@@ -1,6 +1,10 @@
 verdant-rca
 ===========
 
-Folder purpose
- * site: for the actual site/html/python
- * resources: anything not used _in_ the site, but used to create it; psds etc.
+Folders:
+ * verdant: for files/development specific to verdant
+ * rca: for files/dev specific to rca
+
+Both folders contain:
+ * site: the actual site/django/static html mockup etc
+ * resources: for anything not served _in_ the site, but used to create it e.g psds
