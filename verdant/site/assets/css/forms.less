@@ -1,0 +1,33 @@
+input, textarea, select{
+	.transition(all linear 0.2s);
+	.border-radius(6px);
+	border:1px dashed @color-input-border;
+	padding:15px 20px;
+	background-color:white;
+	-webkit-appearance: none;
+
+	&:focus{
+		border-color: @color-input-border-focus;
+		outline:none;
+		background-color:@color-input-focus;
+	}
+}
+input[type=radio]{
+	-webkit-appearance: radio;
+}
+input[type=checkbox]{
+	-webkit-appearance: checkbox;
+}
+input[type=submit], input[type=reset], input.button, button{
+	.border-radius(2px);
+	border:none;
+	background-color: @color-button;
+	color:white;
+	
+	&:hover{
+		background-color: @color-button-focus;
+	}
+}
+textarea{
+
+}

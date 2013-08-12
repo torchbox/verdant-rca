@@ -1,0 +1,117 @@
+---
+note: please leave
+---
+
+@import "assets/css/variables.less";
+@import "assets/css/mixins.less";
+@import "assets/css/forms.less";
+
+.wrapper{
+    overflow:hidden;
+}
+
+
+/* Transitions */
+.container,
+.nav-wrapper,
+footer {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+/* General styles for all menus */
+nav{
+    width:240px;
+    ul, li{
+        margin:0;
+        padding:0;
+        list-style-type:none;
+    }
+
+    a {
+        display: block;
+        color: #fff;
+        font-size: 1.1em;
+        font-weight: 300;
+
+        padding: 1em;
+    }
+}
+   
+body {
+    overflow-x: hidden;
+    position: relative;
+}
+
+#nav-toggle{
+    position:fixed;
+}
+.nav-wrapper{
+    position:relative;
+    overflow:hidden;
+    background: #333;
+    margin-left: -100%;
+    width: 80%;
+    float: left;
+}
+    body.nav-open .nav-wrapper{
+        margin-left:0;
+    }
+   
+
+.container{
+    width:100%;
+    margin-left: 0;
+    float: right;
+    position: relative;
+}
+body.nav-open .container{
+    margin-right:-80%;
+}
+
+footer{
+    background: #333;
+    position:fixed;
+    bottom:0;
+    width:90%;
+    margin:0 5%;
+}
+
+
+/* z-indexes */
+.nav-wrapper{
+    z-index:2;
+}
+footer{
+    z-index:1;
+}
+
+
+/* Example media queries */
+ 
+@media screen and (min-width: 600px){
+    body{
+        margin-left:80px;
+    }
+    .nav-wrapper{
+        position:fixed;
+        height:100%;
+        margin-left:0;
+        left:0;
+        width:80px;
+
+        &:hover{
+            width:240px;
+        }
+    }
+
+    #nav-toggle{
+        display:none;
+    }    
+    
+    footer{
+        width:80%;
+        margin-left:40px;
+    }
+}

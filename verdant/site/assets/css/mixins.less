@@ -1,0 +1,22 @@
+.clearfix() {
+    &:before,
+    &:after {
+        content: " "; /* 1 */
+        display: table; /* 2 */
+    }
+    &:after {
+        clear: both;
+    }
+}
+
+.transition(@transition){
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
+
+.border-radius(@radius){
+    -webkit-border-radius: @radius;
+    border-radius: @radius;
+}
