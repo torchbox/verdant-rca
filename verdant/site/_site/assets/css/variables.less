@@ -1,21 +1,30 @@
-@grid-columns: 12; // The amount of columns you want
-@grid-gutter-width: 3%; // Your gutter width
-@grid-max-width: 1200px; // Set a maximum width of the site. Irrelevant for RCA
+@grid-columns: 12; 
+@grid-gutter-width: 3%;
+@grid-max-width: 1200px;
 
-@color-green: #49c0c1;
+@color-teal: #49c0c1;
 @color-grey: #666;
 @color-red: #FF0000;
+@color-green: #00FF00;
 
 @color-fieldset-hover: lighten(@color-grey, 58%);
 @color-input-border: #CCC;
 @color-input-border-focus: darken(@color-input-border, 25%);
-@color-input-focus: lighten(@color-green, 46%);
-@color-button: @color-green;
-@color-button-focus: lighten(@color-button, 8%);
-@color-link: @color-green;
-@color-link-hover: lighten(@color-button, 8%);
+@color-input-focus: lighten(@color-teal, 46%);
+@color-input-error-bg: lighten(@color-red, 47%);
+@color-button: @color-teal;
+@color-button-hover: darken(@color-button, 8%);
+@color-button-yes: @color-green;
+@color-button-yes-hover: darken(@color-button-yes, 8%);
+@color-button-no: @color-red;
+@color-button-no-hover: darken(@color-button-no, 8%);
+@color-link: @color-teal;
+@color-link-hover: darken(@color-button, 8%);
 
+@color-context-popup-bg: @color-teal;
+@color-context-popup-bg-hover: darken(@color-teal, 20%);
 
 @color-text-base: #444;
+@color-text-input: #222;
 @color-text-grey: @color-grey;
 @color-text-help: lighten(@color-grey, 30%);

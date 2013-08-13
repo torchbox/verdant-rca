@@ -23,6 +23,26 @@ a{
     }
 }
 
+code{
+    .box-shadow(inset 0px 0px 4px 0px rgba(0, 0, 0, 0.2));
+    background-color:@color-fieldset-hover;
+    padding:2px 5px;
+}
+
+kbd{
+    .border-radius(3px);
+    font-family:Open Sans, Arial, sans-serif;
+    border:1px solid @color-grey;
+    border-color:rgba(0,0,0,0.2);
+    padding:0.3em 0.5em;
+}
+.kbd{ /* wraps multiple kbd tags */
+    font-family:Open Sans, Arial, sans-serif;
+    font-weight:300;
+    font-size:0.7em;
+}
+
+
 .wrapper{
     overflow:hidden;
 }
@@ -47,8 +67,10 @@ nav{
 
 #nav-toggle{
     position:fixed;
+    left:0px;
 }
 .nav-wrapper{
+    .box-shadow(inset -5px 0px 10px 0px rgba(0, 0, 0, 0.5));
     position:relative;
     overflow:hidden;
     background: #333;
@@ -63,6 +85,7 @@ nav{
 }
     .content{
         .row();
+        padding-bottom:100px;
     }
 
 body.nav-open .nav-wrapper{
@@ -70,15 +93,71 @@ body.nav-open .nav-wrapper{
 }
 body.nav-open .content-wrapper{
     margin-right:-80%;
+
+    .content{
+        position:fixed;
+    }
 }
 
 footer{
+    .row();
     background: #333;
+    background: rgba(0,0,0,0.7);
     position:fixed;
     bottom:0;
+    height:3em;
     width:90%;
     margin:0 5%;
 }
+    footer ul{
+        .transition(all 0.2s ease);
+        .unlist();
+    }
+    footer li{
+        float:left;
+    }
+
+    .actions{
+        .unlist();
+        color:white;
+        background-color:@color-context-popup-bg;
+        position:absolute;
+        overflow:hidden;
+        height:3em;
+        bottom:0;
+    }
+    .actions a{
+        .clearfix();
+        position:relative;
+        text-decoration:none;
+        text-transform:uppercase;
+        height:3em;
+        line-height:3em;
+        display:block;
+        color:white;
+        padding:0 6em 0 1em;
+
+        &:hover{
+            background-color:@color-context-popup-bg-hover;
+        }
+        .kbd{
+            position:absolute;
+            right:0;
+            top:0;
+            padding-right:1em;
+        }
+    }
+    .actions li{
+        line-height:3em;
+        float:none;
+    }
+    .actions:hover{
+        .box-shadow(0 0 5px rgba(0,0,0,0.5));
+        height:3em * 4;
+    }
+    .actions:hover li{
+        display:block;
+    }
 
 
 /* Z-indexes */

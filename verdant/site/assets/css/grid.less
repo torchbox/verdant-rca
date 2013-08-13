@@ -61,10 +61,16 @@
 .push(@offset:1, @grid-columns:@grid-columns) {
 	margin-left: 100%*(@offset / @grid-columns);
 }
+.push-padding(@offset:1, @grid-columns:@grid-columns) {
+	padding-left:100%*(@offset / @grid-columns);
+}
 
 /* Pull adds right padding */
 .pull(@offset:1, @grid-columns:@grid-columns) {
 	margin-right: 100%*(@offset / @grid-columns);
+}
+.pull-padding(@offset:1, @grid-columns:@grid-columns){
+	padding-right: 100%*(@offset / @grid-columns);
 }
 
 
