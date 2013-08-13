@@ -1,26 +1,32 @@
 ---
-note: please leave
+note: please leave this yaml
 ---
 
 @import "assets/css/variables.less";
 @import "assets/css/mixins.less";
+@import "assets/css/grid.less";
 @import "assets/css/forms.less";
+
+body{
+    font-family:Open Sans,Arial,sans-serif;
+    color:@color-text-base;
+    overflow-x: hidden;
+    position: relative;
+}
+
+a{
+    .transition(all 0.2s linear);
+    color:@color-link;
+
+    &:hover{
+        color:@color-link-hover;
+    }
+}
 
 .wrapper{
     overflow:hidden;
 }
 
-
-/* Transitions */
-.container,
-.nav-wrapper,
-footer {
-    -webkit-transition: all 0.3s ease;
-    -moz-transition: all 0.3s ease;
-    transition: all 0.3s ease;
-}
-
-/* General styles for all menus */
 nav{
     width:240px;
     ul, li{
@@ -38,11 +44,6 @@ nav{
         padding: 1em;
     }
 }
-   
-body {
-    overflow-x: hidden;
-    position: relative;
-}
 
 #nav-toggle{
     position:fixed;
@@ -54,19 +55,20 @@ body {
     margin-left: -100%;
     width: 80%;
     float: left;
-}
-    body.nav-open .nav-wrapper{
-        margin-left:0;
-    }
-   
-
-.container{
+}   
+.content-wrapper{
     width:100%;
-    margin-left: 0;
     float: right;
     position: relative;
 }
-body.nav-open .container{
+    .content{
+        .row();
+    }
+
+body.nav-open .nav-wrapper{
+    margin-left:0;
+}
+body.nav-open .content-wrapper{
     margin-right:-80%;
 }
 
@@ -79,7 +81,7 @@ footer{
 }
 
 
-/* z-indexes */
+/* Z-indexes */
 .nav-wrapper{
     z-index:2;
 }
@@ -87,9 +89,14 @@ footer{
     z-index:1;
 }
 
+/* Transitions */
+.content-wrapper,
+.nav-wrapper,
+footer {
+    .transition(all 0.3s ease)
+}
 
-/* Example media queries */
- 
+
 @media screen and (min-width: 600px){
     body{
         margin-left:80px;
