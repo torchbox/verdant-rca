@@ -1,0 +1,51 @@
+/**
+ * Author(s): Helen Chapman
+ *
+ * MIXINS
+ *
+ * Includes all mixins that are shared across the site, 
+ * both parametric (function) mixins and standard mixins.
+ *
+ * MIXIN EXAMPLE:
+ *  ul {
+ *    .some-reusable-class;
+ *  }
+ * 
+ * PARAMETRIC MIXIN EXAMPLE: 
+ *  .parametric-mixin(@param1, @param2) {
+ *    color: @param1;
+ *    background: @param2;   
+ *  }
+ *
+ */
+
+/**
+ * $Heading styles
+ */
+
+.ho-a-heading {
+    font-family: @font-family-knockout;
+    font-size: @font-size-100;
+}
+
+.ho-b-heading {
+    font-family: @font-family-knockout;
+    font-size: @font-size-30;
+    line-height: @line-height-23;
+}
+
+.h1 {
+    font-family: @font-family-benton;
+    font-size: @font-size-50;
+    line-height: @line-height-60;
+}
+
+/**
+ * $Body copy styles:
+ */
+
+ .bc0 {
+    font-family: @font-family-benton;
+    font-size: @font-size-36;
+    line-height: @line-height-43;
+ }

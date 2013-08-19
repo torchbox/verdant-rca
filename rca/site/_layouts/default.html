@@ -14,7 +14,15 @@
 
         <link rel="stylesheet" href="assets/css/normalize.css">
         <link rel="stylesheet" href="assets/css/core.css">
-        <link rel="stylesheet" href="css/main.css">
+        <link href="assets/css/desktop.css" rel="stylesheet" media="screen and (min-width:600px)" />
+        <link href="assets/css/desktop-large.css" rel="stylesheet" media="screen and (min-width:1280px)" />
+        <!--[if lt IE 9]>
+         <link href="assets/css/desktop.css"" rel="stylesheet" />
+        <![endif]-->
+
+        <!--webfonts-->
+        <link href="http://cloud.webtype.com/css/83171617-ed8a-47d8-8200-052506ac21c2.css" rel="stylesheet" />
+
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     </head>
     <body>
@@ -22,13 +30,28 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
+        <div class="wrapper">
+            <div class="content">
         <!-- Add your site or application content here -->
-        {{ content }}
+            <h1 class="major">Test h1</h1>
+            {{ content }}
+            </div>
+        </div>
+        <div class="full-width-footer">
+            <div class="footer-wrapper">
+                <footer>
+                    <ul>
+                        <li>some test thing</li>
+                        <li>another test thing</li>
+                    </ul>
+                </footer>
+            </div>
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+        <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
         <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/main.js"></script>-->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
