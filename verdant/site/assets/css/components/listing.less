@@ -1,0 +1,76 @@
+/* General listings, like for pages or snippets */
+.listing{
+    thead tr{
+        border-top:1px dashed @color-input-border;
+    }
+    thead th{
+        text-align:left;
+    }
+
+    tbody tr{
+        border-bottom:1px dashed @color-input-border;
+        &:first-child{
+            border-top:1px dashed @color-input-border;
+        }
+    }
+    
+    tbody td{
+        padding-top:1em;
+        padding-bottom:1em;
+    }
+    .bulk{
+        .column(1);
+        .push-padding(1);
+    }
+    .title{
+        .column(4);
+    }
+    .type{
+        .column(2);
+    }
+    .status{
+        .column(2);
+    }
+
+    ul{
+        .unlist();
+    }
+
+    .actions{
+        visibility: hidden
+    }
+    td:hover .actions{
+        visibility:visible;
+    }
+
+    .actions li{
+        float:left;
+    }
+   
+    input:before{
+        cursor:pointer;
+        display:block;
+        content:"";
+        width:20px;
+        height:20px;
+        background-color:red; 
+    }
+    input:checked:before{
+       background-color:blue;
+    }
+
+    .children{
+        padding-top:0;
+        padding-bottom:0;
+        position:relative;
+        
+        .view{
+            text-align:center;
+            position:absolute;
+            top:0;
+            height:100%;
+            width:100%;
+            border-left:1px dashed @color-input-border;
+        }
+    }
+}

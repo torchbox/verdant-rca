@@ -1,14 +1,14 @@
 ---
-note: please leave this yaml
+
 ---
 
 @import "assets/css/variables.less";
 @import "assets/css/mixins.less";
 @import "assets/css/grid.less";
-@import "assets/css/forms.less";
 
 body{
     font-family:Open Sans,Arial,sans-serif;
+    font-size:85%;
     color:@color-text-base;
     overflow-x: hidden;
     position: relative;
@@ -42,42 +42,97 @@ kbd{
     font-size:0.7em;
 }
 
-
 .wrapper{
     overflow:hidden;
 }
 
-nav{
-    width:240px;
-    ul, li{
-        margin:0;
-        padding:0;
-        list-style-type:none;
-    }
+.nav-wrapper{
+    .box-shadow(inset -5px 0px 10px 0px rgba(0, 0, 0, 0.5));
+    position:relative;
+    background: #333;
+    margin-left: -100%;
+    width: 80%;
+    float: left;
+    min-height:800px;
 
-    a {
-        display: block;
-        color: #fff;
-        font-size: 1.1em;
-        font-weight: 300;
-
-        padding: 1em;
+    .logo{
+        position:absolute;
+        height:150px;
+        width:100%;
+        overflow:hidden;
+        background:url(http://placehold.it/150x150) 50% 0 no-repeat;
     }
-}
+    nav{
+        margin-top:150px;
+    }
+}  
 
 #nav-toggle{
     position:fixed;
     left:0px;
 }
-.nav-wrapper{
-    .box-shadow(inset -5px 0px 10px 0px rgba(0, 0, 0, 0.5));
-    position:relative;
-    overflow:hidden;
-    background: #333;
-    margin-left: -100%;
-    width: 80%;
-    float: left;
-}   
+
+
+nav{
+    width:100%;
+
+    ul, li{
+        margin:0;
+        padding:0;
+        list-style-type:none;
+    }
+    ul{
+        width:100%;
+        border-top:1px solid rgba(200,200,200,0.1);
+    }
+    li{
+        overflow:hidden;
+        height:3em;
+        line-height:3em;
+        border-bottom:1px solid rgba(200,200,200,0.1);
+    }
+    li.selected{
+        .transition(all 0.2s ease);
+        background-color:rgba(0,0,0,0.2);
+    
+        &:after{
+            content:"";
+            position:absolute;
+            margin-top:-3em;
+            right:-20px;
+            width:20px;
+            height:3em;
+            background-color:#222;
+        }
+    }
+    a {
+        width:240px;        
+        font-size:0.85em;
+        text-decoration:none;
+        text-transform:uppercase;
+        display: block;
+        color: #fff;
+        font-weight: 300;
+        padding: 0 1em;
+        position:relative;
+        text-indent:35px;
+
+        &:before{
+            position:absolute;
+            left:1em;
+            top:0.9em;
+            content:"";
+            display:inline-block;
+            height:25px;
+            width:25px;
+            background-color:white;
+        }
+    }
+    li.selected a{
+        background-color:#222;
+    }
+}
+
 .content-wrapper{
     width:100%;
     float: right;
@@ -108,12 +163,12 @@ footer{
     height:3em;
     width:90%;
     margin:0 5%;
-}
-    footer ul{
+
+    ul{
         .transition(all 0.2s ease);
         .unlist();
     }
-    footer li{
+    li{
         float:left;
     }
 
@@ -125,42 +180,46 @@ footer{
         overflow:hidden;
         height:3em;
         bottom:0;
-    }
-    .actions a{
-        .clearfix();
-        position:relative;
-        text-decoration:none;
-        text-transform:uppercase;
-        height:3em;
-        line-height:3em;
-        display:block;
-        color:white;
-        padding:0 6em 0 1em;
+ 
+        a{
+            .clearfix();
+            position:relative;
+            text-decoration:none;
+            text-transform:uppercase;
+            height:3em;
+            line-height:3em;
+            display:block;
+            color:white;
+            padding:0 6em 0 1em;
 
+            &:hover{
+                background-color:@color-context-popup-bg-hover;
+            }
+            .kbd{
+                position:absolute;
+                right:0;
+                top:0;
+                padding-right:1em;
+            }
+        }
+        li{
+            line-height:3em;
+            float:none;
+        }
         &:hover{
-            background-color:@color-context-popup-bg-hover;
+            .box-shadow(0 0 5px rgba(0,0,0,0.5));
+            height:3em * 4;
         }
-        .kbd{
-            position:absolute;
-            right:0;
-            top:0;
-            padding-right:1em;
+        &:hover li{
+            display:block;
         }
     }
-    .actions li{
-        line-height:3em;
-        float:none;
-    }
-    .actions:hover{
-        .box-shadow(0 0 5px rgba(0,0,0,0.5));
-        height:3em * 4;
-    }
-    .actions:hover li{
-        display:block;
-    }
-
+}
 
 /* Z-indexes */
+#nav-toggle{
+    z-index:5;
+}
 .nav-wrapper{
     z-index:2;
 }
@@ -175,20 +234,27 @@ footer {
     .transition(all 0.3s ease)
 }
 
-
-@media screen and (min-width: 600px){
+@media screen and (min-width: @breakpoint-mobile){
     body{
-        margin-left:80px;
+        margin-left:60px;
     }
     .nav-wrapper{
         position:fixed;
         height:100%;
         margin-left:0;
         left:0;
-        width:80px;
+        width:60px;
+
+        a{
+            text-indent:70px;
+        }
 
         &:hover{
             width:240px;
+
+            a{
+                text-indent:35px;
+            }
         }
     }
 
@@ -201,3 +267,7 @@ footer {
         margin-left:40px;
     }
 }
+
+@import "assets/css/components/modals.less";
+@import "assets/css/components/forms.less";
+@import "assets/css/components/listing.less";
