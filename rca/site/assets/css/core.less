@@ -7,10 +7,25 @@
 
 .wrapper {
 	background-color: @color-white;
+	background-color: grey;
+	clear: both;
+	overflow: hidden;
 }
 
-.content, footer {
+.content,
+footer {
+	background-color:pink;
 	max-width: @grid-max-width;
+}
+
+.content,
+aside {
+	float: left;
+}
+
+aside {
+	display: none;
+	.column(2);
 }
 
 /* grey background bleeding to edge */
@@ -68,4 +83,68 @@ body {
  	font-family: @font-family-benton;
     font-size: @font-size-18;
     line-height: @line-height-5;
+ }
+
+ /**
+ * $Related links
+ */
+
+ .related {
+ 	background-color: @color-charcoal;
+ 	color: @color-white;
+ 	h2 {
+ 		.t2;
+ 		background-color: lighten(@color-black, 60%);
+ 		.opacity(60);
+ 		margin: 0;
+ 		padding: 0.75em;
+ 	}
+ 	ul {
+ 		padding: 0;
+ 		margin: 0;
+ 	}
+ 	li {
+ 		margin: 0;
+ 		list-style-type: none;
+ 		padding: 0 0.75em;
+ 		.h7;
+ 		a {
+ 			padding: 0.75em 0;
+ 			color: @color-white;
+ 			text-decoration: none;
+ 			display: block;
+ 			border-bottom: 1px solid @color-light-grey;
+ 		}
+ 		&.last a {
+ 			border-bottom: none;
+ 		}
+ 	}
+ }
+
+ .today {
+ 	background-color: @color-white;
+ 	h2 {
+ 		.t2;
+ 		background-color: @color-dark-grey;
+ 		.opacity(20);
+ 	}
+ 	ul {
+ 		padding: 0;
+ 		margin: 0;
+ 	}
+ 	li {
+ 		margin: 0;
+ 		list-style-type: none;
+ 		padding: 0 0.75em;
+ 		h3 {
+ 			.bc4;
+ 		}
+ 		a p {
+ 			.h7;
+ 		}
+
+ 		p {
+ 			.a2;
+ 		}
+ 	}
  }
