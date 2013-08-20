@@ -25,6 +25,7 @@
 
 .ho-a-heading {
     font-family: @font-family-knockout;
+    font-weight: @font-weight-knockout;
     font-size: @font-size-100;
     line-height: 1em;
 }
@@ -160,6 +161,25 @@
     font-size: @font-size-10;
     line-height: @line-height-10;
     text-transform: uppercase;
+}
+
+
+/** 
+* Clearfix
+*/
+.clearfix() {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
 }
 
 /*// Opacity*/

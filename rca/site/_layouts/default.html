@@ -17,11 +17,14 @@
         <link href="assets/css/desktop.css" rel="stylesheet" media="screen and (min-width:600px)" />
         <link href="assets/css/desktop-large.css" rel="stylesheet" media="screen and (min-width:1280px)" />
         <!--[if lt IE 9]>
-         <link href="assets/css/desktop.css"" rel="stylesheet" />
+        <link href="assets/css/desktop.css"" rel="stylesheet" />
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+        </script>
         <![endif]-->
 
         <!--webfonts-->
-        <link href="http://cloud.webtype.com/css/83171617-ed8a-47d8-8200-052506ac21c2.css" rel="stylesheet" />
+        <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
+        <link href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" rel="stylesheet" type="text/css" />
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     </head>
@@ -36,7 +39,7 @@
             {{ content }}
             </div>
             <aside>
-                <div class="related">
+                <div class="related sidebar-links">
                     <h2>Related links</h2>
                     <ul>
                         <li><a href="">Studying at the RCA</a></li>
@@ -44,7 +47,7 @@
                         <li class="last"><a href="">Partnerships Awards &amp; scholarships</a></li>
                     </ul>
                 </div>
-                <div class="today">
+                <div class="today sidebar-links">
                     <h2>Today</h2>
                     <ul>
                         <li>
@@ -52,21 +55,21 @@
                                 <h3>21 March</h3>
                                 <p>Neville Brody in Conversation</p>
                             </a>
-                            <p>public</p>
+                            <span>public</span>
                         </li>
                         <li>
                             <a href="">
                                 <h3>7 May</h3>
                                 <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
                             </a>
-                            <p>private</p>
+                            <span>private</span>
                         </li>
-                        <li>
+                        <li class="last">
                             <a href="">
                                 <h3>14 March</h3>
                                 <p>SHOW RCA 2013</p>
                             </a>
-                            <p>public</p>
+                            <span>public</span>
                         </li>
                     </ul>
                 </div>
