@@ -84,16 +84,37 @@ a {
     }
 }
 
-/*li {
+ul li {
     list-style-type: none;
     &:before {
-        content: '-    ';
+        content: '\002D\00A0\00A0\00A0\00A0\00A0'; /* 002D is hex for a hyphen, 00A0 is hex for nbsp */
+        margin-left: -1.5em;
     }
-}*/
+}
+
+ul ul, ol ol {
+    margin-top: 0; /* make sure nested lists don't have a big space before the indented item */
+    li {
+        font-style: italic;
+    }
+}
 
 /**
  * $Sidebar elements
  */
+
+ /* Remove list icons from all sidebar and footer elements */
+ aside ul li:before,
+ footer ul li:before {
+    content: '';
+    margin: 0;
+ }
+
+ /* Remove italic style for nested lists in sidebar and footer */
+ aside ul ul,
+ footer ul ul {
+    font-style: normal;
+ }
 
 /* common sidebar links patterns */
 
@@ -108,7 +129,6 @@ a {
     }
     li {
         margin: 0;
-        list-style-type: none;
         padding: 0 0.75em;
     }
 }
