@@ -18,7 +18,9 @@
 }
 
 footer {
-	max-width: @grid-max-width;
+	//max-width: @grid-max-width;
+    .column(12);
+    .row();
 }
 
 .content,
@@ -27,8 +29,8 @@ aside {
 }
 
 aside {
-	display: none;
 	.column(2);
+    display: none;
 }
 
 /* grey background bleeding to edge */
@@ -36,6 +38,7 @@ aside {
 	width: 100%;
 	background-color: @color-charcoal;
 	color: @color-white;
+    .clearfix();
 }
 
 
@@ -111,8 +114,8 @@ ul ul, ol ol {
  }
 
  /* Remove italic style for nested lists in sidebar and footer */
- aside ul ul,
- footer ul ul {
+ aside ul ul li,
+ footer ul ul li {
     font-style: normal;
  }
 
@@ -213,3 +216,63 @@ ul ul, ol ol {
  		}
  	}
 }
+
+
+/**
+ * $Footer styles
+ */
+
+ footer,
+ footer a {
+    color: @color-white;
+ }
+
+ div.submenu-block {
+    display: none;
+ }
+
+ footer {
+    padding-top: 30px; /* temporary so I can see what I'm doing till I have the logo */
+    li.main {
+        .h7;
+        text-transform: uppercase;
+        border-top: 1px solid @color-dark-grey;
+        padding: 0.5em 0;
+        &.last {
+            border-bottom: 1px solid @color-dark-grey;
+        }
+        .clearfix();
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul ul {
+        margin-left: 1em;
+    }
+
+    ul ul li {
+        .h8;
+        text-transform: uppercase;
+        padding: 0.25em 0;
+    }
+
+    ul ul ul li {
+        .bc5;
+        text-transform: uppercase;
+        margin-left: 1em; /* Make a nice indent for the second line of text */
+        text-indent: -1em; /* Make a nice indent for the second line of text */
+    }
+ }
+
+ footer.expanded {
+    div.submenu-block {
+        display: block;
+        .clearfix();
+        margin: 1em 0;
+    }
+    li.main {
+        border-bottom: 1px solid @color-dark-grey;
+    }
+ }
