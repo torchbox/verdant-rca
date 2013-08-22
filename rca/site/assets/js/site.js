@@ -1,3 +1,7 @@
+
+/* generic function to show / hide elements
+ * the argument element will be assigned or unassigned an 'expanded' class.
+ * The rest should be handled by the css */
 function expand(element) {
 
 }
