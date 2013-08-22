@@ -1,0 +1,259 @@
+/**
+ * Author(s): Helen Chapman
+ *
+ * MIXINS
+ *
+ * Includes all mixins that are shared across the site, 
+ * both parametric (function) mixins and standard mixins.
+ *
+ * MIXIN EXAMPLE:
+ *  ul {
+ *    .some-reusable-class;
+ *  }
+ * 
+ * PARAMETRIC MIXIN EXAMPLE: 
+ *  .parametric-mixin(@param1, @param2) {
+ *    color: @param1;
+ *    background: @param2;   
+ *  }
+ *
+ */
+
+ /**
+  * &Typography
+  *
+  * Note that the names of all the typographic styles below are based on the names given to them by the design company.
+  * .h1 to .h6 are not necessarily always used by the equivalent tags
+  *
+  */
+
+/* Heading styles */
+
+.ho-a-heading {
+    font-family: @font-family-knockout;
+    font-weight: @font-weight-knockout;
+    font-size: @font-size-72;
+    line-height: 1em;
+    @media @media-desktop {
+       font-size: @font-size-100; 
+    }
+}
+
+.ho-b-heading {
+    font-family: @font-family-knockout;
+    font-size: @font-size-30;
+    line-height: @line-height-11;
+}
+
+.h1 {
+    font-family: @font-family-benton;
+    font-size: @font-size-24;
+    line-height: @line-height-12;
+    @media @media-desktop {
+        font-size: @font-size-50;
+        line-height: @line-height-1;
+    }
+}
+
+.h2 {
+    font-family: @font-family-benton;
+    font-size: @font-size-16;
+    line-height: @line-height-13;
+    @media @media-desktop {
+       font-size: @font-size-40;
+       line-height: @line-height-1;
+    }
+}
+
+.h3 {
+    font-family: @font-family-benton;
+    font-size: @font-size-14;
+    line-height: @line-height-14;
+    @media @media-desktop {
+        font-size: @font-size-36;
+        line-height: @line-height-2;
+    }
+}
+
+.h4 {
+    font-family: @font-family-benton;
+    font-size: @font-size-30;
+    line-height: @line-height-3;
+}
+
+.h5 {
+    font-family: @font-family-benton;
+    font-size: @font-size-22;
+    line-height: @line-height-4;
+}
+
+.h6 {
+    font-family: @font-family-benton;
+    font-size: @font-size-18;
+    line-height: @line-height-5;
+}
+
+.h7 {
+    font-family: @font-family-benton;
+    font-size: @font-size-15;
+    line-height: @line-height-3;
+    text-transform: none;
+}
+
+.h8 {
+    font-family: @font-family-benton;
+    font-size: @font-size-12;
+    line-height: @line-height-6;
+    text-transform: none;
+}
+
+/* Body copy styles */
+
+.bc0 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-36;
+    line-height: @line-height-2;
+    text-transform: none;
+}
+
+.bc1 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-16;
+    line-height: @line-height-13;
+    text-transform: none;
+    @media @media-desktop {
+        font-size: @font-size-30;
+        line-height: @line-height-3;
+    }
+}
+
+.bc2 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-14;
+    line-height: @line-height-14;
+    text-transform: none;
+    @media @media-desktop {
+        font-size: @font-size-22;
+        line-height: @line-height-4;   
+    }
+}
+
+.bc3 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-18;
+    line-height: @line-height-5;
+    text-transform: none;
+ }
+
+.bc4 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-15;
+    line-height: @line-height-7;
+    text-transform: none;
+}
+
+.bc5 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-12;
+    line-height: @line-height-6;
+    text-transform: none;
+}
+
+.module-title {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-12;
+    line-height: @line-height-1;
+    font-color: @color-medium-grey;
+    text-transform: uppercase;
+    @media @media-desktop {
+        font-size: @font-size-13;
+    }  
+}
+
+/* 'Interative' styles */
+
+.a0 {
+    font-family: @font-family-benton;
+    font-size: @font-size-12;
+    line-height: @line-height-8;
+    text-transform: uppercase;
+    @media @media-desktop {
+
+    }    
+}
+
+.a1 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-12;
+    line-height: @line-height-8;
+    text-transform: uppercase;
+}
+
+.a2 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-12;
+    line-height: @line-height-8;
+    text-transform: uppercase;
+    font-color: @color-medium-grey;
+}
+
+.a3 {
+    font-family: @font-family-benton;
+    font-size: @font-size-11;
+    line-height: @line-height-9;
+    text-transform: uppercase;
+}
+
+.a4 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-11;
+    line-height: @line-height-9;
+    text-transform: none;
+}
+
+.t0 {
+    font-family: @font-family-benton;
+    font-size: @font-size-15;
+    line-height: @line-height-7;
+    text-transform: uppercase;
+
+}
+
+.t1 {
+    font-family: @font-family-benton;
+    font-size: @font-size-10;
+    line-height: @line-height-10;
+    text-transform: uppercase;
+}
+
+.t2 {
+    font-family: @font-family-benton-light;
+    font-size: @font-size-10;
+    line-height: @line-height-10;
+    text-transform: uppercase;
+}
+
+
+/** 
+* Clearfix
+*/
+.clearfix() {
+  *zoom: 1;
+  &:before,
+  &:after {
+    display: table;
+    content: "";
+    // Fixes Opera/contenteditable bug:
+    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+    line-height: 0;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+/*// Opacity*/
+.opacity(@opacity) {
+  opacity: @opacity / 100;
+  filter: ~"alpha(opacity=@{opacity})";
+}
