@@ -139,21 +139,10 @@ ul ul, ol ol {
     }
 }
 
-/* common sidebar advert patterns */
+/* sidebar advert */
 
 .sidebar-advert {
-    background-color: @color-dark-grey; /* fallback for ie8 */
-    background-color: fade(@color-dark-grey, 20%);
-    padding: 0.75em;
-    h2, p {
-        margin: 0;
-    }
-    h2 {
-        .h6;
-    }
-    p {
-        .bc3;
-    }
+    .mixin-sidebar-advert(@color-dark-grey, 20%);
 }
 
 /**
@@ -233,6 +222,8 @@ ul ul, ol ol {
 
  div.submenu-block {
     display: none;
+    margin: 0.5em 0 0 0;
+    padding: 1em 0 0.75em 0;
  }
 
  footer {
@@ -270,13 +261,13 @@ ul ul, ol ol {
     }
  }
 
- footer.expanded {
+    
+li.main.expanded {
     div.submenu-block {
         display: block;
         .clearfix();
-        margin: 1em 0;
+        //margin: 1em 0;
+        border-top: 1px solid @color-dark-grey;
     }
-    li.main {
-        border-bottom: 1px solid @color-dark-grey;
-    }
- }
+}
+ 
