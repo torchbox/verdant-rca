@@ -1,4 +1,3 @@
-
 fieldset, input, textarea, select{
      .transition(all linear 0.2s);
 }
@@ -29,18 +28,16 @@ fieldset{
 legend{
     .border-radius(2px);
     color: @color-text-grey;
-    background:lighten(@color-input-border, 10%);
     text-transform:uppercase;
     padding:2px 5px;
     position:absolute;
     top:0;
     margin-top:-1px;
-    font-size:0.6em;
-    text-shadow: 1px 1px 0px #FFFFFF;
+    font-size:0.7em;
 }
 
 fieldset .fields, h2{
-    .push(1);
+    .push(0.5);
 }
 .objects .fields, .objects h2{
     margin-left:0;
@@ -50,7 +47,7 @@ fieldset .fields, h2{
     margin-left:0;
 
     > li{
-        .push-padding(1);
+        .push-padding(0.5);
         border-top: 1px dashed @color-input-border;
 
         &:first-child{
@@ -76,7 +73,6 @@ fieldset .fields, h2{
 
 
 label{
-    font-size:0.85em;
     font-weight:300;
     display:block;
     padding:0 0 0.5em 0;
@@ -199,8 +195,8 @@ ul.full{
     }
     input, textarea{
         .border-radius(0px);
-        .push-padding(1);
-        .pull-padding(1);
+        .push-padding(0.5);
+        .pull-padding(0.5);
         padding-top:2em;
         padding-bottom:2em;
         border:0;
@@ -209,11 +205,11 @@ ul.full{
 
     .title input,
     .title textarea{
-        font-size:2em;
+        font-size:2.2em;
     }
 
     .help, .error-message{
-        .push(1);
+        .push(0.5);
     }
     .error input,
     .error textarea{
