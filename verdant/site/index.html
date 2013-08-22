@@ -3,23 +3,12 @@ layout: default
 ---
 <div class="wrapper">
     <div class="nav-wrapper">
+        <button id="nav-toggle">Menu</button>
+        <div class="logo"></div>
         <nav>
-            <button id="nav-toggle">Menu</button>
             <ul>
-                <li><a href="">Pages</a></li>
-                <li><a href="">Leaves</a></li>
-                <li><a href="">New</a></li>
-                 <li><a href="">Pages</a></li>
-                <li><a href="">Leaves</a></li>
-                <li><a href="">New</a></li>
-                 <li><a href="">Pages</a></li>
-                <li><a href="">Leaves</a></li>
-                <li><a href="">New</a></li>
-                 <li><a href="">Pages</a></li>
-                <li><a href="">Leaves</a></li>
-                <li><a href="">New</a></li>
-                 <li><a href="">Pages</a></li>
-                <li><a href="">Leaves</a></li>
+                <li class="selected"><a href="">Pages</a></li>
+                <li><a href="">Leaves longer title</a></li>
                 <li><a href="">New</a></li>
             </ul>
         </nav>
@@ -27,8 +16,6 @@ layout: default
 
     <div class="content-wrapper">
         <div class="content">
-            
-
             <h1>Styleguide</h1>
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi zzril delenit Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.</p>
                 
@@ -196,9 +183,145 @@ layout: default
 
 
             <h2>Listings</h2>
-
-            <p>[TBC]</p>
             
+            <table class="listing">
+                <thead>
+                    <tr>
+                        <th class="bulk"><input type="checkbox" /></th>
+                        <th class="title">Title</th>
+                        <th class="type">Type</th>
+                        <th class="status">Status</th>
+                        <th>View child pages</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            This is the title of this page
+
+                            <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                           <a href="#" class="view">&gt;</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            Much shorter title
+
+                             <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                            <a href="#" class="view">&gt;</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            Mauris non vestibulum metus, sed scelerisque ipsum. Mauris ante etdt, elementum malesuada vehicula nec, viverra sit amet est. Ut at adipiscing tellus, in condimentum nisl. Donec
+
+                            <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            Atdquam scelerisque fetds enim, non atdquet arcu iacutds ve
+
+                            <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                           
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            Pellentesque non venenatis quam, in elementum
+
+                            <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                            <a href="#" class="view">&gt;</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="bulk"><input type="checkbox" /></td>
+                        <td class="title">
+                            Suspendisse quis ipsum atdquet, pretium lorem quis
+                            <ul class="actions">
+                                <li>View</li>
+                                <li>Edit</li>
+                                <li>Move</li>
+                                <li>Delete</li>
+                            </ul>
+                        </td>
+                        <td class="type">Type</td>
+                        <td class="status">Draft</td>
+                        <td class="children">
+                           
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Modals</h2>
+
+            <!-- Button trigger modal -->
+            <a data-toggle="modal" href="#myModal" class="btn btn-primary btn-lg">Launch demo modal</a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <div class="modal-body">
+                            <p>ERMERGERD! MERDERLS!</p>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
             <h2>Forms</h2>
             
             <p>All form fields must be wrapped with a fieldset to get the correct padding. A legend is also necessary to get the text descriptor of the 'object'.<p>
@@ -206,7 +329,7 @@ layout: default
             <form action="http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi">
                 <fieldset>
                     <legend>Full-width title text input</legend>
-                    <ul class="full">
+                    <ul class="fields full">
                         <li class="text title">
                             <div class="field">
                                 <label for="f1">Single-line text input field:</label>
@@ -217,9 +340,9 @@ layout: default
                     </ul>
                 </fieldset>
 
-                 <fieldset>
+                <fieldset>
                     <legend>Full-width text input with error</legend>
-                    <ul class="full">
+                    <ul class="fields full">
                         <li class="text error">
                             <div class="field">
                                 <label for="f1">Single-line text input field:</label>
@@ -233,7 +356,7 @@ layout: default
 
                 <fieldset>
                     <legend>Full-width textarea</legend>
-                    <ul class="full">
+                    <ul class="fields full">
                         <li class="text">
                             <div class="field">
                                 <label for="f2">Multi-line text input field (textarea):</label>
@@ -243,10 +366,67 @@ layout: default
                         </li>
                     </ul>
                 </fieldset>
-            
+                
+                <fieldset>
+                    <legend>Multi-object example</legend>
+                   
+                    <ul class="objects"> 
+                        <li class="preview">
+                            <ul class="controls">
+                                <li>Move</li>
+                            </ul>
+
+                            <h3>Senior Programme Tutor</h3>
+                            <p>Some information here</p>
+                            <p><a href="">test@test.com</a></p>
+                        </li>
+                        <li class="preview">
+                            <ul class="controls">
+                                <li>Move</li>
+                            </ul>                   
+
+                            <h3>Senior Programme Tutor</h3>
+                            <p>Some information here</p>
+                            <p><a href="">test@test.com</a></p>
+                        </li>
+                        <li>
+                            <h2>Add another object</h2>
+                            <ul class="fields">
+                                <li class="text">
+                                    <div class="field col8">
+                                        <label for="f1">Single-line text input field:</label>
+                                        <input id="f1"  placeholder="Placeholder">
+                                    </div>
+                                    <p class="help">This is the help text for this form input</p>
+                                </li>
+                                <li class="text">
+                                    <div class="field col8">
+                                        <label for="f2">Multi-line text input field (textarea):</label>
+                                        <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
+                                    </div>
+                                    <p class="help">This is the help text for this form input</p>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <p><a href="">Add another object</a>
+                        </li>
+                    </ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Empty multi-object example</legend>
+                   
+                    <ul class="objects"> 
+                        <li>
+                            <p><a href="">Add another object</a>
+                        </li>
+                    </ul>
+                </fieldset>
+
                 <fieldset>
                     <legend>Something</legend>
-                    <ul>
+                    <ul class="fields">
                         <li class="text">
                             <div class="field col8">
                                 <label for="f1">Single-line text input field:</label>
@@ -266,7 +446,7 @@ layout: default
 
                 <fieldset>
                     <legend>Inline fields if necessary</legend>
-                    <ul class="inline">
+                    <ul class="fields inline">
                         <li class="text col2">
                             <div class="field">
                                 <label for="f1">Day:</label>
@@ -299,7 +479,7 @@ layout: default
 
                 <fieldset>
                     <legend>With errors this time</legend>
-                    <ul>
+                    <ul class="fields">
                         <li class="text error">
                             <div class="field col4">
                                 <label for="f1">Single-line text input field:</label>
@@ -322,7 +502,7 @@ layout: default
                 <p>The following two radio buttons are inside <code>fieldset</code> element with a <code>legend</code>:</p>
                 <fieldset>
                     <legend>Legend</legend>
-                    <ul>
+                    <ul class="fields">
                         <li class="radio">
                             <div class="field col8">
                                 <label for="f3">
@@ -350,7 +530,7 @@ layout: default
 
                 <fieldset>
                     <legend>Check those that apply</legend>
-                    <ul>
+                    <ul class="fields">
                         <li class="checkbox"> 
                             <div class="field col8">
                                 <label for="f5">
@@ -377,7 +557,7 @@ layout: default
                 
                 <fieldset>
                     <legend>Selects</legend>
-                    <ul>
+                    <ul class="fields">
                         <li class="select">
                             <div class="field col6">
                                 <label for="f10">A <code>select</code> element with <code>size="1"</code> (dropdown box):</label>
@@ -407,7 +587,7 @@ layout: default
                 
                 <fieldset>
                     <legend>Button</legend>
-                    <ul class="inline"> 
+                    <ul class="fields inline"> 
                         <li class="button col2">
                             <div class="field ">
                                 <label for="f99">Submit button:</label>

@@ -1,0 +1,81 @@
+//
+// Modals
+// --------------------------------------------------
+
+// .modal-open      - body class for killing the scroll
+// .modal           - container to scroll within
+// .modal-dialog    - positioning shell for the actual modal
+// .modal-content   - actual modal w/ bg and corners and shit
+
+@zindex-modal-background: 50;
+@modal-content-bg: #FFFFFF;
+@modal-content-fallback-border-color: #FFFFFF;
+@modal-content-border-color: #FF0000;
+@modal-backdrop-bg: #000000;
+@modal-inner-padding: 10px;
+@modal-footer-border-color: #00FF00;
+@border-radius-large:3px;
+@modal-title-padding:0;
+
+// Kill the scroll on the body
+.modal-open {
+    overflow: hidden;
+}
+
+// Container that the modal scrolls within
+.modal {
+    display: none;
+    overflow: auto;
+    overflow-y: scroll;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: @zindex-modal-background;
+}
+
+// Shell div to position the modal with bottom padding
+.modal-dialog {
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    padding: 10px;
+    z-index: (@zindex-modal-background + 10);
+}
+
+// Actual modal
+.modal-content {
+    position: relative;
+    background-color: white;
+    outline: none;
+}
+
+// Modal background
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: (@zindex-modal-background - 10);
+    background-color: @modal-backdrop-bg;
+    // Fade for backdrop
+    &.fade { opacity:0; }
+    &.in { opacity:0.5; }
+}
+
+// Where all modal content resides
+.modal-body {
+    position: relative;
+}
+
+@media screen and (min-width: @breakpoint-mobile) {
+    .modal-dialog {
+        left: 50%;
+        right: auto;
+        width: 600px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+}
