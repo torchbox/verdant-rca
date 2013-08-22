@@ -45,7 +45,7 @@ aside {
 body {
 	padding: 10px 15px;
 	font-size: @font-size-base;
-	font-family: @font-family-benton-light;
+    font-family: @font-family-benton-light;
 }
 
 /**
@@ -54,6 +54,9 @@ body {
 
 h1 {
 	.h1;
+    &.major {
+        .ho-a-heading;
+    }
 }
 
 h2 {
@@ -190,6 +193,7 @@ ul ul, ol ol {
  		background-color: fade(@color-dark-grey, 20%);
         &:hover {
             background-color: @color-pink;
+            color: @color-white;
         }
  	}
  	ul {

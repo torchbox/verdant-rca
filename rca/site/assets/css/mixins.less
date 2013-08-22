@@ -32,8 +32,11 @@
 .ho-a-heading {
     font-family: @font-family-knockout;
     font-weight: @font-weight-knockout;
-    font-size: @font-size-100;
+    font-size: @font-size-72;
     line-height: 1em;
+    @media @media-desktop {
+       font-size: @font-size-100; 
+    }
 }
 
 .ho-b-heading {
@@ -44,23 +47,32 @@
 
 .h1 {
     font-family: @font-family-benton;
-    font-size: @font-size-50;
-    line-height: @line-height-1;
-    &.major {
-        .ho-a-heading;
+    font-size: @font-size-24;
+    line-height: @line-height-12;
+    @media @media-desktop {
+        font-size: @font-size-50;
+        line-height: @line-height-1;
     }
 }
 
 .h2 {
     font-family: @font-family-benton;
-    font-size: @font-size-40;
-    line-height: @line-height-1;
+    font-size: @font-size-16;
+    line-height: @line-height-13;
+    @media @media-desktop {
+       font-size: @font-size-40;
+       line-height: @line-height-1;
+    }
 }
 
 .h3 {
     font-family: @font-family-benton;
-    font-size: @font-size-36;
-    line-height: @line-height-2;
+    font-size: @font-size-14;
+    line-height: @line-height-14;
+    @media @media-desktop {
+        font-size: @font-size-36;
+        line-height: @line-height-2;
+    }
 }
 
 .h4 {
@@ -97,53 +109,65 @@
 
 /* Body copy styles */
 
- .bc0 {
+.bc0 {
     font-family: @font-family-benton-light;
     font-size: @font-size-36;
     line-height: @line-height-2;
     text-transform: none;
- }
+}
 
- .bc1 {
+.bc1 {
     font-family: @font-family-benton-light;
-    font-size: @font-size-30;
-    line-height: @line-height-3;
+    font-size: @font-size-16;
+    line-height: @line-height-13;
     text-transform: none;
- }
+    @media @media-desktop {
+        font-size: @font-size-30;
+        line-height: @line-height-3;
+    }
+}
 
- .bc2 {
+.bc2 {
     font-family: @font-family-benton-light;
-    font-size: @font-size-22;
-    line-height: @line-height-4;
+    font-size: @font-size-14;
+    line-height: @line-height-14;
     text-transform: none;
- }
+    @media @media-desktop {
+        font-size: @font-size-22;
+        line-height: @line-height-4;   
+    }
+}
 
- .bc3 {
+.bc3 {
     font-family: @font-family-benton-light;
     font-size: @font-size-18;
     line-height: @line-height-5;
     text-transform: none;
  }
 
- .bc4 {
+.bc4 {
     font-family: @font-family-benton-light;
     font-size: @font-size-15;
     line-height: @line-height-7;
     text-transform: none;
- }
+}
 
- .bc5 {
+.bc5 {
     font-family: @font-family-benton-light;
     font-size: @font-size-12;
     line-height: @line-height-6;
     text-transform: none;
- }
+}
 
 .module-title {
     font-family: @font-family-benton-light;
-    font-size: @font-size-13;
+    font-size: @font-size-12;
+    line-height: @line-height-1;
     font-color: @color-medium-grey;
     text-transform: uppercase;
+    @media @media-desktop {
+        font-size: @font-size-13;
+    }  
 }
 
 /* 'Interative' styles */
@@ -153,6 +177,9 @@
     font-size: @font-size-12;
     line-height: @line-height-8;
     text-transform: uppercase;
+    @media @media-desktop {
+
+    }    
 }
 
 .a1 {

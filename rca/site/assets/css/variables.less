@@ -28,18 +28,22 @@
 
 @font-size-base: 93.8%; /* 15px */
 
-@font-size-100:6.667em; /* 100px */
-@font-size-50: 3.333em; /* 50px */
-@font-size-40: 2.667em; /* 40px */
-@font-size-36: 2.400em; /* 36px */
-@font-size-30: 2.000em; /* 30px */
-@font-size-22: 1.467em; /* 22px */
-@font-size-18: 1.200em; /* 18px */
-@font-size-15: 1em;     /* 15px */
-@font-size-13: 0.867em;  /* 13px */
-@font-size-12: 0.800em; /* 12px */
-@font-size-11: 0.733em; /* 11px */
-@font-size-10: 0.667em; /* 10px */
+@font-size-100: 6.667em; /* 100px */
+@font-size-72:  4.800em; /* 72px */
+@font-size-50:  3.333em; /* 50px */
+@font-size-40:  2.667em; /* 40px */
+@font-size-36:  2.400em; /* 36px */
+@font-size-30:  2.000em; /* 30px */
+@font-size-24:  1.600em; /* 24px */
+@font-size-22:  1.467em; /* 22px */
+@font-size-18:  1.200em; /* 18px */
+@font-size-16:  1.067em; /* 16px */
+@font-size-15:  1em;     /* 15px */
+@font-size-14:  0.933em; /* 14px */
+@font-size-13:  0.867em;  /* 13px */
+@font-size-12:  0.800em; /* 12px */
+@font-size-11:  0.733em; /* 11px */
+@font-size-10:  0.667em; /* 10px */
 
 
 /**
@@ -50,18 +54,27 @@
 
  /* Line heights - somewhat arbitrarily named as there are loads of them 
  (mixin styles which use these are in comments) */
-@line-height-1: 1.2em; /* h1, h2 */
-@line-height-2: 1.194em; /* h3, bc0 */
-@line-height-3: 1.267em; /* h4, h7, bc1 */
-@line-height-4: 1.318em; /* h5, bc2 */
-@line-height-5: 1.278em; /* h6, bc3 */
-@line-height-6: 1.250em; /* h8, bc5 */
-@line-height-7 :1.333em; /* bc4, t0 */
-@line-height-8: 1.667em; /* a0, a1, a2 */
-@line-height-9: 1.818em; /* a3, a4 */
-@line-height-10:1.440em; /* t1, t2 */
-@line-height-11:0.767em; /* ho-b */
+@line-height-1:  1.2em; /* h1, h2, .module-title (mobile) */
+@line-height-2:  1.194em; /* h3, bc0 */
+@line-height-3:  1.267em; /* h4, h7, bc1 */
+@line-height-4:  1.318em; /* h5, bc2 */
+@line-height-5:  1.278em; /* h6, bc3 */
+@line-height-6:  1.250em; /* h8, bc5 */
+@line-height-7:  1.333em; /* bc4, t0 */
+@line-height-8:  1.667em; /* a0, a1, a2 */
+@line-height-9:  1.818em; /* a3, a4 */
+@line-height-10: 1.440em; /* t1, t2 */
+@line-height-11: 0.767em; /* ho-b */
+@line-height-12: 1.167em; /* h1 (mobile) */
+@line-height-13: 1.250em; /* h2 (mobile), bc1 (mobile) */
+@line-height-14: 1.429em; /* h3 (mobile), bc2 (mobile) */
 
+/**
+ * $Media query sizes
+ * Used in some mixins to 'bubble' different versions for different media queries
+ */
+@media-desktop: ~"screen and (min-width:600px)";
+@media-desktop-large: ~"screen and (min-width:1280px)";
 
 /**
  * $Colours
