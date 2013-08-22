@@ -1,0 +1,282 @@
+---
+
+---
+@import "assets/css/variables.less";
+@import "assets/css/grid.less";
+@import "assets/css/mixins.less";
+
+.wrapper {
+	background-color: @color-white;
+	//background-color: red;
+	.clearfix();
+}
+
+.content {
+	//background-color: pink;
+	.column(12);
+	.row();
+}
+
+footer {
+	//max-width: @grid-max-width;
+    .column(12);
+    .row();
+}
+
+.content,
+aside {
+	float: left;
+}
+
+aside {
+	.column(2);
+    display: none;
+}
+
+/* grey background bleeding to edge */
+.full-width-footer {
+	width: 100%;
+	background-color: @color-charcoal;
+	color: @color-white;
+    .clearfix();
+}
+
+
+body {
+	padding: 10px 15px;
+	font-size: @font-size-base;
+    font-family: @font-family-benton-light;
+}
+
+/**
+ * $Heading styles
+ */
+
+h1 {
+	.h1;
+    &.major {
+        .ho-a-heading;
+    }
+}
+
+h2 {
+    .h2;
+}
+
+h3 {
+    .h3;
+}
+
+h4 {
+    .h4;
+}
+
+h5 {
+    .h5;
+}
+
+h6 {
+    .h6;
+}
+
+a {
+    color: @color-black;
+    text-decoration: none;
+    &:hover,
+    &:active,
+    &:focus {
+        color: @color-highlight-blue;
+        cursor: pointer;
+    }
+}
+
+ul li {
+    list-style-type: none;
+    &:before {
+        content: '\002D\00A0\00A0\00A0\00A0\00A0'; /* 002D is hex for a hyphen, 00A0 is hex for nbsp */
+        margin-left: -1.5em;
+    }
+}
+
+ul ul, ol ol {
+    margin-top: 0; /* make sure nested lists don't have a big space before the indented item */
+    li {
+        font-style: italic;
+    }
+}
+
+/**
+ * $Sidebar elements
+ */
+
+ /* Remove list icons from all sidebar and footer elements */
+ aside ul li:before,
+ footer ul li:before {
+    content: '';
+    margin: 0;
+ }
+
+ /* Remove italic style for nested lists in sidebar and footer */
+ aside ul ul li,
+ footer ul ul li {
+    font-style: normal;
+ }
+
+/* common sidebar links patterns */
+
+.sidebar-links {
+    h2 {
+        margin: 0;
+        padding: 0.75em;
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        margin: 0;
+        padding: 0 0.75em;
+    }
+}
+
+/* common sidebar advert patterns */
+
+.sidebar-advert {
+    background-color: @color-dark-grey; /* fallback for ie8 */
+    background-color: fade(@color-dark-grey, 20%);
+    padding: 0.75em;
+    h2, p {
+        margin: 0;
+    }
+    h2 {
+        .h6;
+    }
+    p {
+        .bc3;
+    }
+}
+
+/**
+ * $Related links
+ */
+
+.related {
+ 	color: @color-white;
+ 	h2 {
+ 		.t2;
+ 		background-color: lighten(@color-black, 60%);
+ 	}
+ 	ul {
+ 		background-color: @color-charcoal;
+ 	}
+ 	li {
+ 		.h7;
+ 		a {
+            padding: 0.5em 0;
+            display: block;
+ 			color: @color-white;
+ 			border-bottom: 1px solid @color-light-grey;
+            &:hover {
+                color: @color-highlight-blue;
+            }
+ 		}
+ 		&.last a {
+ 			border-bottom: none;
+ 		}
+ 	}
+}
+
+.today {
+ 	h2 {
+ 		.t2;
+ 		background-color: @color-dark-grey; /* fallback for ie8 */
+ 		background-color: fade(@color-dark-grey, 20%);
+        &:hover {
+            background-color: @color-pink;
+            color: @color-white;
+        }
+ 	}
+ 	ul {
+ 		background-color: @color-white; /* fallback for ie8 */
+ 		background-color: fade(@color-white, 75%);
+ 	}
+ 	li {
+        border-bottom: 1px solid @color-black;
+        padding: 0.75em;
+        &.last {
+            border: none;
+        }
+ 		h3 {
+ 			.bc4;
+ 			margin: 0;
+ 		}
+ 		p {
+ 			.h7;
+            margin: 0;
+ 		}
+ 		span {
+ 			.a2;
+            color: @color-medium-grey;
+ 		}
+ 	}
+}
+
+
+/**
+ * $Footer styles
+ */
+
+ footer,
+ footer a {
+    color: @color-white;
+ }
+
+ div.submenu-block {
+    display: none;
+ }
+
+ footer {
+    padding-top: 30px; /* temporary so I can see what I'm doing till I have the logo */
+    li.main {
+        .h7;
+        text-transform: uppercase;
+        border-top: 1px solid @color-dark-grey;
+        padding: 0.5em 0;
+        &.last {
+            border-bottom: 1px solid @color-dark-grey;
+        }
+        .clearfix();
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    ul ul {
+        margin-left: 1em;
+    }
+
+    ul ul li {
+        .h8;
+        text-transform: uppercase;
+        padding: 0.25em 0;
+    }
+
+    ul ul ul li {
+        .bc5;
+        text-transform: uppercase;
+        margin-left: 1em; /* Make a nice indent for the second line of text */
+        text-indent: -1em; /* Make a nice indent for the second line of text */
+    }
+ }
+
+ footer.expanded {
+    div.submenu-block {
+        display: block;
+        .clearfix();
+        margin: 1em 0;
+    }
+    li.main {
+        border-bottom: 1px solid @color-dark-grey;
+    }
+ }
