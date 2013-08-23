@@ -6,9 +6,24 @@
 @import "assets/css/mixins.less";
 
 .wrapper,
+header,
 .footer-wrapper {
 	margin: 0 22% 0 7%; /* creates the offset centre at large desktop size */
 	max-width: 1300px;
+}
+
+nav {
+    .column(12);
+    .row();
+}
+
+form.search {
+    .column(2.1); // this matches the style for aside
+}
+
+
+header {
+	right: auto; /* reset the right position for the desktop layout */
 }
 
 aside {
@@ -16,6 +31,7 @@ aside {
 }
 
 .content,
+nav,
 footer {
 	width: 80%; /* allows room for related content at large desktop size */
 }
