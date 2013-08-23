@@ -200,10 +200,6 @@ h6 {
   font-weight: normal;
 }
 a {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
   color: #49c0c1;
 }
 a:hover {
@@ -236,23 +232,22 @@ kbd {
   float: left;
   min-height: 800px;
 }
-.nav-wrapper .logo {
-  position: absolute;
-  height: 150px;
-  width: 100%;
-  overflow: hidden;
-  background: url(http://placehold.it/150x150) 50% 0 no-repeat;
-}
-.nav-wrapper .nav-main,
-.nav-wrapper .explorer {
+.nav-main {
   margin-top: 150px;
 }
+.logo {
+  background: url(../images/sprites.png) 0 0 no-repeat;
+  background-size: 500px 500px;
+  position: absolute;
+  margin: 3em 0;
+  height: 89px;
+  width: 78px;
+  overflow: hidden;
+}
 #nav-toggle {
+  cursor: pointer;
   position: fixed;
   left: 0px;
-}
-.nav-main {
-  width: 100%;
 }
 .nav-main ul,
 .nav-main li {
@@ -261,52 +256,30 @@ kbd {
   list-style-type: none;
 }
 .nav-main ul {
-  width: 100%;
   border-top: 1px solid rgba(200, 200, 200, 0.1);
 }
 .nav-main li {
-  overflow: hidden;
   border-bottom: 1px solid rgba(200, 200, 200, 0.1);
 }
 .nav-main li.selected {
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
-  transition: all 0.2s ease;
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.nav-main li.selected:after {
-  content: "";
-  position: absolute;
-  margin-top: -3em;
-  right: -20px;
-  width: 20px;
-  height: 3em;
-  background-color: #222;
+  background-color: #333333;
 }
 .nav-main a {
   width: 240px;
   text-decoration: none;
   text-transform: uppercase;
   display: block;
-  color: #fff;
+  opacity: 0.5;
+  color: white;
   font-weight: 600;
   padding: 1em;
   position: relative;
-  text-indent: 35px;
 }
 .nav-main a:before {
-  position: absolute;
-  left: 1em;
-  top: 0.9em;
-  content: "";
-  display: inline-block;
-  height: 25px;
-  width: 25px;
-  background-color: white;
+  opacity: 1;
 }
-.nav-main li.selected a {
-  background-color: #222;
+.nav-main a:hover {
+  opacity: 1;
 }
 .content-wrapper {
   width: 100%;
@@ -349,11 +322,19 @@ kbd {
 .content:after {
   clear: both;
 }
+/* positioning and setup for sliding items */
+.nav-wrapper,
+.content-wrapper {
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
+}
 body.nav-open .nav-wrapper {
-  margin-left: 0;
+  transform: translate3d(125%, 0, 0);
+  -webkit-transform: translate3d(125%, 0, 0);
 }
 body.nav-open .content-wrapper {
-  margin-right: -80%;
+  transform: translate3d(80%, 0, 0);
+  -webkit-transform: translate3d(80%, 0, 0);
 }
 body.nav-open .content-wrapper .content {
   position: fixed;
@@ -468,40 +449,117 @@ footer .actions .dropdown-toggle {
 .nav-wrapper {
   z-index: 2;
 }
-footer {
+footer,
+.logo {
   z-index: 1;
 }
 /* Transitions */
 .content-wrapper,
 .nav-wrapper,
-footer {
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
+.nav-main,
+footer,
+.logo,
+a {
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
 }
 @media screen and (min-width: 600px) {
   body {
     margin-left: 60px;
   }
-  .nav-main a {
-    text-indent: 70px;
+  .nav-wrapper,
+  .content-wrapper {
+    -webkit-transform: none;
+    transform: none;
   }
   .nav-wrapper {
-    position: fixed;
+    position: absolute;
     height: 100%;
-    margin-left: 0;
+    margin-left: -60px;
     left: 0;
     width: 60px;
   }
-  .nav-wrapper:hover {
-    width: 240px;
+  .logo,
+  .nav-main {
+    position: fixed;
+    width: 60px;
+    overflow: hidden;
   }
-  .nav-wrapper:hover .nav-main a {
-    text-indent: 35px;
+  .logo {
+    left: -10px;
+    width: 70px;
+  }
+  .nav-main a {
+    text-indent: 15px;
   }
   #nav-toggle {
-    display: none;
+    left: 10px;
+    color: #999999;
+    text-transform: uppercase;
+    padding: 0.5em;
+    text-indent: -200px;
+    font-size: 0.9em;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+    padding-left: 30px;
+  }
+  #nav-toggle:before {
+    background: url(/assets/images/sprites.png) 0 0 no-repeat;
+    opacity: 0.5;
+    position: absolute;
+    left: 1em;
+    top: 0.9em;
+    content: "";
+    display: inline-block;
+  }
+  #nav-toggle:hover:before {
+    opacity: 1;
+  }
+  #nav-toggle:before {
+    background: url(/assets/images/sprites.png) -109.19999999999999px -64.8px no-repeat;
+    background-size: 300px 300px;
+    height: 10px;
+    width: 15px;
+  }
+  #nav-toggle:hover {
+    color: white;
+  }
+  /* UN-set the transformations used on mobile */
+  body.nav-open .nav-wrapper,
+  body.nav-open .content-wrapper {
+    transform: none;
+    -webkit-transform: none;
+  }
+  body.nav-open .content-wrapper .content {
+    position: initial;
+  }
+  body.nav-open .nav-wrapper {
+    width: 240px;
+  }
+  body.nav-open .nav-wrapper .logo {
+    left: 70px;
+    width: 80px;
+  }
+  body.nav-open .nav-wrapper .nav-main {
+    width: 240px;
+  }
+  body.nav-open .nav-wrapper .nav-main a {
+    text-indent: 0;
+  }
+  body.nav-open #nav-toggle {
+    left: 70px;
+  }
+  body.nav-open #nav-toggle:before {
+    text-indent: 0;
+    content: attr(data-afteropen);
+    line-height: 1em;
+    background: url(/assets/images/sprites.png) -125.69999999999999px -64.5px no-repeat;
+    background-size: 300px 300px;
+    padding-left: 20px;
   }
   footer {
     width: 80%;
@@ -509,12 +567,74 @@ footer {
   }
 }
 /*@import "assets/css/components/explorer-temp.less";*/
-.explorer {
-  width: 400px;
+/* These get used as classes in HTML */
+.icon {
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+}
+.icon:before {
+  background: url(/assets/images/sprites.png) 0 0 no-repeat;
+  opacity: 0.5;
   position: absolute;
-  z-index: 500;
+  left: 1em;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+}
+.icon:hover:before {
+  opacity: 1;
+}
+.icon.explore {
+  padding-left: 50px;
+}
+.icon.explore:before {
+  background: url(/assets/images/sprites.png) 0px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
+}
+.icon.snippets {
+  padding-left: 50px;
+}
+.icon.snippets:before {
+  background: url(/assets/images/sprites.png) -39px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
+}
+.icon.folder {
+  padding-left: 50px;
+}
+.icon.folder:before {
+  background: url(/assets/images/sprites.png) -74px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
+}
+.icon.new {
+  padding-left: 50px;
+}
+.icon.new:before {
+  background: url(/assets/images/sprites.png) -102px -101px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
+}
+.icon.new:before {
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+  background-color: #49c0c1;
+}
+/* These get used as mixins */
+.explorer {
+  pointer-events: none;
+  margin-top: 0;
+  width: 100%;
+  position: relative;
   top: 0;
-  left: 99%;
+  left: 0;
   -webkit-perspective: 1000px;
   -moz-perspective: 1000px;
   perspective: 1000px;
@@ -522,18 +642,18 @@ footer {
   -moz-perspective-origin: 50% 200%;
   perspective-origin: 50% 200%;
   /*.no-touch .explorer li a:hover {
-		background: rgba(255,248,213,0.1);
-	}*/
+        background: rgba(255,248,213,0.1);
+    }*/
 
   /* Hide the inner submenus */
 
   /* 
-	When a submenu is openend, we will hide all li siblings.
-	For that we give a class to the parent menu called "dl-subview".
-	We also hide the submenu link. 
-	The opened submenu will get the class "dl-subviewopen".
-	All this is done for any sub-level being entered.
-	*/
+    When a submenu is openend, we will hide all li siblings.
+    For that we give a class to the parent menu called "dl-subview".
+    We also hide the submenu link. 
+    The opened submenu will get the class "dl-subviewopen".
+    All this is done for any sub-level being entered.
+    */
 
   /* Dynamically added submenu outside of the menu context */
 
@@ -561,6 +681,29 @@ footer {
   display: block;
   position: relative;
   outline: none;
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  padding-left: 50px;
+}
+.explorer a:before {
+  background: url(/assets/images/sprites.png) 0 0 no-repeat;
+  opacity: 0.5;
+  position: absolute;
+  left: 1em;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+}
+.explorer a:hover:before {
+  opacity: 1;
+}
+.explorer a:before {
+  background: url(/assets/images/sprites.png) -74px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
 }
 .explorer a:hover {
   background: #49c0c1;
@@ -570,6 +713,9 @@ footer {
   -moz-transition: all 0.2s linear;
   -o-transition: all 0.2s linear;
   transition: all 0.2s linear;
+  padding-left: 42px;
+  text-indent: -2000px;
+  padding-left: 0;
   position: absolute;
   z-index: 501;
   right: 0;
@@ -581,6 +727,27 @@ footer {
   cursor: pointer;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
+.explorer .children:before {
+  background: url(/assets/images/sprites.png) 0 0 no-repeat;
+  opacity: 0.5;
+  position: absolute;
+  left: 1em;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+}
+.explorer .children:hover:before {
+  opacity: 1;
+}
+.explorer .children:before {
+  background: url(/assets/images/sprites.png) -188.5px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 21px;
+}
+.explorer .children:before {
+  left: 2em;
+}
 .explorer .children:hover {
   background: #49c0c1;
 }
@@ -588,8 +755,33 @@ footer {
 .explorer .dl-subview > .children {
   display: none;
 }
-.explorer .dl-menu {
+.explorer li.dl-back a {
+  -webkit-transition: all 0.2s linear;
+  -moz-transition: all 0.2s linear;
+  -o-transition: all 0.2s linear;
+  transition: all 0.2s linear;
+  padding-left: 50px;
+}
+.explorer li.dl-back a:before {
+  background: url(/assets/images/sprites.png) 0 0 no-repeat;
+  opacity: 0.5;
   position: absolute;
+  left: 1em;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+}
+.explorer li.dl-back a:hover:before {
+  opacity: 1;
+}
+.explorer li.dl-back a:before {
+  background: url(/assets/images/sprites.png) -209.5px -108px no-repeat;
+  background-size: 500px 500px;
+  height: 25px;
+  width: 25px;
+}
+.explorer .dl-menu {
+  position: relative;
   width: 100%;
   opacity: 0;
   pointer-events: none;
@@ -626,6 +818,22 @@ footer {
   width: 100%;
   top: 0px;
   left: 0;
+}
+body.explorer-open .content-wrapper {
+  position: fixed;
+}
+@media screen and (min-width: 600px) {
+  .explorer {
+    margin-top: 150px;
+    width: 400px;
+    position: absolute;
+    z-index: 500;
+    top: 0;
+    left: 99%;
+  }
+  .dl-menu {
+    position: absolute;
+  }
 }
 /* Animation classes for moving out and in */
 .dl-menu.dl-animate-out-1 {

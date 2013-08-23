@@ -20,7 +20,6 @@ h1,h2,h3,h4,h5,h6{
 }
 
 a{
-    .transition(all 0.2s linear);
     color:@color-link;
 
     &:hover{
@@ -54,28 +53,28 @@ kbd{
     width: 80%;
     float: left;
     min-height:800px;
-
-    .logo{
-        position:absolute;
-        height:150px;
-        width:100%;
-        overflow:hidden;
-        background:url(http://placehold.it/150x150) 50% 0 no-repeat;
-    }
-    .nav-main,
-    .explorer{
+}  
+    .nav-main{
         margin-top:150px;
     }
-}  
+
+    .logo{
+        background: url(../images/sprites.png) 0 0 no-repeat;
+        background-size:500px 500px;
+        position:absolute;
+        margin:3em 0;
+        height:89px;
+        width:78px;
+        overflow:hidden;
+    }
 
     #nav-toggle{
+        cursor:pointer;
         position:fixed;
         left:0px;
     }
 
     .nav-main{
-        width:100%;
-
         ul, li{
             margin:0;
             padding:0;
@@ -83,27 +82,14 @@ kbd{
         }
 
         ul{
-            width:100%;
             border-top:1px solid rgba(200,200,200,0.1);
         }
 
         li{
-            overflow:hidden;
             border-bottom:1px solid rgba(200,200,200,0.1);
         
             &.selected{
-                .transition(all 0.2s ease);
-                background-color:rgba(0,0,0,0.2);
-            
-                &:after{
-                    content:"";
-                    position:absolute;
-                    margin-top:-3em;
-                    right:-20px;
-                    width:20px;
-                    height:3em;
-                    background-color:#222;
-                }
+                background-color:@color-grey-dark;
             }
         }
 
@@ -112,25 +98,18 @@ kbd{
             text-decoration:none;
             text-transform:uppercase;
             display: block;
-            color: #fff;
+            opacity:0.5;
+            color: white;
             font-weight: 600;
             padding: 1em;
             position:relative;
-            text-indent:35px;
-
+           
             &:before{
-                position:absolute;
-                left:1em;
-                top:0.9em;
-                content:"";
-                display:inline-block;
-                height:25px;
-                width:25px;
-                background-color:white;
+                opacity:1;
             }
-        }
-        li.selected a{
-            background-color:#222;
+            &:hover{
+                opacity:1;
+            }
         }
     }
 
@@ -144,16 +123,25 @@ kbd{
         padding-bottom:100px;
     }
 
+/* positioning and setup for sliding items */
+.nav-wrapper, .content-wrapper{
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+}
+
 body.nav-open .nav-wrapper{
-    margin-left:0;
+    transform: translate3d(125%,0,0);
+    -webkit-transform: translate3d(125%,0,0);
 }
 body.nav-open .content-wrapper{
-    margin-right:-80%;
+    transform: translate3d(80%,0,0);
+    -webkit-transform: translate3d(80%,0,0);
 
     .content{
         position:fixed;
     }
 }
+
 
 header{
     .row();
@@ -192,10 +180,7 @@ footer{
             padding:0 1em;
             color:white;
         }
-    }
-
-
-    
+    }   
 }
 
 /* Z-indexes */
@@ -205,15 +190,18 @@ footer{
 .nav-wrapper{
     z-index:2;
 }
-footer{
+footer, .logo{
     z-index:1;
 }
 
 /* Transitions */
 .content-wrapper,
 .nav-wrapper,
-footer {
-    .transition(all 0.3s ease)
+.nav-main,
+footer,
+.logo,
+a {
+    .transition(all 0.2s ease)
 }
 
 @media screen and (min-width: @breakpoint-mobile){
@@ -221,31 +209,83 @@ footer {
         margin-left:60px;
     }
 
-    .nav-main a{
-        text-indent:70px;       
+    .nav-wrapper, .content-wrapper{
+        -webkit-transform:none;
+        transform:none;
     }
 
     .nav-wrapper{
-        position:fixed;
+        position:absolute;
         height:100%;
-        margin-left:0;
+        margin-left:-60px;
         left:0;
         width:60px;
+    } 
 
+    .logo, .nav-main{
+        position:fixed;
+        width:60px;
+        overflow:hidden;
+    }
+
+    .logo{
+        left:-10px;
+        width:70px;
+    }
+
+    .nav-main a{
+        text-indent:15px;
+    }
+
+    #nav-toggle{
+        left:10px;
+        color:lighten(@color-grey, 20%);
+        text-transform:uppercase;
+        padding:0.5em;
+        text-indent:-200px;
+        font-size:0.9em;
+        .icon-config();
+        .icon-set(15px, 10px, 364px, 216px, 0.6);
+        
         &:hover{
-            width:240px;
-
-            .nav-main a{
-                text-indent:35px;
-            }
+            color:white;
         }
     }
 
-   
+    /* UN-set the transformations used on mobile */
+    body.nav-open .nav-wrapper, body.nav-open .content-wrapper{
+        transform: none;
+        -webkit-transform: none;
+    }
+    body.nav-open .content-wrapper .content{
+        position:initial;
+    }
+    body.nav-open .nav-wrapper{
+         width:240px;
 
-    #nav-toggle{
-        display:none;
-    }    
+        .logo{
+            left:70px;
+            width:80px;
+        }
+        .nav-main{
+            width:240px;
+
+            a{
+                text-indent:0;
+            }
+        }
+    }
+    body.nav-open #nav-toggle{
+        left:70px;
+
+        &:before{
+            text-indent:0;
+            content: attr(data-afteropen);
+            line-height:1em;
+            .sprite(419px, 215px, 0.6);
+            padding-left:20px;
+        }
+    }
     
     footer{
         width:80%;
@@ -254,6 +294,7 @@ footer {
 }
 
 /*@import "assets/css/components/explorer-temp.less";*/
+@import "assets/css/components/icons.less";
 @import "assets/css/components/explorer.less";
 @import "assets/css/components/dropdowns.less";
 @import "assets/css/components/modals.less";

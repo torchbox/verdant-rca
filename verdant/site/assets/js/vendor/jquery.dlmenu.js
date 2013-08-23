@@ -185,7 +185,7 @@
 			else {
 				onTransitionEndFn.call();
 			}
-
+			$body.removeClass('explorer-open');
 			this.open = false;
 		},
 		openMenu : function() {
@@ -203,6 +203,8 @@
 				$( this ).removeClass( 'dl-menu-toggle' );
 			} );
 			this.$trigger.addClass( 'dl-active' );
+			$body.addClass('explorer-open');
+			$('.explorer').css('top', $(document).scrollTop());
 			this.open = true;
 		},
 		// resets the menu to its original state (first level of options)
