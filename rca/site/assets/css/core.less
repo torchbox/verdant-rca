@@ -7,14 +7,16 @@
 
 .wrapper {
 	background-color: @color-white;
-	//background-color: red;
+	background-color: #ccc;
 	.clearfix();
+    position: relative;
 }
 
 .content {
-	//background-color: pink;
+	background-color: pink;
 	.column(12);
 	.row();
+    margin-top: 100px; /*tbd - space for fixed header */
 }
 
 footer {
@@ -23,13 +25,9 @@ footer {
     .row();
 }
 
-.content,
 aside {
-	float: left;
-}
-
-aside {
-	.column(2);
+	.column(2.1);
+    margin-top: 100px;  /*tbd - space for fixed header */
     display: none;
 }
 
@@ -105,22 +103,194 @@ ul ul, ol ol {
     }
 }
 
-/**
- * $Sidebar elements
- */
-
- /* Remove list icons from all sidebar and footer elements */
+ /* Remove list icons from all sidebar, menu and footer elements */
  aside ul li:before,
- footer ul li:before {
+ footer ul li:before,
+ nav ul li:before {
     content: '';
     margin: 0;
  }
 
- /* Remove italic style for nested lists in sidebar and footer */
+ /* Remove italic style for nested lists in sidebar, menu and footer */
  aside ul ul li,
- footer ul ul li {
+ footer ul ul li,
+ nav ul ul li {
     font-style: normal;
  }
+
+
+/**
+ * $Header
+ */
+
+header {
+    width: 100%;
+    position: fixed;
+    z-index: 200;
+    height: 200px; /* tbd */
+}
+
+
+/**
+ * $Search
+ */
+
+ form.search {
+    input[type="text"] {
+        .t2;
+        color: @color-dark-grey;
+        width: 92%;
+        padding: 0.75em;
+        border: none;
+        border-image-width: 0;
+        border-bottom: 1px solid @color-black; /* fallback for ie 8 */
+        border-bottom: 1px solid fade(@color-black, 40%);
+        background-color: @color-white; /* fallback for ie 8 */
+        background-color: fade(@color-white, 85%);
+    }
+    input[type="submit"] {
+        display: none;
+    }
+ }
+
+/**
+ * $Top navigation
+ * Largely copied from Dave's demo so not using same variables as the rest of the site at the moment, and not
+ * using less nesting
+ */
+
+nav {
+    max-width:@grid-max-width;
+    border-bottom: 1px solid @color-black; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-black, 40%);
+    padding:10px 0;
+    background-color: @color-white; /* fallback for ie 8 */
+    background-color: fade(@color-white, 85%);
+    position:relative;
+    z-index:999;
+    height:150px; /* gets overridden by finding tallest submenu */
+    overflow:hidden;
+    //padding: 0.75em 0 0.75em 0.75em;
+}
+    .js nav {
+        height:20px;
+    }
+
+    nav h2{
+        margin:0;
+        .a0;
+    }
+
+    nav.dl-menuwrapper{
+        margin:20px 0;
+        height:initial;
+        overflow:visible;
+    }
+
+    nav ul, nav li{
+        margin:0;
+        padding:0;
+        list-style:none;
+    }
+    nav ul {
+        position:absolute;
+        top:0;
+        left:45px;
+        width:100%;
+    }
+
+        nav > ul{
+            top:10px;
+        }
+
+        nav.ready .menu{
+            display:none;
+        }
+        nav.changing ul{
+            pointer-events:none;
+        }
+        nav.dl-menuwrapper ul{
+            left:0;
+            top:initial;
+            background-color:white;
+            position:relative;
+            width:auto;
+        }
+        nav li {
+            display:block;
+            width:20%;
+            //line-height:20px;
+        }
+            nav.dl-menuwrapper li {
+                width:100%;
+            }
+            nav li > ul{
+                display:none;
+                left:20%;
+            }
+                nav.dl-menuwrapper li > ul{
+                    display:block;
+                    left:0;
+                }
+
+                nav li.selected > ul {
+                    display:block;
+                }
+
+                nav a{
+                    font-size:12px;
+                    line-height:20px;
+                    color:#999;
+                    text-decoration:none;
+                    text-transform:uppercase;
+                    display:inline-block;
+                    padding-left:10px;
+                }
+                nav a:hover{
+                    color:rgb(0,150,255);
+                } 
+                nav .selected > a{
+                    color:black;
+
+                }
+                nav a:before{
+                    float:left;
+                    margin-left:-10px;
+                    width:10px;
+                    content:"/";
+                    font-size:12px;
+                    line-height:20px;
+                    display:block;
+                    visibility:hidden;
+                    font-weight:bold;
+                    color:black;
+                }
+                    nav li:hover > a:before,
+                    nav li.selected > a:before {
+                        visibility:visible;
+                    }
+       
+    .js .menu.ready {
+        visibility:hidden;
+    }
+
+    nav.dl-menuwrapper,
+    nav.ready .menu{
+        visibility:visible;
+    }
+
+    .breadcrumb{
+        width:100%;
+    }
+    .breadcrumb li{
+        float:left;
+        width:20%; 
+    }
+
+
+/**
+ * $Sidebar elements
+ */
 
 /* common sidebar links patterns */
 
@@ -143,6 +313,18 @@ ul ul, ol ol {
 
 .sidebar-advert {
     .mixin-sidebar-advert(@color-dark-grey, 20%);
+    /*position: relative;
+    &:after {
+        content: " ";
+        .sprite-load;
+        background-repeat: no-repeat;
+        background-position: -90px -14px;
+        width: 67px;
+        height: 36px;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+    }*/
 }
 
 /**
@@ -227,7 +409,7 @@ ul ul, ol ol {
  }
 
  footer {
-    padding-top: 30px; /* temporary so I can see what I'm doing till I have the logo */
+    padding: 1em;
     li.main {
         .h7;
         text-transform: uppercase;
@@ -237,10 +419,26 @@ ul ul, ol ol {
             border-bottom: 1px solid @color-dark-grey;
         }
         .clearfix();
+        //.sprite-load;
     }
+
+    li.main.expanded {
+        padding-bottom: 0;
+        div.submenu-block {
+            display: block;
+            .clearfix();
+            border-top: 1px solid @color-dark-grey;
+        }
+    }
+
     ul {
         margin: 0;
         padding: 0;
+        &.menu {
+            background-image: url('/assets/images/logo-footer-mobile.png');
+            background-repeat: no-repeat;
+            padding-top: 48px; /* temporary so I can see what I'm doing till I have the logo */
+        }
     }
 
     ul ul {
@@ -259,14 +457,54 @@ ul ul, ol ol {
         margin-left: 1em; /* Make a nice indent for the second line of text */
         text-indent: -1em; /* Make a nice indent for the second line of text */
     }
- }
-
-    
-li.main.expanded {
-    div.submenu-block {
-        display: block;
-        .clearfix();
+    h3 {
+        .module-title;
         border-top: 1px solid @color-dark-grey;
+        margin-top: 3em;
+        padding-top: 0.5em;
     }
-}
+
+    ul.social {
+        li {
+            display: inline-block;
+            color: @color-white;
+            .h7;
+            margin-right: 1em;
+            a {
+                display: block;
+                width: 40px;
+                height: 29px;
+                padding: 0.5em 0.75em;
+                &:hover {
+                    background-color: @color-pink;
+                    color: @color-white;
+                }
+            }
+            .facebook {
+                background-color: @color-facebook-blue;
+            }
+            .vimeo {
+                background-color: @color-vimeo-blue;
+            }
+            .twitter {
+                background-color: @color-twitter-blue;
+            }
+            .youtube {
+                background-color: @color-youtube-red;
+            }
+        }
+    }
+
+    .smallprint {
+        .bc5;
+        border-top: 1px solid @color-dark-grey;
+        border-bottom: 1px solid @color-dark-grey;
+        padding: 0.75em 0;
+        margin: 1.5em 0 3em 0;
+        li a {
+            display: block;
+            padding: 1em 0;
+        }
+    }
+ }
  

@@ -15,33 +15,63 @@ body {
 	width: 90%; /* make sure we have a small left and right margin */
 }
 
+header { /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
+    width: 90%;
+    right: 50%; 
+    margin-right: -45%;
+}
+
 aside {
 	display: none; /* at medium desktop size the aside expands with a tab */
 }
 
 .content,
 footer {
+	padding: 0;
 	width: 100%; /*no space for related content - it is now collapsed */
 }
+
+/* At the desktop width the nav shrinks down to allow room for the search to appear next to it above the content */
+nav {
+    .column(2, @grid-gutter-width, 12);
+    .row();
+}
+
+form.search {
+    .column(2, @grid-gutter-width, 12);
+    .row();
+    float: right;
+}
+
 
 footer {
 	section {
 		.column(4, @grid-gutter-width, 12);
 		.row();
 	}
-}
-
-/*h1 {
-	.h1;
-	&.major {
-		.ho-a-heading;
+	ul.menu {
+		background-image: url('/assets/images/logo-footer.png');
+		padding-top: 72px;
 	}
-}*/
-
-/*h2 {
-	.h2;
+	ul.social {
+      	li {
+            a {
+                width: 90px;
+                height: auto;
+            }
+        }
+    }
+    .smallprint {
+    	font-style: italic;
+    	ul {
+            float: right;
+            li {
+                display: inline-block;
+                margin: 0 2em;
+                a {
+                	padding: 0;
+                }
+            }
+        }
+    }
 }
-
-h3 {
-	.h3;
-}*/
