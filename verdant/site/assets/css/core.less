@@ -2,6 +2,13 @@
 
 ---
 
+/* 
+min z-index: 1;
+max z-index: 5;
+*/
+
+
+
 @import "assets/css/variables.less";
 @import "assets/css/mixins.less";
 @import "assets/css/grid.less";
@@ -177,8 +184,15 @@ footer{
             text-transform:uppercase;
             background-color:@color-teal;
             line-height:3em;
-            padding:0 1em;
             color:white;
+            padding-left:1em;
+            padding-right:1em;
+
+            &:before{
+                left:auto;
+                right:1em;
+            }
+
         }
     }   
 }
@@ -245,7 +259,7 @@ a {
         text-indent:-200px;
         font-size:0.9em;
         .icon-config();
-        .icon-set(15px, 10px, 364px, 216px, 0.6);
+        .icon-set(10px, 10px, 364px, 216px, 0.6);
         
         &:hover{
             color:white;
@@ -279,11 +293,16 @@ a {
         left:70px;
 
         &:before{
-            text-indent:0;
-            content: attr(data-afteropen);
-            line-height:1em;
             .sprite(419px, 215px, 0.6);
-            padding-left:20px;
+        }
+        &:after{
+            text-indent: 0;
+            content: attr(data-afteropen);
+            line-height: 1em;
+            padding-left: 25px;
+            position: absolute;
+            left: 0;
+            top: 1em;
         }
     }
     
@@ -293,7 +312,6 @@ a {
     }
 }
 
-/*@import "assets/css/components/explorer-temp.less";*/
 @import "assets/css/components/icons.less";
 @import "assets/css/components/explorer.less";
 @import "assets/css/components/dropdowns.less";

@@ -2,7 +2,7 @@
     .transition(all 0.2s linear);
 
     &:before{
-        background:url(/assets/images/sprites.png) 0 0 no-repeat;
+        background-image:url(/assets/images/sprites.png);
         opacity:0.5;
         position:absolute;
         left:1em;
@@ -46,9 +46,19 @@
             background-color:@color-teal;
         }
     }
+    &.arrow-up{
+        .icon-set(18px, 12px, 270px, 215px, 1);
+    }
+    &.checked{
+        .icon-set(18px, 18px, 0, 339px, 1);
+    }
 }
 
 /* These get used as mixins */
+.icon-checked(){
+    .icon-config();
+    .icon-set(18px, 18px, 0, 339px, 1);
+}
 .icon-folder(){
     .icon-config();
     .icon-set(25px, 25px, 148px, 216px, 1)
