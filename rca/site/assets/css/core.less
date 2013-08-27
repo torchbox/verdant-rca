@@ -5,43 +5,8 @@
 @import "assets/css/grid.less";
 @import "assets/css/mixins.less";
 
-.wrapper {
-	background-color: @color-white;
-	background-color: #ccc;
-	.clearfix();
-    position: relative;
-}
-
-.content {
-	background-color: pink;
-	.column(12);
-	.row();
-    margin-top: 100px; /*tbd - space for fixed header */
-}
-
-footer {
-	//max-width: @grid-max-width;
-    .column(12);
-    .row();
-}
-
-aside {
-	.column(2.1);
-    margin-top: 100px;  /*tbd - space for fixed header */
-    display: none;
-}
-
-/* grey background bleeding to edge */
-.full-width-footer {
-	width: 100%;
-	background-color: @color-charcoal;
-	color: @color-white;
-    .clearfix();
-}
-
-
 body {
-	padding: 10px 15px;
+	padding: 10px 15px; /* padding for mobile */
 	font-size: @font-size-base;
     font-family: @font-family-benton-light;
 }
@@ -76,6 +41,10 @@ h5 {
 h6 {
     .h6;
 }
+
+/**
+ * $Link and list styles
+ */
 
 a {
     color: @color-black;
@@ -118,16 +87,73 @@ ul ul, ol ol {
     font-style: normal;
  }
 
+/**
+ * $Structure
+ */
+
+.wrapper {
+    background-color: @color-white;
+    //background-color: #ccc; //debug
+    .clearfix();
+}
+
+.content {
+    //background-color: pink; //debug
+    .column(12);
+    .row();
+    margin-top: @header-height + 15; /* space for fixed header + extra margin for spacing */
+}
+
+footer {
+    .column(12); /* matches content style */
+    .row();
+}
+
+aside {
+    display: none; /* hidden until large desktop size */
+}
+
+/* grey background bleeding to edge */
+.full-width-footer {
+    width: 100%;
+    background-color: @color-charcoal;
+    color: @color-white;
+    .clearfix();
+}
 
 /**
  * $Header
  */
 
+/* header has to match width of content below so has left and right
+margins like the wrapper. When content scrolls up, especially the full width
+footer, we don't want stuff appearing behind the header. This 100% width wrapper
+makes sure that doesn't happen. */
+.header-wrapper {
+    width: 100%;
+    background-color: @color-white;
+    height: @header-height; /* match height of header */
+    position: fixed;
+    top: 0;
+}
+
 header {
     width: 100%;
     position: fixed;
+    top: 0;
+    left: 0;
     z-index: 200;
-    height: 200px; /* tbd */
+    height: @header-height; /* menu height + logo + margin on logo */
+    background-color: @color-white;
+    a p { /* logo */
+        text-indent: -9000px;
+        background-image: url('/assets/images/logo-header.png');
+        background-repeat: no-repeat;
+        display: block;
+        width: 328px;
+        height: 140px;
+        margin: 30px 0;
+    }
 }
 
 
@@ -136,11 +162,11 @@ header {
  */
 
  form.search {
+    //background-color: red; //debug
     input[type="text"] {
         .t2;
         color: @color-dark-grey;
-        width: 92%;
-        padding: 0.75em;
+        padding: 10px;
         border: none;
         border-image-width: 0;
         border-bottom: 1px solid @color-black; /* fallback for ie 8 */
@@ -155,8 +181,8 @@ header {
 
 /**
  * $Top navigation
- * Largely copied from Dave's demo so not using same variables as the rest of the site at the moment, and not
- * using less nesting
+ * Largely copied from Dave's demo so not using same variables as the rest of the
+ * site at the moment, and not using less nesting
  */
 
 nav {
@@ -166,19 +192,21 @@ nav {
     padding:10px 0;
     background-color: @color-white; /* fallback for ie 8 */
     background-color: fade(@color-white, 85%);
+    //background-color: yellow; //debug
     position:relative;
     z-index:999;
     height:150px; /* gets overridden by finding tallest submenu */
     overflow:hidden;
-    //padding: 0.75em 0 0.75em 0.75em;
 }
     .js nav {
-        height:20px;
+        height:34px; /* adjusted by eye to match search box */
     }
 
     nav h2{
         margin:0;
         .a0;
+        font-size: 12px;
+        line-height: 20px;
     }
 
     nav.dl-menuwrapper{
@@ -219,7 +247,7 @@ nav {
         nav li {
             display:block;
             width:20%;
-            //line-height:20px;
+            line-height:20px;
         }
             nav.dl-menuwrapper li {
                 width:100%;
@@ -286,6 +314,8 @@ nav {
         float:left;
         width:20%; 
     }
+
+/* end of chunk copied from Dave's code */
 
 
 /**
@@ -356,6 +386,10 @@ nav {
  		}
  	}
 }
+
+/**
+ * $Today
+ */
 
 .today {
  	h2 {

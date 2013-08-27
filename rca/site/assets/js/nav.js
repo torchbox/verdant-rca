@@ -91,7 +91,7 @@ function applyNav(){
 				$self.find('.menu').stop().hide()
 
 				$self.stop().animate({
-					height: 20
+					height: 34
 				}, 200, function(){
 					$self.find('.selected > ul').stop().show()
 					$self.removeClass('changing');

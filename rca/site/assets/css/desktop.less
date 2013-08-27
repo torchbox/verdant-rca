@@ -9,6 +9,10 @@ body {
 	padding: 0;
 }
 
+/**
+ * $Structure
+ */
+
 .wrapper,
 .footer-wrapper {
 	margin: 0 auto; /* left and right margins become even at regular desktop size */
@@ -21,6 +25,20 @@ header { /* fixed positioned elements can't use margin:auto - set right and marg
     margin-right: -45%;
 }
 
+/* At the desktop width the nav shrinks down to allow room for
+the search to appear next to it above the content */
+nav {
+    .column(9, @grid-gutter-width, 12);
+    .row();
+}
+
+
+/* Search moves alongside the menu above the content */
+form.search {
+    .column(2, @grid-gutter-width, 12);
+}
+
+
 aside {
 	display: none; /* at medium desktop size the aside expands with a tab */
 }
@@ -31,19 +49,10 @@ footer {
 	width: 100%; /*no space for related content - it is now collapsed */
 }
 
-/* At the desktop width the nav shrinks down to allow room for the search to appear next to it above the content */
-nav {
-    .column(2, @grid-gutter-width, 12);
-    .row();
-}
 
-form.search {
-    .column(2, @grid-gutter-width, 12);
-    .row();
-    float: right;
-}
-
-
+/**
+ * $Desktop footer styles - apply to large desktop size as well
+ */
 footer {
 	section {
 		.column(4, @grid-gutter-width, 12);
