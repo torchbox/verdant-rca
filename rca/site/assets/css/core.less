@@ -101,7 +101,7 @@ ul ul, ol ol {
     //background-color: pink; //debug
     .column(12);
     .row();
-    margin-top: @header-height + 15; /* space for fixed header + extra margin for spacing */
+    margin-top: @header-height; /* space for fixed header */
 }
 
 footer {
@@ -143,7 +143,7 @@ header {
     top: 0;
     left: 0;
     z-index: 200;
-    height: @header-height; /* menu height + logo + margin on logo */
+    height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
     background-color: @color-white;
     a p { /* logo */
         text-indent: -9000px;
