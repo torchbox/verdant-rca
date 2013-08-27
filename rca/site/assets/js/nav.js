@@ -19,8 +19,8 @@ $(function(){
 		on: function(){
 			$('nav li').each(function(){
 				if($(this).children('ul.submenu').length){
-					console.log($(this).find('a').html() + ' has children')
-					console.log($(this).children('ul.submenu'))
+					//console.log($(this).find('a').html() + ' has children')
+					//console.log($(this).children('ul.submenu'))
 					
 					$(this).append('<div class="expand">+</div>')
 				}

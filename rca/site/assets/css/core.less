@@ -101,7 +101,6 @@ ul ul, ol ol {
     //background-color: pink; //debug
     .column(12);
     .row();
-    margin-top: @header-height; /* space for fixed header */
 }
 
 footer {
@@ -132,26 +131,23 @@ makes sure that doesn't happen. */
 .header-wrapper {
     width: 100%;
     background-color: @color-white;
-    height: @header-height; /* match height of header */
-    position: fixed;
-    top: 0;
+    //background-color: red;
+    height: @header-height-mobile; /* match height of mobile version of logo + margin */
 }
 
 header {
-    width: 100%;
-    position: fixed;
-    top: 0;
+    //background-color: pink;
     z-index: 200;
-    height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
-    background-color: @color-white;
+    position: relative; /* to allow alignment of showsearch and showmenu divs */
     a p { /* logo */
         text-indent: -9000px;
-        background-image: url('/assets/images/logo-header.png');
+        background-image: url('/assets/images/logo-header-mobile.png');
         background-repeat: no-repeat;
         display: block;
-        width: 328px;
-        height: 140px;
-        margin: 30px 0;
+        height: @header-height-mobile; /* match height of mobile version of logo + margin */
+        width: 98px;
+        float: left;
+        margin: 10px 0;
     }
 }
 
@@ -315,6 +311,66 @@ nav {
     }
 
 /* end of chunk copied from Dave's code */
+
+
+/**
+ * $Show icons for search and menu at mobile size
+ */
+
+.showsearch {
+    //float: left;
+    text-indent: -9999px;
+    border-left: 1px solid @color-light-grey;
+    position: absolute;
+    right:64px;
+    width: 64px;
+    height: 64px;
+    &:before {
+        content: " ";
+        .sprite-load(-82px, -300px, 44px, 44px);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+.showmenu {
+    //float: left;
+    text-indent: -9999px;
+    border-left: 1px solid @color-light-grey;
+    border-right: 1px solid @color-light-grey;
+    position: absolute;
+    right: 0px;
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    &:before {
+        content: " ";
+        .sprite-load(-90px, -14px, 67px, 36px);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+
+//background: url('imgs/sprites.png') no-repeat -82px -300px; width: 44px; height: 44px;
+
+nav {
+    display: none;
+}
+
+nav.expanded {
+    display: block;
+}
+
+form.search {
+    display: none;
+}
+
+form.search.expanded {
+    display: block;
+}
 
 
 /**
