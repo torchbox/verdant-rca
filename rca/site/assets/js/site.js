@@ -15,4 +15,5 @@ function showHide(element) {
 
 $(document).ready(function(){
 	showHide('li.main'); /* footer expand / collapse */
+	showHide('.today');
 });

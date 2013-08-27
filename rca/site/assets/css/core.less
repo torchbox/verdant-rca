@@ -141,7 +141,6 @@ header {
     width: 100%;
     position: fixed;
     top: 0;
-    left: 0;
     z-index: 200;
     height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
     background-color: @color-white;
@@ -369,6 +368,9 @@ nav {
  	}
  	ul {
  		background-color: @color-charcoal;
+        &.extra-links {
+            background-color: lighten(@color-black, 60%);
+        }
  	}
  	li {
  		.h7;
@@ -391,6 +393,10 @@ nav {
  * $Today
  */
 
+.today.expanded ul {
+    display: block;
+}
+
 .today {
  	h2 {
  		.t2;
@@ -404,6 +410,7 @@ nav {
  	ul {
  		background-color: @color-white; /* fallback for ie8 */
  		background-color: fade(@color-white, 75%);
+        display: none;
  	}
  	li {
         border-bottom: 1px solid @color-black;
