@@ -34,6 +34,7 @@
     font-weight: @font-weight-knockout;
     font-size: @font-size-72;
     line-height: 1em;
+    margin: 0;
     @media @media-desktop {
        font-size: @font-size-100; 
     }
@@ -235,8 +236,12 @@
 * Sprites file
 */
 
-.sprite-load {
+.sprite-load (@positionX, @positionY, @width, @height) {
     background-image: url(/assets/images/sprites.png);
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
     @media @media-retina {
         //call retina sprites file here
     }

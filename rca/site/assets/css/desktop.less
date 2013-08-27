@@ -9,16 +9,61 @@ body {
 	padding: 0;
 }
 
+/**
+ * $Structure
+ */
+
 .wrapper,
 .footer-wrapper {
 	margin: 0 auto; /* left and right margins become even at regular desktop size */
 	width: 90%; /* make sure we have a small left and right margin */
 }
 
-header { /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
+.header-wrapper {
+    position: fixed; /* fixed for desktop and desktop-large version */
+    top: 0;
+    height: @header-height; /* match height of header */
+}
+
+header {
+    width: 100%;
+    height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
+    background-color: @color-white;
+    position: fixed; /* fixed for desktop and desktop-large version */
+    top: 0;
+    right: 50%; /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
     width: 90%;
-    right: 50%; 
     margin-right: -45%;
+    a p {
+        background-image: url('/assets/images/logo-header.png');
+        width: 328px;
+        height: 140px;
+        margin: 30px 0;
+    }
+}
+
+.showmenu,
+.showsearch {
+    /* icons to show menu and search at mobile size disappear */
+    display: none;
+}
+
+/* At the desktop width the nav shrinks down to allow room for
+the search to appear next to it above the content */
+nav {
+    .column(9, @grid-gutter-width, 12);
+    .row();
+}
+
+
+/* Search moves alongside the menu above the content */
+form.search {
+    .column(2, @grid-gutter-width, 12);
+}
+
+
+.content {
+    margin-top: @header-height; /* space for fixed header */
 }
 
 aside {
@@ -31,19 +76,10 @@ footer {
 	width: 100%; /*no space for related content - it is now collapsed */
 }
 
-/* At the desktop width the nav shrinks down to allow room for the search to appear next to it above the content */
-nav {
-    .column(2, @grid-gutter-width, 12);
-    .row();
-}
 
-form.search {
-    .column(2, @grid-gutter-width, 12);
-    .row();
-    float: right;
-}
-
-
+/**
+ * $Desktop footer styles - apply to large desktop size as well
+ */
 footer {
 	section {
 		.column(4, @grid-gutter-width, 12);

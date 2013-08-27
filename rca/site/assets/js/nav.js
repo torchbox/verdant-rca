@@ -19,8 +19,8 @@ $(function(){
 		on: function(){
 			$('nav li').each(function(){
 				if($(this).children('ul.submenu').length){
-					console.log($(this).find('a').html() + ' has children')
-					console.log($(this).children('ul.submenu'))
+					//console.log($(this).find('a').html() + ' has children')
+					//console.log($(this).children('ul.submenu'))
 					
 					$(this).append('<div class="expand">+</div>')
 				}
@@ -91,7 +91,7 @@ function applyNav(){
 				$self.find('.menu').stop().hide()
 
 				$self.stop().animate({
-					height: 20
+					height: 34
 				}, 200, function(){
 					$self.find('.selected > ul').stop().show()
 					$self.removeClass('changing');

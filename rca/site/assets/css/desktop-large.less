@@ -5,37 +5,46 @@
 @import "assets/css/grid.less";
 @import "assets/css/mixins.less";
 
-.wrapper,
+/**
+ * $Structure
+ */
+
+/* header, .wrapper and .footer-wrapper are all in alignment.
+At the large desktop size they are offset from the centre */
 header,
+.wrapper,
 .footer-wrapper {
 	margin: 0 22% 0 7%; /* creates the offset centre at large desktop size */
 	max-width: 1300px;
 }
 
+header {
+	right: auto; /* reset the right value for the large desktop layout (used to centre the header in the desktop layout) */
+}
+
+/* at the large desktop size the navigation bar fills the same width
+as the content below */
 nav {
     .column(12);
     .row();
 }
 
+/* search sits above the aside at the large desktop size. */
 form.search {
-    .column(2.1); // this matches the style for aside
-}
-
-
-header {
-	right: auto; /* reset the right position for the desktop layout */
+    .column(2.3); /* this matches the style for aside */
+    input[type="text"] {
+    	width: 164px; /* adjusted by eye to match width of related content below */
+    }
 }
 
 aside {
 	display: block; /* at large desktop size the aside is always visible */
+	.column(2.3);
+    margin-top: @header-height;  /* space for fixed header */
 }
 
 .content,
 nav,
 footer {
-	width: 80%; /* allows room for related content at large desktop size */
-}
-
-body {
-	padding: 0;
+	width: 80%; /* allows room for related content and search at large desktop size */
 }

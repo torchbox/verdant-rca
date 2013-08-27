@@ -5,43 +5,8 @@
 @import "assets/css/grid.less";
 @import "assets/css/mixins.less";
 
-.wrapper {
-	background-color: @color-white;
-	background-color: #ccc;
-	.clearfix();
-    position: relative;
-}
-
-.content {
-	background-color: pink;
-	.column(12);
-	.row();
-    margin-top: 100px; /*tbd - space for fixed header */
-}
-
-footer {
-	//max-width: @grid-max-width;
-    .column(12);
-    .row();
-}
-
-aside {
-	.column(2.1);
-    margin-top: 100px;  /*tbd - space for fixed header */
-    display: none;
-}
-
-/* grey background bleeding to edge */
-.full-width-footer {
-	width: 100%;
-	background-color: @color-charcoal;
-	color: @color-white;
-    .clearfix();
-}
-
-
 body {
-	padding: 10px 15px;
+	padding: 10px 15px; /* padding for mobile */
 	font-size: @font-size-base;
     font-family: @font-family-benton-light;
 }
@@ -76,6 +41,10 @@ h5 {
 h6 {
     .h6;
 }
+
+/**
+ * $Link and list styles
+ */
 
 a {
     color: @color-black;
@@ -118,16 +87,68 @@ ul ul, ol ol {
     font-style: normal;
  }
 
+/**
+ * $Structure
+ */
+
+.wrapper {
+    background-color: @color-white;
+    //background-color: #ccc; //debug
+    .clearfix();
+}
+
+.content {
+    //background-color: pink; //debug
+    .column(12);
+    .row();
+}
+
+footer {
+    .column(12); /* matches content style */
+    .row();
+}
+
+aside {
+    display: none; /* hidden until large desktop size */
+}
+
+/* grey background bleeding to edge */
+.full-width-footer {
+    width: 100%;
+    background-color: @color-charcoal;
+    color: @color-white;
+    .clearfix();
+}
 
 /**
  * $Header
  */
 
-header {
+/* header has to match width of content below so has left and right
+margins like the wrapper. When content scrolls up, especially the full width
+footer, we don't want stuff appearing behind the header. This 100% width wrapper
+makes sure that doesn't happen. */
+.header-wrapper {
     width: 100%;
-    position: fixed;
+    background-color: @color-white;
+    //background-color: red;
+    height: @header-height-mobile; /* match height of mobile version of logo + margin */
+}
+
+header {
+    //background-color: pink;
     z-index: 200;
-    height: 200px; /* tbd */
+    position: relative; /* to allow alignment of showsearch and showmenu divs */
+    a p { /* logo */
+        text-indent: -9000px;
+        background-image: url('/assets/images/logo-header-mobile.png');
+        background-repeat: no-repeat;
+        display: block;
+        height: @header-height-mobile; /* match height of mobile version of logo + margin */
+        width: 98px;
+        float: left;
+        margin: 10px 0;
+    }
 }
 
 
@@ -136,11 +157,11 @@ header {
  */
 
  form.search {
+    //background-color: red; //debug
     input[type="text"] {
         .t2;
         color: @color-dark-grey;
-        width: 92%;
-        padding: 0.75em;
+        padding: 10px;
         border: none;
         border-image-width: 0;
         border-bottom: 1px solid @color-black; /* fallback for ie 8 */
@@ -155,8 +176,8 @@ header {
 
 /**
  * $Top navigation
- * Largely copied from Dave's demo so not using same variables as the rest of the site at the moment, and not
- * using less nesting
+ * Largely copied from Dave's demo so not using same variables as the rest of the
+ * site at the moment, and not using less nesting
  */
 
 nav {
@@ -166,19 +187,21 @@ nav {
     padding:10px 0;
     background-color: @color-white; /* fallback for ie 8 */
     background-color: fade(@color-white, 85%);
+    //background-color: yellow; //debug
     position:relative;
     z-index:999;
     height:150px; /* gets overridden by finding tallest submenu */
     overflow:hidden;
-    //padding: 0.75em 0 0.75em 0.75em;
 }
     .js nav {
-        height:20px;
+        height:34px; /* adjusted by eye to match search box */
     }
 
     nav h2{
         margin:0;
         .a0;
+        font-size: 12px;
+        line-height: 20px;
     }
 
     nav.dl-menuwrapper{
@@ -219,7 +242,7 @@ nav {
         nav li {
             display:block;
             width:20%;
-            //line-height:20px;
+            line-height:20px;
         }
             nav.dl-menuwrapper li {
                 width:100%;
@@ -287,6 +310,68 @@ nav {
         width:20%; 
     }
 
+/* end of chunk copied from Dave's code */
+
+
+/**
+ * $Show icons for search and menu at mobile size
+ */
+
+.showsearch {
+    //float: left;
+    text-indent: -9999px;
+    border-left: 1px solid @color-light-grey;
+    position: absolute;
+    right:64px;
+    width: 64px;
+    height: 64px;
+    &:before {
+        content: " ";
+        .sprite-load(-82px, -300px, 44px, 44px);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+.showmenu {
+    //float: left;
+    text-indent: -9999px;
+    border-left: 1px solid @color-light-grey;
+    border-right: 1px solid @color-light-grey;
+    position: absolute;
+    right: 0px;
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    &:before {
+        content: " ";
+        .sprite-load(-90px, -14px, 67px, 36px);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+
+//background: url('imgs/sprites.png') no-repeat -82px -300px; width: 44px; height: 44px;
+
+nav {
+    display: none;
+}
+
+nav.expanded {
+    display: block;
+}
+
+form.search {
+    display: none;
+}
+
+form.search.expanded {
+    display: block;
+}
+
 
 /**
  * $Sidebar elements
@@ -339,6 +424,9 @@ nav {
  	}
  	ul {
  		background-color: @color-charcoal;
+        &.extra-links {
+            background-color: lighten(@color-black, 60%);
+        }
  	}
  	li {
  		.h7;
@@ -357,6 +445,14 @@ nav {
  	}
 }
 
+/**
+ * $Today
+ */
+
+.today.expanded ul {
+    display: block;
+}
+
 .today {
  	h2 {
  		.t2;
@@ -370,6 +466,7 @@ nav {
  	ul {
  		background-color: @color-white; /* fallback for ie8 */
  		background-color: fade(@color-white, 75%);
+        display: none;
  	}
  	li {
         border-bottom: 1px solid @color-black;
