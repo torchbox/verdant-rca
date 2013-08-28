@@ -36,8 +36,9 @@ legend{
     font-size:0.7em;
 }
 
-fieldset .fields, h2{
+fieldset .fields, fieldset h2{
     .push(0.5);
+    .pull(0.5);
 }
 .objects .fields, .objects h2{
     margin-left:0;
@@ -48,6 +49,7 @@ fieldset .fields, h2{
 
     > li{
         .push-padding(0.5);
+        .pull-padding(0.5);
         border-top: 1px dashed @color-input-border;
 
         &:first-child{
@@ -104,19 +106,48 @@ input, textarea, select{
         background-color:@color-input-focus;
     }
 }
+
+input[type=radio],input[type=checkbox]{
+    cursor:pointer;
+}
+
 input[type=radio]{
     -webkit-appearance: radio;
     width:auto;
+    position:relative;
+    margin-right:15px;
 }
+
+input[type=radio]:before{
+    text-align:center;
+    position:absolute;
+    top:-5px;
+    left:-2px;
+    cursor:pointer;
+    display:block;
+    content:"";
+    width:20px;
+    height:20px;
+    background-color:white;
+    border:1px solid lighten(@color-grey, 50%);
+    .border-radius(100%);
+}
+input[type=radio]:checked:before{
+    .sprite(106px, 329px, 1);
+}
+
+
 input[type=checkbox]{
     -webkit-appearance: checkbox;
     width:auto;
+    position:relative;
+    margin-right:15px;
 }
 
 input[type=checkbox]:before{
     text-align:center;
     position:absolute;
-    top:0;
+    top:-5px;
     cursor:pointer;
     display:block;
     content:"";
@@ -125,20 +156,22 @@ input[type=checkbox]:before{
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
 }
-input:checked:before{
+input[type=checkbox]:checked:before{
     .sprite(-5px, 332px, 1);
 }
 
 
 input[type=submit], input[type=reset], a.button, input.button, button{
     .border-radius(2px);
-    padding:1em 2em;
+    padding:1.3em 2em;
     border:none;
     background-color: @color-button;
     color:white;
     text-decoration:none;
     text-transform:uppercase;
     font-size:0.95em;
+    white-space: nowrap;
+    position:relative;
     
     &:hover{
         background-color: @color-button-hover;
@@ -156,6 +189,12 @@ input[type=submit], input[type=reset], a.button, input.button, button{
             background-color: @color-button-no-hover;
         }
     }
+}
+a.button{
+    line-height:3.5em;
+}
+.button.icon{
+    padding-left:45px;
 }
 
 /* Other text */
@@ -276,6 +315,7 @@ ul.full{
 
     .error-message{
         .push(0.5);
+        .pull(0.5);
         padding-bottom:1em;
     }
 
@@ -296,4 +336,19 @@ ul.inline li:first-child, li.inline:first-child{
 .controls{
     float:right;
     margin-right:5%;
+    text-transform:uppercase;
+    color:@color-grey;    
+    
+    li{
+        position:relative;
+    }
+    .icon{
+       
+        &:before{
+           opacity:0.5;
+        }
+    }
+    .move-updown-black{
+        cursor:move;
+    }
 }
