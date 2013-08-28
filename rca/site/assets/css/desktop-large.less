@@ -33,13 +33,15 @@ nav {
 form.search {
     .column(2.3); /* this matches the style for aside */
     input[type="text"] {
-    	width: 164px; /* adjusted by eye to match width of related content below */
+    	//width: 164px; /* adjusted by eye to match width of related content below */
+        //width: 100%;
     }
 }
 
 aside {
 	display: block; /* at large desktop size the aside is always visible */
 	.column(2.3);
+    overflow: hidden;
     margin-top: @header-height;  /* space for fixed header */
 }
 

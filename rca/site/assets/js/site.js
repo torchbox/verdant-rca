@@ -26,6 +26,11 @@ function showHideWithSeparateClick(element, clickElement){
 
 
 $(document).ready(function(){
+	$('.bxslider').bxSlider({
+		//auto: true,
+  		//autoControls: true
+  		pager: false
+	}); /* start bxslider */
 	showHide('li.main'); /* footer expand / collapse */
 	showHide('.today');
 	showHideWithSeparateClick('nav', '.showmenu');
