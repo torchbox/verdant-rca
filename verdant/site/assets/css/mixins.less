@@ -55,6 +55,8 @@
 }
 
 .sprite(@x:0; @y:0; @magnification:2){
-    background:url(/assets/images/sprites.png) -@x/(2/@magnification) -@y/(2/@magnification) no-repeat;
+    background-image: url(/assets/images/sprites.png);
+    background-position: -@x/(2/@magnification) -@y/(2/@magnification);
+    background-repeat: no-repeat;
     background-size: 1000px/(2/@magnification) 1000px/(2/@magnification);
 }

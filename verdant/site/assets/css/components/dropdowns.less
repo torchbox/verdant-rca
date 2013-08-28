@@ -32,7 +32,7 @@
             text-transform:uppercase;
             display:block;
             color:white;
-            padding:1em 1em 1em 1em;
+            padding:1em;
 
             &:hover{
                 background-color:@color-context-popup-bg-hover;
@@ -45,13 +45,18 @@
             }
         }
 
-        .kbd,
-        .icon:after{
+        .kbd{
             position:absolute;
             right:1em;
         }
-        .icon.checked:after{
-            content:"\2714";
+        .icon{
+            padding-left:1em;
+            padding-right:1em;
+
+            &:before{
+                left:auto;
+                right:1em;
+            }           
         }
 
         .kbd{

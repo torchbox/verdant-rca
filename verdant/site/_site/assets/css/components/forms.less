@@ -108,11 +108,50 @@ input[type=checkbox]{
     -webkit-appearance: checkbox;
     width:auto;
 }
-input[type=submit], input[type=reset], input.button, button{
+
+
+input[type=checkbox]:before{
+
+}
+
+input[type=checkbox]{
+    .icon-checked();
+
+    &:before{
+        opacity:1;
+        opacity:1;
+        left:0;
+        top:0;
+        cursor:pointer;
+        display:block;
+        width:20px;
+        height:20px;
+        background-color:white;
+        border:1px solid lighten(@color-grey, 50%);
+    }
+}
+input[type=checkbox]:checked:before{
+    
+}
+
+/*i
+input[type=checkbox]:checked:before{
+    border:0px;
+    content:"\2714";
+    color:white;
+    background-color:@color-teal;
+}*/
+
+
+input[type=submit], input[type=reset], a.button, input.button, button{
     .border-radius(2px);
+    padding:1em 2em;
     border:none;
     background-color: @color-button;
     color:white;
+    text-decoration:none;
+    text-transform:uppercase;
+    font-size:0.95em;
     
     &:hover{
         background-color: @color-button-hover;

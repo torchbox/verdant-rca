@@ -1,3 +1,11 @@
+/* 
+min z-index: 500;
+max z-index: unknown;
+*/
+
+
+@explorer-z-index:500;
+
 .explorer {
     pointer-events:none;
     margin-top:0;
@@ -52,7 +60,7 @@
         text-indent:-2000px;
         padding-left:0;
         position:absolute;
-        z-index:501;
+        z-index:@explorer-z-index + 1;
         right:0;
         top:0;
         width:5em;
@@ -158,7 +166,7 @@ body.explorer-open .content-wrapper{
         margin-top:150px;
         width: 400px;
         position: absolute;
-        z-index:500;
+        z-index:@explorer-z-index;
         top:0;
         left:99%;
     }
