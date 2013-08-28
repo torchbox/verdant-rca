@@ -46,7 +46,7 @@ max z-index: unknown;
         display: block;
         position: relative;
         outline: none;
-        .icon-folder();
+        .icon.folder;
 
         &:hover{
             background:@color-teal;
@@ -56,14 +56,14 @@ max z-index: unknown;
 
     .children{
         .transition(all 0.2s linear);
-        .icon-arrow-right();
+        .icon.arrow-right;
         text-indent:-2000px;
-        padding-left:0;
+        padding-right:0;
         position:absolute;
         z-index:@explorer-z-index + 1;
         right:0;
         top:0;
-        width:5em;
+        width:2em;
         height:100%;
         color:white;
         background-color:@color-grey-dark;
@@ -87,7 +87,7 @@ max z-index: unknown;
     }*/
 
     li.dl-back a {
-        .icon-arrow-left();
+        .icon.arrow-left;
     }
 
     li.dl-back:after {

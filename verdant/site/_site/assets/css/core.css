@@ -2,6 +2,7 @@
 min z-index: 1;
 max z-index: 5;
 */
+/* Iconset defined twice to act as guards */
 /* Utility variable — you should never need to modify this */
 /* Ensure grid columns are set to border-boxes. This is essential */
 /* Our row container */
@@ -447,10 +448,6 @@ footer .actions .dropdown-toggle {
   padding-left: 1em;
   padding-right: 1em;
 }
-footer .actions .dropdown-toggle:before {
-  left: auto;
-  right: 1em;
-}
 /* Z-indexes */
 #nav-toggle {
   z-index: 5;
@@ -510,20 +507,20 @@ a {
     padding: 0.5em;
     text-indent: -200px;
     font-size: 0.9em;
-    -webkit-transition: all 0.2s linear;
-    -moz-transition: all 0.2s linear;
-    -o-transition: all 0.2s linear;
-    transition: all 0.2s linear;
+    -webkit-transition: x 0.2s linear;
+    -moz-transition: x 0.2s linear;
+    -o-transition: x 0.2s linear;
+    transition: x 0.2s linear;
     padding-left: 20px;
   }
   #nav-toggle:before {
     background-image: url(/assets/images/sprites.png);
-    opacity: 0.5;
     position: absolute;
-    left: 1em;
     top: 0.9em;
     content: "";
     display: inline-block;
+    height: 10px;
+    width: 10px;
   }
   #nav-toggle:hover:before {
     opacity: 1;
@@ -533,8 +530,7 @@ a {
     background-position: -109.19999999999999px -64.8px;
     background-repeat: no-repeat;
     background-size: 300px 300px;
-    height: 10px;
-    width: 10px;
+    left: 1em;
   }
   #nav-toggle:hover {
     color: white;
@@ -584,97 +580,300 @@ a {
     margin-left: 40px;
   }
 }
-/* These get used as classes in HTML */
-.icon {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
+.icon.explore {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 50px;
 }
-.icon:before {
+.icon.explore:before {
   background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
   position: absolute;
-  left: 1em;
   top: 0.9em;
   content: "";
   display: inline-block;
+  height: 25px;
+  width: 25px;
 }
-.icon:hover:before {
+.icon.explore:hover:before {
   opacity: 1;
-}
-.icon.explore {
-  padding-left: 50px;
 }
 .icon.explore:before {
   background-image: url(/assets/images/sprites.png);
   background-position: 0px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
+  left: 1em;
+}
+.icon.snippets {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 50px;
+}
+.icon.snippets:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
   height: 25px;
   width: 25px;
 }
-.icon.snippets {
-  padding-left: 50px;
+.icon.snippets:hover:before {
+  opacity: 1;
 }
 .icon.snippets:before {
   background-image: url(/assets/images/sprites.png);
   background-position: -39px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
+  left: 1em;
+}
+.icon.folder {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 50px;
+}
+.icon.folder:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
   height: 25px;
   width: 25px;
 }
-.icon.folder {
-  padding-left: 50px;
+.icon.folder:hover:before {
+  opacity: 1;
 }
 .icon.folder:before {
   background-image: url(/assets/images/sprites.png);
   background-position: -74px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
+  left: 1em;
+}
+.icon.new {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 50px;
+}
+.icon.new:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
   height: 25px;
   width: 25px;
 }
-.icon.new {
-  padding-left: 50px;
+.icon.new:hover:before {
+  opacity: 1;
 }
 .icon.new:before {
   background-image: url(/assets/images/sprites.png);
   background-position: -102px -101px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
-  height: 25px;
-  width: 25px;
+  left: 1em;
 }
 .icon.new:before {
   -webkit-border-radius: 100%;
   border-radius: 100%;
   background-color: #49c0c1;
 }
+.icon.iconright.arrow-up {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-right: 36px;
+}
+.icon.iconright.arrow-up:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 12px;
+  width: 18px;
+}
+.icon.iconright.arrow-up:hover:before {
+  opacity: 1;
+}
+.icon.iconright.arrow-up:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -135px -107.5px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  right: 1em;
+  left: initial;
+}
 .icon.arrow-up {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
   padding-left: 36px;
+}
+.icon.arrow-up:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 12px;
+  width: 18px;
+}
+.icon.arrow-up:hover:before {
+  opacity: 1;
 }
 .icon.arrow-up:before {
   background-image: url(/assets/images/sprites.png);
   background-position: -135px -107.5px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
-  height: 12px;
-  width: 18px;
+  left: 1em;
+}
+.icon.arrow-right {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 42px;
+}
+.icon.arrow-right:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 25px;
+  width: 21px;
+}
+.icon.arrow-right:hover:before {
+  opacity: 1;
+}
+.icon.arrow-right:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -188.5px -108px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  left: 1em;
+}
+.icon.arrow-right {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-right: 42px;
+}
+.icon.arrow-right:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 25px;
+  width: 21px;
+}
+.icon.arrow-right:hover:before {
+  opacity: 1;
+}
+.icon.arrow-right:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -188.5px -108px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  right: 1em;
+  left: initial;
+}
+.icon.arrow-left {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-left: 50px;
+}
+.icon.arrow-left:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 25px;
+  width: 25px;
+}
+.icon.arrow-left:hover:before {
+  opacity: 1;
+}
+.icon.arrow-left:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -209.5px -108px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  left: 1em;
 }
 .icon.checked {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
   padding-left: 36px;
+}
+.icon.checked:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+}
+.icon.checked:hover:before {
+  opacity: 1;
 }
 .icon.checked:before {
   background-image: url(/assets/images/sprites.png);
   background-position: 0 -169.5px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
+  left: 1em;
+}
+.icon.iconright.checked-white {
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-right: 36px;
+}
+.icon.iconright.checked-white:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
   height: 18px;
   width: 18px;
 }
-/* These get used as mixins */
+.icon.iconright.checked-white:hover:before {
+  opacity: 1;
+}
+.icon.iconright.checked-white:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -262.5px -108px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  right: 1em;
+  left: initial;
+}
 /* 
 min z-index: 500;
 max z-index: unknown;
@@ -732,20 +931,20 @@ max z-index: unknown;
   display: block;
   position: relative;
   outline: none;
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
   padding-left: 50px;
 }
 .explorer a:before {
   background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
   position: absolute;
-  left: 1em;
   top: 0.9em;
   content: "";
   display: inline-block;
+  height: 25px;
+  width: 25px;
 }
 .explorer a:hover:before {
   opacity: 1;
@@ -755,8 +954,7 @@ max z-index: unknown;
   background-position: -74px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
-  height: 25px;
-  width: 25px;
+  left: 1em;
 }
 .explorer a:hover {
   background: #49c0c1;
@@ -767,13 +965,18 @@ max z-index: unknown;
   -o-transition: all 0.2s linear;
   transition: all 0.2s linear;
   padding-left: 42px;
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
+  padding-right: 42px;
   text-indent: -2000px;
-  padding-left: 0;
+  padding-right: 0;
   position: absolute;
   z-index: 501;
   right: 0;
   top: 0;
-  width: 5em;
+  width: 2em;
   height: 100%;
   color: white;
   background-color: #333333;
@@ -782,12 +985,12 @@ max z-index: unknown;
 }
 .explorer .children:before {
   background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
   position: absolute;
-  left: 1em;
   top: 0.9em;
   content: "";
   display: inline-block;
+  height: 25px;
+  width: 21px;
 }
 .explorer .children:hover:before {
   opacity: 1;
@@ -797,8 +1000,27 @@ max z-index: unknown;
   background-position: -188.5px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
+  left: 1em;
+}
+.explorer .children:before {
+  background-image: url(/assets/images/sprites.png);
+  position: absolute;
+  top: 0.9em;
+  content: "";
+  display: inline-block;
   height: 25px;
   width: 21px;
+}
+.explorer .children:hover:before {
+  opacity: 1;
+}
+.explorer .children:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: -188.5px -108px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+  right: 1em;
+  left: initial;
 }
 .explorer .children:before {
   left: 2em;
@@ -811,20 +1033,20 @@ max z-index: unknown;
   display: none;
 }
 .explorer li.dl-back a {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
   padding-left: 50px;
 }
 .explorer li.dl-back a:before {
   background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
   position: absolute;
-  left: 1em;
   top: 0.9em;
   content: "";
   display: inline-block;
+  height: 25px;
+  width: 25px;
 }
 .explorer li.dl-back a:hover:before {
   opacity: 1;
@@ -834,8 +1056,7 @@ max z-index: unknown;
   background-position: -209.5px -108px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
-  height: 25px;
-  width: 25px;
+  left: 1em;
 }
 .explorer .dl-menu {
   position: relative;
@@ -1573,17 +1794,18 @@ body.explorer-open .content-wrapper {
   cursor: pointer;
 }
 .dropdown ul {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
+  -webkit-transition: opacity 0.2s linear;
+  -moz-transition: opacity 0.2s linear;
+  -o-transition: opacity 0.2s linear;
+  transition: opacity 0.2s linear;
   color: white;
   background-color: #49c0c1;
   position: absolute;
   overflow: hidden;
   top: 100%;
-  display: none;
+  left: -2000px;
   z-index: 500;
+  opacity: 0;
 }
 .dropdown ul,
 .dropdown ul ul,
@@ -1621,16 +1843,6 @@ body.explorer-open .content-wrapper {
 .dropdown ul .kbd {
   position: absolute;
   right: 1em;
-}
-.dropdown ul .icon {
-  padding-left: 1em;
-  padding-right: 1em;
-}
-.dropdown ul .icon:before {
-  left: auto;
-  right: 1em;
-}
-.dropdown ul .kbd {
   font-weight: 600;
   font-size: 0.8em;
   color: rgba(0, 0, 0, 0.3);
@@ -1638,6 +1850,8 @@ body.explorer-open .content-wrapper {
 .dropdown:hover ul {
   -webkit-box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.2);
   box-shadow: 0px 3px 3px 0 rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  left: 0;
   display: block;
 }
 .dropdown.match-width ul {
@@ -1700,10 +1914,10 @@ max z-index: 510;
   opacity: 0.5;
 }
 .modal .close {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
+  -webkit-transition: x 0.2s linear;
+  -moz-transition: x 0.2s linear;
+  -o-transition: x 0.2s linear;
+  transition: x 0.2s linear;
   padding-left: 36px;
   padding: 0;
   width: 50px;
@@ -1715,12 +1929,12 @@ max z-index: 510;
 }
 .modal .close:before {
   background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
   position: absolute;
-  left: 1em;
   top: 0.9em;
   content: "";
   display: inline-block;
+  height: 18px;
+  width: 18px;
 }
 .modal .close:hover:before {
   opacity: 1;
@@ -1730,8 +1944,7 @@ max z-index: 510;
   background-position: -234px -107.5px;
   background-repeat: no-repeat;
   background-size: 500px 500px;
-  height: 18px;
-  width: 18px;
+  left: 1em;
 }
 .modal .close:before {
   padding: 0;
@@ -1894,51 +2107,24 @@ input[type=checkbox] {
   -webkit-appearance: checkbox;
   width: auto;
 }
-input[type=checkbox] {
-  -webkit-transition: all 0.2s linear;
-  -moz-transition: all 0.2s linear;
-  -o-transition: all 0.2s linear;
-  transition: all 0.2s linear;
-  padding-left: 36px;
-}
 input[type=checkbox]:before {
-  background-image: url(/assets/images/sprites.png);
-  opacity: 0.5;
+  text-align: center;
   position: absolute;
-  left: 1em;
-  top: 0.9em;
-  content: "";
-  display: inline-block;
-}
-input[type=checkbox]:hover:before {
-  opacity: 1;
-}
-input[type=checkbox]:before {
-  background-image: url(/assets/images/sprites.png);
-  background-position: 0 -169.5px;
-  background-repeat: no-repeat;
-  background-size: 500px 500px;
-  height: 18px;
-  width: 18px;
-}
-input[type=checkbox]:before {
-  opacity: 1;
-  left: 0;
   top: 0;
   cursor: pointer;
   display: block;
+  content: "";
   width: 20px;
   height: 20px;
   background-color: white;
   border: 1px solid #e6e6e6;
 }
-/*i
-input[type=checkbox]:checked:before{
-    border:0px;
-    content:"\2714";
-    color:white;
-    background-color:@color-teal;
-}*/
+input:checked:before {
+  background-image: url(/assets/images/sprites.png);
+  background-position: 2.5px -166px;
+  background-repeat: no-repeat;
+  background-size: 500px 500px;
+}
 input[type=submit],
 input[type=reset],
 a.button,

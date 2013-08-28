@@ -1,73 +1,38 @@
-.icon-config(){
-    .transition(all 0.2s linear);
-
+.icon.explore{
+    .icon-left(25px, 25px, 0px, 216px, 1);
+}
+.icon.snippets{
+    .icon-left(25px, 25px, 78px, 216px, 1);
+}
+.icon.folder{
+    .icon-left(25px, 25px, 148px, 216px, 1);
+}
+.icon.new{
+    .icon-left(25px, 25px, 204px, 202px, 1);
+    
     &:before{
-        background-image:url(/assets/images/sprites.png);
-        opacity:0.5;
-        position:absolute;
-        left:1em;
-        top:0.9em;
-        content:"";
-        display:inline-block;
-    }
-    &:hover:before{
-        opacity:1;
+        .border-radius(100%);
+        background-color:@color-teal;
     }
 }
-
-.icon-set(@width:25px; @height:25px; @x:0; @y:0; @magnification:2){
-    padding-left:@width * 2;
-
-    &:before{
-        .sprite(@x, @y, @magnification);
-        height:@height;
-        width:@width;
-    }   
+.icon.iconright.arrow-up{
+    .icon-right(18px, 12px, 270px, 215px, 1);
 }
-
-/* These get used as classes in HTML */
-.icon{
-    .icon-config();
-
-    &.explore{
-        .icon-set(25px, 25px, 0px, 216px, 1);
-    }
-    &.snippets{
-        .icon-set(25px, 25px, 78px, 216px, 1);
-    }
-    &.folder{
-        .icon-set(25px, 25px, 148px, 216px, 1);
-    }
-    &.new{
-        .icon-set(25px, 25px, 204px, 202px, 1);
-        
-        &:before{
-            .border-radius(100%);
-            background-color:@color-teal;
-        }
-    }
-    &.arrow-up{
-        .icon-set(18px, 12px, 270px, 215px, 1);
-    }
-    &.checked{
-        .icon-set(18px, 18px, 0, 339px, 1);
-    }
+.icon.arrow-up{
+    .icon-left(18px, 12px, 270px, 215px, 1);
 }
-
-/* These get used as mixins */
-.icon-checked(){
-    .icon-config();
-    .icon-set(18px, 18px, 0, 339px, 1);
+.icon.arrow-right{
+    .icon-left(21px, 25px, 377px, 216px, 1)
 }
-.icon-folder(){
-    .icon-config();
-    .icon-set(25px, 25px, 148px, 216px, 1)
+.icon.arrow-right{
+    .icon-right(21px, 25px, 377px, 216px, 1)
 }
-.icon-arrow-left(){
-    .icon-config();
-    .icon-set(25px, 25px, 419px, 216px, 1)
+.icon.arrow-left{
+    .icon-left(25px, 25px, 419px, 216px, 1)
 }
-.icon-arrow-right(){
-    .icon-config();
-    .icon-set(21px, 25px, 377px, 216px, 1)
+.icon.checked{
+    .icon-left(18px, 18px, 0, 339px, 1);
+}
+.icon.iconright.checked-white{
+    .icon-right(18px, 18px, 525px, 216px, 1);
 }

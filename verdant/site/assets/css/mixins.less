@@ -54,6 +54,54 @@
     }
 }
 
+.icon-config(@width:25px; @height:25px){
+    .transition(x 0.2s linear);
+
+    &:before{
+        background-image:url(/assets/images/sprites.png);
+        position:absolute;
+        top:0.9em;
+        content:"";
+        display:inline-block;
+        height:@height;
+        width:@width;
+    }
+    &:hover:before{
+        opacity:1;
+    }
+}
+
+/* Iconset defined twice to act as guards */
+.icon-set(left; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
+    .icon-config(@width, @height);
+
+    padding-left:@width * 2;
+
+    &:before{
+        .sprite(@x, @y, @magnification);
+        left:1em;
+    }
+}
+.icon-set(right; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
+    .icon-config(@width, @height);
+
+    padding-right:@width * 2;
+
+    &:before{
+        .sprite(@x, @y, @magnification);
+        right:1em;
+        left:initial;
+    }
+}
+
+.icon-left(@width:25px; @height:25px; @x:0; @y:0; @magnification:2){
+    .icon-set(left, @width, @height, @x, @y, @magnification);
+}
+
+.icon-right(@width:25px; @height:25px; @x:0; @y:0; @magnification:2){
+    .icon-set(right, @width, @height, @x, @y, @magnification);
+}
+
 .sprite(@x:0; @y:0; @magnification:2){
     background-image: url(/assets/images/sprites.png);
     background-position: -@x/(2/@magnification) -@y/(2/@magnification);
