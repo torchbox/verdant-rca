@@ -20,8 +20,8 @@ fieldset{
     border-width:1px 0 0 0;
     position:relative;
 
-    &:hover{
-        background-color:@color-fieldset-hover;
+    &.focused{
+        border-color: darken(@color-input-focus, 40%);
     }
 }
 
@@ -76,6 +76,7 @@ label{
     font-weight:300;
     display:block;
     padding:0 0 0.5em 0;
+    line-height:1em;
 
     .checkbox &,
     .radio &{
@@ -89,13 +90,16 @@ input, textarea, select{
     font-family:Open Sans,Arial,sans-serif;
     width:100%;
     border:1px dashed @color-input-border;
-    padding:15px 20px;
+    padding:1.2em;
     background-color:white;
     -webkit-appearance: none;
     color:@color-text-input;
 
+    &:hover{
+        background-color:@color-fieldset-hover;
+    }
     &:focus{
-        border-color: @color-input-border-focus;
+        border-color: darken(@color-input-focus, 40%);
         outline:none;
         background-color:@color-input-focus;
     }
@@ -158,23 +162,29 @@ input[type=submit], input[type=reset], a.button, input.button, button{
 .help, .error-message{
     font-size:0.85em;
     font-weight:300;
-    clear:both;
-}
-
-p.help{
-    margin:0;
 }
 p.error-message{
     margin:0;
 }
 .help{
-    color:@color-text-help;
+    .transition(opacity 0.2s ease);
+    background-color:darken(@color-input-focus, 10%);
+    opacity:0;
+    padding:1.4em 1.2em;
+    margin: 2em 0 0 0;
 }
+
+.field.focused + .help{
+    opacity:1;
+}
+
 .error input, .error textarea, .error select{
     border-color:@color-red;
+    background-color:lighten(@color-red, 45%);
 }
 .error-message{
     color:@color-red;
+    clear:both;
 }
 
 /* field sizing */
@@ -208,9 +218,21 @@ li.inline .field{
     &.col12{clear:none;} 
 }
 
+li.inline .field .help{
+
+}
+
 /* Special full-width, one-off fields i.e a single text or textarea input */
 ul.full{
     margin:-1.5em 0; /* see fieldset padding */
+
+    li{
+        padding:0;
+    }
+
+    .field{
+        padding:0;
+    }
 
     label{
         .visuallyhidden();
@@ -219,10 +241,17 @@ ul.full{
         .border-radius(0px);
         .push-padding(0.5);
         .pull-padding(0.5);
+        border:0;
+    }
+    input{
         padding-top:2em;
         padding-bottom:2em;
-        border:0;
-        border-bottom:1px solid lighten(@color-grey, 55%);
+        .pull-padding(2.5);
+    }
+    textarea{
+        padding-top:2em;
+        padding-bottom:2em;
+        .pull-padding(2.5);
     }
 
     .title input,
@@ -230,9 +259,27 @@ ul.full{
         font-size:2.2em;
     }
 
-    .help, .error-message{
-        .push(0.5);
+    .help{
+        .column(2.5);
+        -webkit-border-radius: 0px 0px 0px 3px;
+        border-radius: 0px 0px 0px 3px;
+        padding:1em;
+        margin:0;
+        position:absolute;
+        right:0;
+        top:0;
     }
+
+    .error .help{
+        background-color:lighten(@color-red, 40%);
+    }
+
+    .error-message{
+        .push(0.5);
+        padding-bottom:1em;
+    }
+
+    .error,
     .error input,
     .error textarea{
         background-color:@color-input-error-bg;

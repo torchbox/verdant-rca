@@ -514,7 +514,6 @@ a {
     padding-left: 20px;
   }
   #nav-toggle:before {
-    background-image: url(/assets/images/sprites.png);
     position: absolute;
     top: 0.9em;
     content: "";
@@ -588,7 +587,6 @@ a {
   padding-left: 50px;
 }
 .icon.explore:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -614,7 +612,6 @@ a {
   padding-left: 50px;
 }
 .icon.snippets:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -640,7 +637,6 @@ a {
   padding-left: 50px;
 }
 .icon.folder:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -666,7 +662,6 @@ a {
   padding-left: 50px;
 }
 .icon.new:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -697,7 +692,6 @@ a {
   padding-right: 36px;
 }
 .icon.iconright.arrow-up:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -724,7 +718,6 @@ a {
   padding-left: 36px;
 }
 .icon.arrow-up:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -750,7 +743,6 @@ a {
   padding-left: 42px;
 }
 .icon.arrow-right:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -776,7 +768,6 @@ a {
   padding-right: 42px;
 }
 .icon.arrow-right:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -803,7 +794,6 @@ a {
   padding-left: 50px;
 }
 .icon.arrow-left:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -829,7 +819,6 @@ a {
   padding-left: 36px;
 }
 .icon.checked:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -855,7 +844,6 @@ a {
   padding-right: 36px;
 }
 .icon.iconright.checked-white:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -938,7 +926,6 @@ max z-index: unknown;
   padding-left: 50px;
 }
 .explorer a:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -955,6 +942,9 @@ max z-index: unknown;
   background-repeat: no-repeat;
   background-size: 500px 500px;
   left: 1em;
+}
+.explorer a:before {
+  opacity: 0.5;
 }
 .explorer a:hover {
   background: #49c0c1;
@@ -984,7 +974,6 @@ max z-index: unknown;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 .explorer .children:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -1003,7 +992,6 @@ max z-index: unknown;
   left: 1em;
 }
 .explorer .children:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -1040,7 +1028,6 @@ max z-index: unknown;
   padding-left: 50px;
 }
 .explorer li.dl-back a:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -1928,7 +1915,6 @@ max z-index: 510;
   text-indent: -200px;
 }
 .modal .close:before {
-  background-image: url(/assets/images/sprites.png);
   position: absolute;
   top: 0.9em;
   content: "";
@@ -2024,8 +2010,8 @@ fieldset {
   border-width: 1px 0 0 0;
   position: relative;
 }
-fieldset:hover {
-  background-color: #fafafa;
+fieldset.focused {
+  border-color: #60c8c9;
 }
 legend {
   -webkit-border-radius: 2px;
@@ -2071,6 +2057,7 @@ label {
   font-weight: 300;
   display: block;
   padding: 0 0 0.5em 0;
+  line-height: 1em;
 }
 .checkbox label,
 .radio label {
@@ -2087,15 +2074,20 @@ select {
   font-family: Open Sans, Arial, sans-serif;
   width: 100%;
   border: 1px dashed #cccccc;
-  padding: 15px 20px;
+  padding: 1.2em;
   background-color: white;
   -webkit-appearance: none;
   color: #222222;
 }
+input:hover,
+textarea:hover,
+select:hover {
+  background-color: #fafafa;
+}
 input:focus,
 textarea:focus,
 select:focus {
-  border-color: #8c8c8c;
+  border-color: #60c8c9;
   outline: none;
   background-color: #f8fdfd;
 }
@@ -2180,24 +2172,32 @@ button.no:hover {
 .error-message {
   font-size: 0.85em;
   font-weight: 300;
-  clear: both;
-}
-p.help {
-  margin: 0;
 }
 p.error-message {
   margin: 0;
 }
 .help {
-  color: #b3b3b3;
+  -webkit-transition: opacity 0.2s ease;
+  -moz-transition: opacity 0.2s ease;
+  -o-transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease;
+  background-color: #d2eff0;
+  opacity: 0;
+  padding: 1.4em 1.2em;
+  margin: 2em 0 0 0;
+}
+.field.focused + .help {
+  opacity: 1;
 }
 .error input,
 .error textarea,
 .error select {
   border-color: #ff0000;
+  background-color: #ffe5e5;
 }
 .error-message {
   color: #ff0000;
+  clear: both;
 }
 /* field sizing */
 .field.col1,
@@ -2234,6 +2234,12 @@ ul.full {
   /* see fieldset padding */
 
 }
+ul.full li {
+  padding: 0;
+}
+ul.full .field {
+  padding: 0;
+}
 ul.full label {
   border: 0;
   clip: rect(0 0 0 0);
@@ -2259,19 +2265,50 @@ ul.full textarea {
   border-radius: 0px;
   padding-left: 4.166666666666666%;
   padding-right: 4.166666666666666%;
+  border: 0;
+}
+ul.full input {
   padding-top: 2em;
   padding-bottom: 2em;
-  border: 0;
-  border-bottom: 1px solid #f2f2f2;
+  padding-right: 20.833333333333336%;
+}
+ul.full textarea {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  padding-right: 20.833333333333336%;
 }
 ul.full .title input,
 ul.full .title textarea {
   font-size: 2.2em;
 }
-ul.full .help,
+ul.full .help {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline;
+  float: left;
+  width: 20.833333333333336%;
+  padding-right: 1.5%;
+  padding-left: 1.5%;
+  *width: 16.666666666666668%;
+  *padding-right: 1.4583333333333333%;
+  *padding-left: 1.4583333333333333%;
+  -webkit-border-radius: 0px 0px 0px 3px;
+  border-radius: 0px 0px 0px 3px;
+  padding: 1em;
+  margin: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+ul.full .error .help {
+  background-color: #ffcccc;
+}
 ul.full .error-message {
   margin-left: 4.166666666666666%;
+  padding-bottom: 1em;
 }
+ul.full .error,
 ul.full .error input,
 ul.full .error textarea {
   background-color: #fff0f0;
