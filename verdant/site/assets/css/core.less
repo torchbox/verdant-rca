@@ -1,17 +1,11 @@
----
-
----
-
 /* 
 min z-index: 1;
 max z-index: 5;
 */
 
-
-
-@import "assets/css/variables.less";
-@import "assets/css/mixins.less";
-@import "assets/css/grid.less";
+@import "variables.less";
+@import "mixins.less";
+@import "grid.less";
 
 body{
     font-family:Open Sans,Arial,sans-serif;
@@ -25,6 +19,7 @@ body{
 h1,h2,h3,h4,h5,h6{
     font-weight:normal;
 }
+
 
 a{
     color:@color-link;
@@ -151,12 +146,22 @@ body.nav-open .content-wrapper{
 
 
 header{
-    .row();
     .push-padding(0.5);
+    .pull-padding(0.5);
     padding-top:1em;
     padding-bottom:1em;
     background-color:@color-header-bg;
-    .box-shadow(0 1px 3px 0 rgba(0,0,0,0.1))
+    .box-shadow(0 1px 3px 0 rgba(0,0,0,0.1));
+
+    .row{
+        padding-top:1em;
+    }
+    h2{
+        margin:0;
+    }
+    .right{
+        text-align:right;
+    }
 }
 
 
@@ -187,12 +192,6 @@ footer{
             color:white;
             padding-left:1em;
             padding-right:1em;
-
-            &:before{
-                left:auto;
-                right:1em;
-            }
-
         }
     }   
 }
@@ -248,7 +247,7 @@ a {
     }
 
     .nav-main a{
-        text-indent:15px;
+        text-indent:25px;
     }
 
     #nav-toggle{
@@ -258,8 +257,7 @@ a {
         padding:0.5em;
         text-indent:-200px;
         font-size:0.9em;
-        .icon-config();
-        .icon-set(10px, 10px, 364px, 216px, 0.6);
+        .icon-left(10px, 12px, 273px, 215px, 0.6);
         
         &:hover{
             color:white;
@@ -285,7 +283,7 @@ a {
             width:240px;
 
             a{
-                text-indent:0;
+                text-indent:15px;
             }
         }
     }
@@ -293,7 +291,7 @@ a {
         left:70px;
 
         &:before{
-            .sprite(419px, 215px, 0.6);
+            .sprite(305px, 215px, 0.6);
         }
         &:after{
             text-indent: 0;
@@ -312,9 +310,9 @@ a {
     }
 }
 
-@import "assets/css/components/icons.less";
-@import "assets/css/components/explorer.less";
-@import "assets/css/components/dropdowns.less";
-@import "assets/css/components/modals.less";
-@import "assets/css/components/forms.less";
-@import "assets/css/components/listing.less";
+@import "components/icons.less";
+@import "components/explorer.less";
+@import "components/dropdowns.less";
+@import "components/modals.less";
+@import "components/forms.less";
+@import "components/listing.less";
