@@ -273,6 +273,15 @@
   filter: ~"alpha(opacity=@{opacity})";
 }
 
+/**
+ * Border box
+ */
+.border-box {
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 /* sidebar advert */
 .mixin-sidebar-advert(@color, @fade) {
     background-color: @color; /* fallback for ie8 */

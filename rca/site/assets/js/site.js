@@ -44,7 +44,7 @@ $(document).ready(function(){
 		on: function(){
 		}, // called each time the query is activated
 		off: function(){
-			$('nav').insertAfter('#site-name');
+			$('nav').insertBefore('.search-form');
 		} // called each time the query is deactivated
 	});
 
