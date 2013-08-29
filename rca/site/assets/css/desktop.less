@@ -26,15 +26,19 @@ body {
 }
 
 header {
-    width: 100%;
     height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
     background-color: @color-white;
     position: fixed; /* fixed for desktop and desktop-large version */
     top: 0;
     right: 50%; /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
-    width: 90%;
+    width: 90%; /* matches wrapper */
     margin-right: -45%;
-    a p {
+    a.site-name {
+        display: block;
+        width: 328px;
+        .clearfix();
+    }
+    a.site-name p {
         background-image: url('/assets/images/logo-header.png');
         width: 328px;
         height: 140px;
@@ -51,14 +55,21 @@ header {
 /* At the desktop width the nav shrinks down to allow room for
 the search to appear next to it above the content */
 nav {
-    .column(9, @grid-gutter-width, 12);
-    .row();
+    //.column(9, @grid-gutter-width, 12);
+    //.row();
+    width: 80%;
+    display: block;
+    float: left;
 }
 
 
 /* Search moves alongside the menu above the content */
 form.search {
-    .column(2, @grid-gutter-width, 12);
+    //.column(2, @grid-gutter-width, 12);
+    display: block;
+    width: 15%;
+    float: right;
+    margin-top: 20px;
 }
 
 
@@ -71,9 +82,17 @@ aside {
 }
 
 .content,
-footer {
+footer,
+.nav-wrapper {
 	padding: 0;
 	width: 100%; /*no space for related content - it is now collapsed */
+}
+
+.nav-wrapper {
+    /* mimics the style of the content below to make sure the search and navigation
+    fill the correct width at the desktop size */
+    .clearfix();
+    max-width: 960px;
 }
 
 

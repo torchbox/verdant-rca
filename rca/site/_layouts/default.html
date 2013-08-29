@@ -11,12 +11,14 @@
         <meta name="viewport" content="width=device-width">
 
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
         <link rel="stylesheet" href="assets/css/normalize.css">
-        <link rel="stylesheet" href="assets/css/core.css">
         <link rel="stylesheet" href="assets/css/dlmenu.css">
+        <link href="assets/css/vendor/jquery.bxslider.css" rel="stylesheet" />
+        <link rel="stylesheet" href="assets/css/core.css">
         <link href="assets/css/desktop.css" rel="stylesheet" media="screen and (min-width:600px)" />
         <link href="assets/css/desktop-large.css" rel="stylesheet" media="screen and (min-width:1280px)" />
+        
+
         <!--[if lt IE 9]>
         <link href="assets/css/desktop.css"" rel="stylesheet" />
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
@@ -35,10 +37,11 @@
         <![endif]-->
     <div class="header-wrapper">
         <header class="page-header">
-                <a href="" id="site-name">
+                <a href="" class="site-name">
                     <p>Royal College of Art</p>
                 </a>
-                <nav class="clearfix">
+                <div class="nav-wrapper">
+                <nav>
                     <h2 class="dl-trigger">Menu</h2>
                     <ul class="menu dl-menu">
                         <li class="selected">
@@ -209,6 +212,7 @@
                     <input type="text" placeholder="SEARCH" />
                     <input type="submit" value="search" />
                 </form>
+                </div>
                 <div class="showsearch">
                     Show search
                 </div>
@@ -226,7 +230,7 @@
             {{ content }}
             </div>
             <aside>
-                <div class="related sidebar-links">
+                <!-- <div class="related sidebar-links">
                     <h2>Related links</h2>
                     <ul>
                         <li><a href="">Studying at the RCA</a></li>
@@ -264,12 +268,43 @@
                             <span>public</span>
                         </li>
                     </ul>
-                </div>
-                <div class="sidebar-advert">
+                </div> -->
+
+                <!-- advert -->
+                <!-- <div class="sidebar-advert">
                     <a href="">
                     <h2>Apply to Study</h2>
                     <p>at the Royal College of Art</p>
                     </a>
+                </div> -->
+
+                <!-- related content -->
+                <div class="related-content-item">
+                    <a href="">
+                        <figure>
+                            <img src="http://placekitten.com/300/200" alt="" />
+                            <figcaption>A new building for Battersea</figcaption>
+                        </figure>
+                    </a>
+                    <a href="" class="index-page-link">News &gt;</a>
+                </div>
+                <div class="related-content-item">
+                    <a href="">
+                        <figure>
+                            <img src="http://placekitten.com/300/200" alt="" />
+                            <figcaption>The Eglu</figcaption>
+                        </figure>
+                    </a>
+                    <a href="" class="index-page-link">News &gt;</a>
+                </div>
+                <div class="related-content-item">
+                    <a href="">
+                        <figure>
+                            <img src="http://placekitten.com/300/200" alt="" />
+                            <figcaption>Talking interiors</figcaption>
+                        </figure>
+                    </a>
+                    <a href="" class="index-page-link">News &gt;</a>
                 </div>
             </aside>
         </div>
@@ -423,6 +458,9 @@
         <script src="assets/js/vendor/harvey.js"></script>
         <script src="assets/js/vendor/jquery.dlmenu.js"></script>
         <script src="assets/js/vendor/jquery.hoverintent.min.js"></script>
+        <script src="assets/js/vendor/fluidvids.js"></script>
+        <script src="assets/js/vendor/jquery.bxslider.min.js"></script>
+
         <script src="assets/js/site.js"></script>
         <script src="assets/js/nav.js"></script>
         <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>

@@ -131,15 +131,18 @@ makes sure that doesn't happen. */
 .header-wrapper {
     width: 100%;
     background-color: @color-white;
-    //background-color: red;
     height: @header-height-mobile; /* match height of mobile version of logo + margin */
+    z-index: 199;
 }
 
 header {
-    //background-color: pink;
     z-index: 200;
     position: relative; /* to allow alignment of showsearch and showmenu divs */
-    a p { /* logo */
+    a.site-name {
+        display: block;
+        width: 98px;
+    }
+    a.site-name p { /* logo */
         text-indent: -9000px;
         background-image: url('/assets/images/logo-header-mobile.png');
         background-repeat: no-repeat;
@@ -168,6 +171,8 @@ header {
         border-bottom: 1px solid fade(@color-black, 40%);
         background-color: @color-white; /* fallback for ie 8 */
         background-color: fade(@color-white, 85%);
+        .border-box();
+        width: 100%;
     }
     input[type="submit"] {
         display: none;
@@ -318,7 +323,6 @@ nav {
  */
 
 .showsearch {
-    //float: left;
     text-indent: -9999px;
     border-left: 1px solid @color-light-grey;
     position: absolute;
@@ -335,7 +339,6 @@ nav {
 }
 
 .showmenu {
-    //float: left;
     text-indent: -9999px;
     border-left: 1px solid @color-light-grey;
     border-right: 1px solid @color-light-grey;
@@ -354,8 +357,6 @@ nav {
 }
 
 
-//background: url('imgs/sprites.png') no-repeat -82px -300px; width: 44px; height: 44px;
-
 nav {
     display: none;
 }
@@ -372,6 +373,69 @@ form.search.expanded {
     display: block;
 }
 
+/**
+ *$Common grid divisions
+*/
+.eight {
+    .column(8, @grid-gutter-width/2, 12);
+}
+
+.four {
+    .column(4, @grid-gutter-width/2, 12);
+    border-bottom: 1px solid @color-black;
+    background-color: grey;
+}
+
+.row {
+    .row();
+}
+
+.row-flush {
+    .row-flush();
+}
+
+/**
+ *$Carousel
+ */
+
+.bx-wrapper {
+    .bx-next {
+        background-color: @color-white;
+        background-color: fade(@color-white, 80%);
+        background-image: none;
+        &:after{
+        content: " ";
+            .sprite-load(0px, -546px, 67px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 40px;
+        }
+    }
+    .bx-prev {
+        background-color: @color-white;
+        background-color: fade(@color-white, 80%);
+        background-image: none;
+        &:after{
+        content: " ";
+            .sprite-load(-139px, -546px, 67px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 30px;
+        }
+    }
+    /* selectors necessary to override the bxslider theme */
+   .bx-controls-direction a {
+        width:137px; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
+        height:136px;
+        z-index: 2; /* over slide but under header */
+    }
+
+    .bx-viewport {
+        border: none;
+        box-shadow: none;
+        left: 0;
+    }
+}
 
 /**
  * $Sidebar elements
@@ -487,6 +551,31 @@ form.search.expanded {
             color: @color-medium-grey;
  		}
  	}
+}
+
+/**
+ * $Related content
+ */
+
+figure {
+    margin: 0;
+}
+
+div.related-content-item {
+    margin: 0 0 30px 0;
+    overflow: hidden;
+    a {
+        .clearfix();
+    }
+    img {
+        height: 150px;
+    }
+    figcaption {
+        .h7();
+    }
+    a.index-page-link {
+        .module-title();
+    }
 }
 
 

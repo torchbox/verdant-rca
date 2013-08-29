@@ -29,17 +29,30 @@ nav {
     .row();
 }
 
+/* the nav-wrapper expands to the full width of the wrapper because the search is now
+above the aside */
+.nav-wrapper {
+    max-width: 1300px;
+}
+
 /* search sits above the aside at the large desktop size. */
 form.search {
-    .column(2.3); /* this matches the style for aside */
+    width: 15%; /* this matches the style for aside */
+    margin-left: 3%;
+    float: left;
+    margin-top: 0;
     input[type="text"] {
-    	width: 164px; /* adjusted by eye to match width of related content below */
+    	//width: 164px; /* adjusted by eye to match width of related content below */
+        //width: 100%;
     }
 }
 
 aside {
 	display: block; /* at large desktop size the aside is always visible */
-	.column(2.3);
+    width: 15%;
+    margin-left: 3%;
+    overflow: hidden;
+    float: left;
     margin-top: @header-height;  /* space for fixed header */
 }
 
