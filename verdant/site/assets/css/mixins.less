@@ -54,10 +54,12 @@
     }
 }
 
-.icon-config(@width:25px; @height:25px){
-    .transition(x 0.2s linear);
+/* Iconset defined twice to act as guards */
+.icon-set(left; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
+    .transition(all 0.2s linear);
 
     &:before{
+        .transition(opacity 0.3s ease);
         position:absolute;
         top:0;
         bottom:0;
@@ -71,11 +73,6 @@
     &:hover:before{
         opacity:1;
     }
-}
-
-/* Iconset defined twice to act as guards */
-.icon-set(left; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
-    .icon-config(@width, @height);
 
     padding-left:@width + 10px;
 
@@ -84,12 +81,32 @@
         left:1em;
     }
 }
+
 .icon-set(right; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
-    .icon-config(@width, @height);
+    .transition(all 0.2s linear);
+    
+    &:before{
+        display:none;
+    }
+    &:after{
+        .transition(opacity 0.3s ease);
+        position:absolute;
+        top:0;
+        bottom:0;
+        margin-top:auto;
+        margin-bottom:auto;
+        content:"";
+        display:inline-block;
+        height:@height;
+        width:@width;
+    }
+    &:hover:after{
+        opacity:1;
+    }
 
     padding-right:@width + 10px;
 
-    &:before{
+    &:after{
         .sprite(@x, @y, @magnification);
         right:1em;
         left:initial;

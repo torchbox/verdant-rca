@@ -37,8 +37,8 @@ legend{
 }
 
 fieldset .fields, fieldset h2{
-    .push(0.5);
-    .pull(0.5);
+    .push(@grid-content-indent);
+    .pull(@grid-content-indent);
 }
 .objects .fields, .objects h2{
     margin-left:0;
@@ -48,8 +48,8 @@ fieldset .fields, fieldset h2{
     margin-left:0;
 
     > li{
-        .push-padding(0.5);
-        .pull-padding(0.5);
+        .push-padding(@grid-content-indent);
+        .pull-padding(@grid-content-indent);
         border-top: 1px dashed @color-input-border;
 
         &:first-child{
@@ -278,8 +278,8 @@ ul.full{
     }
     input, textarea{
         .border-radius(0px);
-        .push-padding(0.5);
-        .pull-padding(0.5);
+        .push-padding(@grid-content-indent);
+        .pull-padding(@grid-content-indent);
         border:0;
     }
     input{
@@ -314,8 +314,8 @@ ul.full{
     }
 
     .error-message{
-        .push(0.5);
-        .pull(0.5);
+        .push(@grid-content-indent);
+        .pull(@grid-content-indent);
         padding-bottom:1em;
     }
 
