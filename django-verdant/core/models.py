@@ -11,10 +11,19 @@ class Site(models.Model):
     root_page = models.ForeignKey('Page')
 
     def natural_key(self):
-        return (self.name,)
+        return (self.hostname,)
+
+    def __unicode__(self):
+        if self.hostname == '*':
+            return "[Default site]"
+        else:
+            return self.hostname
 
 
 class Page(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subpages')
+
+    def __unicode__(self):
+        return self.title
