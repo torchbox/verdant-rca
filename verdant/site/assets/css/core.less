@@ -122,7 +122,10 @@ kbd{
 }
     .content{
         .row();
+
         padding-bottom:100px;
+        .push(@grid-content-indent);
+        .pull(@grid-content-indent);
     }
 
 /* positioning and setup for sliding items */
@@ -146,8 +149,7 @@ body.nav-open .content-wrapper{
 
 
 header{
-    .push-padding(@grid-content-indent);
-    .pull-padding(@grid-content-indent);
+    .full-width-padded();
     padding-top:1em;
     padding-bottom:1em;
     background-color:@color-header-bg;
@@ -309,6 +311,8 @@ a {
         margin-left:40px;
     }
 }
+
+/* thing */
 
 @import "components/icons.less";
 @import "components/explorer.less";

@@ -25,6 +25,10 @@ fieldset{
     }
 }
 
+.full-width fieldset{
+    .full-width();
+}
+
 legend{
     .border-radius(2px);
     color: @color-text-grey;
@@ -36,7 +40,7 @@ legend{
     font-size:0.7em;
 }
 
-fieldset .fields, fieldset h2{
+fieldset .fields{
     .push(@grid-content-indent);
     .pull(@grid-content-indent);
 }

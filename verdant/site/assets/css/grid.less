@@ -16,7 +16,7 @@
 	.border-box();
 
 	display:block;
-	max-width: @grid-max-width;
+	//max-width: @grid-max-width; NO MAX WIDTH
 	margin-right: auto;
 	margin-left: auto;
 	padding-right: @padding;
@@ -24,8 +24,8 @@
 }
 
 .row-flush(){
-	margin-left:-@grid-gutter-width / 2;
-	margin-right:-@grid-gutter-width / 2;
+	margin-left:-@padding;
+	margin-right:-@padding;
 }
 
 /* Our column container */
@@ -58,6 +58,16 @@
 }
 .pull-padding(@offset:1, @grid-columns:@grid-columns){
 	padding-right: 100%*(@offset / @grid-columns);
+}
+
+.full-width(){
+    .push(-@grid-content-indent*1.2);
+    .pull(-@grid-content-indent*1.2);
+}
+.full-width-padded(){
+    .full-width();
+    .push-padding(@grid-content-indent*1.2);
+    .pull-padding(@grid-content-indent*1.2);
 }
 
 
