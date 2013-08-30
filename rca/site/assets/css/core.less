@@ -87,6 +87,16 @@ ul ul, ol ol {
     font-style: normal;
  }
 
+/* More places that list style gets reset - grouping here for clarity */
+ .meta-data ul li:before{
+    content: '';
+    margin: 0;
+ }
+
+ dd {
+    margin: 0; /* override normalize */
+ }
+
 /**
  * $Structure
  */
@@ -377,13 +387,11 @@ form.search.expanded {
  *$Common grid divisions
 */
 .eight {
-    .column(8, @grid-gutter-width/2, 12);
+    .column(8, 0, 12);
 }
 
 .four {
-    .column(4, @grid-gutter-width/2, 12);
-    border-bottom: 1px solid @color-black;
-    background-color: grey;
+    .column(4, 0, 12);
 }
 
 .row {
@@ -425,8 +433,8 @@ form.search.expanded {
     }
     /* selectors necessary to override the bxslider theme */
    .bx-controls-direction a {
-        width:137px; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height:136px;
+        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
+        height: @carousel-control-height;
         z-index: 2; /* over slide but under header */
     }
 
@@ -434,6 +442,58 @@ form.search.expanded {
         border: none;
         box-shadow: none;
         left: 0;
+    }
+}
+
+.bx-wrapper-fullscreen {
+    position: fixed;
+    width: 1300px;
+    //height: 100%;
+    top: 0;
+    //right: 50%; /* equivalent of left and right margin auto for position fixed elements */
+    //margin-right: -650px;
+    left: 7%;
+    z-index: 300;
+}
+
+div.overlay {
+    background-color: fade(@color-black, 80%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 299;
+}
+
+/**
+ * $Twitter block
+ */
+
+.twitter-feed {
+    .row-flush();
+    div {
+        .column(4, @grid-gutter-width / 2, 12);
+        &.full-width {
+            .column(12, @grid-gutter-width / 2, 12);
+        }
+    }
+    h2 {
+        .h7;
+        display: inline;
+    }
+    h3 {
+        .a2;
+    }
+    p {
+        .bc4;
+        margin: 0;
+    }
+    .bird {
+        display: block;
+        float: right;
+        text-align: -9999px;
+        //.sprite-load();
     }
 }
 
@@ -693,4 +753,18 @@ div.related-content-item {
         }
     }
  }
+
+ /**
+  * $Share
+  */
+
+.share {
+    .sprite-load(-164px, -392px, 45px, 48px);
+    text-indent: -9000px;
+    cursor: pointer;
+    &:hover{
+
+    }
+}
+//background: url('imgs/sprites.png') no-repeat -164px -392px; width: 45px; height: 48px;
  
