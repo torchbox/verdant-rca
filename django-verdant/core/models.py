@@ -40,6 +40,16 @@ class Page(models.Model):
     def __unicode__(self):
         return self.title
 
+    @property
+    def specific(self):
+        """
+            Return this page in its most specific subclassed form.
+        """
+        # the ContentType.objects manager keeps a cache, so this should potentially
+        # avoid a database lookup over doing self.content_type. I think.
+        content_type = ContentType.objects.get_for_id(self.content_type_id)
+        return content_type.get_object_for_this_type(id=self.id)
+
     def route(self, request, path_components):
         if path_components:
             # request is for a child of this page
@@ -51,7 +61,7 @@ class Page(models.Model):
             except Page.DoesNotExist:
                 raise Http404
 
-            return subpage.route(request, remaining_components)
+            return subpage.specific.route(request, remaining_components)
 
         else:
             # request is for this very page
