@@ -11,7 +11,7 @@ class SiteManager(models.Manager):
 
 
 class Site(models.Model):
-    hostname = models.CharField(max_length=255, unique=True)
+    hostname = models.CharField(max_length=255, unique=True, db_index=True)
     root_page = models.ForeignKey('Page')
 
     def natural_key(self):
@@ -76,3 +76,9 @@ class Page(models.Model):
         return render(request, self.template, {
             'self': self
         })
+
+    class Meta:
+        unique_together = ("parent", "slug")
+        index_together = [
+            ["parent", "slug"],
+        ]
