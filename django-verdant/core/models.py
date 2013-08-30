@@ -1,5 +1,6 @@
 from django.db import models
 from django.http import HttpResponse, Http404
+from django.shortcuts import render
 
 
 class SiteManager(models.Manager):
@@ -46,5 +47,12 @@ class Page(models.Model):
             # request is for this very page
             return self.serve(request)
 
+    # TODO: metaclass voodoo so that a sensible default template path
+    # (consisting of "LOWERCASED_APP_NAME/LOWERCASED_MODEL_NAME.html")
+    # is defined at the point of subclassing
+    template = "core/page.html"
+
     def serve(self, request):
-        return HttpResponse("<h1>%s</h1>" % self.title)
+        return render(request, self.template, {
+            'self': self
+        })
