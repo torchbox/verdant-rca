@@ -1,4 +1,5 @@
 from django.db import models
+from django.http import HttpResponse, Http404
 
 
 class SiteManager(models.Manager):
@@ -27,3 +28,23 @@ class Page(models.Model):
 
     def __unicode__(self):
         return self.title
+
+    def route(self, request, path_components):
+        if path_components:
+            # request is for a child of this page
+            child_slug = path_components[0]
+            remaining_components = path_components[1:]
+
+            try:
+                subpage = self.subpages.get(slug=child_slug)
+            except Page.DoesNotExist:
+                raise Http404
+
+            return subpage.route(request, remaining_components)
+
+        else:
+            # request is for this very page
+            return self.serve(request)
+
+    def serve(self, request):
+        return HttpResponse("<h1>%s</h1>" % self.title)
