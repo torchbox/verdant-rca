@@ -61,6 +61,8 @@
     font-family: @font-family-benton;
     font-size: @font-size-16;
     line-height: @line-height-13;
+    margin: 0;
+    font-weight: normal;
     @media @media-desktop {
        font-size: @font-size-40;
        line-height: @line-height-1;
@@ -100,6 +102,7 @@
     font-size: @font-size-15;
     line-height: @line-height-3;
     text-transform: none;
+    margin: 0;
 }
 
 .h8 {
@@ -165,7 +168,7 @@
     font-family: @font-family-benton-light;
     font-size: @font-size-12;
     line-height: @line-height-1;
-    font-color: @color-medium-grey;
+    color: @color-medium-grey;
     text-transform: uppercase;
     @media @media-desktop {
         font-size: @font-size-13;
@@ -194,7 +197,9 @@
     font-size: @font-size-12;
     line-height: @line-height-8;
     text-transform: uppercase;
-    font-color: @color-medium-grey;
+    color: @color-medium-grey;
+    font-weight: normal;
+    margin: 0;
 }
 
 .a3 {
@@ -303,6 +308,42 @@
         padding: 0.75em 0.75em 1.5em 0.75em;
         &:hover, &:focus {
             color: @color-white;
+        }
+    }
+}
+
+/* related links and dialogue box */
+.grey-links {
+    color: @color-white;
+    h2 {
+        margin: 0;
+        padding: 0.75em;
+        .t2;
+        background-color: lighten(@color-black, 60%);
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+        background-color: fade(@color-charcoal,90%);
+        &.extra-links {
+            background-color: lighten(@color-black, 60%);
+        }
+    }
+    li {
+        margin: 0;
+        padding: 0 0.75em;
+        .h7;
+        a {
+            padding: 0.5em 0;
+            display: block;
+            color: @color-white;
+            border-bottom: 1px solid @color-light-grey;
+            &:hover {
+                color: @color-pink;
+            }
+        }
+        &.last a {
+            border-bottom: none;
         }
     }
 }

@@ -35,6 +35,7 @@ $(document).ready(function(){
 	showHide('.today');
 	showHideWithSeparateClick('nav', '.showmenu');
 	showHideWithSeparateClick('form.search', '.showsearch');
+	showHideWithSeparateClick('.dialogue', '.share');
 
 	/* mobile rejigging */
 	Harvey.attach('screen and (max-width:599px)', {
@@ -45,7 +46,11 @@ $(document).ready(function(){
 		}, // called each time the query is activated
 		off: function(){
 			$('nav').insertBefore('.search-form');
+			//move navigation back to its proper place for desktop
 		} // called each time the query is deactivated
 	});
 
+	//$('.bx-wrapper').addClass('bx-wrapper-fullscreen');
+	//$('body').append('<div class="overlay">');  
+	//$('.bx-wrapper').insertBefore('.header-wrapper');
 });

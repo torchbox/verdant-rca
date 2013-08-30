@@ -27,7 +27,7 @@ body {
 
 header {
     height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
-    background-color: @color-white;
+    background-color: fade(@color-white, 80%);
     position: fixed; /* fixed for desktop and desktop-large version */
     top: 0;
     right: 50%; /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
@@ -93,6 +93,42 @@ footer,
     fill the correct width at the desktop size */
     .clearfix();
     max-width: 960px;
+}
+
+/**
+ * $Carousel styles for desktop
+ */
+
+.bx-wrapper {
+    .bx-next {
+        //left: 10px;
+        &:after{
+            content: " ";
+            .sprite-load(0px, -546px, 67px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 40px;
+        }
+    }
+
+    .bx-prev {
+        //right: 10px;
+        &:after{
+            content: " ";
+            .sprite-load(-139px, -546px, 67px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 30px;
+        }
+    }
+
+    .bx-controls-direction a {
+        top: 50%;
+        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
+        height: @carousel-control-height;
+        margin-top: ((@carousel-control-height / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
+    }
 }
 
 
