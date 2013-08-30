@@ -143,6 +143,8 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'core',
+
+    'rca',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
