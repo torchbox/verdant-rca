@@ -202,6 +202,17 @@ element.</p>
             </ul>
         </div>
     </div>
+    <div class="col2">
+        <div class="dropdown white">
+            <div class="dropdown-toggle">Open white dropdown with checked values</div>
+            <ul role="menu">
+                <li><a href="#" class="icon iconright checked-white">Delete</a></li>
+                <li><a href="#" class="icon">Do something else a longer title</a></li>
+                <li><a href="#" class="icon iconright checked-white">Preview</a></li>
+                <li><a href="#" class="icon">Something</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
     
@@ -250,9 +261,21 @@ element.</p>
     <thead>
         <tr>
             <th class="bulk"><label for="bulk-select-all"><span>Select all</span><input type="checkbox" id="bulk-select-all"/></label></th>
-            <th class="title orderable"><a href="#">Title</a></th>
-            <th class="type orderable"><a href="#">Type</a></th>
-            <th class="status orderable"><a href="#">Status</a></th>
+            <th class="title"><a href="#" class="icon orderable-up">Title</a></th>
+            <th class="type">
+                <div class="dropdown white match-width">
+                    <a href="#" class="dropdown-toggle icon orderable-down">Type</a> 
+                    <form>
+                        <ul role="menu">
+                            <li><label><input type="radio" name="status" /> Published</label></li>
+                            <li><label><input type="radio" name="status" /> Deleted</label></li>
+                            <li><label><input type="radio" name="status" /> Archived</label></li>
+                            <li><label><input type="radio" name="status" /> Draft</label></li>
+                        </ul>
+                    </form>
+                </div>
+            </th>
+            <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
         </tr>
     </thead>
     <tbody>
