@@ -4,6 +4,8 @@ from django.shortcuts import render
 
 from django.contrib.contenttypes.models import ContentType
 
+from core.util import camelcase_to_underscore
+
 
 class SiteManager(models.Manager):
     def get_by_natural_key(self, hostname):
@@ -24,7 +26,18 @@ class Site(models.Model):
             return self.hostname
 
 
+class PageBase(models.base.ModelBase):
+    """Metaclass for Page"""
+    def __init__(cls, name, bases, dct):
+        super(PageBase, cls).__init__(name, bases, dct)
+
+        # Define a default template path derived from the app name and model name
+        cls.template = "%s/%s.html" % (cls._meta.app_label, camelcase_to_underscore(name))
+
+
 class Page(models.Model):
+    __metaclass__ = PageBase
+
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subpages')
@@ -66,11 +79,6 @@ class Page(models.Model):
         else:
             # request is for this very page
             return self.serve(request)
-
-    # TODO: metaclass voodoo so that a sensible default template path
-    # (consisting of "LOWERCASED_APP_NAME/LOWERCASED_MODEL_NAME.html")
-    # is defined at the point of subclassing
-    template = "core/page.html"
 
     def serve(self, request):
         return render(request, self.template, {
