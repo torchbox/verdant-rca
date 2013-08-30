@@ -88,10 +88,12 @@ ul ul, ol ol {
  }
 
 /* More places that list style gets reset - grouping here for clarity */
- .meta-data ul li:before{
+.meta-data ul li:before,
+.bxslider li:before,
+.dialogue ul li:before {
     content: '';
     margin: 0;
- }
+}
 
  dd {
     margin: 0; /* override normalize */
@@ -124,6 +126,7 @@ aside {
 
 /* grey background bleeding to edge */
 .full-width-footer {
+    margin-top: 32px;
     width: 100%;
     background-color: @color-charcoal;
     color: @color-white;
@@ -140,7 +143,7 @@ footer, we don't want stuff appearing behind the header. This 100% width wrapper
 makes sure that doesn't happen. */
 .header-wrapper {
     width: 100%;
-    background-color: @color-white;
+    //background-color: fade(@color-white, 80%);
     height: @header-height-mobile; /* match height of mobile version of logo + margin */
     z-index: 199;
 }
@@ -411,31 +414,41 @@ form.search.expanded {
         background-color: @color-white;
         background-color: fade(@color-white, 80%);
         background-image: none;
+        right: 0;
         &:after{
         content: " ";
-            .sprite-load(0px, -546px, 67px, 131px);
+            .sprite-load(-181px, -14px, 35px, 66px);
             position: absolute;
             top: 2px;
-            left: 40px;
+            left: 30px;
+        }
+        &:hover {
+            background-color: @color-pink;
         }
     }
     .bx-prev {
         background-color: @color-white;
         background-color: fade(@color-white, 80%);
         background-image: none;
+        left: 0;
         &:after{
         content: " ";
-            .sprite-load(-139px, -546px, 67px, 131px);
+            .sprite-load(-271px, -14px, 35px, 66px);
             position: absolute;
             top: 2px;
-            left: 30px;
+            left: 20px;
+        }
+        &:hover {
+            background-color: @color-pink;
         }
     }
     /* selectors necessary to override the bxslider theme */
    .bx-controls-direction a {
-        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height: @carousel-control-height;
+        width: @carousel-control-width-mobile;
+        height: @carousel-control-height-mobile;
         z-index: 2; /* over slide but under header */
+        top: 100%;
+        margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
     }
 
     .bx-viewport {
@@ -472,6 +485,10 @@ div.overlay {
 
 .twitter-feed {
     .row-flush();
+    padding-top: 16px;
+    margin-top: 32px;
+    border-top: 2px solid @color-light-grey;
+
     div {
         .column(4, @grid-gutter-width / 2, 12);
         &.full-width {
@@ -492,10 +509,44 @@ div.overlay {
     .bird {
         display: block;
         float: right;
-        text-align: -9999px;
+        text-indent: -9999px;
+        background-color:red;
         //.sprite-load();
     }
 }
+
+/**
+ * $Share
+ */
+
+.share-wrapper{
+    margin: 1em 0 1em 1em;
+    position: relative;
+}
+.share {
+    text-indent: -9999px;
+    .sprite-load(-164px, -392px, 45px, @share-link-height);
+    cursor: pointer;
+    &:hover{
+        .sprite-load(-163px, -473px, 45px, @share-link-height);
+    }
+}
+
+/**
+ * $dialogue box
+ */
+
+.dialogue {
+    .grey-links;
+    position: absolute;
+    bottom: @share-link-height + 15px;
+    width: 100%;
+    display: none;
+    &.expanded {
+        display: block;
+    }
+}
+
 
 /**
  * $Sidebar elements
@@ -504,7 +555,7 @@ div.overlay {
 /* common sidebar links patterns */
 
 .sidebar-links {
-    h2 {
+/*    h2 {
         margin: 0;
         padding: 0.75em;
     }
@@ -515,7 +566,7 @@ div.overlay {
     li {
         margin: 0;
         padding: 0 0.75em;
-    }
+    }*/
 }
 
 /* sidebar advert */
@@ -541,32 +592,7 @@ div.overlay {
  */
 
 .related {
- 	color: @color-white;
- 	h2 {
- 		.t2;
- 		background-color: lighten(@color-black, 60%);
- 	}
- 	ul {
- 		background-color: @color-charcoal;
-        &.extra-links {
-            background-color: lighten(@color-black, 60%);
-        }
- 	}
- 	li {
- 		.h7;
- 		a {
-            padding: 0.5em 0;
-            display: block;
- 			color: @color-white;
- 			border-bottom: 1px solid @color-light-grey;
-            &:hover {
-                color: @color-highlight-blue;
-            }
- 		}
- 		&.last a {
- 			border-bottom: none;
- 		}
- 	}
+ 	.grey-links;
 }
 
 /**
@@ -578,7 +604,25 @@ div.overlay {
 }
 
 .today {
+
+/*
+    h2 {
+        margin: 0;
+        padding: 0.75em;
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        margin: 0;
+        padding: 0 0.75em;
+    }*/
+
+
  	h2 {
+        margin: 0;
+        padding: 0.75em;
  		.t2;
  		background-color: @color-dark-grey; /* fallback for ie8 */
  		background-color: fade(@color-dark-grey, 20%);
@@ -591,8 +635,11 @@ div.overlay {
  		background-color: @color-white; /* fallback for ie8 */
  		background-color: fade(@color-white, 75%);
         display: none;
+        padding: 0;
+        margin: 0;
  	}
  	li {
+        margin: 0;
         border-bottom: 1px solid @color-black;
         padding: 0.75em;
         &.last {
@@ -753,18 +800,4 @@ div.related-content-item {
         }
     }
  }
-
- /**
-  * $Share
-  */
-
-.share {
-    .sprite-load(-164px, -392px, 45px, 48px);
-    text-indent: -9000px;
-    cursor: pointer;
-    &:hover{
-
-    }
-}
-//background: url('imgs/sprites.png') no-repeat -164px -392px; width: 45px; height: 48px;
  

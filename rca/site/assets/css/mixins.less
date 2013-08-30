@@ -311,3 +311,39 @@
         }
     }
 }
+
+/* related links and dialogue box */
+.grey-links {
+    color: @color-white;
+    h2 {
+        margin: 0;
+        padding: 0.75em;
+        .t2;
+        background-color: lighten(@color-black, 60%);
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+        background-color: fade(@color-charcoal,90%);
+        &.extra-links {
+            background-color: lighten(@color-black, 60%);
+        }
+    }
+    li {
+        margin: 0;
+        padding: 0 0.75em;
+        .h7;
+        a {
+            padding: 0.5em 0;
+            display: block;
+            color: @color-white;
+            border-bottom: 1px solid @color-light-grey;
+            &:hover {
+                color: @color-pink;
+            }
+        }
+        &.last a {
+            border-bottom: none;
+        }
+    }
+}

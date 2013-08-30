@@ -35,6 +35,7 @@ $(document).ready(function(){
 	showHide('.today');
 	showHideWithSeparateClick('nav', '.showmenu');
 	showHideWithSeparateClick('form.search', '.showsearch');
+	showHideWithSeparateClick('.dialogue', '.share');
 
 	/* mobile rejigging */
 	Harvey.attach('screen and (max-width:599px)', {
