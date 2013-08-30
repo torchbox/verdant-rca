@@ -1,6 +1,8 @@
 from django.db import models
-from django.http import HttpResponse, Http404
+from django.http import Http404
 from django.shortcuts import render
+
+from django.contrib.contenttypes.models import ContentType
 
 
 class SiteManager(models.Manager):
@@ -26,6 +28,14 @@ class Page(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     parent = models.ForeignKey('self', blank=True, null=True, related_name='subpages')
+    content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
+
+    def __init__(self, *args, **kwargs):
+        super(Page, self).__init__(*args, **kwargs)
+        if not self.content_type_id:
+            # set content type to correctly represent the model class that this was
+            # created as
+            self.content_type = ContentType.objects.get_for_model(self)
 
     def __unicode__(self):
         return self.title

@@ -3,6 +3,7 @@
   fields:
     title: Welcome to your new Verdant site!
     slug: index
+    content_type: [core, page]
 - model: core.site
   pk: 1
   fields:
