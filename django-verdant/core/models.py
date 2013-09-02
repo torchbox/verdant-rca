@@ -27,6 +27,11 @@ class Site(models.Model):
             return self.hostname
 
 
+PAGE_CONTENT_TYPES = []
+def get_page_types():
+    return PAGE_CONTENT_TYPES
+
+
 class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
     def __init__(cls, name, bases, dct):
@@ -42,6 +47,9 @@ class PageBase(models.base.ModelBase):
                     exclude = ['content_type']
 
             cls.form_class = PageForm
+
+        # register this type in the list of page content types
+        PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
 
 
 class Page(models.Model):
