@@ -30,9 +30,9 @@ class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
     def __init__(cls, name, bases, dct):
         super(PageBase, cls).__init__(name, bases, dct)
-
-        # Define a default template path derived from the app name and model name
-        cls.template = "%s/%s.html" % (cls._meta.app_label, camelcase_to_underscore(name))
+        if 'template' not in dct:
+            # Define a default template path derived from the app name and model name
+            cls.template = "%s/%s.html" % (cls._meta.app_label, camelcase_to_underscore(name))
 
 
 class Page(models.Model):
