@@ -34,13 +34,14 @@ class PageBase(models.base.ModelBase):
         if 'template' not in dct:
             # Define a default template path derived from the app name and model name
             cls.template = "%s/%s.html" % (cls._meta.app_label, camelcase_to_underscore(name))
-        if 'edit_form' not in dct:
+        if 'form_class' not in dct:
             # define a ModelForm for this page class
             class PageForm(ModelForm):
                 class Meta:
                     model = cls
+                    exclude = ['content_type']
 
-            cls.edit_form = PageForm
+            cls.form_class = PageForm
 
 
 class Page(models.Model):

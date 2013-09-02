@@ -3,7 +3,7 @@
 {% block content %}
     <ul>
         {% for page in pages %}
-            <li>{{ page.title }}</li>
+            <li>{{ page.title }} - <a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
