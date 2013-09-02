@@ -22,7 +22,7 @@ def select_type(request):
 
     page_types = set()
     for ct in existing_page_types:
-        for subpage_type in ct.model_class().subpage_types:
+        for subpage_type in ct.model_class().clean_subpage_types():
             page_types.add(ContentType.objects.get_for_model(subpage_type))
 
     return render(request, 'verdantadmin/pages/select_type.html', {
@@ -70,7 +70,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     page_class = content_type.model_class()
 
     # page must be in the list of allowed subpage types for this parent ID
-    if page_class not in parent_page.subpage_types:
+    if page_class not in parent_page.clean_subpage_types():
         messages.error(request, "Sorry, you do not have access to create a page of type '%s' here." % content_type.name)
         return redirect('verdantadmin_pages_select_type')
 

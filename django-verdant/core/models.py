@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import get_model
 from django.forms import ModelForm
 from django.http import Http404
 from django.shortcuts import render
@@ -106,11 +107,42 @@ class Page(models.Model):
         })
 
     @classmethod
+    def clean_subpage_types(cls):
+        """
+            Returns the list of subpage types, with strings converted to class objects
+            where required
+        """
+        if not hasattr(cls, '_clean_subpage_types'):
+            res = []
+            for page_type in cls.subpage_types:
+                if isinstance(page_type, basestring):
+                    try:
+                        app_label, model_name = page_type.split(".")
+                    except ValueError:
+                        # If we can't split, assume a model in current app
+                        app_label = cls._meta.app_label
+                        model_name = page_type
+
+                    model = get_model(app_label, model_name)
+                    if model:
+                        res.append(model)
+                    else:
+                        raise NameError("name '%s' (used in subpage_types list) is not defined " % page_type)
+
+                else:
+                    # assume it's already a model class
+                    res.append(page_type)
+
+            cls._clean_subpage_types = res
+
+        return cls._clean_subpage_types
+
+    @classmethod
     def allowed_parent_page_types(cls):
         """
             Returns the list of page types that this page type can be a subpage of
         """
-        return [ct for ct in get_page_types() if cls in ct.model_class().subpage_types]
+        return [ct for ct in get_page_types() if cls in ct.model_class().clean_subpage_types()]
 
     @classmethod
     def allowed_parent_pages(cls):
