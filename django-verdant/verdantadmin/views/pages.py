@@ -2,13 +2,19 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib import messages
 
-from core.models import Page
+from core.models import Page, get_page_types
 
 
 def index(request):
     pages = Page.objects.order_by('title')
     return render(request, 'verdantadmin/pages/index.html', {
         'pages': pages,
+    })
+
+def select_type(request):
+    page_types = get_page_types()
+    return render(request, 'verdantadmin/pages/select_type.html', {
+        'page_types': page_types,
     })
 
 def edit(request, page_id):

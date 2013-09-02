@@ -6,4 +6,8 @@
             <li>{{ page.title }} - <a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
         {% endfor %}
     </ul>
+
+    <ul class="actions">
+        <li><a href="{% url 'verdantadmin_pages_select_type' %}">New page</a></li>
+    </ul>
 {% endblock %}

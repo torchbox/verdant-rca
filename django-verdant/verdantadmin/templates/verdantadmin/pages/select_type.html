@@ -1,0 +1,10 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <p>What type of page do you want to create?</p>
+    <ul>
+        {% for content_type in page_types %}
+            <li>{{ content_type.name }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
