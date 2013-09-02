@@ -30,9 +30,9 @@ def select_type(request):
     })
 
 
-def create(request, content_type_id):
+def create(request, content_type_app_name, content_type_model_name):
     try:
-        content_type = ContentType.objects.get_for_id(content_type_id)
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
         raise Http404
 
