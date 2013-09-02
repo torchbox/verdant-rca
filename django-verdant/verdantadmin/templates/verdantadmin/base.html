@@ -4,7 +4,10 @@
         <title>Verdant admin</title>
     </head>
     <body>
-        <h1>Verdant</h1>
+        <a href="{% url 'verdantadmin_home' %}"><h1>Verdant</h1></a>
+        <ul class="menu">
+            <a href="{% url 'verdantadmin_pages_index' %}">Pages</a>
+        </ul>
         {% block content %}{% endblock %}
     </body>
 </html>

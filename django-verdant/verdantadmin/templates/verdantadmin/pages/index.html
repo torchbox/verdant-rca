@@ -1,0 +1,9 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <ul>
+        {% for page in pages %}
+            <li>{{ page.title }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
