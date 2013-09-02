@@ -70,6 +70,9 @@ class Page(models.Model):
     def __unicode__(self):
         return self.title
 
+    # by default pages do not allow any kind of subpages
+    subpage_types = []
+
     @property
     def specific(self):
         """
@@ -101,6 +104,20 @@ class Page(models.Model):
         return render(request, self.template, {
             'self': self
         })
+
+    @classmethod
+    def allowed_parent_page_types(cls):
+        """
+            Returns the list of page types that this page type can be a subpage of
+        """
+        return [ct for ct in get_page_types() if cls in ct.model_class().subpage_types]
+
+    @classmethod
+    def allowed_parent_pages(cls):
+        """
+            Returns the list of pages that this page type can be a subpage of
+        """
+        return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
 
     class Meta:
         unique_together = ("parent", "slug")

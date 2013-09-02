@@ -15,7 +15,16 @@ def index(request):
 
 
 def select_type(request):
-    page_types = get_page_types()
+    # Get the list of page types that can be created within the pages that currently exist
+    existing_page_types = ContentType.objects.raw("""
+        SELECT DISTINCT content_type_id AS id FROM core_page
+    """)
+
+    page_types = set()
+    for ct in existing_page_types:
+        for subpage_type in ct.model_class().subpage_types:
+            page_types.add(ContentType.objects.get_for_model(subpage_type))
+
     return render(request, 'verdantadmin/pages/select_type.html', {
         'page_types': page_types,
     })
