@@ -44,7 +44,7 @@ class PageBase(models.base.ModelBase):
             class PageForm(ModelForm):
                 class Meta:
                     model = cls
-                    exclude = ['content_type']
+                    exclude = ['content_type', 'parent']
 
             cls.form_class = PageForm
 

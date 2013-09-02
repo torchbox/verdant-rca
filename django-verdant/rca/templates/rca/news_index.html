@@ -1,0 +1,9 @@
+{% extends "rca/base.html" %}
+
+{% block content %}
+    <ul>
+        {% for page in self.subpages.all %}
+            <li>{{ page.title }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
