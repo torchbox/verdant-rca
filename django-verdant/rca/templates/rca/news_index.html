@@ -3,7 +3,7 @@
 {% block content %}
     <ul>
         {% for page in self.get_children %}
-            <li>{{ page.title }}</li>
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

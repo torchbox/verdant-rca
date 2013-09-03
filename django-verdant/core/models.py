@@ -23,7 +23,7 @@ class SiteManager(models.Manager):
 
 class Site(models.Model):
     hostname = models.CharField(max_length=255, unique=True, db_index=True)
-    root_page = models.ForeignKey('Page')
+    root_page = models.ForeignKey('Page', related_name='sites_rooted_here')
 
     def natural_key(self):
         return (self.hostname,)
@@ -116,6 +116,28 @@ class Page(MP_Node):
         return render(request, self.template, {
             'self': self
         })
+
+    @property
+    def url(self):
+        paths = [
+            self.path[0:pos]
+            for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
+        ]
+        ancestors = Page.objects.filter(path__in=paths).order_by('-depth').prefetch_related('sites_rooted_here')
+        path_components = []
+
+        site = None
+        for ancestor in ancestors:
+            sites_rooted_here = ancestor.sites_rooted_here.all()
+            if sites_rooted_here:
+                site = sites_rooted_here[0]
+                break
+            else:
+                path_components.insert(0, ancestor.slug)
+
+        # FIXME: support cross-domain links
+        return '/' + '/'.join(path_components) + '/'
+
 
     @classmethod
     def clean_subpage_types(cls):
