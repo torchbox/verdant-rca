@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 from django.db.models import get_model
 from django.forms import ModelForm
 from django.http import Http404
@@ -7,6 +7,12 @@ from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 
 from core.util import camelcase_to_underscore
+
+
+# We try to do database access on app startup (namely, looking up content types) -
+# which will fail if the db hasn't been initialised (e.g. when running the initial syncdb).
+# So, need to explicitly test whether the database is usable yet. (Ugh.)
+DB_IS_READY = ('django_content_type' in connection.introspection.table_names())
 
 
 class SiteManager(models.Manager):
@@ -49,8 +55,9 @@ class PageBase(models.base.ModelBase):
 
             cls.form_class = PageForm
 
-        # register this type in the list of page content types
-        PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
+        if DB_IS_READY:
+            # register this type in the list of page content types
+            PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
 
 
 class Page(models.Model):
