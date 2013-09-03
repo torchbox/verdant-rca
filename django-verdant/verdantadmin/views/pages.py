@@ -83,40 +83,40 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         return redirect('verdantadmin_pages_select_type')
 
     page = page_class()
-    admin = get_admin_handler_for_model(page_class)
+    admin_class = get_admin_handler_for_model(page_class)
 
     if request.POST:
-        form = admin.form_class(request.POST, instance=page)
-        if form.is_valid():
-            page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+        admin = admin_class(request.POST, instance=page)
+        if admin.is_valid():
+            page = admin.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_pages_index')
     else:
-        form = admin.form_class(instance=page)
+        admin = admin_class(instance=page)
 
     return render(request, 'verdantadmin/pages/create.html', {
         'content_type': content_type,
         'page_class': page_class,
         'parent_page': parent_page,
-        'form': form,
+        'form': admin.form_instance,
     })
 
 
 def edit(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
-    admin = get_admin_handler_for_model(page.__class__)
+    admin_class = get_admin_handler_for_model(page.__class__)
 
     if request.POST:
-        form = admin.form_class(request.POST, instance=page)
-        if form.is_valid():
-            form.save()
+        admin = admin_class(request.POST, instance=page)
+        if admin.is_valid():
+            admin.save()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_pages_index')
     else:
-        form = admin.form_class(instance=page)
+        admin = admin_class(instance=page)
 
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
-        'form': form,
+        'form': admin.form_instance,
     })

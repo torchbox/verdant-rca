@@ -20,8 +20,11 @@ class NewsItem(EditorialPage):
 class NewsItemForm(forms.ModelForm):
     class Meta:
         model = NewsItem
-        exclude = ['content_type', 'path', 'depth', 'numchild']
+        exclude = ['content_type', 'path', 'depth', 'numchild', 'sluug']
 
-news_item_admin_handler = AdminHandler(NewsItem, form=NewsItemForm)
 
-register(NewsItem, news_item_admin_handler)
+class NewsItemAdminHandler(AdminHandler):
+    form = NewsItemForm
+
+
+register(NewsItem, NewsItemAdminHandler)
