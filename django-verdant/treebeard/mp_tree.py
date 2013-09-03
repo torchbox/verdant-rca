@@ -253,9 +253,10 @@ class MP_ComplexAddMoveHandler(MP_AddHandler):
 
 
 class MP_AddRootHandler(MP_AddHandler):
-    def __init__(self, cls, **kwargs):
+    def __init__(self, cls, instance, **kwargs):
         super(MP_AddRootHandler, self).__init__()
         self.cls = cls
+        self.instance = instance
         self.kwargs = kwargs
 
     def process(self):
@@ -266,7 +267,7 @@ class MP_AddRootHandler(MP_AddHandler):
         if last_root and last_root.node_order_by:
             # there are root nodes and node_order_by has been set
             # delegate sorted insertion to add_sibling
-            return last_root.add_sibling('sorted-sibling', **self.kwargs)
+            return last_root.add_sibling('sorted-sibling', self.instance, **self.kwargs)
 
         if last_root:
             # adding the new root node as the last one
@@ -274,8 +275,15 @@ class MP_AddRootHandler(MP_AddHandler):
         else:
             # adding the first root node
             newpath = self.cls._get_path(None, 1, 1)
+
+        if self.instance:
+            if self.instance.pk:
+                raise ValueError("Attempted to add a tree node that is already in the database")
+            newobj = self.instance
+        else:
             # creating the new object
-        newobj = self.cls(**self.kwargs)
+            newobj = self.cls(**self.kwargs)
+
         newobj.depth = 1
         newobj.path = newpath
         # saving the instance before returning it
@@ -285,10 +293,11 @@ class MP_AddRootHandler(MP_AddHandler):
 
 
 class MP_AddChildHandler(MP_AddHandler):
-    def __init__(self, node, **kwargs):
+    def __init__(self, node, instance, **kwargs):
         super(MP_AddChildHandler, self).__init__()
         self.node = node
         self.node_cls = node.__class__
+        self.instance = instance
         self.kwargs = kwargs
 
     def process(self):
@@ -297,10 +306,16 @@ class MP_AddChildHandler(MP_AddHandler):
             # delegate sorted insertion to add_sibling
             self.node.numchild += 1
             return self.node.get_last_child().add_sibling(
-                'sorted-sibling', **self.kwargs)
+                'sorted-sibling', self.instance, **self.kwargs)
 
-        # creating a new object
-        newobj = self.node_cls(**self.kwargs)
+        if self.instance:
+            if self.instance.pk:
+                raise ValueError("Attempted to add a tree node that is already in the database")
+            newobj = self.instance
+        else:
+            # creating a new object
+            newobj = self.node_cls(**self.kwargs)
+
         newobj.depth = self.node.depth + 1
         if self.node.is_leaf():
             # the node had no children, adding the first child
@@ -329,18 +344,25 @@ class MP_AddChildHandler(MP_AddHandler):
 
 
 class MP_AddSiblingHandler(MP_ComplexAddMoveHandler):
-    def __init__(self, node, pos, **kwargs):
+    def __init__(self, node, pos, instance, **kwargs):
         super(MP_AddSiblingHandler, self).__init__()
         self.node = node
         self.node_cls = node.__class__
         self.pos = pos
+        self.instance = instance
         self.kwargs = kwargs
 
     def process(self):
         self.pos = self.node._prepare_pos_var_for_add_sibling(self.pos)
 
-        # creating a new object
-        newobj = self.node_cls(**self.kwargs)
+        if self.instance:
+            if self.instance.pk:
+                raise ValueError("Attempted to add a tree node that is already in the database")
+            newobj = self.instance
+        else:
+            # creating a new object
+            newobj = self.node_cls(**self.kwargs)
+
         newobj.depth = self.node.depth
 
         if self.pos == 'sorted-sibling':
@@ -533,13 +555,13 @@ class MP_Node(Node):
         return cls.numconv_obj_
 
     @classmethod
-    def add_root(cls, **kwargs):
+    def add_root(cls, instance=None, **kwargs):
         """
         Adds a root node to the tree.
 
         :raise PathOverflow: when no more root objects can be added
         """
-        return MP_AddRootHandler(cls, **kwargs).process()
+        return MP_AddRootHandler(cls, instance, **kwargs).process()
 
     @classmethod
     def dump_bulk(cls, parent=None, keep_ids=True):
@@ -898,22 +920,22 @@ class MP_Node(Node):
         """
         return self.path.startswith(node.path) and self.depth > node.depth
 
-    def add_child(self, **kwargs):
+    def add_child(self, instance=None, **kwargs):
         """
         Adds a child to the node.
 
         :raise PathOverflow: when no more child nodes can be added
         """
-        return MP_AddChildHandler(self, **kwargs).process()
+        return MP_AddChildHandler(self, instance, **kwargs).process()
 
-    def add_sibling(self, pos=None, **kwargs):
+    def add_sibling(self, pos=None, instance=None, **kwargs):
         """
         Adds a new node as a sibling to the current node object.
 
         :raise PathOverflow: when the library can't make room for the
            node's new position
         """
-        return MP_AddSiblingHandler(self, pos, **kwargs).process()
+        return MP_AddSiblingHandler(self, pos, instance, **kwargs).process()
 
     def get_root(self):
         """:returns: the root node for the current node object."""
