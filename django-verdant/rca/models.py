@@ -2,7 +2,7 @@ from django.db import models
 from django import forms
 
 from core.models import Page
-from verdantadmin.forms import register
+from verdantadmin.forms import register, AdminHandler
 
 
 class EditorialPage(Page):
@@ -20,6 +20,8 @@ class NewsItem(EditorialPage):
 class NewsItemForm(forms.ModelForm):
     class Meta:
         model = NewsItem
-        fields = ['title', 'body']
+        exclude = ['content_type', 'path', 'depth', 'numchild']
 
-register(NewsItem, NewsItemForm)
+news_item_admin_handler = AdminHandler(NewsItem, form=NewsItemForm)
+
+register(NewsItem, news_item_admin_handler)

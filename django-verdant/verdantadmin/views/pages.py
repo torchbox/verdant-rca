@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 
 from core.models import Page, get_page_types
-from verdantadmin.forms import get_form_for_model
+from verdantadmin.forms import get_admin_handler_for_model
 
 
 def index(request):
@@ -83,17 +83,17 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         return redirect('verdantadmin_pages_select_type')
 
     page = page_class()
-    form_class = get_form_for_model(page_class)
+    admin = get_admin_handler_for_model(page_class)
 
     if request.POST:
-        form = form_class(request.POST, instance=page)
+        form = admin.form_class(request.POST, instance=page)
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_pages_index')
     else:
-        form = form_class(instance=page)
+        form = admin.form_class(instance=page)
 
     return render(request, 'verdantadmin/pages/create.html', {
         'content_type': content_type,
@@ -105,16 +105,16 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 def edit(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
-    form_class = get_form_for_model(page.__class__)
+    admin = get_admin_handler_for_model(page.__class__)
 
     if request.POST:
-        form = form_class(request.POST, instance=page)
+        form = admin.form_class(request.POST, instance=page)
         if form.is_valid():
             form.save()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_pages_index')
     else:
-        form = form_class(instance=page)
+        form = admin.form_class(instance=page)
 
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
