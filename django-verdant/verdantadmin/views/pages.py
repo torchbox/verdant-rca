@@ -20,10 +20,17 @@ def select_type(request):
         SELECT DISTINCT content_type_id AS id FROM core_page
     """)
 
+    print "existing page types: %s" % repr(list(existing_page_types))
+
     page_types = set()
     for ct in existing_page_types:
-        for subpage_type in ct.model_class().clean_subpage_types():
-            page_types.add(ContentType.objects.get_for_model(subpage_type))
+        allowed_subpage_types = ct.model_class().clean_subpage_types()
+        print "allowed subpage types of %s = %s" % (ct, repr(allowed_subpage_types))
+        for subpage_type in allowed_subpage_types:
+            subpage_content_type = ContentType.objects.get_for_model(subpage_type)
+            print "adding content type %s" % repr(subpage_content_type)
+
+            page_types.add(subpage_content_type)
 
     return render(request, 'verdantadmin/pages/select_type.html', {
         'page_types': page_types,
@@ -80,7 +87,8 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     if request.POST:
         form = form_class(request.POST, instance=page)
         if form.is_valid():
-            page = form.save()
+            page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+            parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_pages_index')
     else:

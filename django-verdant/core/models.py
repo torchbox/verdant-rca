@@ -5,6 +5,7 @@ from django.http import Http404
 from django.shortcuts import render
 
 from django.contrib.contenttypes.models import ContentType
+from treebeard.mp_tree import MP_Node
 
 from core.util import camelcase_to_underscore
 
@@ -51,16 +52,18 @@ class PageBase(models.base.ModelBase):
             class PageForm(ModelForm):
                 class Meta:
                     model = cls
-                    exclude = ['content_type', 'parent']
+                    exclude = ['content_type', 'parent', 'path', 'depth', 'numchild']
 
             cls.form_class = PageForm
+
+        cls._clean_subpage_types = None  # to be filled in on first call to cls.clean_subpage_types
 
         if DB_IS_READY:
             # register this type in the list of page content types
             PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
 
 
-class Page(models.Model):
+class Page(MP_Node):
     __metaclass__ = PageBase
 
     title = models.CharField(max_length=255)
@@ -98,7 +101,7 @@ class Page(models.Model):
             remaining_components = path_components[1:]
 
             try:
-                subpage = self.subpages.get(slug=child_slug)
+                subpage = self.get_children().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
 
@@ -119,7 +122,7 @@ class Page(models.Model):
             Returns the list of subpage types, with strings converted to class objects
             where required
         """
-        if not hasattr(cls, '_clean_subpage_types'):
+        if cls._clean_subpage_types is None:
             res = []
             for page_type in cls.subpage_types:
                 if isinstance(page_type, basestring):
