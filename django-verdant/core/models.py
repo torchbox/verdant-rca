@@ -52,7 +52,7 @@ class PageBase(models.base.ModelBase):
             class PageForm(ModelForm):
                 class Meta:
                     model = cls
-                    exclude = ['content_type', 'parent', 'path', 'depth', 'numchild']
+                    exclude = ['content_type', 'path', 'depth', 'numchild']
 
             cls.form_class = PageForm
 
@@ -68,7 +68,8 @@ class Page(MP_Node):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField()
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='subpages')
+    # TODO: enforce uniqueness on slug field per parent (will have to be done at the Django
+    # level rather than db, since there is no explicit parent relation in the db)
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
 
     def __init__(self, *args, **kwargs):
@@ -160,9 +161,3 @@ class Page(MP_Node):
             Returns the list of pages that this page type can be a subpage of
         """
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
-
-    class Meta:
-        unique_together = ("parent", "slug")
-        index_together = [
-            ["parent", "slug"],
-        ]

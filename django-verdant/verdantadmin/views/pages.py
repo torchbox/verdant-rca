@@ -81,7 +81,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         messages.error(request, "Sorry, you do not have access to create a page of type '%s' here." % content_type.name)
         return redirect('verdantadmin_pages_select_type')
 
-    page = page_class(parent=parent_page)
+    page = page_class()
     form_class = page_class.form_class
 
     if request.POST:
