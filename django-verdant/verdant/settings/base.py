@@ -137,6 +137,7 @@ INSTALLED_APPS = (
     'devserver',
     'compressor',
     'debug_toolbar',
+    'treebeard',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
