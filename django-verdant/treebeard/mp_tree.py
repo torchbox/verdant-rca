@@ -16,6 +16,17 @@ from treebeard.models import Node
 from treebeard.exceptions import InvalidMoveToDescendant, PathOverflow
 
 
+def get_base_model_class(cls):
+    """
+    Return the class in this model's inheritance chain which implements tree behaviour
+    (i.e. the one which defines the 'path' field). Necessary because a method like
+    get_children invoked on a multiple-table-inheritance subclass needs to perform
+    the query on the base class, in order to return child nodes that are not
+    the same subclass as that parent.
+    """
+    return cls._meta.get_field('path').model
+
+
 class MP_NodeQuerySet(models.query.QuerySet):
     """
     Custom queryset for the tree node manager.
@@ -98,7 +109,7 @@ class MP_ComplexAddMoveHandler(MP_AddHandler):
         """:returns: The sql needed the numchild value of a node"""
         sql = "UPDATE %s SET numchild=numchild%s1"\
               " WHERE path=%%s" % (
-                  connection.ops.quote_name(self.node_cls._meta.db_table),
+                  connection.ops.quote_name(get_base_model_class(self.node_cls)._meta.db_table),
                   {'inc': '+', 'dec': '-'}[incdec])
         vals = [path]
         return sql, vals
@@ -218,7 +229,7 @@ class MP_ComplexAddMoveHandler(MP_AddHandler):
 
         vendor = self.node_cls.get_database_vendor('write')
         sql1 = "UPDATE %s SET" % (
-            connection.ops.quote_name(self.node_cls._meta.db_table), )
+            connection.ops.quote_name(get_base_model_class(self.node_cls)._meta.db_table), )
 
         # <3 "standard" sql
         if vendor == 'sqlite':
@@ -334,7 +345,7 @@ class MP_AddChildHandler(MP_AddHandler):
         newobj.save()
         newobj._cached_parent_obj = self.node
 
-        self.node_cls.objects.filter(
+        get_base_model_class(self.node_cls).objects.filter(
             path=self.node.path).update(numchild=F('numchild')+1)
 
         # we increase the numchild value of the object in memory
@@ -499,7 +510,7 @@ class MP_MoveHandler(MP_ComplexAddMoveHandler):
                 # moving as a target's first child
                 newpos = 1
                 self.pos = 'first-sibling'
-                siblings = self.node_cls.objects.none()
+                siblings = get_base_model_class(self.node_cls).objects.none()
             else:
                 self.target = self.target.get_last_child()
                 self.pos = {
@@ -520,7 +531,7 @@ class MP_MoveHandler(MP_ComplexAddMoveHandler):
                   branch.
         """
         sql = "UPDATE %s SET depth=LENGTH(path)/%%s WHERE path LIKE %%s" % (
-            connection.ops.quote_name(self.node_cls._meta.db_table), )
+            connection.ops.quote_name(get_base_model_class(self.node_cls)._meta.db_table), )
         vals = [self.node_cls.steplen, path + '%']
         return sql, vals
 
@@ -566,6 +577,8 @@ class MP_Node(Node):
     @classmethod
     def dump_bulk(cls, parent=None, keep_ids=True):
         """Dumps a tree branch to a python data structure."""
+
+        cls = get_base_model_class(cls)
 
         # Because of fix_tree, this method assumes that the depth
         # and numchild properties in the nodes can be incorrect,
@@ -625,6 +638,8 @@ class MP_Node(Node):
                      their path
                   5. a list of ids nodes that report a wrong number of children
         """
+        cls = get_base_model_class(cls)
+
         evil_chars, bad_steplen, orphans = [], [], []
         wrong_depth, wrong_numchild = [], []
         for node in cls.objects.all():
@@ -698,6 +713,8 @@ class MP_Node(Node):
                in-place tree reordering, not available at the moment (hint:
                patches are welcome).
         """
+        cls = get_base_model_class(cls)
+
         if destructive:
             dump = cls.dump_bulk(None, True)
             cls.objects.all().delete()
@@ -756,6 +773,8 @@ class MP_Node(Node):
             A *queryset* of nodes ordered as DFS, including the parent.
             If no parent is given, the entire tree is returned.
         """
+        cls = get_base_model_class(cls)  # method doesn't make sense when constrained to a subclass
+
         if parent is None:
             # return the entire tree
             return cls.objects.all()
@@ -767,7 +786,7 @@ class MP_Node(Node):
     @classmethod
     def get_root_nodes(cls):
         """:returns: A queryset containing the root nodes in the tree."""
-        return cls.objects.filter(depth=1)
+        return get_base_model_class(cls).objects.filter(depth=1)
 
     @classmethod
     def get_descendants_group_count(cls, parent=None):
@@ -797,6 +816,8 @@ class MP_Node(Node):
         # If there is a better way to do this in an UNMODIFIED django 1.0, let
         # me know.
         #~
+
+        cls = get_base_model_class(cls)
 
         if parent:
             depth = parent.depth + 1
@@ -841,7 +862,7 @@ class MP_Node(Node):
         :returns: A queryset of all the node's siblings, including the node
             itself.
         """
-        qset = self.__class__.objects.filter(depth=self.depth)
+        qset = get_base_model_class(self.__class__).objects.filter(depth=self.depth)
         if self.depth > 1:
             # making sure the non-root nodes share a parent
             parentpath = self._get_basepath(self.path, self.depth - 1)
@@ -852,8 +873,8 @@ class MP_Node(Node):
     def get_children(self):
         """:returns: A queryset of all the node's children"""
         if self.is_leaf():
-            return self.__class__.objects.none()
-        return self.__class__.objects.filter(
+            return get_base_model_class(self.__class__).objects.none()
+        return get_base_model_class(self.__class__).objects.filter(
             depth=self.depth + 1,
             path__range=self._get_children_path_interval(self.path)
         )
@@ -939,7 +960,7 @@ class MP_Node(Node):
 
     def get_root(self):
         """:returns: the root node for the current node object."""
-        return self.__class__.objects.get(path=self.path[0:self.steplen])
+        return get_base_model_class(self.__class__).objects.get(path=self.path[0:self.steplen])
 
     def is_leaf(self):
         """:returns: True if the node is a leaf node (else, returns False)"""
@@ -954,7 +975,7 @@ class MP_Node(Node):
             self.path[0:pos]
             for pos in range(0, len(self.path), self.steplen)[1:]
         ]
-        return self.__class__.objects.filter(path__in=paths).order_by('depth')
+        return get_base_model_class(self.__class__).objects.filter(path__in=paths).order_by('depth')
 
     def get_parent(self, update=False):
         """
@@ -972,7 +993,7 @@ class MP_Node(Node):
         except AttributeError:
             pass
         parentpath = self._get_basepath(self.path, depth - 1)
-        self._cached_parent_obj = self.__class__.objects.get(path=parentpath)
+        self._cached_parent_obj = get_base_model_class(self.__class__).objects.get(path=parentpath)
         return self._cached_parent_obj
 
     def move(self, target, pos=None):
