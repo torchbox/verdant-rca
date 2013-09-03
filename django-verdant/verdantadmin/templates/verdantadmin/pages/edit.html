@@ -6,6 +6,13 @@
     <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
+
+        {% for formset in inlines %}
+            {{ formset.management_form }}
+            {% for form in formset %}
+                {{ form.as_p }}
+            {% endfor %}
+        {% endfor %}
         <input type="submit" value="Save">
     </form>
 {% endblock %}

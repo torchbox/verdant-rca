@@ -14,15 +14,32 @@ def build_model_form_class(model_class):
 
 
 class AdminHandler(object):
+    inlines = []
+
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)
         self.form_instance = self.form(*args, instance=instance)
 
+        self.inline_instances = [
+            inline(*args, instance=instance)
+            for inline in self.inlines
+        ]
+
     def is_valid(self):
-        return self.form_instance.is_valid()
+        result = self.form_instance.is_valid()
+        for inline in self.inline_instances:
+            result &= inline.is_valid()
+        return result
 
     def save(self, commit=True):
-        return self.form_instance.save(commit=commit)
+        result = self.form_instance.save(commit=commit)
+        if commit:
+            self.save_inlines()
+        return result
+
+    def save_inlines(self, commit=True):
+        for inline in self.inline_instances:
+            inline.save(commit=commit)
 
 
 def build_admin_handler_class(model_class):

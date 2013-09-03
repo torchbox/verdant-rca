@@ -100,6 +100,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         'page_class': page_class,
         'parent_page': parent_page,
         'form': admin.form_instance,
+        'inlines': admin.inline_instances,
     })
 
 
@@ -119,4 +120,5 @@ def edit(request, page_id):
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
         'form': admin.form_instance,
+        'inlines': admin.inline_instances,
     })
