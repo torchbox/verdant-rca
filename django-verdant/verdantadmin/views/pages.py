@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 
 from core.models import Page, get_page_types
+from verdantadmin.forms import get_form_for_model
 
 
 def index(request):
@@ -82,7 +83,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         return redirect('verdantadmin_pages_select_type')
 
     page = page_class()
-    form_class = page_class.form_class
+    form_class = get_form_for_model(page_class)
 
     if request.POST:
         form = form_class(request.POST, instance=page)
@@ -104,7 +105,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 def edit(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
-    form_class = page.form_class
+    form_class = get_form_for_model(page.__class__)
 
     if request.POST:
         form = form_class(request.POST, instance=page)
