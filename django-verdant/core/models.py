@@ -1,6 +1,5 @@
 from django.db import models, connection
 from django.db.models import get_model
-from django.forms import ModelForm
 from django.http import Http404
 from django.shortcuts import render
 
