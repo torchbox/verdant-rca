@@ -1,5 +1,8 @@
 from django.forms import ModelForm
 
+from core.models import Page
+
+
 ADMIN_HANDLERS = {}
 
 
@@ -7,8 +10,9 @@ def build_model_form_class(model_class):
     class MyModelForm(ModelForm):
         class Meta:
             model = model_class
-            # TODO: un-hard-code these somehow - we want model forms for things that aren't pages
-            exclude = ['content_type', 'path', 'depth', 'numchild']
+
+            if issubclass(model_class, Page):
+                exclude = ['content_type', 'path', 'depth', 'numchild']
 
     return MyModelForm
 
