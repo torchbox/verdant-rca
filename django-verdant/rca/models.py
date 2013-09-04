@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from django.forms.models import inlineformset_factory
 
 from core.models import Page
@@ -30,14 +29,10 @@ class NewsItemRelatedLink(RelatedLink):
     news_item = models.ForeignKey('NewsItem', related_name='related_links')
 
 
-class NewsItemForm(forms.ModelForm):
-    class Meta:
-        model = NewsItem
-        exclude = ['content_type', 'path', 'depth', 'numchild', 'sluug']
-
-
 class NewsItemAdminHandler(AdminHandler):
-    form = NewsItemForm
+    model = NewsItem
+    # can pass a custom modelform here:
+    # form = NewsItemForm
     inlines = [inlineformset_factory(NewsItem, NewsItemRelatedLink)]
 
 

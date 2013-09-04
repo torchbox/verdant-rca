@@ -18,6 +18,10 @@ class AdminHandler(object):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)
+
+        if not hasattr(self.__class__, 'form'):
+            self.__class__.form = build_model_form_class(self.__class__.model)
+
         self.form_instance = self.form(*args, instance=instance)
 
         self.inline_instances = [
@@ -44,7 +48,7 @@ class AdminHandler(object):
 
 def build_admin_handler_class(model_class):
     class MyAdminHandler(AdminHandler):
-        form = build_model_form_class(model_class)
+        model = model_class
 
     return MyAdminHandler
 
