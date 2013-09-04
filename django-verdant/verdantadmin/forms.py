@@ -17,14 +17,28 @@ def build_model_form_class(model_class):
     return MyModelForm
 
 
+class AdminHandlerBase(type):
+    """Metaclass for AdminHandler"""
+    def __init__(cls, name, bases, dct):
+        super(AdminHandlerBase, cls).__init__(name, bases, dct)
+
+        if name != 'AdminHandler':
+            # defining a concrete subclass, so ensure that model, form, fields etc are defined
+            if 'model' not in dct:
+                raise Exception("Definition of %s does not specify a 'model' attribute" % name)
+
+            if 'form' not in dct:
+                cls.form = build_model_form_class(cls.model)
+
+            if 'inlines' not in dct:
+                cls.inlines = []
+
+
 class AdminHandler(object):
-    inlines = []
+    __metaclass__ = AdminHandlerBase
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)
-
-        if not hasattr(self.__class__, 'form'):
-            self.__class__.form = build_model_form_class(self.__class__.model)
 
         self.form_instance = self.form(*args, instance=instance)
 
