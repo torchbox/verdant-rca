@@ -3,6 +3,6 @@
 {% endcomment %}
 
 <script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
-{% for panel in panels %}
-    {{ panel.render_js }}
-{% endfor %}
+<script>
+    {% for panel in panels %}{{ panel.render_js }}{% endfor %}
+</script>

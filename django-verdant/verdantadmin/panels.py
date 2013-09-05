@@ -78,7 +78,7 @@ class InlinePanel(object):
                 ]
 
             template = "verdantadmin/panels/inline_panel.html"
-            js_template = "verdantadmin/panels/inline_panel_js.html"
+            js_template = "verdantadmin/panels/inline_panel.js"
 
             def render(self):
                 return mark_safe(render_to_string(self.template, {'formset': self.formset}))
