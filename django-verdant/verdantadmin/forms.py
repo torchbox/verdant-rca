@@ -24,12 +24,15 @@ class AdminHandlerBase(type):
         super(AdminHandlerBase, cls).__init__(name, bases, dct)
 
         if name != 'AdminHandler':
-            # defining a concrete subclass, so ensure that model, form, fields etc are defined
-            if 'model' not in dct:
-                raise Exception("Definition of %s does not specify a 'model' attribute" % name)
-
+            # defining a concrete subclass, so ensure that form, panels etc are defined
             if 'form' not in dct:
-                cls.form = build_model_form_class(cls.model)
+                # build a basic ModelForm from the model that we've (hopefully) been passed
+                try:
+                    model = dct['model']
+                except KeyError:
+                    raise Exception("Definition of %s must specify either a 'form' attribute or a 'model' attribute" % name)
+
+                cls.form = build_model_form_class(model)
 
             if 'panels' not in dct:
                 # in the absence of an explicit panel list declaration,
