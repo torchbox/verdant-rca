@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django.utils.safestring import mark_safe
 
 from core.models import Page
 from verdantadmin.panels import FieldPanel
@@ -80,6 +81,19 @@ class AdminHandler(object):
     def _post_save(self):
         for panel in self.panels:
             panel.post_save()
+
+    def render(self):
+        return mark_safe("".join([panel.render() for panel in self.panels]))
+
+    def render_setup_js(self):
+        """
+        return a string of the JS code to be executed once the HTML has been rendered
+        """
+        js_snippets = [panel.render_js() for panel in self.panels]
+        # discard the empty ones
+        js_snippets = [s for s in js_snippets if s]
+
+        return mark_safe("\n".join(js_snippets))
 
 
 def build_admin_handler_class(model_class):

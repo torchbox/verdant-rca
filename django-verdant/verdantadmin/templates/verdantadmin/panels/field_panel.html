@@ -1,9 +1,11 @@
-{{ field.label_tag }}
+<div class="panel">
+    {{ field.label_tag }}
 
-{{ field.errors }}
+    {{ field.errors }}
 
-{{ field }}
+    {{ field }}
 
-{% if field.help_text %}
-    <div class="help_text">{{ field.help_text }}</div>
-{% endif %}
+    {% if field.help_text %}
+        <div class="help_text">{{ field.help_text }}</div>
+    {% endif %}
+</div>

@@ -4,7 +4,8 @@
     <h2>Editing page '{{ page.title }}'</h2>
 
     <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
-        {% include "verdantadmin/pages/_form.html" %}
+        {% csrf_token %}
+        {{ admin.render }}
         <input type="submit" value="Save">
     </form>
 {% endblock %}
