@@ -1,4 +1,8 @@
-function buildExpandingFormset(prefix) {
+function buildExpandingFormset(prefix, opts) {
+    if (!opts) {
+        opts = {};
+    }
+
     var addButton = $('#' + prefix + '-ADD');
     var formContainer = $('#' + prefix + '-FORMS');
     var totalFormsInput = $('#' + prefix + '-TOTAL_FORMS');
@@ -9,6 +13,11 @@ function buildExpandingFormset(prefix) {
     addButton.click(function() {
         var newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);
         formContainer.append(newFormHtml);
+
+        if (opts.onAdd) {
+            opts.onAdd(formCount);
+        }
+
         formCount++;
         totalFormsInput.val(formCount);
     });

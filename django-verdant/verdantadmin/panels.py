@@ -48,6 +48,10 @@ class FieldPanel(object):
             def render(self):
                 return mark_safe(render_to_string(self.template, {'field': self.form[field_name]}))
 
+            # TEMP - to check that javascript is being correctly applied to fields
+            def render_js(self):
+                return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#ddf')});" % self.form[field_name].id_for_label
+
             def rendered_fields(self):
                 """return a list of names of fields that will be rendered by this panel"""
                 return [field_name]
@@ -85,15 +89,20 @@ class InlinePanel(object):
                     for form in self.formset.forms
                 ]
 
+                self.empty_form_admin_handler_instance = admin_handler(*args, form=self.formset.empty_form)
+
             def render(self):
                 return mark_safe(render_to_string("verdantadmin/panels/inline_panel.html", {
                     'admins': self.admin_handler_instances,
-                    'formset': self.formset
+                    'empty_form_admin': self.empty_form_admin_handler_instance,
+                    'formset': self.formset,
                 }))
 
             def render_js(self):
                 return mark_safe(render_to_string("verdantadmin/panels/inline_panel.js", {
-                    'formset': self.formset
+                    'admins': self.admin_handler_instances,
+                    'empty_form_admin': self.empty_form_admin_handler_instance,
+                    'formset': self.formset,
                 }))
 
             def is_valid(self):

@@ -4,5 +4,9 @@
 
 <script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
 <script>
-    {{ admin.render_setup_js }}
+    (function() {
+        function fixPrefix(str) {return str;}
+
+        {{ admin.render_setup_js }}
+    })();
 </script>
