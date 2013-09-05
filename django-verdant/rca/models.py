@@ -1,5 +1,4 @@
 from django.db import models
-from django.forms.models import inlineformset_factory
 
 from core.models import Page
 from verdantadmin.forms import register, AdminHandler
@@ -38,9 +37,9 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
-        InlinePanel(inlineformset_factory(NewsItem, NewsItemRelatedLink)),
         FieldPanel('body'),
+        InlinePanel(NewsItem, NewsItemRelatedLink),
     ]
 
 
-# register(NewsItem, NewsItemAdminHandler)
+register(NewsItem, NewsItemAdminHandler)

@@ -1,6 +1,7 @@
 # a Panel is a vertical section of the admin add/edit page, responsible for editing
 # some fields (or inline formsets) of the model.
 
+from django.forms.models import inlineformset_factory
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
@@ -44,8 +45,8 @@ class FieldPanel(object):
 
 
 class InlinePanel(object):
-    def __init__(self, formset_class):
-        self.formset_class = formset_class
+    def __init__(self, base_model, related_model):
+        self.formset_class = inlineformset_factory(base_model, related_model)
 
     def get_panel_instance(self, *args, **kwargs):
         formset_class = self.formset_class
