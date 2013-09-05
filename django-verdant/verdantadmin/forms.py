@@ -30,8 +30,8 @@ class AdminHandlerBase(type):
             if 'form' not in dct:
                 cls.form = build_model_form_class(cls.model)
 
-            if 'inlines' not in dct:
-                cls.inlines = []
+            if 'panels' not in dct:
+                cls.panels = []
 
 
 class AdminHandler(object):
@@ -40,28 +40,39 @@ class AdminHandler(object):
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance', None)
 
+        # construct the form instance that spans all panel instances
         self.form_instance = self.form(*args, instance=instance)
 
-        self.inline_instances = [
-            inline(*args, instance=instance)
-            for inline in self.inlines
+        # create each panel instance, handing it the submitted data, model instance and form instance
+        self.panel_instances = [
+            panel.get_panel_instance(*args, instance=instance, form=self.form_instance)
+            for panel in self.panels
         ]
 
     def is_valid(self):
+        # overall submission is valid if the form is valid and all panels are valid
         result = self.form_instance.is_valid()
-        for inline in self.inline_instances:
-            result &= inline.is_valid()
+        for panel in self.panel_instances:
+            result &= panel.is_valid()
         return result
 
     def save(self, commit=True):
+        self._pre_save()
+
         result = self.form_instance.save(commit=commit)
+
         if commit:
-            self.save_inlines()
+            self._post_save()
+
         return result
 
-    def save_inlines(self, commit=True):
-        for inline in self.inline_instances:
-            inline.save(commit=commit)
+    def _pre_save(self):
+        for panel in self.panel_instances:
+            panel.pre_save()
+
+    def _post_save(self):
+        for panel in self.panel_instances:
+            panel.post_save()
 
 
 def build_admin_handler_class(model_class):

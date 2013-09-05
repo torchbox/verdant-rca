@@ -1,0 +1,7 @@
+{% csrf_token %}
+
+{% for panel in panels %}
+    <div class="panel">
+        {{ panel.render|safe }}
+    </div>
+{% endfor %}

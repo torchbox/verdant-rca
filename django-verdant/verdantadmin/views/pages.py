@@ -90,6 +90,8 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if admin.is_valid():
             page = admin.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
+            admin._post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
+
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_pages_index')
     else:
@@ -100,7 +102,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         'page_class': page_class,
         'parent_page': parent_page,
         'form': admin.form_instance,
-        'inlines': admin.inline_instances,
+        'panels': admin.panel_instances,
     })
 
 
@@ -120,5 +122,5 @@ def edit(request, page_id):
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
         'form': admin.form_instance,
-        'inlines': admin.inline_instances,
+        'panels': admin.panel_instances,
     })

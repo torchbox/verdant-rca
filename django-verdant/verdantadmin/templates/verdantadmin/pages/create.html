@@ -4,12 +4,7 @@
     <h2>New {{ content_type.name }}</h2>
 
     <form action="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-
-        {% for inline in inlines %}
-            {{ inline }}
-        {% endfor %}
+        {% include "verdantadmin/pages/_form.html" %}
         <input type="submit" value="Create page">
     </form>
 {% endblock %}

@@ -3,6 +3,7 @@ from django.forms.models import inlineformset_factory
 
 from core.models import Page
 from verdantadmin.forms import register, AdminHandler
+from verdantadmin.panels import FieldPanel, InlinePanel
 
 
 class RelatedLink(models.Model):
@@ -33,7 +34,13 @@ class NewsItemAdminHandler(AdminHandler):
     model = NewsItem
     # can pass a custom modelform here:
     # form = NewsItemForm
-    inlines = [inlineformset_factory(NewsItem, NewsItemRelatedLink)]
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('slug'),
+        InlinePanel(inlineformset_factory(NewsItem, NewsItemRelatedLink)),
+        FieldPanel('body'),
+    ]
 
 
 register(NewsItem, NewsItemAdminHandler)
