@@ -38,7 +38,7 @@ class NewsItemAdminHandler(AdminHandler):
         FieldPanel('title'),
         FieldPanel('slug'),
         FieldPanel('body'),
-        InlinePanel(NewsItem, NewsItemRelatedLink),
+        InlinePanel(NewsItem, NewsItemRelatedLink), # could pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
     ]
 
 

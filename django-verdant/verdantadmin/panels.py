@@ -48,16 +48,34 @@ class FieldPanel(object):
 
 
 class InlinePanel(object):
-    def __init__(self, base_model, related_model):
-        self.formset_class = inlineformset_factory(base_model, related_model, extra=0)
+    def __init__(self, base_model, related_model, panels=None):
+        formset_class = inlineformset_factory(base_model, related_model, extra=0)
+        self.formset_class = formset_class
+        admin_handler_panels = panels
+
+        # construct an AdminHandler class around the particular flavour of ModelForm
+        # that inlineformset_factory generates
+        from verdantadmin.forms import AdminHandler
+        class InlineAdminHandler(AdminHandler):
+            form = formset_class.form
+            if admin_handler_panels is not None:
+                panels = admin_handler_panels
+
+        self.admin_handler = InlineAdminHandler
 
     def get_panel_instance(self, *args, **kwargs):
         formset_class = self.formset_class
+        admin_handler = self.admin_handler
 
         class InlinePanelInstance(AdminPanelInstance):
             def __init__(self, *args, **kwargs):
                 super(InlinePanelInstance, self).__init__(*args, **kwargs)
                 self.formset = formset_class(*args, instance=self.model_instance)
+
+                self.admin_handler_instances = [
+                    admin_handler(*args, instance=form.instance)
+                    for form in self.formset.forms
+                ]
 
             template = "verdantadmin/panels/inline_panel.html"
             js_template = "verdantadmin/panels/inline_panel_js.html"
