@@ -1,6 +1,8 @@
 # a Panel is a vertical section of the admin add/edit page, responsible for editing
 # some fields (or inline formsets) of the model.
 
+from django.template.loader import render_to_string
+
 
 class AdminPanelInstance(object):
     def __init__(self, *args, **kwargs):
@@ -32,8 +34,10 @@ class FieldPanel(object):
             def __init__(self, *args, **kwargs):
                 super(FieldPanelInstance, self).__init__(*args, **kwargs)
 
+            template = "verdantadmin/panels/field_panel.html"
+
             def render(self):
-                return str(self.form[field_name])
+                return render_to_string(self.template, {'field': self.form[field_name]})
 
         return FieldPanelInstance(*args, **kwargs)
 
