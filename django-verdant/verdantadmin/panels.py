@@ -54,8 +54,10 @@ class InlinePanel(object):
                 super(InlinePanelInstance, self).__init__(*args, **kwargs)
                 self.formset = formset_class(*args, instance=self.model_instance)
 
+            template = "verdantadmin/panels/inline_panel.html"
+
             def render(self):
-                return str(self.formset.management_form) + ''.join([form.as_p() for form in self.formset])
+                return render_to_string(self.template, {'formset': self.formset})
 
             def is_valid(self):
                 return self.formset.is_valid()
