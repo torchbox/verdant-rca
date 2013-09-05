@@ -106,10 +106,24 @@ class InlinePanel(object):
                 }))
 
             def is_valid(self):
-                return self.formset.is_valid()
+                result = self.formset.is_valid()
+
+                for admin in self.admin_handler_instances:
+                    result &= admin.is_valid()
+
+                return result
+
+            def pre_save(self):
+                for admin in self.admin_handler_instances:
+                    admin._pre_save()
 
             def post_save(self):
                 # inline relations need to be saved after the form is saved
                 self.formset.save()
+
+                # now we can run any post_save handlers on the child adminhandlers
+                for admin in self.admin_handler_instances:
+                    admin._post_save()
+
 
         return InlinePanelInstance(*args, **kwargs)
