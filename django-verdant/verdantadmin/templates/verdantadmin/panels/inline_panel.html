@@ -1,5 +1,15 @@
-{{ formset.management_form }}
+<div class="expanding-formset">
+    {{ formset.management_form }}
 
-{% for form in formset %}
-    {{ form.as_p }}
-{% endfor %}
+    <div id="id_{{ formset.prefix }}-FORMS">
+        {% for form in formset %}
+            {{ form.as_p }}
+        {% endfor %}
+    </div>
+
+    <script type="text/django-form-template" id="id_{{ formset.prefix }}-EMPTY_FORM_TEMPLATE">
+        {{ formset.empty_form.as_p }}
+    </script>
+
+    <input type="button" id="id_{{ formset.prefix }}-ADD" value="Add another object">
+</div>

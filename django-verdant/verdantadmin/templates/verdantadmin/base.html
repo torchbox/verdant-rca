@@ -1,4 +1,6 @@
 <!DOCTYPE HTML>
+{% load compress %}
+
 <html>
     <head>
         <title>Verdant admin</title>
@@ -18,5 +20,24 @@
         {% endif %}
 
         {% block content %}{% endblock %}
+
+        {% comment %}
+            JavaScript at the bottom for fast page loading:
+            http://developer.yahoo.com/performance/rules.html#js_bottom
+        {% endcomment %}
+
+        {% compress js %}
+            {% comment %}
+                Core JS includes (for inclusion on all pages) to be specified here
+            {% endcomment %}
+            <script src="{{ STATIC_URL }}js/jquery-1.9.1.js"></script>
+        {% endcompress %}
+
+        {% compress js %}
+            {% comment %}
+                Per-page JS is compressed separately so that the global stuff doesn't get re-downloaded each time 
+            {% endcomment %}
+            {% block extra_js %}{% endblock %}
+        {% endcompress %}
     </body>
 </html>

@@ -1,0 +1,8 @@
+{% comment %}
+    Javascript declarations to be included on the 'create page' and 'edit page' views
+{% endcomment %}
+
+<script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
+{% for panel in panels %}
+    {{ panel.render_js }}
+{% endfor %}

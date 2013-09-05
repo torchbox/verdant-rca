@@ -23,6 +23,9 @@ class AdminPanelInstance(object):
     def render(self):
         return ""
 
+    def render_js(self):
+        return ""
+
 
 class FieldPanel(object):
     def __init__(self, field_name):
@@ -46,7 +49,7 @@ class FieldPanel(object):
 
 class InlinePanel(object):
     def __init__(self, base_model, related_model):
-        self.formset_class = inlineformset_factory(base_model, related_model)
+        self.formset_class = inlineformset_factory(base_model, related_model, extra=0)
 
     def get_panel_instance(self, *args, **kwargs):
         formset_class = self.formset_class
@@ -57,9 +60,13 @@ class InlinePanel(object):
                 self.formset = formset_class(*args, instance=self.model_instance)
 
             template = "verdantadmin/panels/inline_panel.html"
+            js_template = "verdantadmin/panels/inline_panel_js.html"
 
             def render(self):
                 return mark_safe(render_to_string(self.template, {'formset': self.formset}))
+
+            def render_js(self):
+                return mark_safe(render_to_string(self.js_template, {'formset': self.formset}))
 
             def is_valid(self):
                 return self.formset.is_valid()
