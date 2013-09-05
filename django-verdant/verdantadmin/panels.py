@@ -2,6 +2,7 @@
 # some fields (or inline formsets) of the model.
 
 from django.template.loader import render_to_string
+from django.utils.safestring import mark_safe
 
 
 class AdminPanelInstance(object):
@@ -37,7 +38,7 @@ class FieldPanel(object):
             template = "verdantadmin/panels/field_panel.html"
 
             def render(self):
-                return render_to_string(self.template, {'field': self.form[field_name]})
+                return mark_safe(render_to_string(self.template, {'field': self.form[field_name]}))
 
         return FieldPanelInstance(*args, **kwargs)
 
@@ -57,7 +58,7 @@ class InlinePanel(object):
             template = "verdantadmin/panels/inline_panel.html"
 
             def render(self):
-                return render_to_string(self.template, {'formset': self.formset})
+                return mark_safe(render_to_string(self.template, {'formset': self.formset}))
 
             def is_valid(self):
                 return self.formset.is_valid()
