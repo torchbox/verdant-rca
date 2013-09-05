@@ -35,26 +35,32 @@ class AdminHandlerBase(type):
 
                 cls.form = build_model_form_class(model)
 
-            if 'panels' not in dct:
-                # in the absence of an explicit panel list declaration,
-                # compile a passable one by turning each field in cls.form into
-                # an individual FieldPanel
-                cls.panels = [FieldPanel(field_name) for field_name in cls.form.base_fields]
-
 
 class AdminHandler(object):
     __metaclass__ = AdminHandlerBase
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs.get('instance', None)
+        if 'form' in kwargs:
+            self.form = kwargs['form']
+            instance = self.form.instance
+        else:
+            instance = kwargs.get('instance', None)
 
-        # construct the form instance that spans all panel instances
-        self.form = self.__class__.form(*args, instance=instance)
+            # construct the form instance that spans all panel instances
+            self.form = self.__class__.form(*args, instance=instance)
+
+        # do we have an explicit list of panel definitions?
+        try:
+            panel_definitions = self.__class__.panels
+        except AttributeError:
+            # infer a list of panel definitions from the form contents
+            visible_field_names = [f.name for f in self.form.visible_fields()]
+            panel_definitions = [FieldPanel(field_name) for field_name in visible_field_names]
 
         # create each panel instance, handing it the submitted data, model instance and form instance
         self.panels = [
             panel.get_panel_instance(*args, instance=instance, form=self.form)
-            for panel in self.__class__.panels
+            for panel in panel_definitions
         ]
 
     def is_valid(self):
@@ -83,7 +89,19 @@ class AdminHandler(object):
             panel.post_save()
 
     def render(self):
-        return mark_safe("".join([panel.render() for panel in self.panels]))
+        # find out which form fields will be rendered by panels
+        fields_rendered_by_panels = set()
+        for panel in self.panels:
+            for field in panel.rendered_fields():
+                fields_rendered_by_panels.add(field)
+
+        panel_html = "".join([panel.render() for panel in self.panels])
+        other_fields_html = "".join([
+            unicode(self.form[field])
+            for field in self.form.fields if field not in fields_rendered_by_panels
+        ])
+
+        return mark_safe(panel_html + other_fields_html)
 
     def render_setup_js(self):
         """

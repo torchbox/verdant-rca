@@ -2,8 +2,8 @@
     {{ formset.management_form }}
 
     <div id="id_{{ formset.prefix }}-FORMS">
-        {% for form in formset %}
-            {{ form.as_p }}
+        {% for admin in admins %}
+            {{ admin.render }}
         {% endfor %}
     </div>
 

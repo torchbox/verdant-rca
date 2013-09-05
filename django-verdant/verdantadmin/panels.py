@@ -26,6 +26,10 @@ class AdminPanelInstance(object):
     def render_js(self):
         return ""
 
+    def rendered_fields(self):
+        """return a list of names of fields that will be rendered by this panel"""
+        return []
+
 
 class FieldPanel(object):
     def __init__(self, field_name):
@@ -43,6 +47,10 @@ class FieldPanel(object):
 
             def render(self):
                 return mark_safe(render_to_string(self.template, {'field': self.form[field_name]}))
+
+            def rendered_fields(self):
+                """return a list of names of fields that will be rendered by this panel"""
+                return [field_name]
 
         return FieldPanelInstance(*args, **kwargs)
 
@@ -73,18 +81,20 @@ class InlinePanel(object):
                 self.formset = formset_class(*args, instance=self.model_instance)
 
                 self.admin_handler_instances = [
-                    admin_handler(*args, instance=form.instance)
+                    admin_handler(*args, form=form)
                     for form in self.formset.forms
                 ]
 
-            template = "verdantadmin/panels/inline_panel.html"
-            js_template = "verdantadmin/panels/inline_panel.js"
-
             def render(self):
-                return mark_safe(render_to_string(self.template, {'formset': self.formset}))
+                return mark_safe(render_to_string("verdantadmin/panels/inline_panel.html", {
+                    'admins': self.admin_handler_instances,
+                    'formset': self.formset
+                }))
 
             def render_js(self):
-                return mark_safe(render_to_string(self.js_template, {'formset': self.formset}))
+                return mark_safe(render_to_string("verdantadmin/panels/inline_panel.js", {
+                    'formset': self.formset
+                }))
 
             def is_valid(self):
                 return self.formset.is_valid()
