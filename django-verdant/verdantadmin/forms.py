@@ -48,25 +48,25 @@ class AdminHandler(object):
         instance = kwargs.get('instance', None)
 
         # construct the form instance that spans all panel instances
-        self.form_instance = self.form(*args, instance=instance)
+        self.form = self.__class__.form(*args, instance=instance)
 
         # create each panel instance, handing it the submitted data, model instance and form instance
-        self.panel_instances = [
-            panel.get_panel_instance(*args, instance=instance, form=self.form_instance)
-            for panel in self.panels
+        self.panels = [
+            panel.get_panel_instance(*args, instance=instance, form=self.form)
+            for panel in self.__class__.panels
         ]
 
     def is_valid(self):
         # overall submission is valid if the form is valid and all panels are valid
-        result = self.form_instance.is_valid()
-        for panel in self.panel_instances:
+        result = self.form.is_valid()
+        for panel in self.panels:
             result &= panel.is_valid()
         return result
 
     def save(self, commit=True):
         self._pre_save()
 
-        result = self.form_instance.save(commit=commit)
+        result = self.form.save(commit=commit)
 
         if commit:
             self._post_save()
@@ -74,11 +74,11 @@ class AdminHandler(object):
         return result
 
     def _pre_save(self):
-        for panel in self.panel_instances:
+        for panel in self.panels:
             panel.pre_save()
 
     def _post_save(self):
-        for panel in self.panel_instances:
+        for panel in self.panels:
             panel.post_save()
 
 

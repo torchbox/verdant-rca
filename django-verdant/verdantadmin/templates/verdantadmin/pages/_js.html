@@ -4,5 +4,5 @@
 
 <script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
 <script>
-    {% for panel in panels %}{{ panel.render_js }}{% endfor %}
+    {% for panel in admin.panels %}{{ panel.render_js }}{% endfor %}
 </script>

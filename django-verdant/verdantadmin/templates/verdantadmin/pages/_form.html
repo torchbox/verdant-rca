@@ -1,6 +1,6 @@
 {% csrf_token %}
 
-{% for panel in panels %}
+{% for panel in admin.panels %}
     <div class="panel">
         {{ panel.render }}
     </div>
