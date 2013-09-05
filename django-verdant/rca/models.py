@@ -43,4 +43,4 @@ class NewsItemAdminHandler(AdminHandler):
     ]
 
 
-register(NewsItem, NewsItemAdminHandler)
+# register(NewsItem, NewsItemAdminHandler)

@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 
 from core.models import Page
+from verdantadmin.panels import FieldPanel
 
 
 ADMIN_HANDLERS = {}
@@ -31,7 +32,10 @@ class AdminHandlerBase(type):
                 cls.form = build_model_form_class(cls.model)
 
             if 'panels' not in dct:
-                cls.panels = []
+                # in the absence of an explicit panel list declaration,
+                # compile a passable one by turning each field in cls.form into
+                # an individual FieldPanel
+                cls.panels = [FieldPanel(field_name) for field_name in cls.form.base_fields]
 
 
 class AdminHandler(object):
