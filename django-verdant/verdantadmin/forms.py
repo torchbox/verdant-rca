@@ -1,4 +1,5 @@
 from django.forms import ModelForm
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
 from core.models import Page
@@ -39,6 +40,8 @@ class AdminHandlerBase(type):
 class AdminHandler(object):
     __metaclass__ = AdminHandlerBase
 
+    can_delete = False
+
     def __init__(self, *args, **kwargs):
         if 'form' in kwargs:
             self.form = kwargs['form']
@@ -62,6 +65,10 @@ class AdminHandler(object):
             panel.get_panel_instance(*args, instance=instance, form=self.form)
             for panel in panel_definitions
         ]
+
+    @property
+    def prefix(self):
+        return self.form.prefix
 
     def is_valid(self):
         # overall submission is valid if the form is valid and all panels are valid
@@ -88,25 +95,31 @@ class AdminHandler(object):
         for panel in self.panels:
             panel.post_save()
 
-    def render(self):
-        # find out which form fields will be rendered by panels
+    def non_panel_fields(self):
+        """
+        return a list of fields that are in the form but not rendered by a panel
+        """
         fields_rendered_by_panels = set()
         for panel in self.panels:
             for field in panel.rendered_fields():
                 fields_rendered_by_panels.add(field)
 
-        panel_html = "".join([panel.render() for panel in self.panels])
-        other_fields_html = "".join([
-            unicode(self.form[field])
-            for field in self.form.fields if field not in fields_rendered_by_panels
-        ])
+        return [
+            self.form[field_name] for field_name in self.form.fields if field_name not in fields_rendered_by_panels
+        ]
 
-        return mark_safe(panel_html + other_fields_html)
+    def render(self):
+        return mark_safe(render_to_string("verdantadmin/panels/admin.html", {
+            'admin': self
+        }))
 
     def render_setup_js(self):
         """
         return a string of the JS code to be executed once the HTML has been rendered
         """
+        return mark_safe(render_to_string("verdantadmin/panels/admin.js", {
+            'admin': self
+        }))
         js_snippets = [panel.render_js() for panel in self.panels]
         # discard the empty ones
         js_snippets = [s for s in js_snippets if s]

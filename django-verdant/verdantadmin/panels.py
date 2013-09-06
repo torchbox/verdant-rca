@@ -1,6 +1,7 @@
 # a Panel is a vertical section of the admin add/edit page, responsible for editing
 # some fields (or inline formsets) of the model.
 
+from django import forms
 from django.forms.models import inlineformset_factory
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -70,6 +71,8 @@ class InlinePanel(object):
         from verdantadmin.forms import AdminHandler
         class InlineAdminHandler(AdminHandler):
             form = formset_class.form
+            can_delete = True
+
             if admin_handler_panels is not None:
                 panels = admin_handler_panels
 
@@ -84,12 +87,15 @@ class InlinePanel(object):
                 super(InlinePanelInstance, self).__init__(*args, **kwargs)
                 self.formset = formset_class(*args, instance=self.model_instance)
 
-                self.admin_handler_instances = [
-                    admin_handler(*args, form=form)
-                    for form in self.formset.forms
-                ]
+                self.admin_handler_instances = []
+                for form in self.formset.forms:
+                    # override the DELETE field to have a hidden input
+                    form.fields['DELETE'].widget = forms.HiddenInput()
+                    self.admin_handler_instances.append(admin_handler(*args, form=form))
 
-                self.empty_form_admin_handler_instance = admin_handler(*args, form=self.formset.empty_form)
+                empty_form = self.formset.empty_form
+                empty_form.fields['DELETE'].widget = forms.HiddenInput()
+                self.empty_form_admin_handler_instance = admin_handler(*args, form=empty_form)
 
             def render(self):
                 return mark_safe(render_to_string("verdantadmin/panels/inline_panel.html", {
