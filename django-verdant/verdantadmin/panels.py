@@ -53,6 +53,14 @@ def FieldPanel(field_name):
     return type('_FieldPanel', (BaseFieldPanel,), {'field_name': field_name})
 
 
+class BaseRichTextFieldPanel(BaseFieldPanel):
+    def render_js(self):
+        return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#fdd')});" % self.form[self.field_name].id_for_label
+
+def RichTextFieldPanel(field_name):
+    return type('_FieldPanel', (BaseRichTextFieldPanel,), {'field_name': field_name})
+
+
 # Abstract superclass of InlinePanel types. Subclasses need to provide:
 # - a formset class (self.formset_class)
 # - an admin handler class (self.admin_handler)

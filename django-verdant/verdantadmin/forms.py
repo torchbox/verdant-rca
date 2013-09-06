@@ -37,6 +37,15 @@ class AdminHandlerBase(type):
                 cls.form = build_model_form_class(model)
 
 
+def panel_for_field(field_name, field_def):
+    try:
+        panel_class = field_def.widget.get_panel()
+    except AttributeError:
+        panel_class = FieldPanel
+
+    return panel_class(field_name)
+
+
 class AdminHandler(object):
     __metaclass__ = AdminHandlerBase
 
@@ -61,7 +70,10 @@ class AdminHandler(object):
         except AttributeError:
             # infer a list of panel definitions from the form contents
             visible_field_names = [f.name for f in self.form.visible_fields()]
-            panel_definitions = [FieldPanel(field_name) for field_name in visible_field_names]
+            panel_definitions = [
+                panel_for_field(field_name, self.form.fields[field_name])
+                for field_name in visible_field_names
+            ]
 
         # create each panel instance, handing it the submitted data, model instance and form instance
         self.panels = [

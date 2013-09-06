@@ -1,8 +1,10 @@
 from django.db import models
 
 from core.models import Page
+
+from verdant.fields import RichTextField
 from verdantadmin.forms import register, AdminHandler
-from verdantadmin.panels import FieldPanel, InlinePanel
+from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
 
 
 class RelatedLink(models.Model):
@@ -14,7 +16,7 @@ class RelatedLink(models.Model):
 
 
 class EditorialPage(Page):
-    body = models.TextField()
+    body = RichTextField()
 
 
 class NewsIndex(Page):
@@ -37,7 +39,7 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
-        FieldPanel('body'),
+        RichTextFieldPanel('body'),
         InlinePanel(NewsItem, NewsItemRelatedLink), # could pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
     ]
 
