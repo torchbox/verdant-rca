@@ -62,8 +62,8 @@ class AdminHandler(object):
 
         # create each panel instance, handing it the submitted data, model instance and form instance
         self.panels = [
-            panel.get_panel_instance(*args, instance=instance, form=self.form)
-            for panel in panel_definitions
+            panel_class(*args, instance=instance, form=self.form)
+            for panel_class in panel_definitions
         ]
 
     @property
