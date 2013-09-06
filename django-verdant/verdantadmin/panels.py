@@ -32,25 +32,25 @@ class BaseAdminPanel(object):
         return []
 
 
+# Abstract superclass of FieldPanel types. Subclasses need to provide a field_name attribute.
+class BaseFieldPanel(BaseAdminPanel):
+    template = "verdantadmin/panels/field_panel.html"
+
+    def render(self):
+        return mark_safe(render_to_string(self.template, {'field': self.form[self.field_name]}))
+
+    # TEMP - to check that javascript is being correctly applied to fields
+    def render_js(self):
+        return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#ddf')});" % self.form[self.field_name].id_for_label
+
+    def rendered_fields(self):
+        """return a list of names of fields that will be rendered by this panel"""
+        return [self.field_name]
+
 def FieldPanel(field_name):
-    class _FieldPanel(BaseAdminPanel):
-        def __init__(self, *args, **kwargs):
-            super(_FieldPanel, self).__init__(*args, **kwargs)
-
-        template = "verdantadmin/panels/field_panel.html"
-
-        def render(self):
-            return mark_safe(render_to_string(self.template, {'field': self.form[field_name]}))
-
-        # TEMP - to check that javascript is being correctly applied to fields
-        def render_js(self):
-            return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#ddf')});" % self.form[field_name].id_for_label
-
-        def rendered_fields(self):
-            """return a list of names of fields that will be rendered by this panel"""
-            return [field_name]
-
-    return _FieldPanel
+    # return a newly constructed subclass of BaseFieldPanel whose only difference
+    # is the addition of a self.field_name attribute
+    return type('_FieldPanel', (BaseFieldPanel,), {'field_name': field_name})
 
 
 def InlinePanel(base_model, related_model, panels=None):
