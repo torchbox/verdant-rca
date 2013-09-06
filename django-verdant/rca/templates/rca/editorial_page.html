@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 
 {% block content %}
-    <p>{{ self.body }}</p>
+    <p>{{ self.body|safe }}</p>
 
     {% block sidebar %}{% endblock %}
 {% endblock %}

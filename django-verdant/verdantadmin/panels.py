@@ -55,7 +55,7 @@ def FieldPanel(field_name):
 
 class BaseRichTextFieldPanel(BaseFieldPanel):
     def render_js(self):
-        return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#fdd')});" % self.form[self.field_name].id_for_label
+        return "makeRichTextEditable(fixPrefix('%s'));" % self.form[self.field_name].id_for_label
 
 def RichTextFieldPanel(field_name):
     return type('_FieldPanel', (BaseRichTextFieldPanel,), {'field_name': field_name})
