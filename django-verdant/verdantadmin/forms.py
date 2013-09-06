@@ -42,7 +42,10 @@ class AdminHandler(object):
 
     can_delete = False
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, data=None, files=None, **kwargs):
+        self.data = data
+        self.files = files
+
         if 'form' in kwargs:
             self.form = kwargs['form']
             instance = self.form.instance
@@ -50,7 +53,7 @@ class AdminHandler(object):
             instance = kwargs.get('instance', None)
 
             # construct the form instance that spans all panel instances
-            self.form = self.__class__.form(*args, instance=instance)
+            self.form = self.__class__.form(data, files, instance=instance)
 
         # do we have an explicit list of panel definitions?
         try:
@@ -62,7 +65,7 @@ class AdminHandler(object):
 
         # create each panel instance, handing it the submitted data, model instance and form instance
         self.panels = [
-            panel_class(*args, instance=instance, form=self.form)
+            panel_class(data, files, instance=instance, form=self.form)
             for panel_class in panel_definitions
         ]
 
@@ -70,7 +73,21 @@ class AdminHandler(object):
     def prefix(self):
         return self.form.prefix
 
+    def is_being_deleted(self):
+        if not self.can_delete:
+            return False
+
+        # largely snarfed from https://github.com/django/django/commit/08056572e8
+        field = self.form.fields['DELETE']
+        prefix = self.form.add_prefix('DELETE')
+        value = field.widget.value_from_datadict(self.data, self.files, prefix)
+        return field.clean(value)
+
     def is_valid(self):
+        if self.is_being_deleted():
+            # shortcut further validation if this model is going to be deleted anyway
+            return True
+
         # overall submission is valid if the form is valid and all panels are valid
         result = self.form.is_valid()
         for panel in self.panels:
@@ -88,10 +105,16 @@ class AdminHandler(object):
         return result
 
     def _pre_save(self):
+        if self.is_being_deleted():
+            return
+
         for panel in self.panels:
             panel.pre_save()
 
     def _post_save(self):
+        if self.is_being_deleted():
+            return
+
         for panel in self.panels:
             panel.post_save()
 

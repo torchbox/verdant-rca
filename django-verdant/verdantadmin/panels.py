@@ -105,6 +105,11 @@ class BaseInlinePanel(BaseAdminPanel):
         # inline relations need to be saved after the form is saved
         self.formset.save()
 
+        # NB we avoid calling save() on the admin handler instances
+        # because this will cause their forms to be saved; we don't
+        # want to do this as formset.save() handles this for us, with some
+        # nuances (e.g. not saving deleted fields).
+
         # now we can run any post_save handlers on the child adminhandlers
         for admin in self.admin_handler_instances:
             admin._post_save()
