@@ -34,12 +34,7 @@ class AdminPanelInstance(object):
 
 class FieldPanel(object):
     def __init__(self, field_name):
-        self.field_name = field_name
 
-    def get_panel_instance(self, *args, **kwargs):
-        field_name = self.field_name
-
-        # FIXME: defining this on every call to get_panel_instance is sucky. METACLASS VOODOO AHOY!
         class FieldPanelInstance(AdminPanelInstance):
             def __init__(self, *args, **kwargs):
                 super(FieldPanelInstance, self).__init__(*args, **kwargs)
@@ -57,13 +52,15 @@ class FieldPanel(object):
                 """return a list of names of fields that will be rendered by this panel"""
                 return [field_name]
 
-        return FieldPanelInstance(*args, **kwargs)
+        self.panel_class = FieldPanelInstance
+
+    def get_panel_instance(self, *args, **kwargs):
+        return self.panel_class(*args, **kwargs)
 
 
 class InlinePanel(object):
     def __init__(self, base_model, related_model, panels=None):
         formset_class = inlineformset_factory(base_model, related_model, extra=0)
-        self.formset_class = formset_class
         admin_handler_panels = panels
 
         # construct an AdminHandler class around the particular flavour of ModelForm
@@ -76,11 +73,7 @@ class InlinePanel(object):
             if admin_handler_panels is not None:
                 panels = admin_handler_panels
 
-        self.admin_handler = InlineAdminHandler
-
-    def get_panel_instance(self, *args, **kwargs):
-        formset_class = self.formset_class
-        admin_handler = self.admin_handler
+        admin_handler = InlineAdminHandler
 
         class InlinePanelInstance(AdminPanelInstance):
             def __init__(self, *args, **kwargs):
@@ -131,5 +124,7 @@ class InlinePanel(object):
                 for admin in self.admin_handler_instances:
                     admin._post_save()
 
+        self.panel_class = InlinePanelInstance
 
-        return InlinePanelInstance(*args, **kwargs)
+    def get_panel_instance(self, *args, **kwargs):
+        return self.panel_class(*args, **kwargs)
