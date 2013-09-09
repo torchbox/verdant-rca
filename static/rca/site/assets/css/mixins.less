@@ -89,9 +89,11 @@
 }
 
 /* sidebar advert */
-.mixin-sidebar-advert(@color, @fade) {
+.mixin-sidebar-advert(@color, @fade:0) {
     background-color: @color; /* fallback for ie8 */
     background-color: fade(@color, @fade);
+    color:white;
+    
     h2, p {
         margin: 0;
     }
