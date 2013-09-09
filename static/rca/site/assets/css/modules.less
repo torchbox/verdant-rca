@@ -27,6 +27,8 @@
  * Stats block
  * Button bar
  * Metadata
+ * Body-text
+ * Profile
  */
 
 /**
@@ -602,7 +604,7 @@
 
     .four-cols{
         .row();
-        margin-bottom:@grid-gutter-width;
+        margin:@grid-gutter-width 0;
     }
 
 }
@@ -690,16 +692,11 @@
  */
 .profile {
     .profile-pic{
-        padding: @grid-gutter-width;
+        padding: 0 @grid-gutter-width;
     }
-    dt {
-        .a3();
-    }
-    dd {
-        .h6();
-        span {
-            .bc3();
-        }
+    h3, p { margin: 0;}
+    .space {
+        margin-top: @spacing-two;
     }
 }
 
