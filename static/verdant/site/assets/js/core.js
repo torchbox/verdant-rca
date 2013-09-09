@@ -3,9 +3,19 @@ $(function(){
         $('body').toggleClass('nav-open');
     });
 
+    fitNav();
+    $(window).resize(function(){
+        fitNav();
+    })
+
     $('textarea').autosize();
 
-    $('.explorer').addClass('dl-menuwrapper').dlmenu({animationClasses : { classin : 'dl-animate-in-2', classout : 'dl-animate-out-2' }});
+    $('.explorer').addClass('dl-menuwrapper').dlmenu({
+        animationClasses : {
+            classin : 'dl-animate-in-2', 
+            classout : 'dl-animate-out-2'
+        }
+    });
 
     $(document).on('focus mouseover', 'input,textarea,select', function(){
     	$(this).closest('.field').addClass('focused')
@@ -18,3 +28,7 @@ $(function(){
         $(this).closest('li').removeClass('focused')
     });
 })
+
+function fitNav(){
+    $('.nav-wrapper').css('min-height',$(window).height());
+}
