@@ -1,4 +1,4 @@
 *.pyc
 .DS_Store
 /django-verdant/.vagrant
-static
+/django-verdant/static
