@@ -34,25 +34,24 @@
 
 	$.DLMenu.prototype = {
 		_init : function( options ) {
-
 			// options
 			this.options = $.extend( true, {}, $.DLMenu.defaults, options );
 			// cache some elements and initialize some variables
 			this._config();
 			
 			var animEndEventNames = {
-					'WebkitAnimation' : 'webkitAnimationEnd',
-					'OAnimation' : 'oAnimationEnd',
-					'msAnimation' : 'MSAnimationEnd',
-					'animation' : 'animationend'
-				},
-				transEndEventNames = {
-					'WebkitTransition' : 'webkitTransitionEnd',
-					'MozTransition' : 'transitionend',
-					'OTransition' : 'oTransitionEnd',
-					'msTransition' : 'MSTransitionEnd',
-					'transition' : 'transitionend'
-				};
+				'WebkitAnimation' : 'webkitAnimationEnd',
+				'OAnimation' : 'oAnimationEnd',
+				'msAnimation' : 'MSAnimationEnd',
+				'animation' : 'animationend'
+			},
+			transEndEventNames = {
+				'WebkitTransition' : 'webkitTransitionEnd',
+				'MozTransition' : 'transitionend',
+				'OTransition' : 'oTransitionEnd',
+				'msTransition' : 'MSTransitionEnd',
+				'transition' : 'transitionend'
+			};
 			// animation end event name
 			this.animEndEventName = animEndEventNames[ Modernizr.prefixed( 'animation' ) ] + '.dlmenu';
 			// transition end event name
@@ -66,20 +65,19 @@
 		},
 		_config : function() {
 			this.open = false;
-			this.$trigger = this.$el.children( '.dl-trigger' );
+			this.$trigger = $( '.dl-trigger' );
 			this.$menu = this.$el.children( 'ul.dl-menu' );
-			this.$menuitems = this.$menu.find( 'li:not(.dl-back)' );
-			this.$el.find( 'ul.submenu' ).prepend( '<li class="dl-back"><a href="#">back</a></li>' );
+			this.$menuitems = this.$menu.find( 'li:not(.dl-back) .children' );
+			this.$el.find( 'ul.dl-submenu' ).prepend( '<li class="dl-back"><a href="#">back</a></li>' );
 			this.$back = this.$menu.find( 'li.dl-back' );
 		},
 		_initEvents : function() {
-
 			var self = this;
 
 			this.$trigger.on( 'click.dlmenu', function() {
 				
 				if( self.open ) {
-					self._closeMenu();
+					//self._closeMenu();
 				} 
 				else {
 					self._openMenu();
@@ -92,8 +90,8 @@
 				
 				event.stopPropagation();
 
-				var $item = $(this),
-					$submenu = $item.children( 'ul.submenu' );
+				var $item = $(this).parent(),
+					$submenu = $item.children( 'ul.dl-submenu' );
 
 				if( $submenu.length > 0 ) {
 
@@ -125,11 +123,10 @@
 				}
 
 			} );
-
+	
 			this.$back.on( 'click.dlmenu', function( event ) {
-				
 				var $this = $( this ),
-					$submenu = $this.parents( 'ul.submenu:first' ),
+					$submenu = $this.parents( 'ul.dl-submenu:first' ),
 					$item = $submenu.parent(),
 
 					$flyin = $submenu.clone().insertAfter( self.$menu );
@@ -185,7 +182,6 @@
 			else {
 				onTransitionEndFn.call();
 			}
-
 			this.open = false;
 		},
 		openMenu : function() {
@@ -197,7 +193,7 @@
 			var self = this;
 			// clicking somewhere else makes the menu close
 			$body.off( 'click' ).on( 'click.dlmenu', function() {
-				self._closeMenu() ;
+				//self._closeMenu() ;
 			} );
 			this.$menu.addClass( 'dl-menuopen dl-menu-toggle' ).on( this.transEndEventName, function() {
 				$( this ).removeClass( 'dl-menu-toggle' );
@@ -208,7 +204,7 @@
 		// resets the menu to its original state (first level of options)
 		_resetMenu : function() {
 			this.$menu.removeClass( 'dl-subview' );
-			this.$menuitems.removeClass( 'dl-subview dl-subviewopen' );
+			this.$menuitems.parent().removeClass( 'dl-subview dl-subviewopen' );
 		}
 	};
 

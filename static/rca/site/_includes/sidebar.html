@@ -1,0 +1,113 @@
+{% if page.path != "news.html" %}
+{% if page.path != "staff-profile.html" %}
+<div class="today expanded">
+    <h2>Today</h2>
+    <ul>
+        <li>
+            <a href="">
+                <h3>21 March</h3>
+                <p>Neville Brody in Conversation</p>
+            </a>
+            <span>public</span>
+        </li>
+        <li>
+            <a href="">
+                <h3>7 May</h3>
+                <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
+            </a>
+            <span>private</span>
+        </li>
+        <li class="last">
+            <a href="">
+                <h3>14 March</h3>
+                <p>SHOW RCA 2013</p>
+            </a>
+            <span>public</span>
+        </li>
+    </ul>
+</div>
+
+<!-- advert -->
+<div class="sidebar-advert">
+    <a href="">
+    <h2>Apply to Study</h2>
+    <p>at the Royal College of Art</p>
+    </a>
+</div>
+
+<div class="related expanded">
+    <h2>In this section</h2>
+    <ul>
+        <li><a href="">Entrance requirements</a></li>
+        <li class="last"><a href="">Partnerships Awards &amp; scholarships</a></li>
+        <li><a href="">Staff</a></li>
+        <li><a href="">Alumni</a></li>
+    </ul>
+    <!-- <ul class="extra-links">
+        <li><a href="">Another link</a></li>
+        <li><a href="">Another link to somewhere else</a></li>
+        <li class="last"><a href="">Another link to somewhere else</a></li>
+    </ul> -->
+</div>
+
+<div class="related expanded">
+    <h2>See also</h2>
+    <ul>
+        <li><a href="">Studying at the RCA</a></li>
+        <li><a href="">Tuition fees and funding</a></li>
+        <li><a href="">Apply for this programme</a></li>
+    </ul>
+</div>
+
+{% endif %}
+{% endif %}
+
+{% if page.path == "news.html" %}
+<!-- related content -->
+<div class="related-content-item">
+    <a href="">
+        <figure>
+            <img src="http://placekitten.com/200/200" alt="" />
+            <figcaption>A new building for Battersea</figcaption>
+        </figure>
+    </a>
+    <a href="" class="index-page-link">News &gt;</a>
+</div>
+<div class="related-content-item">
+    <a href="">
+        <figure>
+            <img src="http://placekitten.com/200/200" alt="" />
+            <figcaption>The Eglu</figcaption>
+        </figure>
+    </a>
+    <a href="" class="index-page-link">News &gt;</a>
+</div>
+<div class="related-content-item">
+    <a href="">
+        <figure>
+            <img src="http://placekitten.com/200/200" alt="" />
+            <figcaption>Talking interiors</figcaption>
+        </figure>
+    </a>
+    <a href="" class="index-page-link">News &gt;</a>
+</div>
+{% endif %}
+
+{% if page.path == "staff-profile.html" %}
+<div class="related-content-item">
+    <a href="">
+        <figure class="staff">
+            <img src="http://instasrc.com/200x200/people" alt="" />
+            <figcaption>Name<span>Surname</span></figcaption>
+        </figure>
+    </a>
+</div>
+<div class="related-content-item">
+    <a href="">
+        <figure class="staff">
+            <img src="http://instasrc.com/200x200/people" alt="" />
+            <figcaption>Name<span>Surname</span></figcaption>
+        </figure>
+    </a>
+</div>
+{% endif %}

@@ -1,12 +1,73 @@
----
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop
+ *
+ * Overrides core.less for desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
 
----
-@import "assets/css/variables.less";
-@import "assets/css/grid.less";
-@import "assets/css/mixins.less";
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents...................You’re reading it!
+ * Reset and body styles......Any remaining browser reset styles, body text style
+ * Typography.................reusable typographical styles
+ * Structure..................structure and layout
+ * Footer styles..............footer and bottom nav
+ * Template specific styles
+ */
+
+/**
+ * $Reset and body styles
+ */
 
 body {
 	padding: 0;
+}
+
+/**
+ * $Typography
+ */
+
+.ho-a-heading {
+    font-size: @font-size-100;
+}
+
+.h1 {
+    font-size: @font-size-50;
+    line-height: @line-height-1;
+    &.major {
+        .ho-a-heading;
+    }
+}
+
+.h2 {
+    font-size: @font-size-40;
+    line-height: @line-height-1;
+}
+
+.h3 {
+    font-size: @font-size-36;
+    line-height: @line-height-2;
+}
+
+.bc1 {
+    font-size: @font-size-30;
+    line-height: @line-height-3;
+}
+
+.bc2 {
+    font-size: @font-size-22;
+    line-height: @line-height-4;
 }
 
 /**
@@ -14,35 +75,47 @@ body {
  */
 
 .wrapper,
-.footer-wrapper {
+.footer-wrapper,
+.header-wrapper{
 	margin: 0 auto; /* left and right margins become even at regular desktop size */
 	width: 90%; /* make sure we have a small left and right margin */
 }
 
-.header-wrapper {
-    position: fixed; /* fixed for desktop and desktop-large version */
-    top: 0;
-    height: @header-height; /* match height of header */
+.header-wrapper.affix{
+    position:fixed;
+    height: 50px;
+    left:0;
+    right:0;
+    top:0;
+
+    header{
+      
+    }
+    .site-name{
+        display:none;
+    }
+}
+.wrapper.affix{
+    margin-top: @header-height; /* space for fixed header */
 }
 
 header {
-    height: @header-height; /* menu height + logo + margin on logo + 10px spacing below */
-    background-color: fade(@color-white, 80%);
-    position: fixed; /* fixed for desktop and desktop-large version */
-    top: 0;
-    right: 50%; /* fixed positioned elements can't use margin:auto - set right and margin-right instead */
-    width: 90%; /* matches wrapper */
-    margin-right: -45%;
+    height:auto;
+    margin:auto;
+    
     a.site-name {
-        display: block;
-        width: 328px;
         .clearfix();
+        float:none;
+        width:auto;
+        display: block;
+        background-color:transparent;
     }
     a.site-name p {
-        background-image: url('/assets/images/logo-header.png');
-        width: 328px;
-        height: 140px;
-        margin: 30px 0;
+        background-image: url('../images/logo-header.png');
+        width: 210px;
+        height: 91px;
+        margin:30px 0;
+        padding:0;
     }
 }
 
@@ -52,108 +125,128 @@ header {
     display: none;
 }
 
-/* At the desktop width the nav shrinks down to allow room for
-the search to appear next to it above the content */
-nav {
-    //.column(9, @grid-gutter-width, 12);
-    //.row();
-    width: 80%;
-    display: block;
-    float: left;
-}
-
-
-/* Search moves alongside the menu above the content */
-form.search {
-    //.column(2, @grid-gutter-width, 12);
-    display: block;
-    width: 15%;
-    float: right;
-    margin-top: 20px;
-}
-
-
-.content {
-    margin-top: @header-height; /* space for fixed header */
-}
-
-aside {
-	display: none; /* at medium desktop size the aside expands with a tab */
-}
-
-.content,
-footer,
-.nav-wrapper {
-	padding: 0;
-	width: 100%; /*no space for related content - it is now collapsed */
-}
-
 .nav-wrapper {
     /* mimics the style of the content below to make sure the search and navigation
     fill the correct width at the desktop size */
     .clearfix();
-    max-width: 960px;
-}
+    width:100%;
 
-/**
- * $Carousel styles for desktop
- */
-
-.bx-wrapper {
-    .bx-next {
-        //left: 10px;
-        &:after{
-            content: " ";
-            .sprite-load(0px, -546px, 67px, 131px);
-            position: absolute;
-            top: 2px;
-            left: 40px;
-        }
-    }
-
-    .bx-prev {
-        //right: 10px;
-        &:after{
-            content: " ";
-            .sprite-load(-139px, -546px, 67px, 131px);
-            position: absolute;
-            top: 2px;
-            left: 30px;
-        }
-    }
-
-    .bx-controls-direction a {
-        top: 50%;
-        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height: @carousel-control-height;
-        margin-top: ((@carousel-control-height / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
-        The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
+    .inner{
+        float:left;
+        width:100%;
     }
 }
 
+nav {
+    display:block;
+    margin-right:@right-col-width + @grid-gutter-width;  
+}
+
+/* Search moves alongside the menu above the content */
+form.search {
+    display: block;
+    position: static;
+    margin-left: 0;
+    float:right;
+    background-color:rgba(255,255,255,0.8);
+    height: auto;
+    margin-left: -@right-col-width;
+    width: @right-col-width;
+    border-bottom: 1px solid @color-black; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-black, 40%);
+    
+    input[type="text"] {
+        padding: 10px @spacing-half;
+    }
+}
+
+.content {
+    margin-top: @spacing-onepointfive;
+    float: left;
+    width: 100%;
+
+    .inner{
+        margin-right: @right-col-width + @grid-gutter-width;
+    }   
+}
+
+aside {
+    float: right;
+    width: @right-col-width;
+    margin-top:@grid-gutter-width;
+    margin-left: -@right-col-width;
+    display:block;
+    overflow: hidden;
+
+    ul {
+         .unlist();
+    }
+    &.affix{
+        margin-top: @header-height; /* space for fixed header */
+    }
+}
 
 /**
- * $Desktop footer styles - apply to large desktop size as well
+ *$Common grid divisions
+*/
+.eight {
+    .column(8, 0, 12);
+}
+
+.four {
+    .column(4, 0, 12);
+}
+
+/**
+ * $Footer styles - apply to large desktop size as well
  */
+
+.full-width-footer{
+    margin-left:0;
+    margin-right:0;
+}
+
+.footer-wrapper{
+    padding-right: @right-col-width + @grid-gutter-width;   
+}
+
+
 footer {
+    padding:2em 0 0 0;
+    
 	section {
 		.column(4, @grid-gutter-width, 12);
 		.row();
 	}
 	ul.menu {
-		background-image: url('/assets/images/logo-footer.png');
+		background-image: url('../images/logo-footer.png');
 		padding-top: 72px;
 	}
+    h3 {
+        margin-top: @spacing-three;
+    }
 	ul.social {
       	li {
+            text-indent: 0px;
             a {
-                width: 90px;
+                padding: @spacing-half;
+                width: 100px;
                 height: auto;
+            }
+            .facebook:after,
+            .vimeo:after,
+            .twitter:after,
+            .youtube:after {
+                content: none;
+                background-image: none;
             }
         }
     }
     .smallprint {
     	font-style: italic;
+        margin: @spacing-onepointfive 0 @spacing-three 0;
+        border-top: 1px solid @color-dark-grey;
+        border-bottom: 1px solid @color-dark-grey;
     	ul {
             float: right;
             li {
@@ -165,4 +258,62 @@ footer {
             }
         }
     }
+
+    .address {
+        display: inline;
+        border-top: none;
+        padding-top: 0;
+        margin-top: 0;
+    }
 }
+
+/**
+ * $Template specific styles
+ */
+
+.type-programme{
+    .cols-nine-three{
+        .row-flush();
+    }
+}   
+
+@import "modules-desktop.less";
+
+
+.col1{
+    .column(1);
+}
+.col2{
+    .column(2);
+}
+.col3{
+    .column(3);
+}
+.col4{
+    .column(4);
+}
+.col5{
+    .column(5);
+}
+.col6{
+    .column(6);
+}
+.col7{
+    .column(7);
+}
+.col8{
+    .column(8);
+}
+.col9{
+    .column(9);
+}
+.col10{
+    .column(10);
+}
+.col11{
+    .column(11);
+}
+.col12{
+    .column(12);
+}
+

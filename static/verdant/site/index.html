@@ -256,121 +256,123 @@ element.</p>
 
 
 <h2>Listings</h2>
+<p>Must be wrapped with a div.listings. The class can't be added to the table itself.</p>
+<div class="listing">
+    <table>
+        <thead>
+            <tr>
+                <th class="bulk"><label for="bulk-select-all"><span>Select all</span><input type="checkbox" id="bulk-select-all"/></label></th>
+                <th class="title"><a href="#" class="icon orderable-up">Title</a></th>
+                <th class="type">
+                    <div class="dropdown white match-width">
+                        <a href="#" class="dropdown-toggle icon orderable-down">Type</a> 
+                        <form>
+                            <ul role="menu">
+                                <li><label><input type="radio" name="status" /> Published</label></li>
+                                <li><label><input type="radio" name="status" /> Deleted</label></li>
+                                <li><label><input type="radio" name="status" /> Archived</label></li>
+                                <li><label><input type="radio" name="status" /> Draft</label></li>
+                            </ul>
+                        </form>
+                    </div>
+                </th>
+                <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">This is the title of this page</a></h2>
 
-<table class="listing">
-    <thead>
-        <tr>
-            <th class="bulk"><label for="bulk-select-all"><span>Select all</span><input type="checkbox" id="bulk-select-all"/></label></th>
-            <th class="title"><a href="#" class="icon orderable-up">Title</a></th>
-            <th class="type">
-                <div class="dropdown white match-width">
-                    <a href="#" class="dropdown-toggle icon orderable-down">Type</a> 
-                    <form>
-                        <ul role="menu">
-                            <li><label><input type="radio" name="status" /> Published</label></li>
-                            <li><label><input type="radio" name="status" /> Deleted</label></li>
-                            <li><label><input type="radio" name="status" /> Archived</label></li>
-                            <li><label><input type="radio" name="status" /> Draft</label></li>
-                        </ul>
-                    </form>
-                </div>
-            </th>
-            <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">This is the title of this page</a></h2>
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Type</td>
+                <td class="status">Draft</td>
+            </tr>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">Much shorter title</a></h2>
 
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Type</td>
-            <td class="status">Draft</td>
-        </tr>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">Much shorter title</a></h2>
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Potentially quite a long type spanning several lines</td>
+                <td class="status">Draft</td>
+            </tr>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">Mauris non vestibulum metus, sed scelerisque ipsum. Mauris ante etdt, elementum malesuada vehicula nec, viverra sit amet est. Ut at adipiscing tellus, in condimentum nisl.</a></h2>
 
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Potentially quite a long type spanning several lines</td>
-            <td class="status">Draft</td>
-        </tr>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">Mauris non vestibulum metus, sed scelerisque ipsum. Mauris ante etdt, elementum malesuada vehicula nec, viverra sit amet est. Ut at adipiscing tellus, in condimentum nisl.</a></h2>
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Type</td>
+                <td class="status">Draft</td>
+            </tr>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">Atdquam scelerisque fetds enim, non atdquet arcu iacutds ve</a></h2>
 
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Type</td>
-            <td class="status">Draft</td>
-        </tr>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">Atdquam scelerisque fetds enim, non atdquet arcu iacutds ve</a></h2>
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Type</td>
+                <td class="status">Draft</td>
+            </tr>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">Pellentesque non venenatis quam, in elementum</a></h2>
 
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Type</td>
-            <td class="status">Draft</td>
-        </tr>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">Pellentesque non venenatis quam, in elementum</a></h2>
-
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Type</td>
-            <td class="status">Draft</td>
-        </tr>
-        <tr>
-            <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
-            <td class="title">
-                <h2><a href="#">Suspendisse quis ipsum atdquet, pretium lorem quis</a></h2>
-                
-                <ul class="actions">
-                    <li><a href="#">View</a></li>
-                    <li><a href="#">Edit</a></li>
-                    <li><a href="#">Move</a></li>
-                    <li><a href="#">Delete</a></li>
-                </ul>
-            </td>
-            <td class="type">Type</td>
-            <td class="status">Draft</td>
-        </tr>
-    </tbody>
-</table>
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Type</td>
+                <td class="status">Draft</td>
+            </tr>
+            <tr>
+                <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                <td class="title">
+                    <h2><a href="#">Suspendisse quis ipsum atdquet, pretium lorem quis</a></h2>
+                    
+                    <ul class="actions">
+                        <li><a href="#">View</a></li>
+                        <li><a href="#">Edit</a></li>
+                        <li><a href="#">Move</a></li>
+                        <li><a href="#">Delete</a></li>
+                    </ul>
+                </td>
+                <td class="type">Type</td>
+                <td class="status">Draft</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <h2>Modals</h2>
 
@@ -389,242 +391,349 @@ element.</p>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<h2>Forms</h2>
+<h2>Page editor forms</h2>
 
 <p>All form fields must be wrapped with a fieldset to get the correct padding. A legend is also necessary to get the text descriptor of the 'object'.<p>
 
 <form action="http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi" class="full-width">
-    <fieldset>
-        <legend>Full-width title text input</legend>
-        <ul class="fields full">
-            <li class="text title">
-                <div class="field">
-                    <label for="f1">Single-line text input field:</label>
-                    <textarea id="f1" placeholder="Placeholder"></textarea>
-                </div>
-                <p class="help">This is the help text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-
-    <fieldset>
-        <legend>Full-width text input with error</legend>
-        <ul class="fields full">
-            <li class="text error">
-                <div class="field">
-                    <label for="f1">Single-line text input field:</label>
-                    <textarea id="f1" rows="1" placeholder="Placeholder"></textarea>
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-
-    <fieldset>
-        <legend>Full-width textarea</legend>
-        <ul class="fields full">
-            <li class="text">
-                <div class="field">
-                    <label for="f2">Multi-line text input field (textarea):</label>
-                    <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
-                </div>
-                <p class="help">This is the help text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Multi-object example</legend>
-       
-        <ul class="objects"> 
-            <li class="preview">
-                <ul class="controls">
-                    <li class="icon move-updown-black">Move</li>
+    <ul class="objects">
+        <li class="object full">
+            <h2>Full-width title text input</h2>
+            <div class="object-help help">This is the help text for this input. Full-width fields should only ever be single field objects, so this help text is sufficient as the individual field's help text, where usually this is the help text for the object as a whole</div>
+            <fieldset>
+                <ul class="fields">
+                    <li class="text title">
+                        <div class="field">
+                            <label for="f1">Single-line text input field:</label>
+                            <textarea id="f1" placeholder="Placeholder"></textarea>
+                        </div>
+                    </li>
                 </ul>
-
-                <h3>Senior Programme Tutor</h3>
-                <p>Some information here</p>
-                <p><a href="">test@test.com</a></p>
-            </li>
-            <li class="preview">
-                <ul class="controls">
-                    <li class="icon move-updown-black">Move</li>
-                </ul>                   
-
-                <h3>Senior Programme Tutor</h3>
-                <p>Some information here</p>
-                <p><a href="">test@test.com</a></p>
-            </li>
-            <li>
-                <h2>Add another object</h2>
+            </fieldset>
+        </li>
+        <li class="object full">
+            <h2>Full-width text input with error</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+           
+            <fieldset>   
+                <ul class="fields">
+                    <li class="text error">
+                        <div class="field">
+                            <label for="f1">Single-line text input field:</label>
+                            <textarea id="f1" rows="1" placeholder="Placeholder"></textarea>
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li class="object full">
+            <h2>Full-width textarea</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+           
+            <fieldset>
                 <ul class="fields">
                     <li class="text">
-                        <div class="field col8">
+                        <div class="field">
+                            <label for="f2">Multi-line text input field (textarea):</label>
+                            <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
+                        </div>
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li class="object">
+            <h2>A multi-object object (get it?)</h2>
+           
+            <ul class="multiple"> 
+                <li class="preview">
+                    <ul class="controls">
+                        <li class="icon move-updown-black">Move</li>
+                    </ul>
+
+                    <h3>Senior Programme Tutor</h3>
+                    <p>Some information here</p>
+                    <p><a href="">test@test.com</a></p>
+                </li>
+                 <li class="preview">
+                    <ul class="controls">
+                        <li class="icon move-updown-black">Move</li>
+                    </ul>
+
+                    <h3>Senior Programme Tutor</h3>
+                    <p>Some information here</p>
+                    <p><a href="">test@test.com</a></p>
+                </li>
+                <li>
+                    <div class="object-help help">This is the help text for this fieldset as a whole</div>
+
+                    <fieldset>
+                        <legend>Multi-object example</legend>
+                        <ul class="fields">
+                            <li class="text">
+                                <div class="field">
+                                    <label for="f1">Single-line text input field:</label>
+                                    <input id="f1"  placeholder="Placeholder">
+                                </div>
+                                <p class="help">This is the help text for this form input, it is longer than most of the others</p>
+                            </li>
+                            <li class="text">
+                                <div class="field">
+                                    <label for="f2">Multi-line text input field (textarea):</label>
+                                    <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
+                                </div>
+                                <p class="help">This is the help text for this form input</p>
+                            </li>
+                        </ul>
+                    </fieldset>
+                </li>
+                <li>
+                    <p><a href="#" class="icon add">Add another object</a>
+                </li>
+            </ul>
+        </li>
+        <li class="object">
+            <h2>Empty multi-object example</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+           
+            <fieldset>
+                <legend>Empty multi-object example</legend>
+
+                <ul class="multiple"> 
+                    <li>
+                         <p><a href="#" class="icon add">Add another object</a></p>
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li class="object"> 
+            <h2>Something</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+            
+            <fieldset>
+                <legend>Something</legend>
+               
+                <ul class="fields">
+                    <li class="text">
+                        <div class="field">
                             <label for="f1">Single-line text input field:</label>
                             <input id="f1"  placeholder="Placeholder">
                         </div>
-                        <p class="help col3">This is the help text for this form input, it is longer than most of the others</p>
+                        <p class="help">This is the help text for this form input</p>
                     </li>
                     <li class="text">
-                        <div class="field col8">
+                        <div class="field">
                             <label for="f2">Multi-line text input field (textarea):</label>
                             <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
                         </div>
                         <p class="help">This is the help text for this form input</p>
                     </li>
                 </ul>
-            </li>
-            <li>
-                <p><a href="">Add another object</a>
-            </li>
-        </ul>
-    </fieldset>
+            </fieldset>
+        </li>
+        <li class="object">
+            <h2>Inline fields if necessary</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
 
-    <fieldset>
-        <legend>Empty multi-object example</legend>
-       
-        <ul class="objects"> 
-            <li>
-                <p><a href="">Add another object</a>
-            </li>
-        </ul>
-    </fieldset>
+            <fieldset>
+                <legend>Inline fields if necessary</legend>
+                
+                <ul class="fields inline">
+                    <li class="text col2">
+                        <div class="field">
+                            <label for="f1">Day:</label>
+                            <input id="f1" placeholder="Placeholder">
+                        </div>    
+                    </li>
+                    <li class="text col2">
+                        <div class="field">
+                            <label for="f1">Month:</label>
+                            <input id="f1" placeholder="Placeholder">
+                        </div>                        
+                    </li>
+                    <li class="text col2">
+                         <div class="field">
+                            <label for="f1">Year:</label>
+                            <input id="f1" placeholder="Placeholder">
+                        </div>                        
+                    </li>
+                </ul>
 
-    <fieldset>
-        <legend>Something</legend>
+                <p class="error-message">Inline fields are only designed to have a single error message pertaining to all of them</p>
+                <p class="help">Similarly their help text should relate to all fields, not each single field</p>
+            </fieldset>
+        </li>
+        <li class="object">
+            <h2>With errors this time</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+
+            <fieldset>
+                <legend>With errors this time</legend>
+               
+                <ul class="fields">
+                    <li class="text error">
+                        <div class="field col4">
+                            <label for="f1">Single-line text input field:</label>
+                            <input id="f1"  placeholder="Placeholder">
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                        <p class="help">This is the help text for this form input</p>
+                    </li>
+                    <li class="text error">
+                        <div class="field col6">
+                            <label for="f2">Multi-line text input field (textarea):</label>
+                            <textarea id="f2" name="textarea" rows="16" placeholder="Placeholder"></textarea>
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                        <p class="help">This is the help text for this form input</p>
+                    </li>
+                </ul>
+            </fieldset>
+        </li>
+        <li class="object">
+            
+            <h2>Radio buttons, Checkbox and Selects</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+
+            <fieldset>
+                <legend>Radio buttons, Checkbox and Selects</legend>
+                <p>Random text, not help text though</p>
+                <ul class="fields">
+                    <li class="radio">
+                        <div class="field col8">
+                            <label for="f3">
+                            <input id="f3" type="radio" name="radio" value="1">
+                            Radio button 1
+                            </label>
+                        </div>
+                    </li>
+                    <li class="radio">
+                        <div class="field col8">
+                            <label for="f4">
+                            <input id="f4" type="radio" name="radio" value="2" checked>
+                            Radio button 2 (initially checked)
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <p class="error-message">Radio and checkbox groups don't get help text or error text alongside each field. Instead, a single error or help text should proceed the group</p>
+                        <p class="help">Radio and checkbox groups don't get help text or error text alongside each field. Instead, a single error or help text should proceed the group</p>
+                    </li>
+                </ul>
+
+                <p>Check those that apply</p>
+                
+                <ul class="fields">
+                    <li class="checkbox"> 
+                        <div class="field col8">
+                            <label for="f5">
+                            <input id="f5" type="checkbox" name="checkbox">
+                            Checkbox 1
+                            </label>
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                        <p class="help">This is the help text for this form input</p>
+                        
+                    </li>
+                    <li class="checkbox">
+                        <div class="field col8">
+                            <label for="f6">
+                            <input id="f6" type="checkbox" name="checkbox2" checked>
+                            Checkbox 2 (initially checked)
+                            </label>
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                        <p class="help">This is the help text for this form input</p>
+                        
+                    </li>
+                </ul>
+
+                <p>Selects</p>
+                
+                <ul class="fields">
+                    <li class="select">
+                        <div class="field col6">
+                            <label for="f10">A <code>select</code> element with <code>size="1"</code> (dropdown box):</label>
+                            <select id="f10" name="select1" size="1">
+                                <option>one</option>
+                                <option selected>two (default)</option>
+                                <option>three</option>
+                            </select>     
+                        </div>
+                    </li> 
+                    <li class="select">
+                        <div class="field col4">
+                            <label for="f11">A <code>select</code> element with <code>size="3"</code> (listbox):</label>
+                            <select id="f11" name="select2" size="3">
+                                <option>one</option>
+                                <option selected>two (default)</option>
+                                <option>three</option>
+                            </select>
+                        </div>
+                        <p class="error-message">This is the error text for this form input</p>
+                        <p class="help">This is the help text for this form input</p>
+                    </li>
+                </ul>
+               
+            </fieldset>
+        </li>
+        <li class="object">
+            <h2>Button</h2>
+            <div class="object-help help">This is the help text for this fieldset as a whole</div>
+
+            <fieldset>
+                <legend>Button</legend>
+                
+                <ul class="fields inline"> 
+                    <li class="button col2">
+                        <div class="field ">
+                            <label for="f99">Submit button:</label>
+                            <input id="f99" type="submit" name="submit" value="Just a test" class="button">
+                        </div>
+                    </li>
+                    <li class="button col2">
+                        <div class="field ">
+                            <label for="f99">Yes button:</label>
+                            <input id="f99" type="submit" name="submit" value="Just a test" class="button yes">
+                        </div>
+                    </li>
+                    <li class="button col2">
+                        <div class="field ">
+                            <label for="f99">No button:</label>
+                            <input id="f99" type="submit" name="submit" value="Just a test" class="button no">
+                        </div>
+                    </li>
+                    <li class="button col2">
+                        <div class="field">
+                            <label for="f0">Reset button:</label>
+                            <input id="f0" type="reset" name="reset" value="Reset">
+                        </div>
+                    </li>  
+                </ul>
+            </fieldset>
+        </li>
+    </ul>
+</form>
+
+<h2>Any other form</h2>
+<form>
+   <fieldset>
+        <legend>Multi-object example</legend>
         <ul class="fields">
             <li class="text">
-                <div class="field col8">
+                <div class="field">
                     <label for="f1">Single-line text input field:</label>
                     <input id="f1"  placeholder="Placeholder">
                 </div>
-                <p class="help">This is the help text for this form input</p>
+                <p class="help">This is the help text for this form input, it is longer than most of the others</p>
             </li>
             <li class="text">
-                <div class="field col8">
+                <div class="field">
                     <label for="f2">Multi-line text input field (textarea):</label>
                     <textarea id="f2" rows="16" placeholder="Placeholder"></textarea>
                 </div>
                 <p class="help">This is the help text for this form input</p>
             </li>
-        </ul>
-    </fieldset>
-
-    <fieldset>
-        <legend>Inline fields if necessary</legend>
-        <ul class="fields inline">
-            <li class="text col2">
-                <div class="field">
-                    <label for="f1">Day:</label>
-                    <input id="f1" placeholder="Placeholder">
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-            <li class="text col2">
-                <div class="field">
-                    <label for="f1">Month:</label>
-                    <input id="f1" placeholder="Placeholder">
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-            <li class="text col2">
-                 <div class="field">
-                    <label for="f1">Year:</label>
-                    <input id="f1" placeholder="Placeholder">
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-        
-            <li><p class="help">In this example, help text might be better outside the list of fields</p></li>
-        </ul>
-    </fieldset>
-
-
-    <fieldset>
-        <legend>With errors this time</legend>
-        <ul class="fields">
-            <li class="text error">
-                <div class="field col4">
-                    <label for="f1">Single-line text input field:</label>
-                    <input id="f1"  placeholder="Placeholder">
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-            <li class="text error">
-                <div class="field col6">
-                    <label for="f2">Multi-line text input field (textarea):</label>
-                    <textarea id="f2" name="textarea" rows="16" placeholder="Placeholder"></textarea>
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-
-    <p>The following two radio buttons are inside <code>fieldset</code> element with a <code>legend</code>:</p>
-    <fieldset>
-        <legend>Legend</legend>
-        <ul class="fields">
-            <li class="radio">
-                <div class="field col8">
-                    <label for="f3">
-                    <input id="f3" type="radio" name="radio" value="1">
-                    Radio button 1
-                    </label>
-                </div>
-               
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-            <li class="radio">
-                <div class="field col8">
-                    <label for="f4">
-                    <input id="f4" type="radio" name="radio" value="2" checked>
-                    Radio button 2 (initially checked)
-                    </label>
-                </div>
-                
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-
-    <fieldset>
-        <legend>Check those that apply</legend>
-        <ul class="fields">
-            <li class="checkbox"> 
-                <div class="field col8">
-                    <label for="f5">
-                    <input id="f5" type="checkbox" name="checkbox">
-                    Checkbox 1
-                    </label>
-                </div>
-                
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-            <li class="checkbox">
-                <div class="field col8">
-                    <label for="f6">
-                    <input id="f6" type="checkbox" name="checkbox2" checked>
-                    Checkbox 2 (initially checked)
-                    </label>
-                </div>
-                <p class="help">This is the help text for this form input</p>
-                <p class="error-message">This is the error text for this form input</p>
-            </li>
-        </ul>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Selects</legend>
-        <ul class="fields">
             <li class="select">
                 <div class="field col6">
                     <label for="f10">A <code>select</code> element with <code>size="1"</code> (dropdown box):</label>
@@ -634,8 +743,9 @@ element.</p>
                         <option>three</option>
                     </select>     
                 </div>
-                <p class="help">This is the help text for this form input</p>
                 <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
             </li> 
             <li class="select">
                 <div class="field col4">
@@ -646,39 +756,54 @@ element.</p>
                         <option>three</option>
                     </select>
                 </div>
-                <p class="help">This is the help text for this form input</p>
                 <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
             </li>
-        </ul>
-    </fieldset>
-    
-    <fieldset>
-        <legend>Button</legend>
-        <ul class="fields inline"> 
-            <li class="button col2">
-                <div class="field ">
-                    <label for="f99">Submit button:</label>
-                    <input id="f99" type="submit" name="submit" value="Just a test" class="button">
+            <li class="checkbox"> 
+                <div class="field col8">
+                    <label for="f5">
+                    <input id="f5" type="checkbox" name="checkbox">
+                    Checkbox 1
+                    </label>
                 </div>
-            </ul>
-            <li class="button col2">
-                <div class="field ">
-                    <label for="f99">Yes button:</label>
-                    <input id="f99" type="submit" name="submit" value="Just a test" class="button yes">
+                <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
+            </li>
+            <li class="checkbox">
+                <div class="field col8">
+                    <label for="f6">
+                    <input id="f6" type="checkbox" name="checkbox2" checked>
+                    Checkbox 2 (initially checked)
+                    </label>
                 </div>
-            </ul>
-            <li class="button col2">
-                <div class="field ">
-                    <label for="f99">No button:</label>
-                    <input id="f99" type="submit" name="submit" value="Just a test" class="button no">
+                <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
+            </li>
+            <li class="radio">
+                <div class="field col8">
+                    <label for="f3">
+                    <input id="f3" type="radio" name="radio" value="1">
+                    Radio button 1
+                    </label>
                 </div>
-            </ul>
-            <li class="button col2">
-                <div class="field">
-                    <label for="f0">Reset button:</label>
-                    <input id="f0" type="reset" name="reset" value="Reset">
+                <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
+            </li>
+            <li class="radio">
+                <div class="field col8">
+                    <label for="f4">
+                    <input id="f4" type="radio" name="radio" value="2" checked>
+                    Radio button 2 (initially checked)
+                    </label>
                 </div>
-            </li>  
+                <p class="error-message">This is the error text for this form input</p>
+                <p class="help">This is the help text for this form input</p>
+                
+            </li>
         </ul>
     </fieldset>
 </form>

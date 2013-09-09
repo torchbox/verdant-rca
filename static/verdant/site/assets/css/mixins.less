@@ -57,11 +57,14 @@
 /* Iconset defined twice to act as guards */
 .icon-set(left; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
     .transition(all 0.2s linear);
+    padding-left:@width + 10px;
+    position:relative;
 
     &:before{
         .transition(opacity 0.3s ease);
         position:absolute;
         top:0;
+        left:1em;
         bottom:0;
         margin-top:auto;
         margin-bottom:auto;
@@ -69,22 +72,18 @@
         display:inline-block;
         height:@height;
         width:@width;
+        .sprite(@x, @y, @magnification);
     }
     &:hover:before{
         opacity:1;
-    }
-
-    padding-left:@width + 10px;
-
-    &:before{
-        .sprite(@x, @y, @magnification);
-        left:1em;
-    }
+    }    
 }
 
 .icon-set(right; @width:25px; @height:25px; @x:0; @y:0; @magnification:2){
     .transition(all 0.2s linear);
-    
+    padding-right:@width + 10px;
+    position:relative;
+
     &:before{
         display:none;
     }
@@ -92,6 +91,8 @@
         .transition(opacity 0.3s ease);
         position:absolute;
         top:0;
+        right:1em;
+        left:initial;
         bottom:0;
         margin-top:auto;
         margin-bottom:auto;
@@ -99,17 +100,11 @@
         display:inline-block;
         height:@height;
         width:@width;
+        .sprite(@x, @y, @magnification);
+        
     }
     &:hover:after{
         opacity:1;
-    }
-
-    padding-right:@width + 10px;
-
-    &:after{
-        .sprite(@x, @y, @magnification);
-        right:1em;
-        left:initial;
     }
 }
 

@@ -15,57 +15,14 @@ form {
 }
 
 fieldset{
-    border:1px dashed @color-input-border;
+    border:0;
     padding:1.5em 0;
-    border-width:1px 0 0 0;
-    position:relative;
-
-    &.focused{
-        border-color: darken(@color-input-focus, 40%);
-    }
-}
-
-.full-width fieldset{
-    .full-width();
+    margin:0;
+    position:relative;   
 }
 
 legend{
-    .border-radius(2px);
-    color: @color-text-grey;
-    text-transform:uppercase;
-    padding:2px 5px;
-    position:absolute;
-    top:0;
-    margin-top:-1px;
-    font-size:0.7em;
-}
-
-fieldset .fields{
-    .push(@grid-content-indent);
-    .pull(@grid-content-indent);
-}
-.objects .fields, .objects h2{
-    margin-left:0;
-}
-
-.objects{
-    margin-left:0;
-
-    > li{
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
-        border-top: 1px dashed @color-input-border;
-
-        &:first-child{
-            border:0;
-        }
-    }
-}
-
-
-.preview{
-    padding-top:1em;
-    padding-bottom:0.5em;
+    .visuallyhidden();
 }
 
 .fields li{
@@ -76,7 +33,6 @@ fieldset .fields{
 .field{
     padding:0 0 0.5em 0;
 }
-
 
 label{
     font-weight:300;
@@ -110,6 +66,7 @@ input, textarea, select{
         background-color:@color-input-focus;
     }
 }
+
 
 input[type=radio],input[type=checkbox]{
     cursor:pointer;
@@ -164,7 +121,6 @@ input[type=checkbox]:checked:before{
     .sprite(-5px, 332px, 1);
 }
 
-
 input[type=submit], input[type=reset], a.button, input.button, button{
     .border-radius(2px);
     padding:1.3em 2em;
@@ -205,29 +161,36 @@ a.button{
 .help, .error-message{
     font-size:0.85em;
     font-weight:300;
-}
-p.error-message{
-    margin:0;
+    margin-top:0;
 }
 .help{
-    .transition(opacity 0.2s ease);
-    background-color:darken(@color-input-focus, 10%);
+    .transition(opacity 0.2s ease); /* TODO: This makes the browser go nuts. Find way to solve */
+    color:@color-grey;
     opacity:0;
-    padding:1.4em 1.2em;
-    margin: 2em 0 0 0;
 }
 
-.field.focused + .help{
+/* permanently show checkbox/radio help as they have no focus state */
+.checkbox .help, .radio .help{
+    opacity:;
+}
+
+
+fieldset:hover > .help,
+.field.focused + .help,
+.field:focus + .help,
+.field:hover + .help,
+li.focused > .help{
     opacity:1;
 }
 
+.error-message{
+    margin:0;
+    color:@color-red;
+    clear:both;
+}
 .error input, .error textarea, .error select{
     border-color:@color-red;
     background-color:lighten(@color-red, 45%);
-}
-.error-message{
-    color:@color-red;
-    clear:both;
 }
 
 /* field sizing */
@@ -261,98 +224,16 @@ li.inline .field{
     &.col12{clear:none;} 
 }
 
-li.inline .field .help{
-
-}
-
-/* Special full-width, one-off fields i.e a single text or textarea input */
-ul.full{
-    margin:-1.5em 0; /* see fieldset padding */
-
-    li{
-        padding:0;
-    }
-
-    .field{
-        padding:0;
-    }
-
-    label{
-        .visuallyhidden();
-    }
-    input, textarea{
-        .border-radius(0px);
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
-        border:0;
-    }
-    input{
-        padding-top:2em;
-        padding-bottom:2em;
-        .pull-padding(2.5);
-    }
-    textarea{
-        padding-top:2em;
-        padding-bottom:2em;
-        .pull-padding(2.5);
-    }
-
-    .title input,
-    .title textarea{
-        font-size:2.2em;
-    }
-
-    .help{
-        .column(2.5);
-        -webkit-border-radius: 0px 0px 0px 3px;
-        border-radius: 0px 0px 0px 3px;
-        padding:1em;
-        margin:0;
-        position:absolute;
-        right:0;
-        top:0;
-    }
-
-    .error .help{
-        background-color:lighten(@color-red, 40%);
-    }
-
-    .error-message{
-        .push(@grid-content-indent);
-        .pull(@grid-content-indent);
-        padding-bottom:1em;
-    }
-
-    .error,
-    .error input,
-    .error textarea{
-        background-color:@color-input-error-bg;
-    }
-}
-
 /* solve gutter issues of inline fields */
 ul.inline li:first-child, li.inline:first-child{
     margin-left:-@grid-gutter-width / 2;
 }
 
-
-/* Object controls */
-.controls{
-    float:right;
-    margin-right:5%;
-    text-transform:uppercase;
-    color:@color-grey;    
-    
-    li{
-        position:relative;
-    }
-    .icon{
-       
-        &:before{
-           opacity:0.5;
-        }
-    }
-    .move-updown-black{
-        cursor:move;
+form .icon.add{
+    position:relative;
+    text-decoration:none;
+    font-weight:700;
+    &:before{
+        left:0;
     }
 }

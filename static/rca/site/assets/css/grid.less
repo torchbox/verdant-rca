@@ -1,6 +1,12 @@
+/**
+ * Author(s): Dave Cranwell
+ *
+ * Grid mixins
+ */
+
 /* Utility variable — you should never need to modify this */
 @gridsystem_width: @grid-columns * 1px;
-@padding: @grid-gutter-width*0.5;
+@padding: @grid-gutter-width * 0.5;
 @correction: 0.5 / @grid-max-width * 100 * 1%; // NOTE: Check this in IE
 
 /* Ensure grid columns are set to border-boxes. This is essential */
@@ -16,7 +22,6 @@
     .border-box();
 
     display:block;
-    max-width: @grid-max-width;
     margin-right: auto;
     margin-left: auto;
     padding-right: @padding;
@@ -58,42 +63,4 @@
 }
 .pull-padding(@offset:1, @grid-columns:@grid-columns){
     padding-right: 100%*(@offset / @grid-columns);
-}
-
-
-.col1{
-    .column(1);
-}
-.col2{
-    .column(2);
-}
-.col3{
-    .column(3);
-}
-.col4{
-    .column(4);
-}
-.col5{
-    .column(5);
-}
-.col6{
-    .column(6);
-}
-.col7{
-    .column(7);
-}
-.col8{
-    .column(8);
-}
-.col9{
-    .column(9);
-}
-.col10{
-    .column(10);
-}
-.col11{
-    .column(11);
-}
-.col12{
-    .column(12);
 }

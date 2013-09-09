@@ -19,223 +19,11 @@
  *
  */
 
- /**
-  * &Typography
-  *
-  * Note that the names of all the typographic styles below are based on the names given to them by the design company.
-  * .h1 to .h6 are not necessarily always used by the equivalent tags
-  *
-  */
-
-/* Heading styles */
-
-.ho-a-heading {
-    font-family: @font-family-knockout;
-    font-weight: @font-weight-knockout;
-    font-size: @font-size-72;
-    line-height: 1em;
-    margin-top: 0;
-    @media @media-desktop {
-       font-size: @font-size-100; 
-    }
-}
-
-.ho-b-heading {
-    font-family: @font-family-knockout;
-    font-size: @font-size-30;
-    line-height: @line-height-11;
-}
-
-.h1 {
-    font-family: @font-family-benton;
-    font-size: @font-size-24;
-    line-height: @line-height-12;
-    margin-top: 0;
-    @media @media-desktop {
-        font-size: @font-size-50;
-        line-height: @line-height-1;
-    }
-}
-
-.h2 {
-    font-family: @font-family-benton;
-    font-size: @font-size-16;
-    line-height: @line-height-13;
-    margin: 0;
-    font-weight: normal;
-    @media @media-desktop {
-       font-size: @font-size-40;
-       line-height: @line-height-1;
-    }
-}
-
-.h3 {
-    font-family: @font-family-benton;
-    font-size: @font-size-14;
-    line-height: @line-height-14;
-    @media @media-desktop {
-        font-size: @font-size-36;
-        line-height: @line-height-2;
-    }
-}
-
-.h4 {
-    font-family: @font-family-benton;
-    font-size: @font-size-30;
-    line-height: @line-height-3;
-}
-
-.h5 {
-    font-family: @font-family-benton;
-    font-size: @font-size-22;
-    line-height: @line-height-4;
-}
-
-.h6 {
-    font-family: @font-family-benton;
-    font-size: @font-size-18;
-    line-height: @line-height-5;
-}
-
-.h7 {
-    font-family: @font-family-benton;
-    font-size: @font-size-15;
-    line-height: @line-height-3;
-    text-transform: none;
-    margin: 0;
-}
-
-.h8 {
-    font-family: @font-family-benton;
-    font-size: @font-size-12;
-    line-height: @line-height-6;
-    text-transform: none;
-}
-
-/* Body copy styles */
-
-.bc0 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-36;
-    line-height: @line-height-2;
-    text-transform: none;
-}
-
-.bc1 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-16;
-    line-height: @line-height-13;
-    text-transform: none;
-    @media @media-desktop {
-        font-size: @font-size-30;
-        line-height: @line-height-3;
-    }
-}
-
-.bc2 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-14;
-    line-height: @line-height-14;
-    text-transform: none;
-    @media @media-desktop {
-        font-size: @font-size-22;
-        line-height: @line-height-4;   
-    }
-}
-
-.bc3 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-18;
-    line-height: @line-height-5;
-    text-transform: none;
- }
-
-.bc4 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-15;
-    line-height: @line-height-7;
-    text-transform: none;
-}
-
-.bc5 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-12;
-    line-height: @line-height-6;
-    text-transform: none;
-}
-
-.module-title {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-12;
-    line-height: @line-height-1;
-    color: @color-medium-grey;
-    text-transform: uppercase;
-    @media @media-desktop {
-        font-size: @font-size-13;
-    }  
-}
-
-/* 'Interative' styles */
-
-.a0 {
-    font-family: @font-family-benton;
-    font-size: @font-size-12;
-    line-height: @line-height-8;
-    text-transform: uppercase;
-    font-weight: normal;
-}
-
-.a1 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-12;
-    line-height: @line-height-8;
-    text-transform: uppercase;
-}
-
-.a2 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-12;
-    line-height: @line-height-8;
-    text-transform: uppercase;
-    color: @color-medium-grey;
-    font-weight: normal;
-    margin: 0;
-}
-
-.a3 {
-    font-family: @font-family-benton;
-    font-size: @font-size-11;
-    line-height: @line-height-9;
-    text-transform: uppercase;
-}
-
-.a4 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-11;
-    line-height: @line-height-9;
-    text-transform: none;
-}
-
-.t0 {
-    font-family: @font-family-benton;
-    font-size: @font-size-15;
-    line-height: @line-height-7;
-    text-transform: uppercase;
-
-}
-
-.t1 {
-    font-family: @font-family-benton;
-    font-size: @font-size-10;
-    line-height: @line-height-10;
-    text-transform: uppercase;
-}
-
-.t2 {
-    font-family: @font-family-benton-light;
-    font-size: @font-size-10;
-    line-height: @line-height-10;
-    text-transform: uppercase;
+.transition(@transition){
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
 }
 
 /** 
@@ -243,14 +31,16 @@
 */
 
 .sprite-load (@positionX, @positionY, @width, @height) {
-    background-image: url(/assets/images/sprites.png);
+    background-image: url(../images/sprites.png);
     background-repeat: no-repeat;
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
-    @media @media-retina {
-        //call retina sprites file here
-    }
+
+    /*@media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        background-image: url(/assets/images/sprites-retina.png);
+        background-size:1184px 2459px;
+    }*/
 }
 
 
@@ -258,33 +48,44 @@
 * Clearfix
 */
 .clearfix() {
-  *zoom: 1;
-  &:before,
-  &:after {
-    display: table;
-    content: "";
-    // Fixes Opera/contenteditable bug:
-    // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
-    line-height: 0;
-  }
-  &:after {
-    clear: both;
-  }
+    *zoom: 1;
+    &:before,
+    &:after {
+        display: table;
+        content: "";
+        // Fixes Opera/contenteditable bug:
+        // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+        line-height: 0;
+    }
+    &:after {
+        clear: both;
+    }
 }
 
-/*// Opacity*/
+/* Removes standard list styles */
+.unlist(){
+    &, ul, li{
+        list-style-type:none;
+        font-style: normal;
+    }
+    &, ul{
+        margin-top:0;
+        margin-bottom:0;
+        padding-left:0;
+    }
+    li{
+
+    }
+    li:before{
+        content:none;
+        margin:auto;
+    }
+}
+
+/* Opacity */
 .opacity(@opacity) {
-  opacity: @opacity / 100;
-  filter: ~"alpha(opacity=@{opacity})";
-}
-
-/**
- * Border box
- */
-.border-box {
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    opacity: @opacity / 100;
+    filter: ~"alpha(opacity=@{opacity})";
 }
 
 /* sidebar advert */
@@ -295,55 +96,38 @@
         margin: 0;
     }
     h2 {
-        .h6;
+        .h6();
     }
     p {
-        .bc3;
+        .bc3();
     }
     &:hover{
         background-color: @color-highlight-blue;
     }
     a {
         display: block;
-        padding: 0.75em 0.75em 1.5em 0.75em;
+        padding: @spacing-half @spacing-one @spacing-two @spacing-half;
         &:hover, &:focus {
             color: @color-white;
         }
     }
 }
 
-/* related links and dialogue box */
-.grey-links {
-    color: @color-white;
-    h2 {
-        margin: 0;
-        padding: 0.75em;
-        .t2;
-        background-color: lighten(@color-black, 60%);
-    }
-    ul {
-        padding: 0;
-        margin: 0;
-        background-color: fade(@color-charcoal,90%);
-        &.extra-links {
-            background-color: lighten(@color-black, 60%);
-        }
-    }
-    li {
-        margin: 0;
-        padding: 0 0.75em;
-        .h7;
-        a {
-            padding: 0.5em 0;
-            display: block;
-            color: @color-white;
-            border-bottom: 1px solid @color-light-grey;
-            &:hover {
-                color: @color-pink;
-            }
-        }
-        &.last a {
-            border-bottom: none;
+.module{
+    border-top:1px solid @color-divider;
+    padding-top: @spacing-half;
+    margin-top: @spacing-two;
+
+    .module-title{
+        margin-top:0;
+        margin-bottom:@spacing-one;
+
+        a:after{
+            margin-left:0.5em;
+            display:inline-block;
+            content:"";
+            opacity:0.7;
+            .sprite-load(-17px, -1218px, 7px, 14px);
         }
     }
 }

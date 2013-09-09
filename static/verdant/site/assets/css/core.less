@@ -260,6 +260,7 @@ a {
         text-indent:-200px;
         font-size:0.9em;
         .icon-left(10px, 12px, 273px, 215px, 0.6);
+        position:fixed;
         
         &:hover{
             color:white;
@@ -312,7 +313,7 @@ a {
     }
 }
 
-/* thing */
+/* bits and pieces */
 
 @import "components/icons.less";
 @import "components/explorer.less";
@@ -320,3 +321,7 @@ a {
 @import "components/modals.less";
 @import "components/forms.less";
 @import "components/listing.less";
+
+/* specific page layouts, that require their own styles */
+
+@import "layouts/page-editor.less";

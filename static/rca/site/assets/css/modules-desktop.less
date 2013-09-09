@@ -1,0 +1,324 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Modules-desktop
+ *
+ * Overrides modules.less for desktop styles.
+ */
+
+ /**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents
+ * Carousel
+ * Carousel news
+ * Twitter
+ * Share and dialogue box
+ * Head of programme
+ * Events block
+ * Scrolling of two plus and three plus items and mobile sizes
+ * Two plus
+ * Three plus
+ * Nine plus/six-plus block
+ * Metadata e.g. on news page
+ * Body text
+ * Tabbed content
+ */
+
+ 
+/**
+ * $Carousel
+ */
+
+.bx-wrapper {
+    .bx-next {
+        &:after {
+            content: " ";
+            .sprite-load(-15px, -821px, 68px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 40px;
+        }
+        &:hover {
+            &:after{
+                .sprite-load(-15px, -266px, 68px, 131px);
+            }
+        }
+    }
+
+    .bx-prev {
+        &:after{
+            content: " ";
+            .sprite-load(-165px, -821px, 68px, 131px);
+            position: absolute;
+            top: 2px;
+            left: 30px;
+        }
+        &:hover {
+            &:after{
+                .sprite-load(-165px, -266px, 68px, 131px);
+            }
+        }
+    }
+
+    .bx-controls-direction a {
+        top: 50%;
+        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
+        height: @carousel-control-height;
+        margin-top: ((@carousel-control-height / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
+    }
+}
+
+/**
+ * $News carousel
+ */
+
+.carousel-news{
+    padding-bottom:0;
+    .carousel{
+        margin:0;
+    }
+    .caption{
+        position:relative;
+    }
+}
+
+/**
+ * $Twitter block
+ */
+
+.twitter-feed {
+    li {
+        .column(4);
+    }
+}
+
+/**
+ * $Share and dialogue box
+ */
+.share-wrapper{
+    margin: @spacing-one 0 @spacing-one @spacing-one;
+    width: 100%;
+}
+
+/**
+ *$Head of programme
+ */
+
+.head-of-programme{
+    .image{
+        .column(2);
+    }
+    .content{
+        .column(10);
+
+        .bc4{
+            font-size:0.5em;
+        }
+    }
+}
+
+/**
+ *$Event block
+ */
+
+.events{    
+    ul{
+        background-color:@color-light-pink;
+    }
+    ul li{
+        .column(4, @grid-gutter-width);
+        padding-left:74px;
+
+        &:before{
+            margin-left:-64px;
+        }        
+    }
+}
+
+/**
+ *$Scrolling of two plus and three plus items and mobile sizes. 
+ */
+
+.events, .two-plus, .three-plus{
+    overflow:visible;
+    ul{
+        white-space:normal;
+    }
+    ul li{
+        display:inline;
+        white-space:normal;
+        float:left;
+    }
+
+    .load-more{
+        display:initial;
+    }
+}
+
+/**
+ *$Two plus
+ */
+.two-plus{
+    ul li{
+        .column(4);         
+    }
+}
+
+
+ /**
+ *$Three plus
+ */
+.three-plus{
+    ul li{
+        .column(3);         
+    }
+}
+
+/**
+ *$Nine plus/six-plus block (doesn't follow grid)
+ */
+
+.nine-plus, .six-plus{
+    ul{
+        margin-left:0;
+        margin-right:0;
+    }
+    ul{
+        .row();
+        .row-flush();
+    }
+    ul li{
+        .column(1.1);
+        overflow:hidden;
+        height:auto;
+        
+        &:first-child{
+            margin-left:0;
+        }
+        &.load-more{
+            width:80px;
+            padding:0;
+        }
+
+    }
+    .image{
+        height:auto;
+    }
+
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+}
+
+.col9 .six-plus li{
+    .column(1.1, @grid-gutter-width/2, 9);
+}
+
+/**
+ * &Metadata e.g. on news page
+ */
+.meta-data {
+    margin-left: @grid-gutter-width;
+}
+
+/**
+ * &Body text
+ */
+
+.body-text {
+    .column(8, 0, 12);
+}
+
+/**
+ *$Tabbed content (3 tabs exactly required)
+ */
+
+.tab-nav{
+    .clearfix();
+    .unlist();
+    position:relative;
+    overflow:hidden;
+    display:block;
+    
+    li{
+        background-color:red;
+    }
+
+    a{
+        background-color:@color-pale-grey;
+        padding-top:@grid-gutter-width;
+        padding-bottom:18%;
+        margin-bottom:-16%;
+        border-left:1px solid @color-divider;
+    }
+    li:first-child a{
+        border-left:0;
+    }
+
+    li.active a{
+        background-color:darken(@color-pale-grey, 10%);
+    }
+    &.tabs-2 a{
+        .column(6, @grid-gutter-width);
+    }
+    &.tabs-3 a{
+        .column(4, @grid-gutter-width);
+    }
+    &.tabs-4 a{
+        .column(3, @grid-gutter-width);
+    }
+    &.tabs-5 a{
+        .column(2.4, @grid-gutter-width);
+    }
+    &.tabs-6 a{
+        .column(2, @grid-gutter-width);
+    }
+}
+.tab-content{
+    .clearfix();
+    background-color:darken(@color-pale-grey, 10%);
+
+    .header{
+        display:none;
+    }
+}
+.tab-pane{
+    border:0;
+    .image.full{
+        margin:auto;
+    }
+    .two-cols{
+        .col{
+            .column(6);
+            padding-bottom:0;
+        }
+    }
+    .four-cols{
+        .row-flush();
+        .col{
+            .column(3);
+            padding-bottom:0;  
+        }
+    }
+}
+
+.button-bar{
+    li{
+        float:left;
+    }
+
+    &.two-button li{
+        .column(6);
+        padding:0;
+
+        .button{
+            width:100%;
+        }
+    }
+
+}

@@ -1,9 +1,26 @@
----
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop-large
+ *
+ * Overrides core.less and desktop.less for large desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
 
----
-@import "assets/css/variables.less";
-@import "assets/css/grid.less";
-@import "assets/css/mixins.less";
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents...................You’re reading it!
+ * Structure..................structure and layout
+ */
 
 /**
  * $Structure
@@ -11,53 +28,11 @@
 
 /* header, .wrapper and .footer-wrapper are all in alignment.
 At the large desktop size they are offset from the centre */
-header,
 .wrapper,
-.footer-wrapper {
-	margin: 0 22% 0 7%; /* creates the offset centre at large desktop size */
-	max-width: 1300px;
+.footer-wrapper,
+.header-wrapper {
+	margin: 0 22% 0 5%; /* creates the offset centre at large desktop size */
+	max-width: @site-max-width;
 }
 
-header {
-	right: auto; /* reset the right value for the large desktop layout (used to centre the header in the desktop layout) */
-}
-
-/* at the large desktop size the navigation bar fills the same width
-as the content below */
-nav {
-    .column(12);
-    .row();
-}
-
-/* the nav-wrapper expands to the full width of the wrapper because the search is now
-above the aside */
-.nav-wrapper {
-    max-width: 1300px;
-}
-
-/* search sits above the aside at the large desktop size. */
-form.search {
-    width: 15%; /* this matches the style for aside */
-    margin-left: 3%;
-    float: left;
-    margin-top: 0;
-    input[type="text"] {
-    	//width: 164px; /* adjusted by eye to match width of related content below */
-        //width: 100%;
-    }
-}
-
-aside {
-	display: block; /* at large desktop size the aside is always visible */
-    width: 15%;
-    margin-left: 3%;
-    overflow: hidden;
-    float: left;
-    margin-top: @header-height;  /* space for fixed header */
-}
-
-.content,
-nav,
-footer {
-	width: 80%; /* allows room for related content and search at large desktop size */
-}
+@import "modules-desktop-large.less";

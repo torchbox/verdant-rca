@@ -4,458 +4,51 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta http-equiv="cleartype" content="on" />
 
-        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="assets/css/normalize.css" />
-        <link rel="stylesheet" href="assets/css/dlmenu.css" /> 
-        <link href="assets/css/vendor/jquery.bxslider.css" rel="stylesheet" />
-        <link rel="stylesheet" href="assets/css/core.css" />
-        <link rel="stylesheet" href="assets/css/news.css" />
+        <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
+        <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
+        <link rel="stylesheet" href="assets/css/vendor/normalize.css" />
+        <link rel="stylesheet" href="assets/css/vendor/jquery.bxslider.css" />
 
-        <link href="assets/css/desktop.css" rel="stylesheet" media="screen and (min-width:600px)" />
-        <link href="assets/css/desktop-large.css" rel="stylesheet" media="screen and (min-width:1280px)" />
+        <link rel="stylesheet/less" href="assets/css/core.less" />
+        <link rel="stylesheet/less" href="assets/css/desktop.less" media="screen and (min-width:1024px)" />
+        <link rel="stylesheet/less" href="assets/css/desktop-large.less"  media="screen and (min-width:1280px)" />
 
-        
+        <script src="assets/js/vendor/less-1.4.1.min.js"></script>
 
         <!--[if lt IE 9]>
-        <link href="assets/css/desktop.css"" rel="stylesheet" />
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
-        </script>
+            <link rel="stylesheet" href="assets/css/desktop.css" />
         <![endif]-->
-
-        <!--webfonts-->
-        <link rel="stylesheet" type="text/css" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
-        <link href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" rel="stylesheet" type="text/css" />
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     </head>
-    <body>
+    <body class="{{ page.bodyclass }}">
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-    <div class="header-wrapper">
-        <header class="page-header">
-                <a href="" class="site-name">
-                    <p>Royal College of Art</p>
-                </a>
-                <div class="nav-wrapper">
-                <nav>
-                    <h2 class="dl-trigger">Menu</h2>
-                    <ul class="menu dl-menu">
-                        <li class="selected">
-                            <a href="#">Schools &amp; Programmes</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a href="#">Architecture</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Architecture</a></li>
-                                        <li><a href="#">Interior design</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Communication</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Animation</a></li>
-                                        <li><a href="#">Information experience design</a></li>
-                                        <li><a href="#">Visual communication</a></li>
-                                    </ul>
-                                </li>
-                                <li class="selected">
-                                    <a href="#">Design</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Design interactions</a></li>
-                                        <li><a href="#">Design products</a></li>
-                                        <li><a href="#">Global innovation design</a></li>
-                                        <li><a href="#">Innovation Design Engineering (IDE)</a></li>
-                                        <li><a href="#">Service design</a></li>
-                                        <li class="selected">
-                                            <a href="#">Vehicle Design</a>
-                                            <ul class="submenu">
-                                                <li class="selected"><a href="#">Entrance requirements</a></li>
-                                                <li><a href="#">Awards &amp; Scholarships</a></li>
-                                                <li><a href="#">Staff</a></li>
-                                                <li><a href="#">Alumni</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Design Research</a>
-                                            <ul class="submenu">
-                                                <li><a href="#">Staff research</a></li>
-                                                <li><a href="#">Student research</a></li>
-                                                <li><a href="#">Research Leader</a></li>
-                                                <li><a href="#">How to Apply</a></li>
-                                                <li><a href="#">MPhil/PhD Entrance requirements</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Fine art</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Painting</a></li>
-                                        <li><a href="#">Photography</a></li>
-                                        <li><a href="#">Printmaking</a></li>
-                                        <li><a href="#">Sculpture</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Humanities</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Critical &amp; Historical studies</a></li>
-                                        <li><a href="#">Critical writing in art &amp; design</a></li>
-                                        <li><a href="#">Curating contemporary art</a></li>
-                                        <li><a href="#">History of design</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Study at RCA</a>
-                                    <ul class="submenu">
-                                        <li>
-                                            <a href="#">The RCA Experience</a>
-                                            <ul class="submenu">
-                                                <li><a href="#">Student Stories</a></li>
-                                                <li><a href="#">Graduate destinations</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Facilities</a></li>
-                                        <li><a href="#">Support services</a></li>
-                                        <li><a href="#">Fees &amp; Funding</a></li>
-                                        <li><a href="#">Open Days</a></li>
-                                        <li><a href="#">Apply</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Research &amp; Innovation</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a href="#">Current research</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Staff Research</a></li>
-                                        <li><a href="#">Student Research</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Success stories</a></li>
-                                <li><a href="#">Research Support</a></li>
-                                <li><a href="#">Research News</a></li>
-                                <li><a href="#">Helen Hamlyn Centre</a></li>
-                                <li><a href="#">InnovationRCA</a></li>
-                                <li><a href="#">RapidformRCA</a></li>
-                                <li><a href="#">Sustain</a></li>
-                                <li><a href="#">Business &amp; Partnerships</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Showcase</a>
-                            <ul class="submenu">
-                                <li><a href="#">Show RCA 2007</a></li>
-                                <li><a href="#">Show RCA 2008</a></li>
-                                <li><a href="#">Show RCA 2009</a></li>
-                                <li><a href="#">Show RCA 2010</a></li>
-                                <li><a href="#">Show RCA 2011</a></li>
-                                <li><a href="#">Show RCA 2012</a></li>
-                                <li><a href="#">Show RCA 2013</a></li>
-                                <li><a href="#">RCA NOW</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="#">More +</a>
-                            <ul class="submenu">
-                                <li>
-                                    <a href="#">Our History</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">History</a></li>
-                                        <li><a href="#">Alumni</a></li>
-                                        <li><a href="#">Achievements</a></li>
-                                        <li><a href="#">College Honours</a></li>
-                                        <li><a href="#">Collection</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Governance</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Rector's Letter</a></li>
-                                        <li><a href="#">Mission</a></li>
-                                        <li><a href="#">Council</a></li>
-                                        <li><a href="#">Academic Quality</a></li>
-                                        <li><a href="#">Policies</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Support the RCA</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Major developments</a></li>
-                                        <li><a href="#">Donors &amp; Sponsors</a></li>
-                                        <li><a href="#">Sponsorship opportunities</a></li>
-                                        <li><a href="#">Ways to Support RCA (including corporate relationships)</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">For Alumni</a></li>
-                                <li><a href="#">Jobs</a></li>
-                                <li><a href="#">Maps</a></li>
-                                <li>
-                                    <a href="#">Events</a>
-                                    <ul class="submenu">
-                                        <li><a href="#">Past events</a></li>
-                                    </ul>                            </li>
-                                <li><a href="#">News</a></li>
-                                <li><a href="#">Publications</a></li>
-                                <li><a href="#">Venue hire</a></li>
-                                <li><a href="#">Contact us</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-                <form class="search" action="" method="">
-                    <input type="text" placeholder="SEARCH" />
-                    <input type="submit" value="search" />
-                </form>
-                </div>
-                <div class="showsearch">
-                    Show search
-                </div>
-                <div class="showmenu">
-                    Show menu
-                </div>
-            </header>
+        
+        <div class="header-wrapper" data-spy="affix" data-offset-top="200">
+            {% include header.html %}
         </div>
 
-        <div class="wrapper">
-
+        <div class="wrapper" data-spy="affix" data-offset-top="200">
             <div class="content">
-
-        <!-- Add your site or application content here -->
-            {{ content }}
+                <div class="inner">
+                    {{ content }}
+                </div>
             </div>
             <aside>
-                <div class="related">
-                    <h2>Related links</h2>
-                    <ul>
-                        <li><a href="">Studying at the RCA</a></li>
-                        <li><a href="">Tuition fees and funding</a></li>
-                        <li class="last"><a href="">Partnerships Awards &amp; scholarships</a></li>
-                    </ul>
-                    <ul class="extra-links">
-                        <li><a href="">Another link</a></li>
-                        <li><a href="">Another link to somewhere else</a></li>
-                        <li class="last"><a href="">Another link to somewhere else</a></li>
-                    </ul>
-                </div>
-                <div class="today">
-                    <h2>Today</h2>
-                    <ul>
-                        <li>
-                            <a href="">
-                                <h3>21 March</h3>
-                                <p>Neville Brody in Conversation</p>
-                            </a>
-                            <span>public</span>
-                        </li>
-                        <li>
-                            <a href="">
-                                <h3>7 May</h3>
-                                <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
-                            </a>
-                            <span>private</span>
-                        </li>
-                        <li class="last">
-                            <a href="">
-                                <h3>14 March</h3>
-                                <p>SHOW RCA 2013</p>
-                            </a>
-                            <span>public</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- advert -->
-                <div class="sidebar-advert">
-                    <a href="">
-                    <h2>Apply to Study</h2>
-                    <p>at the Royal College of Art</p>
-                    </a>
-                </div>
-
-                <!-- related content -->
-                <div class="related-content-item">
-                    <a href="">
-                        <figure>
-                            <img src="http://placekitten.com/300/200" alt="" />
-                            <figcaption>A new building for Battersea</figcaption>
-                        </figure>
-                    </a>
-                    <a href="" class="index-page-link">News &gt;</a>
-                </div>
-                <div class="related-content-item">
-                    <a href="">
-                        <figure>
-                            <img src="http://placekitten.com/300/200" alt="" />
-                            <figcaption>The Eglu</figcaption>
-                        </figure>
-                    </a>
-                    <a href="" class="index-page-link">News &gt;</a>
-                </div>
-                <div class="related-content-item">
-                    <a href="">
-                        <figure>
-                            <img src="http://placekitten.com/300/200" alt="" />
-                            <figcaption>Talking interiors</figcaption>
-                        </figure>
-                    </a>
-                    <a href="" class="index-page-link">News &gt;</a>
-                </div>
+                {% include sidebar.html %}
             </aside>
         </div>
-        <div class="full-width-footer">
-            <div class="footer-wrapper">
-                <footer>
-                    <ul class="menu">
-                        <li class="main expanded"><a href="">Schools &amp; programmes</a>
-                            <div class="submenu-block">
-                                <ul>
-                                    <section>
-                                        <li><a href="">School of Architecture</a></li>
-                                        <ul>
-                                            <li><a href="">Architecture</a></li>
-                                            <li><a href="">Interior design</a></li>
-                                        </ul>
-                                        <li><a href="">School of Communication</a></li>
-                                        <ul>
-                                            <li><a href="">Animation</a></li>
-                                            <li><a href="">Information experience design</a></li>
-                                            <li><a href="">Visual communication</a></li>
-                                        </ul>
-                                        <li><a href="">School of Design</a></li>
-                                        <ul>
-                                            <li><a href="">Design interactions</a></li>
-                                            <li><a href="">Design prodcuts</a></li>
-                                            <li><a href="">Global innovation design</a></li>
-                                            <li><a href="">Innovation design engineering (IDE)</a></li>
-                                            <li><a href="">Service design</a></li>
-                                            <li><a href="">Vehicle design</a></li>
-                                        </ul>
-                                    </section>
-                                    <section>
-                                        <li><a href="">School of Fine Art</a></li>
-                                        <ul>
-                                            <li><a href="">Painting</a></li>
-                                            <li><a href="">Photography</a></li>
-                                            <li><a href="">Printmaking</a></li>
-                                            <li><a href="">Sculpture</a></li>
-                                        </ul>
-                                        <li><a href="">School of Humanities</a></li>
-                                        <ul>
-                                            <li><a href="">Critical &amp; historical studies</a></li>
-                                            <li><a href="">Critical writing in art &amp; design</a></li>
-                                            <li><a href="">Curating contemporary art</a></li>
-                                            <li><a href="">History of design</a></li>
-                                        </ul>
-                                        <li><a href="">School of Material</a></li>
-                                        <ul>
-                                            <li><a href="">Ceramics &amp; glass</a></li>
-                                            <li><a href="">Goldsmithing, silversmithing, metalwork &amp; jewellery</a></li>
-                                            <li><a href="">Fashion menswear</a></li>
-                                            <li><a href="">Fashion womenswear</a></li>
-                                            <li><a href="">Textiles</a></li>
-                                        </ul>
-                                    </section>
-                                    <section>
-                                        <li><a href="">Study at RCA</a></li>
-                                        <ul>
-                                            <li><a href="">The RCA experience</a></li>
-                                            <li><a href="">Facilities</a></li>
-                                            <li><a href="">Support services</a></li>
-                                            <li><a href="">Fees &amp; funding</a></li>
-                                            <li><a href="">Open days</a></li>
-                                            <li><a href="">Apply</a></li>
-                                        </ul>
-                                    </section>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="main expanded"><a href="">Research &amp; innovation</a>
-                            <div class="submenu-block">
-                                <ul>
-                                    <section>
-                                        <li><a href="">Current research</a></li>
-                                        <li><a href="">Success stories</a></li>
-                                        <li><a href="">Research support</a></li>
-                                        <li><a href="">Research news</a></li>
-                                    </section>
-                                    <section>
-                                        <li><a href="">Helen Hamlyn centre</a></li>
-                                        <li><a href="">InnovationRCA</a></li>
-                                        <li><a href="">RapidFormRCA</a></li>
-                                        <li><a href="">Sustain</a></li>
-                                    </section>
-                                    <section>
-                                        <li><a href="">Business &amp; partnerships</a></li>
-                                    </section>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="main expanded"><a href="">Showcase</a>
-                            <div class="submenu-block">
-                                <ul>
-                                    <section>
-                                        <li><a href="">Show RCA (2007-13)</a></li>
-                                    </section>
-                                    <section>
-                                        <li><a href="">RCA Now</a></li>
-                                    </section>
-                                </ul>
-                            </div>
-                        </li>
-                        <li class="main expanded last"><a href="">More</a>
-                            <div class="submenu-block">
-                                <ul>
-                                    <section>
-                                        <li><a href="">Our history</a></li>
-                                        <li><a href="">Governance</a></li>
-                                        <li><a href="">Support the RCA</a></li>
-                                        <li><a href="">For alumni</a></li>
-                                    </section>
-                                    <section>
-                                        <li><a href="">Events</a></li>
-                                        <li><a href="">News</a></li>
-                                        <li><a href="">Publications</a></li>
-                                        <li><a href="">Jobs</a></li>
-                                    </section>
-                                    <section>
-                                        <li><a href="">Contact us</a></li>
-                                        <li><a href="">Maps &amp; visiting</a></li>
-                                        <li><a href="">Term dates</a></li>
-                                        <li><a href="">Venue hire</a></li>
-                                    </section>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                    <h3>Follow the RCA</h3>
-                    <ul class="social">
-                        <li><a href="" class="facebook">Facebook</a></li>
-                        <li><a href="" class="vimeo">Vimeo</a></li>
-                        <li><a href="" class="twitter">Twitter</a></li>
-                        <li><a href="" class="youtube">YouTube</a></li>
-                    </ul>
-                    <div class="smallprint">
-                        <span class="address">
-                            Royal College of Art, Kensington Gore, London, SW7 2EU
-                        </span>
-                        <ul>
-                            <li><a href="">Privacy policy</a></li>
-                            <li><a href="">Copyright notice</a></li>
-                            <li><a href="">Accessiblity</a></li>
-                        </ul>
-                    </div>
-                </footer>
-            </div>
-        </div>
+
+        {% include footer.html %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="assets/js/vendor/harvey.js"></script>
@@ -463,12 +56,11 @@
         <script src="assets/js/vendor/jquery.hoverintent.min.js"></script>
         <script src="assets/js/vendor/fluidvids.js"></script>
         <script src="assets/js/vendor/jquery.bxslider.min.js"></script>
-
+        <script src="assets/js/vendor/bootstrap-affix.js"></script>
+        <script src="assets/js/vendor/bootstrap-tab.js"></script>
+        <script src="assets/js/carousel-news.js"></script>
         <script src="assets/js/site.js"></script>
         <script src="assets/js/nav.js"></script>
-        <!--<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
-        <script src="js/plugins.js"></script>
-        <script src="js/main.js"></script>-->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>

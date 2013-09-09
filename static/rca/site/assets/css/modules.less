@@ -1,0 +1,705 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Modules
+ *
+ * Module mobile styles go here.
+ * Overridden for desktop in moudles-desktop.less and modules-desktop-large.less
+ */
+
+ /**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents
+ * Carousel
+ * Twitter block
+ * Share and dialogue box
+ * News carousel
+ * Head of programme
+ * Event block
+ * Two plus block
+ * Three plus block
+ * Nine plus/six-plus block
+ * Tabbed content
+ * Stats block
+ * Button bar
+ * Metadata
+ */
+
+/**
+ *$Carousel
+ */
+
+.bx-wrapper {
+    .bx-next {
+        background-color: @color-pale-grey;
+        background-color: fade(@color-white, 80%);
+        background-image: none;
+        right: 0;
+        &:after{
+            content: " ";
+            .sprite-load(-211px, -996px, 37px, 66px);
+            position: absolute;
+            top: 2px;
+            left: 30px;
+        }
+        &:hover {
+            background-color: @color-pink;
+            &:after{
+                .sprite-load(-211px, -441px, 37px, 66px);
+            }
+        }
+    }
+    .bx-prev {
+        background-color: @color-pale-grey;
+        background-color: fade(@color-white, 80%);
+        background-image: none;
+        left: 0;
+        &:after{
+            content: " ";
+            .sprite-load(-301px, -996px, 37px, 66px);
+            position: absolute;
+            top: 2px;
+            left: 20px;
+        }
+        &:hover {
+            background-color: @color-pink;
+            &:after{
+                .sprite-load(-301px, -441px, 37px, 66px);
+            }
+        }
+    }
+    /* selectors necessary to override the bxslider theme */
+   .bx-controls-direction a {
+        width: @carousel-control-width-mobile;
+        height: @carousel-control-height-mobile;
+        z-index: 2; /* over slide but under header */
+        top: 100%;
+        margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
+    }
+
+    .bx-viewport {
+        border: none;
+        box-shadow: none;
+        left: 0;
+    }
+    .bxslider {
+        .unlist();
+    }
+
+    .bx-loading {
+        background: url(../images/bx_loader.gif) center center no-repeat #fff;
+    }
+}
+
+/**
+ * $Twitter block
+ */
+
+.twitter-feed {
+    .clearfix();
+
+    h2 {
+        .h7;
+        margin: 0;
+       
+        a {
+            color: @color-highlight-blue;
+        }
+
+        &:after{
+            content:"";
+            display:inline-block;
+            float:right;
+            .sprite-load(-6px, -197px, 28px, 25px);
+        }
+    }
+
+    .row {
+        .unlist();
+        .row-flush();
+    }
+    .row{
+        margin-top: @spacing-one;
+    }
+
+    li {
+        .column(12);
+        margin-bottom:@spacing-one;
+        overflow:hidden;
+    }
+        h3 {
+            .a2;
+            margin: 0;
+        }
+        p {
+            .bc4;
+            margin: 0;
+        }
+   
+}
+
+/**
+ * $Share and dialogue box
+ */
+
+.share-wrapper{
+    margin: @spacing-one 0 0 0;
+    position: relative;
+    width: 180px;
+}
+.share {
+    text-indent: -9999px;
+    .sprite-load(-188px, -2200px, 45px, @share-link-height);
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-188px, -1644px, 45px, @share-link-height);
+    }
+}
+
+.dialogue {
+    .mixin-grey-links;
+    position: absolute;
+    bottom: @share-link-height + 15px;
+    width: 100%;
+    display: none;
+    &.expanded {
+        display: block;
+    }
+}
+
+
+/**
+ * $News carousel
+ */
+
+.carousel-news{
+    .clearfix();
+    position:relative;
+    padding-bottom:100px;
+
+    .carousel{
+        .unlist();
+        margin:0 -15px;
+        overflow:hidden;
+    }
+    li{
+        .transition(all 0.4s ease);
+        float:left;
+        width:10%;
+
+        &:hover, &.active{
+            z-index:5;
+            width:58%;
+
+            .caption{
+                display:block;
+            }
+
+            .image img{
+                opacity:1;
+                display:block;
+            }
+        }
+    }
+
+    .caption{
+        position:absolute;
+        left:0;
+        width:100%;
+        min-width:100%;
+        max-width:100%;
+        overflow:hidden;
+        display:none;
+        margin-top:1em;
+
+
+        .h6{
+            margin:0;
+        }
+    }
+
+    .image{  
+        border-left:1px solid black;
+        overflow:hidden;
+        background-color:black;
+    }
+    .image img{
+        width:auto;
+        max-width:none;
+        opacity:0.4;
+    }
+}
+
+/**
+ *$Head of programme
+ */
+
+.head-of-programme{
+    .image{
+        .column(6);
+        padding-left:0;
+        img{
+            max-width:100%;
+        }
+    }
+    .content{
+        .column(6);
+        margin:0;
+
+        .bc4{
+            font-size:0.8em;
+        }
+    }
+}
+
+/**
+ *$Load more buttons (reused several times below, so this is just common properties)
+ */
+
+.load-more{
+    a{
+        text-indent:-2000px;            
+        display:block;
+        background-color:@color-pale-grey;
+        position:relative;
+
+        &:after{
+            content:"";
+            display:block;
+            margin:auto;
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            .sprite-load(-468px, -995px, 64px, 64px);
+            opacity:0.6;
+        }
+
+        &:hover{
+            background-color:@color-pink;
+            &:after{
+                background-position:-468px -440px;
+                opacity:1;
+            }
+        }
+    }
+}
+
+/**
+ *$Full bleed image
+ */
+
+.full-bleed-image{
+    z-index:-1;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+    height: 100%;
+    background-attachment: fixed;
+    max-height:100%;
+    overflow:hidden;
+}
+
+
+/**
+ *$Event block
+ */
+
+.events{
+    ul{
+        .unlist();
+        position:relative;
+        -webkit-overflow-scrolling: touch;
+        padding-top:@spacing-one;
+        padding-bottom:@spacing-one;
+
+        li{
+            .column(7, @grid-gutter-width);
+            padding-left:74px;
+            min-height:100px;
+            border-right:1px solid fade(@color-divider, 50%);
+            
+            &:before{
+                margin-left:-64px;
+                content:"";
+                display:inline-block;
+                float:left;
+                .sprite-load(-772px, -2200px, 54px, 43px);
+            }
+            &.last{
+                border-right:0;
+            }
+
+            &:hover:before{
+                .sprite-load(-772px, -1645px, 54px, 43px);
+            }
+        }
+    }
+
+    .load-more{
+        border-right:0;
+        position:absolute;
+        height:100%;
+        margin-top:-@spacing-one;
+        margin-bottom:-@spacing-one;
+        background-color:@color-white;
+        padding-left:@grid-gutter-width;
+
+        &:before{
+            display:none;
+        }
+
+        a{
+            position:absolute;
+            height:132px; /* height and width are min-height of 100 + top/bottom padding of 16 as on UL above */
+            width:132px;
+        }
+    }
+
+    
+    .h7, .a2, .bc4{
+        margin:0;
+    }
+
+    .bc4 span{
+        color:@color-light-grey;
+    }
+}
+
+/**
+ *$Single item
+ */
+
+.single{
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+    .h8, .bc5{
+        margin:0;
+    }
+}
+
+
+/**
+ *$Two plus block
+ */
+
+.two-plus{
+    ul{
+        .row-flush();
+        .unlist();
+        
+        position:relative;
+
+        li{
+            .column(8);         
+        }
+        .h8, .bc5{
+            margin:0;
+        }
+        
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+    .load-more{
+        a{
+            height:126px;
+            width:126px;
+        }
+    }
+}
+
+/**
+ *$Three plus block
+ */
+
+.three-plus{
+    ul{
+        .unlist();
+        .row-flush();
+        position:relative;
+
+        li{
+            .column(8);         
+        }
+        .h8, .bc5{
+            margin:0;
+        }
+
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+
+    .load-more{
+        a{
+            height:126px;
+            width:126px;
+        }
+    }
+}
+
+
+/**
+ *$Nine plus/six-plus block (doesn't follow grid)
+ */
+
+.nine-plus, .six-plus{
+    ul{
+        .unlist();
+        .row();
+        .row-flush();
+        position:relative;
+    
+        li{
+            .column(4);
+            display:inline-block;
+            height:250px;
+        }
+    }
+    .image{
+        height:100px;
+        overflow:hidden;
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+    .a3, .a4{
+        margin:0;
+    }
+    .a4{
+        line-height:1.3em;
+    }
+
+    .load-more{
+        height:auto;
+        a{
+            height:80px; /* height and width are min-height of 100 + top/bottom padding of 16 as on UL above */
+            width:80px;
+        }
+    }
+}
+
+
+/**
+ *$Scrolling of events, two plus and three plus items and mobile sizes. 
+ */
+
+.events, .two-plus, .three-plus{
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    ul{
+        white-space: nowrap;
+    }
+    ul li{
+        display:inline-block;
+        white-space:normal;
+        float:none;
+    }
+
+    .load-more{
+        display:none;
+    }
+}
+
+/**
+ *$Tabbed content (3 tabs exactly required)
+ */
+
+.tab-nav{
+    display:none;
+}
+.tab-content{
+    .clearfix();
+    background-color:darken(@color-pale-grey, 10%);
+
+    .header{
+        margin:0;
+        border-bottom:1px solid white;
+
+        a{
+            padding:@grid-gutter-width;
+            background-color:@color-pale-grey;
+            display:block;
+
+            &:after{
+                content:"\002B";
+                display:inline-block;
+                float:right;
+                width:20px;
+                height:20px;
+                font-size:2em;
+                font-family:@font-family-benton-light;
+            }
+            &.active{
+                background-color:darken(@color-pale-grey, 10%);
+            }
+
+            &.active:after{
+                content:"–";
+            }
+        }
+    }
+}
+.tab-pane{
+    display:none;
+    padding:@grid-gutter-width;
+    border-bottom:1px solid white;
+
+    &.flush{
+        padding:0;
+    }
+    &.active{
+        display:block;
+    }
+    ul{
+        .unlist();
+    }
+    .image.full{
+        margin:0 -15px; /* negative by amount of body padding (which isn't same as grid gutter) */
+    }
+
+    .two-cols{
+        .row();
+        .row-flush();
+        margin-bottom:@grid-gutter-width;
+   
+        .col{
+            .row();
+            padding-bottom:@grid-gutter-width;
+
+            .image{
+                .column(1.2, @grid-gutter-width, 6);
+                padding:0;
+            }
+            .content{
+                .column(4, @grid-gutter-width, 6);
+                padding-right:0;
+            }
+            .h6,
+            .bc3{
+                margin:0;
+            }
+        }
+    }
+
+    .four-cols{
+        .row();
+        margin-bottom:@grid-gutter-width;
+    }
+
+}
+
+/**
+ *$Stats block
+ */
+
+/*
+.three-stats{
+    .unlist();
+    .clearfix();
+
+    background-color:@color-light-grey;
+
+    li{
+        .column(4);
+        padding:@grid-gutter-width/2 0;
+    }
+    .stat{
+        .column(2, @grid-gutter-width/2, 4);
+        padding-right:0;
+    }
+    p{
+        .column(2, @grid-gutter-width/2, 4);
+        padding-left:0;
+    }
+}
+*/
+
+/**
+ *$Button bar
+ */
+
+.button-bar{
+    .unlist();
+    .clearfix();  
+
+    a{
+        display:block;
+        border-bottom:1px solid white;
+    }
+    .icon-download:after{
+        content:"";
+        display:inline-block;
+        .sprite-load(-356px, -539px, 43px, 51px);
+        zoom:0.6;
+        float:right;
+        margin:-10px 0;
+    }
+}
+
+/**
+ * &Metadata e.g. on news page
+ */
+.meta-data {
+    border-bottom: 1px solid @color-divider;
+    ul {
+        .unlist();
+        margin: 0;
+        padding: 0;
+    }
+    dd {
+        .a2();
+    }
+
+    dt {
+        margin-bottom: @grid-gutter-width;
+        &:last {
+            margin-bottom: 0;
+        }
+    }
+}
+
+/**
+ * &Body text
+ */
+
+.body-text {
+    .column(12);
+}
+
+/**
+ * &Profile
+ */
+.profile {
+    .profile-pic{
+        padding: @grid-gutter-width;
+    }
+    dt {
+        .a3();
+    }
+    dd {
+        .h6();
+        span {
+            .bc3();
+        }
+    }
+}
+
