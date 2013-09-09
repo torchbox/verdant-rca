@@ -18,10 +18,12 @@
 }
 
 .transition(@transition){
-    -webkit-transition: @transition;
-    -moz-transition: @transition;
-    -o-transition: @transition;
-    transition: @transition;
+    body.ready &{
+        -webkit-transition: @transition;
+        -moz-transition: @transition;
+        -o-transition: @transition;
+        transition: @transition;
+    }
 }
 
 .border-radius(@radius){

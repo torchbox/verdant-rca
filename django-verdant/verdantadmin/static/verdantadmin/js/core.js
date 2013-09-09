@@ -27,6 +27,9 @@ $(function(){
     	$(this).closest('fieldset').removeClass('focused')
         $(this).closest('li').removeClass('focused')
     });
+
+    // Add class to the body from which transitions may be hung so they don't appear to transition on initial page load
+    $('body').addClass('ready'); 
 })
 
 function fitNav(){

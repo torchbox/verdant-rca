@@ -14,13 +14,15 @@ body{
     color:@color-text-base;
     overflow-x: hidden;
     position: relative;
-    color:red;
 }
 
 h1,h2,h3,h4,h5,h6{
     font-weight:normal;
 }
 
+h1{
+    line-height:1.3em;
+}
 
 a{
     color:@color-link;
@@ -59,7 +61,7 @@ kbd{
     min-height:800px;
 }  
     .nav-main{
-        .box-shadow(inset -5px 20px 10px 0px rgba(0, 0, 0, 0.5));
+        .box-shadow(inset -5px -10px 10px 0px rgba(0, 0, 0, 0.5));
         margin-top:150px;
         background: @color-grey-dark;
         height:100%;
@@ -171,6 +173,7 @@ header{
     padding-bottom:1em;
     background-color:@color-header-bg;
     .box-shadow(0 1px 3px 0 rgba(0,0,0,0.1));
+    margin-bottom:2em;
 
     .row{
         padding-top:1em;

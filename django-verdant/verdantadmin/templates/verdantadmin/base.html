@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!doctype html>
 {% load compress %}
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -36,7 +36,7 @@
                     <li><a href="{% url 'verdantadmin_pages_index' %}" class="icon explore">Pages</a></li>
                     <li class="selected"><a href="#" class="icon explore dl-trigger">Explore</a></li>
                     <li><a href="#" class="icon snippets">Snippets</a></li>
-                    <li><a href="#" class="icon new">New</a></li>
+                    <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon new">New</a></li>
                 </ul>
             </nav>
 
@@ -247,6 +247,7 @@
 
         <div class="content-wrapper">
             <div class="content">
+                
                 {% if messages %}
                     <ul class="messages">
                         {% for message in messages %}

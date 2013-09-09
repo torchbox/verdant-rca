@@ -13,6 +13,7 @@ max z-index: unknown;
     position: relative;
     top:0;
     left:0;
+    display:none;
     -webkit-perspective: 1000px;
     -moz-perspective: 1000px;
     perspective: 1000px;
@@ -158,6 +159,10 @@ max z-index: unknown;
         top: 0px;
         left: 0;
     }
+}
+
+body.explorer-open .explorer{
+    display:block;
 }
 
 body.explorer-open .nav-wrapper{

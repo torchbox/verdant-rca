@@ -1,12 +1,16 @@
 {% extends "verdantadmin/base.html" %}
 
 {% block content %}
-    <h2>Editing page '{{ page.title }}'</h2>
+    <header>
+        <h1>Editing page '{{ page.title }}'</h1>
+    </header>
 
     <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
-        {{ admin.render }}
-        <input type="submit" value="Save">
+        <ul class="fields">
+            {{ admin.render }}
+            <li class="button"><input type="submit" value="Save"></li>
+        </ul>
     </form>
 {% endblock %}
 
