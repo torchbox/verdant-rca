@@ -41,7 +41,9 @@ class NewsItemAdminHandler(AdminHandler):
         FieldPanel('slug'),
         FieldPanel('lead_image'),
         RichTextFieldPanel('body'),
-        InlinePanel(NewsItem, NewsItemRelatedLink), # could pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
+        InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links"),
+            # label is optional - we'll derive one from the related_name of the relation if not specified
+            # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
     ]
 
 
