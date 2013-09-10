@@ -1,5 +1,11 @@
 {% extends "rca/editorial_page.html" %}
 
+{% load image_tags %}
+
+{% block pre_content %}
+    {% image self.lead_image 400x300 %}
+{% endblock %}
+
 {% block sidebar %}
     {% with self.related_links.all as related_links %}
         {% if related_links %}

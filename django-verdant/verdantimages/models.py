@@ -19,18 +19,20 @@ class Image(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_in_format(self, format_spec):
-        # TODO: keep an in-memory cache of formats, to avoid a db lookup
-        fmt, created = Format.objects.get_or_create(spec=format_spec)
+    def get_in_format(self, format):
+        if not hasattr(format, 'generate'):
+            # assume we've been passed a format spec string, rather than a Format object
+            # TODO: keep an in-memory cache of formats, to avoid a db lookup
+            format, created = Format.objects.get_or_create(spec=format)
 
         try:
-            rendition = self.renditions.get(format=fmt)
+            rendition = self.renditions.get(format=format)
         except Rendition.DoesNotExist:
             file_field = self.file
-            generated_image_file = fmt.generate(file_field.file)
+            generated_image_file = format.generate(file_field.file)
 
             rendition = Rendition.objects.create(
-                image=self, format=fmt, file=generated_image_file)
+                image=self, format=format, file=generated_image_file)
 
         return rendition
 
