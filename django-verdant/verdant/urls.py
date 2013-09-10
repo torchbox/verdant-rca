@@ -1,5 +1,8 @@
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.conf import settings
+import os.path
 
 from core import urls as verdant_urls
 from verdantadmin import urls as verdant_admin_urls
@@ -22,3 +25,6 @@ urlpatterns = patterns('',
     # Verdant's serving mechanism
     url(r'', include(verdant_urls))
 )
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL + 'images/', document_root=os.path.join(settings.MEDIA_ROOT, 'images'))
