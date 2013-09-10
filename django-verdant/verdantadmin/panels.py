@@ -39,9 +39,6 @@ class BaseFieldPanel(BaseAdminPanel):
     def render(self):
         return mark_safe(render_to_string(self.template, {'field': self.form[self.field_name]}))
 
-    def render_js(self):
-        return ""
-
     def rendered_fields(self):
         """return a list of names of fields that will be rendered by this panel"""
         return [self.field_name]
