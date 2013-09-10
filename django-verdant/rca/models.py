@@ -1,8 +1,8 @@
 from django.db import models
 
 from core.models import Page
+from core.fields import RichTextField
 
-from verdant.fields import RichTextField
 from verdantadmin.forms import register, AdminHandler
 from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
 
