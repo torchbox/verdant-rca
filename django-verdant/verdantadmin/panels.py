@@ -39,9 +39,8 @@ class BaseFieldPanel(BaseAdminPanel):
     def render(self):
         return mark_safe(render_to_string(self.template, {'field': self.form[self.field_name]}))
 
-    # TEMP - to check that javascript is being correctly applied to fields
     def render_js(self):
-        return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#ddf')});" % self.form[self.field_name].id_for_label
+        return ""
 
     def rendered_fields(self):
         """return a list of names of fields that will be rendered by this panel"""

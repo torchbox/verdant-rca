@@ -2,11 +2,11 @@
 
 {% block content %}
     <header>
-        <h1>What type of page do you want to create?</h1>
+        <h1>Create a new page</h1>
     </header>
     <ul>
         {% for content_type in page_types %}
-            <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}">{{ content_type.name }}</a></li>
+            <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon add">{{ content_type.name }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

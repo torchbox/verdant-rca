@@ -2,3 +2,4 @@
 .DS_Store
 /django-verdant/.vagrant
 /django-verdant/static
+local.py
