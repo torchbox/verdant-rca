@@ -101,6 +101,13 @@
  * $Share and dialogue box
  */
 
+ .single {
+    .share-wrapper {
+        margin: @spacing-one 0 @spacing-one @spacing-one;
+        width: 100%;
+    }
+}
+
 
 /**
  *$Head of programme
@@ -173,6 +180,15 @@
 .three-plus{
     ul li{
         .column(3);         
+    }
+}
+
+ /**
+ *$Four plus
+ */
+.four-plus{
+    ul li{
+        .column(2.4);         
     }
 }
 
@@ -342,8 +358,19 @@
 
 .profile {
     .col.first {
+        padding-left: @grid-gutter-width;
         img {
             max-width: 100%;
         }
+    }
+    .col.last {
+        padding-right: @grid-gutter-width;
+    }
+    .share-wrapper, .contact-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .dialogue {
+        width: 180px;
     }
 }

@@ -164,12 +164,14 @@ ul ul, ol ol {
     font-family: @font-family-benton;
     font-size: @font-size-30;
     line-height: @line-height-3;
+    font-weight: normal;
 }
 
 .h5 {
     font-family: @font-family-benton;
     font-size: @font-size-22;
     line-height: @line-height-4;
+    font-weight: normal;
 }
 
 .h6 {
@@ -329,13 +331,13 @@ ul ul, ol ol {
     margin-top:1em;
 }
 
-.content {
+.page-content {
     .column(12);
     .row();
 }
 
 footer {
-    .column(12); /* matches content style */
+    .column(12); /* matches page-content style */
     .row();
 }
 
@@ -359,8 +361,8 @@ aside {
  * $Header
  */
 
-/* header has to match width of content below so has left and right
-margins like the wrapper. When content scrolls up, especially the full width
+/* header has to match width of page-content below so has left and right
+margins like the wrapper. When page-content scrolls up, especially the full width
 footer, we don't want stuff appearing behind the header. This 100% width wrapper
 makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
 .header-wrapper {
@@ -1024,10 +1026,7 @@ input[type=button], button, .button{
 }
 
 .type-news {
-    .share-wrapper {
-        margin: @spacing-one 0 0 0;
-        width: 180px;
-    }
+
 }
 
 .type-staff-profile {
@@ -1041,21 +1040,12 @@ input[type=button], button, .button{
             clear: both;
         }
    }
-
-    .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-        padding-top: @spacing-half;
-        margin-top: @spacing-one * -1; /* sit flush against divider */
-    }
-
-    .share, .add-to-contacts {
-        margin: 0 auto;
-    }
-
-    .dialogue {
-        bottom: @share-link-height + @spacing-half;
-        left: 0;
-    }
+   #tab2 {
+        padding-top: 0; /* carousel sits flush against top of tab */
+        h2 {
+            margin: @spacing-half 0 0 0;
+        }
+   }
 }
 
 
