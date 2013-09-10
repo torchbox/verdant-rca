@@ -2,6 +2,8 @@ from django.core.files import File
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.utils.safestring import mark_safe
+from django.utils.html import escape
 
 import StringIO
 import PIL.Image
@@ -108,3 +110,12 @@ class Rendition(models.Model):
     file = models.ImageField(upload_to='images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
+
+    @property
+    def url(self):
+        return self.file.url
+
+    def img_tag(self):
+        return mark_safe(
+            '<img src="%s" width="%d" height="%d" alt="%s">' % (escape(self.url), self.width, self.height, escape(self.image.title))
+        )
