@@ -275,7 +275,24 @@ footer {
     .cols-nine-three{
         .row-flush();
     }
-}   
+}
+
+.type-news {
+    .share-wrapper {
+        margin: @spacing-one 0 @spacing-one @spacing-one;
+        width: 100%;
+    }
+}
+
+.type-staff-profile {
+    .share-wrapper, .contact-wrapper {
+        border-right: 2px solid @color-medium-grey;
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+}
 
 @import "modules-desktop.less";
 
