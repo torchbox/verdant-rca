@@ -17,6 +17,7 @@
  * Carousel
  * Twitter block
  * Share and dialogue box
+ * 
  * News carousel
  * Head of programme
  * Event block
@@ -148,11 +149,10 @@
  * $Share and dialogue box
  */
 
-.share-wrapper{
-    margin: @spacing-one 0 0 0;
+.share-wrapper {
     position: relative;
-    width: 180px;
 }
+
 .share {
     text-indent: -9999px;
     .sprite-load(-188px, -2200px, 45px, @share-link-height);
@@ -173,6 +173,24 @@
     }
 }
 
+/**
+ * $Add to contacts
+ */
+
+.contact-wrapper {
+
+}
+
+.add-to-contacts {
+    text-indent: -9999px;
+    .sprite-load(-15px, -2200px, 55px, 52px);
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-15px, -1645px, 55px, 52px);
+    }
+    //background: url('imgs/sprites.png') no-repeat -15px -2200px; width: 55px; height: 52px;
+    //background: url('imgs/sprites.png') no-repeat -15px -1645px; width: 55px; height: 52px;
+}
 
 /**
  * $News carousel
@@ -602,9 +620,19 @@
         }
     }
 
-    .four-cols{
+    .four-cols {
         .row();
         margin:@grid-gutter-width 0;
+        .col {
+            .column(12, @grid-gutter-width, 12);
+        }
+    }
+    .three-nine-cols {
+        .row();
+        margin:@grid-gutter-width 0;
+        .col {
+            .column(12, @grid-gutter-width, 12);
+        }
     }
 
 }
@@ -691,12 +719,25 @@
  * &Profile
  */
 .profile {
-    .profile-pic{
-        padding: 0 @grid-gutter-width;
+    /*padding: @grid-gutter-width;*/
+    .col.first {
+        margin: 0 0 @grid-gutter-width 0;
+        img {
+            max-width: 200px;
+        }
     }
     h3, p { margin: 0;}
+    h2 {
+        font-weight: normal;
+        margin-top: -1em;
+    }
     .space {
         margin-top: @spacing-two;
+    }
+    .divider {
+        border-bottom: 2px solid @color-medium-grey;
+        max-width: 100%;
+        margin: @spacing-one @grid-gutter-width/2;
     }
 }
 

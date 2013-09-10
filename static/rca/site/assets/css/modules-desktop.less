@@ -100,10 +100,7 @@
 /**
  * $Share and dialogue box
  */
-.share-wrapper{
-    margin: @spacing-one 0 @spacing-one @spacing-one;
-    width: 100%;
-}
+
 
 /**
  *$Head of programme
@@ -246,7 +243,7 @@
     display:block;
     
     li{
-        background-color:red;
+        //background-color:red;
     }
 
     a{
@@ -303,13 +300,25 @@
         }
     }
     .four-cols{
-        .row-flush();
+        //.row-flush();
         .col{
+            .column(3); 
+        }
+    }
+    .three-nine-cols {
+        .col-3 {
             .column(3);
-            padding-bottom:0;  
+
+        }
+        .col-9 {
+            .column(9);
         }
     }
 }
+
+/**
+ *$Button bar
+ */
 
 .button-bar{
     li{
@@ -325,4 +334,16 @@
         }
     }
 
+}
+
+/*
+ * &Profile
+ */
+
+.profile {
+    .col.first {
+        img {
+            max-width: 100%;
+        }
+    }
 }

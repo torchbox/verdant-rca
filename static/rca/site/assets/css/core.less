@@ -1023,6 +1023,13 @@ input[type=button], button, .button{
    
 }
 
+.type-news {
+    .share-wrapper {
+        margin: @spacing-one 0 0 0;
+        width: 180px;
+    }
+}
+
 .type-staff-profile {
     div.related-content-item .staff figcaption {
         .a3();
@@ -1034,6 +1041,21 @@ input[type=button], button, .button{
             clear: both;
         }
    }
+
+    .share-wrapper, .contact-wrapper {
+        .column(1.5, @grid-gutter-width, 3);
+        padding-top: @spacing-half;
+        margin-top: @spacing-one * -1; /* sit flush against divider */
+    }
+
+    .share, .add-to-contacts {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-half;
+        left: 0;
+    }
 }
 
 
