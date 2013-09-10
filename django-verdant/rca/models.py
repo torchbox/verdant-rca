@@ -24,7 +24,7 @@ class NewsIndex(Page):
 
 
 class NewsItem(EditorialPage):
-    pass
+    lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 
 class NewsItemRelatedLink(RelatedLink):
@@ -39,6 +39,7 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
+        FieldPanel('lead_image'),
         RichTextFieldPanel('body'),
         InlinePanel(NewsItem, NewsItemRelatedLink), # could pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
     ]
