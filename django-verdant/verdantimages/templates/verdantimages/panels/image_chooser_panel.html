@@ -1,0 +1,12 @@
+{% extends "verdantadmin/panels/field_panel.html" %}
+{% load image_tags %}
+
+{% block form_field %}
+    {% if image %}
+        {% image image 130x100 %}
+    {% else %}
+        placeholderplaceholderplaceholder.
+    {% endif %}
+
+    {{ field }}
+{% endblock %}

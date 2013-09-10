@@ -5,6 +5,7 @@ from core.fields import RichTextField
 
 from verdantadmin.forms import register, AdminHandler
 from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
+from verdantimages.panels import ImageChooserPanel
 
 
 class RelatedLink(models.Model):
@@ -39,7 +40,7 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
-        FieldPanel('lead_image'),
+        ImageChooserPanel('lead_image'),
         RichTextFieldPanel('body'),
         InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links"),
             # label is optional - we'll derive one from the related_name of the relation if not specified
