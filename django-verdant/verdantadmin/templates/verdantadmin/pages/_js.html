@@ -6,7 +6,14 @@
 <script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
 <script src="{{ STATIC_URL }}verdantadmin/js/rangy-core.js"></script>
 <script src="{{ STATIC_URL }}verdantadmin/js/hallo.js"></script>
+<script src="{{ STATIC_URL }}verdantadmin/js/modal-workflow.js"></script>
 <script src="{{ STATIC_URL }}verdantadmin/js/verdant-admin.js"></script>
+
+{% comment %}
+    TODO: have a mechanism to specify this include within the verdantimages app -
+    ideally verdantadmin shouldn't have to know anything at all about verdantimages
+{% endcomment %}
+<script src="{{ STATIC_URL }}verdantimages/js/image-chooser.js"></script>
 
 <script>
     (function() {

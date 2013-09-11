@@ -1,12 +1,17 @@
 {% extends "verdantadmin/panels/field_panel.html" %}
 {% load image_tags %}
+{% load static %}
 
 {% block form_field %}
-    {% if image %}
-        {% image image 130x100 %}
-    {% else %}
-        placeholderplaceholderplaceholder.
-    {% endif %}
+    <div id="{{ field.id_for_label }}-chooser">
+        <div id="{{ field.id_for_label }}-previewimage">
+            {% if image %}
+                {% image image 130x100 %}
+            {% else %}
+                <img src="{% static 'verdantimages/images/placeholder.png' %}" width="100" height="75" alt="">
+            {% endif %}
+        </div>
+    </div>
 
     {{ field }}
 {% endblock %}

@@ -20,8 +20,8 @@ class BaseImageChooserPanel(BaseFieldPanel):
             'image': getattr(self.model_instance, self.field_name)
         }))
 
-    #def render_js(self):
-    #    return "createImageChooser(fixPrefix('%s'));" % self.form[self.field_name].id_for_label
+    def render_js(self):
+        return "createImageChooser(fixPrefix('%s'));" % self.form[self.field_name].id_for_label
 
 def ImageChooserPanel(field_name):
     return type('_FieldPanel', (BaseImageChooserPanel,), {'field_name': field_name})
