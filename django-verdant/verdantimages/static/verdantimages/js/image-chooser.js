@@ -3,6 +3,8 @@ function createImageChooser(id) {
     var previewImage = $('#' + id + '-previewimage');
 
     chooserElement.click(function() {
-        ModalWorkflow();
-    })
+        ModalWorkflow({
+            'url': '/admin/images/chooser/' /* TODO: don't hard-code this, as it may be changed in urls.py */
+        });
+    });
 }

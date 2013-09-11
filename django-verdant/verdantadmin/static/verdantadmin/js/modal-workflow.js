@@ -12,10 +12,18 @@ function ModalWorkflow(opts) {
 
     var self = {};
 
-    container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body">\n                <p>ERMERGERD! MERDERLS!</p>\n            </div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
-
+    container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body"></div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
     $('body').append(container);
     container.modal();
+
+    var modalBody = container.find('.modal-body');
+    $.get(opts.url, function(responseText) {
+        var response = eval('(' + responseText + ')');
+        modalBody.html(response.html);
+        if (response.onload) {
+            response.onload(self);
+        }
+    }, 'text');
 
     return self;
 }
