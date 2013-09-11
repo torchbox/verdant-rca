@@ -1,8 +1,8 @@
 from django.db import models
 
 from core.models import Page
+from core.fields import RichTextField
 
-from verdant.fields import RichTextField
 from verdantadmin.forms import register, AdminHandler
 from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
 
@@ -24,7 +24,7 @@ class NewsIndex(Page):
 
 
 class NewsItem(EditorialPage):
-    pass
+    lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 
 class NewsItemRelatedLink(RelatedLink):
@@ -39,8 +39,11 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
+        FieldPanel('lead_image'),
         RichTextFieldPanel('body'),
-        InlinePanel(NewsItem, NewsItemRelatedLink), # could pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
+        InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links"),
+            # label is optional - we'll derive one from the related_name of the relation if not specified
+            # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
     ]
 
 
