@@ -12,18 +12,37 @@ function ModalWorkflow(opts) {
 
     var self = {};
 
-    container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body"></div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
+    var container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body"></div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
     $('body').append(container);
     container.modal();
 
-    var modalBody = container.find('.modal-body');
-    $.get(opts.url, function(responseText) {
-        var response = eval('(' + responseText + ')');
-        modalBody.html(response.html);
-        if (response.onload) {
-            response.onload(self);
+    self.body = container.find('.modal-body');
+
+    self.loadUrl = function(url) {
+        $.get(url, function(responseText) {
+            var response = eval('(' + responseText + ')');
+            self.loadBody(response);
+        }, 'text');
+    };
+
+    self.loadBody = function(body) {
+        if (body.html) {
+            self.body.html(body.html);
         }
-    }, 'text');
+        if (body.onload) {
+            body.onload(self);
+        }
+    };
+
+    self.respond = function(responseType) {
+        console.log('responding with a ' + responseType + ' message');
+    };
+
+    self.close = function() {
+        container.modal('hide');
+    };
+
+    self.loadUrl(opts.url);
 
     return self;
 }
