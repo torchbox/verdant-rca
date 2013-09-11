@@ -55,6 +55,9 @@
             content: " ";
             position: absolute;
             top:2px;
+            left:0;
+            right:0;
+            margin:auto;
         }
         &:hover {
             background-color: @color-pink;
@@ -64,7 +67,6 @@
         right: 0;
         &:after{
             .sprite-load(-211px, -996px, 37px, 66px);
-            left: 30px;
         }
         &:hover:after{
             .sprite-load(-211px, -441px, 37px, 66px);
@@ -74,7 +76,6 @@
         left: 0;
         &:after{
             .sprite-load(-301px, -996px, 37px, 66px);
-            left: 20px;
         }
         &:hover:after{
             .sprite-load(-301px, -441px, 37px, 66px);
@@ -88,8 +89,24 @@
         top: 100%;
         margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
     }
+    .bx-pager{
+        text-align:left;
+        padding-top:0;
+        bottom:@grid-gutter-width;
+        left:@grid-gutter-width;
 
-    .bxslider {
+        &.bx-default-pager a{
+            background:transparent;
+            border:1px solid white;
+
+            &.active,
+            &:hover{
+                background:white;
+            }
+        }
+    }
+
+    .carousel {
         .unlist();
     }
     .bx-viewport {
@@ -100,6 +117,34 @@
    
     .bx-loading {
         background: url(../images/bx_loader.gif) center center no-repeat #fff;
+    }
+
+    .content, 
+    .hover-content{
+        background-color:rgba(0,0,0,0.62);
+        color:@color-white;
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        padding:@grid-gutter-width;
+
+        .bc2{
+            .column(6);
+            margin:0;
+
+            .bc4{
+                font-size:0.6em;
+            }
+        }
+    }
+
+    .hover-content{
+        opacity:0;
+    }
+    &:hover .hover-content{
+        opacity:1;
     }
 }
 
@@ -213,7 +258,7 @@
     position:relative;
     padding-bottom:100px;
 
-    .content{
+    .carousel-content{
         .unlist();
         margin:0 -15px;
         overflow:hidden;
