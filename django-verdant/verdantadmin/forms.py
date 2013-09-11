@@ -37,7 +37,13 @@ class AdminHandlerBase(type):
                 if issubclass(model, Page):
                     exclude = ['content_type', 'path', 'depth', 'numchild']
 
-                cls.form = modelform_factory(model, exclude=exclude)
+                widgets = {}  # initially, no widgets will be overridden
+                if 'panels' in dct:
+                    # give panels the chance to override widgets
+                    for panel_def in dct['panels']:
+                        widgets.update(panel_def.widgets())
+
+                cls.form = modelform_factory(model, exclude=exclude, widgets=widgets)
 
 
 def panel_for_field(field_name, field_def):

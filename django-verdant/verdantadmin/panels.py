@@ -21,6 +21,11 @@ class BaseAdminPanel(object):
     def post_save(self):
         pass
 
+    @classmethod
+    def widgets(cls):
+        """return a dict of field widgets that should be overridden in the form"""
+        return {}
+
     def render(self):
         return ""
 

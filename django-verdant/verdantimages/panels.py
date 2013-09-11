@@ -1,3 +1,4 @@
+from django import forms
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
@@ -6,6 +7,12 @@ from verdantadmin.panels import BaseFieldPanel
 
 class BaseImageChooserPanel(BaseFieldPanel):
     template = "verdantimages/panels/image_chooser_panel.html"
+
+    @classmethod
+    def widgets(cls):
+        return {
+            cls.field_name: forms.HiddenInput
+        }
 
     def render(self):
         return mark_safe(render_to_string(self.template, {
