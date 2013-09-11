@@ -54,10 +54,14 @@ kbd{
     margin-left: -100%;
     width: 80%;
     float: left;
+    height:100%;
     min-height:800px;
 }  
     .nav-main{
+        .box-shadow(inset -5px 20px 10px 0px rgba(0, 0, 0, 0.5));
         margin-top:150px;
+        background: @color-grey-dark;
+        height:100%;
     }
 
     .logo{
@@ -84,7 +88,7 @@ kbd{
         }
 
         ul{
-            border-top:1px solid rgba(200,200,200,0.1);
+            border-top:1px solid rgba(200,200,200,0.2);
         }
 
         li{
@@ -114,6 +118,9 @@ kbd{
             }
         }
     }
+    body.nav-open .nav-wrapper .nav-main a{
+        text-indent:15px;
+    }
 
 .content-wrapper{
     width:100%;
@@ -142,9 +149,9 @@ body.nav-open .content-wrapper{
     transform: translate3d(80%,0,0);
     -webkit-transform: translate3d(80%,0,0);
 
-    .content{
-        position:fixed;
-    }
+    
+    position:fixed;
+    
 }
 
 

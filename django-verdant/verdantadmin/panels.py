@@ -39,10 +39,6 @@ class BaseFieldPanel(BaseAdminPanel):
     def render(self):
         return mark_safe(render_to_string(self.template, {'field': self.form[self.field_name]}))
 
-    # TEMP - to check that javascript is being correctly applied to fields
-    def render_js(self):
-        return "$(fixPrefix('#%s')).click(function() {$(this).css('background-color', '#ddf')});" % self.form[self.field_name].id_for_label
-
     def rendered_fields(self):
         """return a list of names of fields that will be rendered by this panel"""
         return [self.field_name]
@@ -85,6 +81,7 @@ class BaseInlinePanel(BaseAdminPanel):
 
     def render(self):
         return mark_safe(render_to_string("verdantadmin/panels/inline_panel.html", {
+            'label': self.label,
             'admins': self.admin_handler_instances,
             'empty_form_admin': self.empty_form_admin_handler_instance,
             'formset': self.formset,
@@ -122,9 +119,13 @@ class BaseInlinePanel(BaseAdminPanel):
         for admin in self.admin_handler_instances:
             admin._post_save()
 
-def InlinePanel(base_model, related_model, panels=None):
+def InlinePanel(base_model, related_model, panels=None, label=None):
     formset_class = inlineformset_factory(base_model, related_model, extra=0)
     admin_handler_panels = panels
+
+    if not label:
+        # derive a label from the related_name
+        label = formset_class.fk.rel.related_name.replace('_', ' ').capitalize()
 
     # construct an AdminHandler class around the particular flavour of ModelForm
     # that inlineformset_factory generates
@@ -140,5 +141,6 @@ def InlinePanel(base_model, related_model, panels=None):
     # a self.formset_class and self.admin_handler attribute
     return type('_InlinePanel', (BaseInlinePanel,), {
         'formset_class': formset_class,
-        'admin_handler': InlineAdminHandler
+        'admin_handler': InlineAdminHandler,
+        'label': label
     })

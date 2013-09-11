@@ -1,13 +1,74 @@
 {% extends "verdantadmin/base.html" %}
 
 {% block content %}
-    <ul>
-        {% for page in pages %}
-            <li>{{ page.title }} - <a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
-        {% endfor %}
-    </ul>
+    <header>
+        <h1>Explorer</h1>
 
-    <ul class="actions">
-        <li><a href="{% url 'verdantadmin_pages_select_type' %}">New page</a></li>
-    </ul>
+         <p class="breadcrumb"><a href="#">Sample</a> / <a href="#">breadcrumb</a> / <a href="#">goes here</a> /</p>
+
+        <div class="row row-flush">
+            <div class="left col9">
+                <h2 class="icon folder-black">
+                    Goldsmithing, Silversmithing, Metalwork &amp; Jewellery 
+                    <div class="dropdown">
+                        <div class="dropdown-toggle inline icon arrow-down-black">Open drop-down</div> 
+                        <ul role="menu">
+                            <li><a href="#" class="shortcut">Delete</a></li>
+                            <li><a href="#" class="shortcut">Do something else</a></li>
+                            <li><a href="#" class="shortcut">Preview</a></li>
+                            <li><a href="#" class="shortcut">Something</a></li>
+                        </ul>
+                    </div>
+                </h2>
+            </div>
+            <div class="right col3">
+                <a href="{% url 'verdantadmin_pages_select_type' %}" class="button icon add-teal">Add page here</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="listing">
+        <table>
+            <thead>
+                <tr>
+                    <th class="bulk"><label for="bulk-select-all"><span>Select all</span><input type="checkbox" id="bulk-select-all"/></label></th>
+                    <th class="title"><a href="#" class="icon orderable-up">Title</a></th>
+                    <th class="type">
+                        <div class="dropdown white match-width">
+                            <a href="#" class="dropdown-toggle icon orderable-down">Type</a> 
+                            <form>
+                                <ul role="menu">
+                                    <li><label><input type="radio" name="status" /> Published</label></li>
+                                    <li><label><input type="radio" name="status" /> Deleted</label></li>
+                                    <li><label><input type="radio" name="status" /> Archived</label></li>
+                                    <li><label><input type="radio" name="status" /> Draft</label></li>
+                                </ul>
+                            </form>
+                        </div>
+                    </th>
+                    <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for page in pages %}
+                    <tr>
+                        <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                        <td class="title">
+                            <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
+
+                            <ul class="actions">
+                                <li><a href="{{ page.url }}" target="_blank">View</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
+                                <li><a href="#">Move</a></li>
+                                <li><a href="#">Delete</a></li>
+                            </ul>
+                        </td>
+                        <td class="type">{{ page.content_type }}</td>
+                        <td class="status"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+   
 {% endblock %}

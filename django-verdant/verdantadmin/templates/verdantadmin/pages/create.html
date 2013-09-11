@@ -5,8 +5,10 @@
 
     <form action="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" method="POST">
         {% csrf_token %}
-        {{ admin.render }}
-        <input type="submit" value="Create page">
+        <ul class="fields">
+        	{{ admin.render }}
+        	<li class="button"><input type="submit" value="Create page" /></li>
+        </ul>
     </form>
 {% endblock %}
 

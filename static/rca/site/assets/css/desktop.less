@@ -98,7 +98,7 @@ body {
     }
 }
 .wrapper.affix{
-    margin-top: @header-height; /* space for fixed header */
+    margin-top: @header-height + 35px; /* space for fixed header */
 }
 
 header {
@@ -128,7 +128,7 @@ header {
 }
 
 .nav-wrapper {
-    /* mimics the style of the content below to make sure the search and navigation
+    /* mimics the style of the page-content below to make sure the search and navigation
     fill the correct width at the desktop size */
     .clearfix();
     width:100%;
@@ -162,7 +162,7 @@ form.search {
     }
 }
 
-.content {
+.page-content {
     margin-top: @spacing-onepointfive;
     float: left;
     width: 100%;
@@ -277,6 +277,14 @@ footer {
     .cols-nine-three{
         .row-flush();
     }
+}
+
+.type-news {
+
+}
+
+.type-staff-profile {
+
 }
 
 @import "modules-desktop.less";

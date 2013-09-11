@@ -1,11 +1,17 @@
-<div class="panel">
-    {{ field.label_tag }}
+<li class="text panel {% if field.errors %}error{% endif %}">
+    <div class="field">
+         {{ field.label_tag }}
+         {{ field }}
+    </div>
 
-    {{ field.errors }}
-
-    {{ field }}
-
-    {% if field.help_text %}
-        <div class="help_text">{{ field.help_text }}</div>
+    {% if field.errors %}
+        <p class="error-message">
+            {% for error in field.errors %}
+                <span>{{ error|escape }}</span>
+            {% endfor %}
+        </p>
     {% endif %}
-</div>
+    {% if field.help_text %}
+        <p class="help">{{ field.help_text }}</p>
+    {% endif %}
+</li>

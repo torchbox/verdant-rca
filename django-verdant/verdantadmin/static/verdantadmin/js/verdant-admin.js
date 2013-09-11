@@ -1,6 +1,6 @@
 function makeRichTextEditable(id) {
     var input = $('#' + id);
-    var richText = $('<div></div>').html(input.val());
+    var richText = $('<div class="richtext"></div>').html(input.val());
     richText.insertBefore(input);
     input.hide();
     richText.hallo({

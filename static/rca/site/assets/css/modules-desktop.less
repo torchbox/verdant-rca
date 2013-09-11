@@ -34,33 +34,33 @@
  */
 
 .bx-wrapper {
+    .bx-next, .bx-prev {
+        .transition(opacity 0.3s ease);
+        opacity:0
+    } 
+    &:hover {
+        .bx-next, .bx-prev {
+            opacity: 1;
+        }
+    }
+
     .bx-next {
         &:after {
-            content: " ";
             .sprite-load(-15px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
             left: 40px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-15px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-15px, -266px, 68px, 131px);
         }
     }
 
     .bx-prev {
         &:after{
-            content: " ";
             .sprite-load(-165px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
             left: 30px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-165px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-165px, -266px, 68px, 131px);
         }
     }
 
@@ -79,7 +79,7 @@
 
 .carousel-news{
     padding-bottom:0;
-    .carousel{
+    .content{
         margin:0;
     }
     .caption{
@@ -100,10 +100,14 @@
 /**
  * $Share and dialogue box
  */
-.share-wrapper{
-    margin: @spacing-one 0 @spacing-one @spacing-one;
-    width: 100%;
+
+ .single {
+    .share-wrapper {
+        margin: @spacing-one 0 @spacing-one @spacing-one;
+        width: 100%;
+    }
 }
+
 
 /**
  *$Head of programme
@@ -144,7 +148,7 @@
  *$Scrolling of two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus{
+.events, .two-plus, .three-plus, .four-plus{
     overflow:visible;
     ul{
         white-space:normal;
@@ -176,6 +180,15 @@
 .three-plus{
     ul li{
         .column(3);         
+    }
+}
+
+ /**
+ *$Four plus
+ */
+.four-plus{
+    ul li{
+        .column(2);
     }
 }
 
@@ -246,7 +259,7 @@
     display:block;
     
     li{
-        background-color:red;
+        //background-color:red;
     }
 
     a{
@@ -255,6 +268,10 @@
         padding-bottom:18%;
         margin-bottom:-16%;
         border-left:1px solid @color-divider;
+        &:hover {
+            background-color: @color-pink;
+            color: @color-white;
+        }
     }
     li:first-child a{
         border-left:0;
@@ -299,13 +316,25 @@
         }
     }
     .four-cols{
-        .row-flush();
+        //.row-flush();
         .col{
+            .column(3); 
+        }
+    }
+    .three-nine-cols {
+        .col-3 {
             .column(3);
-            padding-bottom:0;  
+
+        }
+        .col-9 {
+            .column(9);
         }
     }
 }
+
+/**
+ *$Button bar
+ */
 
 .button-bar{
     li{
@@ -321,4 +350,27 @@
         }
     }
 
+}
+
+/*
+ * &Profile
+ */
+
+.profile {
+    .col.first {
+        padding-left: @grid-gutter-width;
+        img {
+            max-width: 100%;
+        }
+    }
+    .col.last {
+        padding-right: @grid-gutter-width;
+    }
+    .share-wrapper, .contact-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .dialogue {
+        width: 180px;
+    }
 }

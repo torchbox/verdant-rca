@@ -89,9 +89,11 @@
 }
 
 /* sidebar advert */
-.mixin-sidebar-advert(@color, @fade) {
+.mixin-sidebar-advert(@color, @fade:0) {
     background-color: @color; /* fallback for ie8 */
     background-color: fade(@color, @fade);
+    color:white;
+    
     h2, p {
         margin: 0;
     }
@@ -128,6 +130,36 @@
             content:"";
             opacity:0.7;
             .sprite-load(-17px, -1218px, 7px, 14px);
+        }
+    }
+}
+
+/* generic styles for two-plus, three-plus etc */
+.x-plus-mobile {
+    ul{
+        .unlist();
+        .row-flush();
+        position:relative;
+
+        li{
+            .column(8);         
+        }
+        .h8, .bc5, .a3{
+            margin:0;
+        }
+
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+
+    .load-more{
+        a{
+            height:126px;
+            width:126px;
         }
     }
 }

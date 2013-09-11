@@ -17,63 +17,71 @@
  * Carousel
  * Twitter block
  * Share and dialogue box
+ * 
  * News carousel
  * Head of programme
  * Event block
- * Two plus block
+ * Two two block
  * Three plus block
  * Nine plus/six-plus block
  * Tabbed content
  * Stats block
  * Button bar
  * Metadata
+ * Body-text
+ * Profile
  */
 
 /**
  *$Carousel
  */
 
+/* TO DO: handle landscape / portrait images nicely */
+.bx-wrapper .bx-viewport {
+    background-color:darken(@color-pale-grey, 10%);
+}
 .bx-wrapper {
-    .bx-next {
+    img {
+        width: auto;
+        max-width: 100%;
+        margin: auto;
+    }
+    .bx-next, .bx-prev {
         background-color: @color-pale-grey;
         background-color: fade(@color-white, 80%);
         background-image: none;
-        right: 0;
+
         &:after{
             content: " ";
-            .sprite-load(-211px, -996px, 37px, 66px);
             position: absolute;
-            top: 2px;
-            left: 30px;
+            top:2px;
         }
         &:hover {
             background-color: @color-pink;
-            &:after{
-                .sprite-load(-211px, -441px, 37px, 66px);
-            }
+        }
+    }
+    .bx-next {
+        right: 0;
+        &:after{
+            .sprite-load(-211px, -996px, 37px, 66px);
+            left: 30px;
+        }
+        &:hover:after{
+            .sprite-load(-211px, -441px, 37px, 66px);
         }
     }
     .bx-prev {
-        background-color: @color-pale-grey;
-        background-color: fade(@color-white, 80%);
-        background-image: none;
         left: 0;
         &:after{
-            content: " ";
             .sprite-load(-301px, -996px, 37px, 66px);
-            position: absolute;
-            top: 2px;
             left: 20px;
         }
-        &:hover {
-            background-color: @color-pink;
-            &:after{
-                .sprite-load(-301px, -441px, 37px, 66px);
-            }
+        &:hover:after{
+            .sprite-load(-301px, -441px, 37px, 66px);
         }
     }
     /* selectors necessary to override the bxslider theme */
-   .bx-controls-direction a {
+    .bx-controls-direction a {
         width: @carousel-control-width-mobile;
         height: @carousel-control-height-mobile;
         z-index: 2; /* over slide but under header */
@@ -81,15 +89,15 @@
         margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
     }
 
+    .bxslider {
+        .unlist();
+    }
     .bx-viewport {
         border: none;
         box-shadow: none;
         left: 0;
     }
-    .bxslider {
-        .unlist();
-    }
-
+   
     .bx-loading {
         background: url(../images/bx_loader.gif) center center no-repeat #fff;
     }
@@ -146,11 +154,17 @@
  * $Share and dialogue box
  */
 
-.share-wrapper{
-    margin: @spacing-one 0 0 0;
+.share-wrapper {
     position: relative;
-    width: 180px;
 }
+
+.single {
+    .share-wrapper {
+        margin: @spacing-one 0 0 0;
+        width: 180px;
+    }
+}
+
 .share {
     text-indent: -9999px;
     .sprite-load(-188px, -2200px, 45px, @share-link-height);
@@ -171,6 +185,24 @@
     }
 }
 
+/**
+ * $Add to contacts
+ */
+
+.contact-wrapper {
+
+}
+
+.add-to-contacts {
+    text-indent: -9999px;
+    .sprite-load(-15px, -2200px, 55px, 52px);
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-15px, -1645px, 55px, 52px);
+    }
+    //background: url('imgs/sprites.png') no-repeat -15px -2200px; width: 55px; height: 52px;
+    //background: url('imgs/sprites.png') no-repeat -15px -1645px; width: 55px; height: 52px;
+}
 
 /**
  * $News carousel
@@ -181,7 +213,7 @@
     position:relative;
     padding-bottom:100px;
 
-    .carousel{
+    .content{
         .unlist();
         margin:0 -15px;
         overflow:hidden;
@@ -394,32 +426,7 @@
  */
 
 .two-plus{
-    ul{
-        .row-flush();
-        .unlist();
-        
-        position:relative;
-
-        li{
-            .column(8);         
-        }
-        .h8, .bc5{
-            margin:0;
-        }
-        
-    }
-    .image{
-        margin-bottom:@grid-gutter-width/2;
-        img{
-            display:block;
-        }
-    }
-    .load-more{
-        a{
-            height:126px;
-            width:126px;
-        }
-    }
+    .x-plus-mobile();
 }
 
 /**
@@ -427,30 +434,20 @@
  */
 
 .three-plus{
-    ul{
-        .unlist();
-        .row-flush();
-        position:relative;
+    .x-plus-mobile();
+}
 
-        li{
-            .column(8);         
-        }
-        .h8, .bc5{
-            margin:0;
-        }
+/**
+ *$Four plus block
+ */
 
-    }
-    .image{
-        margin-bottom:@grid-gutter-width/2;
-        img{
-            display:block;
-        }
-    }
-
-    .load-more{
-        a{
-            height:126px;
-            width:126px;
+.four-plus{
+    .x-plus-mobile();
+    p {
+        line-height: 1.25em;
+        span {
+            display: block;
+            clear: both;
         }
     }
 }
@@ -502,7 +499,7 @@
  *$Scrolling of events, two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus{
+.events, .two-plus, .three-plus, .four-plus{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     ul{
@@ -600,9 +597,37 @@
         }
     }
 
-    .four-cols{
+    .two-cols.two-cols-image-big {
+        .image {
+            .column(1.5, @grid-gutter-width, 6);
+            padding:0;
+        }
+        .content {
+            .column(3, @grid-gutter-width, 6);
+            padding-right:0;
+        }
+        .load-more {
+            a {
+                width: 96px;
+                height: 96px;
+            }
+        }
+    }
+
+
+    .four-cols {
         .row();
-        margin-bottom:@grid-gutter-width;
+        margin:@grid-gutter-width 0;
+        .col {
+            .column(12, @grid-gutter-width, 12);
+        }
+    }
+    .three-nine-cols {
+        .row();
+        margin:@grid-gutter-width 0;
+        .col {
+            .column(12, @grid-gutter-width, 12);
+        }
     }
 
 }
@@ -689,17 +714,40 @@
  * &Profile
  */
 .profile {
-    .profile-pic{
-        padding: @grid-gutter-width;
-    }
-    dt {
-        .a3();
-    }
-    dd {
-        .h6();
-        span {
-            .bc3();
+    /*padding: @grid-gutter-width;*/
+    .col.first {
+        margin: 0 0 @grid-gutter-width 0;
+        img {
+            max-width: 200px;
         }
+    }
+    h3, p { margin: 0;}
+    h2 {
+        font-weight: normal;
+        margin-top: -1em;
+    }
+    .space {
+        margin-top: @spacing-two;
+    }
+    .divider {
+        border-bottom: 1px solid @color-medium-grey;
+        max-width: 100%;
+        margin: @spacing-one @grid-gutter-width;
+    }
+
+    .share-wrapper, .contact-wrapper {
+        .column(1.5, @grid-gutter-width, 3);
+        padding-top: @spacing-half;
+        margin-top: @spacing-one * -1; /* sit flush against divider */
+    }
+
+    .share, .add-to-contacts {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-half;
+        left: 0;
     }
 }
 
