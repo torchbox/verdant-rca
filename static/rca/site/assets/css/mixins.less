@@ -133,3 +133,33 @@
         }
     }
 }
+
+/* generic styles for two-plus, three-plus etc */
+.x-plus-mobile {
+    ul{
+        .unlist();
+        .row-flush();
+        position:relative;
+
+        li{
+            .column(8);         
+        }
+        .h8, .bc5, .a3{
+            margin:0;
+        }
+
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+
+    .load-more{
+        a{
+            height:126px;
+            width:126px;
+        }
+    }
+}

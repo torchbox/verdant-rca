@@ -48,7 +48,7 @@ function showHideDialogue() {
 }
 
 $(function(){
-    $('.bxslider').bxSlider({
+    carousel = $('.bxslider').bxSlider({
         //auto: true,
         //autoControls: true
         pager: false
@@ -90,7 +90,6 @@ $(function(){
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
-
-        // TODO: work out some way of enabling bxsliders after tab made visible
+        carousel.reloadSlider();
     })
 });

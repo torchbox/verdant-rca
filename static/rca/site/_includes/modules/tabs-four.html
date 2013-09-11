@@ -13,15 +13,58 @@
             {% include modules/profile.html %}
         </div>
         <h2 class="header"><a href="#tab2" class="a0">Selected work</a></h2>
-        <div class="tab-pane" id="tab2">      
+        <div class="tab-pane" id="tab2">
+            {% include modules/carousel.html %}
+            <section class="row">
+                {% assign staffProfile = true %}
+                {% include modules/body-text.html %}
+                <section class="four">
+                    {% include modules/meta-data.html %}
+                    <div class="single">
+                        {% include modules/share-button.html %}
+                    </div>
+                </section>
+            </section>
         </div>
         <h2 class="header"><a href="#tab3" class="a0">Publications &amp; exhibitions</a></h2>
         <div class="tab-pane" id="tab3">
-            Contents of the third tab
+            <ul class="two-cols two-cols-image-big">
+                <li class="col">
+                    <div class="image"><img src="http://instasrc.com/96x96/art" /></div>
+                    <div class="content">
+                        <h3 class="h6">Liva Lima</h3>
+                        <p class="bc3">Explored in the Kingsdale Festival is one of the first contemporary public buildings....<a href="#" class="bc5 caps">continue</a></p>
+                    </div>
+                </li>
+                <li class="col">
+                    <div class="image"><img src="http://instasrc.com/96x96/architecture" /></div>
+                    <div class="content">
+                        <h3 class="h6">Lima Morgan</h3>
+                        <p class="bc3">The UK to be built entirely of timber, with a timber core and stairs. its experimental structure consists of a combined horizontal and a vertical cantilever...<a href="#" class="bc5 caps">continue</a>
+                    </div>
+                </li>
+            </ul>
+
+            <ul class="two-cols two-cols-image-big">
+                <li class="col">
+                    <div class="image"><img src="http://instasrc.com/96x96/people" /></div>
+                    <div class="content">
+                        <h3 class="h6">Catrin Morgan Lima</h3>
+                        <p class="bc3">And is the third in a series of structural typology studies using CLt, the previous two being the shed...<a href="#" class="bc5 caps">continue</a></p>
+                    </div>
+                </li>
+                <li class="col">
+                    <div class="image load-more"><a href="#">+</a></div>
+                    <div class="content">
+                    </div>
+                </li>
+            </ul>
+
         </div>
         <h2 class="header"><a href="#tab4" class="a0">Research</a></h2>
         <div class="tab-pane" id="tab4">
-            Contents of the fourth tab
+            {% include modules/three-plus.html %}
+            {% include modules/four-plus.html %}
         </div>
     </div>
     
