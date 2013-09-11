@@ -326,54 +326,11 @@ ul ul, ol ol {
  * $Structure
  */
 
-.wrapper,
-.footer-wrapper,
-.header-wrapper{
-    margin-left: 5%;
-    margin-right: 5%;
-}
 
 .wrapper {
     .clearfix();
     margin-top:1em;
-    display: inline;
-    float: left;
 }
-
-    .slider{
-        width: 200%;
-    }
-        .slider-animate-slide-right{
-            margin-left: -95%;
-        }
-
-    .wrapper-left{
-        margin-left: 2.5%;
-        width: 45%;
-        float: left;
-    }
-        .wrapper-left-after-slide-right{
-            /* after slide right */
-            position: fixed;
-        }
-
-
-    .wrapper-right{
-        position: fixed;
-        top: 0;
-        left: 96%;
-        left: 100%;
-
-    }
-
-        .wrapper-right-before-slide-right{
-            /* just before slide right */
-            position: static;
-            width: 45%;
-            float: right;
-            margin-left: -5%;
-        }
-
 
 .page-content {
     .column(12);
@@ -410,10 +367,7 @@ margins like the wrapper. When page-content scrolls up, especially the full widt
 footer, we don't want stuff appearing behind the header. This 100% width wrapper
 makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
 .header-wrapper {
-    margin-top: 0;
-    margin-bottom: 0;
-    // margin:0 -15px ;
-    // margin left/right is set along with .wrapper at the top of this file
+    margin:0 -15px ;
     z-index: 199;
     .clearfix();
 }
