@@ -84,18 +84,18 @@
         margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
     }
 
-    .bx-viewport {
-        border: none;
-        box-shadow: none;
-        left: 0;
-    }
     .bxslider {
         .unlist();
     }
-
-    .bx-loading {
-        background: url(../images/bx_loader.gif) center center no-repeat #fff;
-    }
+        .bx-viewport {
+            border: none;
+            box-shadow: none;
+            left: 0;
+        }
+       
+        .bx-loading {
+            background: url(../images/bx_loader.gif) center center no-repeat #fff;
+        }
 }
 
 /**
@@ -201,7 +201,7 @@
     position:relative;
     padding-bottom:100px;
 
-    .carousel{
+    .content{
         .unlist();
         margin:0 -15px;
         overflow:hidden;
