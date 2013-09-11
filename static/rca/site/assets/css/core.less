@@ -35,17 +35,17 @@
  * Footer styles..............footer and bottom nav
  * Form styling...............default form styles
  * Template specific styles...toggled with a class on the body of all pages of the same template
- * * Programme 
+ * * Programme
  * * News
  */
 
 /**
  * $Reset and body styles
- */ 
+ */
 
-*{ 
-   -webkit-box-sizing: border-box; 
-   -moz-box-sizing: border-box; 
+*{
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
    box-sizing: border-box;
 }
 
@@ -324,10 +324,57 @@ ul ul, ol ol {
  * $Structure
  */
 
+.wrapper,
+.footer-wrapper,
+.header-wrapper{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
 .wrapper {
     .clearfix();
     margin-top:1em;
+    display: inline;
+    float: left;
+    position: relative;
 }
+
+    .slider{
+        width: 200%;
+    }
+        .slider-animate-slide-right{
+            margin-left: -95%;
+        }
+
+    .wrapper-left{
+        border: 1px solid black;
+        margin-left: 2.5%;
+        width: 45%;
+        float: left;
+    }
+        .wrapper-left-after-slide-right{
+            /* after slide right */
+            position: fixed;
+        }
+
+
+    .wrapper-right{
+        border: 1px solid red;
+        position: fixed;
+        top: 0;
+        left: 96%;
+        left: 100%;
+
+    }
+
+        .wrapper-right-before-slide-right{
+            /* just before slide right */
+            position: static;
+            width: 45%;
+            float: right;
+            margin-left: -5%;
+        }
+
 
 .content {
     .column(12);
@@ -349,7 +396,7 @@ aside {
     position:relative;
     z-index:200;
     margin: 32px -15px 0 -15px;
-    
+
     background-color: @color-charcoal;
     color: @color-white;
     .clearfix();
@@ -364,7 +411,10 @@ margins like the wrapper. When content scrolls up, especially the full width
 footer, we don't want stuff appearing behind the header. This 100% width wrapper
 makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
 .header-wrapper {
-    margin:0 -15px ;
+    margin-top: 0;
+    margin-bottom: 0;
+    // margin:0 -15px ;
+    // margin left/right is set along with .wrapper at the top of this file
     z-index: 199;
     .clearfix();
 }
@@ -427,7 +477,7 @@ header {
     &:after{
         .sprite-load(-105px, -1094px, 44px, 44px);
     }
-    
+
 }
 
 .showmenu {
@@ -573,7 +623,7 @@ nav {
                 }
                 nav a:hover{
                     color:rgb(0,150,255);
-                } 
+                }
                 nav .selected > a{
                     color:black;
 
@@ -594,7 +644,7 @@ nav {
                     nav li.selected > a:before {
                         visibility:visible;
                     }
-       
+
     .js .menu.ready {
         visibility:hidden;
     }
@@ -612,8 +662,8 @@ nav {
     }
     .breadcrumb li{
         float:left;
-        width:auto;   
-        padding-right:0.4em;    
+        width:auto;
+        padding-right:0.4em;
     }
     .breadcrumb a{
         display:block;
@@ -761,7 +811,7 @@ nav.expanded {
             position: absolute;
             top: @spacing-half;
             right: @spacing-half;
-            
+
         }
         &:hover {
             background-color: @color-pink;
@@ -1020,7 +1070,7 @@ input[type=button], button, .button{
  */
 
 .type-programme{
-   
+
 }
 
 .type-staff-profile {
@@ -1038,4 +1088,4 @@ input[type=button], button, .button{
 
 
 @import "modules.less";
-@import "dlmenu.less"; 
+@import "dlmenu.less";

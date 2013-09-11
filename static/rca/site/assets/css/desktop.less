@@ -74,12 +74,14 @@ body {
  * $Structure
  */
 
-.wrapper,
-.footer-wrapper,
-.header-wrapper{
-	margin: 0 auto; /* left and right margins become even at regular desktop size */
-	width: 90%; /* make sure we have a small left and right margin */
-}
+// moved to core.less
+// .wrapper,
+// .footer-wrapper,
+// .header-wrapper{
+// 	// margin: 0 auto; /* left and right margins become even at regular desktop size */
+//     margin-left: 5%;
+//     margin-right: 5%;
+// }
 
 .header-wrapper.affix{
     position:fixed;
@@ -89,7 +91,7 @@ body {
     top:0;
 
     header{
-      
+
     }
     .site-name{
         display:none;
@@ -102,7 +104,7 @@ body {
 header {
     height:auto;
     margin:auto;
-    
+
     a.site-name {
         .clearfix();
         float:none;
@@ -139,7 +141,7 @@ header {
 
 nav {
     display:block;
-    margin-right:@right-col-width + @grid-gutter-width;  
+    margin-right:@right-col-width + @grid-gutter-width;
 }
 
 /* Search moves alongside the menu above the content */
@@ -154,7 +156,7 @@ form.search {
     width: @right-col-width;
     border-bottom: 1px solid @color-black; /* fallback for ie 8 */
     border-bottom: 1px solid fade(@color-black, 40%);
-    
+
     input[type="text"] {
         padding: 10px @spacing-half;
     }
@@ -167,7 +169,7 @@ form.search {
 
     .inner{
         margin-right: @right-col-width + @grid-gutter-width;
-    }   
+    }
 }
 
 aside {
@@ -207,13 +209,13 @@ aside {
 }
 
 .footer-wrapper{
-    padding-right: @right-col-width + @grid-gutter-width;   
+    padding-right: @right-col-width + @grid-gutter-width;
 }
 
 
 footer {
     padding:2em 0 0 0;
-    
+
 	section {
 		.column(4, @grid-gutter-width, 12);
 		.row();
@@ -275,7 +277,7 @@ footer {
     .cols-nine-three{
         .row-flush();
     }
-}   
+}
 
 @import "modules-desktop.less";
 

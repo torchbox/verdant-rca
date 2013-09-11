@@ -32,25 +32,42 @@
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
-        
+
         <div class="header-wrapper" data-spy="affix" data-offset-top="200">
             {% include header.html %}
         </div>
 
-        <div class="wrapper" data-spy="affix" data-offset-top="200">
-            <div class="content">
-                <div class="inner">
-                    {{ content }}
+        <div class="slider">
+            <div class="wrapper wrapper-left" data-offset-top="200">
+                <div class="content">
+                    <div class="inner">
+                        {{ content }}
+                    </div>
                 </div>
+                <aside>
+                    {% include sidebar.html %}
+                </aside>
             </div>
-            <aside>
-                {% include sidebar.html %}
-            </aside>
+
+            <div class="wrapper wrapper-right" data-offset-top="200">
+                <div class="content">
+                    <div class="inner">
+                        {{ content }}
+                    </div>
+                </div>
+                <aside>
+                    {% include sidebar.html %}
+                </aside>
+            </div>
         </div>
+
+        <div style="clear:both"></div>
 
         {% include footer.html %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
         <script src="assets/js/vendor/harvey.js"></script>
         <script src="assets/js/vendor/jquery.dlmenu.js"></script>
         <script src="assets/js/vendor/jquery.hoverintent.min.js"></script>
@@ -59,8 +76,10 @@
         <script src="assets/js/vendor/bootstrap-affix.js"></script>
         <script src="assets/js/vendor/bootstrap-tab.js"></script>
         <script src="assets/js/carousel-news.js"></script>
+        <script src="assets/js/jquery.toggle.js"></script>
         <script src="assets/js/site.js"></script>
         <script src="assets/js/nav.js"></script>
+        <script src="assets/js/slide.js"></script>
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
