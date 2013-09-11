@@ -35,24 +35,25 @@
  * Footer styles..............footer and bottom nav
  * Form styling...............default form styles
  * Template specific styles...toggled with a class on the body of all pages of the same template
- * * Programme 
+ * * Programme
  * * News
  */
 
 /**
  * $Reset and body styles
- */ 
+ */
 
-*{ 
-   -webkit-box-sizing: border-box; 
-   -moz-box-sizing: border-box; 
+*{
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
    box-sizing: border-box;
 }
 
 body {
-	padding: 0 15px 0 15px; /* padding for mobile */
-	font-size: @font-size-base;
+    padding: 0 15px 0 15px; /* padding for mobile */
+    font-size: @font-size-base;
     font-family: @font-family-benton-light;
+    -webkit-font-smoothing: antialiased; /* Do not remove! */
 }
 
 
@@ -202,6 +203,10 @@ ul ul, ol ol {
     font-size: @font-size-36;
     line-height: @line-height-2;
     text-transform: none;
+
+    strong{
+        font-family:@font-family-benton;
+    }
 }
 
 .bc1 {
@@ -322,9 +327,14 @@ ul ul, ol ol {
     text-transform:uppercase;
 }
 
+.highlight-blue{
+    color:@color-highlight-blue;
+}
+
 /**
  * $Structure
  */
+
 
 .wrapper {
     .clearfix();
@@ -351,7 +361,7 @@ aside {
     position:relative;
     z-index:200;
     margin: 32px -15px 0 -15px;
-    
+
     background-color: @color-charcoal;
     color: @color-white;
     .clearfix();
@@ -429,7 +439,7 @@ header {
     &:after{
         .sprite-load(-105px, -1094px, 44px, 44px);
     }
-    
+
 }
 
 .showmenu {
@@ -575,7 +585,7 @@ nav {
                 }
                 nav a:hover{
                     color:rgb(0,150,255);
-                } 
+                }
                 nav .selected > a{
                     color:black;
 
@@ -596,7 +606,7 @@ nav {
                     nav li.selected > a:before {
                         visibility:visible;
                     }
-       
+
     .js .menu.ready {
         visibility:hidden;
     }
@@ -614,8 +624,8 @@ nav {
     }
     .breadcrumb li{
         float:left;
-        width:auto;   
-        padding-right:0.4em;    
+        width:auto;
+        padding-right:0.4em;
     }
     .breadcrumb a{
         display:block;
@@ -750,12 +760,12 @@ nav.expanded {
 
 .today {
 
- 	h2 {
+    h2 {
         margin: 0;
         padding: @spacing-half;
- 		.t2;
- 		background-color: @color-dark-grey; /* fallback for ie8 */
- 		background-color: fade(@color-dark-grey, 20%);
+        .t2;
+        background-color: @color-dark-grey; /* fallback for ie8 */
+        background-color: fade(@color-dark-grey, 20%);
         position: relative;
         &:after {
             .sprite-load(-53px, -1178px, 27px, 15px);
@@ -763,7 +773,7 @@ nav.expanded {
             position: absolute;
             top: @spacing-half;
             right: @spacing-half;
-            
+
         }
         &:hover {
             background-color: @color-pink;
@@ -772,34 +782,34 @@ nav.expanded {
                 .sprite-load(-53px, -623px, 27px, 15px);
             }
         }
- 	}
- 	ul {
- 		background-color: @color-white; /* fallback for ie8 */
- 		background-color: fade(@color-white, 75%);
+    }
+    ul {
+        background-color: @color-white; /* fallback for ie8 */
+        background-color: fade(@color-white, 75%);
         display: none; /* contracts */
         padding: 0;
         margin: 0;
- 	}
- 	li {
+    }
+    li {
         margin: 0;
         border-bottom: 1px solid @color-black;
         padding: @spacing-one @spacing-half;
         &.last {
             border: none;
         }
- 		h3 {
- 			.bc4;
- 			margin: 0;
- 		}
- 		p {
- 			.h7;
+        h3 {
+            .bc4;
             margin: 0;
- 		}
- 		span {
- 			.a2;
+        }
+        p {
+            .h7;
+            margin: 0;
+        }
+        span {
+            .a2;
             color: @color-medium-grey;
- 		}
- 	}
+        }
+    }
 }
 
 /* Related content */
@@ -1022,7 +1032,7 @@ input[type=button], button, .button{
  */
 
 .type-programme{
-   
+
 }
 
 .type-news {
@@ -1056,4 +1066,4 @@ input[type=button], button, .button{
 
 
 @import "modules.less";
-@import "dlmenu.less"; 
+@import "dlmenu.less";

@@ -65,6 +65,10 @@ kbd{
         margin-top:150px;
         background: @color-grey-dark;
         height:100%;
+        position:absolute;
+    }
+    .explorer{
+        margin-top:150px; /* same as .nav-main */
     }
 
     .logo{
@@ -123,7 +127,6 @@ kbd{
     }
     body.nav-open{
         .nav-wrapper .nav-main{
-            position:absolute;
             width:100%;
 
             a{
@@ -132,7 +135,6 @@ kbd{
 
         }
     }
-
 
 .content-wrapper{
     width:100%;
@@ -256,6 +258,13 @@ a {
         left:0;
         width:60px;
     } 
+
+    .explorer{
+        margin-top:0;
+    }
+    .nav-main{
+        position:relative;
+    }
 
     .logo, .nav-main{
         position:fixed;

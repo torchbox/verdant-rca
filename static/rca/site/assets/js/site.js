@@ -48,11 +48,7 @@ function showHideDialogue() {
 }
 
 $(function(){
-    carousel = $('.bxslider').bxSlider({
-        //auto: true,
-        //autoControls: true
-        pager: false
-    }); /* start bxslider */
+
 
     showHideParent('.footer-expand'); /* footer expand / collapse */
     showHide('.today');
@@ -86,10 +82,24 @@ $(function(){
         }
     });
 
+    /* start any bxslider carousels */
+    carousel = $('.carousel').bxSlider({
+        pager: function(){return $(this).hasClass('paginated')}
+    }); 
+
     /* tabs */
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
         $(this).tab('show')
         carousel.reloadSlider();
-    })
+    });
+
+    /* Packery */
+    $('.packery').imagesLoaded( function() {
+        var packery = $('.packery').packery({
+            itemSelector: '.item',
+            gutter:16,
+            stamp: ".stamp"
+        });
+    });
 });

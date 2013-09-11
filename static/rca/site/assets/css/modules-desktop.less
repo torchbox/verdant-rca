@@ -34,33 +34,30 @@
  */
 
 .bx-wrapper {
+    .bx-next, .bx-prev {
+        .transition(opacity 0.3s ease);
+        opacity:0
+    } 
+    &:hover {
+        .bx-next, .bx-prev {
+            opacity: 1;
+        }
+    }
     .bx-next {
         &:after {
-            content: " ";
             .sprite-load(-15px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
-            left: 40px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-15px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-15px, -266px, 68px, 131px);
         }
     }
 
     .bx-prev {
         &:after{
-            content: " ";
             .sprite-load(-165px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
-            left: 30px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-165px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-165px, -266px, 68px, 131px);
         }
     }
 
@@ -71,6 +68,13 @@
         margin-top: ((@carousel-control-height / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
         The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
+
+    .caption, .hover-content{
+        opacity:0;
+    }
+    &:hover .caption, &:hover .hover-content{
+        opacity:1;
+    }
 }
 
 /**
@@ -79,7 +83,7 @@
 
 .carousel-news{
     padding-bottom:0;
-    .carousel{
+    .carousel-content{
         margin:0;
     }
     .caption{
@@ -116,6 +120,7 @@
 .head-of-programme{
     .image{
         .column(2);
+        padding-left:0;
     }
     .content{
         .column(10);
