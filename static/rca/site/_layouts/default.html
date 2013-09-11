@@ -38,7 +38,7 @@
         </div>
 
         <div class="slider">
-            <div class="wrapper" data-offset-top="151">
+            <div class="wrapper" data-spy="affix" data-offset-top="151">
                 <div class="page-content">
                     <div class="inner">
                         {{ content }}
@@ -50,12 +50,13 @@
             </div>
         </div>
 
-        <div style="clear:both"></div>
+        <!--<div style="clear:both"></div> YUK! added by Balazs,-->
 
         {% include footer.html %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+        <script src="assets/js/vendor/imagesloaded.pkgd.min.js"></script>
+        <script src="assets/js/vendor/packery.pkgd.min.js"></script>
         <script src="assets/js/vendor/harvey.js"></script>
         <script src="assets/js/vendor/jquery.dlmenu.js"></script>
         <script src="assets/js/vendor/jquery.hoverintent.min.js"></script>

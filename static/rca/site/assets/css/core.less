@@ -50,9 +50,10 @@
 }
 
 body {
-	padding: 0 15px 0 15px; /* padding for mobile */
-	font-size: @font-size-base;
+    padding: 0 15px 0 15px; /* padding for mobile */
+    font-size: @font-size-base;
     font-family: @font-family-benton-light;
+    -webkit-font-smoothing: antialiased; /* Do not remove! */
 }
 
 
@@ -202,6 +203,10 @@ ul ul, ol ol {
     font-size: @font-size-36;
     line-height: @line-height-2;
     text-transform: none;
+
+    strong{
+        font-family:@font-family-benton;
+    }
 }
 
 .bc1 {
@@ -320,6 +325,10 @@ ul ul, ol ol {
 
 .caps{
     text-transform:uppercase;
+}
+
+.highlight-blue{
+    color:@color-highlight-blue;
 }
 
 /**
@@ -751,12 +760,12 @@ nav.expanded {
 
 .today {
 
- 	h2 {
+    h2 {
         margin: 0;
         padding: @spacing-half;
- 		.t2;
- 		background-color: @color-dark-grey; /* fallback for ie8 */
- 		background-color: fade(@color-dark-grey, 20%);
+        .t2;
+        background-color: @color-dark-grey; /* fallback for ie8 */
+        background-color: fade(@color-dark-grey, 20%);
         position: relative;
         &:after {
             .sprite-load(-53px, -1178px, 27px, 15px);
@@ -773,34 +782,34 @@ nav.expanded {
                 .sprite-load(-53px, -623px, 27px, 15px);
             }
         }
- 	}
- 	ul {
- 		background-color: @color-white; /* fallback for ie8 */
- 		background-color: fade(@color-white, 75%);
+    }
+    ul {
+        background-color: @color-white; /* fallback for ie8 */
+        background-color: fade(@color-white, 75%);
         display: none; /* contracts */
         padding: 0;
         margin: 0;
- 	}
- 	li {
+    }
+    li {
         margin: 0;
         border-bottom: 1px solid @color-black;
         padding: @spacing-one @spacing-half;
         &.last {
             border: none;
         }
- 		h3 {
- 			.bc4;
- 			margin: 0;
- 		}
- 		p {
- 			.h7;
+        h3 {
+            .bc4;
             margin: 0;
- 		}
- 		span {
- 			.a2;
+        }
+        p {
+            .h7;
+            margin: 0;
+        }
+        span {
+            .a2;
             color: @color-medium-grey;
- 		}
- 	}
+        }
+    }
 }
 
 /* Related content */

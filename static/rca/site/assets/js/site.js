@@ -92,5 +92,14 @@ $(function(){
         e.preventDefault()
         $(this).tab('show')
         carousel.reloadSlider();
-    })
+    });
+
+    /* Packery */
+    $('.packery').imagesLoaded( function() {
+        var packery = $('.packery').packery({
+            itemSelector: '.item',
+            gutter:16,
+            stamp: ".stamp"
+        });
+    });
 });
