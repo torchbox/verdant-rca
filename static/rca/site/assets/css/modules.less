@@ -438,7 +438,7 @@
  */
 
 .two-plus{
-    .x-plus();
+    .x-plus-mobile();
 }
 
 /**
@@ -446,7 +446,7 @@
  */
 
 .three-plus{
-    .x-plus();
+    .x-plus-mobile();
 }
 
 /**
@@ -454,7 +454,14 @@
  */
 
 .four-plus{
-    .x-plus();
+    .x-plus-mobile();
+    p {
+        line-height: 1.25em;
+        span {
+            display: block;
+            clear: both;
+        }
+    }
 }
 
 
@@ -504,7 +511,7 @@
  *$Scrolling of events, two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus{
+.events, .two-plus, .three-plus, .four-plus{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     ul{
