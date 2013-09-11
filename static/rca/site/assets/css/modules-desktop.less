@@ -34,33 +34,33 @@
  */
 
 .bx-wrapper {
+    .bx-next, .bx-prev {
+        .transition(opacity 0.3s ease);
+        opacity:0
+    } 
+    &:hover {
+        .bx-next, .bx-prev {
+            opacity: 1;
+        }
+    }
+
     .bx-next {
         &:after {
-            content: " ";
             .sprite-load(-15px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
             left: 40px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-15px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-15px, -266px, 68px, 131px);
         }
     }
 
     .bx-prev {
         &:after{
-            content: " ";
             .sprite-load(-165px, -821px, 68px, 131px);
-            position: absolute;
-            top: 2px;
             left: 30px;
         }
-        &:hover {
-            &:after{
-                .sprite-load(-165px, -266px, 68px, 131px);
-            }
+        &:hover:after{
+            .sprite-load(-165px, -266px, 68px, 131px);
         }
     }
 

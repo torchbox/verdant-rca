@@ -46,46 +46,42 @@
         max-width: 100%;
         margin: auto;
     }
-    .bx-next {
+    .bx-next, .bx-prev {
         background-color: @color-pale-grey;
         background-color: fade(@color-white, 80%);
         background-image: none;
-        right: 0;
+
         &:after{
             content: " ";
-            .sprite-load(-211px, -996px, 37px, 66px);
             position: absolute;
-            top: 2px;
-            left: 30px;
+            top:2px;
         }
         &:hover {
             background-color: @color-pink;
-            &:after{
-                .sprite-load(-211px, -441px, 37px, 66px);
-            }
+        }
+    }
+    .bx-next {
+        right: 0;
+        &:after{
+            .sprite-load(-211px, -996px, 37px, 66px);
+            left: 30px;
+        }
+        &:hover:after{
+            .sprite-load(-211px, -441px, 37px, 66px);
         }
     }
     .bx-prev {
-        background-color: @color-pale-grey;
-        background-color: fade(@color-white, 80%);
-        background-image: none;
         left: 0;
         &:after{
-            content: " ";
             .sprite-load(-301px, -996px, 37px, 66px);
-            position: absolute;
-            top: 2px;
             left: 20px;
         }
-        &:hover {
-            background-color: @color-pink;
-            &:after{
-                .sprite-load(-301px, -441px, 37px, 66px);
-            }
+        &:hover:after{
+            .sprite-load(-301px, -441px, 37px, 66px);
         }
     }
     /* selectors necessary to override the bxslider theme */
-   .bx-controls-direction a {
+    .bx-controls-direction a {
         width: @carousel-control-width-mobile;
         height: @carousel-control-height-mobile;
         z-index: 2; /* over slide but under header */
@@ -96,25 +92,16 @@
     .bxslider {
         .unlist();
     }
-        .bx-viewport {
-            border: none;
-            box-shadow: none;
-            left: 0;
-        }
-       
-        .bx-loading {
-            background: url(../images/bx_loader.gif) center center no-repeat #fff;
-        }
-
-        .bx-next, .bx-prev {
-            display: none;
-        }
-        &:hover {
-            .bx-next, .bx-prev {
-                display: block;
-            }
-        }
-
+    .bx-viewport {
+        border: none;
+        box-shadow: none;
+        left: 0;
+    }
+   
+    .bx-loading {
+        background: url(../images/bx_loader.gif) center center no-repeat #fff;
+    }
+}
 
 /**
  * $Twitter block
