@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms.models import modelform_factory
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
@@ -7,17 +7,6 @@ from verdantadmin.panels import FieldPanel
 
 
 ADMIN_HANDLERS = {}
-
-
-def build_model_form_class(model_class):
-    class MyModelForm(ModelForm):
-        class Meta:
-            model = model_class
-
-            if issubclass(model_class, Page):
-                exclude = ['content_type', 'path', 'depth', 'numchild']
-
-    return MyModelForm
 
 
 class AdminHandlerBase(type):
@@ -34,7 +23,28 @@ class AdminHandlerBase(type):
                 except KeyError:
                     raise Exception("Definition of %s must specify either a 'form' attribute or a 'model' attribute" % name)
 
-                cls.form = build_model_form_class(model)
+                # If this form is for a Page object, omit the tree-related fields created by
+                # Treebeard.
+                # TODO: find a less hard-code-y way of achieving this. Possible approaches:
+                # * inject an editable=False flag into those model fields, which they really
+                #   should have had in the first place. Django doesn't like us overriding
+                #   fields from a superclass, though:
+                #   https://docs.djangoproject.com/en/1.5/topics/db/models/#field-name-hiding-is-not-permitted
+                # * implement a PageAdminHandlerBase subclass of this, which adds these to
+                #   the exclude list, and have all adminhandlers for page objects descending
+                #   from that. (Will need us to refactor things to support abstract subclasses
+                #   of AdminHandler...)
+                exclude = []
+                if issubclass(model, Page):
+                    exclude = ['content_type', 'path', 'depth', 'numchild']
+
+                widgets = {}  # initially, no widgets will be overridden
+                if 'panels' in dct:
+                    # give panels the chance to override widgets
+                    for panel_def in dct['panels']:
+                        widgets.update(panel_def.widgets())
+
+                cls.form = modelform_factory(model, exclude=exclude, widgets=widgets)
 
 
 def panel_for_field(field_name, field_def):

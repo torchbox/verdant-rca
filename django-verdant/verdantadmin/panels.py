@@ -21,6 +21,11 @@ class BaseAdminPanel(object):
     def post_save(self):
         pass
 
+    @classmethod
+    def widgets(cls):
+        """return a dict of field widgets that should be overridden in the form"""
+        return {}
+
     def render(self):
         return ""
 
@@ -120,22 +125,25 @@ class BaseInlinePanel(BaseAdminPanel):
             admin._post_save()
 
 def InlinePanel(base_model, related_model, panels=None, label=None):
-    formset_class = inlineformset_factory(base_model, related_model, extra=0)
+
+    # construct an admin handler for the child model class
     admin_handler_panels = panels
-
-    if not label:
-        # derive a label from the related_name
-        label = formset_class.fk.rel.related_name.replace('_', ' ').capitalize()
-
-    # construct an AdminHandler class around the particular flavour of ModelForm
-    # that inlineformset_factory generates
     from verdantadmin.forms import AdminHandler
     class InlineAdminHandler(AdminHandler):
-        form = formset_class.form
+        model = related_model
         can_delete = True
 
         if admin_handler_panels is not None:
             panels = admin_handler_panels
+
+    # now construct a formset, ensuring that it uses the specific form class
+    # built for the adminhandler above (because it might use panels that override
+    # the default form widgets)
+    formset_class = inlineformset_factory(base_model, related_model, form=InlineAdminHandler.form, extra=0)
+
+    if not label:
+        # derive a label from the related_name
+        label = formset_class.fk.rel.related_name.replace('_', ' ').capitalize()
 
     # return a newly constructed subclass of BaseInlinePanel with the addition of
     # a self.formset_class and self.admin_handler attribute
