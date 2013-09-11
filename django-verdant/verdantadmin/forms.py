@@ -34,6 +34,7 @@ class AdminHandlerBase(type):
                 #   the exclude list, and have all adminhandlers for page objects descending
                 #   from that. (Will need us to refactor things to support abstract subclasses
                 #   of AdminHandler...)
+                exclude = []
                 if issubclass(model, Page):
                     exclude = ['content_type', 'path', 'depth', 'numchild']
 
