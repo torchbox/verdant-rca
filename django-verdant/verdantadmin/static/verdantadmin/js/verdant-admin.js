@@ -4,8 +4,13 @@ function makeRichTextEditable(id) {
     richText.insertBefore(input);
     input.hide();
     richText.hallo({
+        toolbar: 'halloToolbarFixed',
         plugins: {
-            'halloformat': {}
+            'halloformat': {},
+            'halloheadings': {},
+            'hallolists': {},
+            'halloreundo': {},
+            'halloverdantimage': {}
         }
     }).bind('hallomodified', function(event, data) {
         input.val(data.content);
