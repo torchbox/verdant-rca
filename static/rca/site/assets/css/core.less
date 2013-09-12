@@ -1061,6 +1061,49 @@ input[type=button], button, .button{
    }
 }
 
+.type-event {
+    .event-info {
+        border-top: 1px solid @color-medium-grey;
+        h3 {
+            margin: @spacing-half 0 0 0;
+        }
+
+        .price {
+            margin: 0;
+        }
+
+        .share-wrapper, .calendar-wrapper {
+            padding-top: @spacing-half;
+            .column(1.5);
+            margin-bottom: @spacing-two;
+            border-top: 1px solid @color-medium-grey;
+        }
+
+        .calendar-wrapper {
+            border-right: 1px solid @color-medium-grey;
+        }
+
+        .share, .calendar {
+            margin: 0 auto;
+        }
+
+        .dialogue {
+            bottom: @share-link-height + @spacing-half;
+            left: 0;
+        }
+
+        .button {
+            display: block;
+            clear: both;
+            width: 180px;
+        }
+    }
+
+    .four-plus {
+        margin-bottom: @spacing-three;
+    }
+
+}
 
 @import "modules.less";
 @import "dlmenu.less";

@@ -17,7 +17,8 @@
  * Carousel
  * Twitter block
  * Share and dialogue box
- * 
+ * Add to contacts
+ * Add to calendar
  * News carousel
  * Head of programme
  * Event block
@@ -257,8 +258,23 @@
     &:hover {
         .sprite-load(-15px, -1645px, 55px, 52px);
     }
-    //background: url('imgs/sprites.png') no-repeat -15px -2200px; width: 55px; height: 52px;
-    //background: url('imgs/sprites.png') no-repeat -15px -1645px; width: 55px; height: 52px;
+}
+
+/**
+ * $Add to calendar
+ */
+
+.calendar-wrapper {
+
+}
+
+.calendar {
+    text-indent: -9999px;
+    .sprite-load(-772px, -2200px, 54px, 43px);
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-772px, -1645px, 54px, 43px);
+    }
 }
 
 /**
@@ -456,7 +472,7 @@
     }
 
     
-    .h7, .a2, .bc4{
+    .h7, .a2 {
         margin:0;
     }
 
@@ -851,9 +867,6 @@
  * &Body text
  */
 
-.body-text {
-    .column(12);
-}
 
 /**
  * &Profile
