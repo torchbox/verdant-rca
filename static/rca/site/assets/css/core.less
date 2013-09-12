@@ -851,7 +851,7 @@ footer a {
 div.submenu-block {
     display: none;
     margin: @spacing-half 0 0 0;
-    padding: @spacing-one 0 @spacing-half 0;
+    padding: @spacing-one 0;
 }
 
 footer {
@@ -867,15 +867,20 @@ footer {
             border-bottom: 1px solid @color-dark-grey;
         }
         .footer-expand {
-            content: ' ';
+            content: "";
             .sprite-load(-53px, -623px, 27px, 15px);
             position: absolute;
-            right: 0px;
+            right: @grid-gutter-width;
             top: @spacing-half;
             cursor: pointer;
         }
         .footer-expand:hover {
             .sprite-load(-53px, -1729px, 27px, 15px);
+        }
+
+        > a{
+            display:inline-block;
+            text-indent:2px;
         }
     }
 
