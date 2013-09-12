@@ -1,0 +1,21 @@
+{% load image_tags %}
+
+<h1>Choose an image:</h1>
+
+<ul>
+    {% for image in images %}
+        <li>
+            <a class="image-choice" href="{% url 'verdantimages_image_chosen' image.id %}">
+                {% image image 130x100 %}
+                {{ image.title }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h1>Or upload a new one:</h1>
+<form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Upload">
+</form>

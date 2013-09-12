@@ -22,6 +22,8 @@
  * News carousel
  * Head of programme
  * Event block
+ * Half-width double
+ * Packery
  * Two two block
  * Three plus block
  * Four plus block
@@ -95,8 +97,6 @@
     .bx-pager{
         text-align:left;
         padding-top:0;
-        bottom:@grid-gutter-width;
-        left:@grid-gutter-width;
 
         &.bx-default-pager a{
             background:transparent;
@@ -136,7 +136,7 @@
         bottom:0;
         padding:@grid-gutter-width;
 
-        .bc2{
+        .bc1{
             .column(6);
             margin:0;
 
@@ -156,7 +156,7 @@
 }
 
 .type-homepage{
-    .carousel .bc2{
+    .carousel .bc1{
         width:100%;
         .bc0
     }
@@ -295,6 +295,7 @@
     }
     li{
         .transition(all 0.4s ease);
+        overflow:hidden;
         float:left;
         width:10%;
 
@@ -308,7 +309,6 @@
 
             .image img{
                 opacity:1;
-                display:block;
             }
         }
     }
@@ -322,7 +322,6 @@
         overflow:hidden;
         display:none;
         margin-top:1em;
-
 
         .h6{
             margin:0;
@@ -338,6 +337,12 @@
         width:auto;
         max-width:none;
         opacity:0.4;
+    }
+
+    &.ready{
+        .image img{
+            width:100%;
+        }
     }
 }
 
@@ -497,7 +502,7 @@
         .unlist();
     }
     li{
-        .column(6);
+        padding-bottom:@grid-gutter-width;
     }
     .image{
         margin-bottom:@grid-gutter-width/2;
@@ -513,7 +518,7 @@
  */
 
 .packery{
-    .row-flush();
+    position:relative;
 
     &.module{
         border:0;
@@ -539,28 +544,9 @@
         border-top:1px solid @color-divider;
         padding-top:@grid-gutter-width/2;
     }
-    .single{
-        .column(2);
-        
-        .image img{
-            width:auto;
-        }
-    }
-    .double{
-        .column(4);
-    }
-    .three-quarters{
-        .column(8);
-    }
-    .full{
-        .column(12);
-    }
-
+    
     .load-more {
-        position:absolute;
         border:0;
-        bottom:0;
-        right:0;
 
         a {
             width: 96px;

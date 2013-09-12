@@ -57,7 +57,7 @@ var desktopNav = {
 					$self.find('.breadcrumb').stop().hide();
 
 					$self.stop().animate({
-						height: $self.data('maxHeight')
+						height: $self.data('maxHeight') + 16
 					},200, function(){
 						$self.removeClass('changing');
 					})

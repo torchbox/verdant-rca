@@ -21,6 +21,13 @@
     {% compress css %}
         <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/core.less" type="text/less" />
     {% endcompress %}
+
+    {% compress css %}
+        {% comment %}
+            Per-page CSS is compressed separately so that the global stuff doesn't get re-downloaded each time 
+        {% endcomment %}
+        {% block extra_css %}{% endblock %}
+    {% endcompress %}
 </head>
 <body>
     <!--[if lt IE 7]>

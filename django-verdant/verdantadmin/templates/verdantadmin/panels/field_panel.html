@@ -1,7 +1,9 @@
 <li class="text panel {% if field.errors %}error{% endif %}">
     <div class="field">
-         {{ field.label_tag }}
-         {{ field }}
+        {{ field.label_tag }}
+        {% block form_field %}
+            {{ field }}
+        {% endblock %}
     </div>
 
     {% if field.errors %}

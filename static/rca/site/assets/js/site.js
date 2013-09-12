@@ -3,11 +3,7 @@
  * The rest should be handled by the css */
 function showHide(element) {
     $(element).click(function(eventObject){
-        if($(this).hasClass('expanded')) {
-            $(this).removeClass('expanded');
-        } else {
-            $(this).addClass('expanded');
-        }
+        $(this).toggleClass('expanded');
     });
 }
 
@@ -15,21 +11,13 @@ function showHide(element) {
 on a different element to the element that has the expanded class applied */
 function showHideWithSeparateClick(element, clickElement){
     $(clickElement).click(function(eventObject){
-        if($(element).hasClass('expanded')) {
-            $(element).removeClass('expanded');
-        } else {
-            $(element).addClass('expanded');
-        }
+        $(element).toggleClass('expanded');
     });
 }
 
 function showHideParent(element) {
     $(element).click(function(eventObject){
-        if($(this).parent().hasClass('expanded')) {
-            $(this).parent().removeClass('expanded');
-        } else {
-            $(this).parent().addClass('expanded');
-        }
+        $(this).parent().toggleClass('expanded');
     });
 }
 
@@ -49,13 +37,24 @@ function showHideDialogue() {
 
 $(function(){
 
-
     showHideParent('.footer-expand'); /* footer expand / collapse */
     showHide('.today');
     showHide('.related');
     showHideWithSeparateClick('nav', '.showmenu');
     showHideWithSeparateClick('form.search', '.showsearch');
     showHideDialogue();
+
+    /* start any bxslider carousels */
+    carousel = $('.carousel').bxSlider({
+        pager: function(){return $(this).hasClass('paginated')}
+    }); 
+
+    /* tabs */
+    $('.tab-nav a, .tab-content .header a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+        carousel.reloadSlider();
+    });   
 
     /* mobile rejigging */
     Harvey.attach('screen and (max-width:768px)', {
@@ -82,23 +81,22 @@ $(function(){
         }
     });
 
-    /* start any bxslider carousels */
-    carousel = $('.carousel').bxSlider({
-        pager: function(){return $(this).hasClass('paginated')}
-    }); 
-
-    /* tabs */
-    $('.tab-nav a, .tab-content .header a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-        carousel.reloadSlider();
+    // Things definitely only for desktop
+    Harvey.attach('screen and (min-width:769px)', {
+        setup: function(){}, 
+        on: function(){
+            /* Packery */
+            $('.packery').imagesLoaded( function() {
+                var packery = $('.packery').packery({
+                    itemSelector: '.item',
+                    stamp: ".stamp"
+                });
+            });
+        }, 
+        off: function(){
+            $('.packery').destroy();
+        }
     });
 
-    /* Packery */
-    $('.packery').imagesLoaded( function() {
-        var packery = $('.packery').packery({
-            itemSelector: '.item',
-            stamp: ".stamp"
-        });
-    });
+   
 });

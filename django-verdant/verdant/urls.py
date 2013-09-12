@@ -5,7 +5,8 @@ from django.conf import settings
 import os.path
 
 from core import urls as verdant_urls
-from verdantadmin import urls as verdant_admin_urls
+from verdantadmin import urls as verdantadmin_urls
+from verdantimages import urls as verdantimages_urls
 
 
 admin.autodiscover()
@@ -19,7 +20,11 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     url(r'^django-admin/', include(admin.site.urls)),
-    url(r'^admin/', include(verdant_admin_urls)),
+
+    # TODO: some way of getting verdantimages to register itself within verdant so that we
+    # don't have to define it separately here
+    url(r'^admin/images/', include(verdantimages_urls)),
+    url(r'^admin/', include(verdantadmin_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
