@@ -98,7 +98,6 @@ $(function(){
     $('.packery').imagesLoaded( function() {
         var packery = $('.packery').packery({
             itemSelector: '.item',
-            gutter:16,
             stamp: ".stamp"
         });
     });

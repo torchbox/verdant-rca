@@ -90,6 +90,7 @@
 
 /* sidebar advert */
 .mixin-sidebar-advert(@color, @fade:0) {
+    .transition(background-color 0.3s ease);
     background-color: @color; /* fallback for ie8 */
     background-color: fade(@color, @fade);
     color:white;
