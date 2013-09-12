@@ -26,6 +26,7 @@
  * Metadata e.g. on news page
  * Body text
  * Tabbed content
+ * Packery
  */
 
  
@@ -75,6 +76,10 @@
     }
     &:hover .caption, &:hover .hover-content{
         opacity:1;
+    }
+    .bx-pager{
+        bottom:@grid-gutter-width;
+        left:@grid-gutter-width;
     }
 }
 
@@ -358,8 +363,8 @@
 
 }
 
-/*
- * &Profile
+/**
+ * $Profile
  */
 
 .profile {
@@ -378,5 +383,46 @@
 
     .dialogue {
         width: 180px;
+    }
+}
+
+/**
+ *$Half-width double item
+ */
+ .half-double{
+    li{
+        .column(6);
+        padding-bottom:0;
+    }
+}
+
+
+/**
+ * $Packery
+ */
+
+.packery{
+    .row-flush();
+
+    .single{
+        .column(2);
+        
+        .image img{
+            width:auto;
+        }
+    }
+    .double{
+        .column(4);
+    }
+    .three-quarters{
+        .column(8);
+    }
+    .full{
+        .column(12);
+    }
+    .load-more {
+        position:absolute;
+        bottom:0;
+        right:0;
     }
 }
