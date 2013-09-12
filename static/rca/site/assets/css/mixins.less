@@ -164,3 +164,17 @@
         }
     }
 }
+
+/* name - span makes a new line - used by staff profile, event */
+.name {
+    color: @color-charcoal;
+    line-height: @line-height-13;
+    margin-top: @spacing-half;
+    span {
+        display: block;
+        clear: both;
+    }
+    &:hover {
+        color: @color-highlight-blue;
+    }
+}

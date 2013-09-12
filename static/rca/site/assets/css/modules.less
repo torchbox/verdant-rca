@@ -24,6 +24,8 @@
  * Event block
  * Two two block
  * Three plus block
+ * Four plus block
+ * Five block
  * Nine plus/six-plus block
  * Tabbed content
  * Stats block
@@ -605,11 +607,19 @@
 .four-plus{
     .x-plus-mobile();
     p {
-        line-height: 1.25em;
-        span {
-            display: block;
-            clear: both;
-        }
+        .name();
+    }
+}
+
+/**
+ *$Five block
+ * Five images and text, no plus - used on event page for speakers
+ */
+
+.five {
+    .x-plus-mobile();
+    p {
+        .name();
     }
 }
 
@@ -830,11 +840,20 @@
     a{
         display:block;
         border-bottom:1px solid white;
+        color: red;
     }
     .icon-download:after{
         content:"";
         display:inline-block;
         .sprite-load(-356px, -539px, 43px, 51px);
+        zoom:0.6;
+        float:right;
+        margin:-10px 0;
+    }
+    .icon-link-away:after{
+        content:"";
+        display:inline-block;
+        .sprite-load(-988px, -539px, 44px, 44px);
         zoom:0.6;
         float:right;
         margin:-10px 0;
