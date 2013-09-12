@@ -17,7 +17,8 @@
  * Carousel
  * Twitter block
  * Share and dialogue box
- * 
+ * Add to contacts
+ * Add to calendar
  * News carousel
  * Head of programme
  * Event block
@@ -99,9 +100,12 @@
             background:transparent;
             border:1px solid white;
 
-            &.active,
-            &:hover{
+            &.active{
                 background:white;
+            }
+            &:hover{
+                background:@color-highlight-blue;
+                border-color:@color-highlight-blue;
             }
         }
     }
@@ -140,13 +144,22 @@
         }
     }
 
-    .hover-content{
-        opacity:0;
-    }
-    &:hover .hover-content{
-        opacity:1;
+    .caption{
+        position:absolute;
+        bottom:0;
+        right:0;
+        padding:@grid-gutter-width;
+        margin:0;
     }
 }
+
+.type-homepage{
+    .carousel .bc2{
+        width:100%;
+        .bc0
+    }
+}
+
 
 /**
  * $Twitter block
@@ -245,8 +258,23 @@
     &:hover {
         .sprite-load(-15px, -1645px, 55px, 52px);
     }
-    //background: url('imgs/sprites.png') no-repeat -15px -2200px; width: 55px; height: 52px;
-    //background: url('imgs/sprites.png') no-repeat -15px -1645px; width: 55px; height: 52px;
+}
+
+/**
+ * $Add to calendar
+ */
+
+.calendar-wrapper {
+
+}
+
+.calendar {
+    text-indent: -9999px;
+    .sprite-load(-772px, -2200px, 54px, 43px);
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-772px, -1645px, 54px, 43px);
+    }
 }
 
 /**
@@ -339,6 +367,7 @@
 
 .load-more{
     a{
+        .transition(background-color 0.2s ease);
         text-indent:-2000px;            
         display:block;
         background-color:@color-pale-grey;
@@ -443,7 +472,7 @@
     }
 
     
-    .h7, .a2, .bc4{
+    .h7, .a2 {
         margin:0;
     }
 
@@ -451,6 +480,93 @@
         color:@color-light-grey;
     }
 }
+
+/**
+ *$Half-width double item
+ */
+ .half-double{
+    &.module{
+        border-top:0;
+    }
+
+    .row-flush();
+
+    ul{
+        .unlist();
+    }
+    li{
+        .column(6);
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+    .h5, .bc4, .a2{
+        margin:0;
+    }
+}
+
+
+/**
+ *$Packery
+ */
+
+.packery{
+    .row-flush();
+
+    &.module{
+        border:0;
+    }
+    ul{
+        .unlist();
+    }
+    li{
+        padding-bottom:@grid-gutter-width;
+    }
+
+    h2,h3,p{
+        margin:0;
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+
+    .item{
+        background-color:white;
+    }
+    .inner{
+        border-top:1px solid @color-divider;
+        padding-top:@grid-gutter-width/2;
+    }
+    .single{
+        .column(2);
+        
+        .image img{
+            width:auto;
+        }
+    }
+    .double{
+        .column(4);
+    }
+    .three-quarters{
+        .column(8);
+    }
+    .full{
+        .column(12);
+    }
+
+    .load-more {
+        position:absolute;
+        border:0;
+        bottom:0;
+        right:0;
+
+        a {
+            width: 96px;
+            height: 96px;
+        }
+    }
+}
+
 
 /**
  *$Single item
@@ -751,9 +867,20 @@
  * &Body text
  */
 
-.body-text {
-    .column(12);
+.body-text,
+.body-text-left {
+    a {
+        color: @color-highlight-blue;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        spacing: @spacing-half;
+    }
 }
+
 
 /**
  * &Profile
