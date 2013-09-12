@@ -1,9 +1,9 @@
 function createImageChooser(id) {
     var chooserElement = $('#' + id + '-chooser');
-    var previewImage = $('#' + id + '-previewimage img');
+    var previewImage = chooserElement.find('.preview-image img');
     var input = $('#' + id);
 
-    chooserElement.click(function() {
+    $('.action-choose-image', chooserElement).click(function() {
         ModalWorkflow({
             'url': '/admin/images/chooser/', /* TODO: don't hard-code this, as it may be changed in urls.py */
             'responses': {
@@ -15,8 +15,14 @@ function createImageChooser(id) {
                         'height': imageData.preview.height,
                         'alt': imageData.title
                     });
+                    chooserElement.removeClass('blank');
                 }
             }
         });
+    });
+
+    $('.action-clear-image', chooserElement).click(function() {
+        input.val('');
+        chooserElement.addClass('blank');
     });
 }

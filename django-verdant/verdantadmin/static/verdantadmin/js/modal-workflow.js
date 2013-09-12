@@ -20,10 +20,12 @@ function ModalWorkflow(opts) {
     self.body = container.find('.modal-body');
 
     self.loadUrl = function(url) {
-        $.get(url, function(responseText) {
-            var response = eval('(' + responseText + ')');
-            self.loadBody(response);
-        }, 'text');
+        $.get(url, self.loadResponseText, 'text');
+    };
+
+    self.loadResponseText = function(responseText) {
+        var response = eval('(' + responseText + ')');
+        self.loadBody(response);
     };
 
     self.loadBody = function(body) {
