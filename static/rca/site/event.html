@@ -8,14 +8,17 @@ bodyclass: type-event
 
 <section class="event-info row">
 	<div class="col-1">
-	<p class="bc4 caps">19 March &#124; 6.30 - 7.30 PM</p>
-	<p class="location">Lecture Theatre 1, Kensington &#124; Directions and transport details</p>
-	<p class="price">&pound;30.00 full price &pound;15.00 concessions</p>
-	<p class="book">Book now</p>
-	<p class="url">Visit the website: www.rca.ac.uk/sustaintalks</p>
+	<h3 class="h5">19 March &#124; 6.30 - 7.30 PM</h3>
+	<p class="bc3">Lecture Theatre 1, Kensington &#124; <a class="a2">Directions and transport details</a></p>
+	<p class="price"><span class="h5">&pound;30.00</span> full price</p>
+	<p class="price"><span class="h5">&pound;15.00</span> concessions</p>
+	
+	<p class="url">Visit the website:<a href="">www.rca.ac.uk/sustaintalks</a></p>
 </div>
 <div class="col-2">
+	{% include modules/calendar-button.html %}
 	{% include modules/share-button.html %}
+	<a class="button">Book now</a>
 </div>
 </section>
 {% include modules/four-plus.html %}

@@ -288,10 +288,23 @@ footer {
 .type-event {
     .event-info {
         .col-1 {
-            .column(10);
+            .column(9);
         }
         .col-2 {
-            .column(2);
+            .column(3);
+        }
+
+        .calendar-wrapper, .share-wrapper {
+            .column(1.5, @grid-gutter-width, 3);
+            border-top: none;
+        }
+
+        .dialogue {
+            width: 180px;
+        }
+        .button {
+            width: 80%;
+            margin: auto;
         }
 
     }
