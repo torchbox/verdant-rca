@@ -793,7 +793,8 @@ nav.expanded {
     li {
         margin: 0;
         border-bottom: 1px solid @color-black;
-        padding: @spacing-one @spacing-half;
+        padding: @spacing-one 0;
+        margin: 0 @spacing-half;
         &.last {
             border: none;
         }
@@ -822,10 +823,20 @@ div.related-content-item {
     margin: 0 0 30px 0;
     overflow: hidden;
     a {
-        .clearfix();
+        //.clearfix();
+    }
+    a.index-page-link {
+        position: relative;
+        &:after {
+            content: '';
+            .sprite-load(-17px, -1220px, 7px, 13px);
+            position: absolute;
+            right: -10px;
+            top: 2px;
+        }
     }
     img {
-        height: 150px;
+        //height: 150px;
     }
     figcaption {
         .h7();
