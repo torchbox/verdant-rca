@@ -99,9 +99,12 @@
             background:transparent;
             border:1px solid white;
 
-            &.active,
-            &:hover{
+            &.active{
                 background:white;
+            }
+            &:hover{
+                background:@color-highlight-blue;
+                border-color:@color-highlight-blue;
             }
         }
     }
@@ -348,6 +351,7 @@
 
 .load-more{
     a{
+        .transition(background-color 0.2s ease);
         text-indent:-2000px;            
         display:block;
         background-color:@color-pale-grey;
@@ -491,11 +495,16 @@
  */
 
 .packery{
+    .row-flush();
+
     &.module{
         border:0;
     }
     ul{
         .unlist();
+    }
+    li{
+        padding-bottom:@grid-gutter-width;
     }
 
     h2,h3,p{
@@ -508,35 +517,27 @@
     .item{
         background-color:white;
     }
+    .inner{
+        border-top:1px solid @color-divider;
+        padding-top:@grid-gutter-width/2;
+    }
     .single{
         .column(2);
-        padding-left:0;
-        padding-right:0;
-
+        
         .image img{
             width:auto;
         }
     }
     .double{
         .column(4);
-        padding-left:0;
-        padding-right:0;
     }
     .three-quarters{
         .column(8);
-        padding-left:0;
-        padding-right:0;
     }
     .full{
         .column(12);
-        padding-left:0;
-        padding-right:0;
     }
 
-    li{
-        border-top:1px solid @color-divider;
-        padding:@grid-gutter-width/2 0 0 0;
-    }
     .load-more {
         position:absolute;
         border:0;
