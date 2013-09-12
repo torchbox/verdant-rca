@@ -20,7 +20,7 @@ function throttle(fn, threshhold, scope) {
 }
 
 function setItemWidth(carousel, width){
-    $('.caption, .image', carousel).css({maxWidth:'none', width:width});
+    $('.caption, .image', carousel).css({width:width});
 }
 
 
