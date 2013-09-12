@@ -1,0 +1,9 @@
+{% comment %}
+    CSS declarations to be included on the 'create page' and 'edit page' views
+{% endcomment %}
+
+{% comment %}
+    TODO: have a mechanism to specify this include within the verdantimages app -
+    ideally verdantadmin shouldn't have to know anything at all about verdantimages
+{% endcomment %}
+<link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}verdantimages/css/image-chooser.less">

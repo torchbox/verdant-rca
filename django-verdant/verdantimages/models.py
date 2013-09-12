@@ -40,7 +40,7 @@ class Image(models.Model):
 @receiver(pre_delete, sender=Image)
 def image_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
-    instance.image_file.delete(False)
+    instance.file.delete(False)
 
 
 class Format(models.Model):
@@ -52,6 +52,7 @@ class Format(models.Model):
         generate an output image in this format, returning it as another
         django.core.files.File object
         """
+        input_file.open()
         image = PIL.Image.open(input_file)
         width, height = image.size
         file_format = image.format

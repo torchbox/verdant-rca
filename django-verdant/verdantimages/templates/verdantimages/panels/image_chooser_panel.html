@@ -1,0 +1,40 @@
+{% extends "verdantadmin/panels/field_panel.html" %}
+{% load image_tags %}
+{% load static %}
+
+{% comment %}
+    Either the chosen-state or unchosen-state div will be shown, depending on the presence
+    of the 'blank' class on the container.
+
+    Any element with the 'action-choose-image' class will open the image chooser modal
+    when clicked.
+{% endcomment %}
+
+{% block form_field %}
+
+    <div id="{{ field.id_for_label }}-chooser" class="image-chooser {% if not image %}blank{% endif %}">
+
+        <div class="chosen-state">
+            <span class="preview-image action-choose-image">
+                {% if image %}
+                    {% image image 130x100 %}
+                {% else %}
+                    <img>
+                {% endif %}
+            </span>
+            {% if not field.field.required %}
+                <input type="button" class="action-clear-image" value="Clear image">
+            {% endif %}
+            <input type="button" class="action-choose-image" value="Choose another image">
+        </div>
+
+        <div class="unchosen-state">
+            <img src="{% static 'verdantimages/images/placeholder.png' %}" width="100" height="75" alt="" class="action-choose-image">
+            <input type="button" class="action-choose-image" value="Choose an image">
+        </div>
+
+    </div>
+
+    {{ field }}
+
+{% endblock %}
