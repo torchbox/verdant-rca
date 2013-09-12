@@ -505,11 +505,12 @@ nav {
 
     nav h2{
         margin:0;
-        .a0;
         font-size: 12px;
+        text-transform:uppercase;
         line-height: 20px;
         float:left;
         padding-right:0.4em;
+        font-weight:normal;
     }
 
     nav.dl-menuwrapper{
@@ -581,7 +582,7 @@ nav {
                     color:#999;
                     text-decoration:none;
                     text-transform:uppercase;
-                    display:inline-block;
+                    display:block;
                     padding-left:10px;
                 }
                 nav a:hover{
@@ -603,10 +604,24 @@ nav {
                     font-weight:bold;
                     color:black;
                 }
-                    nav li:hover > a:before,
                     nav li.selected > a:before {
                         visibility:visible;
                     }
+
+                nav a:after{
+                    float:right;
+                    width:10px;
+                    content:"/";
+                    font-size:12px;
+                    line-height:20px;
+                    display:block;
+                    visibility:hidden;
+                    font-weight:bold;
+                    color:@color-highlight-blue;
+                }
+                nav a:hover:after{
+                    visibility:visible;
+                }
 
     .js .menu.ready {
         visibility:hidden;
@@ -630,6 +645,10 @@ nav {
     }
     .breadcrumb a{
         display:block;
+
+        &:after{
+            display:none;
+        }
     }
 
 
