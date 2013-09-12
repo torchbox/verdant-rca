@@ -52,6 +52,7 @@ class Format(models.Model):
         generate an output image in this format, returning it as another
         django.core.files.File object
         """
+        input_file.open()
         image = PIL.Image.open(input_file)
         width, height = image.size
         file_format = image.format
