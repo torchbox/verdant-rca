@@ -1,23 +1,17 @@
-from django.http import HttpResponse
-from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 
 import json
 
+from verdantadmin.modal_workflow import render_modal_workflow
 from verdantimages.models import Image
 
 def chooser(request):
     images = Image.objects.order_by('title')
 
-    html = render_to_string('verdantimages/chooser/chooser.html', {'images': images})
-    js = render_to_string('verdantimages/chooser/chooser.js', {'images': images})
-
-    return HttpResponse("""
-        {
-            'html': %s,
-            'onload': %s
-        }
-    """ % (json.dumps(html), js), mimetype="text/javascript")
+    return render_modal_workflow(
+        request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
+        {'images': images}
+    )
 
 
 def image_chosen(request, image_id):
@@ -35,10 +29,7 @@ def image_chosen(request, image_id):
         }
     })
 
-    js = render_to_string('verdantimages/chooser/image_chosen.js', {'image_json': image_json})
-
-    return HttpResponse("""
-        {
-            'onload': %s
-        }
-    """ % js, mimetype="text/javascript")
+    return render_modal_workflow(
+        request, None, 'verdantimages/chooser/image_chosen.js',
+        {'image_json': image_json}
+    )
