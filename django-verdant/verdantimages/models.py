@@ -40,7 +40,7 @@ class Image(models.Model):
 @receiver(pre_delete, sender=Image)
 def image_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
-    instance.image_file.delete(False)
+    instance.file.delete(False)
 
 
 class Format(models.Model):
