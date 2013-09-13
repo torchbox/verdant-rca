@@ -1,8 +1,11 @@
 <h1>Choose a page</h1>
 
-{% if not parent_page.is_root %}
-    <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' content_type_app_name content_type_model_name parent_page.get_parent.id %}">Up a level</a>
-{% endif %}
+<p class="breadcrumb">
+    {% for page in parent_page.get_ancestors %}
+        <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' content_type_app_name content_type_model_name page.id %}">{{ page.title }}</a> /
+    {% endfor %}
+    <b>{{ parent_page.title }}</b>
+</p>
 
 <ul>
     {% for entry in pages %}
