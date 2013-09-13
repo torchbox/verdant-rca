@@ -496,8 +496,6 @@
         border-top:0;
     }
 
-    .row-flush();
-
     ul{
         .unlist();
     }
@@ -575,7 +573,7 @@
  */
 
 .two-plus{
-    .x-plus-mobile();
+    .x-plus-base();
 }
 
 /**
@@ -583,7 +581,7 @@
  */
 
 .three-plus{
-    .x-plus-mobile();
+    .x-plus-base();
 }
 
 /**
@@ -591,7 +589,7 @@
  */
 
 .four-plus{
-    .x-plus-mobile();
+    .x-plus-base();
     p {
         .name();
     }
@@ -603,9 +601,33 @@
  */
 
 .five {
-    .x-plus-mobile();
+    .x-plus-base();
     p {
         .name();
+    }
+}
+
+/**
+ *$Six menu block
+ */
+
+.six-menu-block{
+    ul{
+        .unlist();
+        .row();
+        .row-flush();
+        overflow:hidden;
+    }
+    ul li{
+        .column(12);
+    }
+    ul li a{
+        font-family: @font-family-knockout;
+        font-size: @font-size-30;
+        line-height: @line-height-11;
+        text-transform: uppercase;
+        display: block;
+        padding-bottom:@grid-gutter-width;
     }
 }
 
@@ -837,7 +859,7 @@
 }
 
 /**
- * &Metadata e.g. on news page
+ * $Metadata e.g. on news page
  */
 .meta-data {
     border-bottom: 1px solid @color-divider;
@@ -859,7 +881,7 @@
 }
 
 /**
- * &Body text
+ * $Body text
  */
 
 .body-text,
@@ -878,7 +900,7 @@
 
 
 /**
- * &Profile
+ * $Profile
  */
 .profile {
     /*padding: @grid-gutter-width;*/

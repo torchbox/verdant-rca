@@ -110,7 +110,7 @@ ul ul, ol ol {
 
 
  /**
-  * &Typography
+  * $Typography
   *
   * Note that the names of all the typographic styles below are based on the names given to them by the design company.
   * .h1 to .h6 are not necessarily always used by the equivalent tags
@@ -126,8 +126,14 @@ ul ul, ol ol {
     text-transform:uppercase;
     line-height: 1em;
     margin: -0.25em 0 0 0; /*negative margin because there is a smaller top margin above these headers */
-    span{
+    span.dark-grey{
+        color:@color-dark-grey;
+    }
+    span.medium-grey{
         color:@color-medium-grey;
+    }
+    span.light-grey{
+        color:@color-light-grey;
     }
 }
 
@@ -180,6 +186,7 @@ ul ul, ol ol {
     font-family: @font-family-benton;
     font-size: @font-size-18;
     line-height: @line-height-5;
+    font-weight:normal;
 }
 
 .h7 {

@@ -95,5 +95,25 @@ $(function(){
         }
     });
 
-   
+
+    /* X-plus functionality */
+    $('.x-plus').each(function(){
+        var $this = $(this);
+        var number = $this.data('number');
+        var loadmore = $('.load-more', $this);
+        var loadmoreTarget = $('.load-more-target', $this);
+        var items = $(' > ul > li', $this);
+        console.log(items);
+
+        // split list at the 'load-more-target' item.
+        var loadmoreTargetIndex = items.index(loadmoreTarget);
+        var loadmoreIndex = items.index(loadmore);
+        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).hide();
+
+        loadmore.click(function(){
+
+        });
+
+    });
+    
 });

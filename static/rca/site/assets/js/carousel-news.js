@@ -28,12 +28,10 @@ $(function(){
     $('.carousel-news').each(function(){
         var $this = $(this);
         var $carousel = $('.carousel-content', $this);
-
-        $this.imagesLoaded(function(instance){          
-            setItemWidth($carousel, $('.active', $carousel).width());
-            $this.addClass('ready');
-        });
-
+        
+        setItemWidth($carousel, $('.active', $carousel).width());
+        $this.addClass('ready');
+       
         $('> li', $carousel).bind('mouseover click', function(){
             $('> li', $carousel).removeClass('active');
             $(this).addClass('active');

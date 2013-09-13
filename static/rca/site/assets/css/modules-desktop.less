@@ -187,13 +187,13 @@
     }
 }
 
-
 /**
  *$Three plus
  */
 .three-plus{
     ul li{
-        .column(3);         
+        .column(3); 
+        padding-bottom:@grid-gutter-width;       
     }
 }
 
@@ -212,6 +212,26 @@
 .five {
     ul li{
         .column(1.5);
+    }
+}
+
+/**
+ *$Six menu block
+ */
+
+.six-menu-block{
+    ul li{
+        .column(2);
+        margin-bottom: -1000px;
+
+        a{
+            border-left: 1px solid @color-divider;
+            padding: 0 0 1000px @grid-gutter-width/2;
+        }
+    }
+    ul li:first-child a{
+        border-left: 0;
+        padding-left:0;
     }
 }
 
@@ -256,14 +276,14 @@
 }
 
 /**
- * &Metadata e.g. on news page
+ * $Metadata e.g. on news page
  */
 .meta-data {
     margin-left: @grid-gutter-width;
 }
 
 /**
- * &Body text
+ * $Body text
  */
 
 .body-text-left {
@@ -280,12 +300,9 @@
     position:relative;
     overflow:hidden;
     display:block;
-    
-    li{
-        //background-color:red;
-    }
 
     a{
+        .transition(background-color 0.2s ease);
         background-color:@color-pale-grey;
         padding-top:@grid-gutter-width;
         padding-bottom:18%;
@@ -362,6 +379,14 @@
 .button-bar{
     li{
         float:left;
+
+        a{
+            border-left:1px solid white;
+        }
+    }
+
+    li:first-child a{
+        border-left:0;
     }
 
     &.two-button li{
@@ -402,6 +427,8 @@
  *$Half-width double item
  */
  .half-double{
+    .row-flush();
+
     li{
         .column(6);
         padding-bottom:0;
