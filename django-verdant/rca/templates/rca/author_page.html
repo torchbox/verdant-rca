@@ -1,0 +1,16 @@
+{% extends "rca/editorial_page.html" %}
+
+{% load image_tags %}
+
+{% block pre_content %}
+    {% image self.mugshot 400x300 %}
+{% endblock %}
+
+{% block sidebar %}
+    <h2>News stories by {{ self.title }}:</h2>
+    <ul>
+        {% for story in self.news_items.all %}
+            <li><a href="{{ story.url }}">{{ story.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
