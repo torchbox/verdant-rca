@@ -136,20 +136,22 @@
 }
 
 /* generic styles for two-plus, three-plus etc */
-.x-plus-base() {
+.x-plus-scrolled() {
+    overflow:hidden;
+
     ul{
         .unlist();
         .row-flush();
         position:relative;
-
-        li{
-            .column(8);         
-        }
-        .h8, .bc5, .a3{
-            margin:0;
-        }
-
     }
+    li{
+        .column(8); 
+        display:block;
+    }
+    .h8, .bc5, .a3{
+        margin:0;
+    }
+
     .image{
         margin-bottom:@grid-gutter-width/2;
         img{

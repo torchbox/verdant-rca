@@ -434,27 +434,26 @@
         -webkit-overflow-scrolling: touch;
         padding-top:@spacing-one;
         padding-bottom:@spacing-one;
+    }
+    li{
+        .column(7, @grid-gutter-width);
+        padding-left:74px;
+        min-height:100px;
+        border-right:1px solid fade(@color-divider, 50%);
+        
+        &:before{
+            margin-left:-64px;
+            content:"";
+            display:inline-block;
+            float:left;
+            .sprite-load(-772px, -2200px, 54px, 43px);
+        }
+        &.last{
+            border-right:0;
+        }
 
-        li{
-            .column(7, @grid-gutter-width);
-            padding-left:74px;
-            min-height:100px;
-            border-right:1px solid fade(@color-divider, 50%);
-            
-            &:before{
-                margin-left:-64px;
-                content:"";
-                display:inline-block;
-                float:left;
-                .sprite-load(-772px, -2200px, 54px, 43px);
-            }
-            &.last{
-                border-right:0;
-            }
-
-            &:hover:before{
-                .sprite-load(-772px, -1645px, 54px, 43px);
-            }
+        &:hover:before{
+            .sprite-load(-772px, -1645px, 54px, 43px);
         }
     }
 
@@ -479,7 +478,7 @@
     }
 
     
-    .h7, .a2 {
+    .h7, .a2, .bc4 {
         margin:0;
     }
 
@@ -573,7 +572,7 @@
  */
 
 .two-plus{
-    .x-plus-base();
+    .x-plus-scrolled();
 }
 
 /**
@@ -581,7 +580,7 @@
  */
 
 .three-plus{
-    .x-plus-base();
+    .x-plus-scrolled();
 }
 
 /**
@@ -589,7 +588,7 @@
  */
 
 .four-plus{
-    .x-plus-base();
+    .x-plus-scrolled();
     p {
         .name();
     }
@@ -601,7 +600,7 @@
  */
 
 .five {
-    .x-plus-base();
+    .x-plus-scrolled();
     p {
         .name();
     }
@@ -618,10 +617,10 @@
         .row-flush();
         overflow:hidden;
     }
-    ul li{
+    li{
         .column(12);
     }
-    ul li a{
+    a{
         font-family: @font-family-knockout;
         font-size: @font-size-30;
         line-height: @line-height-11;
@@ -641,13 +640,12 @@
         .unlist();
         .row();
         .row-flush();
-        position:relative;
-    
-        li{
-            .column(4);
-            display:inline-block;
-            height:250px;
-        }
+        position:relative;       
+    }
+    li{
+        .column(4);
+        display:inline-block;
+        height:250px;
     }
     .image{
         height:100px;
@@ -684,7 +682,7 @@
     ul{
         white-space: nowrap;
     }
-    ul li{
+    li{
         display:inline-block;
         white-space:normal;
         float:none;
