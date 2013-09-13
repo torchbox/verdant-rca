@@ -659,6 +659,7 @@
     }
     .a3, .a4{
         margin:0;
+        font-size: @font-size-13;
     }
     .a4{
         line-height:1.3em;
@@ -678,7 +679,7 @@
  *$Scrolling of events, two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus{
+.events, .two-plus, .three-plus, .four-plus, .five{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     ul{
@@ -714,6 +715,7 @@
             padding:@grid-gutter-width;
             background-color:@color-pale-grey;
             display:block;
+            font-size: @font-size-10;
 
             &:after{
                 content:"\002B";
@@ -886,6 +888,7 @@
 
 .body-text,
 .body-text-left {
+    //font-size: 0.9em;
     a {
         color: @color-highlight-blue;
         &:hover {
