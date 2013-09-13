@@ -28,6 +28,8 @@
  * Metadata e.g. on news page
  * Body text
  * Tabbed content
+ * Event info
+ * Half-width double item
  * Packery
  */
 
@@ -421,6 +423,32 @@
     .dialogue {
         width: 180px;
     }
+}
+
+/**
+ * Event info
+ */
+.event-info {
+    .col-1 {
+        .column(9);
+    }
+    .col-2 {
+        .column(3);
+    }
+
+    .calendar-wrapper, .share-wrapper,  {
+        .column(1.5, @grid-gutter-width, 3);
+        border-top: none;
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+    .button {
+        max-width: none;
+        margin: auto;
+    }
+
 }
 
 /**

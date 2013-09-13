@@ -940,3 +940,59 @@
     }
 }
 
+/**
+ * Event info
+ */
+
+.event-info {
+    border-top: 1px solid @color-medium-grey;
+    h3 {
+        margin: @spacing-half 0 0 0;
+        span {
+            font-size: 0.75em;
+        }
+    }
+
+    .price {
+        margin: 0;
+    }
+
+    .share-wrapper, .calendar-wrapper {
+        padding-top: @spacing-half;
+        .column(1.5);
+        margin-bottom: @spacing-two;
+        border-top: 1px solid @color-medium-grey;
+        min-width: 75px;
+    }
+
+    .calendar-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .share, .calendar {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-half;
+        left: 0;
+    }
+
+    .button {
+        display: block;
+        clear: both;
+        width: 80%;
+        max-width: 180px;
+    }
+    .icon-link-away{
+        position: relative;
+        &:after {
+            content:"";
+            .sprite-load(-988px, -539px, 44px, 44px);
+            position: absolute;
+            right: 2px;
+            top: 2px;
+        }
+    }
+}
+
