@@ -1,7 +1,7 @@
 {% if page.path != "news.html" %}
 {% if page.path != "staff-profile.html" %}
 <div class="today expanded">
-    <h2>Today</h2>
+    <h2>Events</h2>
     <ul>
         <li>
             <a href="">
@@ -35,6 +35,8 @@
     </a>
 </div>
 
+
+{% if page.path != "event.html" %}
 <div class="related expanded">
     <h2>In this section</h2>
     <ul>
@@ -59,6 +61,7 @@
     </ul>
 </div>
 
+{% endif %}
 {% endif %}
 {% endif %}
 
@@ -97,7 +100,7 @@
 <div class="related-content-item">
     <a href="">
         <figure class="staff">
-            <img src="http://instasrc.com/180x100/people" alt="" />
+            <img src="http://instasrc.com/125x125/people" alt="" />
             <figcaption>Name<span>Surname</span></figcaption>
         </figure>
     </a>
@@ -105,7 +108,7 @@
 <div class="related-content-item">
     <a href="">
         <figure class="staff">
-            <img src="http://instasrc.com/180x100/people" alt="" />
+            <img src="http://instasrc.com/125x125/people" alt="" />
             <figcaption>Name<span>Surname</span></figcaption>
         </figure>
     </a>

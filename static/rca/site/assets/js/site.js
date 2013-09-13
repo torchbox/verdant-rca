@@ -61,21 +61,18 @@ $(function(){
         setup: function(){
             // called when the query becomes valid for the first time
             // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
-            $('footer li.main').removeClass('expanded'); // contract footer menu
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
         }, 
         on: function(){
              // called each time the query is activated
             // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
-            $('footer li.main').removeClass('expanded'); //contract footer menu
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
         }, 
         off: function(){
             // called each time the query is deactivated
             // WHY?: $('nav').insertBefore('.search-form'); //move navigation back to its proper place for desktop
-            $('footer li.main').addClass('expanded'); //expand footer menu
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
         }

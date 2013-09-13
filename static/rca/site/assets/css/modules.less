@@ -26,6 +26,8 @@
  * Packery
  * Two two block
  * Three plus block
+ * Four plus block
+ * Five block
  * Nine plus/six-plus block
  * Tabbed content
  * Stats block
@@ -589,11 +591,19 @@
 .four-plus{
     .x-plus-base();
     p {
-        line-height: 1.25em;
-        span {
-            display: block;
-            clear: both;
-        }
+        .name();
+    }
+}
+
+/**
+ *$Five block
+ * Five images and text, no plus - used on event page for speakers
+ */
+
+.five {
+    .x-plus-mobile();
+    p {
+        .name();
     }
 }
 
@@ -810,8 +820,7 @@
 .button-bar{
     .unlist();
     .clearfix();  
-
-    a{
+    a {
         display:block;
         border-bottom:1px solid white;
     }
@@ -861,7 +870,7 @@
     }
 
     p {
-        spacing: @spacing-half;
+        margin: @spacing-half;
     }
 }
 
