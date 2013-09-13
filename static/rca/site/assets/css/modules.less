@@ -35,6 +35,7 @@
  * Metadata
  * Body-text
  * Profile
+ * Filters
  */
 
 /**
@@ -442,8 +443,8 @@
         border-right:1px solid fade(@color-divider, 50%);
         
         &:before{
-            margin-left:-64px;
-            content:"";
+            margin-left:-64px !important; /* importants necessary to undo .unlist() on this limited occasion */
+            content:"" !important;
             display:inline-block;
             float:left;
             .sprite-load(-772px, -2200px, 54px, 43px);
@@ -568,30 +569,44 @@
 
 
 /**
- *$Two plus block
+ *$Horizontal scrolling of events, and several (but not all) X-plus items
  */
 
-.two-plus{
-    .x-plus-scrolled();
+.events, .two-plus, .three-plus, .four-plus, .five {
+   .x-plus-scrolled();
 }
 
 /**
- *$Three plus block
+ *$One plus block
  */
-
-.three-plus{
-    .x-plus-scrolled();
+.one-plus {
+    ul{
+        .unlist();
+        .row-flush();
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+        img{
+            display:block;
+        }
+    }
+    .load-more{
+        display:none;
+        a{
+            height:126px;
+            width:126px;
+        }
+    }
+    h3, p{
+        margin:0;
+    }
 }
 
 /**
  *$Four plus block
  */
-
-.four-plus{
-    .x-plus-scrolled();
-    p {
-        .name();
-    }
+.four-plus p {
+    .name();
 }
 
 /**
@@ -599,40 +614,12 @@
  * Five images and text, no plus - used on event page for speakers
  */
 
-.five {
-    .x-plus-scrolled();
-    p {
-        .name();
-    }
+.five-plus p {
+    .name();
 }
 
 /**
- *$Six menu block
- */
-
-.six-menu-block{
-    ul{
-        .unlist();
-        .row();
-        .row-flush();
-        overflow:hidden;
-    }
-    li{
-        .column(12);
-    }
-    a{
-        font-family: @font-family-knockout;
-        font-size: @font-size-30;
-        line-height: @line-height-11;
-        text-transform: uppercase;
-        display: block;
-        padding-bottom:@grid-gutter-width;
-    }
-}
-
-
-/**
- *$Nine plus/six-plus block (doesn't follow grid)
+ *$Nine plus/six-plus block are a bit different as they don't follow the grid
  */
 
 .nine-plus, .six-plus{
@@ -672,27 +659,15 @@
     }
 }
 
-
 /**
- *$Scrolling of events, two plus and three plus items and mobile sizes. 
+ * $Styles used to prepare a group of items for appearance with the + button
  */
-
-.events, .two-plus, .three-plus, .four-plus, .five{
-    overflow:auto;
-    -webkit-overflow-scrolling: touch;
-    ul{
-        white-space: nowrap;
-    }
-    li{
-        display:inline-block;
-        white-space:normal;
-        float:none;
-    }
-
-    .load-more{
-        display:none;
+.x-plus{
+    .item-container{
+        height:auto !important; /* important necessary to override inlines styles added by js */
     }
 }
+
 
 /**
  *$Tabbed content (3 tabs exactly required)
@@ -812,6 +787,31 @@
 }
 
 /**
+ *$Six menu block
+ */
+
+.six-menu-block{
+    ul{
+        .unlist();
+        .row();
+        .row-flush();
+        overflow:hidden;
+    }
+    li{
+        .column(12);
+    }
+    a{
+        font-family: @font-family-knockout;
+        font-size: @font-size-30;
+        line-height: @line-height-11;
+        text-transform: uppercase;
+        display: block;
+        padding-bottom:@grid-gutter-width;
+    }
+}
+
+
+/**
  *$Stats block
  */
 
@@ -886,7 +886,6 @@
 
 .body-text,
 .body-text-left {
-    //font-size: 0.9em;
     a {
         color: @color-highlight-blue;
         &:hover {
@@ -942,7 +941,7 @@
 }
 
 /**
- * Event info
+ * $Event info
  */
 
 .event-info {
@@ -995,5 +994,24 @@
             top: 2px;
         }
     }
+}
+
+/**
+ * $Filters
+ */
+
+.filters{
+    .row();
+    ul{
+        .unlist();
+    }
+
+    .checkboxes{}
+
+    .select{}
+
+    &.two-filters{}
+
+    &.four-filters{}   
 }
 

@@ -60,7 +60,7 @@ $(function(){
             var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
                 pager: function(){return $(this).hasClass('paginated')}
             });
-            $(this).data('carousel', tabCarousel)
+            $(this).data('carousel', true)
         }
     });   
 
