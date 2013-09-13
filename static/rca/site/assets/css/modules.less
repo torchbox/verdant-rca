@@ -607,6 +607,30 @@
     }
 }
 
+/**
+ *$Six menu block
+ */
+
+.six-menu-block{
+    ul{
+        .unlist();
+        .row();
+        .row-flush();
+        overflow:hidden;
+    }
+    ul li{
+        .column(12);
+    }
+    ul li a{
+        font-family: @font-family-knockout;
+        font-size: @font-size-30;
+        line-height: @line-height-11;
+        text-transform: uppercase;
+        display: block;
+        padding-bottom:@grid-gutter-width;
+    }
+}
+
 
 /**
  *$Nine plus/six-plus block (doesn't follow grid)
