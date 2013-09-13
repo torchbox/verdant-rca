@@ -44,16 +44,24 @@ $(function(){
     showHideWithSeparateClick('form.search', '.showsearch');
     showHideDialogue();
 
-    /* start any bxslider carousels */
-    carousel = $('.carousel').bxSlider({
+    /* start any bxslider carousels not found within a tab  */
+    carousel = $('.carousel:not(.tab-pane .carousel)').bxSlider({
         pager: function(){return $(this).hasClass('paginated')}
     }); 
 
     /* tabs */
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
-        $(this).tab('show')
-        carousel.reloadSlider();
+        $(this).tab('show');
+        console.log('reloading slider');
+
+        /* ensure carousels within tabs only execute once, on first viewing */
+        if(!$(this).data('carousel')){
+            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
+                pager: function(){return $(this).hasClass('paginated')}
+            });
+            $(this).data('carousel', tabCarousel)
+        }
     });   
 
     /* mobile rejigging */
