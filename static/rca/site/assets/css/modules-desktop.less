@@ -28,6 +28,10 @@
  * Metadata e.g. on news page
  * Body text
  * Tabbed content
+ * Profile
+ * Body-text
+ * Event info
+ * Half-width double item
  * Packery
  */
 
@@ -162,7 +166,7 @@
  *$Scrolling of two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus{
+.events, .two-plus, .three-plus, .four-plus, .five{
     overflow:visible;
     ul{
         white-space:normal;
@@ -185,6 +189,9 @@
     li{
         .column(4);         
     }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
 }
 
 /**
@@ -193,6 +200,9 @@
 .three-plus{
     li{
         .column(3); 
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
     }
 }
 
@@ -203,6 +213,9 @@
     li{
         .column(2);
     }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
 }
 
 /**
@@ -211,6 +224,9 @@
 .five {
     li{
         .column(1.5);
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
     }
 }
 
@@ -267,6 +283,9 @@
 
     .image{
         margin-bottom:@grid-gutter-width/2;
+    }
+    .a3, .a4{
+        font-size: @font-size-11;
     }
 }
 
@@ -332,6 +351,7 @@
         padding-bottom:18%;
         margin-bottom:-16%;
         border-left:1px solid @color-divider;
+
         &:hover {
             background-color: @color-pink;
             color: @color-white;
@@ -445,6 +465,40 @@
     .dialogue {
         width: 180px;
     }
+}
+
+/**
+ * Body text
+ */
+.body-text,
+.body-text-left {
+    font-size: 1em;
+}
+
+/**
+ * Event info
+ */
+.event-info {
+    .col-1 {
+        .column(9);
+    }
+    .col-2 {
+        .column(3);
+    }
+
+    .calendar-wrapper, .share-wrapper,  {
+        .column(1.5, @grid-gutter-width, 3);
+        border-top: none;
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+    .button {
+        max-width: none;
+        margin: auto;
+    }
+
 }
 
 /**
