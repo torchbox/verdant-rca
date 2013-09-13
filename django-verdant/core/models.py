@@ -86,6 +86,15 @@ class Page(MP_Node):
         content_type = ContentType.objects.get_for_id(self.content_type_id)
         return content_type.get_object_for_this_type(id=self.id)
 
+    @property
+    def specific_class(self):
+        """
+            return the class that this page would be if instantiated in its
+            most specific form
+        """
+        content_type = ContentType.objects.get_for_id(self.content_type_id)
+        return content_type.model_class()
+
     def route(self, request, path_components):
         if path_components:
             # request is for a child of this page

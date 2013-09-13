@@ -24,4 +24,4 @@ class BaseImageChooserPanel(BaseFieldPanel):
         return "createImageChooser(fixPrefix('%s'));" % self.form[self.field_name].id_for_label
 
 def ImageChooserPanel(field_name):
-    return type('_FieldPanel', (BaseImageChooserPanel,), {'field_name': field_name})
+    return type('_ImageChooserPanel', (BaseImageChooserPanel,), {'field_name': field_name})

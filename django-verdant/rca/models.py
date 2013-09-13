@@ -4,7 +4,7 @@ from core.models import Page
 from core.fields import RichTextField
 
 from verdantadmin.forms import register, AdminHandler
-from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
+from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.panels import ImageChooserPanel
 
 
@@ -67,7 +67,7 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
-        FieldPanel('author'),
+        PageChooserPanel('author', AuthorPage),
         ImageChooserPanel('lead_image'),
         RichTextFieldPanel('body'),
         InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links",
