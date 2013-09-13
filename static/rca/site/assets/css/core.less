@@ -110,7 +110,7 @@ ul ul, ol ol {
 
 
  /**
-  * &Typography
+  * $Typography
   *
   * Note that the names of all the typographic styles below are based on the names given to them by the design company.
   * .h1 to .h6 are not necessarily always used by the equivalent tags
@@ -126,8 +126,14 @@ ul ul, ol ol {
     text-transform:uppercase;
     line-height: 1em;
     margin: -0.25em 0 0 0; /*negative margin because there is a smaller top margin above these headers */
-    span{
+    span.dark-grey{
+        color:@color-dark-grey;
+    }
+    span.medium-grey{
         color:@color-medium-grey;
+    }
+    span.light-grey{
+        color:@color-light-grey;
     }
 }
 
@@ -180,6 +186,7 @@ ul ul, ol ol {
     font-family: @font-family-benton;
     font-size: @font-size-18;
     line-height: @line-height-5;
+    font-weight:normal;
 }
 
 .h7 {
@@ -201,7 +208,7 @@ ul ul, ol ol {
 
 .bc0 {
     font-family: @font-family-benton-light;
-    font-size: @font-size-36;
+    font-size: @font-size-18;
     line-height: @line-height-2;
     text-transform: none;
 
@@ -505,11 +512,12 @@ nav {
 
     nav h2{
         margin:0;
-        .a0;
         font-size: 12px;
+        text-transform:uppercase;
         line-height: 20px;
         float:left;
         padding-right:0.4em;
+        font-weight:normal;
     }
 
     nav.dl-menuwrapper{
@@ -581,7 +589,7 @@ nav {
                     color:#999;
                     text-decoration:none;
                     text-transform:uppercase;
-                    display:inline-block;
+                    display:block;
                     padding-left:10px;
                 }
                 nav a:hover{
@@ -603,10 +611,24 @@ nav {
                     font-weight:bold;
                     color:black;
                 }
-                    nav li:hover > a:before,
                     nav li.selected > a:before {
                         visibility:visible;
                     }
+
+                nav a:after{
+                    float:right;
+                    width:10px;
+                    content:"/";
+                    font-size:12px;
+                    line-height:20px;
+                    display:block;
+                    visibility:hidden;
+                    font-weight:bold;
+                    color:@color-highlight-blue;
+                }
+                nav a:hover:after{
+                    visibility:visible;
+                }
 
     .js .menu.ready {
         visibility:hidden;
@@ -630,6 +652,10 @@ nav {
     }
     .breadcrumb a{
         display:block;
+
+        &:after{
+            display:none;
+        }
     }
 
 
@@ -669,25 +695,32 @@ nav.expanded {
 /* related links and dialogue box - shared styles */
 .mixin-grey-links {
     color: @color-white;
-    h2 {
+    h2, h3 {
         margin: 0;
         padding: @spacing-half;
         .t2();
         background-color: lighten(@color-black, 60%);
+    }
+    h3 {
+        border-bottom: 1px solid @color-light-grey;
+        &.dark {
+            background-color: fade(@color-charcoal,90%);
+        }
     }
     ul {
         .unlist();
         padding: 0;
         margin: 0;
         background-color: fade(@color-charcoal,90%);
-        /*&.extra-links {
+        &.extra-links {
             background-color: lighten(@color-black, 60%);
-        }*/
+        }
     }
     li {
         .h7();
+        padding: 0 @spacing-half;
         a {
-            padding: @spacing-half;
+            padding: @spacing-half 0;
             display: block;
             color: @color-white;
             border-bottom: 1px solid @color-light-grey;
@@ -695,7 +728,7 @@ nav.expanded {
                 color: @color-pink;
             }
         }
-        &.last a {
+        &:last-child a {
             border-bottom: none;
         }
     }
@@ -728,14 +761,14 @@ nav.expanded {
             right: @spacing-half;
         }
     }
-    ul {
+    ul, h3 {
         display: none;
     }
     &.expanded {
         h2:after {
             .sprite-load(-17px, -623px, 27px, 15px);
         }
-        ul {
+        ul, h3 {
             display: block;
         }
     }
@@ -843,6 +876,7 @@ div.related-content-item {
     }
     figcaption {
         .h7();
+        margin-top: 8px;
     }
     a.index-page-link {
         .module-title();
@@ -857,6 +891,9 @@ div.related-content-item {
 footer,
 footer a {
     color: @color-white;
+    &:hover {
+        color: lighten(@color-highlight-blue, 30%);
+    }
 }
 
 div.submenu-block {
@@ -1059,15 +1096,12 @@ input[type=button], button, .button{
 }
 
 .type-staff-profile {
+    div.related-content-item img {
+        max-width: 125px;
+    }
     div.related-content-item .staff figcaption {
         .a3();
-        color: @color-charcoal;
-        line-height: @line-height-13;
-        margin-top: @spacing-half;
-        span {
-            display: block;
-            clear: both;
-        }
+        .name();
    }
    #tab2 {
         padding-top: 0; /* carousel sits flush against top of tab */
@@ -1078,44 +1112,8 @@ input[type=button], button, .button{
 }
 
 .type-event {
-    .event-info {
-        border-top: 1px solid @color-medium-grey;
-        h3 {
-            margin: @spacing-half 0 0 0;
-        }
 
-        .price {
-            margin: 0;
-        }
-
-        .share-wrapper, .calendar-wrapper {
-            padding-top: @spacing-half;
-            .column(1.5);
-            margin-bottom: @spacing-two;
-            border-top: 1px solid @color-medium-grey;
-        }
-
-        .calendar-wrapper {
-            border-right: 1px solid @color-medium-grey;
-        }
-
-        .share, .calendar {
-            margin: 0 auto;
-        }
-
-        .dialogue {
-            bottom: @share-link-height + @spacing-half;
-            left: 0;
-        }
-
-        .button {
-            display: block;
-            clear: both;
-            width: 180px;
-        }
-    }
-
-    .four-plus {
+    .five {
         margin-bottom: @spacing-three;
     }
 

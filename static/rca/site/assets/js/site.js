@@ -3,11 +3,7 @@
  * The rest should be handled by the css */
 function showHide(element) {
     $(element).click(function(eventObject){
-        if($(this).hasClass('expanded')) {
-            $(this).removeClass('expanded');
-        } else {
-            $(this).addClass('expanded');
-        }
+        $(this).toggleClass('expanded');
     });
 }
 
@@ -15,21 +11,13 @@ function showHide(element) {
 on a different element to the element that has the expanded class applied */
 function showHideWithSeparateClick(element, clickElement){
     $(clickElement).click(function(eventObject){
-        if($(element).hasClass('expanded')) {
-            $(element).removeClass('expanded');
-        } else {
-            $(element).addClass('expanded');
-        }
+        $(element).toggleClass('expanded');
     });
 }
 
 function showHideParent(element) {
     $(element).click(function(eventObject){
-        if($(this).parent().hasClass('expanded')) {
-            $(this).parent().removeClass('expanded');
-        } else {
-            $(this).parent().addClass('expanded');
-        }
+        $(this).parent().toggleClass('expanded');
     });
 }
 
@@ -49,7 +37,6 @@ function showHideDialogue() {
 
 $(function(){
 
-
     showHideParent('.footer-expand'); /* footer expand / collapse */
     showHide('.today');
     showHide('.related');
@@ -57,48 +44,99 @@ $(function(){
     showHideWithSeparateClick('form.search', '.showsearch');
     showHideDialogue();
 
-    /* mobile rejigging */
-    Harvey.attach('screen and (max-width:768px)', {
-        setup: function(){
-            // called when the query becomes valid for the first time
-            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
-            $('footer li.main').removeClass('expanded'); // contract footer menu
-            $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
-            $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
-        on: function(){
-             // called each time the query is activated
-            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
-            $('footer li.main').removeClass('expanded'); //contract footer menu
-            $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
-            $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
-        off: function(){
-            // called each time the query is deactivated
-            // WHY?: $('nav').insertBefore('.search-form'); //move navigation back to its proper place for desktop
-            $('footer li.main').addClass('expanded'); //expand footer menu
-            $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
-            $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
-        }
-    });
-
-    /* start any bxslider carousels */
-    carousel = $('.carousel').bxSlider({
+    /* start any bxslider carousels not found within a tab  */
+    carousel = $('.carousel:not(.tab-pane .carousel)').bxSlider({
         pager: function(){return $(this).hasClass('paginated')}
     }); 
 
     /* tabs */
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
-        $(this).tab('show')
-        carousel.reloadSlider();
+        $(this).tab('show');
+        console.log('reloading slider');
+
+        /* ensure carousels within tabs only execute once, on first viewing */
+        if(!$(this).data('carousel')){
+            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
+                pager: function(){return $(this).hasClass('paginated')}
+            });
+            $(this).data('carousel', tabCarousel)
+        }
+    });   
+
+    /* mobile rejigging */
+    Harvey.attach('screen and (max-width:768px)', {
+        setup: function(){
+            // called when the query becomes valid for the first time
+            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
+            $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
+            $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
+        }, 
+        on: function(){
+             // called each time the query is activated
+            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
+            $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
+            $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
+        }, 
+        off: function(){
+            // called each time the query is deactivated
+            // WHY?: $('nav').insertBefore('.search-form'); //move navigation back to its proper place for desktop
+            $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
+            $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
+        }
     });
 
-    /* Packery */
-    $('.packery').imagesLoaded( function() {
-        var packery = $('.packery').packery({
-            itemSelector: '.item',
-            stamp: ".stamp"
+    // Things definitely only for desktop
+    Harvey.attach('screen and (min-width:769px)', {
+        setup: function(){}, 
+        on: function(){
+            /* Packery */
+            $('.packery').imagesLoaded( function() {
+                var packery = $('.packery').packery({
+                    itemSelector: '.item',
+                    stamp: ".stamp"
+                });
+            });
+        }, 
+        off: function(){
+            $('.packery').destroy();
+        }
+    });
+
+    /* x-plus functionality */
+    $('.x-plus').each(function(){
+        var $this = $(this);
+        var loadmore = $('.load-more', $this);
+        var loadmoreTarget = $('.load-more-target', $this);
+        var itemContainer = $('.item-container', $this);
+        var ul = $('> ul', itemContainer);
+        var items = $('> li', ul);
+        var time = 0
+        var step = 100
+
+        // split list at the 'load-more-target' item.
+        var loadmoreTargetIndex = items.index(loadmoreTarget);
+        var loadmoreIndex = items.index(loadmore);
+        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
+
+        loadmore.click(function(){
+            itemContainer.css('height', itemContainer.height());
+
+            hidden.removeClass('hidden');
+
+            $this.addClass('expanded');
+
+            itemContainer.animate({height:ul.height()}, 300, function(){
+                hidden.each(function(index){
+                    var $this = $(this);
+                    setTimeout( function(){ 
+                        $this.addClass('fade-in-after');
+                    }, time);
+                    time += step;
+                });
+            });
+
+            return false;
         });
     });
 });

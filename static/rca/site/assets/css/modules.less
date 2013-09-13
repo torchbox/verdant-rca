@@ -22,8 +22,12 @@
  * News carousel
  * Head of programme
  * Event block
+ * Half-width double
+ * Packery
  * Two two block
  * Three plus block
+ * Four plus block
+ * Five block
  * Nine plus/six-plus block
  * Tabbed content
  * Stats block
@@ -93,8 +97,6 @@
     .bx-pager{
         text-align:left;
         padding-top:0;
-        bottom:@grid-gutter-width;
-        left:@grid-gutter-width;
 
         &.bx-default-pager a{
             background:transparent;
@@ -134,7 +136,7 @@
         bottom:0;
         padding:@grid-gutter-width;
 
-        .bc2{
+        .bc1{
             .column(6);
             margin:0;
 
@@ -154,7 +156,7 @@
 }
 
 .type-homepage{
-    .carousel .bc2{
+    .carousel .bc1{
         width:100%;
         .bc0
     }
@@ -293,6 +295,7 @@
     }
     li{
         .transition(all 0.4s ease);
+        overflow:hidden;
         float:left;
         width:10%;
 
@@ -306,7 +309,6 @@
 
             .image img{
                 opacity:1;
-                display:block;
             }
         }
     }
@@ -320,7 +322,6 @@
         overflow:hidden;
         display:none;
         margin-top:1em;
-
 
         .h6{
             margin:0;
@@ -336,6 +337,12 @@
         width:auto;
         max-width:none;
         opacity:0.4;
+    }
+
+    &.ready{
+        .image img{
+            width:100%;
+        }
     }
 }
 
@@ -427,27 +434,26 @@
         -webkit-overflow-scrolling: touch;
         padding-top:@spacing-one;
         padding-bottom:@spacing-one;
+    }
+    li{
+        .column(7, @grid-gutter-width);
+        padding-left:74px;
+        min-height:100px;
+        border-right:1px solid fade(@color-divider, 50%);
+        
+        &:before{
+            margin-left:-64px;
+            content:"";
+            display:inline-block;
+            float:left;
+            .sprite-load(-772px, -2200px, 54px, 43px);
+        }
+        &.last{
+            border-right:0;
+        }
 
-        li{
-            .column(7, @grid-gutter-width);
-            padding-left:74px;
-            min-height:100px;
-            border-right:1px solid fade(@color-divider, 50%);
-            
-            &:before{
-                margin-left:-64px;
-                content:"";
-                display:inline-block;
-                float:left;
-                .sprite-load(-772px, -2200px, 54px, 43px);
-            }
-            &.last{
-                border-right:0;
-            }
-
-            &:hover:before{
-                .sprite-load(-772px, -1645px, 54px, 43px);
-            }
+        &:hover:before{
+            .sprite-load(-772px, -1645px, 54px, 43px);
         }
     }
 
@@ -472,7 +478,7 @@
     }
 
     
-    .h7, .a2 {
+    .h7, .a2, .bc4 {
         margin:0;
     }
 
@@ -489,13 +495,11 @@
         border-top:0;
     }
 
-    .row-flush();
-
     ul{
         .unlist();
     }
     li{
-        .column(6);
+        padding-bottom:@grid-gutter-width;
     }
     .image{
         margin-bottom:@grid-gutter-width/2;
@@ -511,7 +515,7 @@
  */
 
 .packery{
-    .row-flush();
+    position:relative;
 
     &.module{
         border:0;
@@ -537,28 +541,9 @@
         border-top:1px solid @color-divider;
         padding-top:@grid-gutter-width/2;
     }
-    .single{
-        .column(2);
-        
-        .image img{
-            width:auto;
-        }
-    }
-    .double{
-        .column(4);
-    }
-    .three-quarters{
-        .column(8);
-    }
-    .full{
-        .column(12);
-    }
-
+    
     .load-more {
-        position:absolute;
         border:0;
-        bottom:0;
-        right:0;
 
         a {
             width: 96px;
@@ -587,7 +572,7 @@
  */
 
 .two-plus{
-    .x-plus-mobile();
+    .x-plus-scrolled();
 }
 
 /**
@@ -595,7 +580,7 @@
  */
 
 .three-plus{
-    .x-plus-mobile();
+    .x-plus-scrolled();
 }
 
 /**
@@ -603,13 +588,45 @@
  */
 
 .four-plus{
-    .x-plus-mobile();
+    .x-plus-scrolled();
     p {
-        line-height: 1.25em;
-        span {
-            display: block;
-            clear: both;
-        }
+        .name();
+    }
+}
+
+/**
+ *$Five block
+ * Five images and text, no plus - used on event page for speakers
+ */
+
+.five {
+    .x-plus-scrolled();
+    p {
+        .name();
+    }
+}
+
+/**
+ *$Six menu block
+ */
+
+.six-menu-block{
+    ul{
+        .unlist();
+        .row();
+        .row-flush();
+        overflow:hidden;
+    }
+    li{
+        .column(12);
+    }
+    a{
+        font-family: @font-family-knockout;
+        font-size: @font-size-30;
+        line-height: @line-height-11;
+        text-transform: uppercase;
+        display: block;
+        padding-bottom:@grid-gutter-width;
     }
 }
 
@@ -623,13 +640,12 @@
         .unlist();
         .row();
         .row-flush();
-        position:relative;
-    
-        li{
-            .column(4);
-            display:inline-block;
-            height:250px;
-        }
+        position:relative;       
+    }
+    li{
+        .column(4);
+        display:inline-block;
+        height:250px;
     }
     .image{
         height:100px;
@@ -641,6 +657,7 @@
     }
     .a3, .a4{
         margin:0;
+        font-size: @font-size-13;
     }
     .a4{
         line-height:1.3em;
@@ -660,13 +677,13 @@
  *$Scrolling of events, two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus{
+.events, .two-plus, .three-plus, .four-plus, .five{
     overflow:auto;
     -webkit-overflow-scrolling: touch;
     ul{
         white-space: nowrap;
     }
-    ul li{
+    li{
         display:inline-block;
         white-space:normal;
         float:none;
@@ -696,6 +713,7 @@
             padding:@grid-gutter-width;
             background-color:@color-pale-grey;
             display:block;
+            font-size: @font-size-10;
 
             &:after{
                 content:"\002B";
@@ -826,8 +844,7 @@
 .button-bar{
     .unlist();
     .clearfix();  
-
-    a{
+    a {
         display:block;
         border-bottom:1px solid white;
     }
@@ -842,7 +859,7 @@
 }
 
 /**
- * &Metadata e.g. on news page
+ * $Metadata e.g. on news page
  */
 .meta-data {
     border-bottom: 1px solid @color-divider;
@@ -864,11 +881,12 @@
 }
 
 /**
- * &Body text
+ * $Body text
  */
 
 .body-text,
 .body-text-left {
+    //font-size: 0.9em;
     a {
         color: @color-highlight-blue;
         &:hover {
@@ -877,13 +895,13 @@
     }
 
     p {
-        spacing: @spacing-half;
+        margin: @spacing-half;
     }
 }
 
 
 /**
- * &Profile
+ * $Profile
  */
 .profile {
     /*padding: @grid-gutter-width;*/
@@ -920,6 +938,62 @@
     .dialogue {
         bottom: @share-link-height + @spacing-half;
         left: 0;
+    }
+}
+
+/**
+ * Event info
+ */
+
+.event-info {
+    border-top: 1px solid @color-medium-grey;
+    h3 {
+        margin: @spacing-half 0 0 0;
+        span {
+            font-size: 0.75em;
+        }
+    }
+
+    .price {
+        margin: 0;
+    }
+
+    .share-wrapper, .calendar-wrapper {
+        padding-top: @spacing-half;
+        .column(1.5);
+        margin-bottom: @spacing-two;
+        border-top: 1px solid @color-medium-grey;
+        min-width: 75px;
+    }
+
+    .calendar-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .share, .calendar {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-half;
+        left: 0;
+    }
+
+    .button {
+        display: block;
+        clear: both;
+        width: 80%;
+        max-width: 180px;
+    }
+    .icon-link-away{
+        position: relative;
+        &:after {
+            content:"";
+            .sprite-load(-988px, -539px, 44px, 44px);
+            position: absolute;
+            right: 2px;
+            top: 2px;
+        }
     }
 }
 

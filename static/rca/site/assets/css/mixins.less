@@ -136,20 +136,22 @@
 }
 
 /* generic styles for two-plus, three-plus etc */
-.x-plus-mobile {
+.x-plus-scrolled() {
+    overflow:hidden;
+
     ul{
         .unlist();
         .row-flush();
         position:relative;
-
-        li{
-            .column(8);         
-        }
-        .h8, .bc5, .a3{
-            margin:0;
-        }
-
     }
+    li{
+        .column(8); 
+        display:block;
+    }
+    .h8, .bc5, .a3{
+        margin:0;
+    }
+
     .image{
         margin-bottom:@grid-gutter-width/2;
         img{
@@ -162,5 +164,22 @@
             height:126px;
             width:126px;
         }
+    }
+    .h8, .bc5 {
+        font-size: @font-size-14;
+    }
+}
+
+/* name - span makes a new line - used by staff profile, event */
+.name {
+    color: @color-charcoal;
+    line-height: @line-height-13;
+    margin-top: @spacing-half;
+    span {
+        display: block;
+        clear: both;
+    }
+    &:hover {
+        color: @color-highlight-blue;
     }
 }

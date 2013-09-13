@@ -19,25 +19,26 @@ function throttle(fn, threshhold, scope) {
     };
 }
 
-function setWidth(carousel, width){
-    $('.caption', carousel).css({maxWidth:'none', width:width});
+function setItemWidth(carousel, width){
+    $('.caption, .image', carousel).css({width:width});
 }
 
-$(function(){
-    
-    $('.carousel-news').each(function(){
-        $this = $(this);
-        $carousel = $('.carousel-content', $this);
-        
-        setWidth($carousel, $('.active', $carousel).width());
 
+$(function(){
+    $('.carousel-news').each(function(){
+        var $this = $(this);
+        var $carousel = $('.carousel-content', $this);
+        
+        setItemWidth($carousel, $('.active', $carousel).width());
+        $this.addClass('ready');
+       
         $('> li', $carousel).bind('mouseover click', function(){
             $('> li', $carousel).removeClass('active');
             $(this).addClass('active');
         })
 
         $(window).resize(throttle(function(){
-            setWidth($carousel, $('.active', $carousel).width());
+            setItemWidth($carousel, $('.active', $carousel).width());
         }));
-    });    
+    });
 })

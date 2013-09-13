@@ -22,10 +22,17 @@
  * Scrolling of two plus and three plus items and mobile sizes
  * Two plus
  * Three plus
+ * Four plus
+ * Five
  * Nine plus/six-plus block
  * Metadata e.g. on news page
  * Body text
  * Tabbed content
+ * Profile
+ * Body-text
+ * Event info
+ * Half-width double item
+ * Packery
  */
 
  
@@ -76,6 +83,10 @@
     &:hover .caption, &:hover .hover-content{
         opacity:1;
     }
+    .bx-pager{
+        bottom:@grid-gutter-width;
+        left:@grid-gutter-width;
+    }
 }
 
 /**
@@ -88,6 +99,7 @@
         margin:0;
     }
     .caption{
+        max-width:none;
         position:relative;
     }
 }
@@ -140,7 +152,7 @@
     ul{
         background-color:@color-light-pink;
     }
-    ul li{
+    li{
         .column(4, @grid-gutter-width);
         padding-left:74px;
 
@@ -154,7 +166,7 @@
  *$Scrolling of two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus{
+.events, .two-plus, .three-plus, .four-plus, .five{
     overflow:visible;
     ul{
         white-space:normal;
@@ -174,27 +186,67 @@
  *$Two plus
  */
 .two-plus{
-    ul li{
+    li{
         .column(4);         
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
     }
 }
 
-
- /**
+/**
  *$Three plus
  */
 .three-plus{
-    ul li{
-        .column(3);         
+    li{
+        .column(3); 
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
     }
 }
 
- /**
+/**
  *$Four plus
  */
 .four-plus{
+    li{
+        .column(2);
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+}
+
+/**
+ *$Five
+ */
+.five {
+    li{
+        .column(1.5);
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+}
+
+/**
+ *$Six menu block
+ */
+
+.six-menu-block{
     ul li{
         .column(2);
+        margin-bottom: -1000px;
+
+        a{
+            border-left: 1px solid @color-divider;
+            padding: 0 0 1000px @grid-gutter-width/2;
+        }
+    }
+    ul li:first-child a{
+        border-left: 0;
+        padding-left:0;
     }
 }
 
@@ -211,7 +263,7 @@
         .row();
         .row-flush();
     }
-    ul li{
+    li{
         .column(1.1);
         overflow:hidden;
         height:auto;
@@ -232,21 +284,49 @@
     .image{
         margin-bottom:@grid-gutter-width/2;
     }
+    .a3, .a4{
+        font-size: @font-size-11;
+    }
 }
 
-.col9 .six-plus li{
+.six-plus li{
     .column(1.1, @grid-gutter-width/2, 9);
 }
 
 /**
- * &Metadata e.g. on news page
+ * $Styles used to prepare a group of items for appearance with the + button
+ */
+.x-plus{
+    li{
+        .transition(opacity 0.5s ease);
+        opacity:1;
+        padding-bottom:@grid-gutter-width;
+    }
+    li.hidden{
+        display:none;
+        opacity:0;
+    }
+    li.fade-in-before{
+        opacity:0;
+    }
+    li.fade-in-after{
+        opacity:1;
+    }
+
+    &.expanded .load-more{
+        display:none;
+    }
+}
+
+/**
+ * $Metadata e.g. on news page
  */
 .meta-data {
     margin-left: @grid-gutter-width;
 }
 
 /**
- * &Body text
+ * $Body text
  */
 
 .body-text-left {
@@ -263,17 +343,15 @@
     position:relative;
     overflow:hidden;
     display:block;
-    
-    li{
-        //background-color:red;
-    }
 
     a{
+        .transition(background-color 0.2s ease);
         background-color:@color-pale-grey;
         padding-top:@grid-gutter-width;
         padding-bottom:18%;
         margin-bottom:-16%;
         border-left:1px solid @color-divider;
+
         &:hover {
             background-color: @color-pink;
             color: @color-white;
@@ -345,6 +423,14 @@
 .button-bar{
     li{
         float:left;
+
+        a{
+            border-left:1px solid white;
+        }
+    }
+
+    li:first-child a{
+        border-left:0;
     }
 
     &.two-button li{
@@ -358,8 +444,8 @@
 
 }
 
-/*
- * &Profile
+/**
+ * $Profile
  */
 
 .profile {
@@ -378,5 +464,82 @@
 
     .dialogue {
         width: 180px;
+    }
+}
+
+/**
+ * Body text
+ */
+.body-text,
+.body-text-left {
+    font-size: 1em;
+}
+
+/**
+ * Event info
+ */
+.event-info {
+    .col-1 {
+        .column(9);
+    }
+    .col-2 {
+        .column(3);
+    }
+
+    .calendar-wrapper, .share-wrapper,  {
+        .column(1.5, @grid-gutter-width, 3);
+        border-top: none;
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+    .button {
+        max-width: none;
+        margin: auto;
+    }
+
+}
+
+/**
+ *$Half-width double item
+ */
+ .half-double{
+    .row-flush();
+
+    li{
+        .column(6);
+        padding-bottom:0;
+    }
+}
+
+
+/**
+ * $Packery
+ */
+
+.packery{
+    .row-flush();
+
+    .single{
+        .column(2);
+        
+        .image img{
+            width:auto;
+        }
+    }
+    .double{
+        .column(4);
+    }
+    .three-quarters{
+        .column(8);
+    }
+    .full{
+        .column(12);
+    }
+    .load-more {
+        position:absolute;
+        bottom:0;
+        right:0;
     }
 }
