@@ -80,10 +80,14 @@ class BasePageChooserPanel(BaseFieldPanel):
         }))
 
     def render_js(self):
-        return "createPageChooser(fixPrefix('%s'), '%s/%s');" % (
+        page = getattr(self.model_instance, self.field_name)
+        parent = page.get_parent() if page else None
+
+        return "createPageChooser(fixPrefix('%s'), '%s/%s', %s);" % (
             self.form[self.field_name].id_for_label,
             self.content_type.app_label,
-            self.content_type.model
+            self.content_type.model,
+            (parent.id if parent else 'null'),
         )
 
 def PageChooserPanel(field_name, page_type=None):

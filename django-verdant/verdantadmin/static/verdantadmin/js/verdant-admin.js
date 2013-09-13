@@ -18,17 +18,23 @@ function makeRichTextEditable(id) {
 }
 
 
-function createPageChooser(id, pageType) {
+function createPageChooser(id, pageType, openAtParentId) {
     var chooserElement = $('#' + id + '-chooser');
     var pageTitle = chooserElement.find('.page-title');
     var input = $('#' + id);
 
     $('.action-choose-page', chooserElement).click(function() {
+        var initialUrl = '/admin/choose-page/' + pageType + '/';
+        /* TODO: don't hard-code this URL, as it may be changed in urls.py */
+        if (openAtParentId) {
+            initialUrl += openAtParentId + '/';
+        }
         ModalWorkflow({
-            'url': '/admin/choose-page/' + pageType + '/', /* TODO: don't hard-code this, as it may be changed in urls.py */
+            'url': initialUrl,
             'responses': {
                 'pageChosen': function(pageData) {
                     input.val(pageData.id);
+                    openAtParentId = pageData.parentId;
                     pageTitle.text(pageData.title);
                     chooserElement.removeClass('blank');
                 }
@@ -38,6 +44,7 @@ function createPageChooser(id, pageType) {
 
     $('.action-clear', chooserElement).click(function() {
         input.val('');
+        openAtParentId = null;
         chooserElement.addClass('blank');
     });
 }
