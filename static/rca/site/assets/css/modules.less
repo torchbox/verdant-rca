@@ -605,26 +605,21 @@
 
 .six-menu-block{
     ul{
+        .unlist();
         .row();
         .row-flush();
         overflow:hidden;
     }
     ul li{
-        .column(4);
-        margin-top: -16px;
-        margin-bottom: -1000px;
+        .column(12);
     }
     ul li a{
-        border-right: 1px solid @color-divider;
         font-family: @font-family-knockout;
         font-size: @font-size-30;
         line-height: @line-height-11;
         text-transform: uppercase;
         display: block;
-        padding-bottom: 1000px;
-    }
-    ul li:last-child a{
-        border-right: 0;
+        padding-bottom:@grid-gutter-width;
     }
 }
 
