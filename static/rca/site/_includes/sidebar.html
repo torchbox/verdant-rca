@@ -1,61 +1,68 @@
-{% if page.path != "news.html" %}
-{% if page.path != "staff-profile.html" %}
-<div class="today expanded">
-    <h2>Events</h2>
-    <ul>
-        <li>
-            <a href="">
-                <h3>21 March</h3>
-                <p>Neville Brody in Conversation</p>
+{% if page.path != "news.html" and page.path != "staff-profile.html" %}
+
+    <div class="today expanded">
+        <h2>Events</h2>
+        <ul>
+            <li>
+                <a href="">
+                    <h3>21 March</h3>
+                    <p>Neville Brody in Conversation</p>
+                </a>
+                <span>public</span>
+            </li>
+            <li>
+                <a href="">
+                    <h3>7 May</h3>
+                    <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
+                </a>
+                <span>private</span>
+            </li>
+            <li class="last">
+                <a href="">
+                    <h3>14 March</h3>
+                    <p>SHOW RCA 2013</p>
+                </a>
+                <span>public</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- adverts -->
+    <div class="apply">
+        <a href="#">
+            <h2>Apply to Study</h2>
+            <p>at the Royal College of Art</p>
+        </a>
+    </div>
+
+    {% if page.path == 'programme.html' or page.path == 'school.html' %}
+        <div class="open-days">
+            <a href="#">
+                <h2>Open Days</h2>
             </a>
-            <span>public</span>
-        </li>
-        <li>
-            <a href="">
-                <h3>7 May</h3>
-                <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
-            </a>
-            <span>private</span>
-        </li>
-        <li class="last">
-            <a href="">
-                <h3>14 March</h3>
-                <p>SHOW RCA 2013</p>
-            </a>
-            <span>public</span>
-        </li>
-    </ul>
-</div>
+        </div>
+    {% endif %}
 
-<!-- advert -->
-<div class="sidebar-advert">
-    <a href="">
-    <h2>Apply to Study</h2>
-    <p>at the Royal College of Art</p>
-    </a>
-</div>
-
-
-{% if page.path != "event.html" %}
-<div class="related expanded">
-    <h2>Related links</h2>
-    <h3 class="dark">In this section</h3>
-    <ul>
-        <li><a href="">Entrance requirements</a></li>
-        <li><a href="">Partnerships Awards &amp; scholarships</a></li>
-        <li><a href="">Staff</a></li>
-        <li><a href="">Alumni</a></li>
-    </ul>
-    <h3>See also</h3>
-    <ul class="extra-links">
-        <li><a href="">Studying at the RCA</a></li>
-        <li><a href="">Tuition fees and funding</a></li>
-        <li><a href="">Apply for this programme</a></li>
-    </ul>
-</div>
-
-{% endif %}
-{% endif %}
+    {% if page.path != "event.html" %}
+        <div class="related expanded">
+            <h2>Related links</h2>
+            <div class="wrapper">
+                <h3 class="dark">In this section</h3>
+                <ul>
+                    <li><a href="">Entrance requirements</a></li>
+                    <li><a href="">Partnerships Awards &amp; scholarships</a></li>
+                    <li><a href="">Staff</a></li>
+                    <li><a href="">Alumni</a></li>
+                </ul>
+                <h3>See also</h3>
+                <ul class="extra-links">
+                    <li><a href="">Studying at the RCA</a></li>
+                    <li><a href="">Tuition fees and funding</a></li>
+                    <li><a href="">Apply for this programme</a></li>
+                </ul>
+            </div>
+        </div>
+    {% endif %}
 {% endif %}
 
 {% if page.path == "news.html" %}

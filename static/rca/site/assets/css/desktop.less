@@ -81,7 +81,7 @@ body {
  * $Structure
  */
 
-.wrapper,
+.page-wrapper,
 .footer-wrapper,
 .header-wrapper{
     margin: 0 auto; /* left and right margins become even at regular desktop size */
@@ -102,7 +102,7 @@ body {
         display:none;
     }
 }
-.wrapper.affix{
+.page-wrapper.affix{
     margin-top: @header-height + 35px; /* space for fixed header */
 }
 
@@ -228,9 +228,11 @@ footer {
 		.column(4, @grid-gutter-width, 12);
 		.row();
 	}
-	ul.menu {
+	a.footer-logo {
 		background-image: url('../images/logo-footer.png');
 		padding-top: 72px;
+        width: 145px;
+        height: 63px;
 	}
     h3 {
         margin-top: @spacing-three;

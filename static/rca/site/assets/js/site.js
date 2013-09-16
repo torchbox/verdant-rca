@@ -1,30 +1,30 @@
+
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
- * The rest should be handled by the css */
-function showHide(element) {
-    $(element).click(function(eventObject){
-        $(this).toggleClass('expanded');
-    });
-}
-
-/* based on function above but allowing the action to be triggered
-on a different element to the element that has the expanded class applied */
-function showHideWithSeparateClick(element, clickElement){
+ * The rest should be handled by the css. No sliding. */
+function showHide(clickElement, classElement){
     $(clickElement).click(function(eventObject){
-        $(element).toggleClass('expanded');
+        $(classElement).toggleClass('expanded');
     });
 }
 
-function showHideParent(element) {
-    $(element).click(function(eventObject){
+/* show hide the footer - needs its own function because of being idiosyncratic */
+function showHideFooter() {
+    $('.footer-expand').click(function(eventObject){
         $(this).parent().toggleClass('expanded');
+        $(this).prev().slideToggle();
     });
 }
 
+/* show hide dialogue - has it's own funciton because of hide behaviour */
 function showHideDialogue() {
-    showHideWithSeparateClick('.dialogue', '.share');
+    $('.share').click(function() {
+         $('.dialogue').addClass('expanded');
+         $('.dialogue').slideDown();
+    });
     $(document).click(function() {
         $('.dialogue').removeClass('expanded');
+        $('.dialogue').slideUp();
     });
     $('.dialogue').click(function(e){
         e.stopPropagation();
@@ -35,22 +35,36 @@ function showHideDialogue() {
     });
 }
 
+/* generic function to show hide an element with slidey fun
+The classElement gets an expanded class, and the showElement gets hidden/shown
+with a slide */
+function showHideSlide(clickElement, classElement, showElement) {
+    $(clickElement).click(function(eventObject){
+        $(classElement).toggleClass('expanded');
+        $(showElement).slideToggle();
+    });
+}
+
 /* hide the search submit button then show
 on typing text */
 function showSearchSubmit() {
     $('form.search input[type="submit"]').hide();
-    $('form.search input[type="text"]').click(function() {
+    $('form.search input[type="text"]').focus(function() {
        $('form.search input[type="submit"]').show(); 
+    });
+    $('form.search input[type="text"]').focusout(function() {
+       $('form.search input[type="submit"]').hide(); 
     });
 }
 
 $(function(){
     showSearchSubmit();
-    showHideParent('.footer-expand'); /* footer expand / collapse */
-    showHide('.today');
-    showHide('.related');
-    showHideWithSeparateClick('nav', '.showmenu');
-    showHideWithSeparateClick('form.search', '.showsearch');
+    showHideFooter();
+    showHideSlide('.today h2', '.today', '.today ul');
+    showHideSlide('.related h2', '.related', '.related .wrapper');
+    showHide('.showmenu', 'nav');
+    showHide('.showsearch', 'form.search');
+    showHide('.filters .checkbox .label', '.filters .checkbox .checkboxes');
     showHideDialogue();
 
     /* start any bxslider carousels not found within a tab  */
@@ -148,4 +162,6 @@ $(function(){
             return false;
         });
     });
+
+  
 });

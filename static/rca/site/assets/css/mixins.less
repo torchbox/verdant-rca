@@ -146,8 +146,13 @@
             margin-left:0.5em;
             display:inline-block;
             content:"";
-            opacity:0.7;
-            .sprite-load(-17px, -1218px, 7px, 14px);
+            opacity:0.4;
+            .sprite-load(-17px, -1217px, 7px, 14px);
+        }
+
+        a:hover:after{
+            background-position:-17px -2323px;
+            opacity:1;
         }
     }
 }
@@ -164,12 +169,13 @@
         white-space: nowrap;
     }
     li{
+        vertical-align:top;
         .column(8); 
         display:inline-block;
         white-space:normal;
         float:none;
     }
-    .h8, .bc5, .a3{
+    .h8, .bc5, .a3, .a4{
         margin:0;
     }
 

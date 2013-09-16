@@ -38,7 +38,7 @@ var desktopNav = {
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
 
-			$(this).data('maxHeight', maxHeight);
+			$(this).data('maxHeight', maxHeight + 16);
 
 			var selected = $(this).find('.selected').clone();
 			selected.find('ul').remove();
@@ -57,15 +57,15 @@ var desktopNav = {
 					$self.find('.breadcrumb').stop().hide();
 
 					$self.stop().animate({
-						height: $self.data('maxHeight') + 16
+						height: $self.data('maxHeight')
 					},200, function(){
-						$self.removeClass('changing');
+						$self.removeClass('changing').addClass('open');
 					})
 
 					$self.find('.menu').stop().fadeIn(200, function(){
 						//necessary to avoid some kind of weird race bug where opacity stops getting changed to 1
 						$self.find('.menu').css({opacity:1,display:'block'})
-						$self.removeClass('changing');
+						$self.removeClass('changing').addClass('open');
 					});
 				}, 
 				out: function(){
@@ -77,7 +77,7 @@ var desktopNav = {
 						height: 34
 					}, 200, function(){
 						$self.find('.selected > ul').stop().show()
-						$self.removeClass('changing');
+						$self.removeClass('changing').removeClass('open');
 					});
 
 					$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){

@@ -24,7 +24,8 @@
  * Three plus
  * Four plus
  * Five
- * Nine plus/six-plus block
+ * Five plus
+ * Speakers
  * Metadata e.g. on news page
  * Body text
  * Tabbed content
@@ -51,6 +52,13 @@
             opacity: 1;
         }
     }
+
+     .bx-next, .bx-prev {
+        &:after{
+            top:5px;
+        }
+    }
+
     .bx-next {
         &:after {
             .sprite-load(-15px, -821px, 68px, 131px);
@@ -71,9 +79,9 @@
 
     .bx-controls-direction a {
         top: 50%;
-        width: @carousel-control-width; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height: @carousel-control-height;
-        margin-top: ((@carousel-control-height / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        width: 138px; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
+        height: 142px;
+        margin-top: ((142px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
         The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
 
@@ -167,7 +175,7 @@
  *$Scrolling of two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five{
+.events, .two-plus, .three-plus, .four-plus, .five, .five-plus, .speakers{
     overflow:visible;
     ul{
         white-space:normal;
@@ -225,6 +233,13 @@
     .h8, .bc5 {
         font-size: @font-size-12;
     }
+    .a3, .a4{
+        margin:0;
+        font-size: @font-size-11;
+    }
+}
+.col9 .three-plus li{
+    .column(2, @grid-gutter-width/2, 9);
 }
 
 /**
@@ -237,19 +252,47 @@
     .h8, .bc5 {
         font-size: @font-size-12;
     }
+   
 }
 
 /**
- *$Five
+ *$Five plus
  */
-.five {
+.five-plus{
     li{
-        .column(1.5);
+        .column(2);
+    }
+
+    .image{
+        height:auto;
+    }
+
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+    .a3, .a4{
+        margin:0;
+        font-size: @font-size-11;
+    }
+}
+
+/**
+ *$Speakers
+ */
+.speakers {
+    margin-left: @spacing-two;
+    ul {
+        margin-left: @grid-gutter-width * -1;
+    }
+    li {
+        .column(2, @grid-gutter-width, 4);
+        margin-bottom: @spacing-one;
     }
     .h8, .bc5 {
         font-size: @font-size-12;
     }
 }
+
 
 /**
  *$Six menu block
@@ -269,49 +312,6 @@
         border-left: 0;
         padding-left:0;
     }
-}
-
-/**
- *$Nine plus/six-plus block (doesn't follow grid)
- */
-
-.nine-plus, .six-plus{
-    ul{
-        margin-left:0;
-        margin-right:0;
-    }
-    ul{
-        .row();
-        .row-flush();
-    }
-    li{
-        .column(1.1);
-        overflow:hidden;
-        height:auto;
-        
-        &:first-child{
-            margin-left:0;
-        }
-        &.load-more{
-            width:80px;
-            padding:0;
-        }
-
-    }
-    .image{
-        height:auto;
-    }
-
-    .image{
-        margin-bottom:@grid-gutter-width/2;
-    }
-    .a3, .a4{
-        font-size: @font-size-11;
-    }
-}
-
-.six-plus li{
-    .column(1.1, @grid-gutter-width/2, 9);
 }
 
 /**
@@ -350,7 +350,7 @@
  * $Body text
  */
 
-.body-text-left {
+.body-text {
     .column(8, 0, 12);
 }
 
@@ -571,10 +571,15 @@
 
 .filters{
     .row();
-    
-    .select label{
-        .visuallyhidden();
+
+    ul{
+        .row-flush();
     }
+    li{
+        .column(3);
+    }
+
+   
 
     .checkboxes{}
 
@@ -584,3 +589,4 @@
 
     &.four-filters{}   
 }
+
