@@ -27,7 +27,7 @@
  * Two two block
  * Three plus block
  * Four plus block
- * Five block
+ * Speakers
  * Nine plus/six-plus block
  * Tabbed content
  * Stats block
@@ -575,7 +575,7 @@
  *$Horizontal scrolling of events, and several (but not all) X-plus items
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five {
+.events, .two-plus, .three-plus, .four-plus, .speakers {
    .x-plus-scrolled();
 }
 
@@ -613,11 +613,10 @@
 }
 
 /**
- *$Five block
- * Five images and text, no plus - used on event page for speakers
+ *$Speakers block
  */
 
-.five-plus p {
+.speakers p {
     .name();
 }
 
@@ -887,17 +886,12 @@
  * $Body text
  */
 
-.body-text,
-.body-text-left {
+.body-text {
     a {
         color: @color-highlight-blue;
         &:hover {
             text-decoration: underline;
         }
-    }
-
-    p {
-        margin: @spacing-half;
     }
 }
 

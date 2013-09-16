@@ -23,7 +23,7 @@
  * Two plus
  * Three plus
  * Four plus
- * Five
+ * Speakers
  * Nine plus/six-plus block
  * Metadata e.g. on news page
  * Body text
@@ -167,7 +167,7 @@
  *$Scrolling of two plus and three plus items and mobile sizes. 
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five{
+.events, .two-plus, .three-plus, .four-plus, .speakers{
     overflow:visible;
     ul{
         white-space:normal;
@@ -240,11 +240,16 @@
 }
 
 /**
- *$Five
+ *$Speakers
  */
-.five {
-    li{
-        .column(1.5);
+.speakers {
+    margin-left: @spacing-two;
+    ul {
+        margin-left: @grid-gutter-width * -1;
+    }
+    li {
+        .column(2, @grid-gutter-width, 4);
+        margin-bottom: @spacing-one;
     }
     .h8, .bc5 {
         font-size: @font-size-12;
@@ -350,7 +355,7 @@
  * $Body text
  */
 
-.body-text-left {
+.body-text {
     .column(8, 0, 12);
 }
 

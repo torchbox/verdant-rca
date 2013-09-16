@@ -47,7 +47,7 @@ function showHideSlide(clickElement, classElement, showElement) {
 //     $(clickElement).find('*').click(function(eventObject){
 //         eventObject.stopPropagation();
 //     });
-// }
+}
 
 /* hide the search submit button then show
 on typing text */
