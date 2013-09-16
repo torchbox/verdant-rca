@@ -53,12 +53,18 @@
 .bx-wrapper {
     height: @carousel-image-height;
     overflow: hidden;
+    margin-bottom:0;
+
     img {
         width: auto;
-        max-width: 100%;
         margin: auto;
     }
-    img, iframe {
+    .landscape img{
+        height:100%;
+        width:auto;
+        max-width:none;
+    }
+    iframe {
         height: @carousel-image-height;
     }
     .bx-next, .bx-prev {
@@ -166,10 +172,60 @@
     }
 }
 
-.type-homepage{
-    .carousel .bc1{
+
+
+
+/**
+ * $Generic video embed wrapper
+ */
+
+.videoembed{
+    overflow:hidden;
+
+    .playpause, .poster{
+        position:absolute;
+        top:0;
+
+    }
+    .playpause{
+        z-index:3;
+        right:0;
+        background-color:darken(@color-dark-grey, 10%);
+        width:50px;
+        height:50px;
+        cursor:pointer;
+        text-indent:-5000px;
+
+        &:after{
+            content:"";
+            position:absolute;
+            top:0;
+            right:0;
+            bottom:0;
+            left:0;
+            margin:auto;
+            display:block;
+            .sprite-load(-1278px, -539px, 22px, 33px);
+        }
+    }
+    .poster{
+        z-index:2;
         width:100%;
-        .bc0
+        height:100%;
+
+        img{
+            height:100%; /* assumed to be landscape */
+            display:block;
+        }
+    }
+
+    &.playing{
+        .playpause{
+            display:none;
+        }
+        .poster{
+            display:none;
+        }
     }
 }
 
@@ -426,7 +482,7 @@
     background-size: cover;
     height: 100%;
     background-attachment: fixed;
-    max-height:800px;
+    max-height:750px;
     overflow:hidden;
 }
 

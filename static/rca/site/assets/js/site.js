@@ -87,6 +87,58 @@ $(function(){
         }
     });   
 
+    /* Vimeo player API */
+    $('.videoembed.vimeo').each(function(){
+        var $this = $(this);
+        var f = $('iframe', $(this));
+
+        // Listen for messages from the player
+        if (window.addEventListener){
+            window.addEventListener('message', onMessageReceived, false);
+        }
+        else {
+            window.attachEvent('onmessage', onMessageReceived, false);
+        }
+
+        // Handle messages received from the player
+        function onMessageReceived(e) {
+            var data = JSON.parse(e.data);
+            
+            switch (data.event) {
+                case 'ready':
+                    post(f, 'addEventListener', 'pause');
+                    post(f, 'addEventListener', 'finish');
+                    break;
+                                       
+                case 'pause':
+                    //nothing
+                    break;
+                   
+                case 'finish':
+                    //nothing
+                    break;
+            }
+        }
+
+        // Call the API when a button is pressed
+        $('.playpause', $(this)).on('click', function() {
+            post(f, 'play');
+            $this.toggleClass('playing');
+        });
+    });
+
+    // Helper function for sending a message to the player
+    function post(frame, action, value) {
+        var url = frame.attr('src').split('?')[0];
+        var data = { method: action };
+        
+        if (value) {
+            data.value = value;
+        }
+        
+        frame[0].contentWindow.postMessage(JSON.stringify(data), url);
+    }
+
     /* mobile rejigging */
     Harvey.attach('screen and (max-width:768px)', {
         setup: function(){
