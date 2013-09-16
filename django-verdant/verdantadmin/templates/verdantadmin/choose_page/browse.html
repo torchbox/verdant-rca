@@ -1,0 +1,23 @@
+<h1>Choose a page</h1>
+
+<p class="breadcrumb">
+    {% for page in parent_page.get_ancestors %}
+        <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' content_type_app_name content_type_model_name page.id %}">{{ page.title }}</a> /
+    {% endfor %}
+    <b>{{ parent_page.title }}</b>
+</p>
+
+<ul>
+    {% for entry in pages %}
+        <li>
+            {% if entry.can_choose %}
+                <a class="choose-page" href="#{{ entry.page.id }}" data-id="{{ entry.page.id }}" data-title="{{ entry.page.title }}" data-url="{{ entry.page.url }}">{{ entry.page.title }}</a>
+            {% else %}
+                {{ entry.page.title }}
+            {% endif %}
+            {% if entry.can_descend %}
+                <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' content_type_app_name content_type_model_name entry.page.id %}">&raquo;</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

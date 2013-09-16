@@ -20,10 +20,16 @@ bodyclass: type-event
 	<a class="button icon icon-link-away">Book now</a>
 </div>
 </section>
-{% include modules/five.html %}
 
 {% include modules/carousel.html %}
 
-{% include modules/body-text.html %}
+<section class="row">
+	
+	{% include modules/body-text.html %}
+
+	<section class="four">
+		{% include modules/speakers.html %}
+	</section>
+</section>
 
 {% include modules/twitter-feed.html %}

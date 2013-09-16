@@ -29,6 +29,7 @@
  * Four plus block
  * Five block
  * five plus/six-plus block
+ * Speakers
  * Tabbed content
  * Stats block
  * Button bar
@@ -250,9 +251,6 @@
     bottom: @share-link-height + 15px;
     width: 100%;
     display: none;
-    &.expanded {
-        display: block;
-    }
 }
 
 /**
@@ -577,7 +575,7 @@
  *$Horizontal scrolling of events, and several (but not all) X-plus items
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five, .five-plus {
+.events, .two-plus, .three-plus, .four-plus, .five, .five-plus, .speakers {
    .x-plus-scrolled();
 }
 
@@ -625,6 +623,14 @@
         white-space:normal;
         float:none;
     }
+}
+
+/**
+ *$Speakers block
+ */
+
+.speakers p {
+    .name();
 }
 
 /**
@@ -852,17 +858,12 @@
  * $Body text
  */
 
-.body-text,
-.body-text-left {
+.body-text {
     a {
         color: @color-highlight-blue;
         &:hover {
             text-decoration: underline;
         }
-    }
-
-    p {
-        margin: @spacing-half;
     }
 }
 

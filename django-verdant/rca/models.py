@@ -4,7 +4,7 @@ from core.models import Page
 from core.fields import RichTextField
 
 from verdantadmin.forms import register, AdminHandler
-from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel
+from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.panels import ImageChooserPanel
 
 
@@ -25,17 +25,39 @@ class EditorialPage(Page):
     body = RichTextField()
 
 
+# == Authors Index ==
+class AuthorsIndex(Page):
+    subpage_types = ['AuthorPage']
+
+
+# == Author Page ==
+class AuthorPage(EditorialPage):
+    mugshot = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+
+class AuthorPageAdmin(AdminHandler):
+    model = AuthorPage
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('slug'),
+        ImageChooserPanel('mugshot'),
+        RichTextFieldPanel('body'),
+    ]
+
+register(AuthorPage, AuthorPageAdmin)
+
+# == News Index ==
 class NewsIndex(Page):
     subpage_types = ['NewsItem']
 
 
+# == News Item ==
 class NewsItem(EditorialPage):
+    author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
-
 
 class NewsItemRelatedLink(RelatedLink):
     news_item = models.ForeignKey('NewsItem', related_name='related_links')
-
 
 class NewsItemAdminHandler(AdminHandler):
     model = NewsItem
@@ -45,6 +67,7 @@ class NewsItemAdminHandler(AdminHandler):
     panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
+        PageChooserPanel('author', AuthorPage),
         ImageChooserPanel('lead_image'),
         RichTextFieldPanel('body'),
         InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links",
@@ -53,6 +76,5 @@ class NewsItemAdminHandler(AdminHandler):
             panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
         ),
     ]
-
 
 register(NewsItem, NewsItemAdminHandler)
