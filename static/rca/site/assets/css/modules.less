@@ -47,10 +47,14 @@
     background-color:darken(@color-pale-grey, 10%);
 }
 .bx-wrapper {
-    img, iframe {
+    height: @carousel-image-height;
+    overflow: hidden;
+    img {
         width: auto;
         max-width: 100%;
         margin: auto;
+    }
+    img, iframe {
         height: @carousel-image-height;
     }
     .bx-next, .bx-prev {
@@ -121,6 +125,7 @@
         border: none;
         box-shadow: none;
         left: 0;
+        height: @carousel-image-height !important; /*important is necessary to override element style */
     }
    
     .bx-loading {
