@@ -40,13 +40,9 @@ The classElement gets an expanded class, and the showElement gets hidden/shown
 with a slide */
 function showHideSlide(clickElement, classElement, showElement) {
     $(clickElement).click(function(eventObject){
-        //eventObject.stopPropagation();
         $(classElement).toggleClass('expanded');
         $(showElement).slideToggle();
     });
-//     $(clickElement).find('*').click(function(eventObject){
-//         eventObject.stopPropagation();
-//     });
 }
 
 /* hide the search submit button then show
@@ -64,8 +60,8 @@ function showSearchSubmit() {
 $(function(){
     showSearchSubmit();
     showHideFooter();
-    showHideSlide('.today', '.today', '.today ul');
-    showHideSlide('.related', '.related', '.related .wrapper');
+    showHideSlide('.today h2', '.today', '.today ul');
+    showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
     showHideDialogue();
