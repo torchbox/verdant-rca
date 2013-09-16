@@ -6,6 +6,8 @@ from django.forms.models import inlineformset_factory
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
+from django.contrib.contenttypes.models import ContentType
+
 
 class BaseAdminPanel(object):
     def __init__(self, *args, **kwargs):
@@ -60,6 +62,45 @@ class BaseRichTextFieldPanel(BaseFieldPanel):
 
 def RichTextFieldPanel(field_name):
     return type('_FieldPanel', (BaseRichTextFieldPanel,), {'field_name': field_name})
+
+
+class BasePageChooserPanel(BaseFieldPanel):
+    template = "verdantadmin/panels/page_chooser_panel.html"
+
+    @classmethod
+    def widgets(cls):
+        return {
+            cls.field_name: HiddenInput
+        }
+
+    def render(self):
+        return mark_safe(render_to_string(self.template, {
+            'field': self.form[self.field_name],
+            'page': getattr(self.model_instance, self.field_name)
+        }))
+
+    def render_js(self):
+        page = getattr(self.model_instance, self.field_name)
+        parent = page.get_parent() if page else None
+
+        return "createPageChooser(fixPrefix('%s'), '%s/%s', %s);" % (
+            self.form[self.field_name].id_for_label,
+            self.content_type.app_label,
+            self.content_type.model,
+            (parent.id if parent else 'null'),
+        )
+
+def PageChooserPanel(field_name, page_type=None):
+    if page_type:
+        content_type = ContentType.objects.get_for_model(page_type)
+    else:
+        # TODO: infer the content type by introspection on the foreign key
+        content_type = ContentType.objects.get_by_natural_key('core', 'page')
+
+    return type('_PageChooserPanel', (BasePageChooserPanel,), {
+        'field_name': field_name,
+        'content_type': content_type,
+    })
 
 
 # Abstract superclass of InlinePanel types. Subclasses need to provide:

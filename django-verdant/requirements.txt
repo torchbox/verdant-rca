@@ -1,4 +1,4 @@
-Django==1.5.1
+Django==1.5.4
 PyYAML==3.10
 South==0.7.6
 psycopg2==2.4.6

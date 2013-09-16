@@ -19,8 +19,8 @@ function ModalWorkflow(opts) {
 
     self.body = container.find('.modal-body');
 
-    self.loadUrl = function(url) {
-        $.get(url, self.loadResponseText, 'text');
+    self.loadUrl = function(url, urlParams) {
+        $.get(url, urlParams, self.loadResponseText, 'text');
     };
 
     self.loadResponseText = function(responseText) {
@@ -48,7 +48,7 @@ function ModalWorkflow(opts) {
         container.modal('hide');
     };
 
-    self.loadUrl(opts.url);
+    self.loadUrl(opts.url, opts.urlParams);
 
     return self;
 }

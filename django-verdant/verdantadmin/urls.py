@@ -8,4 +8,7 @@ urlpatterns = patterns('verdantadmin.views',
     url(r'^pages/new/(\w+)/(\w+)/$', 'pages.select_location', name='verdantadmin_pages_select_location'),
     url(r'^pages/new/(\w+)/(\w+)/(\d+)/$', 'pages.create', name='verdantadmin_pages_create'),
     url(r'^pages/(\d+)/$', 'pages.edit', name='verdantadmin_pages_edit'),
+
+    url(r'^choose-page/(\w+)/(\w+)/$', 'choose_page.browse', name='verdantadmin_choose_page'),
+    url(r'^choose-page/(\w+)/(\w+)/(\d+)/$', 'choose_page.browse', name='verdantadmin_choose_page_child'),
 )

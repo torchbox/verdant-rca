@@ -1,0 +1,11 @@
+.page-chooser {
+    // We show the 'chosen' state...
+    .chosen-state { display: block; }
+    .unchosen-state { display: none; }
+
+    // ...unless the .page-chooser has the 'blank' class set
+    &.blank {
+        .chosen-state { display: none; }
+        .unchosen-state { display: block; }
+    }
+}

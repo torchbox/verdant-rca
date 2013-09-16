@@ -3,6 +3,11 @@
 {% load image_tags %}
 
 {% block pre_content %}
+    {% if self.author %}
+        {% image self.author.mugshot 64x64 %}
+        <p>By <a href="{{ self.author.url }}">{{ self.author.title }}</a></p>
+    {% endif %}
+
     {% image self.lead_image 400x300 %}
 {% endblock %}
 
