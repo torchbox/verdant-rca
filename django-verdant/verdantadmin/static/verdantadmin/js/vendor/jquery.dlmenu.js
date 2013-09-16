@@ -173,8 +173,9 @@
 				onTransitionEndFn = function() {
 					self.$menu.off( self.transEndEventName );
 					self._resetMenu();
+					$body.removeClass('explorer-open');
 				};
-			
+
 			this.$menu.removeClass( 'dl-menuopen' );
 			this.$menu.addClass( 'dl-menu-toggle' );
 			this.$trigger.removeClass( 'dl-active' );
@@ -185,7 +186,7 @@
 			else {
 				onTransitionEndFn.call();
 			}
-			$body.removeClass('explorer-open');
+
 			this.open = false;
 		},
 		openMenu : function() {
