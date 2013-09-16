@@ -1007,17 +1007,103 @@
  */
 
 .filters{
+    font-family:@font-family-benton;
     .row();
+
     ul{
         .unlist();
     }
+    li{
+        border-bottom:1px solid white;
+    }
 
-    .checkboxes{}
+    select, .label{
+        border-radius:0;
+        font-family:inherit;
+        -webkit-appearance: none;
+        background-color:@color-pale-grey;
+        border:0;
+        outline:none;
+        display:block;
+        width:100%;
+        padding:@grid-gutter-width;
+        cursor:pointer;
 
-    .select{}
+        &:hover{
+            background-color:@color-pink;
+            color:white;
+        }
+    }
+
+    select, label, .label{
+        text-transform:uppercase;
+        font-size:0.85em;
+    }
+
+  
+    .label{
+        margin:0;
+    }
+
+    .checkbox{
+        .label{
+            position:relative;
+        }
+        .checkboxes{
+            display:none;
+            padding:@grid-gutter-width;
+
+            label{
+                display:block;
+                font-family:@font-family-benton-light;
+                font-size:0.8em;
+                padding:@grid-gutter-width/4 0 @grid-gutter-width/4 20px;
+            }
+            input{
+                float:left;
+                margin-left:-20px;
+            }
+
+            &.expanded{
+                display:block;
+            }
+        }
+    }
+
+    .select{
+
+        position:relative;
+        label{
+            .visuallyhidden();
+        }
+    }
 
     &.two-filters{}
 
     &.four-filters{}   
 }
 
+@media screen and (-webkit-min-device-pixel-ratio:0) {  
+    .filters{
+        select{
+            padding-right:37px;
+        }
+
+        .checkbox .label, .select{           
+            &:after{
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:@grid-gutter-width;
+                margin:auto;
+                content:"";
+                display:block;
+                .sprite-load(-53px, -1178px, 27px, 14px);
+            }
+            &:hover:after{
+                .sprite-load(-53px, -623px, 27px, 14px);
+            }
+            
+        }
+    }
+}
