@@ -28,7 +28,7 @@
  * Three plus block
  * Four plus block
  * Five block
- * Nine plus/six-plus block
+ * five plus/six-plus block
  * Tabbed content
  * Stats block
  * Button bar
@@ -43,6 +43,9 @@
  */
 
 /* TO DO: handle landscape / portrait images nicely */
+
+@carousel-image-height: 500px;
+
 .bx-wrapper .bx-viewport {
     background-color:darken(@color-pale-grey, 10%);
 }
@@ -94,11 +97,11 @@
     }
     /* selectors necessary to override the bxslider theme */
     .bx-controls-direction a {
-        width: @carousel-control-width-mobile;
-        height: @carousel-control-height-mobile;
+        width: 87px;
+        height: 70px;
         z-index: 2; /* over slide but under header */
         top: 100%;
-        margin-top: @carousel-control-height-mobile * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
+        margin-top: 70px * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
     }
     .bx-pager{
         text-align:left;
@@ -425,7 +428,7 @@
     background-size: cover;
     height: 100%;
     background-attachment: fixed;
-    max-height:100%;
+    max-height:800px;
     overflow:hidden;
 }
 
@@ -457,10 +460,6 @@
         }
         &.last{
             border-right:0;
-        }
-
-        &:hover:before{
-            .sprite-load(-772px, -1645px, 54px, 43px);
         }
     }
 
@@ -578,7 +577,7 @@
  *$Horizontal scrolling of events, and several (but not all) X-plus items
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five {
+.events, .two-plus, .three-plus, .four-plus, .five, .five-plus {
    .x-plus-scrolled();
 }
 
@@ -616,52 +615,15 @@
 }
 
 /**
- *$Five block
- * Five images and text, no plus - used on event page for speakers
+ *$Five plus block + $Three plus block (on homepage)
  */
 
-.five-plus p {
-    .name();
-}
-
-/**
- *$Nine plus/six-plus block are a bit different as they don't follow the grid
- */
-
-.nine-plus, .six-plus{
-    ul{
-        .unlist();
-        .row();
-        .row-flush();
-        position:relative;       
-    }
+.five-plus, .col9 .three-plus{
     li{
         .column(4);
         display:inline-block;
-        height:250px;
-    }
-    .image{
-        height:100px;
-        overflow:hidden;
-        margin-bottom:@grid-gutter-width/2;
-        img{
-            display:block;
-        }
-    }
-    .a3, .a4{
-        margin:0;
-        font-size: @font-size-13;
-    }
-    .a4{
-        line-height:1.3em;
-    }
-
-    .load-more{
-        height:auto;
-        a{
-            height:80px; /* height and width are min-height of 100 + top/bottom padding of 16 as on UL above */
-            width:80px;
-        }
+        white-space:normal;
+        float:none;
     }
 }
 
