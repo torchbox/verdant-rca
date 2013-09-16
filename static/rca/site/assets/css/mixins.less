@@ -43,6 +43,26 @@
     }*/
 }
 
+.visuallyhidden() {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+
+    &:active, &:focus { 
+        clip: auto; 
+        height: auto; 
+        margin: 0; 
+        overflow: visible; 
+        position: static; 
+        width: auto; 
+    }
+}
+
 
 /** 
 * Clearfix
@@ -72,9 +92,6 @@
         margin-top:0;
         margin-bottom:0;
         padding-left:0;
-    }
-    li{
-
     }
     li:before{
         content:none;
@@ -136,20 +153,26 @@
 }
 
 /* generic styles for two-plus, three-plus etc */
-.x-plus-base() {
+.x-plus-scrolled() {
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+
     ul{
         .unlist();
         .row-flush();
         position:relative;
-
-        li{
-            .column(8);         
-        }
-        .h8, .bc5, .a3{
-            margin:0;
-        }
-
+        white-space: nowrap;
     }
+    li{
+        .column(8); 
+        display:inline-block;
+        white-space:normal;
+        float:none;
+    }
+    .h8, .bc5, .a3{
+        margin:0;
+    }
+
     .image{
         margin-bottom:@grid-gutter-width/2;
         img{
@@ -158,6 +181,7 @@
     }
 
     .load-more{
+        display:none;
         a{
             height:126px;
             width:126px;

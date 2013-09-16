@@ -1,8 +1,9 @@
 {% extends "rca/base.html" %}
+{% load rich_text %}
 
 {% block content %}
     {% block pre_content %}{% endblock %}
-    <p>{{ self.body|safe }}</p>
+    <p>{{ self.body|richtext }}</p>
 
     {% block sidebar %}{% endblock %}
 {% endblock %}

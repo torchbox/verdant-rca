@@ -33,6 +33,7 @@
  * Event info
  * Half-width double item
  * Packery
+ * Filters
  */
 
  
@@ -152,7 +153,7 @@
     ul{
         background-color:@color-light-pink;
     }
-    ul li{
+    li{
         .column(4, @grid-gutter-width);
         padding-left:74px;
 
@@ -182,11 +183,31 @@
     }
 }
 
+/* user for all x-plus items, to ensure that new rows are cleared */
+.newrow{
+    clear:left;
+}
+
+/**
+ *$One plus
+ */
+.one-plus{
+    li{
+        .column(6);         
+    }
+    .first{
+        clear:left;
+    }
+    .load-more{
+        display:initial;
+    }
+}
+
 /**
  *$Two plus
  */
 .two-plus{
-    ul li{
+    li{
         .column(4);         
     }
     .h8, .bc5 {
@@ -198,9 +219,8 @@
  *$Three plus
  */
 .three-plus{
-    ul li{
+    li{
         .column(3); 
-        padding-bottom:@grid-gutter-width;       
     }
     .h8, .bc5 {
         font-size: @font-size-12;
@@ -211,7 +231,7 @@
  *$Four plus
  */
 .four-plus{
-    ul li{
+    li{
         .column(2);
     }
     .h8, .bc5 {
@@ -223,7 +243,7 @@
  *$Five
  */
 .five {
-    ul li{
+    li{
         .column(1.5);
     }
     .h8, .bc5 {
@@ -264,7 +284,7 @@
         .row();
         .row-flush();
     }
-    ul li{
+    li{
         .column(1.1);
         overflow:hidden;
         height:auto;
@@ -290,8 +310,33 @@
     }
 }
 
-.col9 .six-plus li{
+.six-plus li{
     .column(1.1, @grid-gutter-width/2, 9);
+}
+
+/**
+ * $Styles used to prepare a group of items for appearance with the + button
+ */
+.x-plus{
+    li{
+        .transition(opacity 0.5s ease);
+        opacity:1;
+        padding-bottom:@grid-gutter-width;
+    }
+    li.hidden{
+        display:none;
+        opacity:0;
+    }
+    li.fade-in-before{
+        opacity:0;
+    }
+    li.fade-in-after{
+        opacity:1;
+    }
+
+    &.expanded .load-more{
+        display:none;
+    }
 }
 
 /**
@@ -518,4 +563,24 @@
         bottom:0;
         right:0;
     }
+}
+
+/**
+ * $Filters
+ */
+
+.filters{
+    .row();
+    
+    .select label{
+        .visuallyhidden();
+    }
+
+    .checkboxes{}
+
+    .select{}
+
+    &.two-filters{}
+
+    &.four-filters{}   
 }

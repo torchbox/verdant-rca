@@ -44,16 +44,24 @@ $(function(){
     showHideWithSeparateClick('form.search', '.showsearch');
     showHideDialogue();
 
-    /* start any bxslider carousels */
-    carousel = $('.carousel').bxSlider({
+    /* start any bxslider carousels not found within a tab  */
+    carousel = $('.carousel:not(.tab-pane .carousel)').bxSlider({
         pager: function(){return $(this).hasClass('paginated')}
     }); 
 
     /* tabs */
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
-        $(this).tab('show')
-        carousel.reloadSlider();
+        $(this).tab('show');
+        console.log('reloading slider');
+
+        /* ensure carousels within tabs only execute once, on first viewing */
+        if(!$(this).data('carousel')){
+            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
+                pager: function(){return $(this).hasClass('paginated')}
+            });
+            $(this).data('carousel', true)
+        }
     });   
 
     /* mobile rejigging */
@@ -95,25 +103,40 @@ $(function(){
         }
     });
 
-
-    /* X-plus functionality */
+    /* x-plus functionality */
     $('.x-plus').each(function(){
         var $this = $(this);
-        var number = $this.data('number');
         var loadmore = $('.load-more', $this);
         var loadmoreTarget = $('.load-more-target', $this);
-        var items = $(' > ul > li', $this);
-        console.log(items);
+        var itemContainer = $('.item-container', $this);
+        var ul = $('> ul', itemContainer);
+        var items = $('> li', ul);
+        var time = 0
+        var step = 100
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
         var loadmoreIndex = items.index(loadmore);
-        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).hide();
+        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
 
         loadmore.click(function(){
+            itemContainer.css('height', itemContainer.height());
 
+            hidden.removeClass('hidden');
+
+            $this.addClass('expanded');
+
+            itemContainer.animate({height:ul.height()}, 300, function(){
+                hidden.each(function(index){
+                    var $this = $(this);
+                    setTimeout( function(){ 
+                        $this.addClass('fade-in-after');
+                    }, time);
+                    time += step;
+                });
+            });
+
+            return false;
         });
-
     });
-    
 });
