@@ -33,6 +33,7 @@
  * Event info
  * Half-width double item
  * Packery
+ * Filters
  */
 
  
@@ -177,6 +178,26 @@
         float:left;
     }
 
+    .load-more{
+        display:initial;
+    }
+}
+
+/* user for all x-plus items, to ensure that new rows are cleared */
+.newrow{
+    clear:left;
+}
+
+/**
+ *$One plus
+ */
+.one-plus{
+    li{
+        .column(6);         
+    }
+    .first{
+        clear:left;
+    }
     .load-more{
         display:initial;
     }
@@ -542,4 +563,24 @@
         bottom:0;
         right:0;
     }
+}
+
+/**
+ * $Filters
+ */
+
+.filters{
+    .row();
+    
+    .select label{
+        .visuallyhidden();
+    }
+
+    .checkboxes{}
+
+    .select{}
+
+    &.two-filters{}
+
+    &.four-filters{}   
 }
