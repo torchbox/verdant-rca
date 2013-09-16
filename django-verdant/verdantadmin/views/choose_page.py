@@ -21,7 +21,7 @@ def browse(request, content_type_app_name, content_type_model_name, parent_page_
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children()
+    pages = parent_page.get_children().order_by('title')
 
     # restrict the page listing to just those pages that:
     # - are of the given content type (taking into account class inheritance)

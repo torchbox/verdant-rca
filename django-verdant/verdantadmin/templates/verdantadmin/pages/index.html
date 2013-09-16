@@ -4,21 +4,33 @@
     <header>
         <h1>Explorer</h1>
 
-         <p class="breadcrumb"><a href="#">Sample</a> / <a href="#">breadcrumb</a> / <a href="#">goes here</a> /</p>
+        <p class="breadcrumb">
+            {% for page in parent_page.get_ancestors %}
+                <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a> /
+            {% endfor %}
+        </p>
 
         <div class="row row-flush">
             <div class="left col9">
                 <h2 class="icon folder-black">
-                    Goldsmithing, Silversmithing, Metalwork &amp; Jewellery 
-                    <div class="dropdown">
-                        <div class="dropdown-toggle inline icon arrow-down-black">Open drop-down</div> 
-                        <ul role="menu">
-                            <li><a href="#" class="shortcut">Delete</a></li>
-                            <li><a href="#" class="shortcut">Do something else</a></li>
-                            <li><a href="#" class="shortcut">Preview</a></li>
-                            <li><a href="#" class="shortcut">Something</a></li>
-                        </ul>
-                    </div>
+                    {{ parent_page.title }}
+
+                    {% comment %}
+                        The root node should serve as a container for the homepages of all
+                        the sites on this Verdant installation, and not be a usable page itself (and
+                        as such, we don't offer these edit actions for it).
+                    {% endcomment %}
+                    {% if not parent_page.is_root %}
+                        <div class="dropdown">
+                            <div class="dropdown-toggle inline icon arrow-down-black">Open drop-down</div> 
+                            <ul role="menu">
+                                <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
+                                <li><a href="#" class="shortcut">Delete</a></li>
+                                <li><a href="#" class="shortcut">Preview</a></li>
+                                <li><a href="#" class="shortcut">Something</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
                 </h2>
             </div>
             <div class="right col3">
@@ -65,6 +77,9 @@
                         </td>
                         <td class="type">{{ page.content_type }}</td>
                         <td class="status"></td>
+                        <td>
+                            <a href="{% url 'verdantadmin_explore' page.id %}">Explore &raquo;</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

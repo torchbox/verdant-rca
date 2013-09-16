@@ -8,9 +8,16 @@ from core.models import Page, get_page_types
 from verdantadmin.forms import get_admin_handler_for_model
 
 
-def index(request):
-    pages = Page.objects.order_by('title')
+def index(request, parent_page_id=None):
+
+    if parent_page_id:
+        parent_page = get_object_or_404(Page, id=parent_page_id)
+    else:
+        parent_page = Page.get_first_root_node()
+
+    pages = parent_page.get_children().order_by('title')
     return render(request, 'verdantadmin/pages/index.html', {
+        'parent_page': parent_page,
         'pages': pages,
     })
 
@@ -93,7 +100,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
             admin._post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
 
             messages.success(request, "Page '%s' created." % page.title)
-            return redirect('verdantadmin_pages_index')
+            return redirect('verdantadmin_explore', page.get_parent().id)
     else:
         admin = admin_class(instance=page)
 
@@ -114,7 +121,7 @@ def edit(request, page_id):
         if admin.is_valid():
             admin.save()
             messages.success(request, "Page '%s' updated." % page.title)
-            return redirect('verdantadmin_pages_index')
+            return redirect('verdantadmin_explore', page.get_parent().id)
     else:
         admin = admin_class(instance=page)
 
