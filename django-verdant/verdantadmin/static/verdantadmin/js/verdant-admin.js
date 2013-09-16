@@ -10,7 +10,8 @@ function makeRichTextEditable(id) {
             'halloheadings': {},
             'hallolists': {},
             'halloreundo': {},
-            'halloverdantimage': {}
+            'halloverdantimage': {},
+            'halloverdantlink': {}
         }
     }).bind('hallomodified', function(event, data) {
         input.val(data.content);
