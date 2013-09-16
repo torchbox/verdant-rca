@@ -11,7 +11,7 @@
     {% for entry in pages %}
         <li>
             {% if entry.can_choose %}
-                <a class="choose-page" href="#{{ entry.page.id }}" data-id="{{ entry.page.id }}" data-title="{{ entry.page.title }}">{{ entry.page.title }}</a>
+                <a class="choose-page" href="#{{ entry.page.id }}" data-id="{{ entry.page.id }}" data-title="{{ entry.page.title }}" data-url="{{ entry.page.url }}">{{ entry.page.title }}</a>
             {% else %}
                 {{ entry.page.title }}
             {% endif %}
