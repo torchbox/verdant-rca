@@ -20,6 +20,7 @@
  * Share and dialogue box
  * Add to contacts
  * Add to calendar
+ * Download
  * News carousel
  * Head of programme
  * Event block
@@ -39,6 +40,7 @@
  * Profile
  * Filters
  * Job summary
+ * Job details
  */
 
 /**
@@ -351,6 +353,25 @@
     cursor: pointer;
     &:hover {
         .sprite-load(-772px, -1645px, 54px, 43px);
+    }
+}
+
+/**
+ * $Download
+ */
+
+.download-wrapper {
+
+}
+
+.download {
+    text-indent: -9999px;
+    .sprite-load(-356px, -2200px, 45px, 51px);
+    //background: url('imgs/sprites.png') no-repeat -356px -2200px; width: 45px; height: 51px;
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-356px, -1644px, 45px, 51px);
+        //background: url('imgs/sprites.png') no-repeat -356px -1644px; width: 45px; height: 52px;
     }
 }
 
@@ -964,7 +985,7 @@
 
     .share-wrapper, .contact-wrapper {
         .column(1.5);
-        padding-top: @spacing-half;
+        padding-top: @spacing-one;
         margin-top: @spacing-one * -1; /* sit flush against divider */
         border-right: 1px solid @color-medium-grey;
         min-width: 75px;
@@ -975,7 +996,7 @@
     }
 
     .dialogue {
-        bottom: @share-link-height + @spacing-half;
+        bottom: @share-link-height + @spacing-one;
         left: 0;
     }
 
@@ -1151,6 +1172,7 @@
  */
 
 .job-summary {
+    margin-right: @grid-gutter-width;
     border-top: 1px solid @color-medium-grey;
     p {
         margin-top: 0;
@@ -1158,4 +1180,35 @@
     h3 {
         margin: 0;
     }
+    &:first-child {
+        padding-top: 4px;
+    }
+    .share-wrapper, .download-wrapper {
+        .column(1.5);
+        padding-top: @spacing-one;
+        border-top: 1px solid @color-medium-grey;
+        min-width: 75px;
+        margin-bottom: @spacing-one;
+    }
+
+    .download-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .share, .download {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-one;
+        left: 0;
+    }
 }
+
+/**
+ * $Job details
+ */
+
+ .job-description.module {
+    margin-top: 0;
+ }

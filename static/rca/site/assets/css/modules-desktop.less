@@ -34,6 +34,8 @@
  * Half-width double item
  * Packery
  * Filters
+ * Job summary
+ * Job details
  */
 
  
@@ -469,7 +471,7 @@
  */
 
 .profile {
-    padding-top: @spacing-one;
+    padding: @spacing-one 0;
     .col.first {
         padding-left: @grid-gutter-width;
         img {
@@ -592,3 +594,27 @@
         .bc0;
     }
 }
+
+/**
+ * $Job summary
+ */
+
+.job-summary {
+    .share-wrapper, .download-wrapper {
+        .column(1.5, @grid-gutter-width, 3);
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+}
+
+/**
+ * $Job details
+ */
+
+ .job-details {
+    li.col-8 {
+        .column(8, 0, 9);
+    }
+ }

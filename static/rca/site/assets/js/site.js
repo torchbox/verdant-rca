@@ -19,8 +19,13 @@ function showHideFooter() {
 /* show hide dialogue - has its own funciton because of hide behaviour */
 function showHideDialogue() {
     $('.share').click(function() {
-         $('.dialogue').addClass('expanded');
-         $('.dialogue').slideDown();
+        if($('.dialogue').hasClass('expanded')) {
+            $('.dialogue').removeClass('expanded');
+            $('.dialogue').slideUp();
+        } else {
+            $('.dialogue').addClass('expanded');
+            $('.dialogue').slideDown();
+        }
     });
     $(document).click(function() {
         $('.dialogue').removeClass('expanded');
