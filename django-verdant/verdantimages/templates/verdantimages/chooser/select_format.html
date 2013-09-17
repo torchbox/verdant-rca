@@ -1,0 +1,11 @@
+{% load image_tags %}
+
+<h1>Choose a format for this image:</h1>
+
+{% image image fill-130x100 %}
+
+<form action="{% url 'verdantimages_chooser_select_format' image.id %}" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Insert image">
+</form>
