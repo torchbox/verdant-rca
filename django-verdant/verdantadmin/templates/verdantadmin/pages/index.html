@@ -34,7 +34,7 @@
                 </h2>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantadmin_pages_select_type' %}" class="button icon add-teal">Add page here</a>
+                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon add-teal">Add page here</a>
             </div>
         </div>
     </header>
@@ -73,13 +73,16 @@
                                 <li><a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
                                 <li><a href="#">Move</a></li>
                                 <li><a href="#">Delete</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
                             </ul>
                         </td>
                         <td class="type">{{ page.content_type }}</td>
                         <td class="status"></td>
-                        <td>
-                            <a href="{% url 'verdantadmin_explore' page.id %}">Explore &raquo;</a>
-                        </td>
+                        {% if page.is_navigable %}
+                            <td>
+                                <a href="{% url 'verdantadmin_explore' page.id %}">Explore &raquo;</a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>

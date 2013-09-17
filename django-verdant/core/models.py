@@ -49,7 +49,11 @@ class PageBase(models.base.ModelBase):
 
         cls._clean_subpage_types = None  # to be filled in on first call to cls.clean_subpage_types
 
-        if DB_IS_READY:
+        if not dct.get('is_abstract'):
+            # subclasses are only abstract if the subclass itself defines itself so
+            cls.is_abstract = False
+
+        if DB_IS_READY and not cls.is_abstract:
             # register this type in the list of page content types
             PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
 
@@ -75,6 +79,8 @@ class Page(MP_Node):
 
     # by default pages do not allow any kind of subpages
     subpage_types = []
+
+    is_abstract = True  # don't offer Page in the list of page types a superuser can create
 
     @property
     def specific(self):
@@ -116,6 +122,19 @@ class Page(MP_Node):
         return render(request, self.template, {
             'self': self
         })
+
+    def is_navigable(self):
+        """
+        Return true if it's meaningful to browse subpages of this page -
+        i.e. it currently has subpages, or its page type indicates that sub-pages are supported
+        """
+        return (not self.is_leaf()) or self.content_type.model_class().subpage_types
+
+    def get_navigable_children(self):
+        # TODO: reframe this as a 'get children with a child_count greater than 0 or a content type in this list' query,
+        # which ought to be more efficient than filtering the full list of children
+        return [page for page in self.get_children() if page.is_navigable()]
+
 
     @property
     def url(self):

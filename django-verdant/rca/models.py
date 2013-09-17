@@ -24,6 +24,14 @@ class RelatedLink(models.Model):
 class EditorialPage(Page):
     body = RichTextField()
 
+    # Setting a class as 'abstract' indicates that it's only intended to be a parent
+    # type for more specific page types, and shouldn't be used directly;
+    # it will thus be excluded from the list of page types a superuser can create.
+    #
+    # (NB it still gets a database table behind the scenes, so it isn't abstract
+    # by Django's own definition)
+    is_abstract = True
+
 
 # == Authors Index ==
 class AuthorsIndex(Page):

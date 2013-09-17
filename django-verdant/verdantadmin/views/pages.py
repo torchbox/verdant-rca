@@ -45,6 +45,17 @@ def select_type(request):
     })
 
 
+def add_subpage(request, parent_page_id):
+    parent_page = get_object_or_404(Page, id=parent_page_id).specific
+
+    return render(request, 'verdantadmin/pages/add_subpage.html', {
+        'parent_page': parent_page,
+        'page_types': [ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()],
+        'all_page_types': get_page_types(),
+    })
+
+
+
 def select_location(request, content_type_app_name, content_type_model_name):
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
@@ -85,9 +96,12 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     page_class = content_type.model_class()
 
     # page must be in the list of allowed subpage types for this parent ID
-    if page_class not in parent_page.clean_subpage_types():
-        messages.error(request, "Sorry, you do not have access to create a page of type '%s' here." % content_type.name)
-        return redirect('verdantadmin_pages_select_type')
+    # == Restriction temporarily relaxed so that as superusers we can add index pages and things -
+    # == TODO: reinstate this for regular editors when we have distinct user types
+    #
+    # if page_class not in parent_page.clean_subpage_types():
+    #     messages.error(request, "Sorry, you do not have access to create a page of type '%s' here." % content_type.name)
+    #     return redirect('verdantadmin_pages_select_type')
 
     page = page_class()
     admin_class = get_admin_handler_for_model(page_class)
