@@ -10,8 +10,10 @@
         <ul>
             {% for image in images %}
                 <li>
-                    {% image image fill-130x100 %}
-                    {{ image.title }}
+                    <a href="{% url 'verdantimages_edit_image' image.id %}">
+                        {% image image fill-130x100 %}
+                        {{ image.title }}
+                    </a>
                 </li>
             {% endfor %}
         </ul>
