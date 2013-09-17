@@ -1,0 +1,19 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+
+{% block content %}
+    <header>
+        <h1>Images</h1>
+    </header>
+    <div class="listing">
+        <ul>
+            {% for image in images %}
+                <li>
+                    {% image image fill-130x100 %}
+                    {{ image.title }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
