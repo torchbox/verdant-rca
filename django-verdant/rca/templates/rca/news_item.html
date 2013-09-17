@@ -4,11 +4,11 @@
 
 {% block pre_content %}
     {% if self.author %}
-        {% image self.author.mugshot 64x64 %}
+        {% image self.author.mugshot fill-64x64 %}
         <p>By <a href="{{ self.author.url }}">{{ self.author.title }}</a></p>
     {% endif %}
 
-    {% image self.lead_image 400x300 %}
+    {% image self.lead_image max-640x480 %}
 {% endblock %}
 
 {% block sidebar %}
@@ -19,7 +19,7 @@
                 {% for link in related_links %}
                     <li>
                         <a href="{{ link.url }}">
-                            {% image link.image 64x64 %}
+                            {% image link.image fill-64x64 %}
                             {{ link.link_text }}
                         </a>
                     </li>

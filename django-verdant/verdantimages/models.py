@@ -9,6 +9,8 @@ import StringIO
 import PIL.Image
 import os.path
 
+from verdantimages import image_ops
+
 
 class Image(models.Model):
     title = models.CharField(max_length=255)
@@ -46,6 +48,33 @@ def image_delete(sender, instance, **kwargs):
 class Format(models.Model):
     spec = models.CharField(max_length=255, db_index=True)
 
+    OPERATION_NAMES = {
+        'max': image_ops.resize_to_max,
+        'min': image_ops.resize_to_min,
+        'width': image_ops.resize_to_width,
+        'height': image_ops.resize_to_height,
+        'fill': image_ops.resize_to_fill,
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(Format, self).__init__(*args, **kwargs)
+
+        # parse the spec string, which is formatted as (method)-(arg)
+        try:
+            (method_name, method_arg_string) = self.spec.split('-')
+            self.method = Format.OPERATION_NAMES[method_name]
+
+            if method_name in ('max', 'min', 'fill'):
+                # method_arg_string is in the form 640x480
+                (width, height) = [int(i) for i in method_arg_string.split('x')]
+                self.method_arg = (width, height)
+            else:
+                # method_arg_string is a single number
+                self.method_arg = int(method_arg_string)
+
+        except (ValueError, KeyError):
+            raise ValueError("Invalid image format spec: %r" % self.spec)
+
     def generate(self, input_file):
         """
         Given an input image file as a django.core.files.File object,
@@ -54,44 +83,10 @@ class Format(models.Model):
         """
         input_file.open()
         image = PIL.Image.open(input_file)
-        width, height = image.size
         file_format = image.format
 
-        # for now, assume spec is a string in the format '320x200'
-        target_width, target_height = [int(i) for i in self.spec.split('x')]
-
-        if width > target_width and height > target_height:
-            # downsize image to COVER the target rectangle
-
-            # scale factor if we were to downsize the image to fit the target width
-            horz_scale = float(target_width) / width
-            # scale factor if we were to downsize the image to fit the target height
-            vert_scale = float(target_height) / height
-
-            # choose whichever of these gives a larger image
-            scale = max(horz_scale, vert_scale)
-
-            width, height = (int(width * scale), int(height * scale))
-
-            # must ensure image is non-paletted for a high-quality resize
-            if image.mode in ['1', 'P']:
-                image = image.convert('RGB')
-
-            image = image.resize(
-                (width, height),
-                PIL.Image.ANTIALIAS
-            )
-
-        if width > target_width or height > target_height:
-            final_width = min(width, target_width)
-            final_height = min(height, target_height)
-
-            # crop image to centre
-            left = (width - final_width) / 2
-            top = (height - final_height) / 2
-            image = image.crop(
-                (left, top, left + final_width, top + final_height)
-            )
+        # perform the resize operation
+        image = self.method(image, self.method_arg)
 
         output = StringIO.StringIO()
         image.save(output, file_format)

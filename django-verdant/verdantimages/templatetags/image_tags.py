@@ -9,21 +9,21 @@ def image(parser, token):
     args = token.split_contents()
 
     if len(args) == 3:
-        # token is of the form {% image self.photo 320x200 %}
+        # token is of the form {% image self.photo max-320x200 %}
         tag_name, image_var, format_spec = args
         return ImageNode(image_var, format_spec)
 
     elif len(args) == 5:
-        # token is of the form {% image self.photo 320x200 as img %}
+        # token is of the form {% image self.photo max-320x200 as img %}
         tag_name, image_var, format_spec, as_token, out_var = args
 
         if as_token != 'as':
-            raise template.TemplateSyntaxError("'image' tag should be of the form {%% image self.photo 320x200 %%} or {%% image self.photo 320x200 as img %%}")
+            raise template.TemplateSyntaxError("'image' tag should be of the form {%% image self.photo max-320x200 %%} or {%% image self.photo max-320x200 as img %%}")
 
         return ImageNode(image_var, format_spec, out_var)
 
     else:
-        raise template.TemplateSyntaxError("'image' tag should be of the form {%% image self.photo 320x200 %%} or {%% image self.photo 320x200 as img %%}")
+        raise template.TemplateSyntaxError("'image' tag should be of the form {%% image self.photo max-320x200 %%} or {%% image self.photo max-320x200 as img %%}")
 
 class ImageNode(template.Node):
     def __init__(self, image_var_name, format_spec, output_var_name=None):
