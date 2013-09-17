@@ -474,6 +474,7 @@ header {
     top: 0;
     height: @header-height-mobile;
     width: 70%;
+    
     input[type="text"] {
         width: 85%;
         .t2;
@@ -506,8 +507,8 @@ form.search.expanded {
 nav {
     background-color:white;
     background-color:rgba(255,255,255,0.8);
-    border-bottom: 1px solid @color-black; /* fallback for ie 8 */
-    border-bottom: 1px solid fade(@color-black, 40%);
+    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-medium-grey, 40%);
     padding:10px @grid-gutter-width;
     position:relative;
     z-index:999;
@@ -930,10 +931,10 @@ footer {
         }
         .footer-expand {
             content: "";
-            .sprite-load(-53px, -623px, 27px, 15px);
+            .sprite-load(-53px, -623px, 24px, 15px);
             position: absolute;
             right: @grid-gutter-width;
-            top: @spacing-half;
+            top: 10px;
             cursor: pointer;
         }
         .footer-expand:hover {

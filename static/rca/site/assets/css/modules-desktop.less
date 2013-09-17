@@ -158,16 +158,24 @@
  */
 
 .events{    
+    .row{
+        margin:0;
+    }
     ul{
         background-color:@color-light-pink;
     }
     li{
         .column(4, @grid-gutter-width);
         padding-left:74px;
+        margin-bottom:@grid-gutter-width;
 
         &:before{
             margin-left:-64px;
         }        
+    }
+    .load-more{
+        border-left:0;
+        margin-left:-1px;
     }
 }
 

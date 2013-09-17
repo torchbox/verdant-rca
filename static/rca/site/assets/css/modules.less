@@ -51,7 +51,7 @@
     background-color:darken(@color-pale-grey, 10%);
 }
 .bx-wrapper {
-    height: @carousel-image-height;
+   /* height: @carousel-image-height;*/
     overflow: hidden;
     margin-bottom:0;
 
@@ -60,13 +60,16 @@
         margin: auto;
     }
     .landscape img{
-        height:100%;
-        width:auto;
+        width:100%;
         max-width:none;
     }
-    iframe {
-        height: @carousel-image-height;
+    .portrait img{
+        height:100%;
     }
+
+    /* iframe {
+        height: @carousel-image-height;
+    }*/
     .bx-next, .bx-prev {
         background-color: @color-pale-grey;
         background-color: fade(@color-white, 80%);
@@ -135,7 +138,7 @@
         border: none;
         box-shadow: none;
         left: 0;
-        height: @carousel-image-height !important; /*important is necessary to override element style */
+       /* height: @carousel-image-height !important;*/ /*important is necessary to override element style */
     }
    
     .bx-loading {
@@ -188,6 +191,7 @@
 
     }
     .playpause{
+        overflow:hidden;
         z-index:3;
         right:0;
         background-color:darken(@color-dark-grey, 10%);
@@ -503,7 +507,7 @@
         .column(7, @grid-gutter-width);
         padding-left:74px;
         min-height:100px;
-        border-right:1px solid fade(@color-divider, 50%);
+        border-left:1px solid fade(@color-divider, 50%);
         
         &:before{
             margin-left:-64px !important; /* importants necessary to undo .unlist() on this limited occasion */
@@ -512,8 +516,8 @@
             float:left;
             .sprite-load(-772px, -2200px, 54px, 43px);
         }
-        &.last{
-            border-right:0;
+        &.newrow{
+            border-left:0;
         }
     }
 

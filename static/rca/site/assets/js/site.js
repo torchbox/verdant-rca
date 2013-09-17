@@ -76,7 +76,6 @@ $(function(){
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
         $(this).tab('show');
-        console.log('reloading slider');
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
