@@ -15,6 +15,7 @@
 /**
  * Contents
  * Carousel
+ * Landscape and portrait images (outside carousel)
  * Twitter block
  * Share and dialogue box
  * Add to contacts
@@ -37,6 +38,7 @@
  * Body-text
  * Profile
  * Filters
+ * Job summary
  */
 
 /**
@@ -172,8 +174,17 @@
     }
 }
 
+/**
+ * $Landscape and portrait images (outside carousel)
+ */
 
+.landscape {
 
+}
+
+.portrait img {
+    width: auto;
+}
 
 /**
  * $Generic video embed wrapper
@@ -1132,5 +1143,19 @@
             }
             
         }
+    }
+}
+
+/**
+ * $Job summary
+ */
+
+.job-summary {
+    border-top: 1px solid @color-medium-grey;
+    p {
+        margin-top: 0;
+    }
+    h3 {
+        margin: 0;
     }
 }
