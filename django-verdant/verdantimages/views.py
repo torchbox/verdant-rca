@@ -30,7 +30,7 @@ def chooser(request):
 
     return render_modal_workflow(
         request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
-        {'images': images, 'form': form}
+        {'images': images, 'form': form, 'will_select_format': request.GET.get('select_format')}
     )
 
 
@@ -49,10 +49,17 @@ def chooser_upload(request):
 
         if form.is_valid():
             image = form.save()
-            return render_modal_workflow(
-                request, None, 'verdantimages/chooser/image_chosen.js',
-                {'image_json': get_image_json(image)}
-            )
+            if request.GET.get('select_format'):
+                return render_modal_workflow(
+                    request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
+                    {'image': image}
+                )
+            else:
+                # not specifying a format; return the image details now
+                return render_modal_workflow(
+                    request, None, 'verdantimages/chooser/image_chosen.js',
+                    {'image_json': get_image_json(image)}
+                )
     else:
         form = ImageForm()
 
@@ -61,4 +68,13 @@ def chooser_upload(request):
     return render_modal_workflow(
         request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
         {'images': images, 'form': form}
+    )
+
+
+def chooser_select_format(request, image_id):
+    image = get_object_or_404(Image, id=image_id)
+
+    return render_modal_workflow(
+        request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
+        {'image': image}
     )
