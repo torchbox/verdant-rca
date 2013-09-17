@@ -943,6 +943,7 @@
     .space {
         margin-top: @spacing-two;
     }
+
     .divider {
         border-bottom: 1px solid @color-medium-grey;
         max-width: 100%;
@@ -950,9 +951,11 @@
     }
 
     .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
+        .column(1.5);
         padding-top: @spacing-half;
         margin-top: @spacing-one * -1; /* sit flush against divider */
+        border-right: 1px solid @color-medium-grey;
+        min-width: 75px;
     }
 
     .share, .add-to-contacts {
@@ -962,6 +965,10 @@
     .dialogue {
         bottom: @share-link-height + @spacing-half;
         left: 0;
+    }
+
+    .inner {
+        padding: 0 @grid-gutter-width;
     }
 }
 

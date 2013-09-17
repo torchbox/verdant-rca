@@ -1,7 +1,7 @@
 
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
- * The rest should be handled by the css. No sliding. */
+ * The rest should be handled by the css, including display:none or display:block No sliding. */
 function showHide(clickElement, classElement){
     $(clickElement).click(function(eventObject){
         $(classElement).toggleClass('expanded');
@@ -16,7 +16,7 @@ function showHideFooter() {
     });
 }
 
-/* show hide dialogue - has it's own funciton because of hide behaviour */
+/* show hide dialogue - has its own funciton because of hide behaviour */
 function showHideDialogue() {
     $('.share').click(function() {
          $('.dialogue').addClass('expanded');

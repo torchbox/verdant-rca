@@ -480,7 +480,11 @@
         padding-right: @grid-gutter-width;
     }
     .share-wrapper, .contact-wrapper {
-        border-right: 1px solid @color-medium-grey;
+        .column(1.5, @grid-gutter-width, 3);
+    }
+
+    .space-large {
+        margin-top: 6em; /* attempt to align jobs on staff profile page */
     }
 
     .dialogue {
@@ -491,8 +495,7 @@
 /**
  * Body text
  */
-.body-text,
-.body-text-left {
+.body-text {
     font-size: 1em;
 }
 

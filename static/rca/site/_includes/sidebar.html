@@ -1,4 +1,4 @@
-{% if page.path != "news.html" and page.path != "staff-profile.html" %}
+{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" %}
 
     <div class="today expanded">
         <h2>Events</h2>
@@ -96,7 +96,7 @@
 </div>
 {% endif %}
 
-{% if page.path == "staff-profile.html" %}
+{% if page.path == "staff-profile.html" or page.path == "student-profile.html" %}
 <div class="related-content-item">
     <a href="">
         <figure class="staff">
