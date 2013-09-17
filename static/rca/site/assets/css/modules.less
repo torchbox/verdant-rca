@@ -15,10 +15,12 @@
 /**
  * Contents
  * Carousel
+ * Landscape and portrait images (outside carousel)
  * Twitter block
  * Share and dialogue box
  * Add to contacts
  * Add to calendar
+ * Download
  * News carousel
  * Head of programme
  * Event block
@@ -37,6 +39,8 @@
  * Body-text
  * Profile
  * Filters
+ * Job summary
+ * Job details
  */
 
 /**
@@ -175,8 +179,17 @@
     }
 }
 
+/**
+ * $Landscape and portrait images (outside carousel)
+ */
 
+.landscape {
 
+}
+
+.portrait img {
+    width: auto;
+}
 
 /**
  * $Generic video embed wrapper
@@ -344,6 +357,25 @@
     cursor: pointer;
     &:hover {
         .sprite-load(-772px, -1645px, 54px, 43px);
+    }
+}
+
+/**
+ * $Download
+ */
+
+.download-wrapper {
+
+}
+
+.download {
+    text-indent: -9999px;
+    .sprite-load(-356px, -2200px, 45px, 51px);
+    //background: url('imgs/sprites.png') no-repeat -356px -2200px; width: 45px; height: 51px;
+    cursor: pointer;
+    &:hover {
+        .sprite-load(-356px, -1644px, 45px, 51px);
+        //background: url('imgs/sprites.png') no-repeat -356px -1644px; width: 45px; height: 52px;
     }
 }
 
@@ -918,7 +950,8 @@
  * $Body text
  */
 
-.body-text {
+.body-text,
+.body-text-style /* allows highlighted links etc without the column stuff */ {
     a {
         color: @color-highlight-blue;
         &:hover {
@@ -947,6 +980,7 @@
     .space {
         margin-top: @spacing-two;
     }
+
     .divider {
         border-bottom: 1px solid @color-medium-grey;
         max-width: 100%;
@@ -954,9 +988,11 @@
     }
 
     .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-        padding-top: @spacing-half;
+        .column(1.5);
+        padding-top: @spacing-one;
         margin-top: @spacing-one * -1; /* sit flush against divider */
+        border-right: 1px solid @color-medium-grey;
+        min-width: 75px;
     }
 
     .share, .add-to-contacts {
@@ -964,8 +1000,12 @@
     }
 
     .dialogue {
-        bottom: @share-link-height + @spacing-half;
+        bottom: @share-link-height + @spacing-one;
         left: 0;
+    }
+
+    .inner {
+        padding: 0 @grid-gutter-width;
     }
 }
 
@@ -1128,5 +1168,61 @@
             }
             
         }
+    }
+}
+
+/**
+ * $Job summary
+ */
+
+.job-summary {
+    margin-right: @grid-gutter-width;
+    border-top: 1px solid @color-medium-grey;
+    p {
+        margin-top: 0;
+    }
+    h3 {
+        margin: 0;
+    }
+    &:first-child {
+        padding-top: 4px;
+    }
+    .share-wrapper, .download-wrapper {
+        .column(1.5);
+        padding-top: @spacing-one;
+        border-top: 1px solid @color-medium-grey;
+        min-width: 75px;
+        margin-bottom: @spacing-one;
+    }
+
+    .download-wrapper {
+        border-right: 1px solid @color-medium-grey;
+    }
+
+    .share, .download {
+        margin: 0 auto;
+    }
+
+    .dialogue {
+        bottom: @share-link-height + @spacing-one;
+        left: 0;
+    }
+}
+
+/**
+ * $Job details
+ */
+
+.job-details {
+    .module {
+        h2 {
+            margin-bottom: 0;
+        }
+        p {
+            margin-top: @spacing-half;
+        }
+    }
+    .job-description.module {
+        margin-top: 0;
     }
 }

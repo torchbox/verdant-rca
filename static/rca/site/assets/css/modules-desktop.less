@@ -30,11 +30,12 @@
  * Body text
  * Tabbed content
  * Profile
- * Body-text
  * Event info
  * Half-width double item
  * Packery
  * Filters
+ * Job summary
+ * Job details
  */
 
  
@@ -478,6 +479,7 @@
  */
 
 .profile {
+    padding: @spacing-one 0;
     .col.first {
         padding-left: @grid-gutter-width;
         img {
@@ -488,20 +490,16 @@
         padding-right: @grid-gutter-width;
     }
     .share-wrapper, .contact-wrapper {
-        border-right: 1px solid @color-medium-grey;
+        .column(1.5, @grid-gutter-width, 3);
+    }
+
+    .space-large {
+        margin-top: 6em; /* attempt to align jobs on staff profile page */
     }
 
     .dialogue {
         width: 180px;
     }
-}
-
-/**
- * Body text
- */
-.body-text,
-.body-text-left {
-    font-size: 1em;
 }
 
 /**
@@ -604,3 +602,27 @@
         .bc0;
     }
 }
+
+/**
+ * $Job summary
+ */
+
+.job-summary {
+    .share-wrapper, .download-wrapper {
+        .column(1.5, @grid-gutter-width, 3);
+    }
+
+    .dialogue {
+        width: 180px;
+    }
+}
+
+/**
+ * $Job details
+ */
+
+ .job-details {
+    li.col-8 {
+        .column(8, 0, 9);
+    }
+ }

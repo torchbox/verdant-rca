@@ -1,0 +1,29 @@
+<section class="two-tab row module">
+
+    <ul class="tab-nav tabs-2">
+        <li class="active"><a href="#tab1" class="t0">Info</a></li>
+        <li><a href="#tab2" class="t0">Selected work</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
+        <div class="tab-pane active flush" id="tab1">
+            {% include modules/profile.html %}
+        </div>
+        <h2 class="header"><a href="#tab2" class="a0">Work</a></h2>
+        <div class="tab-pane" id="tab2">
+            {% include modules/carousel.html %}
+            {% if page.path == "student-profile.html" %}
+            <section class="row">
+                {% assign studentProfile = true %}
+                {% include modules/body-text.html %}
+                <section class="four">
+                    {% include modules/meta-data.html %}
+                    <div class="single">
+                        {% include modules/share-button.html %}
+                    </div>
+                </section>
+            </section>
+            {% endif %}
+        </div>
+</section>
