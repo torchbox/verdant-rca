@@ -57,12 +57,12 @@ def resize_to_max(image, size):
 def resize_to_min(image, size):
     """
     Resize image down to cover the given dimensions, preserving aspect ratio.
-    Will leave image unchanged if it's already within those dimensions.
+    Will leave image unchanged if width or height is already within those limits.
     """
     (original_width, original_height) = image.size
     (target_width, target_height) = size
 
-    if original_width <= target_width and original_height <= target_height:
+    if original_width <= target_width or original_height <= target_height:
         return image
 
     # scale factor if we were to downsize the image to fit the target width
