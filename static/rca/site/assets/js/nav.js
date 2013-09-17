@@ -88,7 +88,7 @@ var desktopNav = {
 						$(this).removeClass('changing');
 					})
 				},
-				timeout:400
+				timeout:500
 			})	
 
 			$('li', $self).hoverIntent({
@@ -101,7 +101,7 @@ var desktopNav = {
 						$(this).find('> ul').stop().hide();
 					}
 				},
-				timeout: 300
+				timeout: 1000
 			});
 		});
 	},

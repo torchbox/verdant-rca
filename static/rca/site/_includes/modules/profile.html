@@ -7,34 +7,46 @@
 			<h3 class="a2">School</h3>
 			<p class="h7">School of Fine Art</p>
 
-			<h3 class="a2 space">Job</h3>
-			<p class="h7">Senior programme tutor</p>
-			<ul>
-				<li>Sculpture</li>
-				<li><a href="">sculpture@rca.ac.uk</a></li>
-			</ul>
-			<p class="h7 space">Visiting tutor sculpture</p>
-			<ul>
-				<li>Sculpture</li>
-				<li><a href="">sculpture@rca.ac.uk</a></li>
-			</ul>
-			<p class="h7 space">Tutor</p>
-			<ul>
-				Painting and printmaking
-				<li><a href="">painting@rca.ac.uk</a></li>
-				<li><a href="">printmaking@rca.ac.uk</a></li>
-			</ul>
+			{% if page.path == "staff-profile.html" %}
+				<h3 class="a2 space">Job</h3>
+				<p class="h7">Senior programme tutor</p>
+				<ul>
+					<li>Sculpture</li>
+					<li><a href="">sculpture@rca.ac.uk</a></li>
+				</ul>
+			{% endif %}
+			{% if page.path == "student-profile.html" %}
+				<h3 class="a2 space">Course</h3>
+				<p class="h7">Scupture MA</p>
+			{% endif %}
 		</li>
 		<li class="col">
-			<h3 class="a2">Contact</h3>
-			<ul>
-				<li><a href="">jeremy.hammond@rca.ac.uk</a></li>
-				<li><a href="">www.jeremyhammond.com</a></li>
-				<li><a href="">jeremyhammond.tumblr.com</a></li>
-				<li><a href="">@jezzahammer</a></li>
-			</ul>
+			{% if page.path == "student-profile.html" %}
+				<h3 class="a2">Contact</h3>
+				<ul>
+					<li><a href="">jeremy.hammond@rca.ac.uk</a></li>
+					<li><a href="">www.jeremyhammond.com</a></li>
+					<li><a href="">jeremyhammond.tumblr.com</a></li>
+					<li><a href="">@jezzahammer</a></li>
+				</ul>
+			{% endif %}
+			{% if page.path == "staff-profile.html" %}
+				<p class="h7 space space-large">Visiting tutor sculpture</p>
+				<ul>
+					<li>Sculpture</li>
+					<li><a href="">sculpture@rca.ac.uk</a></li>
+				</ul>
+			{% endif %}
 		</li>
 		<li class="col last">
+			{% if page.path == "staff-profile.html" %}
+				<p class="h7 space space-large">Tutor</p>
+				<ul>
+					Painting and printmaking
+					<li><a href="">painting@rca.ac.uk</a></li>
+					<li><a href="">printmaking@rca.ac.uk</a></li>
+				</ul>
+			{% endif %}
 		</li>
 	</ul>
 	<div class="divider"></div>
@@ -45,46 +57,56 @@
 			{% include modules/share-button.html %}
 			</div>
 		</li>
-		<li class="col col-9 last">
+		<li class="col col-9 last body-text-style">
 			<p>Nigel Rolfe is recognised as a seminal figure in sculpture, in its history and among current world practitioners. He has lectured at the Royal College of Art since 1982. He is a senior visiting critic to postgraduate courses in the USA and Europe. He was visiting professor in sculpture at Yale University and visiting professor in fine art at the RCA.</p>
 		</li>
 	</ul>
-	<div class="divider"></div>
-	<ul class="three-nine-cols">
-		<li class="col col-3 first">
-			<h2 class="a2">Biography</h3>
-		</li>
-		<li class="col col-9 last">
-			<p>Born in the isle of Wight in 1950, Nigel Rolfe lives and works in Dublin, Ireland. He works with many media – video and photography and sound – and for the past thirty years he has made performances throughout Europe, the former Eastern Block, North and South America and Japan.
-Retrospectives of his work have been held at the Irish Museum of Modern Art, Dublin, and the Musée d’art moderne de la ville de Paris. He has exhibited in the são Paulo, Busan and Kwang ju Biennales and shown work in many art fairs. His work is represented by galleries in Dublin, Paris and new york. in 2008 he made numerous one person and group exhibitions. There are many articles and publications of his work. <a class="t2" href="">continue</a></p>
-		</li>
-	</ul>
-	<div class="divider"></div>
-	<ul class="three-nine-cols">
-		<li class="col col-3 first">
-			<h2 class="a2">Practice</h3>
-		</li>
-		<li class="col col-9 last">
-			 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eu magna ac leo convallis vulputate. Integer imperdiet orci et sapien adipiscing, sit amet volutpat arcu elementum. Sed vitae justo sed lorem aliquet malesuada. Etiam rhoncus felis eu vulputate vehicula. Nulla laoreet tincidunt velit eu mattis. Proin vel sapien imperdiet, tempor magna ac, iaculis nibh. Nulla neque odio, volutpat ut mauris at, vehicula aliquam odio. Integer arcu risus, elementum a nisi vitae, malesuada congue justo. Fusce vestibulum diam quis dui congue, eget sagittis nisi adipiscing. Donec sem tortor, gravida vitae mauris ac, tempus varius nibh. Nullam a augue ipsum. Donec dignissim, nisl ut viverra pellentesque, odio sem gravida nunc, non egestas dui lectus et tortor. Duis posuere iaculis pharetra. Curabitur vitae lacinia ipsum, non porttitor tortor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla blandit interdum sem vel congue.
 
-Nullam vitae sagittis nunc. Vivamus massa risus, hendrerit sit amet ipsum vitae, fringilla cursus mi. Pellentesque lacinia lorem id commodo adipiscing. Donec et tincidunt justo, vitae porttitor lorem. Duis rhoncus urna odio, posuere commodo urna feugiat vitae. Sed fermentum gravida vulputate. Quisque eu consectetur dui. Etiam viverra nisl dapibus justo gravida, nec tempus felis hendrerit. Duis hendrerit aliquet sem, eget fringilla elit. Nulla at nulla tincidunt risus bibendum imperdiet vel et nunc. Sed accumsan egestas urna, in posuere tortor sagittis at. Nam elementum sapien tortor, ac faucibus justo ultricies non. Quisque imperdiet purus laoreet nisi sagittis, at commodo ante sollicitudin.</p>
-		</li>
-	</ul>
-	<div class="divider"></div>
-	<ul class="three-nine-cols">
-		<li class="col col-3 first">
-			<h2 class="a2">External collaborations</h3>
-		</li>
-		<li class="col col-9 last">
-			<h3 class="h7">Title of collaboration</h3>
-			<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
-			<span class="date">2012</span>
-			<h3 class="h7 space">Title of collaboration</h3>
-			<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
-			<span class="date">2012</span>
-			<h3 class="h7 space">Title of collaboration</h3>
-			<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
-			<span class="date">2012</span>
-		</li>
-	</ul>
+	{% if page.path == "staff-profile.html" %}
+		<div class="divider"></div>
+		<ul class="three-nine-cols">
+			<li class="col col-3 first">
+				<h2 class="a2">Biography</h3>
+			</li>
+			<li class="col col-9 last body-text-style">
+				<p>Born in the isle of Wight in 1950, Nigel Rolfe lives and works in Dublin, Ireland. He works with many media – video and photography and sound – and for the past thirty years he has made performances throughout Europe, the former Eastern Block, North and South America and Japan.
+	Retrospectives of his work have been held at the Irish Museum of Modern Art, Dublin, and the Musée d’art moderne de la ville de Paris. He has exhibited in the são Paulo, Busan and Kwang ju Biennales and shown work in many art fairs. His work is represented by galleries in Dublin, Paris and new york. in 2008 he made numerous one person and group exhibitions. There are many articles and publications of his work. <a class="t2" href="">continue</a></p>
+			</li>
+		</ul>
+		<div class="divider"></div>
+		<ul class="three-nine-cols">
+			<li class="col col-3 first">
+				<h2 class="a2">Practice</h3>
+			</li>
+			<li class="col col-9 last body-text-style">
+				 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eu magna ac leo convallis vulputate. Integer imperdiet orci et sapien adipiscing, sit amet volutpat arcu elementum. Sed vitae justo sed lorem aliquet malesuada. Etiam rhoncus felis eu vulputate vehicula. Nulla laoreet tincidunt velit eu mattis. Proin vel sapien imperdiet, tempor magna ac, iaculis nibh. Nulla neque odio, volutpat ut mauris at, vehicula aliquam odio. Integer arcu risus, elementum a nisi vitae, malesuada congue justo. Fusce vestibulum diam quis dui congue, eget sagittis nisi adipiscing. Donec sem tortor, gravida vitae mauris ac, tempus varius nibh. Nullam a augue ipsum. Donec dignissim, nisl ut viverra pellentesque, odio sem gravida nunc, non egestas dui lectus et tortor. Duis posuere iaculis pharetra. Curabitur vitae lacinia ipsum, non porttitor tortor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla blandit interdum sem vel congue.
+
+	Nullam vitae sagittis nunc. Vivamus massa risus, hendrerit sit amet ipsum vitae, fringilla cursus mi. Pellentesque lacinia lorem id commodo adipiscing. Donec et tincidunt justo, vitae porttitor lorem. Duis rhoncus urna odio, posuere commodo urna feugiat vitae. Sed fermentum gravida vulputate. Quisque eu consectetur dui. Etiam viverra nisl dapibus justo gravida, nec tempus felis hendrerit. Duis hendrerit aliquet sem, eget fringilla elit. Nulla at nulla tincidunt risus bibendum imperdiet vel et nunc. Sed accumsan egestas urna, in posuere tortor sagittis at. Nam elementum sapien tortor, ac faucibus justo ultricies non. Quisque imperdiet purus laoreet nisi sagittis, at commodo ante sollicitudin.<a href="">http://www.somewhere.com</a></p>
+			</li>
+		</ul>
+		<div class="divider"></div>
+		<ul class="three-nine-cols">
+			<li class="col col-3 first">
+				<h2 class="a2">External collaborations</h3>
+			</li>
+			<li class="col col-9 last body-text-style">
+				<h3 class="h7">Title of collaboration</h3>
+				<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
+				<span class="date">2012</span>
+				<h3 class="h7 space">Title of collaboration</h3>
+				<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
+				<span class="date">2012</span>
+				<h3 class="h7 space">Title of collaboration</h3>
+				<p>some text on the nature of the collaboration which fill ins the blanks and helps the reader to understand what took place.</p>
+				<span class="date">2012</span>
+			</li>
+		</ul>
+	{% endif %}
+
+	{% if page.path == "student-profile.html" %}
+		<div class="inner">
+        	{% include modules/three-plus.html %}
+        	{% include modules/four-plus.html %}
+    	</div>
+    {% endif %}
 </div>

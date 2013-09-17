@@ -1,4 +1,4 @@
-{% if page.path != "news.html" and page.path != "staff-profile.html" %}
+{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" %}
 
     <div class="today expanded">
         <h2>Events</h2>
@@ -43,7 +43,7 @@
         </div>
     {% endif %}
 
-    {% if page.path != "event.html" %}
+    {% if page.path != "event.html" and page.path != "job.html" %}
         <div class="related expanded">
             <h2>Related links</h2>
             <div class="wrapper">
@@ -96,7 +96,7 @@
 </div>
 {% endif %}
 
-{% if page.path == "staff-profile.html" %}
+{% if page.path == "staff-profile.html" or page.path == "student-profile.html" %}
 <div class="related-content-item">
     <a href="">
         <figure class="staff">
@@ -113,4 +113,26 @@
         </figure>
     </a>
 </div>
+{% endif %}
+
+{% if page.path == "job.html" %}
+    <!-- adverts -->
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
 {% endif %}

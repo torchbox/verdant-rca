@@ -474,8 +474,9 @@ header {
     top: 0;
     height: @header-height-mobile;
     width: 70%;
+    
     input[type="text"] {
-        width: 85%;
+        width: 90%;
         .t2;
         color: @color-dark-grey;
         padding: 28px;
@@ -487,8 +488,7 @@ header {
         outline:none;
     }
     input[type="submit"] {
-        //display: none;
-        .sprite-load(-211px, -996px, 37px, 66px);
+        .sprite-load(-1212px, -1094px, 25px, 44px);
         background-color:transparent;
         text-indent: -9999px;
         border: 0;
@@ -506,8 +506,8 @@ form.search.expanded {
 nav {
     background-color:white;
     background-color:rgba(255,255,255,0.8);
-    border-bottom: 1px solid @color-black; /* fallback for ie 8 */
-    border-bottom: 1px solid fade(@color-black, 40%);
+    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-medium-grey, 40%);
     padding:10px @grid-gutter-width;
     position:relative;
     z-index:999;
@@ -692,15 +692,20 @@ nav.expanded {
  *$Common grid divisions
 */
 .eight {
-    .column(12); /* full width for mobile */
 }
 
 .four {
-    .column(12); /* full width for mobile */
+}
+
+.three {
+}
+
+.nine {
 }
 
 .row {
     .row();
+    .unlist();
 }
 
 .row-flush {
@@ -768,12 +773,21 @@ nav.expanded {
     color:@color-black;
 }
 
+.other-jobs {
+    .mixin-sidebar-advert(@color-light-grey, 80%);
+    color:@color-black;
+    border-bottom: 1px solid @color-medium-grey;
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
 
 /* Related links */
 
 .related {
     .mixin-grey-links;
-    margin-top: @grid-gutter-width * 10;
+    margin-top: @grid-gutter-width * 6;
     
     h2 {
         .transition(background-color 0.3s ease);
@@ -880,6 +894,7 @@ div.related-content-item {
         &:after {
             content: '';
             .sprite-load(-17px, -1220px, 7px, 13px);
+            opacity: 0.3;
             position: absolute;
             right: -10px;
             top: 2px;
@@ -930,10 +945,10 @@ footer {
         }
         .footer-expand {
             content: "";
-            .sprite-load(-53px, -623px, 27px, 15px);
+            .sprite-load(-53px, -623px, 24px, 15px);
             position: absolute;
             right: @grid-gutter-width;
-            top: @spacing-half;
+            top: 10px;
             cursor: pointer;
         }
         .footer-expand:hover {
@@ -1114,7 +1129,8 @@ input[type=button], button, .button{
 
 }
 
-.type-staff-profile {
+.type-staff-profile,
+.type-student-profile {
     div.related-content-item img {
         max-width: 125px;
     }

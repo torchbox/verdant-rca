@@ -159,11 +159,12 @@ form.search {
     height: auto;
     margin-left: -@right-col-width;
     width: @right-col-width;
-    border-bottom: 1px solid @color-black; /* fallback for ie 8 */
-    border-bottom: 1px solid fade(@color-black, 40%);
+    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-medium-grey, 40%);
 
     input[type="text"] {
         padding: 10px @spacing-half;
+        width: 85%;
     }
     input[type="submit"] {
         .sprite-load(-95px, -1178px, 15px, 27px);
@@ -205,6 +206,15 @@ aside {
 
 .four {
     .column(4, 0, 12);
+    padding-left: @grid-gutter-width;
+}
+
+.three {
+    .column(3, 0, 12);
+}
+
+.nine {
+    .column(9, 0, 12);
 }
 
 /**

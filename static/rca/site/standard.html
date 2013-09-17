@@ -1,0 +1,26 @@
+---
+layout: default
+bodyclass: type-standard
+---
+
+<h1 class="h1">Standard page heading</h1>
+
+<section class="row">
+	{% include modules/carousel.html %}
+</section>
+
+<section class="row">
+	{% assign showIntro = true %}
+	{% include modules/body-text.html %}
+
+	<section class="four">
+		<div class="single borders">
+			{% include modules/share-button.html %}
+		</div>
+		<ul class="button-bar one-button">
+        <li><a href="#" class="button icon icon-download">RCA Annual Review 2011/12</a></li>
+    </ul>
+	</section>
+</section>
+
+{% include modules/twitter-feed.html %}
