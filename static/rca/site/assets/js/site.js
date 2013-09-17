@@ -74,7 +74,12 @@ $(function(){
 
     /* start any bxslider carousels not found within a tab  */
     carousel = $('.carousel:not(.tab-pane .carousel)').bxSlider({
-        pager: function(){return $(this).hasClass('paginated')}
+        pager: function(){return $(this).hasClass('paginated')},
+        onSliderLoad: function(){
+            //find portrait images and set their height to be a percentage
+            $('.portrait', carousel).css('padding-bottom', ($('li:first-child', carousel).height() / $('li:first-child', carousel).width() * 100) + '%');
+
+        }
     }); 
 
     /* tabs */
