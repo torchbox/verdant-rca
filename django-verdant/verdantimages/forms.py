@@ -1,8 +1,8 @@
-from django.forms import ModelForm
+from django import forms
 
 from verdantimages.models import Image
 
 
-class ImageForm(ModelForm):
+class ImageForm(forms.ModelForm):
     class Meta:
         model = Image

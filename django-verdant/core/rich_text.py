@@ -69,7 +69,7 @@ def filter_img_for_editor(elem):
         try:
             image = Image.objects.get(id=elem.attrs['data-id'])
             format = elem.attrs.get('data-format', 'fill-320x200')
-            rendering = image.get_in_format(format)
+            rendering = image.get_rendition(format)
             elem['src'] = rendering.url
             elem['width'] = rendering.width
             elem['height'] = rendering.height
@@ -97,7 +97,7 @@ def filter_img_for_template(elem):
         try:
             image = Image.objects.get(id=elem.attrs['data-id'])
             format = elem.attrs.get('data-format', 'fill-320x200')
-            rendering = image.get_in_format(format)
+            rendering = image.get_rendition(format)
             elem['src'] = rendering.url
             elem['width'] = rendering.width
             elem['height'] = rendering.height

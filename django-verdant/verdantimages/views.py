@@ -12,7 +12,7 @@ def get_image_json(image):
     helper function: given an image, return the json to pass back to the
     image chooser panel
     """
-    preview_image = image.get_in_format('fill-130x100')
+    preview_image = image.get_rendition('fill-130x100')
 
     return json.dumps({
         'id': image.id,

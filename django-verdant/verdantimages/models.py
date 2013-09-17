@@ -21,20 +21,20 @@ class Image(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_in_format(self, format):
-        if not hasattr(format, 'generate'):
-            # assume we've been passed a format spec string, rather than a Format object
-            # TODO: keep an in-memory cache of formats, to avoid a db lookup
-            format, created = Format.objects.get_or_create(spec=format)
+    def get_rendition(self, filter):
+        if not hasattr(filter, 'process_image'):
+            # assume we've been passed a filter spec string, rather than a Filter object
+            # TODO: keep an in-memory cache of filters, to avoid a db lookup
+            filter, created = Filter.objects.get_or_create(spec=filter)
 
         try:
-            rendition = self.renditions.get(format=format)
+            rendition = self.renditions.get(filter=filter)
         except Rendition.DoesNotExist:
             file_field = self.file
-            generated_image_file = format.generate(file_field.file)
+            generated_image_file = filter.process_image(file_field.file)
 
             rendition = Rendition.objects.create(
-                image=self, format=format, file=generated_image_file)
+                image=self, filter=filter, file=generated_image_file)
 
         return rendition
 
@@ -45,7 +45,12 @@ def image_delete(sender, instance, **kwargs):
     instance.file.delete(False)
 
 
-class Format(models.Model):
+class Filter(models.Model):
+    """
+    Represents an operation that can be applied to an Image to produce a rendition
+    appropriate for final display on the website. Usually this would be a resize operation,
+    but could potentially involve colour processing, etc.
+    """
     spec = models.CharField(max_length=255, db_index=True)
 
     OPERATION_NAMES = {
@@ -57,12 +62,15 @@ class Format(models.Model):
     }
 
     def __init__(self, *args, **kwargs):
-        super(Format, self).__init__(*args, **kwargs)
+        super(Filter, self).__init__(*args, **kwargs)
+        self.method = None  # will be populated when needed, by parsing the spec string
 
-        # parse the spec string, which is formatted as (method)-(arg)
+    def _parse_spec_string(self):
+        # parse the spec string, which is formatted as (method)-(arg),
+        # and save the results to self.method and self.method_arg
         try:
             (method_name, method_arg_string) = self.spec.split('-')
-            self.method = Format.OPERATION_NAMES[method_name]
+            self.method = Filter.OPERATION_NAMES[method_name]
 
             if method_name in ('max', 'min', 'fill'):
                 # method_arg_string is in the form 640x480
@@ -73,14 +81,17 @@ class Format(models.Model):
                 self.method_arg = int(method_arg_string)
 
         except (ValueError, KeyError):
-            raise ValueError("Invalid image format spec: %r" % self.spec)
+            raise ValueError("Invalid image filter spec: %r" % self.spec)
 
-    def generate(self, input_file):
+    def process_image(self, input_file):
         """
         Given an input image file as a django.core.files.File object,
-        generate an output image in this format, returning it as another
-        django.core.files.File object
+        generate an output image with this filter applied, returning it
+        as another django.core.files.File object
         """
+        if not self.method:
+            self._parse_spec_string()
+
         input_file.open()
         image = PIL.Image.open(input_file)
         file_format = image.format
@@ -91,7 +102,7 @@ class Format(models.Model):
         output = StringIO.StringIO()
         image.save(output, file_format)
 
-        # generate new filename derived from old one, inserting the format string before the extension
+        # generate new filename derived from old one, inserting the filter spec string before the extension
         input_filename_parts = os.path.basename(input_file.name).split('.')
         output_filename_parts = input_filename_parts[:-1] + [self.spec] + input_filename_parts[-1:]
         output_filename = '.'.join(output_filename_parts)
@@ -104,7 +115,7 @@ class Format(models.Model):
 
 class Rendition(models.Model):
     image = models.ForeignKey('Image', related_name='renditions')
-    format = models.ForeignKey('Format', related_name='renditions')
+    filter = models.ForeignKey('Filter', related_name='renditions')
     file = models.ImageField(upload_to='images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
