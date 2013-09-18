@@ -160,7 +160,8 @@
  *$Event block
  */
 
-.events{    
+.events{ 
+    margin-bottom:0 !important;
     .row{
         margin:0;
     }
@@ -329,6 +330,9 @@
  * $Styles used to prepare a group of items for appearance with the + button
  */
 .x-plus{
+    /* because all LI items in an x-plus have bottom padding, margin of proceeding elements needs to be catered for */
+    margin-bottom:-@grid-gutter-width;
+
     li{
         .transition(opacity 0.5s ease);
         opacity:1;
