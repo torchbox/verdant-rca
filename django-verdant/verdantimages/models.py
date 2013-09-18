@@ -20,7 +20,7 @@ class Image(models.Model):
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
 
-    tags = TaggableManager()
+    tags = TaggableManager(help_text=None)
 
     def __unicode__(self):
         return self.title
