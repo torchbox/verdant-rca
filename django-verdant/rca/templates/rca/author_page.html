@@ -13,4 +13,12 @@
             <li><a href="{{ story.url }}">{{ story.title }}</a></li>
         {% endfor %}
     </ul>
+
+    <p>in alphabetical order:</p>
+    <ul>
+        {% for page in news_items %}
+            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+        {% endfor %}
+    </ul>
+
 {% endblock %}

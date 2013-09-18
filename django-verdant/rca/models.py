@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import render
 
 from core.models import Page
 from core.fields import RichTextField
@@ -41,6 +42,14 @@ class AuthorsIndex(Page):
 # == Author Page ==
 class AuthorPage(EditorialPage):
     mugshot = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+
+    def serve(self, request):
+        news_items = self.news_items.order_by('title')
+
+        return render(request, self.template, {
+            'self': self,
+            'news_items': news_items,
+        })
 
 class AuthorPageAdmin(AdminHandler):
     model = AuthorPage
