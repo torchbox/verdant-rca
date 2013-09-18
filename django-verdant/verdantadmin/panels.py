@@ -5,8 +5,14 @@ from django.forms import HiddenInput
 from django.forms.models import inlineformset_factory
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.db import connection
 
 from django.contrib.contenttypes.models import ContentType
+
+
+# Test whether database has been initialised - otherwise we fail on the initial syncdb.
+# TODO: centralise this check, so that we aren't duplicating it from core/models.py
+DB_IS_READY = ('django_content_type' in connection.introspection.table_names())
 
 
 class BaseAdminPanel(object):
@@ -91,11 +97,14 @@ class BasePageChooserPanel(BaseFieldPanel):
         )
 
 def PageChooserPanel(field_name, page_type=None):
-    if page_type:
-        content_type = ContentType.objects.get_for_model(page_type)
+    if DB_IS_READY:
+        if page_type:
+            content_type = ContentType.objects.get_for_model(page_type)
+        else:
+            # TODO: infer the content type by introspection on the foreign key
+            content_type = ContentType.objects.get_by_natural_key('core', 'page')
     else:
-        # TODO: infer the content type by introspection on the foreign key
-        content_type = ContentType.objects.get_by_natural_key('core', 'page')
+        content_type = None
 
     return type('_PageChooserPanel', (BasePageChooserPanel,), {
         'field_name': field_name,
