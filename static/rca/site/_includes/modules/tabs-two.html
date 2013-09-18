@@ -13,17 +13,17 @@
         <h2 class="header"><a href="#tab2" class="a0">Work</a></h2>
         <div class="tab-pane" id="tab2">
             {% include modules/carousel.html %}
+            
             {% if page.path == "student-profile.html" %}
-            <section class="row">
-                {% assign studentProfile = true %}
-                {% include modules/body-text.html %}
-                <section class="four">
-                    {% include modules/meta-data.html %}
-                    <div class="single">
-                        {% include modules/share-button.html %}
-                    </div>
+                <section class="row">
+                    {% include modules/body-text.html studentProfile = true %}
+                    <section class="four">
+                        {% include modules/meta-data.html %}
+                        <div class="single">
+                            {% include modules/share-button.html %}
+                        </div>
+                    </section>
                 </section>
-            </section>
             {% endif %}
         </div>
 </section>

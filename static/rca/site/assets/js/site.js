@@ -195,7 +195,6 @@ $(function(){
         var itemContainer = $('.item-container', $this);
         var ul = $('> ul', itemContainer);
         var items = $('> li', ul);
-        var time = 0
         var step = 100
 
         // split list at the 'load-more-target' item.
@@ -204,13 +203,16 @@ $(function(){
         var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
 
         loadmore.click(function(){
-            itemContainer.css('height', itemContainer.height());
+            if(!$this.hasClass('expanded')){
+                $this.addClass('expanded');
+                itemContainer.css('height', itemContainer.height());
 
-            hidden.removeClass('hidden');
+                hidden.removeClass('hidden');
 
-            $this.addClass('expanded');
+                console.log(ul.height());
+                itemContainer.animate({height:ul.height()}, 300);
 
-            itemContainer.animate({height:ul.height()}, 300, function(){
+                var time = 0;
                 hidden.each(function(index){
                     var $this = $(this);
                     setTimeout( function(){ 
@@ -218,8 +220,13 @@ $(function(){
                     }, time);
                     time += step;
                 });
-            });
-
+               
+            }else{
+                $this.removeClass('expanded');
+                itemContainer.removeAttr('style');
+                hidden.removeClass('fade-in-after').addClass('hidden');
+            }
+           
             return false;
         });
     });

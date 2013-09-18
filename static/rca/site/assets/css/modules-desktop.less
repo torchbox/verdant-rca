@@ -353,8 +353,14 @@
         opacity:1;
     }
 
-    &.expanded .load-more{
-        display:none;
+    &.expanded .load-more {
+        a:after{
+            background-position:-377px -996px;
+        }
+
+        a:hover:after{
+            background-position:-377px -441px;
+        }
     }
 }
 
@@ -433,28 +439,30 @@
     .image.full{
         margin:auto;
     }
-    .two-cols{
-        .col{
-            .column(6);
-            padding-bottom:0;
-        }
-    }
-    .four-cols{
-        //.row-flush();
-        .col{
-            .column(3); 
-        }
-    }
-    .three-nine-cols {
-        .col-3 {
-            .column(3);
+}
 
-        }
-        .col-9 {
-            .column(9);
-        }
+/* don't nest within tab-pane as specificity is too high */
+.two-cols{
+    li{
+        .column(6);
     }
 }
+.four-cols{
+    //.row-flush();
+    .col{
+        .column(3); 
+    }
+}
+.three-nine-cols {
+    .col-3 {
+        .column(3);
+
+    }
+    .col-9 {
+        .column(9);
+    }
+}
+
 
 /**
  *$Button bar
