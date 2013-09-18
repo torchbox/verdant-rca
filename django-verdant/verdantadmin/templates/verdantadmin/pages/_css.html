@@ -9,3 +9,7 @@
 <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}verdantadmin/css/panels/rich-text.less">
 <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}verdantadmin/css/panels/page-chooser.less">
 <link rel="stylesheet" type="text/less" href="{{ STATIC_URL }}verdantimages/css/image-chooser.less">
+
+{# we'll want tag-it included, for the benefit of any modals that use it, like images. #}
+{# TODO: a method of injecting these sorts of things on demand when the modal is spawned #}
+<link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery.tagit.css">
