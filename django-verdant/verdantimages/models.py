@@ -9,6 +9,8 @@ import StringIO
 import PIL.Image
 import os.path
 
+from verdantimages import image_ops
+
 
 class Image(models.Model):
     title = models.CharField(max_length=255)
@@ -19,20 +21,20 @@ class Image(models.Model):
     def __unicode__(self):
         return self.title
 
-    def get_in_format(self, format):
-        if not hasattr(format, 'generate'):
-            # assume we've been passed a format spec string, rather than a Format object
-            # TODO: keep an in-memory cache of formats, to avoid a db lookup
-            format, created = Format.objects.get_or_create(spec=format)
+    def get_rendition(self, filter):
+        if not hasattr(filter, 'process_image'):
+            # assume we've been passed a filter spec string, rather than a Filter object
+            # TODO: keep an in-memory cache of filters, to avoid a db lookup
+            filter, created = Filter.objects.get_or_create(spec=filter)
 
         try:
-            rendition = self.renditions.get(format=format)
+            rendition = self.renditions.get(filter=filter)
         except Rendition.DoesNotExist:
             file_field = self.file
-            generated_image_file = format.generate(file_field.file)
+            generated_image_file = filter.process_image(file_field.file)
 
             rendition = Rendition.objects.create(
-                image=self, format=format, file=generated_image_file)
+                image=self, filter=filter, file=generated_image_file)
 
         return rendition
 
@@ -43,60 +45,64 @@ def image_delete(sender, instance, **kwargs):
     instance.file.delete(False)
 
 
-class Format(models.Model):
+class Filter(models.Model):
+    """
+    Represents an operation that can be applied to an Image to produce a rendition
+    appropriate for final display on the website. Usually this would be a resize operation,
+    but could potentially involve colour processing, etc.
+    """
     spec = models.CharField(max_length=255, db_index=True)
 
-    def generate(self, input_file):
+    OPERATION_NAMES = {
+        'max': image_ops.resize_to_max,
+        'min': image_ops.resize_to_min,
+        'width': image_ops.resize_to_width,
+        'height': image_ops.resize_to_height,
+        'fill': image_ops.resize_to_fill,
+    }
+
+    def __init__(self, *args, **kwargs):
+        super(Filter, self).__init__(*args, **kwargs)
+        self.method = None  # will be populated when needed, by parsing the spec string
+
+    def _parse_spec_string(self):
+        # parse the spec string, which is formatted as (method)-(arg),
+        # and save the results to self.method and self.method_arg
+        try:
+            (method_name, method_arg_string) = self.spec.split('-')
+            self.method = Filter.OPERATION_NAMES[method_name]
+
+            if method_name in ('max', 'min', 'fill'):
+                # method_arg_string is in the form 640x480
+                (width, height) = [int(i) for i in method_arg_string.split('x')]
+                self.method_arg = (width, height)
+            else:
+                # method_arg_string is a single number
+                self.method_arg = int(method_arg_string)
+
+        except (ValueError, KeyError):
+            raise ValueError("Invalid image filter spec: %r" % self.spec)
+
+    def process_image(self, input_file):
         """
         Given an input image file as a django.core.files.File object,
-        generate an output image in this format, returning it as another
-        django.core.files.File object
+        generate an output image with this filter applied, returning it
+        as another django.core.files.File object
         """
+        if not self.method:
+            self._parse_spec_string()
+
         input_file.open()
         image = PIL.Image.open(input_file)
-        width, height = image.size
         file_format = image.format
 
-        # for now, assume spec is a string in the format '320x200'
-        target_width, target_height = [int(i) for i in self.spec.split('x')]
-
-        if width > target_width and height > target_height:
-            # downsize image to COVER the target rectangle
-
-            # scale factor if we were to downsize the image to fit the target width
-            horz_scale = float(target_width) / width
-            # scale factor if we were to downsize the image to fit the target height
-            vert_scale = float(target_height) / height
-
-            # choose whichever of these gives a larger image
-            scale = max(horz_scale, vert_scale)
-
-            width, height = (int(width * scale), int(height * scale))
-
-            # must ensure image is non-paletted for a high-quality resize
-            if image.mode in ['1', 'P']:
-                image = image.convert('RGB')
-
-            image = image.resize(
-                (width, height),
-                PIL.Image.ANTIALIAS
-            )
-
-        if width > target_width or height > target_height:
-            final_width = min(width, target_width)
-            final_height = min(height, target_height)
-
-            # crop image to centre
-            left = (width - final_width) / 2
-            top = (height - final_height) / 2
-            image = image.crop(
-                (left, top, left + final_width, top + final_height)
-            )
+        # perform the resize operation
+        image = self.method(image, self.method_arg)
 
         output = StringIO.StringIO()
         image.save(output, file_format)
 
-        # generate new filename derived from old one, inserting the format string before the extension
+        # generate new filename derived from old one, inserting the filter spec string before the extension
         input_filename_parts = os.path.basename(input_file.name).split('.')
         output_filename_parts = input_filename_parts[:-1] + [self.spec] + input_filename_parts[-1:]
         output_filename = '.'.join(output_filename_parts)
@@ -109,7 +115,7 @@ class Format(models.Model):
 
 class Rendition(models.Model):
     image = models.ForeignKey('Image', related_name='renditions')
-    format = models.ForeignKey('Format', related_name='renditions')
+    filter = models.ForeignKey('Filter', related_name='renditions')
     file = models.ImageField(upload_to='images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
@@ -122,3 +128,9 @@ class Rendition(models.Model):
         return mark_safe(
             '<img src="%s" width="%d" height="%d" alt="%s">' % (escape(self.url), self.width, self.height, escape(self.image.title))
         )
+
+# Receive the pre_delete signal and delete the file associated with the model instance.
+@receiver(pre_delete, sender=Rendition)
+def rendition_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.file.delete(False)

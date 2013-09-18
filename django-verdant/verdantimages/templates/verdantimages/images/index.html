@@ -1,0 +1,22 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+
+{% block content %}
+    <header>
+        <h1>Images</h1>
+        <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
+    </header>
+    <div class="listing">
+        <ul>
+            {% for image in images %}
+                <li>
+                    <a href="{% url 'verdantimages_edit_image' image.id %}">
+                        {% image image fill-130x100 %}
+                        {{ image.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

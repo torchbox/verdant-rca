@@ -1,0 +1,15 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+
+{% block content %}
+    <header>
+        <h1>Add image</h1>
+    </header>
+
+    <form action="{% url 'verdantimages_add_image' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Adding a page within '{{ parent_page.title }}'</h1>
+    </header>
+    <p>Page types that a regular editor would be allowed to add:</p>
+    <ul>
+        {% for content_type in page_types %}
+            <li><a href="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" class="icon add">{{ content_type.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <p>Page types that you can add as a superuser:</p>
+    <ul>
+        {% for content_type in all_page_types %}
+            <li><a href="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" class="icon add">{{ content_type.name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

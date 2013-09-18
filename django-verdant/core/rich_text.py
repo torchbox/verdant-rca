@@ -5,6 +5,8 @@ from urlparse import urlparse
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
 from verdantimages.models import Image
+from verdantimages.formats import FORMATS_BY_NAME
+
 from core.models import Page
 
 
@@ -65,16 +67,7 @@ def filter_a_for_editor(elem):
 
 def filter_img_for_editor(elem):
     strip_attributes_not_in_list(elem, ['src', 'data-id', 'data-format', 'width', 'height', 'alt'])
-    if 'data-id' in elem.attrs:
-        try:
-            image = Image.objects.get(id=elem.attrs['data-id'])
-            format = elem.attrs.get('data-format', '320x200')
-            rendering = image.get_in_format(format)
-            elem['src'] = rendering.url
-            elem['width'] = rendering.width
-            elem['height'] = rendering.height
-        except Image.DoesNotExist:
-            pass
+    populate_image_attrs(elem)
 
 EDITOR_WHITELIST_RULES = WHITELIST_RULES.copy()
 EDITOR_WHITELIST_RULES.update({
@@ -93,17 +86,8 @@ def filter_a_for_template(elem):
     strip_attributes_not_in_list(elem, ['href'])
 
 def filter_img_for_template(elem):
-    if 'data-id' in elem.attrs:
-        try:
-            image = Image.objects.get(id=elem.attrs['data-id'])
-            format = elem.attrs.get('data-format', '320x200')
-            rendering = image.get_in_format(format)
-            elem['src'] = rendering.url
-            elem['width'] = rendering.width
-            elem['height'] = rendering.height
-        except Image.DoesNotExist:
-            pass
-    strip_attributes_not_in_list(elem, ['src', 'width', 'height', 'alt'])
+    populate_image_attrs(elem)
+    strip_attributes_not_in_list(elem, ['src', 'width', 'height', 'class', 'alt'])
 
 TEMPLATE_WHITELIST_RULES = WHITELIST_RULES.copy()
 TEMPLATE_WHITELIST_RULES.update({
@@ -116,6 +100,40 @@ def strip_attributes_not_in_list(elem, allowed_attrs):
     for attr in elem.attrs.keys():
         if attr not in allowed_attrs:
             del elem[attr]
+
+
+def populate_image_attrs(elem):
+    """
+    populate src, width, height and class attributes
+    from the 'data-id' and 'data-format' attributes
+    """
+    if 'data-id' in elem.attrs:
+        try:
+            image = Image.objects.get(id=elem.attrs['data-id'])
+            try:
+                format_name = elem.attrs['data-format']
+                format = FORMATS_BY_NAME[format_name]
+                filter_spec = format.filter_spec
+                classnames = format.classnames
+            except KeyError:
+                filter_spec = 'max-1024x768'
+                classnames = None
+
+            rendering = image.get_rendition(filter_spec)
+            elem['src'] = rendering.url
+            elem['width'] = rendering.width
+            elem['height'] = rendering.height
+
+            if classnames:
+                elem['class'] = classnames
+            else:
+                try:
+                    del elem['class']
+                except KeyError:
+                    pass
+
+        except Image.DoesNotExist:
+            pass
 
 
 def apply_whitelist(doc, rules):
