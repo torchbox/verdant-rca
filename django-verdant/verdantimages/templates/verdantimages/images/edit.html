@@ -12,4 +12,5 @@
         {{ form.as_p }}
         <input type="submit" value="Save">
     </form>
+    <a href="{% url 'verdantimages_delete_image' image.id %}">Delete image</a>
 {% endblock %}

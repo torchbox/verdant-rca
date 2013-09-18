@@ -1,0 +1,16 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+
+{% block content %}
+    <header>
+        <h1>Delete image</h1>
+    </header>
+    {% image image max-800x600 %}
+
+    <p>Are you sure you want to delete this image?</p>
+    <form action="{% url 'verdantimages_delete_image' image.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Yes, delete">
+    </form>
+{% endblock %}

@@ -31,6 +31,19 @@ def edit(request, image_id):
     })
 
 
+def delete(request, image_id):
+    image = get_object_or_404(Image, id=image_id)
+
+    if request.POST:
+        image.delete()
+        messages.success(request, "Image '%s' deleted." % image.title)
+        return redirect('verdantimages_index')
+
+    return render(request, "verdantimages/images/confirm_delete.html", {
+        'image': image,
+    })
+
+
 def add(request):
     if request.POST:
         form = ImageForm(request.POST, request.FILES)
