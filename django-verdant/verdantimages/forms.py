@@ -9,6 +9,12 @@ class ImageForm(forms.ModelForm):
         model = Image
 
 
+class EditImageForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        exclude = ['file']
+
+
 class ImageInsertionForm(forms.Form):
     """
     Form for selecting parameters of the image (e.g. format) prior to insertion

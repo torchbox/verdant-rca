@@ -9,9 +9,16 @@ class Migration(DataMigration):
     def forwards(self, orm):
         page_content_type = orm['contenttypes.ContentType'].objects.get(app_label='core', model='page')
 
+        root = orm['core.Page'].objects.create(
+            title="Root",
+            slug="root",
+            content_type=page_content_type,
+        )
+
         homepage = orm['core.Page'].objects.create(
             title="Welcome to your new Verdant site!",
-            slug="index",
+            parent=root,
+            slug="home",
             content_type=page_content_type,
         )
         orm['core.Site'].objects.create(hostname="*", root_page=homepage)
