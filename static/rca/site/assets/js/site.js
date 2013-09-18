@@ -188,8 +188,10 @@ $(function(){
     });
 
     /* x-plus functionality */
+
     $('.x-plus').each(function(){
         var $this = $(this);
+        var paginationContainer = $($this.data('pagination'));
         var loadmore = $('.load-more', $this);
         var loadmoreTarget = $('.load-more-target', $this);
         var itemContainer = $('.item-container', $this);
@@ -202,15 +204,31 @@ $(function(){
         var loadmoreIndex = items.index(loadmore);
         var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
 
-        loadmore.click(function(){
+        loadmore.click(function(e){
+            e.preventDefault();
+            
+            if($this.data('pagination') && paginationContainer.length()){
+                console.log('loading from ', $('.next a', paginationContainer).attr('href'));
+                $('<div></div>').load($('.next a', paginationContainer).attr('href') + " .x-plus ul", function(){
+                    loadmore.before($(this).find("li:not(.load-more)"));
+                    expandToFit(false);
+                });
+            }else{
+                expandToFit(true);
+            }
+
+            return false;
+        });
+
+        var expandToFit = function(animateHeight){
             if(!$this.hasClass('expanded')){
                 $this.addClass('expanded');
-                itemContainer.css('height', itemContainer.height());
 
-                hidden.removeClass('hidden');
-
-                console.log(ul.height());
-                itemContainer.animate({height:ul.height()}, 300);
+                if(animateHeight){
+                    itemContainer.css('height', itemContainer.height());
+                    hidden.removeClass('hidden');
+                    itemContainer.animate({height:ul.height()}, 300);
+                }
 
                 var time = 0;
                 hidden.each(function(index){
@@ -220,16 +238,16 @@ $(function(){
                     }, time);
                     time += step;
                 });
-               
             }else{
                 $this.removeClass('expanded');
                 itemContainer.removeAttr('style');
                 hidden.removeClass('fade-in-after').addClass('hidden');
             }
-           
-            return false;
-        });
+        }
+
     });
+
+
 
   
 });
