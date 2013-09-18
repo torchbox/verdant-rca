@@ -16,4 +16,6 @@ urlpatterns = patterns('verdantadmin.views',
 
     url(r'^choose-page/(\w+)/(\w+)/$', 'choose_page.browse', name='verdantadmin_choose_page'),
     url(r'^choose-page/(\w+)/(\w+)/(\d+)/$', 'choose_page.browse', name='verdantadmin_choose_page_child'),
+
+    url(r'^tag-autocomplete/$', 'tags.autocomplete', name='verdantadmin_tag_autocomplete'),
 )

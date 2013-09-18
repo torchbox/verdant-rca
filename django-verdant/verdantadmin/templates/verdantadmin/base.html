@@ -18,8 +18,9 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" >
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
     {% compress css %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery-ui-smoothness/jquery-ui-smoothness.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/core.less" type="text/less" />
     {% endcompress %}
 
@@ -77,6 +78,7 @@
             Core JS includes (for inclusion on all pages) to be specified here
         {% endcomment %}
 
+        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-ui-1.10.3.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.autosize.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-modal.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.dlmenu.js"></script>

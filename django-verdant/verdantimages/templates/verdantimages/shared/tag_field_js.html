@@ -1,0 +1,10 @@
+<script src="{{ STATIC_URL }}verdantadmin/js/vendor/tag-it.js"></script>
+
+{% url 'verdantadmin_tag_autocomplete' as autocomplete_url %}
+<script>
+    $(function() {
+        $('#id_tags').tagit({
+            autocomplete: {source: "{{ autocomplete_url|addslashes }}"}
+        });
+    });
+</script>
