@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import render
 
 from core.models import Page
 from core.fields import RichTextField
@@ -9,6 +10,7 @@ from verdantimages.panels import ImageChooserPanel
 
 
 class RelatedLink(models.Model):
+    page = models.ForeignKey('core.Page', related_name='related_links')
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
@@ -16,9 +18,6 @@ class RelatedLink(models.Model):
     # (actually, it's so that we can check that the widget override for ImageChooserPanel happens
     # within formsets too)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
-
-    class Meta:
-        abstract = True
 
 
 class EditorialPage(Page):
@@ -42,6 +41,14 @@ class AuthorsIndex(Page):
 class AuthorPage(EditorialPage):
     mugshot = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
+    def serve(self, request):
+        news_items = self.news_items.order_by('title')
+
+        return render(request, self.template, {
+            'self': self,
+            'news_items': news_items,
+        })
+
 class AuthorPageAdmin(AdminHandler):
     model = AuthorPage
 
@@ -64,9 +71,6 @@ class NewsItem(EditorialPage):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
-class NewsItemRelatedLink(RelatedLink):
-    news_item = models.ForeignKey('NewsItem', related_name='related_links')
-
 class NewsItemAdminHandler(AdminHandler):
     model = NewsItem
     # can pass a custom modelform here:
@@ -78,7 +82,7 @@ class NewsItemAdminHandler(AdminHandler):
         PageChooserPanel('author', AuthorPage),
         ImageChooserPanel('lead_image'),
         RichTextFieldPanel('body'),
-        InlinePanel(NewsItem, NewsItemRelatedLink, label="Wonderful related links",
+        InlinePanel(Page, RelatedLink, label="Wonderful related links",
             # label is optional - we'll derive one from the related_name of the relation if not specified
             # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
             panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
