@@ -263,7 +263,7 @@ ul ul, ol ol {
     font-family: @font-family-benton-light;
     font-size: @font-size-13;
     line-height: @line-height-1;
-    color: @color-medium-grey;
+    color: @color-dark-grey;
     text-transform: uppercase;
 }
 
@@ -289,7 +289,7 @@ ul ul, ol ol {
     font-size: @font-size-12;
     line-height: @line-height-8;
     text-transform: uppercase;
-    color: @color-medium-grey;
+    color: @color-dark-grey;
     font-weight: normal;
 }
 
@@ -505,7 +505,7 @@ form.search.expanded {
 
 nav {
     background-color:white;
-    background-color:rgba(255,255,255,0.8);
+    background-color:rgba(255,255,255,0.95);
     border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
     border-bottom: 1px solid fade(@color-medium-grey, 40%);
     padding:10px @grid-gutter-width;
@@ -1144,6 +1144,12 @@ input[type=button], button, .button{
             margin: @spacing-half 0 0 0;
         }
    }
+}
+
+.type-student-profile {
+    .tab-pane .three-plus {
+        margin-top: @grid-gutter-width;
+    }
 }
 
 .type-event {
