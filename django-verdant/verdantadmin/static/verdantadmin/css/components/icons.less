@@ -2,8 +2,19 @@
 .icon.explore{
     .icon-left(25px, 25px, 0px, 216px, 1);
 }
+.icon.images{
+    .icon-left(25px, 25px, 100%, 100%, 1);
+    /* temporary until image exists */
+    &:before{
+        content:"img";
+    }
+}
 .icon.snippets{
-    .icon-left(25px, 25px, 78px, 216px, 1);
+    .icon-left(25px, 25px, 100%, 100%, 1);
+    /* temporary until image exists */
+    &:before{
+        content:"sni";
+    }
 }
 .icon.folder{
     .icon-left(25px, 25px, 148px, 216px, 1);
@@ -49,13 +60,12 @@
     .icon-right(15px, 10px, 134px, 280px, 0.7);
 }
 
-
 /* teal icons */
 .icon.checked{
     .icon-left(18px, 18px, 0, 339px, 1);
 }
 .icon.add-teal{
-    .icon-left(22px, 21px, 50px, 328px, 1); 
+    .icon-left(25px, 25px, 50px, 328px, 1); 
     &:before{
         .border-radius(100%);
         background-color:white;
@@ -63,7 +73,8 @@
 }
 
 
-/* misc overides */
+/* misc  */
+
 h2.icon{
     position:relative;
 
