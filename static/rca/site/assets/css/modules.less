@@ -42,6 +42,7 @@
  * Job summary
  * Job details
  * Teaser image
+ * Quotation
  */
 
 /**
@@ -311,6 +312,17 @@
     .share-wrapper {
         margin: @spacing-one 0 0 0;
         width: 180px;
+    }
+    &.borders {
+        .share-wrapper {
+            border-top: 1px solid @color-medium-grey;
+            border-bottom: 1px solid @color-medium-grey;
+            padding: @spacing-one 0;
+            margin-bottom: @spacing-one;
+        }
+        .dialogue {
+            margin-bottom: @spacing-one;
+        }
     }
 }
 
@@ -1252,7 +1264,9 @@
     padding-top: @spacing-half;
     figcaption {
         //display: none;
-        float: right;
+        display: block;
+        width: 100%;
+        text-align: right;
         margin-top: @spacing-one;
     }
     /*&:hover {
@@ -1260,4 +1274,21 @@
             display: block;
         }
     }*/
+}
+
+/**
+ * $Quotation
+ */
+
+.quotation {
+    border-top: 1px solid @color-medium-grey;
+    padding-top: @spacing-one;
+    margin: @spacing-one 0;
+    padding-right: @spacing-three;
+    cite {
+        font-style: normal;
+    }
+    p {
+        margin: 0;
+    }
 }
