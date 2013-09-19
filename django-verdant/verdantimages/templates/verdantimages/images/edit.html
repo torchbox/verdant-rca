@@ -13,11 +13,22 @@
     <header>
         <h1>Edit image</h1>
     </header>
-    {% image image max-800x600 %}
-    <form action="{% url 'verdantimages_edit_image' image.id %}" method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
-    </form>
-    <a href="{% url 'verdantimages_delete_image' image.id %}">Delete image</a>
+    <div class="row row-flush">
+        <div class="col6">
+            {% image image max-800x600 %}
+        </div>
+        <div class="col6">
+            <h2>Image details</h2>
+            <form action="{% url 'verdantimages_edit_image' image.id %}" method="POST">
+                {% csrf_token %}
+                <ul class="fields">
+                    {% for field in form %}
+                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                    {% endfor %}
+                    <li class="button"><input type="submit" value="Save" /></li>
+                </ul>
+            </form>
+            <a href="{% url 'verdantimages_delete_image' image.id %}">Delete image</a>
+        </div>
+    </div>
 {% endblock %}

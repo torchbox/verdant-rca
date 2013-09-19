@@ -22,6 +22,10 @@ h1,h2,h3,h4,h5,h6{
 
 h1{
     line-height:1.3em;
+    font-size:1.6em;
+    text-transform:uppercase;
+    color:@color-grey;
+    font-weight:bold;
 }
 
 a{
@@ -44,6 +48,11 @@ kbd{
     border:1px solid @color-grey;
     border-color:rgba(0,0,0,0.2);
     padding:0.3em 0.5em;
+}
+
+img{
+    max-width:100%;
+    height:auto;
 }
 
 .wrapper{
@@ -177,9 +186,6 @@ header{
     .box-shadow(0 1px 3px 0 rgba(0,0,0,0.1));
     margin-bottom:2em;
 
-    .row{
-        padding-top:1em;
-    }
     h2{
         margin:0;
     }
@@ -242,6 +248,43 @@ a {
 }
 
 @media screen and (min-width: @breakpoint-mobile){
+    .col1{
+        .column(1);
+    }
+    .col2{
+        .column(2);
+    }
+    .col3{
+        .column(3);
+    }
+    .col4{
+        .column(4);
+    }
+    .col5{
+        .column(5);
+    }
+    .col6{
+        .column(6);
+    }
+    .col7{
+        .column(7);
+    }
+    .col8{
+        .column(8);
+    }
+    .col9{
+        .column(9);
+    }
+    .col10{
+        .column(10);
+    }
+    .col11{
+        .column(11);
+    }
+    .col12{
+        .column(12);
+    }
+    
     body{
         margin-left:60px;
     }
