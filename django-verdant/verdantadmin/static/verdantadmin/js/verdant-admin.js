@@ -24,7 +24,7 @@ function createPageChooser(id, pageType, openAtParentId) {
     var pageTitle = chooserElement.find('.page-title');
     var input = $('#' + id);
 
-    $('.action-choose-page', chooserElement).click(function() {
+    $('.action-choose', chooserElement).click(function() {
         var initialUrl = '/admin/choose-page/' + pageType + '/';
         /* TODO: don't hard-code this URL, as it may be changed in urls.py */
         if (openAtParentId) {
