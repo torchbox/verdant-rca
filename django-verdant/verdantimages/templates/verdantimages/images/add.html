@@ -16,7 +16,11 @@
 
     <form action="{% url 'verdantimages_add_image' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+            {% endfor %}
+            <li class="button"><input type="submit" value="Save" /></li>
+        </ul>
     </form>
 {% endblock %}

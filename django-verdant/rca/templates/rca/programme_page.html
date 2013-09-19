@@ -1,0 +1,21 @@
+{% extends "rca/editorial_page.html" %}
+
+{% load rich_text image_tags %}
+
+{% block content %}
+    <div><h2>head of programme</h2> {{ self.head_of_programme }}</div>
+    <div><h2>head of programme's statement</h2> {{ self.head_of_programme_statement|richtext }}</div>
+    <h2>A carousel</h2>
+    <ul>
+        {% for item in self.carousel_items.all %}
+            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <h2>Related links</h2>
+    <ul>
+        {% for item in self.related_links.all %}
+            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

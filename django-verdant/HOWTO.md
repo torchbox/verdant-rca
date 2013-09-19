@@ -12,7 +12,7 @@ Configuration of the fields, content blocks and templates is all done within [si
 
 *	"Panel": A Panel is an instance of a singular content block e.g a Title, a Body text field, an Author. These are defined within an AdminHandler and essentially state "Pages of this kind of template all have this content block".
 
-*	"InlinePanel": This is for content blocks that repeat an unknown/unpredicatable number of times. While single, unrepeating fields can be defined as denormalised fields of your Page, the database can't forever add new fields for every instance of a mulitple content block. E.g a "Date published" is likely to be a single item on your page however a "Carousel item" would need to have multiple entries, each potentially comprising many fields. InlinePanel therefore creates a ForeignKey association between your Page and a Model you've defined elsewhere, which could have multiple values.
+*	"InlinePanel": This is for content blocks that repeat an unknown/unpredicatable number of times. While single, unrepeating fields can be defined as denormalised fields of your Page, the database can't forever add new fields for every instance of a mulitple content block. E.g a "Date published" is likely to be a single item on your page however a "Carousel item" would need to have multiple entries, each potentially comprising many fields. InlinePanel therefore creates a ForeignKey association between your Page and any Model you've created to represent this repeating content block.
 
 
 # Troubleshooting / Idiosyncrasies

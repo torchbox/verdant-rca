@@ -73,6 +73,8 @@ class SchoolPage(Page):
 class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
    
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
 class ProgrammePageRelatedLink(models.Model):
@@ -86,6 +88,7 @@ class ProgrammePageOurSites(models.Model):
     
     url = models.URLField()
     site_name = models.CharField(max_length=255)
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
@@ -101,24 +104,28 @@ class ProgrammePageFacilities(models.Model):
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 class ProgrammePage(Page):
-   head_of_programme = models.CharField(max_length=255)
-   head_of_programme_statement = RichTextField()
-   programme_video = models.CharField(max_length=255)
-   download_document_url = models.CharField(max_length=255)
+    head_of_programme = models.CharField(max_length=255)
+    head_of_programme_statement = RichTextField()
+    programme_video = models.CharField(max_length=255, blank=True)
+    download_document_url = models.CharField(max_length=255, blank=True)
+    download_document_text = models.CharField(max_length=255, blank=True)
 
 class ProgrammePageAdmin(AdminHandler):
     model = ProgrammePage
 
     panels = [
+        FieldPanel('title'),
+        FieldPanel('slug'),
         InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
         InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
-        FieldPanel('head_of_programe'),
+        FieldPanel('head_of_programme'),
         RichTextFieldPanel('head_of_programme_statement'),
         InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
         FieldPanel('programme_video'),
         InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
         InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
         FieldPanel('download_document_url'),
+        FieldPanel('download_document_text'),
     ]
 
 register(ProgrammePage, ProgrammePageAdmin)

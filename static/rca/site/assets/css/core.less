@@ -1159,5 +1159,35 @@ input[type=button], button, .button{
 
 }
 
+.type-standard {
+    .button-bar,
+    .teaser-image,
+    .quotation {
+        margin-bottom: @spacing-two;
+    }
+}
+
+.type-events-index,
+.type-jobs-index {
+    .one-plus {
+        p {
+            margin: @spacing-half 0;
+        }
+        .details p {
+            margin: 0;
+        }
+        h2 {
+            margin: -0.15em 0 0 0;
+        }
+        ul.content {
+            .unlist();
+        }
+        .location {
+            color: @color-medium-grey;
+            display: block;
+        }
+    }
+}
+
 @import "modules.less";
 @import "dlmenu.less";
