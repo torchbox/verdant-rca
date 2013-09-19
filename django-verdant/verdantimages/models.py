@@ -9,6 +9,8 @@ import StringIO
 import PIL.Image
 import os.path
 
+from taggit.managers import TaggableManager
+
 from verdantimages import image_ops
 
 
@@ -17,6 +19,8 @@ class Image(models.Model):
     file = models.ImageField(upload_to='original_images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
+
+    tags = TaggableManager(help_text=None)
 
     def __unicode__(self):
         return self.title

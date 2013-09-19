@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% with self.related_links.all as related_links %}
+    {% with self.generic_related_links.all as related_links %}
         {% if related_links %}
             <h2>Related links</h2>
             <ul>

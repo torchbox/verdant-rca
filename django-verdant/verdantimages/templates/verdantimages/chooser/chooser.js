@@ -21,4 +21,9 @@ function(modal) {
 
         return false;
     });
+
+    {% url 'verdantadmin_tag_autocomplete' as autocomplete_url %}
+    $('#id_tags', modal.body).tagit({
+        autocomplete: {source: "{{ autocomplete_url|addslashes }}"}
+    });
 }
