@@ -1,15 +1,13 @@
 {% load explorer_nav %}
 
-{% for page in pages %}
+{% for page, children in nodes %}
     <li>
         <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a>
-        {% with page.get_navigable_children as children %}
-            {% if children %}
-                <div class="children">+</div>
-                <ul class="dl-submenu">
-                    {% explorer_subnav children %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+        {% if children %}
+            <div class="children">+</div>
+            <ul class="dl-submenu">
+                {% explorer_subnav children %}
+            </ul>
+        {% endif %}
     </li>
 {% endfor %}

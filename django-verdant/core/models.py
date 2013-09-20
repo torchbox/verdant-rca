@@ -39,6 +39,7 @@ def get_page_types():
     return PAGE_CONTENT_TYPES
 
 LEAF_PAGE_CONTENT_TYPE_IDS = []
+NAVIGABLE_PAGE_CONTENT_TYPE_IDS = []
 
 class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
@@ -58,7 +59,10 @@ class PageBase(models.base.ModelBase):
             if not cls.is_abstract:
                 # register this type in the list of page content types
                 PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
-            if not cls.subpage_types:
+            if cls.subpage_types:
+                NAVIGABLE_PAGE_CONTENT_TYPE_IDS.append(
+                    ContentType.objects.get_for_model(cls).id)
+            else:
                 LEAF_PAGE_CONTENT_TYPE_IDS.append(
                     ContentType.objects.get_for_model(cls).id)
 
@@ -206,3 +210,55 @@ class Page(MP_Node):
             Returns the list of pages that this page type can be a subpage of
         """
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
+
+
+def get_navigation_menu_items():
+    # Get all pages that appear in the navigation menu: ones which have children,
+    # or are a non-leaf type (indicating that they *could* have children)
+    if NAVIGABLE_PAGE_CONTENT_TYPE_IDS:
+        pages = Page.objects.raw("""
+            SELECT * FROM core_page
+            WHERE numchild > 0 OR content_type_id IN %s
+            ORDER BY path
+        """, [tuple(NAVIGABLE_PAGE_CONTENT_TYPE_IDS)])
+    else:
+        pages = Page.objects.raw("""
+            SELECT * FROM core_page
+            WHERE numchild > 0
+            ORDER BY path
+        """)
+
+    # Turn this into a tree structure:
+    #     tree_node = (page, children)
+    #     where 'children' is a list of tree_nodes.
+    # Algorithm:
+    # Maintain a list that tells us, for each depth level, the last page we saw at that depth level.
+    # Since our page list is ordered by path, we know that whenever we see a page
+    # at depth d, its parent must be the last page we saw at depth (d-1), and so we can
+    # find it in that list.
+
+    depth_list = [(None, [])]  # a dummy node for depth=0, since one doesn't exist in the DB
+
+    for page in pages:
+        # create a node for this page
+        node = (page, [])
+        # retrieve the parent from depth_list
+        parent_page, parent_childlist = depth_list[page.depth - 1]
+        # insert this new node in the parent's child list
+        parent_childlist.append(node)
+
+        # add the new node to depth_list
+        try:
+            depth_list[page.depth] = node
+        except IndexError:
+            # an exception here means that this node is one level deeper than any we've seen so far
+            depth_list.append(node)
+
+    # in Verdant, the convention is to have one root node in the db (depth=1); the menu proper
+    # begins with the children of that node (depth=2).
+    try:
+        root, root_children = depth_list[1]
+        return root_children
+    except IndexError:
+        # what, we don't even have a root node? Fine, just return an empty list...
+        []
