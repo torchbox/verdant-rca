@@ -139,11 +139,6 @@ class Page(MP_Node):
         """
         return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
 
-    def get_navigable_children(self):
-        # "get children, except for leaf-type ones that have no children of their own"
-        return self.get_children().exclude(numchild=0, content_type_id__in=LEAF_PAGE_CONTENT_TYPE_IDS)
-
-
     @property
     def url(self):
         paths = [
