@@ -1,0 +1,4 @@
+{% for child in self.children %}
+    <h1>{{ child.heading }}</h1>
+    {{ child.render_as_object }}
+{% endfor %}

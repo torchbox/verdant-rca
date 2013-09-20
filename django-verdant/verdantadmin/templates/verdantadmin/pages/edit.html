@@ -7,10 +7,9 @@
 
     <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
-        <ul class="fields">
-            {{ admin.render }}
-            <li class="button"><input type="submit" value="Save"></li>
-        </ul>
+        {{ edit_handler.render_as_object }}
+        {{ edit_handler.render_missing_fields }}
+        <div class="button"><input type="submit" value="Save"></div>
     </form>
 {% endblock %}
 

@@ -6,7 +6,7 @@ from core.rich_text import to_db_html, to_editor_html
 
 class RichTextArea(Textarea):
     def get_panel(self):
-        from verdantadmin.panels import RichTextFieldPanel
+        from verdantadmin.edit_handlers import RichTextFieldPanel
         return RichTextFieldPanel
 
     def render(self, name, value, attrs=None):

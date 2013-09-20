@@ -4,9 +4,8 @@ from django.shortcuts import render
 from core.models import Page
 from core.fields import RichTextField
 
-from verdantadmin.forms import register, AdminHandler
-from verdantadmin.panels import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
-from verdantimages.panels import ImageChooserPanel
+from verdantadmin.edit_handlers import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
+from verdantimages.edit_handlers import ImageChooserPanel
 
 
 class RelatedLink(models.Model):
@@ -48,17 +47,14 @@ class AuthorPage(EditorialPage):
             'news_items': news_items,
         })
 
-class AuthorPageAdmin(AdminHandler):
-    model = AuthorPage
-
-    panels = [
-        FieldPanel('title'),
-        FieldPanel('slug'),
-        ImageChooserPanel('mugshot'),
-        RichTextFieldPanel('body'),
-    ]
-
-register(AuthorPage, AuthorPageAdmin)
+AuthorPage.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    ImageChooserPanel('mugshot'),
+    RichTextFieldPanel('body'),
+]
+AuthorPage.promote_panels = [
+]
 
 
 # == School ==
@@ -110,25 +106,21 @@ class ProgrammePage(Page):
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
 
-class ProgrammePageAdmin(AdminHandler):
-    model = ProgrammePage
-
-    panels = [
-        FieldPanel('title'),
-        FieldPanel('slug'),
-        InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
-        InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
-        FieldPanel('head_of_programme'),
-        RichTextFieldPanel('head_of_programme_statement'),
-        InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
-        FieldPanel('programme_video'),
-        InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
-        InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
-        FieldPanel('download_document_url'),
-        FieldPanel('download_document_text'),
-    ]
-
-register(ProgrammePage, ProgrammePageAdmin)
+ProgrammePage.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
+    InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
+    FieldPanel('head_of_programme'),
+    RichTextFieldPanel('head_of_programme_statement'),
+    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
+    FieldPanel('programme_video'),
+    InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
+    InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
+    FieldPanel('download_document_url'),
+    FieldPanel('download_document_text'),
+]
+ProgrammePage.promote_panels = []
 
 
 # == News Index ==
@@ -141,22 +133,16 @@ class NewsItem(EditorialPage):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
-class NewsItemAdminHandler(AdminHandler):
-    model = NewsItem
-    # can pass a custom modelform here:
-    # form = NewsItemForm
-
-    panels = [
-        FieldPanel('title'),
-        FieldPanel('slug'),
-        PageChooserPanel('author', AuthorPage),
-        ImageChooserPanel('lead_image'),
-        RichTextFieldPanel('body'),
-        InlinePanel(Page, RelatedLink, label="Wonderful related links",
-            # label is optional - we'll derive one from the related_name of the relation if not specified
-            # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
-            panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
-        ),
-    ]
-
-register(NewsItem, NewsItemAdminHandler)
+NewsItem.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    PageChooserPanel('author', AuthorPage),
+    ImageChooserPanel('lead_image'),
+    RichTextFieldPanel('body'),
+    InlinePanel(Page, RelatedLink, label="Wonderful related links",
+        # label is optional - we'll derive one from the related_name of the relation if not specified
+        # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
+        panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
+    ),
+]
+NewsItem.promote_panels = []

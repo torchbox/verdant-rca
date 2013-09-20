@@ -49,3 +49,11 @@ function createPageChooser(id, pageType, openAtParentId) {
         chooserElement.addClass('blank');
     });
 }
+
+function initInlineChildDeleteButton(childId, deleteInputId) {
+    $('#' + deleteInputId + '-button').click(function() {
+        /* set 'deleted' form field to true */
+        $('#' + deleteInputId).val('1');
+        $('#' + childId).fadeOut();
+    });
+}

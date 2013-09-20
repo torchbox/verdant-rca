@@ -5,8 +5,7 @@ from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 
 from core.models import Page, get_page_types
-from verdantadmin.forms import get_admin_handler_for_model
-
+from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 
 def index(request, parent_page_id=None):
 
@@ -104,42 +103,64 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     #     return redirect('verdantadmin_pages_select_type')
 
     page = page_class()
-    admin_class = get_admin_handler_for_model(page_class)
+    edit_handler_class = get_page_edit_handler(page_class)
+    form_class = edit_handler_class.get_form_class(page_class)
 
     if request.POST:
-        admin = admin_class(request.POST, instance=page)
-        if admin.is_valid():
-            page = admin.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+        form = form_class(request.POST, request.FILES, instance=page)
+        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
+
+        if edit_handler.is_valid():
+            edit_handler.pre_save()
+            page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            admin._post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
+            edit_handler.post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
     else:
-        admin = admin_class(instance=page)
+        form = form_class(instance=page)
+        edit_handler = edit_handler_class(instance=page, form=form)
 
     return render(request, 'verdantadmin/pages/create.html', {
         'content_type': content_type,
         'page_class': page_class,
         'parent_page': parent_page,
-        'admin': admin,
+        'edit_handler': edit_handler,
     })
 
 
 def edit(request, page_id):
     page = get_object_or_404(Page, id=page_id).specific
-    admin_class = get_admin_handler_for_model(page.__class__)
+    edit_handler_class = get_page_edit_handler(page.__class__)
+    form_class = edit_handler_class.get_form_class(page.__class__)
 
     if request.POST:
-        admin = admin_class(request.POST, instance=page)
-        if admin.is_valid():
-            admin.save()
+        form = form_class(request.POST, request.FILES, instance=page)
+        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
+
+        if edit_handler.is_valid():
+            edit_handler.pre_save()
+            form.save()
+            edit_handler.post_save()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
     else:
-        admin = admin_class(instance=page)
+        form = form_class(instance=page)
+        edit_handler = edit_handler_class(instance=page, form=form)
 
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
-        'admin': admin,
+        'edit_handler': edit_handler,
     })
+
+
+PAGE_EDIT_HANDLERS = {}
+def get_page_edit_handler(page_class):
+    if page_class not in PAGE_EDIT_HANDLERS:
+        PAGE_EDIT_HANDLERS[page_class] = TabbedInterface([
+            ObjectList(page_class.content_panels, heading='Content'),
+            ObjectList(page_class.promote_panels, heading='Promote')
+        ])
+
+    return PAGE_EDIT_HANDLERS[page_class]
