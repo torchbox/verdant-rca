@@ -1,5 +1,6 @@
 {% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" %}
-
+    
+    {% if page.path != "events-index.html" %}
     <div class="today expanded">
         <h2>Events</h2>
         <ul>
@@ -26,6 +27,7 @@
             </li>
         </ul>
     </div>
+    {% endif %}
 
     <!-- adverts -->
     <div class="apply">
