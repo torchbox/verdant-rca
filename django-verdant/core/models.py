@@ -22,16 +22,26 @@ class SiteManager(models.Manager):
 
 class Site(models.Model):
     hostname = models.CharField(max_length=255, unique=True, db_index=True)
+    port = models.IntegerField(default=80, help_text="Set this to something other than 80 if you need a specific port number to appear in URLs (e.g. development on port 8000). Does not affect request handling (so port forwarding still works).")
     root_page = models.ForeignKey('Page', related_name='sites_rooted_here')
+    is_default_site = models.BooleanField(default=False, help_text="If true, this site will handle requests for all other hostnames that do not have a site entry of their own")
 
     def natural_key(self):
         return (self.hostname,)
 
     def __unicode__(self):
-        if self.hostname == '*':
-            return "[Default site]"
-        else:
-            return self.hostname
+        return self.hostname + ("" if self.port == 80 else (":%d" % self.port)) + (" [default]" if self.is_default_site else "")
+
+    @staticmethod
+    def find_for_request(request):
+        """Find the site object responsible for responding to this HTTP request object"""
+        hostname = request.META['HTTP_HOST'].split(':')[0]
+        try:
+            # find a Site matching this specific hostname
+            return Site.objects.get(hostname=hostname)
+        except Site.DoesNotExist:
+            # failing that, look for a catch-all Site. If that fails, let the Site.DoesNotExist propagate back to the caller
+            return Site.objects.get(is_default_site=True)
 
 
 PAGE_CONTENT_TYPES = []
