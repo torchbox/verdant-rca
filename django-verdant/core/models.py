@@ -151,50 +151,69 @@ class Page(MP_Node):
         return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
 
     @property
-    def url(self, current_site=None):
-        try:
-            return self._url
-        except AttributeError:
-            # get a list of all ancestor paths of this page
-            paths = [
-                self.path[0:pos]
-                for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
-            ]
-            # retrieve the pages with those paths, along with any site records that they
-            # are roots of. We don't worry about the join returning multiple results because
-            # 1) we're going to stop at the first row where we see a site, and 2) people really
-            # shouldn't be rooting sites at the same place anyway.
-            pages = Page.objects.raw("""
-                SELECT
-                    core_page.id, core_page.slug,
-                    core_site.id AS site_id, core_site.hostname, core_site.port
-                FROM
-                    core_page
-                    LEFT JOIN core_site ON (core_page.id = core_site.root_page_id)
-                WHERE
-                    core_page.path IN %s
-                ORDER BY
-                    core_page.depth DESC
-            """, [tuple(paths)])
+    def url(self):
+        if not hasattr(self, '_url_base'):
+            self._set_url_properties()
+        if self._url_base:
+            return self._url_base + self._url_path
 
-            url = ''
-            for page in pages:
-                if page.site_id:
-                    # we've found a site root; attach the site's base URL and return
-                    if page.port == 80:
-                        base_url = "http://%s/" % page.hostname
-                    else:
-                        base_url = "http://%s:%d/" % (page.hostname, page.port)
-                    self._url = base_url + url
-                    return self._url
+    def relative_url(self, current_site):
+        if not hasattr(self, '_url_base'):
+            self._set_url_properties()
+        if self._url_site_id == current_site.id:
+            # don't prepend the full _url_base, just add a slash
+            return '/' + self._url_path
+        else:
+            return self._url_base + self._url_path
+
+    def _set_url_properties(self):
+        # populate a bunch of properties necessary for forming relative URLs:
+        # _url_path - the path portion of the url (without the initial '/')
+        # _url_site_id - the site
+        # _url_base - the http://example.com:8000/ portion of the url
+
+        # get a list of all ancestor paths of this page
+        paths = [
+            self.path[0:pos]
+            for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
+        ]
+        # retrieve the pages with those paths, along with any site records that they
+        # are roots of. We don't worry about the join returning multiple results because
+        # 1) we're going to stop at the first row where we see a site, and 2) people really
+        # shouldn't be rooting sites at the same place anyway.
+        pages = Page.objects.raw("""
+            SELECT
+                core_page.id, core_page.slug,
+                core_site.id AS site_id, core_site.hostname, core_site.port
+            FROM
+                core_page
+                LEFT JOIN core_site ON (core_page.id = core_site.root_page_id)
+            WHERE
+                core_page.path IN %s
+            ORDER BY
+                core_page.depth DESC
+        """, [tuple(paths)])
+
+        url = ''
+        for page in pages:
+            if page.site_id:
+                # we've found a site root
+                self._url_site_id = page.site_id
+                self._url_path = url
+                if page.port == 80:
+                    self._url_base = "http://%s/" % page.hostname
                 else:
-                    # attach the parent's slug and move on to the next level up
-                    url = page.slug + '/' + url
+                    self._url_base = "http://%s:%d/" % (page.hostname, page.port)
+                return
+            else:
+                # attach the parent's slug and move on to the next level up
+                url = page.slug + '/' + url
 
-            # if we got here, we've reached the end of the ancestor list without finding a site,
-            # which means that this page doesn't have a routeable URL
-            self._url = None
-            return self._url
+        # if we got here, we've reached the end of the ancestor list without finding a site,
+        # which means that this page doesn't have a routeable URL
+        self._url_site_id = None
+        self._url_path = None
+        self._url_base = None
 
     @classmethod
     def clean_subpage_types(cls):

@@ -1,13 +1,11 @@
 from django.http import Http404
 
-from core.models import Site
-
 
 def serve(request, path):
-    try:
-        site = Site.find_for_request(request)
-    except Site.DoesNotExist:
+    # we need a valid Site object corresponding to this request (set in core.middleware.SiteMiddleware)
+    # in order to proceed
+    if not request.site:
         raise Http404
 
     path_components = [component for component in path.split('/') if component]
-    return site.root_page.specific.route(request, path_components)
+    return request.site.root_page.specific.route(request, path_components)

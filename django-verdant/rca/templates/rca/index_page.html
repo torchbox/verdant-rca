@@ -1,9 +1,9 @@
 {% extends "rca/base.html" %}
-
+{% load pageurl %}
 {% block content %}
     <ul>
         {% for page in self.get_children %}
-            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

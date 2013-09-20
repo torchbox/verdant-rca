@@ -1,6 +1,7 @@
 {% extends "rca/editorial_page.html" %}
 
 {% load image_tags %}
+{% load pageurl %}
 
 {% block pre_content %}
     {% image self.mugshot width-300 %}
@@ -10,14 +11,14 @@
     <h2>News stories by {{ self.title }}:</h2>
     <ul>
         {% for story in self.news_items.all %}
-            <li><a href="{{ story.url }}">{{ story.title }}</a></li>
+            <li><a href="{% pageurl story %}">{{ story.title }}</a></li>
         {% endfor %}
     </ul>
 
     <p>in alphabetical order:</p>
     <ul>
         {% for page in news_items %}
-            <li><a href="{{ page.url }}">{{ page.title }}</a></li>
+            <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
         {% endfor %}
     </ul>
 
