@@ -24,8 +24,12 @@
         <h2>Or upload a new one:</h2>
         <form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Upload">
+            <ul class="fields">
+                {% for field in form %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% endfor %}
+                <li class="button"><input type="submit" value="Upload" /></li>
+            </ul>
         </form>
     </div>
 </div>
