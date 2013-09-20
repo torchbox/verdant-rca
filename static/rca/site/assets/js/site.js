@@ -74,10 +74,21 @@ $(function(){
 
     /* start any bxslider carousels not found within a tab  */
     carousel = $('.carousel:not(.tab-pane .carousel)').bxSlider({
+        adaptiveHeight: true,
         pager: function(){return $(this).hasClass('paginated')},
         onSliderLoad: function(){
+            //find tallest item and use as basis of scale for portrait images
+            var tallest = 0;
+            $('li', carousel).each(function(){
+                console.log(tallest);
+                tallest = ($(this).height() > tallest) ? $(this).height() : tallest;
+            })
+
+            // Also set the carousel to be that tallest height by default, otherwise it may have no height a tall
+            carousel.parent().height(tallest);
+
             //find portrait images and set their height to be a percentage
-            $('.portrait', carousel).css('padding-bottom', ($('li:first-child', carousel).height() / $('li:first-child', carousel).width() * 100) + '%');
+            $('.portrait', carousel).css('padding-bottom', (tallest / carousel.parent().width() * 100) + '%');
 
         }
     }); 
