@@ -38,6 +38,7 @@ PAGE_CONTENT_TYPES = []
 def get_page_types():
     return PAGE_CONTENT_TYPES
 
+LEAF_PAGE_CONTENT_TYPE_IDS = []
 
 class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
@@ -53,9 +54,13 @@ class PageBase(models.base.ModelBase):
             # subclasses are only abstract if the subclass itself defines itself so
             cls.is_abstract = False
 
-        if DB_IS_READY and not cls.is_abstract:
-            # register this type in the list of page content types
-            PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
+        if DB_IS_READY:
+            if not cls.is_abstract:
+                # register this type in the list of page content types
+                PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
+            if not cls.subpage_types:
+                LEAF_PAGE_CONTENT_TYPE_IDS.append(
+                    ContentType.objects.get_for_model(cls).id)
 
 
 class Page(MP_Node):
@@ -128,12 +133,11 @@ class Page(MP_Node):
         Return true if it's meaningful to browse subpages of this page -
         i.e. it currently has subpages, or its page type indicates that sub-pages are supported
         """
-        return (not self.is_leaf()) or self.content_type.model_class().subpage_types
+        return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
 
     def get_navigable_children(self):
-        # TODO: reframe this as a 'get children with a child_count greater than 0 or a content type in this list' query,
-        # which ought to be more efficient than filtering the full list of children
-        return [page for page in self.get_children() if page.is_navigable()]
+        # "get children, except for leaf-type ones that have no children of their own"
+        return self.get_children().exclude(numchild=0, content_type_id__in=LEAF_PAGE_CONTENT_TYPE_IDS)
 
 
     @property
