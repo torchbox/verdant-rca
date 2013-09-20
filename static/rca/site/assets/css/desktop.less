@@ -313,18 +313,28 @@ footer {
 
 .type-events-index {
     .one-plus {
+        ul{
+            margin:0;
+        }
         li.first {
             .column(2, @grid-gutter-width/2, 6);
+            background-color: @color-light-pink;
+            padding: @spacing-half;
         }
         li.second {
-            .column(4, @grid-gutter-width/2, 6);
+            margin-left: 8.33%; /* one column width */
+            .column(3.5, @grid-gutter-width/2, 6);
         }
     }
 }
 
 .type-jobs-index {
     .one-plus {
+        /*li{
+            .column(8);       
+        }*/
         li.col {
+            //.column(4, @grid-gutter-width/2, 8);
             .column(3, @grid-gutter-width/2, 6);
         }
     }
