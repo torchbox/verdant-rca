@@ -12,25 +12,24 @@
 
 {% block form_field %}
 
-    <div id="{{ field.id_for_label }}-chooser" class="image-chooser {% if not image %}blank{% endif %}">
+    <div id="{{ field.id_for_label }}-chooser" class="chooser image-chooser {% if not image %}blank{% endif %}">
 
-        <div class="chosen-state">
-            <span class="preview-image action-choose-image">
+        <div class="chosen">
+            <div class="preview-image">
                 {% if image %}
                     {% image image fill-130x100 %}
                 {% else %}
                     <img>
                 {% endif %}
-            </span>
+            </div>
             {% if not field.field.required %}
-                <input type="button" class="action-clear-image" value="Clear image">
+                <input type="button" class="action-clear" value="Clear image">
             {% endif %}
-            <input type="button" class="action-choose-image" value="Choose another image">
+            <input type="button" class="action-choose" value="Choose another image">
         </div>
 
-        <div class="unchosen-state">
-            <img src="{% static 'verdantimages/images/placeholder.png' %}" width="100" height="75" alt="" class="action-choose-image">
-            <input type="button" class="action-choose-image" value="Choose an image">
+        <div class="unchosen">
+            <input type="button" class="action-choose" value="Choose an image">
         </div>
 
     </div>

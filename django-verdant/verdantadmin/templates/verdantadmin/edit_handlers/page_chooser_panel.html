@@ -15,19 +15,19 @@
 
 {% block form_field %}
 
-    <div id="{{ field.id_for_label }}-chooser" class="page-chooser {% if not page %}blank{% endif %}">
+    <div id="{{ field.id_for_label }}-chooser" class="chooser page-chooser {% if not page %}blank{% endif %}">
 
-        <div class="chosen-state">
+        <div class="chosen">
             <span class="page-title">{{ page.title }}</span>
 
             {% if not field.field.required %}
                 <input type="button" class="action-clear" value="Clear choice">
             {% endif %}
-            <input type="button" class="action-choose-page" value="Choose another page">
+            <input type="button" class="action-choose" value="Choose another page">
         </div>
 
-        <div class="unchosen-state">
-            <input type="button" class="action-choose-page" value="Choose a page">
+        <div class="unchosen">
+            <input type="button" class="action-choose" value="Choose a page">
         </div>
 
     </div>

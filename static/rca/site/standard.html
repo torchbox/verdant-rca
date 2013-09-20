@@ -10,27 +10,16 @@ bodyclass: type-standard
 </section>
 
 <section class="row">
-	{% include modules/body-text.html showIntro = true %}
+	{% include modules/body-text.html showIntro = true showImage = true %}
 
 	<section class="four">
-		<div class="single borders">
+		<div class="single">
 			{% include modules/share-button.html %}
 		</div>
-		<ul class="button-bar one-button">
-	        <li><a href="#" class="button icon icon-download">RCA Annual Review 2011/12</a></li>
-	    </ul>
-    	{% include modules/teaser-image.html %}
-    	{% include modules/quotation.html %}
+		{% include modules/quotation.html %}
+		{% include modules/quotation.html %}
+    	
 	</section>
-</section>
-
-<section class="row">
-	
-</section>
-
-<h2>Teaser title</h2>
-<section class="row">
-	{% include modules/teaser-quote.html %}
 </section>
 
 {% include modules/twitter-feed.html %}

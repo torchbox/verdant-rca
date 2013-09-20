@@ -41,7 +41,7 @@
  * Filters
  * Job summary
  * Job details
- * Teaser image
+ * Bodytext image
  * Quotation
  */
 
@@ -312,6 +312,7 @@
     .share-wrapper {
         margin: @spacing-one 0 0 0;
         width: 180px;
+        padding: @spacing-one 0;
     }
     &.borders {
         .share-wrapper {
@@ -696,7 +697,6 @@
 .one-plus {
     ul{
         .unlist();
-        .row-flush();
     }
     .image{
         margin-bottom:@grid-gutter-width/2;
@@ -1255,25 +1255,26 @@
 }
 
 /**
- * $Teaser image
+ * $Bodytext image
  */
 
-.teaser-image {
+.bodytext-image {
     margin-top: @spacing-one;
-    border-top: 1px solid @color-medium-grey;
-    padding-top: @spacing-half;
+    //border-top: 1px solid @color-medium-grey;
+    //padding-top: @spacing-half;
     figcaption {
-        //display: none;
         display: block;
         width: 100%;
         text-align: right;
         margin-top: @spacing-one;
     }
-    /*&:hover {
-        figcaption {
-            display: block;
+    &.small {
+        .image {
+            max-width: 33.33%;
+            float:right;
+            margin-left: @spacing-one;
         }
-    }*/
+    }
 }
 
 /**
@@ -1283,7 +1284,7 @@
 .quotation {
     border-top: 1px solid @color-medium-grey;
     padding-top: @spacing-one;
-    margin: @spacing-one 0;
+    margin: 0;
     padding-right: @spacing-three;
     cite {
         font-style: normal;

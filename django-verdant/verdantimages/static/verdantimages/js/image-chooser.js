@@ -3,7 +3,7 @@ function createImageChooser(id) {
     var previewImage = chooserElement.find('.preview-image img');
     var input = $('#' + id);
 
-    $('.action-choose-image', chooserElement).click(function() {
+    $('.action-choose', chooserElement).click(function() {
         ModalWorkflow({
             'url': '/admin/images/chooser/', /* TODO: don't hard-code this, as it may be changed in urls.py */
             'responses': {
@@ -21,7 +21,7 @@ function createImageChooser(id) {
         });
     });
 
-    $('.action-clear-image', chooserElement).click(function() {
+    $('.action-clear', chooserElement).click(function() {
         input.val('');
         chooserElement.addClass('blank');
     });
