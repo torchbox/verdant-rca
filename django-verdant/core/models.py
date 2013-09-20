@@ -88,7 +88,8 @@ class Page(MP_Node):
 
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
-        if not self.content_type_id:
+        if not self.id and not self.content_type_id:
+            # this model is being newly created rather than retrieved from the db;
             # set content type to correctly represent the model class that this was
             # created as
             self.content_type = ContentType.objects.get_for_model(self)
@@ -150,26 +151,50 @@ class Page(MP_Node):
         return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
 
     @property
-    def url(self):
-        paths = [
-            self.path[0:pos]
-            for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
-        ]
-        ancestors = Page.objects.filter(path__in=paths).order_by('-depth').prefetch_related('sites_rooted_here')
-        path_components = []
+    def url(self, current_site=None):
+        try:
+            return self._url
+        except AttributeError:
+            # get a list of all ancestor paths of this page
+            paths = [
+                self.path[0:pos]
+                for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
+            ]
+            # retrieve the pages with those paths, along with any site records that they
+            # are roots of. We don't worry about the join returning multiple results because
+            # 1) we're going to stop at the first row where we see a site, and 2) people really
+            # shouldn't be rooting sites at the same place anyway.
+            pages = Page.objects.raw("""
+                SELECT
+                    core_page.id, core_page.slug,
+                    core_site.id AS site_id, core_site.hostname, core_site.port
+                FROM
+                    core_page
+                    LEFT JOIN core_site ON (core_page.id = core_site.root_page_id)
+                WHERE
+                    core_page.path IN %s
+                ORDER BY
+                    core_page.depth DESC
+            """, [tuple(paths)])
 
-        site = None
-        for ancestor in ancestors:
-            sites_rooted_here = ancestor.sites_rooted_here.all()
-            if sites_rooted_here:
-                site = sites_rooted_here[0]
-                break
-            else:
-                path_components.insert(0, ancestor.slug)
+            url = ''
+            for page in pages:
+                if page.site_id:
+                    # we've found a site root; attach the site's base URL and return
+                    if page.port == 80:
+                        base_url = "http://%s/" % page.hostname
+                    else:
+                        base_url = "http://%s:%d/" % (page.hostname, page.port)
+                    self._url = base_url + url
+                    return self._url
+                else:
+                    # attach the parent's slug and move on to the next level up
+                    url = page.slug + '/' + url
 
-        # FIXME: support cross-domain links
-        return '/' + '/'.join(path_components) + '/'
-
+            # if we got here, we've reached the end of the ancestor list without finding a site,
+            # which means that this page doesn't have a routeable URL
+            self._url = None
+            return self._url
 
     @classmethod
     def clean_subpage_types(cls):
