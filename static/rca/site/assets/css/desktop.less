@@ -310,12 +310,26 @@ footer {
 
 .type-event {
 }
-
+.type-events-index,
 .type-events-index {
     .one-plus {
         ul{
             margin:0;
         }
+        li {
+            .column(6, @grid-gutter-width * 2);
+            &.newrow {
+                padding-left: 0;
+            }
+            &:not(.newrow) {
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.type-events-index {
+    .one-plus {
         li.first {
             .column(2, @grid-gutter-width/2, 6);
             background-color: @color-light-pink;
@@ -330,11 +344,7 @@ footer {
 
 .type-jobs-index {
     .one-plus {
-        /*li{
-            .column(8);       
-        }*/
         li.col {
-            //.column(4, @grid-gutter-width/2, 8);
             .column(3, @grid-gutter-width/2, 6);
         }
     }
