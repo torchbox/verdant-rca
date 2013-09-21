@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup, NavigableString, Tag
 from urlparse import urlparse
+import re  # parsing HTML with regexes LIKE A BOSS.
 
 # FIXME: we don't really want to import verdantimages within core.
 # For that matter, we probably don't want core to be concerned about translating
@@ -73,26 +74,6 @@ EDITOR_WHITELIST_RULES = WHITELIST_RULES.copy()
 EDITOR_WHITELIST_RULES.update({
     'a': filter_a_for_editor,
     'img': filter_img_for_editor,
-})
-
-
-def filter_a_for_template(elem):
-    if 'data-id' in elem.attrs:
-        try:
-            page = Page.objects.get(id=elem.attrs['data-id'])
-            elem['href'] = page.url
-        except Page.DoesNotExist:
-            pass
-    strip_attributes_not_in_list(elem, ['href'])
-
-def filter_img_for_template(elem):
-    populate_image_attrs(elem)
-    strip_attributes_not_in_list(elem, ['src', 'width', 'height', 'class', 'alt'])
-
-TEMPLATE_WHITELIST_RULES = WHITELIST_RULES.copy()
-TEMPLATE_WHITELIST_RULES.update({
-    'a': filter_a_for_template,
-    'img': filter_img_for_template,
 })
 
 
@@ -184,7 +165,75 @@ def to_editor_html(html):
     apply_whitelist(doc, EDITOR_WHITELIST_RULES)
     return unicode(doc)
 
+FIND_A_TAG = re.compile(r'<a(\b[^>]*)>')
+FIND_IMG_TAG = re.compile(r'<img(\b[^>]*)>')
+FIND_ATTRS = re.compile(r'([\w-]+)\=("[^"]*"|\'[^\']*\'|\S*)')
+FIND_QUOTED_TOKEN = re.compile(r'[\'\"]?([\w-]*)')
+
 def to_template_html(html):
-    doc = BeautifulSoup(html)
-    apply_whitelist(doc, TEMPLATE_WHITELIST_RULES)
-    return unicode(doc)
+    def extract_attrs(attr_string, whitelist):
+        attributes = {}
+        for name, val in FIND_ATTRS.findall(attr_string):
+            if name in whitelist:
+                attributes[name] = val
+        return attributes
+
+    def build_tag(name, attributes):
+        return '<' + name + ''.join([" %s=%s" % i for i in attributes.items()]) + '>'
+
+    def get_attr_token(s):
+        clean_val = FIND_QUOTED_TOKEN.match(s)
+        return (clean_val and clean_val.group(1))
+
+    def replace_a_elem(m):
+        attributes = extract_attrs(m.group(1), ('data-id', 'href'))
+
+        if 'data-id' in attributes:
+            try:
+                page_id = get_attr_token(attributes['data-id'])
+                page = Page.objects.get(id=page_id)
+                attributes['href'] = page.url
+            except Page.DoesNotExist:
+                pass
+            del attributes['data-id']
+
+        return build_tag('a', attributes)
+
+    def replace_img_elem(m):
+        attributes = extract_attrs(m.group(1), ('data-id', 'data-format', 'src', 'width', 'height', 'alt', 'class'))
+
+        if 'data-id' in attributes:
+            try:
+                image_id = get_attr_token(attributes['data-id'])
+                image = Image.objects.get(id=image_id)
+                try:
+                    format_name = get_attr_token(attributes['data-format'])
+                    format = FORMATS_BY_NAME[format_name]
+                    filter_spec = format.filter_spec
+                    classnames = format.classnames
+                except KeyError:
+                    filter_spec = 'max-1024x768'
+                    classnames = None
+
+                rendering = image.get_rendition(filter_spec)
+                attributes['src'] = rendering.url
+                attributes['width'] = rendering.width
+                attributes['height'] = rendering.height
+
+                if classnames:
+                    attributes['class'] = classnames
+                else:
+                    try:
+                        del attributes['class']
+                    except KeyError:
+                        pass
+
+            except Image.DoesNotExist:
+                pass
+
+        return build_tag('img', attributes)
+
+
+    html = FIND_A_TAG.sub(replace_a_elem, html)
+    html = FIND_IMG_TAG.sub(replace_img_elem, html)
+    return html
