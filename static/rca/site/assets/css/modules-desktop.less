@@ -41,6 +41,7 @@
  * Gallery
  * Index page intro
  * Three-search
+ * Contact
  */
 
  
@@ -731,5 +732,21 @@
     .three {
         .column(3);
         padding-right: 0;
+    }
+}
+
+/**
+ * Contact
+ */
+
+.contact {
+    li.col {
+        .column(4, @grid-gutter-width, 12); 
+        p {
+            margin: 0;
+        }
+        &:first-child {
+            padding-left: 0;
+        }
     }
 }
