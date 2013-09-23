@@ -87,6 +87,7 @@ def chooser_select_format(request, image_id):
                 'title': image.title,
                 'format': format.name,
                 'alt': form.cleaned_data['alt_text'],
+                'class': format.classnames,
                 'preview': {
                     'url': preview_image.url,
                     'width': preview_image.width,

@@ -32,6 +32,7 @@
                             img.setAttribute('width', imageData.preview.width)
                             img.setAttribute('height', imageData.preview.height)
                             img.setAttribute('alt', imageData.alt)
+                            img.setAttribute('class', imageData['class'])
                             img.setAttribute('data-alt', imageData.alt)
                             img.setAttribute('data-embedtype', 'image')
                             img.setAttribute('data-id', imageData.id)
