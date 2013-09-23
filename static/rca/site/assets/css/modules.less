@@ -43,6 +43,7 @@
  * Job details
  * Bodytext image
  * Quotation
+ * Gallery
  */
 
 /**
@@ -1292,5 +1293,24 @@
     }
     p {
         margin: 0;
+    }
+}
+
+/**
+ * $Gallery
+ */
+
+.gallery{
+    ul{
+        .unlist();
+    }
+    li{
+        padding-bottom:@grid-gutter-width;
+    }
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+    h2,h3,p{
+        margin:0;
     }
 }

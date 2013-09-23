@@ -1,6 +1,6 @@
 $(function(){
 
-	Harvey.attach('screen and (max-width:1023px)', {
+	Harvey.attach('screen and (max-width:768px)', {
 		setup: function(){}, // called when the query becomes valid for the first time
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({
@@ -17,7 +17,7 @@ $(function(){
 
 		} // called each time the query is deactivated
 	});
-	Harvey.attach('screen and (min-width:1024px)', {
+	Harvey.attach('screen and (min-width:768px)', {
 		setup: function(){}, // called when the query becomes valid for the first time
 		on: function(){
 			desktopNav.apply()
@@ -101,7 +101,7 @@ var desktopNav = {
 						$(this).find('> ul').stop().hide();
 					}
 				},
-				timeout: 1000
+				timeout: 600
 			});
 		});
 	},
