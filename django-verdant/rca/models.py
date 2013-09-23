@@ -159,8 +159,8 @@ class NewsItem(Page):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
-    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='related_school')
-    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='related_programme')
+    #related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='related_school')
+    #related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='related_programme')
     # TODO: Social image
     # TODO: Social text
 
@@ -187,6 +187,6 @@ NewsItem.promote_panels = [
     FieldPanel('show_on_homepage'),
     FieldPanel('listing_intro'),
     FieldPanel('area'),
-    PageChooserPanel('related_school', SchoolPage),
-    PageChooserPanel('related_programme', ProgrammePage),
+    #PageChooserPanel('related_school', SchoolPage),
+    #PageChooserPanel('related_programme', ProgrammePage),
 ]
