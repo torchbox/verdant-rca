@@ -25,3 +25,7 @@ class ImageInsertionForm(forms.Form):
         widget=forms.RadioSelect
     )
     alt_text = forms.CharField()
+
+
+class ImageSearchForm(forms.Form):
+    q = forms.CharField(label = "Search")
