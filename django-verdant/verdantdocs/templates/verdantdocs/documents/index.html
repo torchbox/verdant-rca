@@ -7,11 +7,11 @@
                 <h1>Documents</h1>
             </div>
             <div class="right col3">
-                <a href="{# url 'verdantdocs_add_document' #}" class="button icon add-teal">Add a document</a>
+                <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>
             </div>
         </div>
     </header>
-    <div class="listing documents">
+    <div class="{# listing #} documents">
         <ul>
             {% for doc in documents %}
                 <li>
