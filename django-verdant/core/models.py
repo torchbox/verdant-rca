@@ -55,6 +55,12 @@ class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
     def __init__(cls, name, bases, dct):
         super(PageBase, cls).__init__(name, bases, dct)
+
+        if cls._deferred:
+            # this is an internal class built for Django's deferred-attribute mechanism;
+            # don't proceed with all this page type registration stuff
+            return
+
         if 'template' not in dct:
             # Define a default template path derived from the app name and model name
             cls.template = "%s/%s.html" % (cls._meta.app_label, camelcase_to_underscore(name))
