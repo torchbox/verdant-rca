@@ -167,10 +167,11 @@ a.button{
 .help, .error-message{
     font-size:0.85em;
     font-weight:300;
-    margin-top:0;
+    margin:0;
 }
 .help{
-    .transition(opacity 0.2s ease); /* TODO: This makes the browser go nuts. Find way to solve */
+    /* TODO: This transitionmakes the browser go nuts. Find way to solve */
+    .transition(opacity 0.2s ease); 
     color:@color-grey;
     opacity:0;
 }
