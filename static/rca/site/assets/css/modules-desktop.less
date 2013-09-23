@@ -688,11 +688,20 @@
  * Three search
  */
 .three-search {
-    .fine {
-        .column(9);
+    .nine {
+        .column(9,);
         padding-left: 0;
+        li {
+            .column(3, @grid-gutter-width, 9);
+            &:first-child {
+                padding-left: @grid-gutter-width / 2;
+            }
+            .h8, .bc5 {
+                font-size: @font-size-12;
+            }
+        }
     }
-    .free {
+    .three {
         .column(3);
         padding-right: 0;
     }

@@ -688,7 +688,7 @@
  *$Horizontal scrolling of events, and several (but not all) X-plus items
  */
 
-.events, .two-plus, .three-plus, .four-plus, .five, .five-plus, .speakers {
+.events, .two-plus, .three-plus, .four-plus, .five, .five-plus, .speakers, .current-research {
    .x-plus-scrolled();
 }
 
@@ -1322,6 +1322,24 @@
     .content {
         .bc4{
             font-size:0.8em;
+        }
+    }
+}
+
+/**
+ * Three search
+ */
+.three-search {
+    .research-search {
+        /* overriding core search styles */
+        position: static;
+        display: block;
+        width: 100%;
+        background-color: @color-light-grey;
+        border-bottom: 0;
+        input[type="text"] {
+            color: @color-black;
+            font-weight: bold;
         }
     }
 }
