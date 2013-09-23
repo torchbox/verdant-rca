@@ -147,7 +147,16 @@ header {
 nav {
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
+
+    &:after {
+        .sprite-load(-53px, -1178px, 27px, 15px);
+        content: ' ';
+        position: absolute;
+        top: @spacing-half;
+        right: @spacing-half;
+    }
 }
+
 
 /* Search moves alongside the menu above the content */
 form.search {
