@@ -222,6 +222,11 @@ aside {
     .column(3, 0, 12);
 }
 
+.six {
+    .column(6, 0, 12);
+    padding-right: @grid-gutter-width;
+}
+
 .nine {
     .column(9, 0, 12);
 }
@@ -320,7 +325,7 @@ footer {
 .type-event {
 }
 .type-events-index,
-.type-events-index {
+.type-jobs-index {
     .one-plus {
         ul{
             margin:0;
@@ -355,6 +360,7 @@ footer {
     .one-plus {
         li.col {
             .column(3, @grid-gutter-width/2, 6);
+            padding-left: 0;
         }
     }
 }

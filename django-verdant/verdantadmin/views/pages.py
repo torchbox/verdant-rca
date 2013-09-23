@@ -27,15 +27,11 @@ def select_type(request):
         SELECT DISTINCT content_type_id AS id FROM core_page
     """)
 
-    print "existing page types: %s" % repr(list(existing_page_types))
-
     page_types = set()
     for ct in existing_page_types:
         allowed_subpage_types = ct.model_class().clean_subpage_types()
-        print "allowed subpage types of %s = %s" % (ct, repr(allowed_subpage_types))
         for subpage_type in allowed_subpage_types:
             subpage_content_type = ContentType.objects.get_for_model(subpage_type)
-            print "adding content type %s" % repr(subpage_content_type)
 
             page_types.add(subpage_content_type)
 

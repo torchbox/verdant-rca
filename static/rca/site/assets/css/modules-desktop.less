@@ -38,7 +38,12 @@
  * Job details
  * Teaser image
  * Quotation
+<<<<<<< HEAD
  * Gallery
+=======
+ * Index page intro
+ * Three-search
+>>>>>>> 616b1b3fd9372134353bc8d9fbad1ea82cda6d65
  */
 
  
@@ -669,6 +674,7 @@
 }
 
 /**
+<<<<<<< HEAD
  * $Gallery
  */
 
@@ -693,4 +699,41 @@
         max-height:none;
         max-width:400px;
     }*/
+=======
+ * Index page intro
+ */
+
+.index-intro {
+    .content {
+        margin: 0;
+        .column(8);
+        padding-left:0;
+        .bc4{
+            font-size:0.5em;
+        }
+    }
+}
+
+/**
+ * Three search
+ */
+.three-search {
+    .nine {
+        .column(9,);
+        padding-left: 0;
+        li {
+            .column(3, @grid-gutter-width, 9);
+            &:first-child {
+                padding-left: @grid-gutter-width / 2;
+            }
+            .h8, .bc5 {
+                font-size: @font-size-12;
+            }
+        }
+    }
+    .three {
+        .column(3);
+        padding-right: 0;
+    }
+>>>>>>> 616b1b3fd9372134353bc8d9fbad1ea82cda6d65
 }
