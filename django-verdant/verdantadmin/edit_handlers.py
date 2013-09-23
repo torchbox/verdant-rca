@@ -283,12 +283,38 @@ def RichTextFieldPanel(field_name):
     })
 
 
-class BasePageChooserPanel(BaseFieldPanel):
-    field_template = "verdantadmin/edit_handlers/page_chooser_panel.html"
+class BaseChooserPanel(BaseFieldPanel):
+    """
+    Abstract superclass for panels that provide a modal interface for choosing (or creating)
+    a database object such as an image, resulting in an ID that is used to populate
+    a hidden foreign key input.
 
+    Subclasses provide:
+    * field_template
+    * object_type_name - something like 'image' which will be used as the var name
+      for the object instance in the field_template
+    * js_function_name - a JS function responsible for the modal workflow; this receives
+      the ID of the hidden field as a parameter, and should ultimately populate that field
+      with the appropriate object ID. If the function requires any other parameters, the
+      subclass will need to override render_js instead.
+    """
     @classmethod
     def widget_overrides(cls):
         return {cls.field_name: HiddenInput}
+
+    def render_as_field(self, show_help_text=True):
+        return mark_safe(render_to_string(self.field_template, {
+            'field': self.bound_field,
+            self.object_type_name: getattr(self.instance, self.field_name),
+            'show_help_text': show_help_text,
+        }))
+
+    def render_js(self):
+        return mark_safe("%s(fixPrefix('%s'));" % (self.js_function_name, self.bound_field.id_for_label))
+
+class BasePageChooserPanel(BaseChooserPanel):
+    field_template = "verdantadmin/edit_handlers/page_chooser_panel.html"
+    object_type_name = "page"
 
     _target_content_type = None
     @classmethod
@@ -301,13 +327,6 @@ class BasePageChooserPanel(BaseFieldPanel):
                 cls._target_content_type = ContentType.objects.get_by_natural_key('core', 'page')
 
         return cls._target_content_type
-
-    def render_as_field(self, show_help_text=True):
-        return mark_safe(render_to_string(self.field_template, {
-            'field': self.bound_field,
-            'page': getattr(self.instance, self.field_name),
-            'show_help_text': show_help_text,
-        }))
 
     def render_js(self):
         page = getattr(self.instance, self.field_name)
