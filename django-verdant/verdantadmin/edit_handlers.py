@@ -283,12 +283,40 @@ def RichTextFieldPanel(field_name):
     })
 
 
-class BasePageChooserPanel(BaseFieldPanel):
-    field_template = "verdantadmin/edit_handlers/page_chooser_panel.html"
+class BaseChooserPanel(BaseFieldPanel):
+    """
+    Abstract superclass for panels that provide a modal interface for choosing (or creating)
+    a database object such as an image, resulting in an ID that is used to populate
+    a hidden foreign key input.
 
+    Subclasses provide:
+    * field_template
+    * object_type_name - something like 'image' which will be used as the var name
+      for the object instance in the field_template
+    * js_function_name - a JS function responsible for the modal workflow; this receives
+      the ID of the hidden field as a parameter, and should ultimately populate that field
+      with the appropriate object ID. If the function requires any other parameters, the
+      subclass will need to override render_js instead.
+    """
     @classmethod
     def widget_overrides(cls):
         return {cls.field_name: HiddenInput}
+
+    def render_as_field(self, show_help_text=True):
+        instance_obj = getattr(self.instance, self.field_name)
+        return mark_safe(render_to_string(self.field_template, {
+            'field': self.bound_field,
+            self.object_type_name: instance_obj,
+            'is_chosen': bool(instance_obj),
+            'show_help_text': show_help_text,
+        }))
+
+    def render_js(self):
+        return mark_safe("%s(fixPrefix('%s'));" % (self.js_function_name, self.bound_field.id_for_label))
+
+class BasePageChooserPanel(BaseChooserPanel):
+    field_template = "verdantadmin/edit_handlers/page_chooser_panel.html"
+    object_type_name = "page"
 
     _target_content_type = None
     @classmethod
@@ -301,13 +329,6 @@ class BasePageChooserPanel(BaseFieldPanel):
                 cls._target_content_type = ContentType.objects.get_by_natural_key('core', 'page')
 
         return cls._target_content_type
-
-    def render_as_field(self, show_help_text=True):
-        return mark_safe(render_to_string(self.field_template, {
-            'field': self.bound_field,
-            'page': getattr(self.instance, self.field_name),
-            'show_help_text': show_help_text,
-        }))
 
     def render_js(self):
         page = getattr(self.instance, self.field_name)
@@ -339,11 +360,16 @@ class BaseInlinePanel(EditHandler):
     @classmethod
     def get_child_edit_handler_class(cls):
         if cls._child_edit_handler_class is None:
-            if cls.panels is None:
+            # Look for a panels definition in the InlinePanel declaration
+            if cls.panels is not None:
+                panels = cls.panels
+            # Failing that, see if the related model has one defined
+            elif hasattr(cls.related_model, 'panels'):
+                panels = cls.related_model.panels
+            # As a last resort, build the form class and get some basic panel definitions from that
+            else:
                 form_class = cls.get_child_form_class()
                 panels = extract_panel_definitions_from_form_class(form_class)
-            else:
-                panels = cls.panels
 
             cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
 
@@ -353,7 +379,7 @@ class BaseInlinePanel(EditHandler):
     @classmethod
     def get_child_form_class(cls):
         if cls._child_form_class is None:
-            if cls.panels is None:
+            if cls.panels is None and not hasattr(cls.related_model, 'panels'):
                 # go ahead and create the formset without any intervention from panel definitions
                 cls._child_form_class = get_form_for_model(cls.related_model)
             else:
