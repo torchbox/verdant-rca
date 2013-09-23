@@ -6,6 +6,7 @@ from core.fields import RichTextField
 
 from verdantadmin.edit_handlers import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
+from verdantdocs.edit_handlers import DocumentChooserPanel
 
 
 class RelatedLink(models.Model):
@@ -17,6 +18,14 @@ class RelatedLink(models.Model):
     # (actually, it's so that we can check that the widget override for ImageChooserPanel happens
     # within formsets too)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+
+class RelatedDocument(models.Model):
+    page = models.ForeignKey('core.Page', related_name='related_documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+
+    panels = [
+        DocumentChooserPanel('document')
+    ]
 
 class EditorialPage(Page):
     body = RichTextField()
@@ -144,5 +153,6 @@ NewsItem.content_panels = [
         # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
         panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
     ),
+    InlinePanel(Page, RelatedDocument),
 ]
 NewsItem.promote_panels = []

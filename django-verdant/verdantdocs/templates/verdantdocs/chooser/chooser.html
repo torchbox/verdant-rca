@@ -1,0 +1,14 @@
+<header>
+<h1>Choose a document</h1>
+</header>
+
+<div class="{# listing #} documents">
+    <ul>
+        {% for doc in documents %}
+            <li>
+                <a class="document-choice" href="{% url 'verdantdocs_document_chosen' doc.id %}">{{ doc.title }}</a>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

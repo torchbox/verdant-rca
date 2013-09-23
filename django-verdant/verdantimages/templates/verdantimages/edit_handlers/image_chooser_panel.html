@@ -1,39 +1,16 @@
-{% extends "verdantadmin/edit_handlers/field_panel_field.html" %}
+{% extends "verdantadmin/edit_handlers/chooser_panel.html" %}
 {% load image_tags %}
-{% load static %}
 
-{% comment %}
-    Either the chosen-state or unchosen-state div will be shown, depending on the presence
-    of the 'blank' class on the container.
-
-    Any element with the 'action-choose-image' class will open the image chooser modal
-    when clicked.
-{% endcomment %}
-
-{% block form_field %}
-
-    <div id="{{ field.id_for_label }}-chooser" class="chooser image-chooser {% if not image %}blank{% endif %}">
-
-        <div class="chosen">
-            <div class="preview-image">
-                {% if image %}
-                    {% image image fill-130x100 %}
-                {% else %}
-                    <img>
-                {% endif %}
-            </div>
-            {% if not field.field.required %}
-                <input type="button" class="action-clear" value="Clear image">
-            {% endif %}
-            <input type="button" class="action-choose" value="Choose another image">
-        </div>
-
-        <div class="unchosen">
-            <input type="button" class="action-choose" value="Choose an image">
-        </div>
-
+{% block chosen_state_view %}
+    <div class="preview-image">
+        {% if image %}
+            {% image image fill-130x100 %}
+        {% else %}
+            <img>
+        {% endif %}
     </div>
-
-    {{ field }}
-
 {% endblock %}
+
+{% block clear_button_label %}Clear image{% endblock %}
+{% block choose_another_button_label %}Choose another image{% endblock %}
+{% block choose_button_label %}Choose an image{% endblock %}
