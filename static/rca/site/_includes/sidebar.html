@@ -1,4 +1,4 @@
-{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" %}
+{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" and page.path != "rcanow.html" %}
     
     {% if page.path != "events-index.html" %}
     <div class="today expanded">
@@ -137,4 +137,8 @@
             <p>School: Design</p>
         </a>
     </div>
+{% endif %}
+
+{% if page.path == "rcanow.html" %}
+	{% include modules/three-plus-vertical.html %}
 {% endif %}
