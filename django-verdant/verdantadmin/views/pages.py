@@ -56,11 +56,12 @@ def select_location(request, content_type_app_name, content_type_model_name):
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
         raise Http404
-    # content type must be in the list of page types
-    if content_type not in get_page_types():
-        raise Http404
 
     page_class = content_type.model_class()
+    # page_class must be a Page type and not some other random model
+    if not issubclass(page_class, Page):
+        raise Http404
+
     # find all the valid locations (parent pages) where a page of the chosen type can be added
     parent_pages = page_class.allowed_parent_pages()
 

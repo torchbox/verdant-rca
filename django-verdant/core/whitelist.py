@@ -75,29 +75,30 @@ class Whitelister(object):
     def clean(cls, html):
         """Clean up an HTML string to contain just the allowed elements / attributes"""
         doc = BeautifulSoup(html, 'lxml')
-        cls.clean_doc(doc)
+        body = doc.body
+        cls.clean_node(doc, doc)
         return unicode(doc)
 
     @classmethod
-    def clean_doc(cls, doc):
+    def clean_node(cls, doc, node):
         """Clean a BeautifulSoup document in-place"""
-        if isinstance(doc, NavigableString):
-            cls.clean_string_node(doc)
-        elif isinstance(doc, Tag):
-            cls.clean_tag_node(doc)
+        if isinstance(node, NavigableString):
+            cls.clean_string_node(doc, node)
+        elif isinstance(node, Tag):
+            cls.clean_tag_node(doc, node)
         else:
-            cls.clean_unknown_node(doc)
+            cls.clean_unknown_node(doc, node)
 
     @classmethod
-    def clean_string_node(cls, str):
+    def clean_string_node(cls, doc, str):
         # by default, nothing needs to be done to whitelist string nodes
         pass
 
     @classmethod
-    def clean_tag_node(cls, tag):
+    def clean_tag_node(cls, doc, tag):
         # first, whitelist the contents of this tag
         for child in tag.contents:
-            cls.clean_doc(child)
+            cls.clean_node(doc, child)
 
         # see if there is a rule in element_rules for this tag type
         try:
@@ -111,6 +112,6 @@ class Whitelister(object):
         rule(tag)
 
     @classmethod
-    def clean_unknown_node(cls, node):
+    def clean_unknown_node(cls, doc, node):
         # don't know what type of object this is, so KILL IT WITH FIRE
         node.decompose()

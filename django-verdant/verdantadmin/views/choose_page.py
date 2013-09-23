@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
-from core.models import Page, get_page_types
+from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
 
 def browse(request, content_type_app_name, content_type_model_name, parent_page_id=None):
@@ -10,9 +10,6 @@ def browse(request, content_type_app_name, content_type_model_name, parent_page_
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
-        raise Http404
-    # content type must be in the list of page types
-    if content_type not in get_page_types():
         raise Http404
     desired_class = content_type.model_class()
 
