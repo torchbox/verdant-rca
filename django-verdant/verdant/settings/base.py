@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     'core',
     'verdantadmin',
     'verdantimages',
+    'verdantdocs',
 
     'rca',
 )
