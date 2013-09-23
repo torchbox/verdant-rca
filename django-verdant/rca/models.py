@@ -6,6 +6,7 @@ from core.fields import RichTextField
 
 from verdantadmin.edit_handlers import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
+from verdantdocs.edit_handlers import DocumentChooserPanel
 
 
 class RelatedLink(models.Model):
@@ -23,7 +24,7 @@ class RelatedDocument(models.Model):
     document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
 
     panels = [
-        FieldPanel('document')
+        DocumentChooserPanel('document')
     ]
 
 class EditorialPage(Page):

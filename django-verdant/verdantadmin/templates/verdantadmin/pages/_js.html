@@ -21,6 +21,9 @@
 {# TODO: a method of injecting these sorts of things on demand when the modal is spawned #}
 <script src="{{ STATIC_URL }}verdantadmin/js/vendor/tag-it.js"></script>
 
+<script src="{{ STATIC_URL }}verdantdocs/js/document-chooser.js"></script>
+
+{# FIXME: this really shouldn't go in the compressed JS, as it's dynamic per page #}
 <script>
     (function() {
         function fixPrefix(str) {return str;}
