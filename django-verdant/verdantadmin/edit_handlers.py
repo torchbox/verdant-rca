@@ -339,11 +339,16 @@ class BaseInlinePanel(EditHandler):
     @classmethod
     def get_child_edit_handler_class(cls):
         if cls._child_edit_handler_class is None:
-            if cls.panels is None:
+            # Look for a panels definition in the InlinePanel declaration
+            if cls.panels is not None:
+                panels = cls.panels
+            # Failing that, see if the related model has one defined
+            elif hasattr(cls.related_model, 'panels'):
+                panels = cls.related_model.panels
+            # As a last resort, build the form class and get some basic panel definitions from that
+            else:
                 form_class = cls.get_child_form_class()
                 panels = extract_panel_definitions_from_form_class(form_class)
-            else:
-                panels = cls.panels
 
             cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
 
@@ -353,7 +358,7 @@ class BaseInlinePanel(EditHandler):
     @classmethod
     def get_child_form_class(cls):
         if cls._child_form_class is None:
-            if cls.panels is None:
+            if cls.panels is None and not hasattr(cls.related_model, 'panels'):
                 # go ahead and create the formset without any intervention from panel definitions
                 cls._child_form_class = get_form_for_model(cls.related_model)
             else:

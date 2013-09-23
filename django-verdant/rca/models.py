@@ -18,6 +18,14 @@ class RelatedLink(models.Model):
     # within formsets too)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
+class RelatedDocument(models.Model):
+    page = models.ForeignKey('core.Page', related_name='related_documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+
+    panels = [
+        FieldPanel('document')
+    ]
+
 class EditorialPage(Page):
     body = RichTextField()
 
@@ -144,5 +152,6 @@ NewsItem.content_panels = [
         # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
         panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
     ),
+    InlinePanel(Page, RelatedDocument),
 ]
 NewsItem.promote_panels = []
