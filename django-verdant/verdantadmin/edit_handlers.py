@@ -303,9 +303,11 @@ class BaseChooserPanel(BaseFieldPanel):
         return {cls.field_name: HiddenInput}
 
     def render_as_field(self, show_help_text=True):
+        instance_obj = getattr(self.instance, self.field_name)
         return mark_safe(render_to_string(self.field_template, {
             'field': self.bound_field,
-            self.object_type_name: getattr(self.instance, self.field_name),
+            self.object_type_name: instance_obj,
+            'is_chosen': bool(instance_obj),
             'show_help_text': show_help_text,
         }))
 
