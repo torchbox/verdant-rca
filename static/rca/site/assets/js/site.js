@@ -62,6 +62,25 @@ function showSearchSubmit() {
     });
 }
 
+/*google maps for contact page */
+function initializeMaps() {
+    var mapCanvas = document.getElementById('map_canvas_kensington');
+    var mapOptions = {
+        center: new google.maps.LatLng(51.501144, -0.179285),
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(mapCanvas, mapOptions);
+
+    var mapCanvas2 = document.getElementById('map_canvas_battersea');
+    var mapOptions2 = {
+        center: new google.maps.LatLng(51.479167, -0.170076),
+        zoom: 16,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
+}
+
 $(function(){
     showSearchSubmit();
     showHideFooter();
@@ -258,7 +277,6 @@ $(function(){
 
     });
 
-
-
-  
+    /* Google maps for contact page */
+    initializeMaps();
 });
