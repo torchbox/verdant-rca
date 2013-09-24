@@ -10,6 +10,7 @@ import PIL.Image
 import os.path
 
 from taggit.managers import TaggableManager
+from taggit.models import Tag
 
 from verdantimages import image_ops
 
@@ -41,6 +42,24 @@ class Image(models.Model):
                 image=self, filter=filter, file=generated_image_file)
 
         return rendition
+
+    @staticmethod
+    def search(q):
+        strings = q.split()
+        # match according to tags first
+        tags = Tag.objects.none()
+        for string in strings:
+            tags = tags | Tag.objects.filter(name__startswith=string)
+        # NB the following line will select images if any tags match, not just if all do
+        tag_matches = Image.objects.filter(tags__in = tags).distinct()
+        # now match according to titles
+        title_matches = Image.objects.none()
+        images = Image.objects.all()
+        for term in strings:
+            title_matches = title_matches | images.filter(title__istartswith=term).distinct()
+        images = tag_matches | title_matches
+        return images
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Image)
