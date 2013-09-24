@@ -27,7 +27,7 @@ class Document(models.Model):
 
     @staticmethod
     def search(q):
-        # TODO: DRY this method with the one on verdantimages.models.Image
+        # TODO: DRY this method with the one on verdantimages.models.AbstractImage
         # TODO: speed up this search - currently istartswith is doing sequential scan
         strings = q.split()
         # match according to tags first
