@@ -1,10 +1,10 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 
 import json
 
 from verdantadmin.modal_workflow import render_modal_workflow
 from verdantimages.models import Image
-from verdantimages.forms import ImageForm, ImageInsertionForm
+from verdantimages.forms import ImageForm, ImageInsertionForm, ImageSearchForm
 from verdantimages.formats import FORMATS_BY_NAME
 
 
@@ -27,11 +27,20 @@ def get_image_json(image):
 
 def chooser(request):
     images = Image.objects.order_by('title')
-    form = ImageForm()
+    uploadform = ImageForm()
+    if 'q' in request.GET:
+        searchform = ImageSearchForm(request.GET)
+        if searchform.is_valid():
+            q = searchform.cleaned_data['q']
+            images = Image.search(q)
+            return render(request, "verdantimages/chooser/search_results.html", {'images': images})
+    else:
+        searchform = ImageSearchForm()
+
 
     return render_modal_workflow(
         request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
-        {'images': images, 'form': form, 'will_select_format': request.GET.get('select_format')}
+        {'images': images, 'uploadform': uploadform, 'searchform': searchform, 'will_select_format': request.GET.get('select_format')}
     )
 
 
@@ -68,7 +77,7 @@ def chooser_upload(request):
 
     return render_modal_workflow(
         request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
-        {'images': images, 'form': form}
+        {'images': images, 'uploadform': form}
     )
 
 
