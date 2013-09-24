@@ -15,7 +15,7 @@ from taggit.models import Tag
 from verdantimages import image_ops
 
 
-class Image(models.Model):
+class AbstractBaseImage(models.Model):
     title = models.CharField(max_length=255)
     file = models.ImageField(upload_to='original_images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
@@ -60,6 +60,11 @@ class Image(models.Model):
         images = tag_matches | title_matches
         return images
 
+    class Meta:
+        abstract=True
+
+class Image(AbstractBaseImage):
+    pass
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Image)
