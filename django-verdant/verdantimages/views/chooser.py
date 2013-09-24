@@ -27,17 +27,16 @@ def get_image_json(image):
     })
 
 def chooser(request):
-    images = Image.objects.order_by('title')
     uploadform = ImageForm()
+    images = []
     if 'q' in request.GET:
         searchform = SearchForm(request.GET)
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
             images = Image.search(q)
-            return render(request, "verdantimages/chooser/search_results.html", {'images': images})
+        return render(request, "verdantimages/chooser/search_results.html", {'images': images})
     else:
         searchform = SearchForm()
-
 
     return render_modal_workflow(
         request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',

@@ -62,16 +62,14 @@ def add(request):
 
 
 def search(request):
+    images = []
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
             images = Image.search(q)
-        else: # empty search field
-            images = []
     else:
         form = SearchForm()
-        images = []
 
     context = {
         'form': form,

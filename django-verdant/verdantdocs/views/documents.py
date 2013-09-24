@@ -30,16 +30,14 @@ def add(request):
     })
 
 def search(request):
+    documents = []
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
             documents = Document.search(q)
-        else: # empty search field
-            documents = []
     else:
         form = SearchForm()
-        documents = []
 
     context = {
         'form': form,
