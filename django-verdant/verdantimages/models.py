@@ -15,7 +15,7 @@ from taggit.models import Tag
 from verdantimages import image_ops
 
 
-class AbstractBaseImage(models.Model):
+class AbstractImage(models.Model):
     title = models.CharField(max_length=255)
     file = models.ImageField(upload_to='original_images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
@@ -63,7 +63,7 @@ class AbstractBaseImage(models.Model):
     class Meta:
         abstract=True
 
-class Image(AbstractBaseImage):
+class Image(AbstractImage):
     pass
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
@@ -141,9 +141,8 @@ class Filter(models.Model):
         return output_file
 
 
-class Rendition(models.Model):
-    image = models.ForeignKey('Image', related_name='renditions')
-    filter = models.ForeignKey('Filter', related_name='renditions')
+class AbstractRendition(models.Model):
+    filter = models.ForeignKey('Filter', related_name='+')
     file = models.ImageField(upload_to='images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
@@ -156,6 +155,13 @@ class Rendition(models.Model):
         return mark_safe(
             '<img src="%s" width="%d" height="%d" alt="%s">' % (escape(self.url), self.width, self.height, escape(self.image.title))
         )
+
+    class Meta:
+        abstract=True
+
+
+class Rendition(AbstractRendition):
+    image = models.ForeignKey('Image', related_name='renditions')
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Rendition)
