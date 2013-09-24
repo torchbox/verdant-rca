@@ -29,6 +29,31 @@ def add(request):
         'form': form,
     })
 
+
+def edit(request, document_id):
+    doc = get_object_or_404(Document, id=document_id)
+    if request.POST:
+        original_file = doc.file
+        form = DocumentForm(request.POST, request.FILES, instance=doc)
+        if form.is_valid():
+            if 'file' in form.changed_data:
+                # if providing a new document file, delete the old one.
+                # NB Doing this via original_file.delete() clears the file field,
+                # which definitely isn't what we want...
+                original_file.storage.delete(original_file.name)
+            doc = form.save()
+            messages.success(request, "Document '%s' updated." % doc.title)
+            return redirect('verdantdocs_index')
+
+    else:
+        form = DocumentForm(instance=doc)
+
+    return render(request, "verdantdocs/documents/edit.html", {
+        'document': doc,
+        'form': form,
+    })
+
+
 def search(request):
     documents = []
     if 'q' in request.GET:

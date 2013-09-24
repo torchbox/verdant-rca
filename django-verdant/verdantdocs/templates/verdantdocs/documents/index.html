@@ -16,7 +16,7 @@
         <ul>
             {% for doc in documents %}
                 <li>
-                    <a href="{# url 'verdantdocs_edit_document' doc.id #}">
+                    <a href="{% url 'verdantdocs_edit_document' doc.id %}">
                         {{ doc.title }}
                     </a>
                 </li>
