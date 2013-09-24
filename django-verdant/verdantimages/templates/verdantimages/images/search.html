@@ -15,7 +15,7 @@
                 url: "{%url 'verdantimages_search_image' %}",
                 data: {q: "" + $('#id_q').val() + ""},
                 success: function(data, status) {
-                        $('.image-results').html(data);
+                        $('#image-results').html(data);
                     },
                 });
         };
@@ -36,7 +36,7 @@
         <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
     </header>
 
-    <div class="image-results">
+    <div id="image-results" class="listing images">
     {% include "verdantimages/images/search-results.html" %}
     </div>
 
