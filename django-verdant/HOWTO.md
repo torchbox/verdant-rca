@@ -17,6 +17,8 @@ Configuration of the fields, content blocks and templates is all done within [si
 
 # Troubleshooting / Idiosyncrasies
 
+* 	New installations of Verdant will appear to have no means of creating a first page. To solve: User needs to visit /admin/pages/2 and start from there.
+
 * 	Foreign key fields linked to other first-class Verdant citizens, e.g Images or Documents, declare "related_name='+'" in the ForeignKey definition. This is clumsy but necessary. It creates a bogus link to avoid a reference back to the object in which it is defined.
 
 * 	You can't create a Field at any point in the site, with the same name as an existing Model . e.g if you create a News page/template with a field "Author", you will run into difficulties if you also have a separate template/Page model tcalled "Author." 
