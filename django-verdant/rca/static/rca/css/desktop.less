@@ -1,0 +1,412 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop
+ *
+ * Overrides core.less for desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents...................You’re reading it!
+ * Reset and body styles......Any remaining browser reset styles, body text style
+ * Typography.................reusable typographical styles
+ * Structure..................structure and layout
+ * Footer styles..............footer and bottom nav
+ * Template specific styles
+ */
+
+/**
+ * $Reset and body styles
+ */
+
+body {
+	padding: 0;
+}
+
+/**
+ * $Typography
+ * Note that in order for elements to pick up the desktop versions of these styles the class h3 or bc1 etc must be applied
+ * directly to the html element not assigned in the css, e.g. '<a class="bc2">' not 'a {.bc2()}'
+ */
+
+.ho-a-heading {
+    font-size: @font-size-100;
+}
+
+.h1 {
+    font-size: @font-size-50;
+    line-height: @line-height-1;
+    &.major {
+        .ho-a-heading;
+    }
+}
+
+.h2 {
+    font-size: @font-size-40;
+    line-height: @line-height-1;
+}
+
+.h3 {
+    font-size: @font-size-36;
+    line-height: @line-height-2;
+}
+
+.bc0 {
+    font-size: @font-size-36;
+    line-height: @line-height-2;
+}
+
+.bc1 {
+    font-size: @font-size-30;
+    line-height: @line-height-3;
+}
+
+.bc2 {
+    font-size: @font-size-22;
+    line-height: @line-height-4;
+}
+
+/**
+ * $Structure
+ */
+
+.page-wrapper,
+.footer-wrapper,
+.header-wrapper{
+    margin: 0 auto; /* left and right margins become even at regular desktop size */
+    width: 90%; /* make sure we have a small left and right margin */
+}
+
+.header-wrapper.affix{
+    position:fixed;
+    height: 50px;
+    left:0;
+    right:0;
+    top:0;
+
+    header{
+
+    }
+    .site-name{
+        display:none;
+    }
+}
+.page-wrapper.affix{
+    margin-top: @header-height + 35px; /* space for fixed header */
+}
+
+header {
+    height:auto;
+    margin:auto;
+
+    a.site-name {
+        .clearfix();
+        float:none;
+        width:210px;
+        display: block;
+        background-color:transparent;
+    }
+    a.site-name p {
+        background-image: url('/static/rca/images/logo-header.png');
+        width: 210px;
+        height: 91px;
+        margin:30px 0;
+        padding:0;
+    }
+}
+
+.showmenu,
+.showsearch {
+    /* icons to show menu and search at mobile size disappear */
+    display: none;
+}
+
+.nav-wrapper {
+    /* mimics the style of the page-content below to make sure the search and navigation
+    fill the correct width at the desktop size */
+    .clearfix();
+    width:100%;
+
+    .inner{
+        float:left;
+        width:100%;
+    }
+}
+
+nav {
+    display:block;
+    margin-right:@right-col-width + @grid-gutter-width;
+
+    &:after {
+        .sprite-load(-53px, -1178px, 27px, 15px);
+        content: ' ';
+        position: absolute;
+        top: @spacing-half;
+        right: @spacing-half;
+    }
+}
+
+
+/* Search moves alongside the menu above the content */
+form.search {
+    display: block;
+    position: static;
+    margin-left: 0;
+    float:right;
+    background-color:rgba(255,255,255,0.95);
+    height: auto;
+    margin-left: -@right-col-width;
+    width: @right-col-width;
+    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-medium-grey, 40%);
+
+    input[type="text"] {
+        padding: 10px @spacing-half;
+        width: 85%;
+    }
+    input[type="submit"] {
+        .sprite-load(-95px, -1178px, 15px, 27px);
+    }
+}
+
+.page-content {
+    margin-top: @spacing-onepointfive;
+    float: left;
+    width: 100%;
+
+    > .inner{
+        margin-right: @right-col-width + @grid-gutter-width;
+    }
+}
+
+aside {
+    float: right;
+    width: @right-col-width;
+    margin-top:@grid-gutter-width;
+    margin-left: -@right-col-width;
+    display:block;
+    overflow: hidden;
+
+    ul {
+         .unlist();
+    }
+    &.affix{
+        margin-top: @header-height; /* space for fixed header */
+    }
+}
+
+/**
+ *$Common grid divisions
+*/
+.eight {
+    .column(8, 0, 12);
+}
+
+.four {
+    .column(4, 0, 12);
+    padding-left: @grid-gutter-width;
+}
+
+.three {
+    .column(3, 0, 12);
+}
+
+.two {
+    .column(2, 0, 12);
+    padding-right: @grid-gutter-width;
+}
+
+.six {
+    .column(6, 0, 12);
+    padding-right: @grid-gutter-width;
+}
+
+.nine {
+    .column(9, 0, 12);
+}
+
+/**
+ * $Footer styles - apply to large desktop size as well
+ */
+
+.full-width-footer{
+    margin-left:0;
+    margin-right:0;
+}
+
+.footer-wrapper{
+    padding-right: @right-col-width + @grid-gutter-width;
+}
+
+
+footer {
+    padding:2em 0 0 0;
+
+	section {
+		.column(4, @grid-gutter-width, 12);
+		.row();
+	}
+	a.footer-logo {
+		background-image: url('/static/rca/images/logo-footer.png');
+		padding-top: 72px;
+        width: 145px;
+        height: 63px;
+	}
+    h3 {
+        margin-top: @spacing-three;
+    }
+	ul.social {
+      	li {
+            text-indent: 0px;
+            a {
+                padding: @spacing-half;
+                width: 100px;
+                height: auto;
+            }
+            .facebook:after,
+            .vimeo:after,
+            .twitter:after,
+            .youtube:after {
+                content: none;
+                background-image: none;
+            }
+        }
+    }
+    .smallprint {
+    	font-style: italic;
+        margin: @spacing-onepointfive 0 @spacing-three 0;
+        border-top: 1px solid @color-dark-grey;
+        border-bottom: 1px solid @color-dark-grey;
+    	
+        ul {
+            float: right;
+            li {
+                display: inline-block;
+                margin: 0 2em;
+                a {
+                	padding: 0;
+                }
+            }
+        }
+    }
+
+    .address {
+        display: inline;
+        border-top: none;
+        padding-top: 0;
+        margin-top: 0;
+    }
+}
+
+/**
+ * $Template specific styles
+ */
+
+.type-programme{
+    .cols-nine-three{
+        .row-flush();
+    }
+}
+
+.type-news {
+
+}
+
+.type-staff-profile {
+
+}
+
+.type-event {
+}
+.type-events-index,
+.type-jobs-index {
+    .one-plus {
+        ul{
+            margin:0;
+        }
+        li {
+            .column(6, @grid-gutter-width * 2);
+            &.newrow {
+                padding-left: 0;
+            }
+            &:not(.newrow) {
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.type-events-index {
+    .one-plus {
+        li.first {
+            .column(2, @grid-gutter-width/2, 6);
+            background-color: @color-light-pink;
+            padding: @spacing-half;
+        }
+        li.second {
+            margin-left: 8.33%; /* one column width */
+            .column(3.5, @grid-gutter-width/2, 6);
+        }
+    }
+}
+
+.type-jobs-index {
+    .one-plus {
+        li.col {
+            .column(3, @grid-gutter-width/2, 6);
+            padding-left: 0;
+        }
+    }
+}
+
+@import "modules-desktop.less";
+
+
+.col1{
+    .column(1);
+}
+.col2{
+    .column(2);
+}
+.col3{
+    .column(3);
+}
+.col4{
+    .column(4);
+}
+.col5{
+    .column(5);
+}
+.col6{
+    .column(6);
+}
+.col7{
+    .column(7);
+}
+.col8{
+    .column(8);
+}
+.col9{
+    .column(9);
+}
+.col10{
+    .column(10);
+}
+.col11{
+    .column(11);
+}
+.col12{
+    .column(12);
+}
+
