@@ -7,6 +7,7 @@ import os.path
 from core import urls as verdant_urls
 from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
+from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 
 
@@ -25,8 +26,10 @@ urlpatterns = patterns('',
     # TODO: some way of getting verdantimages to register itself within verdant so that we
     # don't have to define it separately here
     url(r'^admin/images/', include(verdantimages_urls)),
-    url(r'^admin/documents/', include(verdantdocs_urls)),
+    url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
+
+    url(r'^documents/', include(verdantdocs_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
