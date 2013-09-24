@@ -14,6 +14,10 @@ class Document(models.Model):
     def __unicode__(self):
         return self.title
 
+    @property
+    def url(self):
+        return "TEMP"
+
     @staticmethod
     def search(q):
         # TODO: DRY this method with the one on verdantimages.models.Image
