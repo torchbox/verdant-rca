@@ -1,0 +1,11 @@
+<h3>{{ documents|length }} matches</h3>
+<ul>
+    {% for doc in documents %}
+        <li>
+            <a class="document-choice" href="{% url 'verdantdocs_index' %}">
+                {{ doc.title }}
+            </a>
+                <p>Tags: {% for tag in doc.tags.all %}{{ tag.name }} {% endfor %}</p>
+        </li>
+    {% endfor %}
+</ul>
