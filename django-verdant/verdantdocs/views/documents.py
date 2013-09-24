@@ -54,6 +54,19 @@ def edit(request, document_id):
     })
 
 
+def delete(request, document_id):
+    doc = get_object_or_404(Document, id=document_id)
+
+    if request.POST:
+        doc.delete()
+        messages.success(request, "Document '%s' deleted." % doc.title)
+        return redirect('verdantdocs_index')
+
+    return render(request, "verdantdocs/documents/confirm_delete.html", {
+        'document': doc,
+    })
+
+
 def search(request):
     documents = []
     if 'q' in request.GET:
