@@ -1,4 +1,4 @@
-{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" and page.path != "rcanow.html" %}
+{% if page.path != "news.html" and page.path != "staff-profile.html" and page.path != "student-profile.html" and page.path != "job.html" and page.path != "rcanow.html" and page.path != "rcanow-index.html" %}
     
     {% if page.path != "events-index.html" %}
     <div class="today expanded">
@@ -45,7 +45,7 @@
         </div>
     {% endif %}
 
-    {% if page.path != "event.html" and page.path != "job.html" and page.path != "contact.html" %}
+    {% if page.path != "event.html" and page.path != "job.html" and page.path != "contact.html" and page.path != "rcanow-index.html" %}
         <div class="related expanded">
             <h2>In this section</h2>
             <div class="wrapper">
@@ -141,4 +141,21 @@
 
 {% if page.path == "rcanow.html" %}
 	{% include modules/three-plus-vertical.html %}
+{% endif %}
+
+{% if page.path == "rcanow-index.html" %}
+    <div class="related expanded">
+            <h2>Tags</h2>
+            <div class="wrapper">
+                <!-- <h3 class="dark">In this section</h3> -->
+                <ul>
+                    <li><a href="">animation (12)</a></li>
+                    <li><a href="">glassmaking (5)</a></li>
+                    <li><a href="">fashion (2)</a></li>
+                    <li><a href="">design (1)</a></li>
+                    <li><a href="">architecture (1)</a></li>
+                    <li><a href="">illustration (1)</a></li>
+                </ul>
+            </div>
+        </div>
 {% endif %}
