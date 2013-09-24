@@ -1,6 +1,14 @@
 {% extends "verdantadmin/base.html" %}
 {% load image_tags %}
 
+{% block extra_css %}
+    {% include "verdantadmin/shared/tag_field_css.html" %}
+{% endblock %}
+
+{% block extra_js %}
+    {% include "verdantadmin/shared/tag_field_js.html" %}
+{% endblock %}
+
 {% block content %}
     <header>
         <h1>Add document</h1>

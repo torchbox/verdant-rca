@@ -8,7 +8,7 @@ from verdantadmin.edit_handlers import FieldPanel, InlinePanel, RichTextFieldPan
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantdocs.edit_handlers import DocumentChooserPanel
 
-
+# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
 class RelatedLink(models.Model):
     page = models.ForeignKey('core.Page', related_name='generic_related_links')
     url = models.URLField()
@@ -19,6 +19,7 @@ class RelatedLink(models.Model):
     # within formsets too)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
+# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
 class RelatedDocument(models.Model):
     page = models.ForeignKey('core.Page', related_name='related_documents')
     document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
@@ -27,6 +28,7 @@ class RelatedDocument(models.Model):
         DocumentChooserPanel('document')
     ]
 
+# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS: not sure of it's purpose
 class EditorialPage(Page):
     body = RichTextField()
 
@@ -39,12 +41,57 @@ class EditorialPage(Page):
     is_abstract = True
 
 
+# Examples to be copied and pasted:
+#  InlinePanel(Page, RelatedLink, label="Wonderful related links",
+#     # label is optional - we'll derive one from the related_name of the relation if not specified
+#     # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
+#     panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
+# ),
+
+
+# Everything that follows is 'real' template code to be used in the actual RCA site, rather than just verdant testing purposes
+
+NEWS_AREA_CHOICES = (
+    ('helenhamlyn', 'Helen Hamlyn'),
+    ('innovationrca', 'InnovationRCA'),
+    ('research', 'Research'),
+    ('knowledgeexchange', 'Knowledge Exchange'),
+    ('showrca', 'Show RCA'),
+)
+
+EVENT_AUDIENCE_CHOICES = (
+    ('public', 'Public'),
+    ('private', 'Private'),
+)
+
+EVENT_LOCATION_CHOICES = (
+    ('kensington', 'Kensington'),
+    ('battersea', 'Battersea'),
+)
+
+EVENT_GALLERY_CHOICES = (
+    ('gallery1', 'Gallery 1'),
+    ('gallery2', 'Gallery 2'),
+    ('galleryn', 'Gallery N'),
+)
+
+
+# Generic social fields abstract class to add social image/text to any new content type easily.
+class SocialFields(models.Model):
+    social_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    social_text = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        abstract = True 
+
 # == Authors Index ==
+
 class AuthorsIndex(Page):
     subpage_types = ['AuthorPage']
 
 
 # == Author Page ==
+
 class AuthorPage(EditorialPage):
     mugshot = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
@@ -57,16 +104,18 @@ class AuthorPage(EditorialPage):
         })
 
 AuthorPage.content_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
     ImageChooserPanel('mugshot'),
     RichTextFieldPanel('body'),
 ]
+
 AuthorPage.promote_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
 ]
 
 
 # == School ==
+
 class SchoolPage(Page):
     """
     School page (currently only necessary for foreign key with ProgrammePage)
@@ -111,9 +160,9 @@ class ProgrammePage(Page):
     download_document_text = models.CharField(max_length=255, blank=True)
 
 ProgrammePage.content_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
-    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
+    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", 
+        panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
+    ),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
     FieldPanel('head_of_programme'),
     RichTextFieldPanel('head_of_programme_statement'),
@@ -124,22 +173,20 @@ ProgrammePage.content_panels = [
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
 ]
-ProgrammePage.promote_panels = []
+
+ProgrammePage.promote_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+]
 
 
 # == News Index ==
+
 class NewsIndex(Page):
     subpage_types = ['NewsItem']
 
-# == News Item ==
 
-AREA_CHOICES = (
-    ('helenhamlyn', 'Helen Hamlyn'),
-    ('innovationrca', 'InnovationRCA'),
-    ('research', 'Research'),
-    ('knowledgeexchange', 'Knowledge Exchange'),
-    ('showrca', 'Show RCA'),
-)
+# == News Item ==
 
 class NewsItemCarouselItem(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
@@ -152,21 +199,18 @@ class NewsItemRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
-class NewsItem(Page):
+class NewsItem(Page, SocialFields):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     date = models.DateField()
     body = RichTextField()
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
-    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='related_school')
-    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='related_programme')
-    # TODO: Social image
-    # TODO: Social text
+    area = models.CharField(max_length=255, choices=NEWS_AREA_CHOICES, blank=True)
+    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='news_item')
+    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='news_item')
+    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
     PageChooserPanel('author', AuthorPage),
     FieldPanel('date'),
     RichTextFieldPanel('body'),
@@ -176,17 +220,163 @@ NewsItem.content_panels = [
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content",
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
-
-    #  InlinePanel(Page, RelatedLink, label="Wonderful related links",
-    #     # label is optional - we'll derive one from the related_name of the relation if not specified
-    #     # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
-    #     panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
-    # ),
 ]
+
 NewsItem.promote_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    ImageChooserPanel('social_image'),
+    FieldPanel('social_text'),
     FieldPanel('show_on_homepage'),
     FieldPanel('listing_intro'),
     FieldPanel('area'),
     PageChooserPanel('related_school', SchoolPage),
     PageChooserPanel('related_programme', ProgrammePage),
 ]
+
+# == Event Item ==
+
+class EventItemSpeaker(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='speakers')
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    link = models.URLField()
+
+class EventItemCarouselItem(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='carousel_items')
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    embedly_url = models.URLField(blank=True)
+
+class EventItem(Page, SocialFields):
+    date_to = models.DateField()
+    date_from = models.DateField()
+    times = RichTextField(blank=True)
+    audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
+    location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
+    specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
+    specific_directions_link = models.URLField(blank=True)
+    gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
+    cost = RichTextField(blank=True)
+    signup_link = models.URLField(blank=True)
+    # TODO: Event URL, purpose unknown
+    show_on_homepage = models.BooleanField()
+    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='event_item')
+    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='event_item')
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
+    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+EventItem.content_panels = [
+    FieldPanel('date_to'),
+    FieldPanel('date_from'),
+    RichTextFieldPanel('times'),
+    FieldPanel('audience'),
+    FieldPanel('location'),
+    FieldPanel('specific_directions'),
+    FieldPanel('specific_directions_link'),
+    FieldPanel('gallery'),
+    RichTextFieldPanel('cost'),
+    FieldPanel('signup_link'),
+    InlinePanel(EventItem, EventItemSpeaker, label="Speaker",
+        panels=[FieldPanel('name'), FieldPanel('surname'), ImageChooserPanel('image'), FieldPanel('link')]
+    ),
+    InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content",
+        panels=[ImageChooserPanel('image'), FieldPanel('embedly_url')]
+    ),
+]
+
+EventItem.promote_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    ImageChooserPanel('social_image'),
+    FieldPanel('social_text'),
+    FieldPanel('show_on_homepage'),
+    FieldPanel('listing_intro'),
+    PageChooserPanel('related_school', SchoolPage),
+    PageChooserPanel('related_programme', ProgrammePage),
+]
+
+
+# == Standard page ==
+
+class StandardPage(Page, SocialFields):
+   pass
+
+   
+# == Standard Index page ==
+
+class StandardIndex(Page, SocialFields):
+    pass
+
+
+# == Home page ==
+
+class HomePage(Page, SocialFields):
+    pass
+
+
+# == Job page ==
+
+class JobPage(Page, SocialFields):
+    pass
+
+   
+# == Jobs index page ==
+
+class JobsIndex(Page, SocialFields):
+    pass
+   
+
+# == Staff profile page ==
+
+class StaffPage(Page, SocialFields):
+    pass
+
+   
+# == Student profile page ==
+
+class StudentPage(Page, SocialFields):
+    pass
+
+
+# == RCA Now page ==
+
+class RcaNowPage(Page, SocialFields):
+    pass
+
+   
+# == RCA Now index ==
+
+class RcaNowIndex(Page, SocialFields):
+    pass
+
+   
+# == Research Item page ==
+
+class ResearchItem(Page, SocialFields):
+    pass
+
+
+# == Research Innovation page ==
+
+class ResearchInnovationPage(Page, SocialFields):
+    pass
+
+   
+# == Current research page ==
+
+class CurrentResearchPage(Page, SocialFields):
+    pass
+
+   
+# == Gallery Page ==
+
+class GalleryPage(Page, SocialFields):
+    pass
+
+   
+# == Contact Us page ==
+
+class ContactUsPage(Page, SocialFields):
+    pass
+

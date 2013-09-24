@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from verdantimages.models import Image
-from verdantimages.forms import ImageForm, EditImageForm, ImageSearchForm
+from verdantimages.forms import ImageForm, EditImageForm
+from verdantadmin.forms import SearchForm
 
 def index(request):
     images = Image.objects.order_by('title')
@@ -62,12 +63,12 @@ def add(request):
 
 def search(request):
     if 'q' in request.GET:
-        form = ImageSearchForm(request.GET)
+        form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
             images = Image.search(q)
     else:
-        form = ImageSearchForm()
+        form = SearchForm()
         images = Image.objects.order_by('title')
 
     context = {

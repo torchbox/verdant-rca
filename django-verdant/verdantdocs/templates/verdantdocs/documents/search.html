@@ -9,10 +9,10 @@
         });
         function search () {
             $.ajax({
-                url: "{%url 'verdantimages_search_image' %}",
+                url: "{%url 'verdantdocs_search' %}",
                 data: {q: "" + $('#id_q').val() + ""},
                 success: function(data, status) {
-                        $('#image-results').html(data);
+                        $('#document-results').html(data);
                     },
                 });
         };
@@ -22,7 +22,7 @@
 {% block content %}
     <header>
         <h1>Start typing tags</h1>
-        <form class="" action="{% url 'verdantimages_search_image' %}" method="get">
+        <form class="" action="{% url 'verdantdocs_search' %}" method="get">
             <ul class="fields">
                 {% for field in form %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
@@ -30,17 +30,11 @@
                 <li class="button"><input type="submit" value="Filter" /></li>
             </ul>
         </form>
-        <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
+        <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>
     </header>
 
-    <div id="image-results" class="listing images">
-    {% include "verdantimages/images/search-results.html" %}
+    <div id="document-results" class="">
+        {% include "verdantdocs/documents/search-results.html" %}
     </div>
 
-<h1>Or upload a new one:</h1>
-<form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Upload">
-</form>
 {% endblock %}
