@@ -295,3 +295,88 @@ EventItem.promote_panels = [
     PageChooserPanel('related_school', SchoolPage),
     PageChooserPanel('related_programme', ProgrammePage),
 ]
+
+
+# == Standard page ==
+
+class StandardPage(Page, SocialFields):
+   pass
+
+   
+# == Standard Index page ==
+
+class StandardIndex(Page, SocialFields):
+    pass
+
+
+# == Home page ==
+
+class HomePage(Page, SocialFields):
+    pass
+
+
+# == Job page ==
+
+class JobPage(Page, SocialFields):
+    pass
+
+   
+# == Jobs index page ==
+
+class JobsIndex(Page, SocialFields):
+    pass
+   
+
+# == Staff profile page ==
+
+class StaffPage(Page, SocialFields):
+    pass
+
+   
+# == Student profile page ==
+
+class StudentPage(Page, SocialFields):
+    pass
+
+
+# == RCA Now page ==
+
+class RcaNowPage(Page, SocialFields):
+    pass
+
+   
+# == RCA Now index ==
+
+class RcaNowIndex(Page, SocialFields):
+    pass
+
+   
+# == Research Item page ==
+
+class ResearchItem(Page, SocialFields):
+    pass
+
+
+# == Research Innovation page ==
+
+class ResearchInnovationPage(Page, SocialFields):
+    pass
+
+   
+# == Current research page ==
+
+class CurrentResearchPage(Page, SocialFields):
+    pass
+
+   
+# == Gallery Page ==
+
+class GalleryPage(Page, SocialFields):
+    pass
+
+   
+# == Contact Us page ==
+
+class ContactUsPage(Page, SocialFields):
+    pass
+
