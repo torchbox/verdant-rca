@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, render
 import json
 
 from verdantadmin.modal_workflow import render_modal_workflow
-from verdantimages.models import Image
-from verdantimages.forms import ImageForm, ImageInsertionForm
+from verdantimages.models import get_image_model
+from verdantimages.forms import get_image_form, ImageInsertionForm
 from verdantadmin.forms import SearchForm
 from verdantimages.formats import FORMATS_BY_NAME
 
@@ -27,6 +27,9 @@ def get_image_json(image):
     })
 
 def chooser(request):
+    Image = get_image_model()
+    ImageForm = get_image_form()
+
     uploadform = ImageForm()
     images = []
     if 'q' in request.GET:
@@ -45,7 +48,7 @@ def chooser(request):
 
 
 def image_chosen(request, image_id):
-    image = get_object_or_404(Image, id=image_id)
+    image = get_object_or_404(get_image_model(), id=image_id)
 
     return render_modal_workflow(
         request, None, 'verdantimages/chooser/image_chosen.js',
@@ -54,6 +57,9 @@ def image_chosen(request, image_id):
 
 
 def chooser_upload(request):
+    Image = get_image_model()
+    ImageForm = get_image_form()
+
     if request.POST:
         form = ImageForm(request.POST, request.FILES)
 
@@ -82,7 +88,7 @@ def chooser_upload(request):
 
 
 def chooser_select_format(request, image_id):
-    image = get_object_or_404(Image, id=image_id)
+    image = get_object_or_404(get_image_model(), id=image_id)
 
     if request.POST:
         form = ImageInsertionForm(request.POST, initial={'alt_text': image.title})

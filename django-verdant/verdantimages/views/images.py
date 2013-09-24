@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
-from verdantimages.models import Image
-from verdantimages.forms import ImageForm, EditImageForm
+from verdantimages.models import get_image_model
+from verdantimages.forms import get_image_form, get_edit_image_form
 from verdantadmin.forms import SearchForm
 
 def index(request):
-    images = Image.objects.order_by('title')
+    images = get_image_model().objects.order_by('title')
 
     return render(request, "verdantimages/images/index.html", {
         'images': images,
@@ -14,6 +14,9 @@ def index(request):
 
 
 def edit(request, image_id):
+    Image = get_image_model()
+    EditImageForm = get_edit_image_form()
+
     image = get_object_or_404(Image, id=image_id)
 
     if request.POST:
@@ -33,7 +36,7 @@ def edit(request, image_id):
 
 
 def delete(request, image_id):
-    image = get_object_or_404(Image, id=image_id)
+    image = get_object_or_404(get_image_model(), id=image_id)
 
     if request.POST:
         image.delete()
@@ -46,6 +49,8 @@ def delete(request, image_id):
 
 
 def add(request):
+    ImageForm = get_image_form()
+
     if request.POST:
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
@@ -67,7 +72,7 @@ def search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
-            images = Image.search(q)
+            images = get_image_model().search(q)
     else:
         form = SearchForm()
 

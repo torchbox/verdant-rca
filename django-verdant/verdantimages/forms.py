@@ -1,18 +1,15 @@
 from django import forms
+from django.forms.models import modelform_factory
 
-from verdantimages.models import Image
+from verdantimages.models import get_image_model
 from verdantimages.formats import FORMATS
 
 
-class ImageForm(forms.ModelForm):
-    class Meta:
-        model = Image
+def get_image_form():
+    return modelform_factory(get_image_model())
 
-
-class EditImageForm(forms.ModelForm):
-    class Meta:
-        model = Image
-        exclude = ['file']
+def get_edit_image_form():
+    return modelform_factory(get_image_model(), exclude=['file'])
 
 
 class ImageInsertionForm(forms.Form):
