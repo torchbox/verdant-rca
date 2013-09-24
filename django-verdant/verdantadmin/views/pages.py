@@ -151,6 +151,20 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
     })
 
+def delete(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.POST:
+        parent_id = page.get_parent().id
+        page.delete()
+        messages.success(request, "Page '%s' deleted." % page.title)
+        return redirect('verdantadmin_explore', parent_id)
+
+    return render(request, 'verdantadmin/pages/confirm_delete.html', {
+        'page': page,
+        'descendant_count': page.get_descendant_count()
+    })
+
 
 PAGE_EDIT_HANDLERS = {}
 def get_page_edit_handler(page_class):

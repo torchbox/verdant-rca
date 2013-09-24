@@ -13,6 +13,9 @@ function ModalWorkflow(opts) {
     var self = {};
     var responseCallbacks = opts.responses || {};
 
+    /* remove any previous modals before continuing (closing doesn't remove them from the dom) */
+    $('body > .modal').remove();
+
     var container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body"></div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
     $('body').append(container);
     container.modal();
