@@ -61,7 +61,7 @@ NEWS_AREA_CHOICES = (
 
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
-    ('private', 'Private'),
+    ('rcaonly', 'RCA only'),
 )
 
 EVENT_LOCATION_CHOICES = (
@@ -82,7 +82,19 @@ class SocialFields(models.Model):
     social_text = models.CharField(max_length=255, blank=True)
 
     class Meta:
-        abstract = True 
+        abstract = True
+
+class CarouselItemFields(models.Model):
+    image_year = models.CharField(max_length=25, blank=True)
+    image_creator = models.CharField(max_length=255, blank=True)
+    image_medium = models.CharField(max_length=255, blank=True)
+    image_dimensions = models.CharField(max_length=25, blank=True)
+    image_photographer = models.CharField(max_length=25, blank=True)
+    overlay_text = models.CharField(max_length=255, blank=True)
+    link = models.URLField(blank=True)
+
+    class Meta:
+        abstract = True
 
 # == Authors Index ==
 
@@ -202,6 +214,7 @@ class NewsItemRelatedLink(models.Model):
 class NewsItem(Page, SocialFields):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     date = models.DateField()
+    intro = RichTextField()
     body = RichTextField()
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
@@ -213,6 +226,7 @@ class NewsItem(Page, SocialFields):
 NewsItem.content_panels = [
     PageChooserPanel('author', AuthorPage),
     FieldPanel('date'),
+    RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
     InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
         panels=[PageChooserPanel('url'), FieldPanel('link_text')]
@@ -299,7 +313,7 @@ EventItem.promote_panels = [
 
 # == Standard page ==
 
-class StandardPageCarouselItem(models.Model):
+class StandardPageCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.StandardPage', related_name='carousel_items')
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
     embedly_url = models.URLField(blank=True)
