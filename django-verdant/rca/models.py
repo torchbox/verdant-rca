@@ -97,6 +97,19 @@ class CarouselItemFields(models.Model):
     embedly_url = models.URLField(blank=True)
     poster_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
+    panels=[
+        ImageChooserPanel('image'), 
+        FieldPanel('image_year'), 
+        FieldPanel('image_creator'), 
+        FieldPanel('image_medium'), 
+        FieldPanel('image_dimensions'),
+        FieldPanel('image_photographer'),
+        FieldPanel('overlay_text'),
+        FieldPanel('link'),
+        FieldPanel('embedly_url'),
+        ImageChooserPanel('poster_image'), 
+    ]
+
     class Meta:
         abstract = True
 
@@ -204,11 +217,8 @@ class NewsIndex(Page):
 
 # == News Item ==
 
-class NewsItemCarouselItem(models.Model):
+class NewsItemCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
-    url = models.URLField()
 
 class NewsItemRelatedLink(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_links')
@@ -332,9 +342,7 @@ class StandardPage(Page, SocialFields):
 StandardPage.content_panels = [
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content",
-        panels=[ImageChooserPanel('image'), FieldPanel('embedly_url')]
-    ),
+    InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, label="Related links"),
 ]
 
