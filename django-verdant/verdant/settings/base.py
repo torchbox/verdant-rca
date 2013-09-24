@@ -205,3 +205,8 @@ LOGGING = {
         },
     }
 }
+
+# VERDANT SETTINGS
+
+# Override the Image class used by verdantimages with a custom one
+VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'

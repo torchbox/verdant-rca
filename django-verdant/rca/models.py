@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
 from core.models import Page
@@ -6,7 +8,36 @@ from core.fields import RichTextField
 
 from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
+from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
+
+
+# RCA defines its own custom image class to replace verdantimages.Image,
+# providing various additional data fields
+class RcaImage(AbstractImage):
+    alt = models.CharField(max_length=255, blank=True)
+    creator = models.CharField(max_length=255, blank=True)
+    year = models.CharField(max_length=255, blank=True)
+    medium = models.CharField(max_length=255, blank=True)
+    dimensions = models.CharField(max_length=255, blank=True)
+    permission = models.CharField(max_length=255, blank=True)
+    photographer = models.CharField(max_length=255, blank=True)
+
+# Receive the pre_delete signal and delete the file associated with the model instance.
+@receiver(pre_delete, sender=RcaImage)
+def image_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.file.delete(False)
+
+class RcaRendition(AbstractRendition):
+    image = models.ForeignKey('RcaImage', related_name='renditions')
+
+# Receive the pre_delete signal and delete the file associated with the model instance.
+@receiver(pre_delete, sender=RcaRendition)
+def rendition_delete(sender, instance, **kwargs):
+    # Pass false so FileField doesn't save the model.
+    instance.file.delete(False)
+
 
 # DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
 class RelatedLink(models.Model):
@@ -17,7 +48,7 @@ class RelatedLink(models.Model):
     # let's allow related links to have their own images. Just for kicks.
     # (actually, it's so that we can check that the widget override for ImageChooserPanel happens
     # within formsets too)
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
 # DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
 class RelatedDocument(models.Model):
@@ -86,7 +117,7 @@ WORK_TYPES_CHOICES = (
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
-    social_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     social_text = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -94,7 +125,7 @@ class SocialFields(models.Model):
 
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     image_year = models.CharField(max_length=25, blank=True)
     image_creator = models.CharField(max_length=255, blank=True)
     image_medium = models.CharField(max_length=255, blank=True)
@@ -103,7 +134,7 @@ class CarouselItemFields(models.Model):
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
     embedly_url = models.URLField(blank=True)
-    poster_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
     panels=[
         ImageChooserPanel('image'), 
@@ -131,7 +162,7 @@ class AuthorsIndex(Page):
 # == Author Page ==
 
 class AuthorPage(EditorialPage):
-    mugshot = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    mugshot = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
     def serve(self, request):
         news_items = self.news_items.order_by('title')
@@ -167,7 +198,7 @@ class SchoolPage(Page):
 
 class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
@@ -180,18 +211,18 @@ class ProgrammePageOurSites(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='our_sites')
     url = models.URLField()
     site_name = models.CharField(max_length=255)
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
     name = models.CharField(max_length=255)
     text = RichTextField()
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
 class ProgrammePageFacilities(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='facilities')
     text = RichTextField()
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
 class ProgrammePage(Page):
     head_of_programme = models.CharField(max_length=255)
@@ -283,14 +314,14 @@ NewsItem.promote_panels = [
 
 class EventItemSpeaker(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='speakers')
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     link = models.URLField()
 
 class EventItemCarouselItem(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='carousel_items')
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     embedly_url = models.URLField(blank=True)
 
 class EventItem(Page, SocialFields):
