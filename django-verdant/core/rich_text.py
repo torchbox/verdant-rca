@@ -9,7 +9,7 @@ from core.models import Page
 # FIXME: we don't really want to import verdantimages within core.
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
-from verdantimages.models import Image
+from verdantimages.models import get_image_model
 from verdantimages.formats import FORMATS_BY_NAME
 
 from verdantdocs.models import Document
@@ -46,6 +46,7 @@ class ImageEmbedHandler(object):
         Given a dict of attributes from the <embed> tag, return the real HTML
         representation.
         """
+        Image = get_image_model()
         try:
             image = Image.objects.get(id=attrs['id'])
             try:
