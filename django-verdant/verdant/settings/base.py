@@ -53,7 +53,10 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+# MW 2013-09-24: L10n needs to be disabled in order to recognise formats like
+# "24 Sep 2013" in FriendlyDateField, because Python's strptime doesn't support
+# localised month names. https://code.djangoproject.com/ticket/13339
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True

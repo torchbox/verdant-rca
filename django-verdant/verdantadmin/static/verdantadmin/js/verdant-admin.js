@@ -60,8 +60,8 @@ function initInlineChildDeleteButton(childId, deleteInputId) {
 }
 
 function initDateChoosers(context) {
-    $('.date_field input', context).datepicker({
-        dateFormat: 'dd/mm/yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
+    $('input.friendly_date', context).datepicker({
+        dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
     });
 }
 $(function() {

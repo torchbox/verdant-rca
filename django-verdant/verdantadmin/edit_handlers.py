@@ -1,12 +1,45 @@
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from django.forms.widgets import TextInput, Textarea, HiddenInput
+from django import forms
+from django.db import models
 from django.forms.models import modelform_factory, inlineformset_factory
 from django.contrib.contenttypes.models import ContentType
+
+import copy
 
 from core.models import Page
 from core.util import camelcase_to_underscore
 
+
+class FriendlyDateInput(forms.DateInput):
+    """
+    A custom DateInput widget that formats dates as "05 Oct 2013"
+    and adds class="friendly_date" to be picked up by jquery datepicker.
+    """
+    def __init__(self, attrs=None):
+        default_attrs = {'class': 'friendly_date'}
+        if attrs:
+            default_attrs.update(attrs)
+
+        super(FriendlyDateInput, self).__init__(attrs=default_attrs, format='%d %b %Y')
+
+FORM_FIELD_OVERRIDES = {
+    models.DateField: {'widget': FriendlyDateInput},
+}
+
+# Callback to allow us to override the default form fields provided for each model field.
+def formfield_for_dbfield(db_field, **kwargs):
+    # snarfed from django/contrib/admin/options.py
+
+    # If we've got overrides for the formfield defined, use 'em. **kwargs
+    # passed to formfield_for_dbfield override the defaults.
+    for klass in db_field.__class__.mro():
+        if klass in FORM_FIELD_OVERRIDES:
+            kwargs = dict(copy.deepcopy(FORM_FIELD_OVERRIDES[klass]), **kwargs)
+            return db_field.formfield(**kwargs)
+
+    # For any other type of field, just call its formfield() method.
+    return db_field.formfield(**kwargs)
 
 def get_form_for_model(model, **kwargs):
     # django's modelform_factory with a bit of custom behaviour
@@ -14,6 +47,8 @@ def get_form_for_model(model, **kwargs):
     # been editable=False)
     if issubclass(model, Page):
         kwargs['exclude'] = kwargs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
+
+    kwargs['formfield_callback'] = formfield_for_dbfield
 
     return modelform_factory(model, **kwargs)
 
@@ -236,7 +271,7 @@ class BaseFieldPanel(EditHandler):
 
     def object_classnames(self):
         widget = self.bound_field.field.widget
-        if isinstance(widget, TextInput) or isinstance(widget, Textarea):
+        if isinstance(widget, forms.TextInput) or isinstance(widget, forms.Textarea):
             return 'full'
         else:
             return ''
@@ -298,7 +333,7 @@ class BaseChooserPanel(BaseFieldPanel):
     """
     @classmethod
     def widget_overrides(cls):
-        return {cls.field_name: HiddenInput}
+        return {cls.field_name: forms.HiddenInput}
 
     def render_as_field(self, show_help_text=True):
         instance_obj = getattr(self.instance, self.field_name)
@@ -412,13 +447,13 @@ class BaseInlinePanel(EditHandler):
         self.children = []
         for subform in self.formset.forms:
             # override the DELETE field to have a hidden input
-            subform.fields['DELETE'].widget = HiddenInput()
+            subform.fields['DELETE'].widget = forms.HiddenInput()
             self.children.append(
                 child_edit_handler_class(data, files, instance=subform.instance, form=subform)
             )
 
         empty_form = self.formset.empty_form
-        empty_form.fields['DELETE'].widget = HiddenInput()
+        empty_form.fields['DELETE'].widget = forms.HiddenInput()
         self.empty_child = child_edit_handler_class(data, files, instance=empty_form.instance, form=empty_form)
 
     template = "verdantadmin/edit_handlers/inline_panel.html"
