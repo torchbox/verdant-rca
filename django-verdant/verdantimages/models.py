@@ -1,4 +1,5 @@
 from django.core.files import File
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
@@ -34,12 +35,12 @@ class AbstractImage(models.Model):
 
         try:
             rendition = self.renditions.get(filter=filter)
-        except Rendition.DoesNotExist:
+        except ObjectDoesNotExist:
             file_field = self.file
             generated_image_file = filter.process_image(file_field.file)
 
-            rendition = Rendition.objects.create(
-                image=self, filter=filter, file=generated_image_file)
+            rendition = self.renditions.create(
+                filter=filter, file=generated_image_file)
 
         return rendition
 
