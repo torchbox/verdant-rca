@@ -1,6 +1,9 @@
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.core.urlresolvers import reverse
+
+import os.path
 
 from taggit.managers import TaggableManager
 from taggit.models import Tag
@@ -16,7 +19,7 @@ class Document(models.Model):
 
     @property
     def url(self):
-        return "TEMP"
+        return reverse('verdantdocs_serve', args=[self.id, os.path.basename(self.file.name)])
 
     @staticmethod
     def search(q):
