@@ -1,8 +1,24 @@
 function(modal) {
-    $('a.image-choice', modal.body).click(function() {
-        modal.loadUrl(this.href);
+    function ajaxifyLinks (context) {
+        $('a.image-choice', context).click(function() {
+            modal.loadUrl(this.href);
+            return false;
+        });
+    };
+
+    function search () {
+        $.ajax({
+            url: "{%url 'verdantimages_chooser' %}",
+            data: {q: "" + $('#id_q').val() + ""},
+            success: function(data, status) {
+                $('#image-results').html(data);
+                ajaxifyLinks($('#image-results'));
+            }
+        });
         return false;
-    });
+    };
+
+    ajaxifyLinks(modal.body);
 
     $('form.image-upload', modal.body).submit(function() {
         var formdata = new FormData(this);
@@ -29,17 +45,6 @@ function(modal) {
         var wait = setTimeout(search, 50);
         $(this).data('timer', wait);
     });
-
-    function search () {
-        $.ajax({
-            url: "{%url 'verdantimages_chooser' %}",
-            data: {q: "" + $('#id_q').val() + ""},
-            success: function(data, status) {
-                $('#image-results').html(data);
-            }
-        });
-        return false;
-    };
 
     {% url 'verdantadmin_tag_autocomplete' as autocomplete_url %}
     $('#id_tags', modal.body).tagit({
