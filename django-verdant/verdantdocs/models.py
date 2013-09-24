@@ -14,7 +14,7 @@ class Document(models.Model, TagSearchable):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='documents')
 
-    tags = TaggableManager(help_text=None)
+    tags = TaggableManager(help_text=None, blank=True)
 
     def __unicode__(self):
         return self.title

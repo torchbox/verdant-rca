@@ -22,7 +22,7 @@ class AbstractImage(models.Model, TagSearchable):
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
 
-    tags = TaggableManager(help_text=None)
+    tags = TaggableManager(help_text=None, blank=True)
 
     def __unicode__(self):
         return self.title
