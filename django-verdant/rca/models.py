@@ -57,6 +57,7 @@ NEWS_AREA_CHOICES = (
     ('research', 'Research'),
     ('knowledgeexchange', 'Knowledge Exchange'),
     ('showrca', 'Show RCA'),
+    ('fuelrca', 'Fuel RCA'),
 )
 
 EVENT_AUDIENCE_CHOICES = (
@@ -67,9 +68,16 @@ EVENT_AUDIENCE_CHOICES = (
 EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
+    ('other', 'Other (enter below)')
 )
 
 EVENT_GALLERY_CHOICES = (
+    ('gallery1', 'Gallery 1'),
+    ('gallery2', 'Gallery 2'),
+    ('galleryn', 'Gallery N'),
+)
+
+WORK_TYPES_CHOICES = (
     ('gallery1', 'Gallery 1'),
     ('gallery2', 'Gallery 2'),
     ('galleryn', 'Gallery N'),
@@ -113,6 +121,7 @@ class CarouselItemFields(models.Model):
     class Meta:
         abstract = True
 
+
 # == Authors Index ==
 
 class AuthorsIndex(Page):
@@ -138,8 +147,10 @@ AuthorPage.content_panels = [
 ]
 
 AuthorPage.promote_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
+    MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
 ]
 
 
@@ -150,6 +161,7 @@ class SchoolPage(Page):
     School page (currently only necessary for foreign key with ProgrammePage)
     """
     pass
+
 
 # == Programme page ==
 
@@ -195,7 +207,9 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
     FieldPanel('head_of_programme'),
     RichTextFieldPanel('head_of_programme_statement'),
-    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
+    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
+        panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
+    ),
     FieldPanel('programme_video'),
     InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
     InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
@@ -204,8 +218,10 @@ ProgrammePage.content_panels = [
 ]
 
 ProgrammePage.promote_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
+    MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
 ]
 
 
@@ -249,8 +265,10 @@ NewsItem.content_panels = [
 ]
 
 NewsItem.promote_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
+     MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
     ImageChooserPanel('social_image'),
     FieldPanel('social_text'),
     FieldPanel('show_on_homepage'),
@@ -259,6 +277,7 @@ NewsItem.promote_panels = [
     PageChooserPanel('related_school', SchoolPage),
     PageChooserPanel('related_programme', ProgrammePage),
 ]
+
 
 # == Event Item ==
 

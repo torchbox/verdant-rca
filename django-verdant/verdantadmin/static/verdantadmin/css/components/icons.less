@@ -16,13 +16,23 @@
         content:"sni";
     }
 }
+.icon.documents{
+    .icon-left(25px, 25px, 100%, 100%, 1);
+    /* temporary until image exists */
+    &:before{
+        content:"doc";
+    }
+}
 .icon.folder{
     .icon-left(25px, 25px, 148px, 216px, 1);
 }
 .icon.new, .icon.add{
     .icon-left(25px, 25px, 204px, 202px, 1);
     cursor:pointer;
-    
+    position:relative;
+    text-decoration:none;
+    font-weight:700;
+
     &:before{
         .border-radius(100%);
         background-color:@color-teal;
