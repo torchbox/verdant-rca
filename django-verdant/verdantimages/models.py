@@ -44,18 +44,18 @@ class AbstractImage(models.Model):
 
         return rendition
 
-    @staticmethod
-    def search(q):
+    @classmethod
+    def search(cls, q):
         strings = q.split()
         # match according to tags first
         tags = Tag.objects.none()
         for string in strings:
             tags = tags | Tag.objects.filter(name__startswith=string)
         # NB the following line will select images if any tags match, not just if all do
-        tag_matches = Image.objects.filter(tags__in = tags).distinct()
+        tag_matches = cls.objects.filter(tags__in = tags).distinct()
         # now match according to titles
-        title_matches = Image.objects.none()
-        images = Image.objects.all()
+        title_matches = cls.objects.none()
+        images = cls.objects.all()
         for term in strings:
             title_matches = title_matches | images.filter(title__istartswith=term).distinct()
         images = tag_matches | title_matches
