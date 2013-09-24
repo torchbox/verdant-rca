@@ -3,7 +3,6 @@ from django.contrib import messages
 
 from verdantimages.models import Image
 from verdantimages.forms import ImageForm, EditImageForm, ImageSearchForm
-from taggit.models import Tag
 
 def index(request):
     images = Image.objects.order_by('title')
@@ -62,28 +61,18 @@ def add(request):
 
 
 def search(request):
-    images = Image.objects.order_by('title')
-    tags = Tag.objects.none()
-    tag_matches = None
-    title_matches = Image.objects.none()
     if 'q' in request.GET:
         form = ImageSearchForm(request.GET)
         if form.is_valid():
-            strings = form.cleaned_data['q'].split()
-            for string in strings:
-                tags = tags | Tag.objects.filter(name__istartswith=string)
-            # NB the following line will select images if any tags match, not just if all do
-            tag_matches = images.filter(tags__in = tags).distinct()
-            for term in strings:
-                title_matches = title_matches | images.filter(title__istartswith=term).distinct()
-            images = tag_matches | title_matches
+            q = form.cleaned_data['q']
+            images = Image.search(q)
     else:
         form = ImageSearchForm()
+        images = Image.objects.order_by('title')
 
     context = {
         'form': form,
         'images': images,
-        'tags': tags,
     }
     if request.is_ajax():
         return render(request, "verdantimages/images/search-results.html", context)
