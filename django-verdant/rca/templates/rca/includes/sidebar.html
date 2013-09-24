@@ -1,0 +1,200 @@
+<!-- Events -->
+{% if showToday == "true" %}
+    <div class="today expanded">
+        <h2>Events</h2>
+        <ul>
+            <li>
+                <a href="">
+                    <h3>21 March</h3>
+                    <p>Neville Brody in Conversation</p>
+                </a>
+                <span>public</span>
+            </li>
+            <li>
+                <a href="">
+                    <h3>7 May</h3>
+                    <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
+                </a>
+                <span>private</span>
+            </li>
+            <li class="last">
+                <a href="">
+                    <h3>14 March</h3>
+                    <p>SHOW RCA 2013</p>
+                </a>
+                <span>public</span>
+            </li>
+        </ul>
+    </div>
+{% endif %}
+
+<!-- adverts -->
+{% if showAdverts == "true" %}
+    <!-- adverts -->
+    <div class="apply">
+        <a href="#">
+            <h2>Apply to Study</h2>
+            <p>at the Royal College of Art</p>
+        </a>
+    </div>
+{% endif %}
+
+<!--open days-->
+{% if showOpenDays == "true" %}
+    <div class="open-days">
+        <a href="#">
+            <h2>Open Days</h2>
+        </a>
+    </div>
+{% endif %}
+
+<!-- Related links -->
+{% if showRelatedLinks == "true" %}
+    <div class="related expanded">
+        <h2>In this section</h2>
+        <div class="wrapper">
+            <!-- <h3 class="dark">In this section</h3> -->
+            <ul>
+                <li><a href="">Entrance requirements</a></li>
+                <li><a href="">Partnerships Awards &amp; scholarships</a></li>
+                <li><a href="">Staff</a></li>
+                <li><a href="">Alumni</a></li>
+            </ul>
+            <h3>See also</h3>
+            <ul class="extra-links">
+                <li><a href="">Studying at the RCA</a></li>
+                <li><a href="">Tuition fees and funding</a></li>
+                <li><a href="">Apply for this programme</a></li>
+            </ul>
+        </div>
+    </div>
+{% endif %}
+
+<!-- related content -->
+{% if showRelatedNews == "true" %}
+    <div class="related-content-item">
+        <a href="">
+            <figure>
+                <img src="http://instasrc.com/180x100/architecture" alt="" />
+                <figcaption>A new building for Battersea</figcaption>
+            </figure>
+        </a>
+        <a href="" class="index-page-link">News</a>
+    </div>
+    <div class="related-content-item">
+        <a href="">
+            <figure>
+                <img src="http://instasrc.com/180x100/art" alt="" />
+                <figcaption>The Eglu</figcaption>
+            </figure>
+        </a>
+        <a href="" class="index-page-link">News</a>
+    </div>
+    <div class="related-content-item">
+        <a href="">
+            <figure>
+                <img src="http://instasrc.com/180x100/art" alt="" />
+                <figcaption>Talking interiors</figcaption>
+            </figure>
+        </a>
+        <a href="" class="index-page-link">News</a>
+    </div>
+
+    <div class="related-content-item">
+        <a href="">
+            <figure class="staff">
+                <img src="http://instasrc.com/125x125/people" alt="" />
+                <figcaption>Name<span>Surname</span></figcaption>
+            </figure>
+        </a>
+    </div>
+    <div class="related-content-item">
+        <a href="">
+            <figure class="staff">
+                <img src="http://instasrc.com/125x125/people" alt="" />
+                <figcaption>Name<span>Surname</span></figcaption>
+            </figure>
+        </a>
+    </div>
+{% endif %}
+
+<!-- job adverts -->
+{% if showRelatedJobs == "true" %}
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
+    <div class="other-jobs">
+        <a href="#">
+            <h2>Senior Tutor: animation</h2>
+            <p>School: Design</p>
+        </a>
+    </div>
+{% endif %}
+
+<!-- related projects -->
+{% if showRelatedProjects == "true" %}
+	<ul class="related-projects">
+        <li>
+            <a href="#">
+                <div class="image"><img src="http://instasrc.com/224x126/nature" /></div>
+                <div class="content">
+                    <h2 class="h8">Project Title</h2>
+                    <p class="bc5">Student Name</p>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <div class="image"><img src="http://instasrc.com/224x126/people" /></div>
+                <div class="content">
+                    <h2 class="h8">Project Title</h2>
+                    <p class="bc5">Student Name</p>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <div class="image"><img src="http://instasrc.com/224x126/animal" /></div>
+                <div class="content">
+                    <h2 class="h8">Project Title</h2>
+                    <p class="bc5">Student Name</p>
+                </div>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <div class="image"><img src="http://instasrc.com/224x126/architecture" /></div>
+                <div class="content">
+                    <h2 class="h8">Project Title</h2>
+                    <p class="bc5">Student Name</p>
+                </div>
+            </a>
+        </li>
+    </ul>
+{% endif %}
+
+<!-- tags -->
+{% if showTags == "true" %}
+    <div class="related expanded">
+        <h2>Tags</h2>
+        <div class="wrapper">
+            <ul>
+                <li><a href="">animation (12)</a></li>
+                <li><a href="">glassmaking (5)</a></li>
+                <li><a href="">fashion (2)</a></li>
+                <li><a href="">design (1)</a></li>
+                <li><a href="">architecture (1)</a></li>
+                <li><a href="">illustration (1)</a></li>
+            </ul>
+        </div>
+    </div>
+{% endif %}

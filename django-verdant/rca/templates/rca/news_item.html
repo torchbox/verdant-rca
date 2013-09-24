@@ -5,7 +5,6 @@
 
 {% block pre_content %}
     {% if self.author %}
-        {% image self.author.mugshot fill-64x64 %}
         <p>By <a href="{% pageurl self.author %}">{{ self.author.title }}</a></p>
     {% endif %}
 
@@ -28,4 +27,5 @@
             </ul>
         {% endif %}
     {% endwith %}
+    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
 {% endblock %}
