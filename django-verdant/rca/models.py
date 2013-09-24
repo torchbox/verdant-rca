@@ -84,7 +84,9 @@ class SocialFields(models.Model):
     class Meta:
         abstract = True
 
+# Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
     image_year = models.CharField(max_length=25, blank=True)
     image_creator = models.CharField(max_length=255, blank=True)
     image_medium = models.CharField(max_length=255, blank=True)
@@ -92,6 +94,8 @@ class CarouselItemFields(models.Model):
     image_photographer = models.CharField(max_length=25, blank=True)
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
+    embedly_url = models.URLField(blank=True)
+    poster_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
     class Meta:
         abstract = True
@@ -315,8 +319,6 @@ EventItem.promote_panels = [
 
 class StandardPageCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.StandardPage', related_name='carousel_items')
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
-    embedly_url = models.URLField(blank=True)
 
 class StandardPageRelatedLink(models.Model):
     page = models.ForeignKey('rca.StandardPage', related_name='related_links')
