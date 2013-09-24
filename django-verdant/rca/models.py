@@ -299,8 +299,35 @@ EventItem.promote_panels = [
 
 # == Standard page ==
 
+class StandardPageCarouselItem(models.Model):
+    page = models.ForeignKey('rca.StandardPage', related_name='carousel_items')
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    embedly_url = models.URLField(blank=True)
+
+class StandardPageRelatedLink(models.Model):
+    page = models.ForeignKey('rca.StandardPage', related_name='related_links')
+    url = models.URLField()
+    link_text = models.CharField(max_length=255)
+
 class StandardPage(Page, SocialFields):
-   pass
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+
+StandardPage.content_panels = [
+    RichTextFieldPanel('intro'),
+    RichTextFieldPanel('body'),
+    InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content",
+        panels=[ImageChooserPanel('image'), FieldPanel('embedly_url')]
+    ),
+    InlinePanel(StandardPage, StandardPageRelatedLink, label="Related links"),
+]
+
+StandardPage.promote_panels = [
+    FieldPanel('title'),
+    FieldPanel('slug'),
+    ImageChooserPanel('social_image'),
+    FieldPanel('social_text'),
+]
 
    
 # == Standard Index page ==
