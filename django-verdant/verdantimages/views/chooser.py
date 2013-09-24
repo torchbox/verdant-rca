@@ -4,7 +4,8 @@ import json
 
 from verdantadmin.modal_workflow import render_modal_workflow
 from verdantimages.models import Image
-from verdantimages.forms import ImageForm, ImageInsertionForm, ImageSearchForm
+from verdantimages.forms import ImageForm, ImageInsertionForm
+from verdantadmin.forms import SearchForm
 from verdantimages.formats import FORMATS_BY_NAME
 
 
@@ -29,13 +30,13 @@ def chooser(request):
     images = Image.objects.order_by('title')
     uploadform = ImageForm()
     if 'q' in request.GET:
-        searchform = ImageSearchForm(request.GET)
+        searchform = SearchForm(request.GET)
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
             images = Image.search(q)
             return render(request, "verdantimages/chooser/search_results.html", {'images': images})
     else:
-        searchform = ImageSearchForm()
+        searchform = SearchForm()
 
 
     return render_modal_workflow(
