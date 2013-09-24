@@ -181,10 +181,7 @@ class BaseCompositeEditHandler(EditHandler):
         return mark_safe(u'\n'.join([handler.render_js() for handler in self.children]))
 
     def is_valid(self):
-        result = True
-        for handler in self.children:
-            result &= handler.is_valid()
-        return result
+        return all([child.is_valid() for child in self.children])
 
     def pre_save(self):
         for handler in self.children:
@@ -436,10 +433,9 @@ class BaseInlinePanel(EditHandler):
         }))
 
     def is_valid(self):
-        result = self.formset.is_valid()
-        for child in self.children:
-            result &= child.is_valid()
-        return result
+        formset_is_valid = self.formset.is_valid()
+        children_are_valid = all([child.is_valid() for child in self.children])
+        return (formset_is_valid and children_are_valid)
 
     def pre_save(self):
         for child in self.children:

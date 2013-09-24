@@ -107,7 +107,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         form = form_class(request.POST, request.FILES, instance=page)
         edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if edit_handler.is_valid():
+        if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
@@ -136,7 +136,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
         edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if edit_handler.is_valid():
+        if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
             form.save()
             edit_handler.post_save()
