@@ -92,7 +92,7 @@
         label{
             .visuallyhidden();
         }
-        input, textarea{
+        input, textarea, .richtext{
             .border-radius(0px);
             .push-padding(@grid-content-indent);
             .pull-padding(2);
@@ -119,6 +119,11 @@
         }
     }
 
+    /* wrapper around add button for mutliple objects */
+    p.add{
+        margin:0;
+        padding:@grid-gutter-width 0;
+    }
 
     /* Object controls */
     .controls{

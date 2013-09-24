@@ -4,7 +4,7 @@ from django.shortcuts import render
 from core.models import Page
 from core.fields import RichTextField
 
-from verdantadmin.edit_handlers import FieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
+from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantdocs.edit_handlers import DocumentChooserPanel
 
@@ -245,9 +245,7 @@ NewsItem.content_panels = [
     InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
         panels=[PageChooserPanel('url'), FieldPanel('link_text')]
     ),
-    InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content",
-        panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
-    ),
+    InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
 
 NewsItem.promote_panels = [
@@ -314,8 +312,10 @@ EventItem.content_panels = [
 ]
 
 EventItem.promote_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
+    MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
     ImageChooserPanel('social_image'),
     FieldPanel('social_text'),
     FieldPanel('show_on_homepage'),
@@ -347,10 +347,14 @@ StandardPage.content_panels = [
 ]
 
 StandardPage.promote_panels = [
-    FieldPanel('title'),
-    FieldPanel('slug'),
-    ImageChooserPanel('social_image'),
-    FieldPanel('social_text'),
+    MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
 ]
 
    
