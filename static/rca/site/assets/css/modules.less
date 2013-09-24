@@ -399,6 +399,7 @@
 }
 
 .download {
+    display: inline-block;
     text-indent: -9999px;
     .sprite-load(-356px, -2200px, 45px, 51px);
     //background: url('imgs/sprites.png') no-repeat -356px -2200px; width: 45px; height: 51px;
@@ -1181,6 +1182,14 @@
         }
     }
 
+    &.one-filters{
+        .two,
+        .three,
+        .four {
+            display: none;
+        }
+    }
+
     &.two-filters{}
 
     &.four-filters{}   
@@ -1327,24 +1336,15 @@
 
 
 /**
- * $Three plus vertical
+ * $Related projects
  */
-.three-plus-vertical {
-	.row {
-		margin-top: @spacing-half;
-	}
-	h3 {
-		margin-bottom: @spacing-half;
+.related-projects {
+	h2 {
+		margin-bottom: 0;
 	}
 	p {
 		margin-top: 0;
 	}
-    .load-more{
-        a{
-            height:126px;
-            width:126px;
-        }
-    }
 }
 
 /**
