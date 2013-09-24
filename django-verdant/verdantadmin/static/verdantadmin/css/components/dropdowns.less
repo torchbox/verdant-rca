@@ -81,6 +81,17 @@
         top:auto;
         bottom:100%;
     }
+
+    input[type=button], input[type=submit], button{
+        padding:1em 0;
+        .border-radius(0);
+        display:block;
+        width:100%;
+        text-align:left;
+        margin-left:-1em;
+        padding-left:1em;
+        border-right:1px solid rgba(255,255,255,0.2);
+    }
 }
 
 .dropdown.white{
@@ -136,3 +147,13 @@ h2 .dropdown{
         }
     }
 }
+
+footer .actions .dropdown-toggle{
+    text-transform:uppercase;
+    background-color:@color-teal;
+    line-height:3em;
+    color:white;
+    padding-left:1em;
+    padding-right:1em;      
+}
+
