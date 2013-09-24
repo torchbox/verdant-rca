@@ -1,5 +1,5 @@
 from django.core.files import File
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
@@ -72,6 +72,23 @@ class Image(AbstractImage):
 def image_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.file.delete(False)
+
+
+def get_image_model():
+    from django.conf import settings
+    from django.db.models import get_model
+
+    try:
+        app_label, model_name = settings.VERDANTIMAGES_IMAGE_MODEL.split('.')
+    except AttributeError:
+        return Image
+    except ValueError:
+        raise ImproperlyConfigured("VERDANTIMAGES_IMAGE_MODEL must be of the form 'app_label.model_name'")
+
+    image_model = get_model(app_label, model_name)
+    if image_model is None:
+        raise ImproperlyConfigured("VERDANTIMAGES_IMAGE_MODEL refers to model '%s' that has not been installed" % settings.VERDANTIMAGES_IMAGE_MODEL)
+    return image_model
 
 
 class Filter(models.Model):
