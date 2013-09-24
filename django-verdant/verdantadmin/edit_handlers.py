@@ -5,6 +5,7 @@ from django.forms.models import modelform_factory, inlineformset_factory
 from django.contrib.contenttypes.models import ContentType
 
 from core.models import Page
+from core.util import camelcase_to_underscore
 
 
 def get_form_for_model(model, **kwargs):
@@ -241,11 +242,11 @@ class BaseFieldPanel(EditHandler):
             return ''
 
     def field_classnames(self):
-        # TODO: insert a classname appropriate to the widget, e.g. "text", "radio", "checkbox"
+        field_type = camelcase_to_underscore(self.bound_field.field.__class__.__name__)
         if self.bound_field.errors:
-            return "error"
+            return field_type + " error"
         else:
-            return ""
+            return field_type
 
     object_template = "verdantadmin/edit_handlers/field_panel_object.html"
     def render_as_object(self):

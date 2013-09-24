@@ -1,4 +1,5 @@
-<li class="TODO {% if field.errors %}error{% endif %}">
+{% load fieldtype %}
+<li class="{{ field|fieldtype }} {% if field.errors %}error{% endif %}">
     <div class="field">
         {{ field.label_tag }}
         {% block form_field %}
