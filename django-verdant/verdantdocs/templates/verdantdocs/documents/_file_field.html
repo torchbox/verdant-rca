@@ -1,0 +1,5 @@
+{% extends "verdantadmin/shared/field_as_li.html" %}
+{% block form_field %}
+    Currently: <a href="{{ document.url }}">{{ document.filename }}</a><br />Change:
+    {{ field }}
+{% endblock %}

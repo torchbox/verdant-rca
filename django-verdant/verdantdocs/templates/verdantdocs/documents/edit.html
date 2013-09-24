@@ -18,7 +18,13 @@
         {% csrf_token %}
         <ul class="fields">
             {% for field in form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+
+                {% if field.name == 'file' %}
+                    {% include "verdantdocs/documents/_file_field.html" %}
+                {% else %}
+                    {% include "verdantadmin/shared/field_as_li.html" %}
+                {% endif %}
+
             {% endfor %}
             <li class="button"><input type="submit" value="Save" /></li>
         </ul>

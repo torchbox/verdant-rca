@@ -18,8 +18,12 @@ class Document(models.Model):
         return self.title
 
     @property
+    def filename(self):
+        return os.path.basename(self.file.name)
+
+    @property
     def url(self):
-        return reverse('verdantdocs_serve', args=[self.id, os.path.basename(self.file.name)])
+        return reverse('verdantdocs_serve', args=[self.id, self.filename])
 
     @staticmethod
     def search(q):
