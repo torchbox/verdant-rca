@@ -1,0 +1,34 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+{% block extra_css %}
+    {% include "verdantadmin/shared/tag_field_css.html" %}
+{% endblock %}
+
+{% block extra_js %}
+    {% include "verdantadmin/shared/tag_field_js.html" %}
+{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>Edit document '{{ document.title }}'</h1>
+    </header>
+
+    <form action="{% url 'verdantdocs_edit_document' document.id %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <ul class="fields">
+            {% for field in form %}
+
+                {% if field.name == 'file' %}
+                    {% include "verdantdocs/documents/_file_field.html" %}
+                {% else %}
+                    {% include "verdantadmin/shared/field_as_li.html" %}
+                {% endif %}
+
+            {% endfor %}
+            <li class="button"><input type="submit" value="Save" /></li>
+        </ul>
+    </form>
+
+    <a href="{% url 'verdantdocs_delete_document' document.id %}">Delete document</a>
+{% endblock %}
