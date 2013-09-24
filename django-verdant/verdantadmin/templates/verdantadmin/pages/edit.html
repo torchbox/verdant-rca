@@ -1,7 +1,9 @@
 {% extends "verdantadmin/base.html" %}
 
+{% block bodyclass %}merged-header{% endblock %}
+
 {% block content %}
-    <header>
+    <header class="merged">
         <h1>Editing page '{{ page.title }}'</h1>
     </header>
 
