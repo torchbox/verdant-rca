@@ -8,4 +8,5 @@ urlpatterns = patterns('verdantdocs.views',
 
     url(r'^chooser/$', 'chooser.chooser', name='verdantdocs_chooser'),
     url(r'^chooser/(\d+)/$', 'chooser.document_chosen', name='verdantdocs_document_chosen'),
+    url(r'^chooser/upload/$', 'chooser.chooser_upload', name='verdantdocs_chooser_upload'),
 )

@@ -2,13 +2,31 @@
 <h1>Choose a document</h1>
 </header>
 
-<div class="{# listing #} documents">
-    <ul>
-        {% for doc in documents %}
-            <li>
-                <a class="document-choice" href="{% url 'verdantdocs_document_chosen' doc.id %}">{{ doc.title }}</a>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+<div class="row row-flush">
+    <div class="col6">
+        <form class="document-search" action="{% url 'verdantdocs_chooser' %}" method="GET">
+            <ul class="fields">
+                {% for field in searchform %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% endfor %}
+                <li class="button"><input type="submit" value="Search" /></li>
+            </ul>
+        </form>
+        <div id="search-results" class="{# listing #} documents">
+            {% include "verdantdocs/chooser/search_results.html" %}
+        </div>
+    </div>
+
+    <div class="col6">
+        <h2>Or upload a new one:</h2>
+        <form class="document-upload" action="{% url 'verdantdocs_chooser_upload' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul class="fields">
+                {% for field in uploadform %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% endfor %}
+                <li class="button"><input type="submit" value="Save" /></li>
+            </ul>
+        </form>
+    </div>
 </div>
