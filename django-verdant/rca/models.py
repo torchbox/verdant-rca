@@ -77,34 +77,29 @@ class SchoolPage(Page):
 
 class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
-   
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
 class ProgrammePageRelatedLink(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='related_links')
-    
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
 class ProgrammePageOurSites(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='our_sites')
-    
     url = models.URLField()
     site_name = models.CharField(max_length=255)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
-    
     name = models.CharField(max_length=255)
     text = RichTextField()
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
 class ProgrammePageFacilities(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='facilities')
-
     text = RichTextField()
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
 
@@ -136,23 +131,62 @@ ProgrammePage.promote_panels = []
 class NewsIndex(Page):
     subpage_types = ['NewsItem']
 
-
 # == News Item ==
-class NewsItem(EditorialPage):
+
+AREA_CHOICES = (
+    ('helenhamlyn', 'Helen Hamlyn'),
+    ('innovationrca', 'InnovationRCA'),
+    ('research', 'Research'),
+    ('knowledgeexchange', 'Knowledge Exchange'),
+    ('showrca', 'Show RCA'),
+)
+
+class NewsItemCarouselItem(models.Model):
+    page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
+    url = models.URLField()
+
+class NewsItemRelatedLink(models.Model):
+    page = models.ForeignKey('rca.NewsItem', related_name='related_links')
+    url = models.URLField()
+    link_text = models.CharField(max_length=255)
+
+class NewsItem(Page):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
-    lead_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, related_name='+')
+    date = models.DateField()
+    body = RichTextField()
+    show_on_homepage = models.BooleanField()
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='related_school')
+    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='related_programme')
+    # TODO: Social image
+    # TODO: Social text
 
 NewsItem.content_panels = [
     FieldPanel('title'),
     FieldPanel('slug'),
     PageChooserPanel('author', AuthorPage),
-    ImageChooserPanel('lead_image'),
+    FieldPanel('date'),
     RichTextFieldPanel('body'),
-    InlinePanel(Page, RelatedLink, label="Wonderful related links",
-        # label is optional - we'll derive one from the related_name of the relation if not specified
-        # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
-        panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
+    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
+        panels=[PageChooserPanel('url'), FieldPanel('link_text')]
     ),
-    InlinePanel(Page, RelatedDocument),
+    InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content",
+        panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
+    ),
+
+    #  InlinePanel(Page, RelatedLink, label="Wonderful related links",
+    #     # label is optional - we'll derive one from the related_name of the relation if not specified
+    #     # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
+    #     panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
+    # ),
 ]
-NewsItem.promote_panels = []
+NewsItem.promote_panels = [
+    FieldPanel('show_on_homepage'),
+    FieldPanel('listing_intro'),
+    FieldPanel('area'),
+    PageChooserPanel('related_school', SchoolPage),
+    PageChooserPanel('related_programme', ProgrammePage),
+]

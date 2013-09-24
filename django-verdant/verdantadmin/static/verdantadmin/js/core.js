@@ -37,6 +37,14 @@ $(function(){
         $(this).closest('li').removeClass('focused')
     });
 
+    /* tabs */
+    $('.tab-nav a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show');
+    });   
+
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
+
+
 })

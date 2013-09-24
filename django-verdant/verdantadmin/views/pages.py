@@ -56,11 +56,12 @@ def select_location(request, content_type_app_name, content_type_model_name):
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
         raise Http404
-    # content type must be in the list of page types
-    if content_type not in get_page_types():
-        raise Http404
 
     page_class = content_type.model_class()
+    # page_class must be a Page type and not some other random model
+    if not issubclass(page_class, Page):
+        raise Http404
+
     # find all the valid locations (parent pages) where a page of the chosen type can be added
     parent_pages = page_class.allowed_parent_pages()
 
@@ -106,7 +107,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         form = form_class(request.POST, request.FILES, instance=page)
         edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if edit_handler.is_valid():
+        if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
@@ -135,7 +136,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
         edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if edit_handler.is_valid():
+        if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
             form.save()
             edit_handler.post_save()
@@ -148,6 +149,20 @@ def edit(request, page_id):
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
         'edit_handler': edit_handler,
+    })
+
+def delete(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.POST:
+        parent_id = page.get_parent().id
+        page.delete()
+        messages.success(request, "Page '%s' deleted." % page.title)
+        return redirect('verdantadmin_explore', parent_id)
+
+    return render(request, 'verdantadmin/pages/confirm_delete.html', {
+        'page': page,
+        'descendant_count': page.get_descendant_count()
     })
 
 

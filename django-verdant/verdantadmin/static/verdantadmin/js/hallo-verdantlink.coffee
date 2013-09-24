@@ -30,6 +30,7 @@
                             a = document.createElement('a')
                             a.setAttribute('href', pageData.url)
                             a.setAttribute('data-id', pageData.id)
+                            a.setAttribute('data-linktype', 'page')
 
                             if (not lastSelection.collapsed) and lastSelection.canSurroundContents()
                                 # use the selected content as the link text

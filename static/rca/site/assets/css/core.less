@@ -916,15 +916,7 @@ div.related-content-item {
         //.clearfix();
     }
     a.index-page-link {
-        position: relative;
-        &:after {
-            content: '';
-            .sprite-load(-17px, -1220px, 7px, 13px);
-            opacity: 0.3;
-            position: absolute;
-            right: -10px;
-            top: 2px;
-        }
+        .chevron();
     }
     img {
         //height: 150px;
@@ -932,9 +924,6 @@ div.related-content-item {
     figcaption {
         .h7();
         margin-top: 8px;
-    }
-    a.index-page-link {
-        .module-title();
     }
 }
 
@@ -1140,6 +1129,20 @@ input[type=button], button, .button{
     &:hover{
         color:@color-white;
         background-color:@color-pink;
+    }
+}
+
+/* link with chevron */
+.chevron {
+    .module-title();
+    position: relative;
+    &:after {
+        content: '';
+        .sprite-load(-17px, -1220px, 7px, 13px);
+        opacity: 0.3;
+        position: absolute;
+        right: -10px;
+        top: 2px;
     }
 }
 

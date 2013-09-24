@@ -25,7 +25,7 @@
                             <div class="dropdown-toggle inline icon arrow-down-black">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                <li><a href="#" class="shortcut">Delete</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
                                 <li><a href="#" class="shortcut">Preview</a></li>
                                 <li><a href="#" class="shortcut">Something</a></li>
                             </ul>
@@ -72,7 +72,7 @@
                                 <li><a href="{{ page.url }}" target="_blank">View</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_edit' page.id %}">Edit</a></li>
                                 <li><a href="#">Move</a></li>
-                                <li><a href="#">Delete</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
                             </ul>
                         </td>
