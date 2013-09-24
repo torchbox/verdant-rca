@@ -11,25 +11,18 @@
         {% csrf_token %}
         {{ edit_handler.render_as_object }}
         {{ edit_handler.render_missing_fields }}
-        <div class="button"><input type="submit" value="Save"></div>
+        
+        <footer>
+            <ul>
+                <li class="actions">
+                    <div class="dropdown dropup match-width">
+                        <div class="dropdown-toggle"><input type="submit" value="Save" /></div>
+                    </div>
+                </li>
+                <li>Something</li>
+            </ul>
+        </footer>
     </form>
-   
-    <footer>
-        <ul>
-            <li class="actions">
-                <div class="dropdown dropup match-width">
-                    <div class="dropdown-toggle icon iconright arrow-up">Open drop-down</div>
-                    <ul role="menu">
-                        <li><a href="#" class="shortcut">Delete <span class="kbd"><kbd>Shift</kbd> + <kbd>P</kbd></span></a></li>
-                        <li><a href="#" class="shortcut">Do something else <span class="kbd"><kbd>Shift</kbd> + <kbd>P</kbd></span></a></li>
-                        <li><a href="#" class="shortcut">Preview <span class="kbd"><kbd>Shift</kbd> + <kbd>A</kbd></span></a></li>
-                        <li><a href="#" class="shortcut">Something<span class="kbd"><kbd>Shift</kbd> + <kbd>Q</kbd></span></a></li>
-                    </ul>
-                </div>
-            </li>
-            <li>Something</li>
-        </ul>
-</footer>
 
 {% endblock %}
 

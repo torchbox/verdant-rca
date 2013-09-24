@@ -165,6 +165,12 @@ a.button{
 }
 .button.icon{
     padding-left:45px;
+
+    /* before and after are reserved for the icon container */
+    &:before,
+    &:after{
+        left:1em;
+    }
 }
 
 /* Other text */
@@ -240,14 +246,6 @@ ul.inline li:first-child, li.inline:first-child{
     margin-left:-@grid-gutter-width / 2;
 }
 
-form .icon.add{
-    position:relative;
-    text-decoration:none;
-    font-weight:700;
-    &:before{
-        left:0;
-    }
-}
 
 /* TODO this chooser style has been made more generic based on two identical methods for choosing pages and images that were previously included in their own less files in each app directory (and since deleted). It would be best if an admin "theme" (to use a drupal term) provided all the design for a UI in a single place, but should that be a series of overrides to the css provided from an app? If so, perhaps those two previous less files should be re-instated and then overriden here? hmm. */
 
