@@ -19,11 +19,17 @@
         </div>
         <div class="col6">
             <h2>Image details</h2>
-            <form action="{% url 'verdantimages_edit_image' image.id %}" method="POST">
+            <form action="{% url 'verdantimages_edit_image' image.id %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul class="fields">
                     {% for field in form %}
-                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+
+                        {% if field.name == 'file' %}
+                            {% include "verdantimages/images/_file_field.html" %}
+                        {% else %}
+                            {% include "verdantadmin/shared/field_as_li.html" %}
+                        {% endif %}
+
                     {% endfor %}
                     <li class="button"><input type="submit" value="Save" /></li>
                 </ul>

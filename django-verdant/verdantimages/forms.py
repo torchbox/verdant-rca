@@ -6,10 +6,10 @@ from verdantimages.formats import FORMATS
 
 
 def get_image_form():
-    return modelform_factory(get_image_model())
-
-def get_edit_image_form():
-    return modelform_factory(get_image_model(), exclude=['file'])
+    # set the 'file' widget to a FileInput rather than the default ClearableFileInput
+    # so that when editing, we don't get the 'currently: ...' banner which is
+    # a bit pointless here
+    return modelform_factory(get_image_model(), widgets = {'file': forms.FileInput()})
 
 
 class ImageInsertionForm(forms.Form):
