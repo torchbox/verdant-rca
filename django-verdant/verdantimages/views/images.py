@@ -67,9 +67,11 @@ def search(request):
         if form.is_valid():
             q = form.cleaned_data['q']
             images = Image.search(q)
+        else: # empty search field
+            images = []
     else:
         form = SearchForm()
-        images = Image.objects.order_by('title')
+        images = []
 
     context = {
         'form': form,

@@ -24,9 +24,9 @@ function(modal) {
 
     $('form.image-search', modal.body).submit(search);
 
-    $('#id_q').keyup(function() {
+    $('#id_q').on('input', function() {
         clearTimeout($.data(this, 'timer'));
-        var wait = setTimeout(search, 10);
+        var wait = setTimeout(search, 50);
         $(this).data('timer', wait);
     });
 

@@ -2,9 +2,9 @@
 
 {% block extra_js %}
     <script>
-        $('#id_q').keyup(function() {
+        $('#id_q').on('input', function() {
             clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(search, 500);
+            var wait = setTimeout(search, 50);
             $(this).data('timer', wait);
         });
         function search () {
@@ -27,7 +27,7 @@
                 {% for field in form %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li class="button"><input type="submit" value="Filter" /></li>
+                <li class="button"><input type="submit" value="Search" /></li>
             </ul>
         </form>
         <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>

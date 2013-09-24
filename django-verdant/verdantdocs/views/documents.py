@@ -35,9 +35,11 @@ def search(request):
         if form.is_valid():
             q = form.cleaned_data['q']
             documents = Document.search(q)
+        else: # empty search field
+            documents = []
     else:
         form = SearchForm()
-        documents = Document.objects.order_by('title')
+        documents = []
 
     context = {
         'form': form,

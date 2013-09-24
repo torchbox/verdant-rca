@@ -2,9 +2,9 @@
 
 {% block extra_js %}
     <script>
-        $('#id_q').keyup(function() {
+        $('#id_q').on('input', function() {
             clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(search, 500);
+            var wait = setTimeout(search, 50);
             $(this).data('timer', wait);
         });
         function search () {
@@ -27,20 +27,14 @@
                 {% for field in form %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li class="button"><input type="submit" value="Filter" /></li>
+                <li class="button"><input type="submit" value="Search" /></li>
             </ul>
         </form>
         <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
     </header>
 
     <div id="image-results" class="listing images">
-    {% include "verdantimages/images/search-results.html" %}
+        {% include "verdantimages/images/search-results.html" %}
     </div>
 
-<h1>Or upload a new one:</h1>
-<form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Upload">
-</form>
 {% endblock %}
