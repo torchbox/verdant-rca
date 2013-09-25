@@ -305,8 +305,6 @@ class NewsItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=NEWS_AREA_CHOICES, blank=True)
-    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='news_item')
-    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='news_item')
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
@@ -349,6 +347,18 @@ class EventItemCarouselItem(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     embedly_url = models.URLField(blank=True)
 
+class EventItemRelatedSchool(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='related_schools')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+
+    panels = [FieldPanel('school')]
+
+class EventItemRelatedProgramme(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='related_programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+
+    panels = [FieldPanel('programme')]
+
 class EventItem(Page, SocialFields):
     date_to = models.DateField()
     date_from = models.DateField()
@@ -362,8 +372,6 @@ class EventItem(Page, SocialFields):
     signup_link = models.URLField(blank=True)
     # TODO: Event URL, purpose unknown
     show_on_homepage = models.BooleanField()
-    related_school = models.ForeignKey('rca.SchoolPage', null=True, blank=True, related_name='event_item')
-    related_programme = models.ForeignKey('rca.ProgrammePage', null=True, blank=True, related_name='event_item')
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
@@ -395,8 +403,8 @@ EventItem.promote_panels = [
     FieldPanel('social_text'),
     FieldPanel('show_on_homepage'),
     FieldPanel('listing_intro'),
-    PageChooserPanel('related_school', SchoolPage),
-    PageChooserPanel('related_programme', ProgrammePage),
+    InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
+    InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
 ]
 
 
