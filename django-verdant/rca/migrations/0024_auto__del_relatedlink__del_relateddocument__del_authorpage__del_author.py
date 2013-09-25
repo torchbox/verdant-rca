@@ -8,6 +8,12 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Changing field 'NewsItem.author' (deleting and recreating)
+        db.delete_column(u'rca_newsitem', 'author_id')
+        db.add_column(u'rca_newsitem', 'author',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
+                      keep_default=False)
+
         # Deleting model 'RelatedLink'
         db.delete_table(u'rca_relatedlink')
 
@@ -24,18 +30,8 @@ class Migration(SchemaMigration):
         db.delete_table(u'rca_editorialpage')
 
 
-        # Renaming column for 'NewsItem.author' to match new field type.
-        db.rename_column(u'rca_newsitem', 'author_id', 'author')
-        # Changing field 'NewsItem.author'
-        db.alter_column(u'rca_newsitem', 'author', self.gf('django.db.models.fields.CharField')(default='', max_length=255))
-        # Removing index on 'NewsItem', fields ['author']
-        db.delete_index(u'rca_newsitem', ['author_id'])
-
 
     def backwards(self, orm):
-        # Adding index on 'NewsItem', fields ['author']
-        db.create_index(u'rca_newsitem', ['author_id'])
-
         # Adding model 'RelatedLink'
         db.create_table(u'rca_relatedlink', (
             ('url', self.gf('django.db.models.fields.URLField')(max_length=200)),
@@ -75,10 +71,14 @@ class Migration(SchemaMigration):
         db.send_create_signal(u'rca', ['EditorialPage'])
 
 
-        # Renaming column for 'NewsItem.author' to match new field type.
-        db.rename_column(u'rca_newsitem', 'author', 'author_id')
-        # Changing field 'NewsItem.author'
-        db.alter_column(u'rca_newsitem', 'author_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['rca.AuthorPage']))
+        # Replacing field 'NewsItem.author'
+        db.delete_column(u'rca_newsitem', 'author')
+        db.add_column(u'rca_newsitem', 'author',
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='news_items', null=True, to=orm['rca.AuthorPage']),
+                      keep_default=False)
+        # Adding index on 'NewsItem', fields ['author']
+        db.create_index(u'rca_newsitem', ['author_id'])
+
 
     models = {
         u'contenttypes.contenttype': {
