@@ -1,0 +1,9 @@
+<header>
+<h1>Choose {{ snippet_type_name }}</h1>
+</header>
+
+<ul class="listing snippets">
+    {% for item in items %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
