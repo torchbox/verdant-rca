@@ -512,3 +512,10 @@ class GalleryPage(Page, SocialFields):
 class ContactUsPage(Page, SocialFields):
     pass
 
+
+# == Snippet: Advert ==
+class Advert(models.Model):
+    page = models.ForeignKey('core.Page', related_name='adverts')
+    url = models.URLField()
+    text = models.CharField(max_length=255)
+    show_globally = models.BooleanField(default=False)
