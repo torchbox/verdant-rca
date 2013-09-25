@@ -33,6 +33,7 @@ class AbstractImage(models.Model, TagSearchable):
             # TODO: keep an in-memory cache of filters, to avoid a db lookup
             filter, created = Filter.objects.get_or_create(spec=filter)
 
+        # TODO: wrap this in a transaction, as it's susceptible to race conditions
         try:
             rendition = self.renditions.get(filter=filter)
         except ObjectDoesNotExist:
