@@ -91,6 +91,12 @@ class SocialFields(models.Model):
     class Meta:
         abstract = True
 
+class CommonPromoteFields(models.Model):
+    show_in_menus = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -272,7 +278,7 @@ class EventItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class EventItem(Page, SocialFields):
+class EventItem(Page, SocialFields, CommonPromoteFields):
     date_to = models.DateField()
     date_from = models.DateField()
     times = RichTextField(blank=True)
@@ -318,6 +324,7 @@ EventItem.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
+    FieldPanel('show_in_menus'),
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),

@@ -117,6 +117,13 @@ class EditHandler(object):
         """
         return ""
 
+
+    def field_type(self):
+        """
+        The kind of field it is e.g boolean_field. Useful for better semantic markup of field display based on type
+        """
+        return ""
+
     def render_as_object(self):
         """
         Render this object as it should appear within an ObjectList. Should not
@@ -276,12 +283,15 @@ class BaseFieldPanel(EditHandler):
         else:
             return ''
 
+    def field_type(self):
+        return camelcase_to_underscore(self.bound_field.field.__class__.__name__)        
+
     def field_classnames(self):
-        field_type = camelcase_to_underscore(self.bound_field.field.__class__.__name__)
+        type = self.field_type()
         if self.bound_field.errors:
-            return field_type + " error"
+            return type + " error"
         else:
-            return field_type
+            return type
 
     object_template = "verdantadmin/edit_handlers/field_panel_object.html"
     def render_as_object(self):
@@ -294,6 +304,7 @@ class BaseFieldPanel(EditHandler):
     def render_as_field(self, show_help_text=True):
         return mark_safe(render_to_string(self.field_template, {
             'field': self.bound_field,
+            'field_type': self.field_type(),
             'show_help_text': show_help_text,
         }))
 
