@@ -67,19 +67,55 @@ def index(request):
 def list(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
+    snippet_type_name, snippet_type_name_plural = get_snippet_type_name(content_type)
 
     items = model.objects.all()
 
     return render(request, 'verdantsnippets/snippets/list.html', {
         'content_type': content_type,
-        'snippet_type_name': get_snippet_type_name(content_type)[1],
+        'snippet_type_name': snippet_type_name,
+        'snippet_type_name_plural': snippet_type_name_plural,
         'items': items,
     })
 
 
+def create(request, content_type_app_name, content_type_model_name):
+    content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    model = content_type.model_class()
+    snippet_type_name = get_snippet_type_name(content_type)[0]
+
+    instance = model()
+    edit_handler_class = get_snippet_edit_handler(model)
+    form_class = edit_handler_class.get_form_class(model)
+
+    if request.POST:
+        form = form_class(request.POST, request.FILES, instance=instance)
+        edit_handler = edit_handler_class(request.POST, request.FILES, instance=instance, form=form)
+
+        if all([form.is_valid(), edit_handler.is_valid()]):
+            edit_handler.pre_save()
+            form.save()
+            edit_handler.post_save()
+
+            messages.success(
+                request,
+                "%s '%s' created." % (capfirst(get_snippet_type_name(content_type)[0]), instance)
+            )
+            return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+    else:
+        form = form_class(instance=instance)
+        edit_handler = edit_handler_class(instance=instance, form=form)
+
+    return render(request, 'verdantsnippets/snippets/create.html', {
+        'content_type': content_type,
+        'snippet_type_name': snippet_type_name,
+        'edit_handler': edit_handler,
+    })
+
 def edit(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
+    snippet_type_name = get_snippet_type_name(content_type)[0]
 
     instance = get_object_or_404(model, id=id)
     edit_handler_class = get_snippet_edit_handler(model)
@@ -96,7 +132,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
 
             messages.success(
                 request,
-                "%s '%s' updated." % (capfirst(get_snippet_type_name(content_type)[0]), instance)
+                "%s '%s' updated." % (capfirst(snippet_type_name), instance)
             )
             return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
     else:
@@ -105,7 +141,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
 
     return render(request, 'verdantsnippets/snippets/edit.html', {
         'content_type': content_type,
-        'snippet_type_name': get_snippet_type_name(content_type)[0],
+        'snippet_type_name': snippet_type_name,
         'instance': instance,
         'edit_handler': edit_handler,
     })
