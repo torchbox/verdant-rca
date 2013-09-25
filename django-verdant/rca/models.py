@@ -511,6 +511,13 @@ class Advert(models.Model):
     text = models.CharField(max_length=255)
     show_globally = models.BooleanField(default=False)
 
+    panels = [
+        PageChooserPanel('page'),
+        FieldPanel('url'),
+        FieldPanel('text'),
+        FieldPanel('show_globally'),
+    ]
+
     def __unicode__(self):
         return self.text
 
