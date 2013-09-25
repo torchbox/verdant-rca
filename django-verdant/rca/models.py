@@ -303,7 +303,7 @@ NewsItem.content_panels = [
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
     InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
-        panels=[PageChooserPanel('url'), FieldPanel('link_text')]
+        panels=[FieldPanel('url'), FieldPanel('link_text')]
     ),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
@@ -355,7 +355,7 @@ class EventItem(Page, SocialFields):
     times = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
-    location_other = models.CharField(max_length=255, blank=True)
+    location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
@@ -367,19 +367,21 @@ class EventItem(Page, SocialFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 EventItem.content_panels = [
-    FieldPanel('date_to'),
-    FieldPanel('date_from'),
-    RichTextFieldPanel('times'),
-    FieldPanel('audience'),
     MultiFieldPanel([
-        FieldPanel('location'),
-        FieldPanel('location_other'),
-    ], 'Location'),
-    FieldPanel('specific_directions'),
-    FieldPanel('specific_directions_link'),
-    FieldPanel('gallery'),
-    RichTextFieldPanel('cost'),
-    FieldPanel('signup_link'),
+        FieldPanel('date_to'),
+        FieldPanel('date_from'),
+        RichTextFieldPanel('times'),
+        FieldPanel('audience'),
+        MultiFieldPanel([
+            FieldPanel('location'),
+            FieldPanel('location_other'),
+        ], 'Location'),
+        FieldPanel('specific_directions'),
+        FieldPanel('specific_directions_link'),
+        FieldPanel('gallery'),
+        RichTextFieldPanel('cost'),
+        FieldPanel('signup_link'),
+    ], 'Event detail'),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker",
         panels=[FieldPanel('name'), FieldPanel('surname'), ImageChooserPanel('image'), FieldPanel('link')]
     ),
@@ -393,8 +395,10 @@ EventItem.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
-    ImageChooserPanel('social_image'),
-    FieldPanel('social_text'),
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
     FieldPanel('show_on_homepage'),
     FieldPanel('listing_intro'),
     InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
