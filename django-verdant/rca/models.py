@@ -92,7 +92,7 @@ class SocialFields(models.Model):
         abstract = True
 
 class CommonPromoteFields(models.Model):
-    show_in_menus = models.BooleanField(default=False)
+    show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
 
     class Meta:
         abstract = True
@@ -302,15 +302,15 @@ EventItem.content_panels = [
         FieldPanel('date_from'),
         RichTextFieldPanel('times'),
         FieldPanel('audience'),
-        MultiFieldPanel([
-            FieldPanel('location'),
-            FieldPanel('location_other'),
-        ], 'Location'),
+        FieldPanel('location'),
+        FieldPanel('location_other'),
         FieldPanel('specific_directions'),
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
         RichTextFieldPanel('cost'),
         FieldPanel('signup_link'),
+        FieldPanel('external_link'),
+        FieldPanel('external_link_text'),
     ], 'Event detail'),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker",
         panels=[FieldPanel('name'), FieldPanel('surname'), ImageChooserPanel('image'), FieldPanel('link')]
@@ -368,6 +368,11 @@ StandardPage.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
@@ -377,8 +382,53 @@ StandardPage.promote_panels = [
    
 # == Standard Index page ==
 
+class StandardIndexCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.StandardIndex', related_name='carousel_items')
+
+class StandardIndexTeaser(models.Model):
+    page = models.ForeignKey('rca.StandardIndex', related_name='teasers')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    url = models.URLField(blank=True)
+    title = models.CharField(max_length=255, blank=True)
+    text = models.CharField(max_length=255, blank=True)
+
+class StandardIndexRelatedLink(models.Model):
+    page = models.ForeignKey('rca.StandardIndex', related_name='related_links')
+    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='related_links_link')
+
+    panel = [
+        PageChooserPanel('link'),
+    ]
+
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
-    pass
+    teasers_title = models.CharField(max_length=255, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True)
+
+
+StandardIndex.content_panels = [
+    InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
+    MultiFieldPanel([
+        FieldPanel('teasers_title'),
+        InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
+    ],'Teasers'),
+    InlinePanel(StandardIndex, StandardIndexRelatedLink, label="Related links"),
+]
+
+StandardIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
 
 
 # == Home page ==
