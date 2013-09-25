@@ -6,4 +6,5 @@ urlpatterns = patterns('verdantsnippets.views',
     url(r'^(\w+)/(\w+)/$', 'snippets.list', name='verdantsnippets_list'),
     url(r'^(\w+)/(\w+)/new/$', 'snippets.create', name='verdantsnippets_create'),
     url(r'^(\w+)/(\w+)/(\d+)/$', 'snippets.edit', name='verdantsnippets_edit'),
+    url(r'^(\w+)/(\w+)/(\d+)/delete/$', 'snippets.delete', name='verdantsnippets_delete'),
 )

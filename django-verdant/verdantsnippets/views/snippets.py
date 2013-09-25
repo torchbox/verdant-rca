@@ -145,3 +145,25 @@ def edit(request, content_type_app_name, content_type_model_name, id):
         'instance': instance,
         'edit_handler': edit_handler,
     })
+
+
+def delete(request, content_type_app_name, content_type_model_name, id):
+    content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    model = content_type.model_class()
+    snippet_type_name = get_snippet_type_name(content_type)[0]
+
+    instance = get_object_or_404(model, id=id)
+
+    if request.POST:
+        instance.delete()
+        messages.success(
+            request,
+            "%s '%s' deleted." % (capfirst(snippet_type_name), instance)
+        )
+        return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+
+    return render(request, 'verdantsnippets/snippets/confirm_delete.html', {
+        'content_type': content_type,
+        'snippet_type_name': snippet_type_name,
+        'instance': instance,
+    })
