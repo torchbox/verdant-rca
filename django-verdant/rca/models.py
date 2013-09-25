@@ -139,11 +139,6 @@ class SocialFields(models.Model):
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    image_year = models.CharField(max_length=25, blank=True)
-    image_creator = models.CharField(max_length=255, blank=True)
-    image_medium = models.CharField(max_length=255, blank=True)
-    image_dimensions = models.CharField(max_length=25, blank=True)
-    image_photographer = models.CharField(max_length=25, blank=True)
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
     embedly_url = models.URLField(blank=True)
@@ -151,11 +146,6 @@ class CarouselItemFields(models.Model):
 
     panels=[
         ImageChooserPanel('image'), 
-        FieldPanel('image_year'), 
-        FieldPanel('image_creator'), 
-        FieldPanel('image_medium'), 
-        FieldPanel('image_dimensions'),
-        FieldPanel('image_photographer'),
         FieldPanel('overlay_text'),
         FieldPanel('link'),
         FieldPanel('embedly_url'),
