@@ -1,5 +1,5 @@
 <!-- Events -->
-{% if showToday == "true" %}
+{% if showToday %}
     <div class="today expanded">
         <h2>Events</h2>
         <ul>
@@ -29,7 +29,7 @@
 {% endif %}
 
 <!-- adverts -->
-{% if showAdverts == "true" %}
+{% if showAdverts %}
     <!-- adverts -->
     <div class="apply">
         <a href="#">
@@ -40,7 +40,7 @@
 {% endif %}
 
 <!--open days-->
-{% if showOpenDays == "true" %}
+{% if showOpenDays %}
     <div class="open-days">
         <a href="#">
             <h2>Open Days</h2>
@@ -49,7 +49,7 @@
 {% endif %}
 
 <!-- Related links -->
-{% if showRelatedLinks == "true" %}
+{% if showRelatedLinks %}
     <div class="related expanded">
         <h2>In this section</h2>
         <div class="wrapper">
@@ -71,7 +71,7 @@
 {% endif %}
 
 <!-- related content -->
-{% if showRelatedNews == "true" %}
+{% if showRelatedNews %}
     <div class="related-content-item">
         <a href="">
             <figure>
@@ -99,7 +99,9 @@
         </a>
         <a href="" class="index-page-link">News</a>
     </div>
+{% endif %}
 
+{% if showRelatedStaff %}
     <div class="related-content-item">
         <a href="">
             <figure class="staff">
@@ -119,7 +121,7 @@
 {% endif %}
 
 <!-- job adverts -->
-{% if showRelatedJobs == "true" %}
+{% if showRelatedJobs %}
     <div class="other-jobs">
         <a href="#">
             <h2>Senior Tutor: animation</h2>
@@ -141,7 +143,7 @@
 {% endif %}
 
 <!-- related projects -->
-{% if showRelatedProjects == "true" %}
+{% if showRelatedProjects %}
 	<ul class="related-projects">
         <li>
             <a href="#">
@@ -183,7 +185,7 @@
 {% endif %}
 
 <!-- tags -->
-{% if showTags == "true" %}
+{% if showTags %}
     <div class="related expanded">
         <h2>Tags</h2>
         <div class="wrapper">

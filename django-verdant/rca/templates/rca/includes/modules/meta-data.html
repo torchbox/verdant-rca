@@ -1,0 +1,29 @@
+<section class="four">
+    <div class="meta-data">
+        <dl>
+            {% if showNewsMeta %}
+                <dd>Writer</dd>
+                <dt>{{ self.author }}</dt>
+                
+                <dd>Date</dd>
+                <dt>{{ self.date }}</dt>
+
+                <dd>Links</dd>
+                <dt class="last">
+                    <ul>
+                        {% with self.related_links.all as related_links %}
+                            {% if related_links %}
+                                {% for link in related_links %}
+                                <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </ul>
+                </dt>
+            {% endif %}
+        </dl>
+    </div>
+    <div class="single">
+        {% include "rca/includes/modules/share-button.html" %}
+    </div>
+</section>

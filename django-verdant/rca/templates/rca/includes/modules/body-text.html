@@ -1,0 +1,8 @@
+{% load rich_text %}
+
+<section class="body-text">
+	{% if showIntro %}
+    	<div class="bc3">{{ self.intro|richtext }}</div>
+    {% endif %}
+    {{ self.body|richtext }}
+</section>

@@ -1,8 +1,21 @@
-{% extends "rca/editorial_page.html" %}
-
-{% load image_tags %}
+{% extends "rca/base.html" %}
 {% load pageurl %}
 
+{% block content %}
+    <h1>{{ self.title }}</h1>
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
+        {% include "rca/includes/modules/meta-data.html" with showNewsMeta="true" %}
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
+{% endblock %}
+
+
+{% comment %}
 {% block pre_content %}
     {% if self.author %}
         <p>By <a href="{% pageurl self.author %}">{{ self.author.title }}</a></p>
@@ -27,5 +40,6 @@
             </ul>
         {% endif %}
     {% endwith %}
-    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
 {% endblock %}
+
+{% endcomment %}
