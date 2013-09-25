@@ -27,7 +27,7 @@
                 {% for field in form %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li class="button"><input type="submit" value="Search" /></li>
+                <li><input type="submit" value="Search" /></li>
             </ul>
         </form>
         <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>

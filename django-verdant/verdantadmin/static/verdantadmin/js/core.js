@@ -46,5 +46,7 @@ $(function(){
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
 
-
+    $('.dropdown-toggle').bind('click', function(){
+        $(this).closest('.dropdown').toggleClass('open');
+    });
 })
