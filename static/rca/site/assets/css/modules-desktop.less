@@ -93,10 +93,22 @@
     }
 
     .caption, .hover-content{
+        //.transition(opacity 0.3s ease);
+        //opacity:0;
+    }
+    &:hover .caption, &:hover .hover-content{
+        //opacity:1;
+    }
+    .caption{
+        bottom:@grid-gutter-width;
+        top: auto;
+    }
+    .bc1, .caption {
+        display: block;
         .transition(opacity 0.3s ease);
         opacity:0;
     }
-    &:hover .caption, &:hover .hover-content{
+    &:hover .bc1, &:hover .caption {
         opacity:1;
     }
     .bx-pager{

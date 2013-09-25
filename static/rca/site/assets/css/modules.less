@@ -160,7 +160,7 @@
 
     .content, 
     .hover-content{
-        background-color:rgba(0,0,0,0.62);
+        //background-color:rgba(0,0,0,0.62);
         color:@color-white;
         position:absolute;
         top:0;
@@ -169,10 +169,11 @@
         bottom:0;
         padding:@grid-gutter-width;
 
-        .bc1{
-            .column(6);
+        .bc1 {
+            .column(12);
             margin:0;
-
+            background-color:rgba(0,0,0,0.62);
+            padding:@grid-gutter-width;
             .bc4{
                 font-size:0.6em;
             }
@@ -180,20 +181,13 @@
     }
 
     .caption{
+        background-color:rgba(0,0,0,0.62);
         position:absolute;
-        //bottom:0;
-        right:0;
+        top:@grid-gutter-width;
+        right:@grid-gutter-width;
         padding:@grid-gutter-width;
         margin:0;
-        &.title {
-            bottom: 3em;
-        }
-        &.medium {
-            bottom: 1.5em;
-        }
-        &.details {
-            bottom:0;
-        }
+        display: none;
     }
 }
 

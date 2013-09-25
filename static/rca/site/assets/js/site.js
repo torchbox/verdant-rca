@@ -278,5 +278,5 @@ $(function(){
     });
 
     /* Google maps for contact page */
-    initializeMaps();
+    //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 });
