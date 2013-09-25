@@ -44,6 +44,11 @@ class AbstractImage(models.Model, TagSearchable):
 
         return rendition
 
+    def is_portrait(self):
+        return (self.width < self.height)
+    def is_landscape(self):
+        return (self.height < self.width)
+
     class Meta:
         abstract=True
 
