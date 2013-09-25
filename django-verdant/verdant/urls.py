@@ -9,6 +9,7 @@ from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
+from verdantsnippets import urls as verdantsnippets_urls
 
 
 admin.autodiscover()
@@ -27,6 +28,7 @@ urlpatterns = patterns('',
     # don't have to define it separately here
     url(r'^admin/images/', include(verdantimages_urls)),
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
+    url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),

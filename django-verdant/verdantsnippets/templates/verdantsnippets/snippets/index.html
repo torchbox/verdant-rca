@@ -1,0 +1,18 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Snippets</h1>
+    </header>
+    <div class="listing snippet_types">
+        <ul>
+            {% for name, content_type in snippet_types %}
+                <li>
+                    <a href="{% url 'verdantsnippets_list' content_type.app_label content_type.model %}">
+                        {{ name|capfirst }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

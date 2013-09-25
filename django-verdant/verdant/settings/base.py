@@ -158,6 +158,7 @@ INSTALLED_APPS = (
     'verdantadmin',
     'verdantimages',
     'verdantdocs',
+    'verdantsnippets',
 
     'rca',
 )
