@@ -10,6 +10,7 @@ from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel,
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
+from verdantsnippets.models import register_snippet
 
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -523,3 +524,4 @@ class Advert(models.Model):
     url = models.URLField()
     text = models.CharField(max_length=255)
     show_globally = models.BooleanField(default=False)
+register_snippet(Advert)
