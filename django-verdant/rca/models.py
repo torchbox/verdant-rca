@@ -242,10 +242,18 @@ NewsItem.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
-    ImageChooserPanel('social_image'),
-    FieldPanel('social_text'),
-    FieldPanel('show_on_homepage'),
-    FieldPanel('listing_intro'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+
     FieldPanel('area'),
     InlinePanel(NewsItem, NewsItemRelatedSchool, label="Related schools"),
     InlinePanel(NewsItem, NewsItemRelatedProgramme, label="Related programmes"),
@@ -392,11 +400,18 @@ class StandardIndexTeaser(models.Model):
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
 
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('url'),
+        FieldPanel('title'),
+        FieldPanel('text'),
+    ]
+
 class StandardIndexRelatedLink(models.Model):
     page = models.ForeignKey('rca.StandardIndex', related_name='related_links')
     link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='related_links_link')
 
-    panel = [
+    panels = [
         PageChooserPanel('link'),
     ]
 
@@ -407,11 +422,10 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
 
 StandardIndex.content_panels = [
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
-    MultiFieldPanel([
-        FieldPanel('teasers_title'),
-        InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
-    ],'Teasers'),
+    FieldPanel('teasers_title'),
+    InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
     InlinePanel(StandardIndex, StandardIndexRelatedLink, label="Related links"),
+    FieldPanel('twitter_feed'),
 ]
 
 StandardIndex.promote_panels = [
