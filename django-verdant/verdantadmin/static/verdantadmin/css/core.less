@@ -88,7 +88,7 @@ img{
         background: url(~"@{static-root}sprites.png") 0 0 no-repeat;
         background-size:750px 500px;
         position:absolute;
-        margin:3em 0;
+        margin:3em auto;
         height:89px;
         width:78px;
         overflow:hidden;
@@ -98,6 +98,7 @@ img{
         cursor:pointer;
         position:fixed;
         left:0px;
+        background: @color-grey-dark;
     }
 
     .nav-main{
@@ -140,14 +141,21 @@ img{
         }
     }
     body.nav-open{
-        .nav-wrapper .nav-main{
-            width:100%;
-
-            a{
-                text-indent:15px;
+        .nav-wrapper{
+            .logo{
+                left:0;
+                right:0;
             }
+            .nav-main{
+                width:100%;
 
+                a{
+                    text-indent:15px;
+                }
+
+            }
         }
+
     }
 
 .content-wrapper{
@@ -179,7 +187,6 @@ body.nav-open .content-wrapper{
     transform: translate3d(80%,0,0);
     -webkit-transform: translate3d(80%,0,0);
 
-    
     position:fixed;
     
 }
@@ -327,7 +334,7 @@ a {
 
     .logo{
         left:-10px;
-        width:70px;
+        width:80px;
     }
 
     .nav-main a{
@@ -361,8 +368,9 @@ a {
          width:240px;
 
         .logo{
-            left:70px;
             width:80px;
+            left:70px;
+            right:auto;
         }
         .nav-main{
             width:240px;

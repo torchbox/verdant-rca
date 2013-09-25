@@ -165,7 +165,7 @@ class ProgrammePage(Page, CommonPromoteFields):
     download_document_text = models.CharField(max_length=255, blank=True)
 
 ProgrammePage.content_panels = [
-    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", 
+    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="Test", 
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
