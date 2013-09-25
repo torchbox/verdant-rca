@@ -11,7 +11,6 @@ from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 
-
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -38,50 +37,6 @@ def rendition_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.file.delete(False)
 
-# TODO: delete these "DO NOT USE" models below, unless actually used, in which case explain how used.
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
-class RelatedLink(models.Model):
-    page = models.ForeignKey('core.Page', related_name='generic_related_links')
-    url = models.URLField()
-    link_text = models.CharField(max_length=255)
-
-    # let's allow related links to have their own images. Just for kicks.
-    # (actually, it's so that we can check that the widget override for ImageChooserPanel happens
-    # within formsets too)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
-class RelatedDocument(models.Model):
-    page = models.ForeignKey('core.Page', related_name='related_documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
-
-    panels = [
-        DocumentChooserPanel('document')
-    ]
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS: not sure of it's purpose
-class EditorialPage(Page):
-    body = RichTextField()
-
-    # Setting a class as 'abstract' indicates that it's only intended to be a parent
-    # type for more specific page types, and shouldn't be used directly;
-    # it will thus be excluded from the list of page types a superuser can create.
-    #
-    # (NB it still gets a database table behind the scenes, so it isn't abstract
-    # by Django's own definition)
-    is_abstract = True
-
-
-# Examples to be copied and pasted:
-#  InlinePanel(Page, RelatedLink, label="Wonderful related links",
-#     # label is optional - we'll derive one from the related_name of the relation if not specified
-#     # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
-#     panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
-# ),
-
-
-# Everything that follows is 'real' template code to be used in the actual RCA site, rather than just verdant testing purposes
 
 NEWS_AREA_CHOICES = (
     ('helenhamlyn', 'Helen Hamlyn'),
@@ -136,6 +91,12 @@ class SocialFields(models.Model):
     class Meta:
         abstract = True
 
+class CommonPromoteFields(models.Model):
+    show_in_menus = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
+
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -156,41 +117,9 @@ class CarouselItemFields(models.Model):
         abstract = True
 
 
-# == Authors Index ==
-
-class AuthorsIndex(Page):
-    subpage_types = ['AuthorPage']
-
-
-# == Author Page ==
-
-class AuthorPage(EditorialPage):
-    mugshot = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-
-    def serve(self, request):
-        news_items = self.news_items.order_by('title')
-
-        return render(request, self.template, {
-            'self': self,
-            'news_items': news_items,
-        })
-
-AuthorPage.content_panels = [
-    ImageChooserPanel('mugshot'),
-    RichTextFieldPanel('body'),
-]
-
-AuthorPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('title'),
-        FieldPanel('slug'),
-    ], 'Common page configuration'),
-]
-
-
 # == School ==
 
-class SchoolPage(Page):
+class SchoolPage(Page, CommonPromoteFields):
     """
     School page (currently only necessary for foreign key with ProgrammePage)
     """
@@ -202,7 +131,7 @@ class SchoolPage(Page):
 class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
+    text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
 class ProgrammePageRelatedLink(models.Model):
@@ -227,7 +156,7 @@ class ProgrammePageFacilities(models.Model):
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
-class ProgrammePage(Page):
+class ProgrammePage(Page, CommonPromoteFields):
     head_of_programme = models.CharField(max_length=255)
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
@@ -261,7 +190,7 @@ ProgrammePage.promote_panels = [
 
 # == News Index ==
 
-class NewsIndex(Page):
+class NewsIndex(Page, CommonPromoteFields):
     subpage_types = ['NewsItem']
 
 
@@ -287,8 +216,8 @@ class NewsItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class NewsItem(Page, SocialFields):
-    author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
+class NewsItem(Page, SocialFields, CommonPromoteFields):
+    author = models.CharField(max_length=255)
     date = models.DateField()
     intro = RichTextField()
     body = RichTextField()
@@ -298,7 +227,7 @@ class NewsItem(Page, SocialFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
-    PageChooserPanel('author', AuthorPage),
+    FieldPanel('author'),
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
@@ -349,7 +278,7 @@ class EventItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class EventItem(Page, SocialFields):
+class EventItem(Page, SocialFields, CommonPromoteFields):
     date_to = models.DateField()
     date_from = models.DateField()
     times = RichTextField(blank=True)
@@ -361,7 +290,8 @@ class EventItem(Page, SocialFields):
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
     cost = RichTextField(blank=True)
     signup_link = models.URLField(blank=True)
-    # TODO: Event URL, purpose unknown
+    external_link = models.URLField(blank=True)
+    external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
@@ -395,12 +325,18 @@ EventItem.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+    ], 'Cross-page behaviour'),
+    
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    FieldPanel('show_on_homepage'),
-    FieldPanel('listing_intro'),
+   
     InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
     InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
 ]
@@ -416,7 +352,7 @@ class StandardPageRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
-class StandardPage(Page, SocialFields):
+class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
 
@@ -441,78 +377,85 @@ StandardPage.promote_panels = [
    
 # == Standard Index page ==
 
-class StandardIndex(Page, SocialFields):
+class StandardIndex(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Home page ==
 
-class HomePage(Page, SocialFields):
+class HomePage(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Job page ==
 
-class JobPage(Page, SocialFields):
+class JobPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Jobs index page ==
 
-class JobsIndex(Page, SocialFields):
+class JobsIndex(Page, SocialFields, CommonPromoteFields):
     pass
    
 
 # == Staff profile page ==
 
-class StaffPage(Page, SocialFields):
+class StaffPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Student profile page ==
 
-class StudentPage(Page, SocialFields):
+class StudentPage(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == RCA Now page ==
 
-class RcaNowPage(Page, SocialFields):
+class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == RCA Now index ==
 
-class RcaNowIndex(Page, SocialFields):
+class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Research Item page ==
 
-class ResearchItem(Page, SocialFields):
+class ResearchItem(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Research Innovation page ==
 
-class ResearchInnovationPage(Page, SocialFields):
+class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Current research page ==
 
-class CurrentResearchPage(Page, SocialFields):
+class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Gallery Page ==
 
-class GalleryPage(Page, SocialFields):
+class GalleryPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Contact Us page ==
 
-class ContactUsPage(Page, SocialFields):
+class ContactUsPage(Page, SocialFields, CommonPromoteFields):
     pass
 
+
+# == Snippet: Advert ==
+class Advert(models.Model):
+    page = models.ForeignKey('core.Page', related_name='adverts')
+    url = models.URLField()
+    text = models.CharField(max_length=255)
+    show_globally = models.BooleanField(default=False)

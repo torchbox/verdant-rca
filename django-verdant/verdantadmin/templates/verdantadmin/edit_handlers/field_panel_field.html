@@ -1,8 +1,9 @@
 <div class="field">
-    {{ field.label_tag }}
+    {% if field_type != "boolean_field" %}{{ field.label_tag }}{% endif %}
     {% block form_field %}
         {{ field }}
     {% endblock %}
+    {% if field_type = "boolean_field" %}{{ field.label_tag }}{% endif %}
 </div>
 
 {% if field.errors %}
