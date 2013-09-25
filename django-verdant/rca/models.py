@@ -119,7 +119,7 @@ class CarouselItemFields(models.Model):
 
 # == School ==
 
-class SchoolPage(Page):
+class SchoolPage(Page, CommonPromoteFields):
     """
     School page (currently only necessary for foreign key with ProgrammePage)
     """
@@ -156,7 +156,7 @@ class ProgrammePageFacilities(models.Model):
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
-class ProgrammePage(Page):
+class ProgrammePage(Page, CommonPromoteFields):
     head_of_programme = models.CharField(max_length=255)
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
@@ -190,7 +190,7 @@ ProgrammePage.promote_panels = [
 
 # == News Index ==
 
-class NewsIndex(Page):
+class NewsIndex(Page, CommonPromoteFields):
     subpage_types = ['NewsItem']
 
 
@@ -216,7 +216,7 @@ class NewsItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class NewsItem(Page, SocialFields):
+class NewsItem(Page, SocialFields, CommonPromoteFields):
     author = models.CharField(max_length=255)
     date = models.DateField()
     intro = RichTextField()
@@ -290,7 +290,8 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
     cost = RichTextField(blank=True)
     signup_link = models.URLField(blank=True)
-    # TODO: Event URL, purpose unknown
+    external_link = models.URLField(blank=True)
+    external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
@@ -324,13 +325,18 @@ EventItem.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
-    FieldPanel('show_in_menus'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+    ], 'Cross-page behaviour'),
+    
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    FieldPanel('show_on_homepage'),
-    FieldPanel('listing_intro'),
+   
     InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
     InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
 ]
@@ -346,7 +352,7 @@ class StandardPageRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
-class StandardPage(Page, SocialFields):
+class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
 
@@ -371,79 +377,79 @@ StandardPage.promote_panels = [
    
 # == Standard Index page ==
 
-class StandardIndex(Page, SocialFields):
+class StandardIndex(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Home page ==
 
-class HomePage(Page, SocialFields):
+class HomePage(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Job page ==
 
-class JobPage(Page, SocialFields):
+class JobPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Jobs index page ==
 
-class JobsIndex(Page, SocialFields):
+class JobsIndex(Page, SocialFields, CommonPromoteFields):
     pass
    
 
 # == Staff profile page ==
 
-class StaffPage(Page, SocialFields):
+class StaffPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Student profile page ==
 
-class StudentPage(Page, SocialFields):
+class StudentPage(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == RCA Now page ==
 
-class RcaNowPage(Page, SocialFields):
+class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == RCA Now index ==
 
-class RcaNowIndex(Page, SocialFields):
+class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Research Item page ==
 
-class ResearchItem(Page, SocialFields):
+class ResearchItem(Page, SocialFields, CommonPromoteFields):
     pass
 
 
 # == Research Innovation page ==
 
-class ResearchInnovationPage(Page, SocialFields):
+class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Current research page ==
 
-class CurrentResearchPage(Page, SocialFields):
+class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Gallery Page ==
 
-class GalleryPage(Page, SocialFields):
+class GalleryPage(Page, SocialFields, CommonPromoteFields):
     pass
 
    
 # == Contact Us page ==
 
-class ContactUsPage(Page, SocialFields):
+class ContactUsPage(Page, SocialFields, CommonPromoteFields):
     pass
 
 
