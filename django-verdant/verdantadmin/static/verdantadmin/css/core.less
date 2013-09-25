@@ -8,7 +8,7 @@ max z-index: 5;
 @import "grid.less";
 
 html{
-    background-color:@color-grey-lighter;
+    background-color:@color-header-bg;
 }
 
 body{
@@ -155,6 +155,7 @@ img{
     float: right;
     position: relative;
     background-color:white;
+    border-bottom:1px solid @color-grey-lighter;
 }
     .content{
         .row();
@@ -206,6 +207,10 @@ header{
         margin-bottom:0;
         padding-bottom:6em;    
     }
+}
+
+.page-explorer header{
+    margin-bottom:0;
 }
 
 
