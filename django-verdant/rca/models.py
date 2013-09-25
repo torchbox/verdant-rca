@@ -125,7 +125,7 @@ class SchoolPage(Page):
 class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=25, help_text='This text will overlay the image', blank=True)
+    text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
 class ProgrammePageRelatedLink(models.Model):
