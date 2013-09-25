@@ -141,6 +141,10 @@ class AdvertPlacement(models.Model):
     page = models.ForeignKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
+    panels = [
+        FieldPanel('advert'),
+    ]
+
 # == School ==
 
 class SchoolPage(Page, CommonPromoteFields):
@@ -259,6 +263,7 @@ NewsItem.content_panels = [
         panels=[FieldPanel('url'), FieldPanel('link_text')]
     ),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
+    InlinePanel(NewsItem, AdvertPlacement, label="Adverts"),
 ]
 
 NewsItem.promote_panels = [
