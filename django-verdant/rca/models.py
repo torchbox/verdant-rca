@@ -11,7 +11,6 @@ from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 
-
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -38,50 +37,6 @@ def rendition_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.file.delete(False)
 
-# TODO: delete these "DO NOT USE" models below, unless actually used, in which case explain how used.
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
-class RelatedLink(models.Model):
-    page = models.ForeignKey('core.Page', related_name='generic_related_links')
-    url = models.URLField()
-    link_text = models.CharField(max_length=255)
-
-    # let's allow related links to have their own images. Just for kicks.
-    # (actually, it's so that we can check that the widget override for ImageChooserPanel happens
-    # within formsets too)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
-class RelatedDocument(models.Model):
-    page = models.ForeignKey('core.Page', related_name='related_documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
-
-    panels = [
-        DocumentChooserPanel('document')
-    ]
-
-# DO NOT USE THIS FOR REAL CONTENT TYPE MODELS: not sure of it's purpose
-class EditorialPage(Page):
-    body = RichTextField()
-
-    # Setting a class as 'abstract' indicates that it's only intended to be a parent
-    # type for more specific page types, and shouldn't be used directly;
-    # it will thus be excluded from the list of page types a superuser can create.
-    #
-    # (NB it still gets a database table behind the scenes, so it isn't abstract
-    # by Django's own definition)
-    is_abstract = True
-
-
-# Examples to be copied and pasted:
-#  InlinePanel(Page, RelatedLink, label="Wonderful related links",
-#     # label is optional - we'll derive one from the related_name of the relation if not specified
-#     # Could also pass a panels=[...] argument here if we wanted to customise the display of the inline sub-forms
-#     panels=[FieldPanel('url'), FieldPanel('link_text'), ImageChooserPanel('image')]
-# ),
-
-
-# Everything that follows is 'real' template code to be used in the actual RCA site, rather than just verdant testing purposes
 
 NEWS_AREA_CHOICES = (
     ('helenhamlyn', 'Helen Hamlyn'),
@@ -154,38 +109,6 @@ class CarouselItemFields(models.Model):
 
     class Meta:
         abstract = True
-
-
-# == Authors Index ==
-
-class AuthorsIndex(Page):
-    subpage_types = ['AuthorPage']
-
-
-# == Author Page ==
-
-class AuthorPage(EditorialPage):
-    mugshot = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-
-    def serve(self, request):
-        news_items = self.news_items.order_by('title')
-
-        return render(request, self.template, {
-            'self': self,
-            'news_items': news_items,
-        })
-
-AuthorPage.content_panels = [
-    ImageChooserPanel('mugshot'),
-    RichTextFieldPanel('body'),
-]
-
-AuthorPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('title'),
-        FieldPanel('slug'),
-    ], 'Common page configuration'),
-]
 
 
 # == School ==
@@ -288,7 +211,7 @@ class NewsItemRelatedProgramme(models.Model):
     panels = [FieldPanel('programme')]
 
 class NewsItem(Page, SocialFields):
-    author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
+    author = models.CharField(max_length=255)
     date = models.DateField()
     intro = RichTextField()
     body = RichTextField()
@@ -298,7 +221,7 @@ class NewsItem(Page, SocialFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
-    PageChooserPanel('author', AuthorPage),
+    FieldPanel('author'),
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
