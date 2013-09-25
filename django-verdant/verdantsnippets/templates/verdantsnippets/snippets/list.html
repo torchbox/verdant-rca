@@ -2,13 +2,13 @@
 
 {% block content %}
     <header>
-        <h1>{{ snippet_type_name }}</h1>
+        <h1>{{ snippet_type_name|capfirst }}</h1>
     </header>
     <div class="listing snippets">
         <ul>
             {% for item in items %}
                 <li>
-                    <a href="{# url 'verdantdocs_edit_document' doc.id #}">
+                    <a href="{% url 'verdantsnippets_edit' content_type.app_label content_type.model item.id %}">
                         {{ item }}
                     </a>
                 </li>
