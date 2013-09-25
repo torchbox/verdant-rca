@@ -1,0 +1,72 @@
+
+{% load image_tags %}
+
+{% comment %}
+{% with self.carousel_items.all as carousel_items %}
+    {% if carousel_items %}
+        {% for carousel_item in carousel_items %}
+            {{ carousel_item.overlay_text }}
+            {{ carousel_item.link }}
+            {{ carousel_item.embedly_url }}
+            {% image carousel_item.image width-1000 %}
+            {% image carousel_item.poster_image width-1000 %}
+            {{ carousel_item.image.is_portrait }}
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% endcomment %}
+
+<section class="row">
+    <ul class="carousel paginated">
+        {% with self.carousel_items.all as carousel_items %}
+            {% if carousel_items %}
+                {% for carousel_item in carousel_items %}
+                    {% if carousel_item.image %}
+                        <li>
+                            <div class="image {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
+                                {% image carousel_item.image width-1000 %}
+                            </div>
+                            {% if carousel_item.overlay_text %}{% endif %}
+                        </li>
+                    {% endif %}
+                    <!-- <li><div class="image portrait"><img src="http://instasrc.com/400x800/art" width="200" height="900" /></div></li>
+                    <li><div class="image landscape"><img src="http://instasrc.com/944x531/art" width="944" height="531"/></div></li>
+                    <li>
+                        <div class="image landscape"><img src="http://instasrc.com/944x531/art" width="944" height="531"/></div>
+                        <div class="content">
+                            <h3 class="bc1"><a href="#"><strong>The Royal College of Art</strong> sits at the threshold of a new and vital moment in communications history, an extraordinary time and one that wil deeply affect all of us...<span class="bc4 caps">Continue</span></a></h3>
+                            <p class="caption a4">
+                                Echoes, Rhythms and Deep Flows I<br />
+                                100 biros diluted in alcohol, leather dye, car brake fluid oil<br />
+                                3m x 4m &#124; &copy; RCA &#124; David Bailey
+                            </p>
+                        </div>
+                    </li>
+                    
+                    <li>
+                        <div class="image landscape"><img src="http://instasrc.com/944x531/art" width="944" height="531" /></div>
+                        <div class="hover-content">
+                            <h3 class="bc1"><a href="#">The Royal College of Art sits at the threshold of a new and vital moment in communications history, an extraordinary time and one that wil deeply affect all of us...<span href="#" class="bc4 caps">Continue</span></a></h3>
+                            <p class="caption a4">Caption Here</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="image landscape"><img src="http://instasrc.com/700x200/aurora" width="700" height="200" /></div>
+                    </li>
+                    <li>
+                        <div class="image landscape"><img src="http://instasrc.com/600x500/aurora" width="600" height="531" /></div>
+                    </li>
+                    <li><div class="image portrait"><img src="http://instasrc.com/400x531/art" width="400" height="531" /></div></li>
+                    
+                    <li>
+                        <div class="videoembed vimeo">
+                            <div class="playpause play">Play</div>
+                            <div class="poster"><img src="http://b.vimeocdn.com/ts/167/267/167267482_640.jpg" height="531" /></div>
+                            <iframe src="http://player.vimeo.com/video/25401444?api=1&player_id=vimeoplayer1" width="944" height="531" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                        </div>
+                    </li> -->
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </ul>
+</section>
