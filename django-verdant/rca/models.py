@@ -118,6 +118,29 @@ class CarouselItemFields(models.Model):
         abstract = True
 
 
+# == Snippet: Advert ==
+class Advert(models.Model):
+    page = models.ForeignKey('core.Page', related_name='adverts', null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+    text = models.CharField(max_length=255)
+    show_globally = models.BooleanField(default=False)
+
+    panels = [
+        PageChooserPanel('page'),
+        FieldPanel('url'),
+        FieldPanel('text'),
+        FieldPanel('show_globally'),
+    ]
+
+    def __unicode__(self):
+        return self.text
+
+register_snippet(Advert)
+
+class AdvertPlacement(models.Model):
+    page = models.ForeignKey('core.Page', related_name='advert_placements')
+    advert = models.ForeignKey('rca.Advert', related_name='+')
+
 # == School ==
 
 class SchoolPage(Page, CommonPromoteFields):
@@ -516,23 +539,3 @@ class GalleryPage(Page, SocialFields, CommonPromoteFields):
 
 class ContactUsPage(Page, SocialFields, CommonPromoteFields):
     pass
-
-
-# == Snippet: Advert ==
-class Advert(models.Model):
-    page = models.ForeignKey('core.Page', related_name='adverts')
-    url = models.URLField()
-    text = models.CharField(max_length=255)
-    show_globally = models.BooleanField(default=False)
-
-    panels = [
-        PageChooserPanel('page'),
-        FieldPanel('url'),
-        FieldPanel('text'),
-        FieldPanel('show_globally'),
-    ]
-
-    def __unicode__(self):
-        return self.text
-
-register_snippet(Advert)
