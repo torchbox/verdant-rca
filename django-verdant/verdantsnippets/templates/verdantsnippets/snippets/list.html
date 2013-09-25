@@ -1,0 +1,18 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>{{ snippet_type_name }}</h1>
+    </header>
+    <div class="listing snippets">
+        <ul>
+            {% for item in items %}
+                <li>
+                    <a href="{# url 'verdantdocs_edit_document' doc.id #}">
+                        {{ item }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

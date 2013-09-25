@@ -524,4 +524,8 @@ class Advert(models.Model):
     url = models.URLField()
     text = models.CharField(max_length=255)
     show_globally = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.text
+
 register_snippet(Advert)
