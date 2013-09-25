@@ -9,7 +9,7 @@
                 {% for field in searchform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li class="button"><input type="submit" value="Search" /></li>
+                <li><input type="submit" value="Search" /></li>
             </ul>
         </form>
         <div id="search-results" class="listing documents">
@@ -25,7 +25,7 @@
                 {% for field in uploadform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li class="button"><input type="submit" value="Save" /></li>
+                <li><input type="submit" value="Save" /></li>
             </ul>
         </form>
     </div>
