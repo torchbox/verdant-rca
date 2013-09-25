@@ -38,6 +38,7 @@ def rendition_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.file.delete(False)
 
+# TODO: delete these "DO NOT USE" models below, unless actually used, in which case explain how used.
 
 # DO NOT USE THIS FOR REAL CONTENT TYPE MODELS
 class RelatedLink(models.Model):
@@ -112,6 +113,18 @@ WORK_TYPES_CHOICES = (
     ('gallery1', 'Gallery 1'),
     ('gallery2', 'Gallery 2'),
     ('galleryn', 'Gallery N'),
+)
+
+SCHOOL_CHOICES = (
+    ('school1', 'School 1'),
+    ('school2', 'School 2'),
+    ('schooln', 'School N'),
+)
+
+PROGRAMME_CHOICES = (
+    ('programme1', 'Programme 1'),
+    ('programme2', 'Programme 2'),
+    ('programmen', 'Programme N'),
 )
 
 
@@ -272,6 +285,18 @@ class NewsItemRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
+class NewsItemRelatedSchool(models.Model):
+    page = models.ForeignKey('rca.NewsItem', related_name='related_schools')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+
+    panels = [FieldPanel('school')]
+
+class NewsItemRelatedProgramme(models.Model):
+    page = models.ForeignKey('rca.NewsItem', related_name='related_programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+
+    panels = [FieldPanel('programme')]
+
 class NewsItem(Page, SocialFields):
     author = models.ForeignKey('rca.AuthorPage', null=True, blank=True, related_name='news_items')
     date = models.DateField()
@@ -305,8 +330,8 @@ NewsItem.promote_panels = [
     FieldPanel('show_on_homepage'),
     FieldPanel('listing_intro'),
     FieldPanel('area'),
-    PageChooserPanel('related_school', SchoolPage),
-    PageChooserPanel('related_programme', ProgrammePage),
+    InlinePanel(NewsItem, NewsItemRelatedSchool, label="Related schools"),
+    InlinePanel(NewsItem, NewsItemRelatedProgramme, label="Related programmes"),
 ]
 
 
