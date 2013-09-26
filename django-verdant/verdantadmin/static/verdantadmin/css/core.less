@@ -172,10 +172,8 @@ img{
 }
     .content{
         .row();
-
+        .artist-indent();
         padding-bottom:100px;
-        .push(@grid-content-indent);
-        .pull(@grid-content-indent);
     }
 
 /* positioning and setup for sliding items */
@@ -193,12 +191,12 @@ body.nav-open .content-wrapper{
     -webkit-transform: translate3d(80%,0,0);
 
     position:fixed;
-    
 }
 
 
 header{
-    .full-width-padded();
+    .full-width();
+    .artist-indent();
     padding-top:2em;
     padding-bottom:2em;
     background-color:@color-header-bg;
@@ -339,7 +337,7 @@ a {
 
     .logo{
         left:-10px;
-        width:80px;
+        width:70px;
     }
 
     .nav-main a{
@@ -362,12 +360,14 @@ a {
     }
 
     /* UN-set the transformations used on mobile */
-    body.nav-open .nav-wrapper, body.nav-open .content-wrapper{
+    body.nav-open .nav-wrapper, 
+    body.nav-open .content-wrapper{
         transform: none;
         -webkit-transform: none;
     }
-    body.nav-open .content-wrapper .content{
-        position:initial;
+
+    body.nav-open .content-wrapper{
+        position:relative;
     }
     body.nav-open .nav-wrapper{
          width:240px;
@@ -417,6 +417,7 @@ a {
 @import "components/modals.less";
 @import "components/forms.less";
 @import "components/listing.less";
+@import "components/messages.less";
 
 /* specific page layouts, that require their own styles */
 

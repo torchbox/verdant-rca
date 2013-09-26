@@ -10,6 +10,12 @@
 	box-sizing: border-box;
 }
 
+.content-box(){
+	-webkit-box-sizing: content-box;
+	-moz-box-sizing: content-box;
+	box-sizing: content-box;
+}
+
 /* Our row container */
 .row(@padding:0){
 	.clearfix();
@@ -61,15 +67,14 @@
 }
 
 .full-width(){
-    .push(-@grid-content-indent*1.1);
-    .pull(-@grid-content-indent*1.1);
-}
-.full-width-padded(){
-    .full-width();
-    .push-padding(@grid-content-indent*1.1);
-    .pull-padding(@grid-content-indent*1.1);
+    .push(-@grid-content-indent*1.15);
+    .pull(-@grid-content-indent*1.15);
 }
 
+.artist-indent(){
+	.push-padding(@grid-content-indent);
+	.pull-padding(@grid-content-indent);
+}
 
 .row{
 	.row();

@@ -1,10 +1,6 @@
 .tab-nav{
-    @tab-height:4em;
-
     .full-width();
     .clearfix();
-    .push-padding(@grid-content-indent);
-    .pull-padding(@grid-content-indent);
     border:1px solid @color-grey-lighter;
     border-width:0 0 1px 1px;
 
@@ -15,20 +11,24 @@
     }
     a{
         outline:none;
-        line-height:@tab-height;
+        line-height:3em;
         text-transform:uppercase;
-        font-weight:bold;
+        font-weight:700;
+        font-size:1.2em;
         text-decoration:none;
-        background-color:lighten(@color-grey-light, 10%);
+        background-color:lighten(@color-grey-light, 15%);
         display:block;
         padding:0 1em;
-        color:darken(@color-grey-light, 20%);
+        color:@color-grey;
+        border-top:0.3em solid lighten(@color-grey-light, 15%);;
         border-bottom:1px solid transparent;
+
 
         &.active{
             background-color:white;
             .box-shadow(none);
-            color:@color-grey;
+            color:@color-grey-dark;
+            border-top:0.3em solid @color-grey-dark;
             border-bottom:2px solid white;
             margin-bottom:-1px;
             z-index:1;
@@ -38,7 +38,8 @@
 
     /* For cases where tab-nav should merge with header */
     &.merged{
-        margin-top:-@tab-height;
+        background-color:@color-header-bg;
+        margin-top:-3.5em;
     }
 }
 .tab-content{

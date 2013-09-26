@@ -288,11 +288,13 @@ class BaseFieldPanel(EditHandler):
         return camelcase_to_underscore(self.bound_field.field.__class__.__name__)        
 
     def field_classnames(self):
-        type = self.field_type()
+        classname = self.field_type()
+        if self.bound_field.field.required:
+            classname += " required"
         if self.bound_field.errors:
-            return type + " error"
-        else:
-            return type
+            classname += " error"
+
+        return classname
 
     object_template = "verdantadmin/edit_handlers/field_panel_object.html"
     def render_as_object(self):
