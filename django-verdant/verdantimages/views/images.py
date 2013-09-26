@@ -6,10 +6,13 @@ from verdantimages.forms import get_image_form
 from verdantadmin.forms import SearchForm
 
 def index(request):
-    images = get_image_model().objects.order_by('title')
+    images = get_image_model().objects.order_by('-created_at')[:12]
+    form = SearchForm()
 
     return render(request, "verdantimages/images/index.html", {
         'images': images,
+        'form': form,
+        'is_searching': False,
     })
 
 
@@ -86,8 +89,9 @@ def search(request):
     context = {
         'form': form,
         'images': images,
+        'is_searching': True,
     }
     if request.is_ajax():
         return render(request, "verdantimages/images/search-results.html", context)
     else:
-        return render(request, "verdantimages/images/search.html", context)
+        return render(request, "verdantimages/images/index.html", context)
