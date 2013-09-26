@@ -5,19 +5,20 @@ from hashlib import md5
 from django import template
 from django.core.cache import cache
 from django.conf import settings
+from django.utils.safestring import mark_safe
 
 from embedly import Embedly
-from embeds.models import SavedEmbed
+from django_embedly.models import SavedEmbed
 
 register = template.Library()
 
-EMBED_REGEX = re.compile(r'embed:\s*(https?://[\w\d:#@%/;$()~_?\+\-=\\\.&]+)', re.I)
+EMBED_REGEX = re.compile(r'(https?://[\w\d:#@%/;$()~_?\+\-=\\\.&]+)', re.I)
 USER_AGENT = 'Mozilla/5.0 (compatible; django-embedly/0.2; ' \
         '+http://github.com/BayCitizen/)'
 
 @register.filter
 def embedly(html, arg=None):
-    return EMBED_REGEX.sub(lambda x: embed_replace(x, maxwidth=arg), html)
+    return mark_safe(EMBED_REGEX.sub(lambda x: embed_replace(x, maxwidth=arg), html))
 
 
 def embed_replace(match, maxwidth=None):

@@ -1,5 +1,5 @@
 
-{% load image_tags %}
+{% load image_tags embed_filters %}
 
 {% if self.carousel_items.all.count == 1 %}
 {% endif %}
@@ -69,7 +69,7 @@
                         <div class="videoembed vimeo">
                             <div class="playpause play">Play</div>
                             <div class="poster"><img src="http://b.vimeocdn.com/ts/167/267/167267482_640.jpg" height="531" /></div>
-                            <iframe src="http://player.vimeo.com/video/25401444?api=1&player_id=vimeoplayer1" width="944" height="531" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                            {{ carousel_item.embedly_url|embedly:"944" }}
                         </div>
                     {% endif %}
                 {% endfor %}
