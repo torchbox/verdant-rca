@@ -50,16 +50,18 @@
 
 <!-- Related links -->
 {% if showRelatedLinks %}
+    {% load pageurl %}
     <div class="related expanded">
         <h2>In this section</h2>
         <div class="wrapper">
             <!-- <h3 class="dark">In this section</h3> -->
-            <ul>
-                <li><a href="">Entrance requirements</a></li>
-                <li><a href="">Partnerships Awards &amp; scholarships</a></li>
-                <li><a href="">Staff</a></li>
-                <li><a href="">Alumni</a></li>
-            </ul>
+            {% if self.get_siblings %}
+                <ul>
+                    {% for page in self.get_siblings %}
+                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
             <h3>See also</h3>
             {% with self.related_links.all as related_links %}
                 {% if related_links %}
