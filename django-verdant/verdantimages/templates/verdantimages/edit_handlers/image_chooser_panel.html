@@ -1,6 +1,8 @@
 {% extends "verdantadmin/edit_handlers/chooser_panel.html" %}
 {% load image_tags %}
 
+{% block chooser_class %}image-chooser{% endblock %}
+
 {% block chosen_state_view %}
     <div class="preview-image">
         {% if image %}

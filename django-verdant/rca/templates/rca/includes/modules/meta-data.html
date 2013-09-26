@@ -2,24 +2,61 @@
     <div class="meta-data">
         <dl>
             {% if showNewsMeta %}
-                <dd>Writer</dd>
-                <dt>{{ self.author }}</dt>
-                
-                <dd>Date</dd>
-                <dt>{{ self.date }}</dt>
 
-                <dd>Links</dd>
-                <dt class="last">
-                    <ul>
-                        {% with self.related_links.all as related_links %}
-                            {% if related_links %}
+                {% if self.author %}
+                    <dd>Writer</dd>
+                    <dt>{{ self.author }}</dt>
+                {% endif %}
+                
+                {% if self.date %}
+                    <dd>Date</dd>
+                    <dt>{{ self.date }}</dt>
+                {% endif %}
+
+                {% if self.area %}
+                    <dd>Area</dd>
+                    <dt>{{ self.area }}</dt>
+                {% endif %}
+
+                {% with self.related_schools.all as related_schools %}
+                    {% if self.related_schools %}
+                        <dd>From</dd>
+                        <dt>
+                            <ul>
+                                 {% for school in related_schools %}
+                                    <li>{{ school.school }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+                {% with self.related_programmes.all as related_programmes %}
+                    {% if self.related_programmes %}
+                        <dd>Programme</dd>
+                        <dt>
+                            <ul>
+                                 {% for programme in related_programmes %}
+                                    <li>{{ programme.programme }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %} 
+                
+                {% with self.related_links.all as related_links %}
+                    {% if related_links %}
+                        <dd>Links</dd>
+                        <dt>
+                            <ul>
                                 {% for link in related_links %}
                                 <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
                                 {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                    </ul>
-                </dt>
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %} 
+
             {% endif %}
         </dl>
     </div>

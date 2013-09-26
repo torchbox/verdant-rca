@@ -269,9 +269,7 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
-        panels=[FieldPanel('url'), FieldPanel('link_text')]
-    ),
+    InlinePanel(NewsItem, NewsItemRelatedLink, label="News links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
     InlinePanel(NewsItem, AdvertPlacement, label="Adverts"),
 ]
@@ -399,6 +397,12 @@ class StandardPageRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
+class StandardPageQuotation(models.Model):
+    page = models.ForeignKey('rca.StandardPage', related_name='quotations')
+    quotation = models.TextField()
+    quotee = models.CharField(max_length=255, blank=True)
+    quotee_job_title = models.CharField(max_length=255, blank=True)
+
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
@@ -408,6 +412,7 @@ StandardPage.content_panels = [
     RichTextFieldPanel('body'),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, label="Related links"),
+    InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
 ]
 
 StandardPage.promote_panels = [

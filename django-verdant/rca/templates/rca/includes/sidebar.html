@@ -61,11 +61,15 @@
                 <li><a href="">Alumni</a></li>
             </ul>
             <h3>See also</h3>
-            <ul class="extra-links">
-                <li><a href="">Studying at the RCA</a></li>
-                <li><a href="">Tuition fees and funding</a></li>
-                <li><a href="">Apply for this programme</a></li>
-            </ul>
+            {% with self.related_links.all as related_links %}
+                {% if related_links %}
+                    <ul class="extra-links">
+                    {% for link in related_links %}
+                        <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
         </div>
     </div>
 {% endif %}
