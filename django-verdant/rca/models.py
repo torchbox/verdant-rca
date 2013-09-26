@@ -237,15 +237,10 @@ class NewsIndex(Page, CommonPromoteFields):
 class NewsItemCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
 
-class NewsItemRelatedLink(models.Model):
+class NewsItemLink(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
-
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_text'),
-    ]
+    link = models.URLField()
+    link_text = models.CharField(max_length=255)
 
 class NewsItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_schools')
@@ -274,7 +269,7 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links"),
+    InlinePanel(NewsItem, NewsItemLink, label="Links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
 
