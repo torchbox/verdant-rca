@@ -255,9 +255,7 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
-        panels=[FieldPanel('url'), FieldPanel('link_text')]
-    ),
+    InlinePanel(NewsItem, NewsItemRelatedLink, label="News links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
 

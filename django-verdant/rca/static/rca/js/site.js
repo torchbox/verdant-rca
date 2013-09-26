@@ -181,20 +181,14 @@ $(function(){
     /* mobile rejigging */
     Harvey.attach('screen and (max-width:768px)', {
         setup: function(){
-            // called when the query becomes valid for the first time
-            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
         }, 
         on: function(){
-             // called each time the query is activated
-            // WHY?: $('nav').insertAfter('.showMenu'); //move navigation into content for mobile version
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
         }, 
         off: function(){
-            // called each time the query is deactivated
-            // WHY?: $('nav').insertBefore('.search-form'); //move navigation back to its proper place for desktop
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
         }
@@ -278,5 +272,5 @@ $(function(){
     });
 
     /* Google maps for contact page */
-    //initializeMaps();
+    //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 });
