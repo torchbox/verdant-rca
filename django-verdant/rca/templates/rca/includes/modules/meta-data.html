@@ -44,12 +44,12 @@
                     {% endif %}
                 {% endwith %} 
                 
-                {% with self.links.all as links %}
-                    {% if links %}
+                {% with self.related_links.all as related_links %}
+                    {% if related_links %}
                         <dd>Links</dd>
                         <dt>
                             <ul>
-                                {% for link in links %}
+                                {% for link in related_links %}
                                 <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
                                 {% endfor %}
                             </ul>
