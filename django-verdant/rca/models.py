@@ -180,7 +180,7 @@ class ProgrammePageFacilities(models.Model):
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
-class ProgrammePage(Page, CommonPromoteFields):
+class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     head_of_programme = models.CharField(max_length=255)
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
@@ -209,6 +209,15 @@ ProgrammePage.promote_panels = [
         FieldPanel('title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
 ]
 
 
