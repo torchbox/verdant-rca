@@ -11,6 +11,7 @@ from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.models import register_snippet
+from verdantsnippets.edit_handlers import SnippetChooserPanel
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -141,6 +142,10 @@ class AdvertPlacement(models.Model):
     page = models.ForeignKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
+    panels = [
+        SnippetChooserPanel('advert', Advert),
+    ]
+
 # == School ==
 
 class SchoolPage(Page, CommonPromoteFields):
@@ -264,10 +269,9 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links",
-        panels=[FieldPanel('url'), FieldPanel('link_text')]
-    ),
+    InlinePanel(NewsItem, NewsItemRelatedLink, label="News links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
+    InlinePanel(NewsItem, AdvertPlacement, label="Adverts"),
 ]
 
 NewsItem.promote_panels = [

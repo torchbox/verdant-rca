@@ -4,6 +4,7 @@ from django import forms
 from django.db import models
 from django.forms.models import modelform_factory, inlineformset_factory
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 import copy
 
@@ -346,8 +347,17 @@ class BaseChooserPanel(BaseFieldPanel):
     def widget_overrides(cls):
         return {cls.field_name: forms.HiddenInput}
 
+    def get_chosen_item(self):
+        try:
+            return getattr(self.instance, self.field_name)
+        except ObjectDoesNotExist:
+            # if the ForeignKey is null=False, Django decides to raise
+            # a DoesNotExist exception here, rather than returning None
+            # like every other unpopulated field type. Yay consistency!
+            return None
+
     def render_as_field(self, show_help_text=True):
-        instance_obj = getattr(self.instance, self.field_name)
+        instance_obj = self.get_chosen_item()
         return mark_safe(render_to_string(self.field_template, {
             'field': self.bound_field,
             self.object_type_name: instance_obj,
