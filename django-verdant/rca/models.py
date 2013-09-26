@@ -393,6 +393,12 @@ class StandardPageRelatedLink(models.Model):
     url = models.URLField()
     link_text = models.CharField(max_length=255)
 
+class StandardPageQuotation(models.Model):
+    page = models.ForeignKey('rca.StandardPage', related_name='quotations')
+    quotation = models.TextField()
+    quotee = models.CharField(max_length=255, blank=True)
+    quotee_job_title = models.CharField(max_length=255, blank=True)
+
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
@@ -402,6 +408,7 @@ StandardPage.content_panels = [
     RichTextFieldPanel('body'),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, label="Related links"),
+    InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
 ]
 
 StandardPage.promote_panels = [
