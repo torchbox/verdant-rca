@@ -471,12 +471,14 @@ class StandardIndexRelatedLink(models.Model):
     ]
 
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
+    intro = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True)
 
 
 StandardIndex.content_panels = [
     FieldPanel('title'),
+    RichTextFieldPanel('intro'),
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
