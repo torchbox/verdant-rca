@@ -2,28 +2,73 @@
 {% load image_tags %}
 
 
+{% block extra_js %}
+    <script>
+        $('#id_q').on('input', function() {
+            clearTimeout($.data(this, 'timer'));
+            var wait = setTimeout(search, 50);
+            $(this).data('timer', wait);
+        });
+        $('a.suggested-tag').click(function() {
+            $('#id_q').val($(this).text());
+            search();
+            return false;
+        })
+        function search () {
+            $.ajax({
+                url: "{%url 'verdantimages_search_image' %}",
+                data: {q: "" + $('#id_q').val() + ""},
+                success: function(data, status) {
+                    $('#image-results').html(data);
+                },
+            });
+        };
+    </script>
+{% endblock %}
+
 {% block content %}
     <header>
         <div class="row row-flush">
             <div class="left col9">
                 <h1>Images</h1>
-                <p><a href="{% url 'verdantimages_search_image' %}">Search</a></p>
             </div>
             <div class="right col3">
                 <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
             </div>
         </div>
     </header>
-    <div class="listing horiz images">
-        <ul>
-            {% for image in images %}
-                <li>
-                    <a href="{% url 'verdantimages_edit_image' image.id %}">
-                        {% image image fill-130x100 %}
-                        {{ image.title }}
-                    </a>
-                </li>
+
+    <form class="" action="{% url 'verdantimages_search_image' %}" method="get">
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
+            {% if popular_tags %}
+                <li>Popular tags:
+                    {% for tag in popular_tags %}
+                        <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </li>
+            {% endif %}
+            <li><input type="submit" value="Search" /></li>
         </ul>
+    </form>
+
+    <div id="image-results" class="listing horiz images">
+        {% if is_searching %}
+            {% include "verdantimages/images/search-results.html" %}
+        {% else %}
+            <p>Latest added images</p>
+            <ul>
+                {% for image in images %}
+                    <li>
+                        <a href="{% url 'verdantimages_edit_image' image.id %}">
+                            {% image image fill-130x100 %}
+                            {{ image.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}

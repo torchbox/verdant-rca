@@ -23,6 +23,10 @@ class RcaImage(AbstractImage):
     permission = models.CharField(max_length=255, blank=True)
     photographer = models.CharField(max_length=255, blank=True)
 
+    @property
+    def default_alt_text(self):
+        return self.alt
+
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaImage)
 def image_delete(sender, instance, **kwargs):
