@@ -270,6 +270,7 @@ ul.inline li:first-child, li.inline:first-child{
         height:95px;
 
         &:before{
+            .sprite(836px, 380px, 1);
             .transition(opacity 0.3s ease);
             position:absolute;
             top:0;
@@ -280,11 +281,10 @@ ul.inline li:first-child, li.inline:first-child{
             display:inline-block;
             height:100px;
             width:@thumbnail-width;
-            .sprite(836px, 362px, 1);
-            opacity:0.2;
+            opacity:0.1;
         }
         &:hover:before{
-            opacity:0.3;
+            opacity:0.2;
         }    
     }
     .chosen{
