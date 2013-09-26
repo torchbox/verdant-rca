@@ -93,6 +93,7 @@ class SocialFields(models.Model):
         abstract = True
 
 class CommonPromoteFields(models.Model):
+    seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
     show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
 
     class Meta:
@@ -193,6 +194,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     download_document_text = models.CharField(max_length=255, blank=True)
 
 ProgrammePage.content_panels = [
+    FieldPanel('title'),
     InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="Test", 
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
@@ -211,7 +213,7 @@ ProgrammePage.content_panels = [
 
 ProgrammePage.promote_panels = [
     MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
 
@@ -265,6 +267,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
+    FieldPanel('title'),
     FieldPanel('author'),
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
@@ -275,7 +278,7 @@ NewsItem.content_panels = [
 
 NewsItem.promote_panels = [
      MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
 
@@ -342,6 +345,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
 
 EventItem.content_panels = [
     MultiFieldPanel([
+        FieldPanel('title'),
         FieldPanel('date_to'),
         FieldPanel('date_from'),
         RichTextFieldPanel('times'),
@@ -366,7 +370,7 @@ EventItem.content_panels = [
 
 EventItem.promote_panels = [
     MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
 
@@ -412,6 +416,7 @@ class StandardPage(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
 
 StandardPage.content_panels = [
+    FieldPanel('title'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
@@ -421,7 +426,7 @@ StandardPage.content_panels = [
 
 StandardPage.promote_panels = [
     MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
 
@@ -471,6 +476,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
 
 
 StandardIndex.content_panels = [
+    FieldPanel('title'),
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
@@ -480,7 +486,7 @@ StandardIndex.content_panels = [
 
 StandardIndex.promote_panels = [
     MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
 
