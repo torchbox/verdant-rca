@@ -156,6 +156,10 @@ class Page(MP_Node):
         """
         return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
 
+    def get_other_siblings(self):
+        # get sibling pages excluding self
+        return self.get_siblings().exclude(id=self.id)
+
     @property
     def url(self):
         if not hasattr(self, '_url_base'):
