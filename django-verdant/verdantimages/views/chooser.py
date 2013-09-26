@@ -92,7 +92,7 @@ def chooser_select_format(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
 
     if request.POST:
-        form = ImageInsertionForm(request.POST, initial={'alt_text': image.title})
+        form = ImageInsertionForm(request.POST, initial={'alt_text': image.default_alt_text})
         if form.is_valid():
 
             format = FORMATS_BY_NAME[form.cleaned_data['format']]
@@ -116,7 +116,7 @@ def chooser_select_format(request, image_id):
                 {'image_json': image_json}
             )
     else:
-        form = ImageInsertionForm(initial={'alt_text': image.title})
+        form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
 
     return render_modal_workflow(
         request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
