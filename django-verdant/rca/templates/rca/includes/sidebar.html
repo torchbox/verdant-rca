@@ -69,7 +69,7 @@
                     <h3>See also</h3>
                     <ul class="extra-links">
                     {% for link in related_links %}
-                        <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
+                        <li><a href="{% pageurl link.link %}">{{ link.link_text }}</a></li>
                     {% endfor %}
                     </ul>
                 {% endif %}
