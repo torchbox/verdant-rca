@@ -196,7 +196,7 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="Test", 
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
-    InlinePanel(ProgrammePage, ProgrammePageRelatedLink, label="Related links"),
+    InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('head_of_programme'),
     RichTextFieldPanel('head_of_programme_statement'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
@@ -415,7 +415,7 @@ StandardPage.content_panels = [
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
-    InlinePanel(StandardPage, StandardPageRelatedLink, label="Related links"),
+    InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
 ]
 

@@ -4,7 +4,7 @@
 
 {% block content %}
     <header class="merged">
-        <h1>Editing page "{{ page.title }}"</h1>
+        <h1>Editing: <span>{{ page.title }}</span></h1>
     </header>
 
     <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
