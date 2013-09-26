@@ -448,7 +448,7 @@ class BaseInlinePanel(EditHandler):
     def get_formset_class(cls):
         if cls._formset_class is None:
             form_class = cls.get_child_form_class()
-            cls._formset_class = inlineformset_factory(cls.base_model, cls.related_model, form=form_class, extra=0)
+            cls._formset_class = inlineformset_factory(cls.base_model, cls.related_model, form=form_class, fk_name=cls.fk_name, extra=0)
 
             # at this point we can fill in a heading, if we don't have one already
             if not cls.heading:
@@ -503,12 +503,13 @@ class BaseInlinePanel(EditHandler):
         for child in self.children:
             child.post_save()
 
-def InlinePanel(base_model, related_model, panels=None, label='', help_text=''):
+def InlinePanel(base_model, related_model, panels=None, label='', help_text='', fk_name=None):
     return type('_InlinePanel', (BaseInlinePanel,), {
         'base_model': base_model,
         'related_model': related_model,
         'panels': panels,
         'heading': label,
+        'fk_name': fk_name,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
     })
 

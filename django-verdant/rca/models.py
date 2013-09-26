@@ -474,7 +474,7 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
-    InlinePanel(StandardIndex, StandardIndexRelatedLink, label="Related links"),
+    InlinePanel(StandardIndex, StandardIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
