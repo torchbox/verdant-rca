@@ -6,7 +6,7 @@
 
 <div class="row row-flush">
     <div class="col6">
-        <form class="image-search" action="{% url 'verdantimages_chooser' %}" method="GET">
+        <form class="image-search" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET">
             <ul class="fields">
                 {% for field in searchform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}

@@ -6,9 +6,10 @@ function(modal) {
         });
     };
 
+    var searchUrl = $('form.image-search', modal.body).attr('action');
     function search () {
         $.ajax({
-            url: "{%url 'verdantimages_chooser' %}",
+            url: searchUrl,
             data: {q: "" + $('#id_q').val() + ""},
             success: function(data, status) {
                 $('#image-results').html(data);

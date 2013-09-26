@@ -37,7 +37,8 @@ def chooser(request):
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
             images = Image.search(q)
-        return render(request, "verdantimages/chooser/search_results.html", {'images': images})
+        return render(request, "verdantimages/chooser/search_results.html", {
+            'images': images, 'will_select_format': request.GET.get('select_format')})
     else:
         searchform = SearchForm()
 
