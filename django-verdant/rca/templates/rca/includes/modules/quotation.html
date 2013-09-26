@@ -1,8 +1,16 @@
-{% comment %}
-	static till dave adds this to the model
-{% endcomment %}
-<blockquote class="quotation">
-	<q class="bc2">"...rechristened the National Art Training School at its new home in South Kensington"</q>
-	<cite class="a0">Mark Robson</cite>
-	<p class="a1">Dean of School</p>
-</blockquote>
+{% with self.quotations.all as quotations %}
+    {% if quotations %}
+        {% for quotation in quotations %}
+        	<blockquote class="quotation">
+	            <q class="bc2">"{{ quotation.quotation }}"</q>
+	            {% if quotation.quotee %}
+	            	<cite class="a0">{{ quotation.quotee }}</cite>
+	            {% endif %}
+	            {% if quotation.quotee_job_title %}
+	            	<p class="a1">{{ quotation.quotee_job_title }}</p>
+	            {% endif %}
+            </blockquote>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}

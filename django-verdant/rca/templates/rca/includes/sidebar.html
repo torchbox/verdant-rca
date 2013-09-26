@@ -51,20 +51,22 @@
 <!-- Related links -->
 {% if showRelatedLinks %}
     {% load pageurl %}
+    {% if self.get_siblings or self.related_links %}
     <div class="related expanded">
         <h2>In this section</h2>
         <div class="wrapper">
             <!-- <h3 class="dark">In this section</h3> -->
             {% if self.get_siblings %}
                 <ul>
-                    {% for page in self.get_siblings %}
+                    {% for page in self.get_other_siblings %}
                         <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}
-            <h3>See also</h3>
+            
             {% with self.related_links.all as related_links %}
                 {% if related_links %}
+                    <h3>See also</h3>
                     <ul class="extra-links">
                     {% for link in related_links %}
                         <li><a href="{{ link.url }}">{{ link.link_text }}</a></li>
@@ -74,6 +76,7 @@
             {% endwith %}
         </div>
     </div>
+    {% endif %}
 {% endif %}
 
 <!-- related content -->
