@@ -21,6 +21,7 @@ class AbstractImage(models.Model, TagSearchable):
     file = models.ImageField(upload_to='original_images', width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     tags = TaggableManager(help_text=None, blank=True)
 
