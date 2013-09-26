@@ -11,7 +11,6 @@ from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.models import register_snippet
-from verdantsnippets.edit_handlers import SnippetChooserPanel
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -142,10 +141,6 @@ class AdvertPlacement(models.Model):
     page = models.ForeignKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
-    panels = [
-        SnippetChooserPanel('advert', Advert),
-    ]
-
 # == School ==
 
 class SchoolPage(Page, CommonPromoteFields):
@@ -165,8 +160,13 @@ class ProgrammePageCarouselItem(models.Model):
 
 class ProgrammePageRelatedLink(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='related_links')
-    url = models.URLField()
-    link_text = models.CharField(max_length=255)
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
 
 class ProgrammePageOurSites(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='our_sites')
@@ -239,8 +239,13 @@ class NewsItemCarouselItem(CarouselItemFields):
 
 class NewsItemRelatedLink(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_links')
-    url = models.URLField()
-    link_text = models.CharField(max_length=255)
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
 
 class NewsItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_schools')
@@ -269,9 +274,8 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     RichTextFieldPanel('intro'),
     RichTextFieldPanel('body'),
-    InlinePanel(NewsItem, NewsItemRelatedLink, label="News links"),
+    InlinePanel(NewsItem, NewsItemRelatedLink, label="Related links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
-    InlinePanel(NewsItem, AdvertPlacement, label="Adverts"),
 ]
 
 NewsItem.promote_panels = [
@@ -394,8 +398,13 @@ class StandardPageCarouselItem(CarouselItemFields):
 
 class StandardPageRelatedLink(models.Model):
     page = models.ForeignKey('rca.StandardPage', related_name='related_links')
-    url = models.URLField()
-    link_text = models.CharField(max_length=255)
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
 
 class StandardPageQuotation(models.Model):
     page = models.ForeignKey('rca.StandardPage', related_name='quotations')
@@ -453,10 +462,12 @@ class StandardIndexTeaser(models.Model):
 
 class StandardIndexRelatedLink(models.Model):
     page = models.ForeignKey('rca.StandardIndex', related_name='related_links')
-    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='related_links_link')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
 
     panels = [
         PageChooserPanel('link'),
+        FieldPanel('link_text'),
     ]
 
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
