@@ -9,7 +9,7 @@
             var wait = setTimeout(search, 50);
             $(this).data('timer', wait);
         });
-        $('a.suggested_tag').click(function() {
+        $('a.suggested-tag').click(function() {
             $('#id_q').val($(this).text());
             search();
             return false;
@@ -46,7 +46,7 @@
             {% if popular_tags %}
                 <li>Popular tags:
                     {% for tag in popular_tags %}
-                        <a class="suggested_tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
                     {% endfor %}
                 </li>
             {% endif %}
