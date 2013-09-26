@@ -1,4 +1,6 @@
 from taggit.models import Tag
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count
 
 class TagSearchable(object):
     """
@@ -23,3 +25,12 @@ class TagSearchable(object):
             title_matches = title_matches | results.filter(title__istartswith=term).distinct()
         results = tag_matches | title_matches
         return results
+
+    @classmethod
+    def popular_tags(cls):
+        content_type = ContentType.objects.get_for_model(cls)
+        return Tag.objects.filter(
+            taggit_taggeditem_items__content_type=content_type
+        ).annotate(
+            item_count=Count('taggit_taggeditem_items')
+        ).order_by('-item_count')[:10]

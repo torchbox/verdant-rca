@@ -9,14 +9,19 @@
             var wait = setTimeout(search, 50);
             $(this).data('timer', wait);
         });
+        $('a.suggested_tag').click(function() {
+            $('#id_q').val($(this).text());
+            search();
+            return false;
+        })
         function search () {
             $.ajax({
                 url: "{%url 'verdantimages_search_image' %}",
                 data: {q: "" + $('#id_q').val() + ""},
                 success: function(data, status) {
-                        $('#image-results').html(data);
-                    },
-                });
+                    $('#image-results').html(data);
+                },
+            });
         };
     </script>
 {% endblock %}
@@ -38,6 +43,13 @@
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
+            {% if popular_tags %}
+                <li>Popular tags:
+                    {% for tag in popular_tags %}
+                        <a class="suggested_tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </li>
+            {% endif %}
             <li><input type="submit" value="Search" /></li>
         </ul>
     </form>
