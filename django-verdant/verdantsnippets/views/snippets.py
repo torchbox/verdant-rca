@@ -5,7 +5,7 @@ from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 
-from verdantsnippets.models import SNIPPET_CONTENT_TYPES
+from verdantsnippets.models import get_snippet_content_types
 from verdantadmin.edit_handlers import ObjectList, get_form_for_model, extract_panel_definitions_from_form_class
 
 # == Helper functions ==
@@ -28,7 +28,7 @@ def get_content_type_from_url_params(app_name, model_name):
         content_type = ContentType.objects.get_by_natural_key(app_name, model_name)
     except ContentType.DoesNotExist:
         raise Http404
-    if content_type not in SNIPPET_CONTENT_TYPES:
+    if content_type not in get_snippet_content_types():
         # don't allow people to hack the URL to edit content types that aren't registered as snippets
         raise Http404
 
@@ -57,7 +57,7 @@ def index(request):
             get_snippet_type_name(content_type)[1],
             content_type
         )
-        for content_type in SNIPPET_CONTENT_TYPES
+        for content_type in get_snippet_content_types()
     ]
     return render(request, 'verdantsnippets/snippets/index.html', {
         'snippet_types': snippet_types,
