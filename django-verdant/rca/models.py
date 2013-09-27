@@ -43,7 +43,7 @@ def rendition_delete(sender, instance, **kwargs):
     instance.file.delete(False)
 
 
-NEWS_AREA_CHOICES = (
+AREA_CHOICES = (
     ('helenhamlyn', 'Helen Hamlyn'),
     ('innovationrca', 'InnovationRCA'),
     ('research', 'Research'),
@@ -267,7 +267,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField()
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
-    area = models.CharField(max_length=255, choices=NEWS_AREA_CHOICES, blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
@@ -500,6 +500,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
+    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
 StandardIndex.content_panels = [
     FieldPanel('title'),
