@@ -248,6 +248,11 @@ class NewsItemLink(models.Model):
     link = models.URLField()
     link_text = models.CharField(max_length=255)
 
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
 class NewsItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_schools')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
