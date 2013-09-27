@@ -1,0 +1,72 @@
+
+{% extends "rca/base.html" %}
+{% load rich_text %}
+
+{% block content %}
+	<span class="a2"><a href="">{{ self.audience }}</a></span>
+    <h1 class="h1">{{ self.title }}</h1>
+
+    <section class="event-info row">
+		<div class="col-1">
+
+		{% comment %}
+		To do: make this a repeatable block once the model is updated for event dates and timings
+		{% endcomment %}
+
+		<h3 class="h5">{{ self.date_from }}{% if self.date_from != self.date_to %} to {{ self.date_to }}{% endif %}{% if self.times %} &#124; <span>{{ self.times|richtext }}</span>{% endif %}</h3>
+
+		<p class="bc3">{{ self.location }}{% if self.location_other %} and {{ self.location_other }}{% endif %}{% if self.specific_directions_link and self.specific_directions %} &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>{% endif %}</p>
+		{% if self.cost %}{{ self.cost|richtext }}{% endif %}
+		
+		{% if self.external_link and self.external_link_text %}
+			<p><a href="{{ self.external_link }}">{{ self.external_link_text }}</a></p>
+		{% endif %}
+	</div>
+	<div class="col-2">
+		{% include "rca/includes/modules/calendar-button.html" %}
+		{% include "rca/includes/modules/share-button.html" %}
+		{% if self.signup_link %}
+			<a href="{{ self.signup_link }}" class="button icon icon-link-away">Book now</a>
+		{% endif %}
+	</div>
+	</section>
+
+    {% include "rca/includes/modules/carousel.html" %}	
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+{% endblock %}
+
+{% comment %}
+<span class="a2"><a href="">Public</a></span>
+<h1 class="h1">Sustain Talks present SEE CHANGE</h1>
+
+<section class="event-info row">
+	<div class="col-1">
+	<h3 class="h5">19 March &#124; <span>6.30 - 7.30 PM</span></h3>
+	<p class="bc3">Lecture Theatre 1, Kensington &#124; <a class="a2">Directions and transport details</a></p>
+	<p><strong>&pound;30.00</strong> full price, <strong>&pound;15.00</strong> concessions</p>
+	
+	<p><a href="">www.rca.ac.uk/sustaintalks</a></p>
+</div>
+<div class="col-2">
+	{% include modules/calendar-button.html %}
+	{% include modules/share-button.html %}
+	<a class="button icon icon-link-away">Book now</a>
+</div>
+</section>
+
+{% include modules/carousel.html %}
+
+<section class="row">
+	
+	{% include modules/body-text.html %}
+
+	<section class="four">
+		{% include modules/speakers.html %}
+	</section>
+</section>
+
+{% include modules/twitter-feed.html %}
+{% endcomment %}

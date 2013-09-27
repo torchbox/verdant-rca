@@ -1,10 +1,11 @@
+{% load pageurl %}
 {% if events %}
     <div class="today expanded">
         <h2>Events</h2>
         <ul>
             {% for event in events %}
                 <li>
-                    <a href="{{ event.url }}">
+                    <a href="{% pageurl event %}">
                         <h3>{{ event.date_from|date:"j F" }}</h3>
                         <p>{{ event.title }}</p>
                     </a>

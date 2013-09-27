@@ -1,6 +1,12 @@
 
 {% load image_tags embed_filters %}
 
+{% comment %}
+        To do:
+        * text  / no text carousel versions if agreed with Octavia
+        * case where there is only one image or only one video
+        {% endcomment %}
+
 {% if self.carousel_items.all.count == 1 %}
 {% endif %}
 
