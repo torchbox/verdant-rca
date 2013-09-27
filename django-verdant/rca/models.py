@@ -191,7 +191,7 @@ class ProgrammePageFacilities(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
-    head_of_programme = models.CharField(max_length=255)
+    head_of_programme = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
     download_document_url = models.CharField(max_length=255, blank=True)
@@ -203,7 +203,7 @@ ProgrammePage.content_panels = [
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
-    FieldPanel('head_of_programme'),
+    PageChooserPanel('head_of_programme'),
     RichTextFieldPanel('head_of_programme_statement'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
         panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
@@ -523,6 +523,7 @@ StandardIndex.content_panels = [
     ],'Contact'),
     InlinePanel(StandardIndex, StandardIndexContactPhone, label="Contact phone number"),
     InlinePanel(StandardIndex, StandardIndexContactEmail, label="Contact email address"),
+    FieldPanel('news_carousel_area'),
 ]
 
 StandardIndex.promote_panels = [

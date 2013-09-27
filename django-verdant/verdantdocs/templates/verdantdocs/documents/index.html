@@ -1,26 +1,71 @@
 {% extends "verdantadmin/base.html" %}
 
+{% block extra_js %}
+    <script>
+        $('#id_q').on('input', function() {
+            clearTimeout($.data(this, 'timer'));
+            var wait = setTimeout(search, 50);
+            $(this).data('timer', wait);
+        });
+        $('a.suggested-tag').click(function() {
+            $('#id_q').val($(this).text());
+            search();
+            return false;
+        })
+        function search () {
+            $.ajax({
+                url: "{%url 'verdantdocs_search' %}",
+                data: {q: "" + $('#id_q').val() + ""},
+                success: function(data, status) {
+                    $('#document-results').html(data);
+                },
+            });
+        };
+    </script>
+{% endblock %}
+
 {% block content %}
     <header>
         <div class="row row-flush">
             <div class="left col9">
                 <h1>Documents</h1>
-                <p><a href="{% url 'verdantdocs_search' %}">Search</a></p>
             </div>
             <div class="right col3">
                 <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>
             </div>
         </div>
     </header>
-    <div class="listing documents">
-        <ul>
-            {% for doc in documents %}
-                <li>
-                    <a href="{% url 'verdantdocs_edit_document' doc.id %}">
-                        {{ doc.title }}
-                    </a>
-                </li>
+
+    <form class="" action="{% url 'verdantdocs_search' %}" method="get">
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
+            {% if popular_tags %}
+                <li>Popular tags:
+                    {% for tag in popular_tags %}
+                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                </li>
+            {% endif %}
+            <li><input type="submit" value="Search" /></li>
         </ul>
+    </form>
+
+    <div id="document-results" class="listing documents">
+        {% if is_searching %}
+            {% include "verdantdocs/documents/search-results.html" %}
+        {% else %}
+            <p>Latest added documents</p>
+            <ul>
+                {% for doc in documents %}
+                    <li>
+                        <a href="{% url 'verdantdocs_edit_document' doc.id %}">
+                            {{ doc.title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
 {% endblock %}
