@@ -351,10 +351,10 @@ class EventItemRelatedProgramme(models.Model):
 
 class EventItemDatesTimes(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
-    date_from = models.DateField()
-    date_to = models.DateField(blank=True, help_text="Not required if event is on a single day")
-    time_from = models.CharField(max_length=255, blank=True)
-    time_to = models.CharField(max_length=255, blank=True)
+    date_from = models.DateField("Start date")
+    date_to = models.DateField("End date", blank=True, help_text="Not required if event is on a single day")
+    time_from = models.CharField("Start time", max_length=255, blank=True)
+    time_to = models.CharField("End time",max_length=255, blank=True)
 
     panels = [
         FieldPanel('date_from'),
@@ -393,7 +393,7 @@ EventItem.content_panels = [
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
-    InlinePanel(EventItem, EventItemSpeaker, label="Dates and times"),
+    InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
     InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
 ]
