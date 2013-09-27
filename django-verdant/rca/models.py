@@ -476,18 +476,24 @@ class StandardIndexRelatedLink(models.Model):
 
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True)
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
 
 
 StandardIndex.content_panels = [
     FieldPanel('title'),
-    RichTextFieldPanel('intro'),
+    MultiFieldPanel([
+        RichTextFieldPanel('intro'),
+        PageChooserPanel('intro_link'),
+    ],'Introduction'),
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
     InlinePanel(StandardIndex, StandardIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
+    ImageChooserPanel('background_image'),
 ]
 
 StandardIndex.promote_panels = [

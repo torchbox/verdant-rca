@@ -1,20 +1,32 @@
 /* General listings, like for pages, images or snippets */
-.listing{
+ul.listing{
+    .unlist();
+}
 
+.listing{
     /*font-size:0.9em; Don't know what I was thinking with this. Way too presumptuous */
 
     &.flush{
         .full-width();
     } 
 
-    &.horiz li{
+    &.horiz > li{
         float:left;
     }
 
-    &.images li{
+    &.images > li{
         width:130px;
         height:130px;
         margin:0 @grid-gutter-width @grid-gutter-width 0;
+    }
+
+    ul&{
+        border-top:1px dashed @color-input-border;
+        margin-bottom:2em;
+    }
+    > li{
+        padding:1em 0;
+        border-bottom:1px dashed @color-input-border;
     }
 
     table{
@@ -88,6 +100,7 @@
             .visuallyhidden();
         }
         input{
+            margin-top:3px;
             font-size:1.2em;
         }
        
