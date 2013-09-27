@@ -7,10 +7,14 @@ from verdantadmin.forms import SearchForm
 
 
 def index(request):
-    documents = Document.objects.order_by('title')
+    documents = Document.objects.order_by('-created_at')[:12]
+    form = SearchForm()
 
     return render(request, "verdantdocs/documents/index.html", {
         'documents': documents,
+        'form': form,
+        'popular_tags': Document.popular_tags(),
+        'is_searching': False,
     })
 
 
@@ -77,11 +81,14 @@ def search(request):
     else:
         form = SearchForm()
 
-    context = {
-        'form': form,
-        'documents': documents,
-    }
     if request.is_ajax():
-        return render(request, "verdantdocs/documents/search-results.html", context)
+        return render(request, "verdantdocs/documents/search-results.html", {
+            'documents': documents,
+        })
     else:
-        return render(request, "verdantdocs/documents/search.html", context)
+        return render(request, "verdantdocs/documents/index.html", {
+            'form': form,
+            'documents': documents,
+            'is_searching': True,
+            'popular_tags': Document.popular_tags(),
+        })
