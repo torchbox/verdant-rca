@@ -4,6 +4,7 @@
 
 <div class="row row-flush">
     <div class="col6">
+        <h2>Search</h2>
         <form class="document-search" action="{% url 'verdantdocs_chooser' %}" method="GET">
             <ul class="fields">
                 {% for field in searchform %}
@@ -18,7 +19,7 @@
     </div>
 
     <div class="col6">
-        <h2>Or upload a new one:</h2>
+        <h2>Or upload a new one</h2>
         <form class="document-upload" action="{% url 'verdantdocs_chooser_upload' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <ul class="fields">
