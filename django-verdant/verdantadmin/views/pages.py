@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 
+from treebeard.exceptions import InvalidMoveToDescendant
+
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 
@@ -163,6 +165,41 @@ def delete(request, page_id):
     return render(request, 'verdantadmin/pages/confirm_delete.html', {
         'page': page,
         'descendant_count': page.get_descendant_count()
+    })
+
+def move(request, page_to_move_id, viewed_page_id=None):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+
+    if viewed_page_id:
+        viewed_page = get_object_or_404(Page, id=viewed_page_id)
+    else:
+        viewed_page = Page.get_first_root_node()
+
+    if request.POST:
+        try:
+            page_to_move.move(viewed_page, pos='last-child')
+
+            messages.success(request, "Page '%s' moved." % page_to_move.title)
+            return redirect('verdantadmin_explore', viewed_page.id)
+        except InvalidMoveToDescendant:
+            messages.error(request, "You cannot move this page into itself.")
+            return redirect('verdantadmin_pages_move', page_to_move.id)
+
+    child_pages = []
+    for page in viewed_page.get_children():
+        # can't move the page into itself or its descendants
+        can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+
+        can_descend = can_choose and page.get_children_count()
+
+        child_pages.append({
+            'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
+        })
+
+    return render(request, 'verdantadmin/pages/move_choose_destination.html', {
+        'page_to_move': page_to_move,
+        'viewed_page': viewed_page,
+        'child_pages': child_pages,
     })
 
 

@@ -15,6 +15,9 @@ urlpatterns = patterns('verdantadmin.views',
     url(r'^pages/(\d+)/add_subpage/$', 'pages.add_subpage', name='verdantadmin_pages_add_subpage'),
     url(r'^pages/(\d+)/delete/$', 'pages.delete', name='verdantadmin_pages_delete'),
 
+    url(r'^pages/(\d+)/move/$', 'pages.move', name='verdantadmin_pages_move'),
+    url(r'^pages/(\d+)/move/(\d+)/$', 'pages.move', name='verdantadmin_pages_move_choose_destination'),
+
     url(r'^choose-page/(\w+)/(\w+)/$', 'choose_page.browse', name='verdantadmin_choose_page'),
     url(r'^choose-page/(\w+)/(\w+)/(\d+)/$', 'choose_page.browse', name='verdantadmin_choose_page_child'),
 
