@@ -196,6 +196,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme_video = models.CharField(max_length=255, blank=True)
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 ProgrammePage.content_panels = [
     FieldPanel('title'),
@@ -213,6 +214,7 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
+    FieldPanel('twitter_feed',)
 ]
 
 ProgrammePage.promote_panels = [
@@ -317,10 +319,23 @@ class EventItemSpeaker(models.Model):
     surname = models.CharField(max_length=255)
     link = models.URLField()
 
+    panels=[
+        FieldPanel('name'), 
+        FieldPanel('surname'), 
+        ImageChooserPanel('image'), 
+        FieldPanel('link'),
+    ]
+    
+
 class EventItemCarouselItem(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='carousel_items')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     embedly_url = models.URLField(blank=True)
+
+    panels=[
+        ImageChooserPanel('image'), 
+        FieldPanel('embedly_url'),
+    ]
 
 class EventItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='related_schools')
@@ -334,16 +349,27 @@ class EventItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class EventItem(Page, SocialFields, CommonPromoteFields):
-    date_to = models.DateField()
+class EventItemDatesTimes(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField()
-    times = RichTextField(blank=True)
+    date_to = models.DateField(blank=True, help_text="Not required if event is on a single day")
+    time_from = models.CharField(max_length=255, blank=True)
+    time_to = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('date_from'),
+        FieldPanel('date_to'),
+        FieldPanel('time_from'),
+        FieldPanel('time_to'),
+    ]
+
+class EventItem(Page, SocialFields, CommonPromoteFields):
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
-    gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
+    gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     signup_link = models.URLField(blank=True)
     external_link = models.URLField(blank=True)
@@ -352,12 +378,10 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
+
 EventItem.content_panels = [
     MultiFieldPanel([
         FieldPanel('title'),
-        FieldPanel('date_to'),
-        FieldPanel('date_from'),
-        RichTextFieldPanel('times'),
         FieldPanel('audience'),
         FieldPanel('location'),
         FieldPanel('location_other'),
@@ -369,12 +393,9 @@ EventItem.content_panels = [
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
-    InlinePanel(EventItem, EventItemSpeaker, label="Speaker",
-        panels=[FieldPanel('name'), FieldPanel('surname'), ImageChooserPanel('image'), FieldPanel('link')]
-    ),
-    InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content",
-        panels=[ImageChooserPanel('image'), FieldPanel('embedly_url')]
-    ),
+    InlinePanel(EventItem, EventItemSpeaker, label="Dates and times"),
+    InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
+    InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
 ]
 
 EventItem.promote_panels = [
@@ -499,7 +520,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
-    twitter_feed = models.CharField(max_length=255, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
