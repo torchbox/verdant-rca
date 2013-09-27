@@ -1,4 +1,5 @@
 {% extends "rca/base.html" %}
+{% load image_tags %}
 
 {% block content %}
 	<div class="full-bleed-image"><img src="/static/rca/images/example/sky.jpg" /></div>
@@ -17,6 +18,51 @@
 	        <p class="content bc0">The RCA leads in the development of high-level interdisciplinary research in art and design...<span class="bc4 caps">Continue</span></p>
 	    </a>
 	</section>
+
+	<!--teaser block-->
+	{% with self.teasers.all as teasers %}
+        {% if self.teasers %}
+
+        	<section class="two-plus x-plus module">
+			    <h2 class="module-title">Module title</h2>
+			    <div class="item-container">
+			        <ul class="row">
+
+                     {% for teaser in teasers %}
+                     	{% if forloop.counter == 6 %}
+                     		<li class="load-more-target {{ forloop.counter }}">
+                     	{% elif forloop.counter0|divisibleby:"3" %}
+                     		<li class="newrow {{ forloop.counter }}">
+                     	{% else %}
+                     		<li class="{{ forloop.counter }}">
+                     	{% endif %}
+                     	{% comment %}{% cycle '<li>' '<li>' '<li>' '<li class="newrow"> <li> <li class="load-more-target">' %}{% endcomment %}
+                     		{% if teaser.url %}
+                     		<a href="{{ teaser.url }}">
+                     		{% endif %}
+                     			{% if teaser.image %}
+                     			<div class="image">{% image teaser.image width-400 %}</div>
+                     			{% endif %}
+			                    <div class="content">
+			                    	{% if teaser.title %}
+			                        <h3 class="h8">{{ teaser.title }}</h3>
+			                        {% endif %}
+			                        {% if teaser.text %}
+			                        <p class="bc5">{{ teaser.text }}</p>
+			                        {% endif %}
+			                    </div>
+			                {% if teaser.url %}
+			                </a>
+			                {% endif %}
+                    {% endfor %}
+
+                	<li class="load-more"><a href="#">+</a></li>
+		        </ul>
+		    </div>
+		</section>
+
+        {% endif %}
+    {% endwith %}
 
 {% endblock %}
 
