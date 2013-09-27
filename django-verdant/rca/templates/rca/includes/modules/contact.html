@@ -1,23 +1,36 @@
-<section class="module contact">
-	<h2 class="module-title">Contact</h2>
-	<ul class="row">
-		<li class="col col-1">
-			<p>
-				<strong>Research and Innovation</strong><br />
-				Royal College of Art<br />
-				Kensington Gore<br />
-				London<br />
-				SW7 2EU<br />
-				<a class="chevron">View map</a>
-			</p>
-		</li>
-		<li class="col col-2">
-			<p>
-				Tel: +44 (0) 7590 4444 (Main Switchboard)<br />
-				Fax: +44 (0) 7590 4500<br />
-				<a href="">development@rca.ac.uk</a><br />
-				<a href="">personnel@rca.ac.uk</a>
-			</p>
-		</li>
-	</ul>
-</section>
+
+{% if self.contact_title or self.contact_address or self.contact_link or self.contact_link_text %}
+	<section class="module contact">
+		<h2 class="module-title">Contact</h2>
+		<ul class="row">
+			<li class="col col-1">
+				<p>
+					{% if self.contact_title %}
+						<strong>{{ self.contact_title }}</strong><br />
+					{% endif %}
+					{% if self.contact_address %}
+						{{ self.contact.address }}
+					{% endif %}
+					{% if self.contact_link and self.contact_link_text %}
+						<a href="{{ self.contact_link }}" class="chevron">{{ self.contact_link_text }}</a>
+					{% endif %}
+				</p>
+			</li>
+			<li class="col col-2">
+				<p>
+					Tel: +44 (0) 7590 4444 (Main Switchboard)<br />
+					Fax: +44 (0) 7590 4500<br />
+					<a href="">development@rca.ac.uk</a><br />
+					<a href="">personnel@rca.ac.uk</a>
+				</p>
+			</li>
+		</ul>
+	</section>
+{% endif %}
+
+{% comment %}
+contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text
+{% endcomment %}
