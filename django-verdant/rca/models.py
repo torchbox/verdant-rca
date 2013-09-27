@@ -339,7 +339,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES)
-    cost = RichTextField(blank=True)
+    cost = RichTextField(blank=True, help_text="Prices should be in bold")
     signup_link = models.URLField(blank=True)
     external_link = models.URLField(blank=True)
     external_link_text = models.CharField(max_length=255, blank=True)
