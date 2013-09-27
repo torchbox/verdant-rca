@@ -1,31 +1,8 @@
+{% load rca_tags %}
+
 <!-- Events -->
 {% if showToday %}
-    <div class="today expanded">
-        <h2>Events</h2>
-        <ul>
-            <li>
-                <a href="">
-                    <h3>21 March</h3>
-                    <p>Neville Brody in Conversation</p>
-                </a>
-                <span>public</span>
-            </li>
-            <li>
-                <a href="">
-                    <h3>7 May</h3>
-                    <p>Not dressed for Conqering - Ines Doujak's Loomshuttles Warpaths</p>
-                </a>
-                <span>private</span>
-            </li>
-            <li class="last">
-                <a href="">
-                    <h3>14 March</h3>
-                    <p>SHOW RCA 2013</p>
-                </a>
-                <span>public</span>
-            </li>
-        </ul>
-    </div>
+    {% upcoming_events %}
 {% endif %}
 
 <!-- adverts -->
