@@ -15,6 +15,8 @@ class RichTextArea(Textarea):
 
     def value_from_datadict(self, data, files, name):
         original_value = super(RichTextArea, self).value_from_datadict(data, files, name)
+        if original_value is None:
+            return None
         return DbWhitelister.clean(original_value)
 
 
