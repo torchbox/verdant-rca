@@ -201,6 +201,14 @@ li.focused > .help{
     opacity:1;
 }
 
+.required label:after{
+    content:"*";
+    color:@color-red;
+    font-weight:bold;
+    display:inline;
+    margin-left:0.5em;
+}
+
 .error-message{
     margin:0;
     color:@color-red;
@@ -300,3 +308,6 @@ ul.inline li:first-child, li.inline:first-child{
         }
     }
 }
+
+/* jQuery UI bits and pieces */
+
