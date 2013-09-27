@@ -13,6 +13,7 @@ from verdantadmin.taggable import TagSearchable
 class Document(models.Model, TagSearchable):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='documents')
+    created_at = models.DateTimeField(auto_now_add=True)
 
     tags = TaggableManager(help_text=None, blank=True)
 
