@@ -4,12 +4,7 @@
 {% block content %}
 	<div class="full-bleed-image"><img src="/static/rca/images/example/sky.jpg" /></div>
 
-	<h1 class="h1 major">
-		{% with self.title.split as titleword %}
-		    <span class="medium-grey">{{ titleword|slice:":1"|join:" " }}</span> 
-		    {{ titleword|slice:"1:"|join:" " }}
-		{% endwith %}
-	</h1>
+	{% include "rca/includes/modules/h1-major.html" %}
 
 	{% include "rca/includes/modules/carousel.html" %}
 
@@ -63,6 +58,9 @@
 
         {% endif %}
     {% endwith %}
+
+    {% include "rca/includes/modules/contact.html" %}
+    {% include "rca/includes/modules/twitter-feed.html" %}
 
 {% endblock %}
 
