@@ -1,0 +1,56 @@
+{% comment %}
+<span class="a2"><a href="">Public</a></span>
+<h1 class="h1">Sustain Talks present SEE CHANGE</h1>
+
+<section class="event-info row">
+	<div class="col-1">
+	<h3 class="h5">19 March &#124; <span>6.30 - 7.30 PM</span></h3>
+	<p class="bc3">Lecture Theatre 1, Kensington &#124; <a class="a2">Directions and transport details</a></p>
+	<p><strong>&pound;30.00</strong> full price, <strong>&pound;15.00</strong> concessions</p>
+	
+	<p><a href="">www.rca.ac.uk/sustaintalks</a></p>
+</div>
+<div class="col-2">
+	{% include modules/calendar-button.html %}
+	{% include modules/share-button.html %}
+	<a class="button icon icon-link-away">Book now</a>
+</div>
+</section>
+
+{% include modules/carousel.html %}
+
+<section class="row">
+	
+	{% include modules/body-text.html %}
+
+	<section class="four">
+		{% include modules/speakers.html %}
+	</section>
+</section>
+
+{% include modules/twitter-feed.html %}
+{% endcomment %}
+
+{% extends "rca/base.html" %}
+
+{% block content %}
+	<span class="a2"><a href="">{{ self.audience }}</a></span>
+    <h1 class="h1">{{ self.title }}</h1>
+
+
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
+        <section class="four">
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+            {% include "rca/includes/modules/quotation.html" %}
+        </section>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+{% endblock %}
