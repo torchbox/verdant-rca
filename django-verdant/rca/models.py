@@ -43,7 +43,7 @@ def rendition_delete(sender, instance, **kwargs):
     instance.file.delete(False)
 
 
-NEWS_AREA_CHOICES = (
+AREA_CHOICES = (
     ('helenhamlyn', 'Helen Hamlyn'),
     ('innovationrca', 'InnovationRCA'),
     ('research', 'Research'),
@@ -267,7 +267,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField()
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
-    area = models.CharField(max_length=255, choices=NEWS_AREA_CHOICES, blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
 NewsItem.content_panels = [
@@ -474,13 +474,33 @@ class StandardIndexRelatedLink(models.Model):
         FieldPanel('link_text'),
     ]
 
+class StandardIndexContactPhone(models.Model):
+    page = models.ForeignKey('rca.StandardIndex', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class StandardIndexContactEmail(models.Model):
+    page = models.ForeignKey('rca.StandardIndex', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
+    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
 StandardIndex.content_panels = [
     FieldPanel('title'),
@@ -494,6 +514,15 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, StandardIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+        
+    ],'Contact'),
+    InlinePanel(StandardIndex, StandardIndexContactPhone, label="Contact phone number"),
+    InlinePanel(StandardIndex, StandardIndexContactEmail, label="Contact email address"),
 ]
 
 StandardIndex.promote_panels = [

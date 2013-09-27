@@ -1,0 +1,16 @@
+{% if events %}
+    <div class="today expanded">
+        <h2>Events</h2>
+        <ul>
+            {% for event in events %}
+                <li>
+                    <a href="{{ event.url }}">
+                        <h3>{{ event.date_from|date:"j F" }}</h3>
+                        <p>{{ event.title }}</p>
+                    </a>
+                    <span>{{ event.audience }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
