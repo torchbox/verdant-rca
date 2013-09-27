@@ -4,7 +4,7 @@
 
 {% block content %}
 	<header class="merged">
-    	<h1>New {{ content_type.name }}</h1>
+    	<h1>New <span>{{ content_type.name }}</span></h1>
    	</header>
 
     <form action="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" method="POST">
