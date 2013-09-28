@@ -5,6 +5,9 @@ class FakeQuerySet(object):
     def all(self):
         return self
 
+    def __getitem__(self, k):
+        return self.results[k]
+
     def __iter__(self):
         return self.results.__iter__()
 
