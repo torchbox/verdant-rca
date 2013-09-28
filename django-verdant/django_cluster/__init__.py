@@ -146,10 +146,30 @@ def build_clusterable_model(model, overrides):
         for (field_name, related_instances) in relation_assignments.items():
             setattr(self, field_name, related_instances)
 
+    def save(self, **kwargs):
+        update_fields = kwargs.pop('update_fields', None)
+        if update_fields is None:
+            real_update_fields = None
+            relations_to_commit = list(overrides)
+        else:
+            real_update_fields = []
+            relations_to_commit = []
+            for field in update_fields:
+                if field in overrides:
+                    relations_to_commit.append(field)
+                else:
+                    real_update_fields.append(field)
+
+        super(cls, self).save(update_fields=real_update_fields, **kwargs)
+
+        for relation in relations_to_commit:
+            getattr(self, relation).commit()
+
     dct = {
         'Meta': Meta,
         '__module__': 'django_cluster.models',
-        '__init__': init
+        '__init__': init,
+        'save': save,
     }
     for name in overrides:
         original_descriptor = getattr(model, name)
