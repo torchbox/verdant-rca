@@ -12,7 +12,7 @@ from django.db import models
 from django.utils.functional import cached_property
 
 
-def create_deferring_foreign_related_manager(relation_name, rel_field, original_manager_cls):
+def create_deferring_foreign_related_manager(relation_name, original_manager_cls):
     class DeferringRelatedManager(models.Manager):
         def __init__(self, instance):
             self.instance = instance
@@ -101,7 +101,6 @@ class DeferringForeignRelatedObjectsDescriptor(object):
     def deferring_related_manager_cls(self):
         return create_deferring_foreign_related_manager(
             self.original_descriptor.related.get_accessor_name(),
-            self.original_descriptor.related.field,
             self.original_descriptor.related_manager_cls
         )
 
