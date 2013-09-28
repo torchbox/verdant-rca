@@ -10,3 +10,6 @@ class FakeQuerySet(object):
 
     def __nonzero__(self):
         return bool(self.results)
+
+    def __repr__(self):
+        return repr(list(self))
