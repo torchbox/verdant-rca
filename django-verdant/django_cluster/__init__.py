@@ -48,15 +48,14 @@ def create_deferring_foreign_related_manager(relation_name, rel_field, original_
                 if item not in items:
                     items.append(item)
 
-        if rel_field.null:
-            def clear(self):
-                try:
-                    cluster_related_objects = self.instance._cluster_related_objects
-                except AttributeError:
-                    cluster_related_objects = {}
-                    self.instance._cluster_related_objects = cluster_related_objects
+        def clear(self):
+            try:
+                cluster_related_objects = self.instance._cluster_related_objects
+            except AttributeError:
+                cluster_related_objects = {}
+                self.instance._cluster_related_objects = cluster_related_objects
 
-                cluster_related_objects[relation_name] = []
+            cluster_related_objects[relation_name] = []
 
         def commit(self):
             # apply any changes present in _cluster_related_objects to the database
@@ -69,17 +68,9 @@ def create_deferring_foreign_related_manager(relation_name, rel_field, original_
             original_manager = original_manager_cls(self.instance)
 
             live_items = list(original_manager.get_query_set())
-            items_to_remove = [
-                item for item in live_items
-                if item not in final_items
-            ]
-
-            if items_to_remove:
-                # original_manager.remove() is only defined for nullable
-                # foreign keys, but if that isn't the case, then the object
-                # assignment logic here and in DeferringForeignRelatedObjectsDescriptor
-                # should ensure that there are never items to remove.
-                original_manager.remove(*items_to_remove)
+            for item in live_items:
+                if item not in final_items:
+                    item.delete()
 
             for item in final_items:
                 if item not in live_items:
@@ -103,10 +94,7 @@ class DeferringForeignRelatedObjectsDescriptor(object):
 
     def __set__(self, instance, value):
         manager = self.__get__(instance)
-        # If the foreign key can support nulls, then completely clear the related set.
-        # Otherwise, just move the named objects into the set.
-        if self.original_descriptor.related.field.null:
-            manager.clear()
+        manager.clear()
         manager.add(*value)
 
     @cached_property
