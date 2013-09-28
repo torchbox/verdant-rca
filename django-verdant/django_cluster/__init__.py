@@ -13,6 +13,12 @@ from django.utils.functional import cached_property
 
 
 def create_deferring_foreign_related_manager(relation_name, original_manager_cls):
+    """
+    Create a DeferringRelatedManager class that wraps an ordinary RelatedManager
+    with 'deferring' behaviour: any updates to the object set (via e.g. add() or clear())
+    are written to a holding area rather than committed to the database immediately.
+    Writing to the database is deferred until the model is saved.
+    """
     class DeferringRelatedManager(models.Manager):
         def __init__(self, instance):
             self.instance = instance
@@ -24,6 +30,10 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
             return original_manager_cls(self.instance).get_query_set()
 
         def get_query_set(self):
+            """
+            return the current object set with any updates applied,
+            wrapped up in a FakeQuerySet if it doesn't match the database state
+            """
             try:
                 results = self.instance._cluster_related_objects[relation_name]
             except (AttributeError, KeyError):
@@ -32,6 +42,10 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
             return FakeQuerySet(*results)
 
         def add(self, *new_items):
+            """
+            Add the passed items to the stored object set, but do not commit them
+            to the database
+            """
             try:
                 cluster_related_objects = self.instance._cluster_related_objects
             except AttributeError:
@@ -49,6 +63,9 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                     items.append(item)
 
         def clear(self):
+            """
+            Clear the stored object set, without affecting the database
+            """
             try:
                 cluster_related_objects = self.instance._cluster_related_objects
             except AttributeError:
@@ -58,7 +75,11 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
             cluster_related_objects[relation_name] = []
 
         def commit(self):
-            # apply any changes present in _cluster_related_objects to the database
+            """
+            Apply any changes made to the stored object set to the database.
+            Any objects removed from the initial set will be deleted entirely
+            from the database.
+            """
             try:
                 final_items = self.instance._cluster_related_objects[relation_name]
             except (AttributeError, KeyError):
@@ -80,9 +101,13 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
 
     return DeferringRelatedManager
 
-# wrapper for a ForeignRelatedObjectsDescriptor so that it exposes a DeferringRelatedManager
-# rather than a plain RelatedManager
 class DeferringForeignRelatedObjectsDescriptor(object):
+    """
+    Wrapper for a ForeignRelatedObjectsDescriptor so that accesses to an incoming
+    foreign key attribute on a model are directed to a DeferringRelatedManager
+    rather than a plain RelatedManager. This ensures that writes to that attribute
+    are stored locally rather than committed to the database immediately.
+    """
     def __init__(self, original_descriptor):
         self.original_descriptor = original_descriptor
 
@@ -106,6 +131,14 @@ class DeferringForeignRelatedObjectsDescriptor(object):
 
 
 def build_clusterable_model(model, overrides):
+    """
+    Construct a tweaked version of the 'model' class, adding deferring behaviour
+    to the foreign key relations named in the dict 'overrides'. Each key-value pair
+    in 'overrides' specifies a relation name to override, mapped to the model class
+    that this should be a collection of. (This class isn't necessarily the same as
+    the model class of the original relation; it may itself be a tweaked version
+    constructed using this function.)
+    """
     if not overrides:
         # no overriding of the original model is necessary
         return model
@@ -113,6 +146,11 @@ def build_clusterable_model(model, overrides):
     Meta = type('Meta', (), {'proxy': True, 'app_label': 'django_cluster'})
 
     def init(self, *args, **kwargs):
+        """
+        Model instance constructor, extended to support passing in kwargs for
+        deferring relations. Each such kwarg is a list of dicts, each one being
+        the kwargs to pass to the related model's constructor.
+        """
         kwargs_for_super = kwargs.copy()
         relation_assignments = {}
 
@@ -134,6 +172,9 @@ def build_clusterable_model(model, overrides):
             setattr(self, field_name, related_instances)
 
     def save(self, **kwargs):
+        """
+        Save the model and commit all deferring relations.
+        """
         update_fields = kwargs.pop('update_fields', None)
         if update_fields is None:
             real_update_fields = None
