@@ -221,7 +221,7 @@ class ProgrammePageFacilities(models.Model):
     ]
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
-    head_of_programme = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
     download_document_url = models.CharField(max_length=255, blank=True)
@@ -234,7 +234,7 @@ ProgrammePage.content_panels = [
         panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
     ),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
-    PageChooserPanel('head_of_programme'),
+    PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     RichTextFieldPanel('head_of_programme_statement'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
         panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
