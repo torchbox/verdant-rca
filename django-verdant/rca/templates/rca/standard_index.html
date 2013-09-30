@@ -61,6 +61,10 @@
         {% endif %}
     {% endwith %}
 
+    {% comment %}
+    {% news_carousel %}
+    {% endcomment %}
+
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}
 
@@ -69,23 +73,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
 {% endblock %}
-
-
-{% comment %}
-
-<h1 class="h1 major"><span class="medium-grey">Standard</span> index page heading</h1>
-
-<section class="row">
-	{% include modules/carousel.html %}
-</section>
-
-{% include modules/index-intro.html %}
-
-{% include modules/five-plus-two-lines.html %}
-
-{% include modules/carousel-news.html %}
-
-{% include modules/contact.html %}
-
-{% include modules/twitter-feed.html %}
-{% endcomment %}
