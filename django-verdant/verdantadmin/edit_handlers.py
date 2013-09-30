@@ -28,6 +28,10 @@ FORM_FIELD_OVERRIDES = {
     models.DateField: {'widget': FriendlyDateInput},
 }
 
+WIDGET_JS = {
+    FriendlyDateInput: (lambda id: "initDateChoosers(document.getElementById(fixPrefix(%s)));" % id),
+}
+
 # Callback to allow us to override the default form fields provided for each model field.
 def formfield_for_dbfield(db_field, **kwargs):
     # snarfed from django/contrib/admin/options.py
@@ -302,6 +306,16 @@ class BaseFieldPanel(EditHandler):
             'self': self,
             'field_content': self.render_as_field(show_help_text=False),
         }))        
+
+    def render_js(self):
+        try:
+            # see if there's an entry for this widget type in WIDGET_JS
+            js_func = WIDGET_JS[self.bound_field.field.widget.__class__]
+        except KeyError:
+            return ''
+
+        return mark_safe(js_func(self.bound_field.id_for_label))
+
 
     field_template = "verdantadmin/edit_handlers/field_panel_field.html"
     def render_as_field(self, show_help_text=True):
