@@ -161,6 +161,12 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
         }
     }
 }
+
+input[type=submit].button-small, input[type=reset].button-small, input[type=button].button-small, .button.button-small, button.button-small{
+    font-size:0.85em;
+    padding:1em 1.8em;
+}
+
 a.button{
     line-height:3.5em;
 }
@@ -174,6 +180,9 @@ a.button{
     }
 }
 
+
+
+
 /* Other text */
 .help, .error-message{
     font-size:0.85em;
@@ -181,7 +190,7 @@ a.button{
     margin:0 0 0.5em 0;
 }
 .help{
-    /* TODO: This transitionmakes the browser go nuts. Find way to solve */
+    /* TODO: This transitionmakes the browser go nuts and the left menu jerk around. Find way to solve */
     .transition(opacity 0.2s ease); 
     color:@color-grey;
     opacity:0;

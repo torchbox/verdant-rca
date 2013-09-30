@@ -1,9 +1,13 @@
-<ul>
-    {% for doc in documents %}
-        <li>
-            <a class="document-choice" href="{% url 'verdantdocs_document_chosen' doc.id %}">{{ doc.title }}</a>
-            </a>
-        </li>
-        <p>Tags: {% for tag in doc.tags.all %}{{ tag.name }} {% endfor %}</p>
-    {% endfor %}
-</ul>
+{% if documents %}
+	<h2>Results</h2>
+	<ul class="listing">
+	    {% for doc in documents %}
+	        <li>
+	            <a class="document-choice" href="{% url 'verdantdocs_document_chosen' doc.id %}">{{ doc.title }}</a>
+	            </a>
+	            <p>Tags: {% for tag in doc.tags.all %}{{ tag.name }} {% endfor %}</p>
+	        </li>
+	        
+	    {% endfor %}
+	</ul>
+{% endif %}
