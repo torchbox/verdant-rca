@@ -277,6 +277,16 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
+    def feature_image(self):
+        try:
+            return self.carousel_items.filter(image__isnull=False)[0].image
+        except IndexError:
+            try:
+                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
+            except IndexError:
+                return None
+
+
 NewsItem.content_panels = [
     FieldPanel('title'),
     FieldPanel('author'),

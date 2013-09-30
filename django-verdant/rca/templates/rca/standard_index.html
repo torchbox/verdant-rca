@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load image_tags rich_text pageurl %}
+{% load image_tags rich_text pageurl rca_tags %}
 
 {% block content %}
 	<div class="full-bleed-image">{% image self.background_image width-4000 %}</div>
@@ -61,9 +61,7 @@
         {% endif %}
     {% endwith %}
 
-    {% comment %}
-    {% news_carousel %}
-    {% endcomment %}
+    {% news_carousel self.news_carousel_area %}
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}
