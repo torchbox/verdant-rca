@@ -241,7 +241,7 @@ ProgrammePage.content_panels = [
     ),
     FieldPanel('programme_video'),
     InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
-    InlinePanel(ProgrammePage, ProgrammePageFacilities, label="Facilities"),        
+    InlinePanel(ProgrammePage, ProgrammePageFacilities, fk_name='page', label="Facilities"),        
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
     FieldPanel('twitter_feed',)
@@ -436,7 +436,7 @@ EventItem.content_panels = [
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
-    FieldPanel('body'),
+    RichTextFieldPanel('body'),
     InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
     InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
@@ -635,7 +635,7 @@ class JobPageRelatedProgramme(models.Model):
 
 class JobPage(Page, SocialFields, CommonPromoteFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text="This is my hel text")
     other_department = models.CharField(max_length=255, blank=True)
     closing_date = models.DateField()
     interview_date = models.DateField(blank=True)
