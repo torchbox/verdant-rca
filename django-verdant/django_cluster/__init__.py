@@ -194,6 +194,7 @@ def build_clusterable_model(model, overrides):
             getattr(self, relation).commit()
 
     dct = {
+        'clusterable_relations': overrides,
         'Meta': Meta,
         '__module__': 'django_cluster.models',
         '__init__': init,
