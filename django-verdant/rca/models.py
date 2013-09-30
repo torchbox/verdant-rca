@@ -70,9 +70,23 @@ EVENT_GALLERY_CHOICES = (
 )
 
 WORK_TYPES_CHOICES = (
-    ('gallery1', 'Gallery 1'),
-    ('gallery2', 'Gallery 2'),
-    ('galleryn', 'Gallery N'),
+    ('journalarticle', 'Journal Article'),
+    ('thesis', 'Thesis'),
+    ('booksection', 'Book Section'),
+    ('monograph', 'Monograph'),
+    ('printepublication', 'Printed Publication'),
+    ('conferenceorworkshop', 'Conference or Workshop'),
+    ('artordesignobject', 'Art or design object'),
+    ('showexhibitionorevent', 'Show, Exhibition or Event'),
+    ('teachingresource', 'Teaching Resource'),
+    ('residency', 'Residency'),
+    ('other', 'Other (enter below)'),
+)
+
+WORK_THEME_CHOICES = (
+    ('theme1', 'Theme 1'),
+    ('theme2', 'Theme 2'),
+    ('themen', 'Theme N'),
 )
 
 SCHOOL_CHOICES = (
@@ -87,6 +101,10 @@ PROGRAMME_CHOICES = (
     ('programmen', 'Programme N'),
 )
 
+RESEARCH_TYPES_CHOICES = (
+    ('student', 'Student'),
+    ('staff', 'Staff'),
+)
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
@@ -622,8 +640,61 @@ class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
    
 # == Research Item page ==
 
+class ResearchItemCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.ResearchItem', related_name='carousel_items')
+
+class ResearchItemCreator(models.Model):
+    page = models.ForeignKey('rca.ResearchItem', related_name='creator')
+    person = models.ForeignKey('core.Page', null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+
+class ResearchItemLink(models.Model):
+    page = models.ForeignKey('rca.ResearchItem', related_name='links')
+    link = models.URLField()
+    link_text = models.CharField(max_length=255)
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
 class ResearchItem(Page, SocialFields, CommonPromoteFields):
-    pass
+    research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
+    ref = models.CharField(max_length=255, blank=True)
+    year = models.CharField(max_length=4)
+    description = RichTextField()
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
+    work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
+    theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+
+ResearchItem.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('research_type'),
+    InlinePanel(ResearchItem, ResearchItemCarouselItem, label="Carousel content"),
+    InlinePanel(ResearchItem, ResearchItemCreator, fk_name='page', label="Creator"),
+    FieldPanel('year'),
+    RichTextFieldPanel('description'),
+    InlinePanel(ResearchItem, ResearchItemLink, label="Links"),
+    FieldPanel('twitter_feed'),
+]
+
+ResearchItem.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
 
 
 # == Research Innovation page ==
