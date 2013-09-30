@@ -63,6 +63,11 @@ EVENT_LOCATION_CHOICES = (
     ('other', 'Other (enter below)')
 )
 
+CAMPUS_CHOICES = (
+    ('kensington', 'Kensington'),
+    ('battersea', 'Battersea'),
+)
+
 EVENT_GALLERY_CHOICES = (
     ('gallery1', 'Gallery 1'),
     ('gallery2', 'Gallery 2'),
@@ -284,7 +289,9 @@ class NewsItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_schools')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
 
-    panels = [FieldPanel('school')]
+    panels = [
+        FieldPanel('school')
+    ]
 
 class NewsItemRelatedProgramme(models.Model):
     page = models.ForeignKey('rca.NewsItem', related_name='related_programmes')
@@ -323,7 +330,7 @@ NewsItem.content_panels = [
 ]
 
 NewsItem.promote_panels = [
-     MultiFieldPanel([
+    MultiFieldPanel([
         FieldPanel('seo_title'),
         FieldPanel('slug'),
     ], 'Common page configuration'),
@@ -614,8 +621,69 @@ class HomePage(Page, SocialFields, CommonPromoteFields):
 
 # == Job page ==
 
+class JobPageRelatedSchool(models.Model):
+    page = models.ForeignKey('rca.JobPage', related_name='related_schools')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+
+    panels = [FieldPanel('school')]
+
+class JobPageRelatedProgramme(models.Model):
+    page = models.ForeignKey('rca.JobPage', related_name='related_programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+
+    panels = [FieldPanel('programme')]
+
 class JobPage(Page, SocialFields, CommonPromoteFields):
-    pass
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    other_department = models.CharField(max_length=255, blank=True)
+    closing_date = models.DateField()
+    interview_date = models.DateField(blank=True)
+    responsible_to = models.CharField(max_length=255, blank=True)
+    required_hours = models.CharField(max_length=255, blank=True)
+    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    salary = models.CharField(max_length=255, blank=True)
+    ref_number = models.CharField(max_length=255, blank=True)
+    grade = models.CharField(max_length=255, blank=True)
+    description = RichTextField()
+    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing jobs', blank=True)
+    show_on_homepage = models.BooleanField()
+
+JobPage.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('programme'),
+    FieldPanel('school'),
+    FieldPanel('other_department'),
+    FieldPanel('closing_date'),
+    FieldPanel('interview_date'),
+    FieldPanel('responsible_to'),
+    FieldPanel('required_hours'),
+    FieldPanel('campus'),
+    FieldPanel('salary'),
+    FieldPanel('ref_number'),
+    FieldPanel('grade'),
+    RichTextFieldPanel('description'),
+    DocumentChooserPanel('download_info'),
+]
+
+JobPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
 
    
 # == Jobs index page ==
