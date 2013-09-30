@@ -189,6 +189,13 @@ class ProgrammePageFacilities(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='facilities')
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
+    panels = [
+        ImageChooserPanel('image'),
+        RichTextFieldPanel('text'),
+        PageChooserPanel('link'),
+    ]
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     head_of_programme = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
