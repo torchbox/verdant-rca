@@ -733,9 +733,85 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
    
 # == Student profile page ==
 
-class StudentPage(Page, SocialFields, CommonPromoteFields):
-    pass
+class StudentPageDegree(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='degrees')
+    degree = models.CharField(max_length=255)
 
+class StudentPageExhibition(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='exhibitions')
+    exhibition = models.CharField(max_length=255)
+
+class StudentPageExperience(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='experiences')
+    experience = models.CharField(max_length=255)
+
+class StudentPageAwards(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='awards')
+    award = models.CharField(max_length=255)
+
+class StudentPageContacts(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='contacts')
+    email = models.EmailField(max_length=255, blank=True)
+    phone = models.CharField(max_length=255, blank=True)
+    website = models.URLField(blank=True)
+
+class StudentPageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
+
+class StudentPageWorkCollaborator(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
+    name = models.CharField(max_length=255)
+
+class StudentPage(Page, SocialFields, CommonPromoteFields):
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
+    statement = RichTextField()
+    project_title = models.CharField(max_length=255, blank=True)
+    work_description = models.CharField(max_length=255, blank=True)
+    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
+    work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES)
+    work_awards = models.CharField(max_length=255)
+    work_sponsors = models.CharField(max_length=255)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+
+StudentPage.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    ImageChooserPanel('profile_image'),
+    InlinePanel(StudentPage, StudentPageDegree, label="Degree"),
+    InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
+    InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
+    #TODO: Degrees is missing due to confusion between "Degree" and "Degrees"
+    InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
+    RichTextFieldPanel('statement'),
+    InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
+    FieldPanel('project_title'),
+    FieldPanel('work_description'),
+    FieldPanel('work_type'),
+    FieldPanel('work_location'),
+    InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
+    FieldPanel('work_awards'),
+    FieldPanel('work_sponsors'),
+    FieldPanel('twitter_feed'),
+]
+
+StudentPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
 
 # == RCA Now page ==
 
