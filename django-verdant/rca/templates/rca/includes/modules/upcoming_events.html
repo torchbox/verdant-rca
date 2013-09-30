@@ -6,17 +6,7 @@
             {% for event in events %}
                 <li>
                     <a href="{% pageurl event %}">
-                        {% comment %}
-                        {% with event.dates_times.all as dates %}
-                            {% if dates %}
-                                {% for date in dates %}
-                                    {% if forloop.counter == 1 %}
-                                        <h3>{{ date.date_from|date:"j F" }}</h3>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
-                        {% endcomment %}
+                        <h3>{{ event.start_date|date:"j F" }}</h3>
                         <p>{{ event.title }}</p>
                     </a>
                     <span>{{ event.audience }}</span>
