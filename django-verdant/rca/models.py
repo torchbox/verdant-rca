@@ -364,6 +364,7 @@ class EventItemDatesTimes(models.Model):
     ]
 
 class EventItem(Page, SocialFields, CommonPromoteFields):
+    body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
@@ -393,6 +394,7 @@ EventItem.content_panels = [
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
+    FieldPanel('body'),
     InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
     InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
