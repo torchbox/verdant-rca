@@ -737,17 +737,25 @@ class StudentPageDegree(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='degrees')
     degree = models.CharField(max_length=255)
 
+    panels = [FieldPanel('degree')]
+
 class StudentPageExhibition(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='exhibitions')
     exhibition = models.CharField(max_length=255)
+
+    panels = [FieldPanel('exhibition')]
 
 class StudentPageExperience(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='experiences')
     experience = models.CharField(max_length=255)
 
+    panels = [FieldPanel('experience')]
+
 class StudentPageAwards(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='awards')
     award = models.CharField(max_length=255)
+
+    panels = [FieldPanel('award')]
 
 class StudentPageContacts(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='contacts')
@@ -755,12 +763,20 @@ class StudentPageContacts(models.Model):
     phone = models.CharField(max_length=255, blank=True)
     website = models.URLField(blank=True)
 
+    panels = [
+        FieldPanel('email'),
+        FieldPanel('phone'),
+        FieldPanel('website'),
+    ]
+
 class StudentPageCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
 
 class StudentPageWorkCollaborator(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
     name = models.CharField(max_length=255)
+
+    panels = [FieldPanel('name')]
 
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
