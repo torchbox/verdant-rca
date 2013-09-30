@@ -16,19 +16,6 @@
             border-color: darken(@color-input-focus, 40%);
         }        
 
-        > h2{
-            .border-radius(2px);
-            color: @color-text-grey;
-            text-transform:uppercase;
-            padding:2px 5px;
-            position:absolute;
-            top:0;
-            left:0;
-            margin-top:-1px;
-            font-size:0.7em;
-            z-index:1;
-        }
-
         fieldset{
             .column(10);
             padding-left:0;
@@ -69,7 +56,9 @@
 
     /* Special full-width, one-off fields i.e a single text or textarea input */
     .full{
-         
+        h2{
+            display:none; /* The field label is used instead */
+        }
         .object-help{
             margin-top:1em;
         }
@@ -94,9 +83,6 @@
             padding:0;
         }
 
-        label{
-            .visuallyhidden();
-        }
         input, textarea, .richtext{
             font-family:Bitter, Georgia, serif;
             .border-radius(0px);
@@ -105,6 +91,8 @@
             border:0;
             padding-top:3em;
             padding-bottom:2em;
+            font-size:1.2em;
+            line-height:1.6em;
         }
 
         .title input,
@@ -123,6 +111,22 @@
         .error textarea{
             background-color:@color-input-error-bg;
         }
+    }
+
+    .object > h2, .full label{
+        .border-radius(2px);
+        color: @color-text-grey;
+        text-transform:uppercase;
+        padding:2px 5px;
+        position:absolute;
+        top:0;
+        left:0;
+        margin-top:-1px;
+        font-size:0.7em;
+        z-index:1;
+        margin:0.2em 0;
+        line-height:1.5em;
+        font-weight:normal;
     }
 
     /* wrapper around add button for mutliple objects */
