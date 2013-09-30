@@ -10,6 +10,7 @@ import copy
 
 from core.models import Page
 from core.util import camelcase_to_underscore
+from core.fields import RichTextArea
 
 
 class FriendlyDateInput(forms.DateInput):
@@ -30,6 +31,7 @@ FORM_FIELD_OVERRIDES = {
 
 WIDGET_JS = {
     FriendlyDateInput: (lambda id: "initDateChooser(fixPrefix('%s'));" % id),
+    RichTextArea: (lambda id: "makeRichTextEditable(fixPrefix('%s'));" % id),
 }
 
 # Callback to allow us to override the default form fields provided for each model field.

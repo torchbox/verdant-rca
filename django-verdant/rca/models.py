@@ -216,7 +216,7 @@ class ProgrammePageFacilities(models.Model):
 
     panels = [
         ImageChooserPanel('image'),
-        RichTextFieldPanel('text'),
+        FieldPanel('text'),
         PageChooserPanel('link'),
     ]
 
@@ -235,7 +235,7 @@ ProgrammePage.content_panels = [
     ),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
-    RichTextFieldPanel('head_of_programme_statement'),
+    FieldPanel('head_of_programme_statement'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
         panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
     ),
@@ -356,8 +356,8 @@ NewsItem.content_panels = [
     FieldPanel('title'),
     FieldPanel('author'),
     FieldPanel('date'),
-    RichTextFieldPanel('intro'),
-    RichTextFieldPanel('body'),
+    FieldPanel('intro'),
+    FieldPanel('body'),
     InlinePanel(NewsItem, NewsItemLink, label="Links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
@@ -464,12 +464,12 @@ EventItem.content_panels = [
         FieldPanel('specific_directions'),
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
-        RichTextFieldPanel('cost'),
+        FieldPanel('cost'),
         FieldPanel('signup_link'),
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
-    RichTextFieldPanel('body'),
+    FieldPanel('body'),
     InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
     InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
@@ -524,8 +524,8 @@ class StandardPage(Page, SocialFields, CommonPromoteFields):
 
 StandardPage.content_panels = [
     FieldPanel('title'),
-    RichTextFieldPanel('intro'),
-    RichTextFieldPanel('body'),
+    FieldPanel('intro'),
+    FieldPanel('body'),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
@@ -608,7 +608,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
 StandardIndex.content_panels = [
     FieldPanel('title'),
     MultiFieldPanel([
-        RichTextFieldPanel('intro'),
+        FieldPanel('intro'),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
@@ -696,7 +696,7 @@ JobPage.content_panels = [
     FieldPanel('salary'),
     FieldPanel('ref_number'),
     FieldPanel('grade'),
-    RichTextFieldPanel('description'),
+    FieldPanel('description'),
     DocumentChooserPanel('download_info'),
 ]
 
@@ -801,7 +801,7 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
     #TODO: Degrees is missing due to confusion between "Degree" and "Degrees"
     InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
-    RichTextFieldPanel('statement'),
+    FieldPanel('statement'),
     InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
     FieldPanel('project_title'),
     FieldPanel('work_description'),
@@ -884,7 +884,7 @@ ResearchItem.content_panels = [
     FieldPanel('work_type'),
     FieldPanel('work_type_other'),
     FieldPanel('theme'),
-    RichTextFieldPanel('description'),
+    FieldPanel('description'),
     InlinePanel(ResearchItem, ResearchItemLink, label="Links"),
     FieldPanel('twitter_feed'),
 ]
