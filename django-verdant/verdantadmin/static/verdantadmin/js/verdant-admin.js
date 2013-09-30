@@ -64,6 +64,12 @@ function initDateChoosers(context) {
         dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
     });
 }
+function initDateChooser(id) {
+    $('#' + id).datepicker({
+        dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
+    });
+}
+
 $(function() {
     initDateChoosers();
 });
