@@ -4,7 +4,7 @@ from django import forms
 from django.db import models
 from django.forms.models import modelform_factory, inlineformset_factory
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 
 import copy
 
@@ -379,7 +379,21 @@ class BasePageChooserPanel(BaseChooserPanel):
     def target_content_type(cls):
         if cls._target_content_type is None:
             if cls.page_type:
-                cls._target_content_type = ContentType.objects.get_for_model(cls.page_type)
+                if isinstance(cls.page_type, basestring):
+                    # translate the passed model name into an actual model class
+                    from django.db.models import get_model
+                    try:
+                        app_label, model_name = cls.page_type.split('.')
+                    except ValueError:
+                        raise ImproperlyConfigured("The page_type passed to PageChooserPanel must be of the form 'app_label.model_name'")
+
+                    page_type = get_model(app_label, model_name)
+                    if page_type is None:
+                        raise ImproperlyConfigured("PageChooserPanel refers to model '%s' that has not been installed" % cls.page_type)
+                else:
+                    page_type = cls.page_type
+
+                cls._target_content_type = ContentType.objects.get_for_model(page_type)
             else:
                 # TODO: infer the content type by introspection on the foreign key
                 cls._target_content_type = ContentType.objects.get_by_natural_key('core', 'page')
