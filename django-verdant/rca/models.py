@@ -874,10 +874,16 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
 
 ResearchItem.content_panels = [
     FieldPanel('title'),
-    FieldPanel('research_type'),
     InlinePanel(ResearchItem, ResearchItemCarouselItem, label="Carousel content"),
+    FieldPanel('research_type'),
     InlinePanel(ResearchItem, ResearchItemCreator, fk_name='page', label="Creator"),
+    FieldPanel('ref'),
     FieldPanel('year'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('work_type'),
+    FieldPanel('work_type_other'),
+    FieldPanel('theme'),
     RichTextFieldPanel('description'),
     InlinePanel(ResearchItem, ResearchItemLink, label="Links"),
     FieldPanel('twitter_feed'),
