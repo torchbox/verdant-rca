@@ -318,6 +318,39 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
             except IndexError:
                 return None
 
+    def get_related_news(self, count):
+        # Assign each news item a score indicating similarity to this news item:
+        # 100 points for a matching area, 10 points for a matching programme,
+        # 1 point for a matching school.
+
+        # if self.area is blank, we don't want to give priority to other news items
+        # that also have a blank area field - so instead, set the target area to
+        # something that will never match, so that it never contributes to the score
+        my_area = self.area or "this_will_never_match"
+
+        my_programmes = list(self.related_programmes.values_list('programme', flat=True))
+        my_programmes.append("this_will_never_match_either")  # insert a dummy programme name to avoid an empty IN clause
+
+        my_schools = list(self.related_schools.values_list('school', flat=True))
+        my_schools.append("this_will_never_match_either")  # insert a dummy school name to avoid an empty IN clause
+
+        return NewsItem.objects.extra(
+            select={'score': """
+                CASE WHEN rca_newsitem.area = %s THEN 100 ELSE 0 END
+                + (
+                    SELECT COUNT(*) FROM rca_newsitemrelatedprogramme
+                    WHERE rca_newsitemrelatedprogramme.page_id=core_page.id
+                        AND rca_newsitemrelatedprogramme.programme IN %s
+                ) * 10
+                + (
+                    SELECT COUNT(*) FROM rca_newsitemrelatedschool
+                    WHERE rca_newsitemrelatedschool.page_id=core_page.id
+                        AND rca_newsitemrelatedschool.school IN %s
+                ) * 1
+            """},
+            select_params=(my_area, tuple(my_programmes), tuple(my_schools))
+        ).exclude(id=self.id).order_by('-score')[:count]
+
 
 NewsItem.content_panels = [
     FieldPanel('title'),
