@@ -276,7 +276,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -668,7 +668,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
@@ -844,7 +844,7 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing staff members Twitter handle")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing this staff member's Twitter handle (or any hashtag or search term)")
     intro = RichTextField()
     biography = RichTextField()
     practice = RichTextField(blank=True)
@@ -856,11 +856,13 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('school'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
     InlinePanel(StaffPage, StaffPageRole, label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
+    FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
     MultiFieldPanel([
         FieldPanel('practice'),
@@ -948,7 +950,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES)
     work_awards = models.CharField(max_length=255)
     work_sponsors = models.CharField(max_length=255)
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -999,7 +1001,7 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
     show_on_homepage = models.BooleanField()
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     # TODO: tags
 
 RcaNowPage.content_panels = [
@@ -1065,7 +1067,7 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
