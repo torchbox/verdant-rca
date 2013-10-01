@@ -325,7 +325,7 @@ class BaseFieldPanel(EditHandler):
     def render_as_object(self):
         return mark_safe(render_to_string(self.object_template, {
             'self': self,
-            'field_content': self.render_as_field(show_help_text=False, is_single_object=True),
+            'field_content': self.render_as_field(show_help_text=False),
         }))        
 
     def render_js(self):
@@ -339,12 +339,11 @@ class BaseFieldPanel(EditHandler):
 
 
     field_template = "verdantadmin/edit_handlers/field_panel_field.html"
-    def render_as_field(self, show_help_text=True, is_single_object=False):
+    def render_as_field(self, show_help_text=True):
         return mark_safe(render_to_string(self.field_template, {
             'field': self.bound_field,
             'field_type': self.field_type(),
             'show_help_text': show_help_text,
-            'is_single_object': is_single_object,
         }))
 
     def rendered_fields(self):
