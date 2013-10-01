@@ -304,9 +304,9 @@ class BaseFieldPanel(EditHandler):
         self.help_text = self.bound_field.help_text
 
     def object_classnames(self):
-        if self.classname:
+        try:
             return "single-field " + self.classname
-        else:
+        except (AttributeError, TypeError):
             return "single-field"
 
     def field_type(self):

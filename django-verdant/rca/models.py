@@ -55,6 +55,7 @@ AREA_CHOICES = (
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
+    ('openday', 'Open Day')
 )
 
 EVENT_LOCATION_CHOICES = (
@@ -221,15 +222,10 @@ class ProgrammePageStudentStory(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
-class ProgrammePageFacilities(models.Model):
-    page = models.ForeignKey('rca.ProgrammePage', related_name='facilities')
-    text = RichTextField()
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-
     panels = [
-        ImageChooserPanel('image'),
+        FieldPanel('name'),
         FieldPanel('text'),
+        ImageChooserPanel('image'),
         PageChooserPanel('link'),
     ]
 
@@ -240,12 +236,15 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     open_day = models.DateField(blank=True)
     open_day_link = models.URLField(max_length=255, blank=True)
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
-    head_of_programme_statement = RichTextField()
+    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    facilities_text = RichTextField()
+    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
@@ -253,7 +252,7 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
-    FieldPanel('head_of_programme_statement'),
+    PageChooserPanel('head_of_programme_link'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
     MultiFieldPanel([
         FieldPanel('open_day'),
@@ -264,7 +263,11 @@ ProgrammePage.content_panels = [
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Video'),
     InlinePanel(ProgrammePage, ProgrammePageStudentStory, fk_name='page', label="Student stories"),
-    InlinePanel(ProgrammePage, ProgrammePageFacilities, fk_name='page', label="Facilities"),        
+    MultiFieldPanel([
+        ImageChooserPanel('facilities_image'),
+        FieldPanel('facilities_text'),
+        PageChooserPanel('facilities_link'),
+    ], 'Facilities'),        
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
     FieldPanel('twitter_feed'),
