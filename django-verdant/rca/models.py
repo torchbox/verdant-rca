@@ -207,6 +207,7 @@ class ProgrammePageStudentStory(models.Model):
     name = models.CharField(max_length=255)
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
 class ProgrammePageFacilities(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='facilities')
@@ -221,9 +222,14 @@ class ProgrammePageFacilities(models.Model):
     ]
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    open_day = models.DateField(blank=True)
+    open_day_link = models.URLField(max_length=255, blank=True)
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
     head_of_programme_statement = RichTextField()
     programme_video = models.CharField(max_length=255, blank=True)
+    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
@@ -240,7 +246,7 @@ ProgrammePage.content_panels = [
         panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
     ),
     FieldPanel('programme_video'),
-    InlinePanel(ProgrammePage, ProgrammePageStudentStory, label="Student stories"),
+    InlinePanel(ProgrammePage, ProgrammePageStudentStory, fk_name='page', label="Student stories"),
     InlinePanel(ProgrammePage, ProgrammePageFacilities, fk_name='page', label="Facilities"),        
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
