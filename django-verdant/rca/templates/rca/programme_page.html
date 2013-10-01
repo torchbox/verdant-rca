@@ -2,20 +2,24 @@
 {% load pageurl image_tags embed_filters rich_text %}
 
 {% block content %}
+    {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
 
     {% if self.head_of_programme %}
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
-            <a href="#">
-                <div class="image"><img src="http://instasrc.com/176x176/people" /></div>
-                <p class="content bc1"><strong>Neville Brody</strong> The Royal Collage of Arts sits at the threshold of a new and vital moment in communications history, an extraordinary time and one that will deeply affect all of us...<span class="bc4 caps">Continue</span></p>
-            </a>
+            
+
+            <div class="image">{% image self.head_of_programme.image width-400 %}</div>
+            <div class="content bc1"><strong>Neville Brody</strong> {{ self.head_of_programme_statement|richtext }}...<a href="#"><span class="bc4 caps">Continue</a></span></div>
+            <!-- To do: add in link once it is in the model -->
+            <!-- To do: may need to have an alternative class for the text so it sits flush to the left if there is no staff image (remains to be seen if that is a required field) -->
         </section>
     {% endif %}
 
     <!-- tabs -->
+    
     <section class="three-tab row module">
         <h2 class="module-title">Student info</h2>
 
@@ -30,10 +34,11 @@
             <div class="tab-pane active flush" id="tab1">
                 <div class="videoembed vimeo image full">
                     <div class="playpause play">Play</div>
-                    {% comment %}To do: replace image with poster image for video{% endcomment %}
-                    <div class="poster"><img src="http://b.vimeocdn.com/ts/167/267/167267482_640.jpg" /></div>
-                        {{ self.programme_video|embedly:"944" }}
-                    </div>
+                    {% if self.programme_video_poster_image %}
+                        <div class="poster">{% image self.programme_video_poster_image width-1000 %}</div>
+                            {{ self.programme_video|embedly:"944" }}
+                        </div>
+                    {% endif %}
                 </div>
             <h2 class="header"><a href="#tab2" class="a0">Student stories</a></h2>
             
@@ -44,7 +49,7 @@
                             {% for story in student_stories %}
                                 {% cycle '<li class="newrow">' '<li>' %}
                                     {% if story.image %}
-                                        <div class="image">{% image story.image width-400 %}</div>
+                                        <div class="image">{% image story.image width-200 %}</div>
                                     {% endif %}
                                     <div class="content">
                                         <h3 class="h6">{{ story.name }}</h3>
@@ -107,23 +112,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showAds="true" showRelatedLinks="true" %}
 {% endblock %}
-
-{% comment %}
-{% block content %}
-    <div><h2>head of programme</h2> {{ self.head_of_programme }}</div>
-    <div><h2>head of programme's statement</h2> {{ self.head_of_programme_statement|richtext }}</div>
-    <h2>A carousel</h2>
-    <ul>
-        {% for item in self.carousel_items.all %}
-            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
-        {% endfor %}
-    </ul>
-
-    <h2>Related links</h2>
-    <ul>
-        {% for item in self.related_links.all %}
-            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
-        {% endfor %}
-    </ul>
-{% endblock %}
-{% endcomment %}

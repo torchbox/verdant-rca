@@ -246,6 +246,16 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
+    def tabbed_feature_count(self):
+        count = 0;
+        if self.programme_video:
+            count = count + 1;
+        if self.facilities_text or self.facilities_image:
+            count = count + 1;
+        if self.student_stories:
+            count = count + 1;
+        return count;
+
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
     FieldPanel('title', classname="full title"),
