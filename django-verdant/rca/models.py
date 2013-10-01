@@ -248,9 +248,9 @@ class SchoolPage(Page, SocialFields, CommonPromoteFields):
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(SchoolPage, SchoolPageCarouselItem, label="Carousel content"),
+    InlinePanel(SchoolPage, SchoolPageCarouselItem, label="Carousel content", help_text="test"),
     PageChooserPanel('head_of_school', 'rca.StaffPage'),
-    FieldPanel('head_of_school_statement'),
+    FieldPanel('head_of_school_statement', classname="full"),
     PageChooserPanel('head_of_school_link'),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
@@ -261,7 +261,7 @@ SchoolPage.content_panels = [
     ], 'Contact'),
     InlinePanel(SchoolPage, SchoolPageContactTelEmail, label="Contact phone numbers/emails"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
-    FieldPanel('head_of_research_statement'),
+    FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
     InlinePanel(SchoolPage, SchoolPageRelatedLink, fk_name='page', label="Related links"),
 ]
