@@ -1,19 +1,105 @@
 {% extends "rca/base.html" %}
-{% load pageurl %}
+{% load pageurl image_tags embed_filters rich_text %}
 
 {% block content %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
 
     {% if self.head_of_programme %}
-    <section class="head-of-programme row module">
-        <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
-        <a href="#">
-            <div class="image"><img src="http://instasrc.com/176x176/people" /></div>
-            <p class="content bc1"><strong>Neville Brody</strong> The Royal Collage of Arts sits at the threshold of a new and vital moment in communications history, an extraordinary time and one that will deeply affecta all of us...<span class="bc4 caps">Continue</span></p>
-        </a>
-    </section>
+        <section class="head-of-programme row module">
+            <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
+            <a href="#">
+                <div class="image"><img src="http://instasrc.com/176x176/people" /></div>
+                <p class="content bc1"><strong>Neville Brody</strong> The Royal Collage of Arts sits at the threshold of a new and vital moment in communications history, an extraordinary time and one that will deeply affect all of us...<span class="bc4 caps">Continue</span></p>
+            </a>
+        </section>
     {% endif %}
+
+    <!-- tabs -->
+    <section class="three-tab row module">
+        <h2 class="module-title">Student info</h2>
+
+        <ul class="tab-nav tabs-3">
+            <li class="active"><a href="#tab1" class="t0">Programme video</a></li>
+            <li><a href="#tab2" class="t0">Student stories</a></li>
+            <li><a href="#tab3" class="t0">Facilities</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <h2 class="header"><a href="#tab1" class="a0 active">Programme video</a></h2>
+            <div class="tab-pane active flush" id="tab1">
+                <div class="videoembed vimeo image full">
+                    <div class="playpause play">Play</div>
+                    {% comment %}To do: replace image with poster image for video{% endcomment %}
+                    <div class="poster"><img src="http://b.vimeocdn.com/ts/167/267/167267482_640.jpg" /></div>
+                        {{ self.programme_video|embedly:"944" }}
+                    </div>
+                </div>
+            <h2 class="header"><a href="#tab2" class="a0">Student stories</a></h2>
+            
+            {% with self.student_stories.all as student_stories %}
+                {% if student_stories %}
+                    <div class="tab-pane" id="tab2">      
+                        <ul class="two-cols">
+                            {% for story in student_stories %}
+                                {% cycle '<li class="newrow">' '<li>' %}
+                                    {% if story.image %}
+                                        <div class="image">{% image story.image width-400 %}</div>
+                                    {% endif %}
+                                    <div class="content">
+                                        <h3 class="h6">{{ story.name }}</h3>
+                                        <div class="bc3">{{ story.text|richtext }}....<a href="#" class="bc5 caps">continue</a></div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+
+            <h2 class="header"><a href="#tab3" class="a0">More content</a></h2>
+            <div class="tab-pane" id="tab3">
+                Contents of the third tab
+            </div>
+        </div>
+        <ul class="button-bar two-button">
+            <li><a href="#" class="button icon icon-download">Button with icon</a></li>
+            <li><a href="#" class="button icon icon-download">Button with icon</a></li>
+        </ul>
+    </section>
+
+    <!-- our sites -->
+    {% with self.our_sites.all as our_sites %}
+        {% if our_sites %}
+            <section class="two-plus x-plus module">
+                <h2 class="module-title">Our sites</h2>
+                <div class="item-container">
+                    <ul class="row">
+                        {% for site in our_sites %}
+                            {% if forloop.counter == 3 %}
+                                <li class="load-more-target">
+                            {% elif forloop.counter0|divisibleby:"3" %}
+                                <li class="newrow">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                            <a href="{{ site.url }}">
+                                {% if site.image %}
+                                    <div class="image">{% image site.image width-400 %}</div>
+                                {% endif %}
+                                <div class="content">
+                                    <h3 class="h8">{{ site.site_name }}</h3>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li class="load-more"><a href="#">+</a></li>
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
     
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
