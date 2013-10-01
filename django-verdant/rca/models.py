@@ -258,16 +258,15 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    open_day = models.DateField(blank=True)
-    open_day_link = models.URLField(max_length=255, blank=True)
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    head_of_programme_statement = RichTextField(null=True, blank=True)
     head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
-    facilities_text = RichTextField()
+    facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
@@ -287,12 +286,9 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
+    FieldPanel('head_of_programme_statement'),
     PageChooserPanel('head_of_programme_link'),
     InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
-    MultiFieldPanel([
-        FieldPanel('open_day'),
-        FieldPanel('open_day_link'),
-    ], 'Open day'),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
