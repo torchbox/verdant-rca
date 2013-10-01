@@ -866,6 +866,8 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
     show_on_homepage = models.BooleanField()
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    # TODO: tags
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
