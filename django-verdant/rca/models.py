@@ -319,6 +319,16 @@ class ProgrammePageOurSites(models.Model):
         FieldPanel('site_name')
     ]
 
+class ProgrammeDocuments(models.Model):
+    page = models.ForeignKey('rca.ProgrammePage', related_name='documents')
+    url = models.CharField(max_length=255, blank=True)
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('url'), 
+        FieldPanel('text')
+    ]
+
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
     name = models.CharField(max_length=255)
@@ -342,8 +352,6 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    download_document_url = models.CharField(max_length=255, blank=True)
-    download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -378,8 +386,7 @@ ProgrammePage.content_panels = [
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
     ], 'Facilities'),        
-    FieldPanel('download_document_url'),
-    FieldPanel('download_document_text'),
+    InlinePanel(ProgrammePage, ProgrammeDocuments, fk_name='page', label="Documents"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1027,6 +1034,7 @@ StudentPage.content_panels = [
     FieldPanel('programme'),
     FieldPanel('current_degree'),
     ImageChooserPanel('profile_image'),
+    InlinePanel(StudentPage, StudentPageContacts, label="Student contact"),
     InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
