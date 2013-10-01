@@ -249,7 +249,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
 
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
@@ -379,11 +379,11 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
 
 
 NewsItem.content_panels = [
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     FieldPanel('author'),
     FieldPanel('date'),
-    FieldPanel('intro'),
-    FieldPanel('body'),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(NewsItem, NewsItemLink, label="Links"),
     InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
 ]
@@ -483,7 +483,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
 
 EventItem.content_panels = [
     MultiFieldPanel([
-        FieldPanel('title'),
+        FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
         FieldPanel('location'),
         FieldPanel('location_other'),
@@ -495,7 +495,7 @@ EventItem.content_panels = [
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
     InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
     InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
@@ -549,9 +549,9 @@ class StandardPage(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
 
 StandardPage.content_panels = [
-    FieldPanel('title'),
-    FieldPanel('intro'),
-    FieldPanel('body'),
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
@@ -589,7 +589,7 @@ class StandardIndexTeaser(models.Model):
     panels = [
         ImageChooserPanel('image'),
         FieldPanel('url'),
-        FieldPanel('title'),
+        FieldPanel('title', classname="full title"),
         FieldPanel('text'),
     ]
 
@@ -632,7 +632,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
 StandardIndex.content_panels = [
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     MultiFieldPanel([
         FieldPanel('intro'),
         PageChooserPanel('intro_link'),
@@ -710,7 +710,7 @@ class JobPage(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
 
 JobPage.content_panels = [
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     FieldPanel('programme'),
     FieldPanel('school'),
     FieldPanel('other_department'),
@@ -818,7 +818,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 StudentPage.content_panels = [
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     FieldPanel('school'),
     FieldPanel('programme'),
     ImageChooserPanel('profile_image'),
@@ -871,10 +871,11 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
-    FieldPanel('title'),
-    FieldPanel('body'),
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body', classname="full"),
     FieldPanel('school'),
     FieldPanel('programme'),
+    FieldPanel('area'),
     FieldPanel('twitter_feed'),
 ]
 
@@ -934,7 +935,7 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 ResearchItem.content_panels = [
-    FieldPanel('title'),
+    FieldPanel('title', classname="full title"),
     InlinePanel(ResearchItem, ResearchItemCarouselItem, label="Carousel content"),
     FieldPanel('research_type'),
     InlinePanel(ResearchItem, ResearchItemCreator, fk_name='page', label="Creator"),

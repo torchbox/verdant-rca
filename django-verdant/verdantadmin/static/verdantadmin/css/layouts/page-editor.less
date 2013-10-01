@@ -36,7 +36,6 @@ body.page-editor{
             opacity:1;
         }
     }
-
     
 
     .multiple{
@@ -98,11 +97,7 @@ body.page-editor{
             line-height:1.6em;
         }
 
-        .title input,
-        .title textarea{
-            font-size:2em;
-            padding-top:2em;
-        }
+        
         .error-message{
             .push(@grid-content-indent);
             .pull(@grid-content-indent);
@@ -116,7 +111,13 @@ body.page-editor{
         }
     }
 
-    .object > h2, .full label{
+    .single-field{
+        h2{
+            display:none; /* The field label is used instead */
+        }
+    }
+
+    .object > h2, .single-field label{
         .border-radius(2px);
         color: @color-text-grey;
         text-transform:uppercase;
@@ -130,6 +131,12 @@ body.page-editor{
         margin:0.2em 0;
         line-height:1.5em;
         font-weight:normal;
+    }
+
+    .title input,
+    .title textarea{
+        font-size:2em;
+        padding-top:2em;
     }
 
     /* wrapper around add button for mutliple objects */
