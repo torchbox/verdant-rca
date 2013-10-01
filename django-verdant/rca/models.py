@@ -36,6 +36,11 @@ def image_delete(sender, instance, **kwargs):
 class RcaRendition(AbstractRendition):
     image = models.ForeignKey('RcaImage', related_name='renditions')
 
+    class Meta:
+        unique_together = (
+            ('image', 'filter'),
+        )
+
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaRendition)
 def rendition_delete(sender, instance, **kwargs):
