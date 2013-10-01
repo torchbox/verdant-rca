@@ -35,8 +35,7 @@ body.page-editor{
         &:hover .object-help{
             opacity:1;
         }
-    }
-    
+    }    
 
     .multiple{
         .full-width();
@@ -56,15 +55,21 @@ body.page-editor{
         padding-bottom:0.5em;
     }
 
+    .single-field{
+        h2, .object-help{
+            display:none; /* The field label is used instead */
+        }
+    }
+
+
     /* Special full-width, one-off fields i.e a single text or textarea input */
     .full{
         h2{
             display:none; /* The field label is used instead */
         }
         .object-help{
+            display:block;
             margin-top:1em;
-        }
-        > .help{
             position:absolute;
             right:0;
             top:0;
@@ -76,6 +81,10 @@ body.page-editor{
             width:initial;
             padding:0;
             .full-width();
+
+            .help{
+                display:none;
+            }
         }
         li{
             padding:0;
@@ -111,10 +120,7 @@ body.page-editor{
         }
     }
 
-    .single-field h2{
-        display:none; /* The field label is used instead */
-    }
-
+   
     .object > h2, .single-field label{
         .border-radius(2px);
         color: @color-text-grey;

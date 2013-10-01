@@ -142,6 +142,12 @@ RESEARCH_TYPES_CHOICES = (
     ('staff', 'Staff'),
 )
 
+STAFF_TYPES_CHOICES = (
+    ('academic', 'Academic'),
+    ('technical','Technical'),
+    ('administrative','Administrative'),
+)
+
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
     social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -792,9 +798,96 @@ class JobsIndex(Page, SocialFields, CommonPromoteFields):
 
 # == Staff profile page ==
 
-class StaffPage(Page, SocialFields, CommonPromoteFields):
-    pass
+class StaffPageRole(models.Model):
+    page = models.ForeignKey('rca.StaffPage', related_name='roles')
+    title = models.CharField(max_length=255)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    email = models.EmailField(max_length=255)
 
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('programme'),
+        FieldPanel('email'),
+    ]
+
+class StaffPageCollaborations(models.Model):
+    page = models.ForeignKey('rca.StaffPage', related_name='collaborations')
+    title = models.CharField(max_length=255)
+    link = models.URLField()
+    text = RichTextField(blank=True)
+    date = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('link'),
+        FieldPanel('text'),
+        FieldPanel('date'),
+    ]
+
+class StaffPagePublicationExhibition(models.Model):
+    page = models.ForeignKey('rca.StaffPage', related_name='publications_exhibitions')
+    title = models.CharField(max_length=255)
+    typeof = models.CharField("Type", max_length=255, choices=[('publication', 'Publication'),('exhibition', 'Exhibition')])
+    location_year = models.CharField("Location and year", max_length=255)
+    authors_collaborators = models.TextField("Authors/collaborators", blank=True)
+    link = models.URLField(blank=True)
+
+    panels = [
+        FieldPanel('title'),
+        FieldPanel('typeof'),
+        FieldPanel('location_year'),
+        FieldPanel('authors_collaborators'),
+        FieldPanel('link'),
+    ]
+
+class StaffPage(Page, SocialFields, CommonPromoteFields):
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
+    staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing staff members Twitter handle")
+    intro = RichTextField()
+    biography = RichTextField()
+    practice = RichTextField(blank=True)
+    practice_link = models.URLField(blank=True)
+    show_on_homepage = models.BooleanField()
+    show_on_programme_page = models.BooleanField()
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
+    research_interests = RichTextField(blank=True)
+
+StaffPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    ImageChooserPanel('profile_image'),
+    FieldPanel('staff_type'),
+    InlinePanel(StaffPage, StaffPageRole, label="Roles"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('biography', classname="full"),
+    FieldPanel('research_interests', classname="full"),
+    MultiFieldPanel([
+        FieldPanel('practice'),
+        FieldPanel('practice_link'),
+    ], 'Practice'),
+    InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
+    InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
+]
+
+StaffPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('show_on_programme_page'),
+        FieldPanel('listing_intro'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
    
 # == Student profile page ==
 
@@ -846,6 +939,7 @@ class StudentPageWorkCollaborator(models.Model):
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    current_degree = models.CharField(max_length=255)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
     statement = RichTextField()
     project_title = models.CharField(max_length=255, blank=True)
@@ -860,11 +954,11 @@ StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('school'),
     FieldPanel('programme'),
+    FieldPanel('current_degree'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, StudentPageDegree, label="Degree"),
+    InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
-    #TODO: Degrees is missing due to confusion between "Degree" and "Degrees"
     InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
     FieldPanel('statement'),
     InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
