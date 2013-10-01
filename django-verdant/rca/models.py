@@ -942,6 +942,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     current_degree = models.CharField(max_length=255)
+    specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
     statement = RichTextField()
     project_title = models.CharField(max_length=255, blank=True)
