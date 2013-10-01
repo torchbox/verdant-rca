@@ -186,6 +186,12 @@ class ProgrammePageCarouselItem(models.Model):
     text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
     url = models.URLField()
 
+    panels = [
+        ImageChooserPanel('image'), 
+        FieldPanel('text'), 
+        FieldPanel('url'),
+    ]
+
 class ProgrammePageRelatedLink(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -201,6 +207,12 @@ class ProgrammePageOurSites(models.Model):
     url = models.URLField()
     site_name = models.CharField(max_length=255)
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
+    panels = [
+        ImageChooserPanel('image'), 
+        FieldPanel('url'), 
+        FieldPanel('site_name')
+    ]
 
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
@@ -222,7 +234,8 @@ class ProgrammePageFacilities(models.Model):
     ]
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     open_day = models.DateField(blank=True)
     open_day_link = models.URLField(max_length=255, blank=True)
@@ -235,22 +248,26 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
 
 ProgrammePage.content_panels = [
+    ImageChooserPanel('background_image'),
     FieldPanel('title'),
-    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="Test", 
-        panels=[ImageChooserPanel('image'), FieldPanel('text'), FieldPanel('url')]
-    ),
+    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     FieldPanel('head_of_programme_statement'),
-    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites",
-        panels=[ImageChooserPanel('image'), FieldPanel('url'), FieldPanel('site_name')]
-    ),
-    FieldPanel('programme_video'),
+    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
+    MultiFieldPanel([
+        FieldPanel('open_day'),
+        FieldPanel('open_day_link'),
+    ], 'Open day'),
+    MultiFieldPanel([
+        FieldPanel('programme_video'),
+        ImageChooserPanel('programme_video_poster_image'),
+    ], 'Video'),
     InlinePanel(ProgrammePage, ProgrammePageStudentStory, fk_name='page', label="Student stories"),
     InlinePanel(ProgrammePage, ProgrammePageFacilities, fk_name='page', label="Facilities"),        
     FieldPanel('download_document_url'),
     FieldPanel('download_document_text'),
-    FieldPanel('twitter_feed',)
+    FieldPanel('twitter_feed'),
 ]
 
 ProgrammePage.promote_panels = [
@@ -266,7 +283,10 @@ ProgrammePage.promote_panels = [
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    FieldPanel('school'),
+    FieldPanel('programme'),
 ]
 
 
