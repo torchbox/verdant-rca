@@ -1226,6 +1226,10 @@ class ResearchInnovationPageCurrentResearch(models.Model):
         PageChooserPanel('link'),
     ]
 
+    class Meta:
+        # needs to be shortened to avoid hitting limit on the permissions table - https://code.djangoproject.com/ticket/8548
+        verbose_name = "research innov. page current research"
+
 class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
