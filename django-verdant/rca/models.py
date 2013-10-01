@@ -96,15 +96,40 @@ WORK_THEME_CHOICES = (
 )
 
 SCHOOL_CHOICES = (
-    ('school1', 'School 1'),
-    ('school2', 'School 2'),
-    ('schooln', 'School N'),
+    ('schoolofarchitecture', 'School of Architecture'),
+    ('schoolofcommunication', 'School of Communication'),
+    ('schoolofdesign', 'School of Design'),
+    ('schooloffineart', 'School of Fine Art'),
+    ('schoolofhumanities', 'School of Humanities'),
+    ('schoolofmaterial', 'School of Material'),
 )
 
 PROGRAMME_CHOICES = (
-    ('programme1', 'Programme 1'),
-    ('programme2', 'Programme 2'),
-    ('programmen', 'Programme N'),
+    ('architecture', 'Architecture'),
+    ('interiordesign', 'Interior Design'),
+    ('animation', 'Animation'),
+    ('informationexperiencedesign', 'Information Experience Design'),
+    ('visualcommunication', 'Visual Communication'),
+    ('designinteractions', 'Design Interactions'),
+    ('designproducts', 'Design Products'),
+    ('globalinnovationdesign', 'Global Innovation Design'),
+    ('innovationdesignengineering', 'Innovation Design Engineering'),
+    ('servicedesign', 'Service Design'),
+    ('vehicledesign', 'Vehicle Design'),
+    ('painting', 'Painting'),
+    ('photography', 'Photography'),
+    ('printmaking', 'Printmaking'),
+    ('sculpture', 'Sculpture'),
+    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
+    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
+    ('curatingcontemporaryart', 'Curating Contemporary Art'),
+    ('historyofdesign', 'History of Design'),
+    ('ceramicsglass', 'Ceramics & Glass'),
+    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('fashionmenswear', 'Fashion Menswear'),
+    ('fashionwomenswear', 'Fashion Womenswear'),
+    ('textiles', 'Textiles')
+
 )
 
 RESEARCH_TYPES_CHOICES = (
