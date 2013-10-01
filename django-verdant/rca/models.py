@@ -133,8 +133,7 @@ PROGRAMME_CHOICES = (
     ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
     ('fashionmenswear', 'Fashion Menswear'),
     ('fashionwomenswear', 'Fashion Womenswear'),
-    ('textiles', 'Textiles')
-
+    ('textiles', 'Textiles'),
 )
 
 RESEARCH_TYPES_CHOICES = (
@@ -206,13 +205,82 @@ class AdvertPlacement(models.Model):
     page = models.ForeignKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
-# == School ==
 
-class SchoolPage(Page, CommonPromoteFields):
-    """
-    School page (currently only necessary for foreign key with ProgrammePage)
-    """
-    pass
+# == School page ==
+
+class SchoolPageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.SchoolPage', related_name='carousel_items')
+
+class SchoolPageContactTelEmail(models.Model):
+    page = models.ForeignKey('rca.SchoolPage', related_name='contact_tel_email')
+    phone_number = models.CharField(max_length=255, blank=True)
+    email = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('phone_number'),
+        FieldPanel('email'),
+    ]
+
+class SchoolPageRelatedLink(models.Model):
+    page = models.ForeignKey('rca.SchoolPage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
+class SchoolPage(Page, SocialFields, CommonPromoteFields):
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    head_of_school_statement = RichTextField(null=True, blank=True)
+    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
+    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    head_of_research_statement = RichTextField(null=True, blank=True)
+    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
+SchoolPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    ImageChooserPanel('background_image'),
+    InlinePanel(SchoolPage, SchoolPageCarouselItem, label="Carousel content"),
+    PageChooserPanel('head_of_school', 'rca.StaffPage'),
+    FieldPanel('head_of_school_statement'),
+    PageChooserPanel('head_of_school_link'),
+    FieldPanel('twitter_feed'),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+    ], 'Contact'),
+    InlinePanel(SchoolPage, SchoolPageContactTelEmail, label="Contact phone numbers/emails"),
+    PageChooserPanel('head_of_research', 'rca.StaffPage'),
+    FieldPanel('head_of_research_statement'),
+    PageChooserPanel('head_of_research_link'),
+    InlinePanel(SchoolPage, SchoolPageRelatedLink, fk_name='page', label="Related links"),
+]
+
+SchoolPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
 
 
 # == Programme page ==
@@ -942,6 +1010,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     current_degree = models.CharField(max_length=255)
+    specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
     statement = RichTextField()
     project_title = models.CharField(max_length=255, blank=True)
