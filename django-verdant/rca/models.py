@@ -1105,8 +1105,110 @@ ResearchItem.promote_panels = [
 
 # == Research Innovation page ==
 
+
+class ResearchInnovationPageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='carousel_items')
+
+class ResearchInnovationPageTeaser(models.Model):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='teasers')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    url = models.URLField(blank=True)
+    title = models.CharField(max_length=255, blank=True)
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('url'),
+        FieldPanel('title', classname="full title"),
+        FieldPanel('text'),
+    ]
+
+class ResearchInnovationPageRelatedLink(models.Model):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Provide an alternate link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
+class ResearchInnovationPageContactPhone(models.Model):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class ResearchInnovationPageContactEmail(models.Model):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
+class ResearchInnovationPageCurrentResearch(models.Model):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='current_research')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
+    panels = [
+        PageChooserPanel('link'),
+    ]
+
 class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
-    pass
+    intro = RichTextField(blank=True)
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    teasers_title = models.CharField(max_length=255, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
+    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+
+ResearchInnovationPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    MultiFieldPanel([
+        FieldPanel('intro'),
+        PageChooserPanel('intro_link'),
+    ],'Introduction'),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageCurrentResearch, fk_name='page', label="Current research"),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageCarouselItem, label="Carousel content"),
+    FieldPanel('teasers_title'),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageTeaser, label="Teaser content"),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageRelatedLink, fk_name='page', label="Related links"),
+    FieldPanel('twitter_feed'),
+    ImageChooserPanel('background_image'),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+        
+    ],'Contact'),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageContactPhone, label="Contact phone number"),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageContactEmail, label="Contact email address"),
+    FieldPanel('news_carousel_area'),
+]
+
+ResearchInnovationPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
 
    
 # == Current research page ==
