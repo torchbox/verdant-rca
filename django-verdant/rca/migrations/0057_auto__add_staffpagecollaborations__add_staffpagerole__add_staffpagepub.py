@@ -53,7 +53,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'StaffPage.profile_image'
         db.add_column(u'rca_staffpage', 'profile_image',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default='', related_name='+', to=orm['rca.RcaImage']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['rca.RcaImage']),
                       keep_default=False)
 
         # Adding field 'StaffPage.staff_type'
@@ -547,7 +547,7 @@ class Migration(SchemaMigration):
             u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'practice': ('core.fields.RichTextField', [], {'blank': 'True'}),
             'practice_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['rca.RcaImage']"}),
+            'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'research_interests': ('core.fields.RichTextField', [], {'blank': 'True'}),
             'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),

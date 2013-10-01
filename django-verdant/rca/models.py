@@ -842,7 +842,7 @@ class StaffPagePublicationExhibition(models.Model):
 
 class StaffPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing staff members Twitter handle")
     intro = RichTextField()
