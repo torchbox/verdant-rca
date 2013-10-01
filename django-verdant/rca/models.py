@@ -857,10 +857,45 @@ StudentPage.promote_panels = [
 
 # == RCA Now page ==
 
-class RcaNowPage(Page, SocialFields, CommonPromoteFields):
-    pass
+class RcaNowPagePageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.RcaNowPage', related_name='carousel_items')
 
-   
+class RcaNowPage(Page, SocialFields, CommonPromoteFields):
+    body = RichTextField()
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES)
+    show_on_homepage = models.BooleanField()
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the standard Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    # TODO: tags
+
+RcaNowPage.content_panels = [
+    InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
+    FieldPanel('title'),
+    FieldPanel('body'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('twitter_feed'),
+]
+
+RcaNowPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 # == RCA Now index ==
 
 class RcaNowIndex(Page, SocialFields, CommonPromoteFields):

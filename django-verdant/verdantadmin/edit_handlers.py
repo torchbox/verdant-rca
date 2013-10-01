@@ -304,11 +304,10 @@ class BaseFieldPanel(EditHandler):
         self.help_text = self.bound_field.help_text
 
     def object_classnames(self):
-        widget = self.bound_field.field.widget
-        if isinstance(widget, forms.TextInput) or isinstance(widget, forms.Textarea):
-            return 'full'
+        if self.classname:
+            return "single-field " + self.classname
         else:
-            return ''
+            return "single-field"
 
     def field_type(self):
         return camelcase_to_underscore(self.bound_field.field.__class__.__name__)        
@@ -326,7 +325,7 @@ class BaseFieldPanel(EditHandler):
     def render_as_object(self):
         return mark_safe(render_to_string(self.object_template, {
             'self': self,
-            'field_content': self.render_as_field(show_help_text=False),
+            'field_content': self.render_as_field(show_help_text=False, is_single_object=True),
         }))        
 
     def render_js(self):
@@ -340,19 +339,21 @@ class BaseFieldPanel(EditHandler):
 
 
     field_template = "verdantadmin/edit_handlers/field_panel_field.html"
-    def render_as_field(self, show_help_text=True):
+    def render_as_field(self, show_help_text=True, is_single_object=False):
         return mark_safe(render_to_string(self.field_template, {
             'field': self.bound_field,
             'field_type': self.field_type(),
             'show_help_text': show_help_text,
+            'is_single_object': is_single_object,
         }))
 
     def rendered_fields(self):
         return [self.field_name]
 
-def FieldPanel(field_name):
+def FieldPanel(field_name, classname=None):
     return type('_FieldPanel', (BaseFieldPanel,), {
         'field_name': field_name,
+        'classname': classname,
     })
 
 
