@@ -222,7 +222,8 @@ class ProgrammePageFacilities(models.Model):
     ]
 
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     open_day = models.DateField(blank=True)
     open_day_link = models.URLField(max_length=255, blank=True)
@@ -266,7 +267,10 @@ ProgrammePage.promote_panels = [
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    FieldPanel('school'),
+    FieldPanel('programme'),
 ]
 
 
