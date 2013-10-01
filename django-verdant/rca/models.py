@@ -321,11 +321,11 @@ class ProgrammePageOurSites(models.Model):
 
 class ProgrammeDocuments(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='documents')
-    url = models.CharField(max_length=255, blank=True)
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
-        FieldPanel('url'), 
+        DocumentChooserPanel('document'), 
         FieldPanel('text')
     ]
 
