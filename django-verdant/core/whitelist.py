@@ -75,7 +75,6 @@ class Whitelister(object):
     def clean(cls, html):
         """Clean up an HTML string to contain just the allowed elements / attributes"""
         doc = BeautifulSoup(html, 'lxml')
-        body = doc.body
         cls.clean_node(doc, doc)
         return unicode(doc)
 
@@ -97,7 +96,11 @@ class Whitelister(object):
     @classmethod
     def clean_tag_node(cls, doc, tag):
         # first, whitelist the contents of this tag
-        for child in tag.contents:
+
+        # NB tag.contents will change while this iteration is running, so we need
+        # to capture the initial state into a static list() and iterate over that
+        # to avoid losing our place in the sequence.
+        for child in list(tag.contents):
             cls.clean_node(doc, child)
 
         # see if there is a rule in element_rules for this tag type
