@@ -89,19 +89,10 @@ a {
     }
 }
 
-ul li {
+ul {
+    margin: 0;
+    padding: 0;
     list-style-type: none;
-    &:before {
-        content: '\002D\00A0\00A0\00A0\00A0\00A0'; /* 002D is hex for a hyphen, 00A0 is hex for nbsp */
-        margin-left: -1.5em;
-    }
-}
-
-ul ul, ol ol {
-    margin-top: 0; /* make sure nested lists don't have a big space before the indented item */
-    li {
-        font-style: italic;
-    }
 }
 
  dd {
@@ -548,7 +539,6 @@ nav {
         list-style:none;
     }
     nav ul {
-        .unlist();
         position:absolute;
         top:0;
         width:100%;
@@ -732,7 +722,6 @@ nav.expanded {
 
 .row {
     .row();
-    .unlist();
 }
 
 .row-flush {
@@ -759,7 +748,6 @@ nav.expanded {
         }
     }
     ul {
-        .unlist();
         padding: 0;
         margin: 0;
         background-color: fade(@color-charcoal,90%);
@@ -1000,7 +988,6 @@ footer {
         height: 48px;
     }
     ul {
-        .unlist();
         margin: 0;
         padding: 0;
         &.menu {
@@ -1208,9 +1195,6 @@ input[type=button], button, .button{
         }
         h2 {
             margin: -0.15em 0 0 0;
-        }
-        ul.content {
-            .unlist();
         }
         .location {
             color: @color-medium-grey;
