@@ -1046,7 +1046,7 @@ class AlumniPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     year = models.CharField(max_length=4, blank=True)
-    intro = RichTextField()
+    intro = RichTextField(blank=True)
     biography = RichTextField()
 
 AlumniPage.content_panels = [
@@ -1056,7 +1056,7 @@ AlumniPage.content_panels = [
     FieldPanel('programme'),
     FieldPanel('year'),
     FieldPanel('intro'),
-    FieldPanel('biograyph'),
+    FieldPanel('biography'),
 ]
 
 AlumniPage.promote_panels = [
