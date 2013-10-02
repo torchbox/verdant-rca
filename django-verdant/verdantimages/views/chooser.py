@@ -109,7 +109,8 @@ def chooser_select_format(request, image_id):
                     'url': preview_image.url,
                     'width': preview_image.width,
                     'height': preview_image.height,
-                }
+                },
+                'html': format.image_to_editor_html(image, form.cleaned_data['alt_text']),
             })
 
             return render_modal_workflow(
