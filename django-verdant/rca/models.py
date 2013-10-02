@@ -379,8 +379,8 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
-    head_of_programme_statement = RichTextField(null=True, blank=True)
+    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text="This is my help text")
+    head_of_programme_statement = RichTextField(null=True, blank=True, help_text="This is my content this is my content this is my content")
     head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -405,7 +405,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
     FieldPanel('title', classname="full title"),
-    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content"),
+    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="You want to use this carousel becaus eit is nice"),
     InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     FieldPanel('head_of_programme_statement'),

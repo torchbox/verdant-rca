@@ -2,11 +2,9 @@ body.page-editor{
     padding-bottom:100px; /* provides space for the actions bar at the bottom */
 }
 .objects{
-    .full-width();
-
     .object{
         .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
+        padding-right:@grid-gutter-width/2;
         position:relative;
         border:1px dashed @color-input-border;
         border-width:1px 0 0 0;
@@ -26,28 +24,30 @@ body.page-editor{
 
         .object-help{
             .column(2);
+            display:block;
+            position:absolute;
+            z-index:1;
+            right:0;
+            top:0;
+            padding-right:@grid-gutter-width/2;
             float:right;
             margin-top:4em;
             text-align:right;
-            padding-right:0;
             opacity:0;
         }
+
         &:hover .object-help{
             opacity:1;
         }
     }    
 
     .multiple{
-        .full-width();
+
     }
     .multiple > li{
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
-        border-top: 1px dashed @color-input-border;
+        border-bottom: 1px dashed @color-input-border;
 
-        &:first-child{
-            border:0;
-        }
+
     }
 
     .preview{
@@ -64,23 +64,21 @@ body.page-editor{
 
     /* Special full-width, one-off fields i.e a single text or textarea input */
     .full{
+        padding:0;
+
         h2{
             display:none; /* The field label is used instead */
         }
+
         .object-help{
             display:block;
-            margin-top:1em;
-            position:absolute;
-            right:0;
-            top:0;
-            z-index:1;
         }
+        
         fieldset{
             display:block;
             float:none;
             width:initial;
             padding:0;
-            .full-width();
 
             .help{
                 display:none;
@@ -95,10 +93,10 @@ body.page-editor{
         }
 
         input, textarea, .richtext{
+            .nice-padding;
+            .pull-padding(2);
             font-family:Bitter, Georgia, serif;
             .border-radius(0px);
-            .push-padding(@grid-content-indent);
-            .pull-padding(2);
             border:0;
             padding-top:3em;
             padding-bottom:2em;
@@ -145,9 +143,7 @@ body.page-editor{
 
     /* wrapper around add button for mutliple objects */
     p.add{
-        .full-width();
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
+        
         margin-top:0;
         margin-bottom:0;
         padding-top:3em;

@@ -1,19 +1,35 @@
 .messages{
-	.full-width();
+    position:relative;
+    margin-left:-15px;
+    z-index:5;
 
-	ul{
-		.unlist();
-	}
-	li{
-		.artist-indent();
-		padding-top:1.3em;
-		padding-bottom:1.3em;
-		color:white;
-	}
-	.error{
-		background-color:@color-red;
-	}
-	.success{
-		background-color:@color-teal-dark;
-	}
+    &:before{
+        content: "";
+        height: 0;
+        width: 0;
+        display: block;
+        position: absolute;
+        bottom: -15px;
+        left: 0;
+        border-top: 15px solid #000;
+        border-left: 15px solid transparent;
+    }
+
+    ul{
+        .unlist();
+        padding-left:10px;
+    }
+    li{
+        .nice-padding;
+        padding-top:1.3em;
+        padding-bottom:1.3em;
+        color:white;
+        text-indent:15px;
+    }
+    .error{
+        background-color:@color-red;
+    }
+    .success{
+        background-color:@color-teal-dark;
+    }
 }

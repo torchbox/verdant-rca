@@ -1,5 +1,5 @@
 {% load image_tags %}
-<h3>{{ images|length }} matches</h3>
+<h3>{{ images|length }} match{{ images|length|pluralize:"es" }}</h3>
 <ul>
     {% for image in images %}
         <li>

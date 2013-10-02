@@ -14,21 +14,23 @@
         <h1>Edit document '{{ document.title }}'</h1>
     </header>
 
-    <form action="{% url 'verdantdocs_edit_document' document.id %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <ul class="fields">
-            {% for field in form %}
+    <div class="nice-padding">
+        <form action="{% url 'verdantdocs_edit_document' document.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul class="fields">
+                {% for field in form %}
 
-                {% if field.name == 'file' %}
-                    {% include "verdantdocs/documents/_file_field.html" %}
-                {% else %}
-                    {% include "verdantadmin/shared/field_as_li.html" %}
-                {% endif %}
+                    {% if field.name == 'file' %}
+                        {% include "verdantdocs/documents/_file_field.html" %}
+                    {% else %}
+                        {% include "verdantadmin/shared/field_as_li.html" %}
+                    {% endif %}
 
-            {% endfor %}
-            <li><input type="submit" value="Save" /></li>
-        </ul>
-    </form>
+                {% endfor %}
+                <li><input type="submit" value="Save" /></li>
+            </ul>
+        </form>
 
-    <a href="{% url 'verdantdocs_delete_document' document.id %}">Delete document</a>
+        <a href="{% url 'verdantdocs_delete_document' document.id %}">Delete document</a>
+    </div>
 {% endblock %}
