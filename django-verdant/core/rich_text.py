@@ -49,15 +49,7 @@ class ImageEmbedHandler(object):
         Image = get_image_model()
         try:
             image = Image.objects.get(id=attrs['id'])
-            try:
-                format = get_image_format(attrs['format'])
-                filter_spec = format.filter_spec
-                classnames = format.classnames
-            except KeyError:
-                filter_spec = 'max-1024x768'
-                classnames = None
-
-            rendering = image.get_rendition(filter_spec)
+            format = get_image_format(attrs['format'])
 
             if for_editor:
                 editor_attrs = 'data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
@@ -66,15 +58,7 @@ class ImageEmbedHandler(object):
             else:
                 editor_attrs = ''
 
-            if classnames:
-                class_attr = 'class="%s" ' % escape(classnames)
-            else:
-                class_attr = ''
-
-            return '<img %s%ssrc="%s" width="%d" height="%d" alt="%s">' % (
-                editor_attrs, class_attr,
-                escape(rendering.url), rendering.width, rendering.height, attrs['alt']
-            )
+            return format.image_to_html(image, attrs['alt'], editor_attrs)
 
         except Image.DoesNotExist:
             return "<img>"

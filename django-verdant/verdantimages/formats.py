@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.utils.importlib import import_module
+from django.utils.html import escape
 
 class Format(object):
     def __init__(self, name, label, classnames, filter_spec):
@@ -7,6 +8,20 @@ class Format(object):
         self.label = label
         self.classnames = classnames
         self.filter_spec = filter_spec
+
+    def image_to_html(self, image, alt_text, extra_attributes):
+        rendition = image.get_rendition(self.filter_spec)
+
+        if self.classnames:
+            class_attr = 'class="%s" ' % escape(self.classnames)
+        else:
+            class_attr = ''
+
+        return '<img %s%ssrc="%s" width="%d" height="%d" alt="%s">' % (
+            extra_attributes, class_attr,
+            escape(rendition.url), rendition.width, rendition.height, alt_text
+        )
+
 
 
 FORMATS = []
@@ -19,6 +34,7 @@ def register_image_format(format):
     FORMATS.append(format)
 
 def unregister_image_format(format_name):
+    global FORMATS
     # handle being passed a format object rather than a format name string
     try:
         format_name = format_name.name
@@ -36,6 +52,7 @@ def get_image_formats():
     return FORMATS
 
 def get_image_format(name):
+    search_for_image_formats()
     return FORMATS_BY_NAME[name]
 
 _searched_for_image_formats = False
