@@ -136,6 +136,36 @@ PROGRAMME_CHOICES = (
     ('textiles', 'Textiles'),
 )
 
+SUBJECT_CHOICES = (
+    ('animation', 'Animation'),
+    ('architecture', 'Architecture'),
+    ('ceramicsglass', 'Ceramics & Glass'),
+    ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
+    ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
+    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
+    ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
+    ('designinteractions', 'Design Interactions'),
+    ('designproducts', 'Design Products'),
+    ('fashionmenswear', 'Fashion Menswear'),
+    ('fashionwomenswear', 'Fashion Womenswear'),
+    ('innovationdesignengineering', 'Innovation Design Engineering'),
+    ('historyofdesign', 'History of Design'),
+    ('painting', 'Painting'),
+    ('photography', 'Photography'),
+    ('printmaking', 'Printmaking'),
+    ('sculpture', 'Sculpture'),
+    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('textiles', 'Textiles'),
+    ('vehicledesign', 'Vehicle Design'),
+    ('visualcommunication', 'Visual Communication'),
+)
+
+QUALIFICATION_CHOICES = (
+    ('ma', 'MA'),
+    ('mphil', 'MPhil'),
+    ('phd', 'PhD'),
+)
+
 RESEARCH_TYPES_CHOICES = (
     ('student', 'Student'),
     ('staff', 'Staff'),
@@ -1016,7 +1046,9 @@ class StudentPageWorkCollaborator(models.Model):
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
-    current_degree = models.CharField(max_length=255)
+    degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
+    degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
+    degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
     statement = RichTextField()
