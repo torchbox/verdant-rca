@@ -39,17 +39,20 @@
     <div class="wrapper">
         <div id="nav-toggle" data-afteropen="Collapse">Menu</div>
         <div class="nav-wrapper">
-            <a href="{% url 'verdantadmin_home' %}" class="logo"></a>
-            <nav class="nav-main">
-                <ul>
-                    <li class="selected"><a href="#" class="icon explore dl-trigger">Pages</a></li>
-                    <li><a href="{% url 'verdantimages_index' %}" class="icon images">Images</a></li>
-                    <li><a href="{% url 'verdantdocs_index' %}" class="icon documents">Documents</a></li>
-                    <li><a href="{% url 'verdantsnippets_index' %}" class="icon snippets">Snippets</a></li>
-                    <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon new">New</a></li>
-                </ul>
-            </nav>
-
+            <div class="inner">
+                <a href="{% url 'verdantadmin_home' %}" class="logo"></a>
+                <nav class="nav-main">
+                    <ul>
+                        <li class="selected"><a href="#" class="icon explore dl-trigger">Pages</a></li>
+                        <li><a href="{% url 'verdantimages_index' %}" class="icon images">Images</a></li>
+                        <li><a href="{% url 'verdantdocs_index' %}" class="icon documents">Documents</a></li>
+                        <li><a href="{% url 'verdantsnippets_index' %}" class="icon snippets">Snippets</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon new">New</a></li>
+                    </ul>
+                </nav>
+            </div>
+                
+           
             <nav class="explorer">
                 <ul class="dl-menu">
                     {% explorer_nav %}

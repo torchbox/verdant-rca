@@ -1,21 +1,157 @@
-{% extends "rca/editorial_page.html" %}
-
-{% load rich_text image_tags %}
+{% extends "rca/base.html" %}
+{% load pageurl image_tags embed_filters rich_text %}
 
 {% block content %}
-    <div><h2>head of programme</h2> {{ self.head_of_programme }}</div>
-    <div><h2>head of programme's statement</h2> {{ self.head_of_programme_statement|richtext }}</div>
-    <h2>A carousel</h2>
-    <ul>
-        {% for item in self.carousel_items.all %}
-            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
-        {% endfor %}
-    </ul>
+    {% include "rca/includes/modules/background-image.html" %}
+    {% include "rca/includes/modules/h1-major.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
 
-    <h2>Related links</h2>
-    <ul>
-        {% for item in self.related_links.all %}
-            <li><a href="{{ item.url }}">{{ item.url }}</a></li>
-        {% endfor %}
-    </ul>
+    {% if self.head_of_programme %}
+        <section class="head-of-programme row module">
+            <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
+            
+            {% if self.head_of_programme.profile_image %}
+                <a href="{% pageurl self.head_of_programme %}">
+                    <div class="image">{% image self.head_of_programme.profile_image width-400 %}</div>
+                </a>
+            {% endif %}
+            <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
+                <strong>{{ self.head_of_programme.title }}</strong>
+                {{ self.head_of_programme_statement|richtext }}
+                {% if self.head_of_programme_link %}
+                    ...<a href="{% pageurl self.head_of_programme_link %}"><span class="bc4 caps">Continue</a></span>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- tabs -->
+    
+
+    <!-- To do: may need custom tags for tabbed content as below logic does not solve all cases -->
+    
+    {% comment %} 'and' has higher precedent than 'or' so below should work as if download items were in brackets{% endcomment %}
+    {% if self.tabbed_feature_count > 0 or self.download_document_url and self.download_document_text %}
+        <section class="three-tab row module">
+            <h2 class="module-title">Student info</h2>
+
+            <!--show tabs if there is more than 1-->
+            {% if self.tabbed_feature_count > 1 %}
+                <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
+                    {% if self.programme_video %}
+                        <li class="active"><a href="#tab1" class="t0">Programme video</a></li>
+                    {% endif %}
+                    {% if self.student_stories %}
+                        <li><a href="#tab2" class="t0">Student stories</a></li>
+                    {% endif %}
+                    {% if self.facilities_text or self.facilities_image %}
+                        <li><a href="#tab3" class="t0">Facilities</a></li>
+                    {% endif %}
+                </ul>
+
+                <div class="tab-content">
+            {% endif %}
+
+                {% if self.programme_video %}
+                    <h2 class="header"><a href="#tab1" class="a0 active">Programme video</a></h2>
+                    <div class="tab-pane active flush" id="tab1">
+                        <div class="videoembed vimeo">
+                            <div class="playpause play">Play</div>
+                            {% if self.programme_video_poster_image %}
+                                <div class="poster">{% image self.programme_video_poster_image width-1000 %}</div>
+                            {% endif %}
+                            {{ self.programme_video|embedly:"944" }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                
+                {% with self.student_stories.all as student_stories %}
+                    {% if student_stories %}
+                        <h2 class="header"><a href="#tab2" class="a0">Student stories</a></h2>
+                        <div class="tab-pane" id="tab2">      
+                            <ul class="two-cols">
+                                {% for story in student_stories %}
+                                    {% cycle '<li class="newrow">' '<li>' %}
+                                        {% if story.image %}
+                                            <div class="image">{% image story.image width-200 %}</div>
+                                        {% endif %}
+                                        <div class="content">
+                                            <h3 class="h6">{{ story.name }}</h3>
+                                            <div class="bc3">{{ story.text|richtext }}....<a href="#" class="bc5 caps">continue</a></div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                {% if self.facilities_text or self.facilities_image %}
+                    <h2 class="header"><a href="#tab3" class="a0">Facilities</a></h2>
+                    <div class="tab-pane flush" id="tab3">
+                        {% if self.facilities_image %}
+                            <div class="image">{% image self.facilities_image width-1000 %}</div>
+                        {% endif %}
+                        {% if self.facilities_text %}
+                            <div class="facilities">
+                                {{ self.facilities_text|richtext }}
+                                {% if self.facilities_link %}
+                                    ...<a class="bc5 caps" href="{% pageurl self.facilities_link %}">continue</a>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+            {% if self.tabbed_feature_count > 1 %}
+                <!-- close tabs if there is more than 1 -->
+                </div>
+            {% endif %}
+
+            <ul class="button-bar two-button">
+                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
+                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
+            </ul>
+
+        </section>
+    {% endif %}
+
+    <!-- our sites -->
+    {% with self.our_sites.all as our_sites %}
+        {% if our_sites %}
+            <section class="two-plus x-plus module">
+                <h2 class="module-title">Our sites</h2>
+                <div class="item-container">
+                    <ul class="row">
+                        {% for site in our_sites %}
+                            {% if forloop.counter == 3 %}
+                                <li class="load-more-target">
+                            {% elif forloop.counter0|divisibleby:"3" %}
+                                <li class="newrow">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                            <a href="{{ site.url }}">
+                                {% if site.image %}
+                                    <div class="image">{% image site.image width-400 %}</div>
+                                {% endif %}
+                                <div class="content">
+                                    <h3 class="h8">{{ site.site_name }}</h3>
+                                </div>
+                            </a>
+                        </li>
+                        {% endfor %}
+                        <li class="load-more"><a href="#">+</a></li>
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+    
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAds="true" showRelatedLinks="true" %}
 {% endblock %}

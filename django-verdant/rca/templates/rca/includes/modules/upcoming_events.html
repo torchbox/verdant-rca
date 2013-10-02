@@ -6,7 +6,7 @@
             {% for event in events %}
                 <li>
                     <a href="{% pageurl event %}">
-                        <h3>{{ event.date_from|date:"j F" }}</h3>
+                        <h3>{{ event.start_date|date:"j F" }}</h3>
                         <p>{{ event.title }}</p>
                     </a>
                     <span>{{ event.audience }}</span>

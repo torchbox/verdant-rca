@@ -493,6 +493,10 @@
         .bc4{
             font-size:0.8em;
         }
+
+        &.flushleft {
+            padding-left: 0;
+        }
     }
 }
 
@@ -778,7 +782,8 @@
 .tab-content{
     .clearfix();
     background-color:darken(@color-pale-grey, 10%);
-
+    position: relative;
+    
     .header{
         margin:0;
         border-bottom:1px solid white;
@@ -825,6 +830,13 @@
     .image.full{
         margin:0 -15px; /* negative by amount of body padding (which isn't same as grid gutter) */
     }
+
+    .facilities {
+        padding: @spacing-one;
+        p {
+            display: inline;
+        }
+    }
 }
 
 /* don't nest within tab-pane as specificity is too high */
@@ -848,6 +860,10 @@
     .h6,
     .bc3{
         margin:0;
+    }
+
+    div.bc3 p {
+        display: inline;
     }
     
 
@@ -1351,6 +1367,9 @@
  * Index page intro
  */
 .index-intro {
+    p {
+        display:inline;
+    }
     .content {
         .bc4{
             font-size:0.8em;

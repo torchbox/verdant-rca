@@ -56,6 +56,7 @@ max z-index: unknown;
 
         &:hover{
             background:@color-teal;
+            color:white;
         }
     }
 
@@ -164,29 +165,6 @@ max z-index: unknown;
 body.explorer-open .explorer{
     display:block;
 }
-
-body.explorer-open .nav-wrapper{
-
-}
-body.explorer-open .content-wrapper{
-    //position:fixed;
-}
-
-@media screen and (min-width: @breakpoint-mobile){
-    .explorer {
-        margin-top:150px;
-        width: 400px;
-        position: absolute;
-        z-index:@explorer-z-index;
-        top:0;
-        left:99%;
-    }
-    .dl-menu {
-        position: absolute;
-    }
-}
-
-
 
 /* Animation classes for moving out and in */
 

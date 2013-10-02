@@ -1,0 +1,28 @@
+{% load image_tags pageurl %}
+
+{% if news_items %}
+    <section class="carousel-news row module">
+        {% comment %}
+        To do: add link to news index
+        {% endcomment %}
+        <h2 class="module-title"><a href="#">News</a></h2>
+        <ul class="carousel-content">
+            {% for news_item in news_items %}
+                <li class="{% if forloop.counter == 1 %}active{% endif %}{% if forloop.last %} last{% endif %}">
+                    <a href="{% pageurl news_item %}">
+                        {% with news_item.feature_image as feature_image %}
+                            {% if feature_image %}
+                                <div class="image">{% image feature_image width-1000 %}</div>
+                            {% else%}
+                                {% comment %}Default image to appear here{% endcomment %}
+                            {% endif %}
+                        {% endwith %}
+                        <div class="caption">
+                            <h3 class="h6">{{ news_item.title }}</h3>
+                        </div>
+                    </a>
+                </li> 
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}

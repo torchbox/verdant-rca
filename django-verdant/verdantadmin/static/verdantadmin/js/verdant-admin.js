@@ -3,6 +3,17 @@ function makeRichTextEditable(id) {
     var richText = $('<div class="richtext"></div>').html(input.val());
     richText.insertBefore(input);
     input.hide();
+
+    function removeStylingSpans(context) {
+        /* Strip the 'style' attribute from spans that have no other attributes.
+        (we don't remove the span entirely as that messes with the cursor position,
+        and spans will be removed anyway by our whitelisting)
+        */
+        $('span[style]', context).filter(function() {
+            return this.attributes.length === 1;
+        }).removeAttr('style');
+    }
+
     richText.hallo({
         toolbar: 'halloToolbarFixed',
         plugins: {
@@ -16,6 +27,10 @@ function makeRichTextEditable(id) {
         }
     }).bind('hallomodified', function(event, data) {
         input.val(data.content);
+    }).bind('paste', function(event, data) {
+        setTimeout(function() {
+            removeStylingSpans(richText);
+        }, 1);
     });
 }
 
@@ -64,6 +79,12 @@ function initDateChoosers(context) {
         dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
     });
 }
+function initDateChooser(id) {
+    $('#' + id).datepicker({
+        dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
+    });
+}
+
 $(function() {
     initDateChoosers();
 });

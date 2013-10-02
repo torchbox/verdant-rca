@@ -67,9 +67,10 @@ def chooser_upload(request):
         if form.is_valid():
             image = form.save()
             if request.GET.get('select_format'):
+                form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
                 return render_modal_workflow(
                     request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
-                    {'image': image}
+                    {'image': image, 'form': form}
                 )
             else:
                 # not specifying a format; return the image details now
