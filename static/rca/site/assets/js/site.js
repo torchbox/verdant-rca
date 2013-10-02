@@ -113,6 +113,20 @@ $(function(){
     }); 
 
     /* tabs */
+    //apply active class in correct place and add tab links
+    $('.tab-nav li:first-child').addClass('active');
+    $('.tab-pane').first().addClass('active');
+    $('.tab-content .header a').first().addClass('active');
+    $('.tab-nav li a').each(function(index){
+        $(this).attr('href', "#tab" + (index+1));
+    });
+    $('.tab-pane').each(function(index){
+        $(this).attr('id', "tab" + (index+1));
+    });
+    $('.tab-content .header a').each(function(index){
+        $(this).attr('href', "#tab" + (index+1));
+    });
+
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
         $(this).tab('show');
