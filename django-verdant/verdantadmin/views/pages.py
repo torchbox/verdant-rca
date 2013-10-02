@@ -167,23 +167,13 @@ def delete(request, page_id):
         'descendant_count': page.get_descendant_count()
     })
 
-def move(request, page_to_move_id, viewed_page_id=None):
+def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
 
     if viewed_page_id:
         viewed_page = get_object_or_404(Page, id=viewed_page_id)
     else:
         viewed_page = Page.get_first_root_node()
-
-    if request.POST:
-        try:
-            page_to_move.move(viewed_page, pos='last-child')
-
-            messages.success(request, "Page '%s' moved." % page_to_move.title)
-            return redirect('verdantadmin_explore', viewed_page.id)
-        except InvalidMoveToDescendant:
-            messages.error(request, "You cannot move this page into itself.")
-            return redirect('verdantadmin_pages_move', page_to_move.id)
 
     child_pages = []
     for page in viewed_page.get_children():
@@ -200,6 +190,30 @@ def move(request, page_to_move_id, viewed_page_id=None):
         'page_to_move': page_to_move,
         'viewed_page': viewed_page,
         'child_pages': child_pages,
+    })
+
+def move_confirm(request, page_to_move_id, destination_id):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    destination = get_object_or_404(Page, id=destination_id)
+
+    if request.POST:
+        try:
+            page_to_move.move(destination, pos='last-child')
+
+            messages.success(request, "Page '%s' moved." % page_to_move.title)
+            return redirect('verdantadmin_explore', destination.id)
+        except InvalidMoveToDescendant:
+            messages.error(request, "You cannot move this page into itself.")
+            return redirect('verdantadmin_pages_move', page_to_move.id)
+
+    else:
+        if page_to_move == destination or destination.is_descendant_of(page_to_move):
+            messages.error(request, "You cannot move this page into itself.")
+            return redirect('verdantadmin_pages_move', page_to_move.id)
+
+    return render(request, 'verdantadmin/pages/confirm_move.html', {
+        'page_to_move': page_to_move,
+        'destination': destination,
     })
 
 
