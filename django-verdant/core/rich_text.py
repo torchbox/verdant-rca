@@ -52,7 +52,7 @@ class ImageEmbedHandler(object):
             format = get_image_format(attrs['format'])
 
             if for_editor:
-                editor_attrs = 'data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
+                editor_attrs = 'contenteditable="false" data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
                     image.id, attrs['format'], attrs['alt']
                 )
             else:
