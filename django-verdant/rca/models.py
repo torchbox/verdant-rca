@@ -905,6 +905,14 @@ HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
+    MultiFieldPanel([
+    FieldPanel('packery_news'),
+    FieldPanel('packery_staff'),
+    FieldPanel('packery_student_work'),
+    FieldPanel('packery_tweets'),
+    FieldPanel('packery_rcanow'),
+    FieldPanel('packery_standard'),
+    ], 'Packery content'),
 ]
 
 HomePage.promote_panels = [
