@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.utils.importlib import import_module
+
 class Format(object):
     def __init__(self, name, label, classnames, filter_spec):
         self.name = name
@@ -16,3 +19,16 @@ FORMATS = [
 FORMATS_BY_NAME = {}
 for format in FORMATS:
     FORMATS_BY_NAME[format.name] = format
+
+
+_searched_for_image_formats = False
+def search_for_image_formats():
+    global _searched_for_image_formats
+    if not _searched_for_image_formats:
+        for app_module in settings.INSTALLED_APPS:
+            try:
+                import_module('%s.image_formats' % app_module)
+            except ImportError:
+                continue
+
+        _searched_for_image_formats = True
