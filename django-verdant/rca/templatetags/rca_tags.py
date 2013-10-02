@@ -16,9 +16,24 @@ def upcoming_events(context, count=3):
     }
 
 @register.inclusion_tag('rca/includes/modules/carousel-news.html', takes_context=True)
-def news_carousel(context, area, count=6):
-    news_items = NewsItem.objects.filter(area=area)[:count]
+def news_carousel(context, area="", programme="", count=6):
+    if area:
+        news_items = NewsItem.objects.filter(area=area)[:count]
+    elif programme:
+        news_items = NewsItem.objects.filter(related_programmes__programme=programme)[:count]
     return {
         'news_items': news_items,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/includes/modules/upcoming_events_by_programme.html', takes_context=True)
+def upcoming_events_by_programme(context, opendays=0, programme=""):
+    events = EventItem.objects.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).filter(end_date__gte=date.today()).filter(related_programmes__programme=programme).order_by('start_date')
+    if opendays:
+        events = events.filter(audience='openday')
+    else:
+        events = events.exclude(audience='openday')
+    return {
+        'events': events,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }

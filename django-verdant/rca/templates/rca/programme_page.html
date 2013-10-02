@@ -1,11 +1,12 @@
 {% extends "rca/base.html" %}
-{% load pageurl image_tags embed_filters rich_text %}
+{% load pageurl image_tags embed_filters rich_text rca_tags %}
 
 {% block content %}
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
 
+    <!-- head of programme -->
     {% if self.head_of_programme %}
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
@@ -25,13 +26,23 @@
         </section>
     {% endif %}
 
+    <!-- news carousel -->
+
+    {% news_carousel programme=self.programme %}
+
+    <!-- events -->
+    {% upcoming_events_by_programme programme=self.programme %}
+
+
+    <!-- open days -->
+    {% upcoming_events_by_programme opendays=1 programme=self.programme %}
+
     <!-- tabs -->
     
-
     <!-- To do: may need custom tags for tabbed content as below logic does not solve all cases -->
     
-    {% comment %} 'and' has higher precedent than 'or' so below should work as if download items were in brackets{% endcomment %}
-    {% if self.tabbed_feature_count > 0 or self.download_document_url and self.download_document_text %}
+    {% comment %} 'and' has higher precedent than 'or' so below should work as if document items were in brackets{% endcomment %}
+    {% if self.tabbed_feature_count > 0 or document.download and document.text %}
         <section class="three-tab row module">
             <h2 class="module-title">Student info</h2>
 
@@ -78,7 +89,7 @@
                                         {% endif %}
                                         <div class="content">
                                             <h3 class="h6">{{ story.name }}</h3>
-                                            <div class="bc3">{{ story.text|richtext }}....<a href="#" class="bc5 caps">continue</a></div>
+                                            <div class="bc3">{{ story.text|richtext }}{% if story.link %}....<a href="{% pageurl story.link %}" class="bc5 caps">continue</a>{% endif %}</div>
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -109,10 +120,17 @@
                 </div>
             {% endif %}
 
-            <ul class="button-bar two-button">
-                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
-                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
-            </ul>
+            {% with self.documents.all as documents %}
+                {% if documents %}
+                    <ul class="button-bar two-button">
+                        {% for document in documents %}
+                            {% if document.download and document.text %}
+                                <li><a href="{{ document.document }}" class="button icon icon-download">{{ document.text }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
 
         </section>
     {% endif %}
