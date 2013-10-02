@@ -52,13 +52,9 @@ class ImageEmbedHandler(object):
             format = get_image_format(attrs['format'])
 
             if for_editor:
-                editor_attrs = 'contenteditable="false" data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
-                    image.id, attrs['format'], attrs['alt']
-                )
+                return format.image_to_editor_html(image, attrs['alt'])
             else:
-                editor_attrs = ''
-
-            return format.image_to_html(image, attrs['alt'], editor_attrs)
+                return format.image_to_html(image, attrs['alt'])
 
         except Image.DoesNotExist:
             return "<img>"

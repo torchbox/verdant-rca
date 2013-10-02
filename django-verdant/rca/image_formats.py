@@ -2,7 +2,12 @@ from verdantimages.formats import Format, unregister_image_format, register_imag
 from django.utils.html import escape
 
 class CaptionedImageFormat(Format):
-    def image_to_html(self, image, alt_text, extra_attributes):
+    def editor_attributes(self, image, alt_text):
+        # need to add contenteditable=false to prevent editing within the embed
+        original_attrs = super(CaptionedImageFormat, self).editor_attributes(image, alt_text)
+        return 'contenteditable="false" ' + original_attrs
+
+    def image_to_html(self, image, alt_text, extra_attributes=''):
         rendition = image.get_rendition(self.filter_spec)
 
         if self.classnames:

@@ -9,6 +9,20 @@ class Format(object):
         self.classnames = classnames
         self.filter_spec = filter_spec
 
+    def editor_attributes(self, image, alt_text):
+        """
+        Return string of additional attributes to go on the HTML element
+        when outputting this image within a rich text editor field
+        """
+        return 'data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
+            image.id, self.name, alt_text
+        )
+
+    def image_to_editor_html(self, image, alt_text):
+        return self.image_to_html(
+            image, alt_text, self.editor_attributes(image, alt_text)
+        )
+
     def image_to_html(self, image, alt_text, extra_attributes):
         rendition = image.get_rendition(self.filter_spec)
 
