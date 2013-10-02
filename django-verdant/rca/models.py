@@ -912,7 +912,7 @@ HomePage.content_panels = [
     FieldPanel('packery_tweets'),
     FieldPanel('packery_rcanow'),
     FieldPanel('packery_standard'),
-    ], 'Packery content'),
+    ], 'Packery content')
 ]
 
 HomePage.promote_panels = [
@@ -1525,7 +1525,14 @@ ResearchInnovationPage.promote_panels = [
 # == Current research page ==
 
 class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
-    pass
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+CurrentResearchPage.content_panels = [
+    FieldPanel('title'),
+    FieldPanel('intro'),
+    FieldPanel('twitter_feed'),
+]
 
 CurrentResearchPage.promote_panels = [
     MultiFieldPanel([
