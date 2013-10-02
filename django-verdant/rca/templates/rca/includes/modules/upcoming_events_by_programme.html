@@ -1,0 +1,27 @@
+{% load pageurl %}
+{% if events %}
+    <section class="events x-plus row module">
+        <!-- to do: add link to events index filtered by programme -->
+        <h2 class="module-title"><a href="#">{{ self.programme }} events</a></h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for event in events %}
+                    {% if forloop.counter == 3 %}
+                        <li class="load-more-target">
+                    {% elif forloop.counter0|divisibleby:"3" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl event %}">
+                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{{ event.location }}</span></h3>
+                            <p class="h7">{{ event.title }}</p>
+                            {% if event.audience %}<p class="meta a2">{{ event.audience }}</p>{% endif %}
+                        </a>  
+                    </li>
+                {% endfor %}
+                <li class="load-more"><a href="#">+</a></li>
+            </ul>
+        </div>
+    </section>
+{% endif %}

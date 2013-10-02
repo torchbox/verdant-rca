@@ -136,6 +136,36 @@ PROGRAMME_CHOICES = (
     ('textiles', 'Textiles'),
 )
 
+SUBJECT_CHOICES = (
+    ('animation', 'Animation'),
+    ('architecture', 'Architecture'),
+    ('ceramicsglass', 'Ceramics & Glass'),
+    ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
+    ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
+    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
+    ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
+    ('designinteractions', 'Design Interactions'),
+    ('designproducts', 'Design Products'),
+    ('fashionmenswear', 'Fashion Menswear'),
+    ('fashionwomenswear', 'Fashion Womenswear'),
+    ('innovationdesignengineering', 'Innovation Design Engineering'),
+    ('historyofdesign', 'History of Design'),
+    ('painting', 'Painting'),
+    ('photography', 'Photography'),
+    ('printmaking', 'Printmaking'),
+    ('sculpture', 'Sculpture'),
+    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('textiles', 'Textiles'),
+    ('vehicledesign', 'Vehicle Design'),
+    ('visualcommunication', 'Visual Communication'),
+)
+
+QUALIFICATION_CHOICES = (
+    ('ma', 'MA'),
+    ('mphil', 'MPhil'),
+    ('phd', 'PhD'),
+)
+
 RESEARCH_TYPES_CHOICES = (
     ('student', 'Student'),
     ('staff', 'Staff'),
@@ -319,6 +349,16 @@ class ProgrammePageOurSites(models.Model):
         FieldPanel('site_name')
     ]
 
+class ProgrammeDocuments(models.Model):
+    page = models.ForeignKey('rca.ProgrammePage', related_name='documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        DocumentChooserPanel('document'), 
+        FieldPanel('text')
+    ]
+
 class ProgrammePageStudentStory(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='student_stories')
     name = models.CharField(max_length=255)
@@ -342,8 +382,6 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    download_document_url = models.CharField(max_length=255, blank=True)
-    download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -378,8 +416,7 @@ ProgrammePage.content_panels = [
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
     ], 'Facilities'),        
-    FieldPanel('download_document_url'),
-    FieldPanel('download_document_text'),
+    InlinePanel(ProgrammePage, ProgrammeDocuments, fk_name='page', label="Documents"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1009,7 +1046,9 @@ class StudentPageWorkCollaborator(models.Model):
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
-    current_degree = models.CharField(max_length=255)
+    degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
+    degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
+    degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
     statement = RichTextField()
@@ -1025,8 +1064,11 @@ StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('school'),
     FieldPanel('programme'),
-    FieldPanel('current_degree'),
+    FieldPanel('degree_qualification'),
+    FieldPanel('degree_subject'),
+    FieldPanel('degree_year'),
     ImageChooserPanel('profile_image'),
+    InlinePanel(StudentPage, StudentPageContacts, label="Student contact"),
     InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),

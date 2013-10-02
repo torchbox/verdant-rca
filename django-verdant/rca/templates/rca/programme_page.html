@@ -1,29 +1,48 @@
 {% extends "rca/base.html" %}
-{% load pageurl image_tags embed_filters rich_text %}
+{% load pageurl image_tags embed_filters rich_text rca_tags %}
 
 {% block content %}
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
 
+    <!-- head of programme -->
     {% if self.head_of_programme %}
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
             
-
-            <div class="image">{% image self.head_of_programme.image width-400 %}</div>
-            <div class="content bc1"><strong>Neville Brody</strong> {{ self.head_of_programme_statement|richtext }}...<a href="#"><span class="bc4 caps">Continue</a></span></div>
-            <!-- To do: add in link once it is in the model -->
-            <!-- To do: may need to have an alternative class for the text so it sits flush to the left if there is no staff image (remains to be seen if that is a required field) -->
+            {% if self.head_of_programme.profile_image %}
+                <a href="{% pageurl self.head_of_programme %}">
+                    <div class="image">{% image self.head_of_programme.profile_image width-400 %}</div>
+                </a>
+            {% endif %}
+            <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
+                <strong>{{ self.head_of_programme.title }}</strong>
+                {{ self.head_of_programme_statement|richtext }}
+                {% if self.head_of_programme_link %}
+                    ...<a href="{% pageurl self.head_of_programme_link %}"><span class="bc4 caps">Continue</a></span>
+                {% endif %}
+            </div>
         </section>
     {% endif %}
 
+    <!-- news carousel -->
+
+    {% news_carousel programme=self.programme %}
+
+    <!-- events -->
+    {% upcoming_events_by_programme programme=self.programme %}
+
+
+    <!-- open days -->
+    {% upcoming_events_by_programme opendays=1 programme=self.programme %}
+
     <!-- tabs -->
     
-    {% comment %} 'and' has higher precedent than 'or' so below should work as if download items were in brackets{% endcomment %}
     <!-- To do: may need custom tags for tabbed content as below logic does not solve all cases -->
-
-    {% if self.tabbed_feature_count > 0 or self.download_document_url and self.download_document_text %}
+    
+    {% comment %} 'and' has higher precedent than 'or' so below should work as if document items were in brackets{% endcomment %}
+    {% if self.tabbed_feature_count > 0 or document.download and document.text %}
         <section class="three-tab row module">
             <h2 class="module-title">Student info</h2>
 
@@ -47,7 +66,7 @@
                 {% if self.programme_video %}
                     <h2 class="header"><a href="#tab1" class="a0 active">Programme video</a></h2>
                     <div class="tab-pane active flush" id="tab1">
-                        <div class="videoembed vimeo image full">
+                        <div class="videoembed vimeo">
                             <div class="playpause play">Play</div>
                             {% if self.programme_video_poster_image %}
                                 <div class="poster">{% image self.programme_video_poster_image width-1000 %}</div>
@@ -70,7 +89,7 @@
                                         {% endif %}
                                         <div class="content">
                                             <h3 class="h6">{{ story.name }}</h3>
-                                            <div class="bc3">{{ story.text|richtext }}....<a href="#" class="bc5 caps">continue</a></div>
+                                            <div class="bc3">{{ story.text|richtext }}{% if story.link %}....<a href="{% pageurl story.link %}" class="bc5 caps">continue</a>{% endif %}</div>
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -81,20 +100,17 @@
                 
                 {% if self.facilities_text or self.facilities_image %}
                     <h2 class="header"><a href="#tab3" class="a0">Facilities</a></h2>
-                    <div class="tab-pane" id="tab3">
+                    <div class="tab-pane flush" id="tab3">
                         {% if self.facilities_image %}
                             <div class="image">{% image self.facilities_image width-1000 %}</div>
                         {% endif %}
                         {% if self.facilities_text %}
-                            {{ self.facilities_text|richtext }}
-                        {% endif %}
-                        {% if self.facilities_link %}
-                            ...
-                            <a class="bc4 caps" href="{% pageurl self.facilities_link %}">
-                        {% endif %}
-                            continue
-                        {% if self.facilities_link %}
-                            </a>
+                            <div class="facilities">
+                                {{ self.facilities_text|richtext }}
+                                {% if self.facilities_link %}
+                                    ...<a class="bc5 caps" href="{% pageurl self.facilities_link %}">continue</a>
+                                {% endif %}
+                            </div>
                         {% endif %}
                     </div>
                 {% endif %}
@@ -104,10 +120,17 @@
                 </div>
             {% endif %}
 
-            <ul class="button-bar two-button">
-                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
-                <li><a href="#" class="button icon icon-download">Button with icon</a></li>
-            </ul>
+            {% with self.documents.all as documents %}
+                {% if documents %}
+                    <ul class="button-bar two-button">
+                        {% for document in documents %}
+                            {% if document.download and document.text %}
+                                <li><a href="{{ document.document }}" class="button icon icon-download">{{ document.text }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
 
         </section>
     {% endif %}
