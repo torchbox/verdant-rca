@@ -454,7 +454,7 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
 
 NewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('intro'),
+    FieldPanel('intro', classname="full"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -719,7 +719,7 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
 
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('intro'),
+    FieldPanel('intro', classname="full"),
     InlinePanel(EventIndex, EventIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
@@ -851,7 +851,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
-        FieldPanel('intro'),
+        FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
     InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
@@ -1017,7 +1017,7 @@ class JobsIndex(Page, SocialFields, CommonPromoteFields):
 
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('intro'),
+    FieldPanel('intro', classname="full"),
     InlinePanel(JobsIndex, JobsIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
@@ -1042,10 +1042,21 @@ JobsIndex.promote_panels = [
 # == Alumni profile page ==
 
 class AlumniPage(Page, SocialFields, CommonPromoteFields):
-    pass
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    year = models.CharField(max_length=4, blank=True)
+    intro = RichTextField()
+    biography = RichTextField()
 
 AlumniPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    ImageChooserPanel('profile_image'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('year'),
+    FieldPanel('intro'),
+    FieldPanel('biograyph'),
 ]
 
 AlumniPage.promote_panels = [
@@ -1324,7 +1335,7 @@ class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
 
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
-    FieldPanel('intro'),
+    FieldPanel('intro', classname="full"),
     InlinePanel(RcaNowIndex, RcaNowIndexRelatedLink, fk_name='page', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
@@ -1483,7 +1494,7 @@ class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
 ResearchInnovationPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
-        FieldPanel('intro'),
+        FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
     InlinePanel(ResearchInnovationPage, ResearchInnovationPageCurrentResearch, fk_name='page', label="Current research"),
@@ -1529,8 +1540,8 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
 CurrentResearchPage.content_panels = [
-    FieldPanel('title'),
-    FieldPanel('intro'),
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
     FieldPanel('twitter_feed'),
 ]
 
