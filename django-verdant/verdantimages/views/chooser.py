@@ -6,7 +6,7 @@ from verdantadmin.modal_workflow import render_modal_workflow
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form, ImageInsertionForm
 from verdantadmin.forms import SearchForm
-from verdantimages.formats import FORMATS_BY_NAME
+from verdantimages.formats import get_image_format
 
 
 def get_image_json(image):
@@ -96,7 +96,7 @@ def chooser_select_format(request, image_id):
         form = ImageInsertionForm(request.POST, initial={'alt_text': image.default_alt_text})
         if form.is_valid():
 
-            format = FORMATS_BY_NAME[form.cleaned_data['format']]
+            format = get_image_format(form.cleaned_data['format'])
             preview_image = image.get_rendition(format.filter_spec)
 
             image_json = json.dumps({

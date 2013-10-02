@@ -10,7 +10,7 @@ from core.models import Page
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
 from verdantimages.models import get_image_model
-from verdantimages.formats import FORMATS_BY_NAME
+from verdantimages.formats import get_image_format
 
 from verdantdocs.models import Document
 
@@ -50,7 +50,7 @@ class ImageEmbedHandler(object):
         try:
             image = Image.objects.get(id=attrs['id'])
             try:
-                format = FORMATS_BY_NAME[attrs['format']]
+                format = get_image_format(attrs['format'])
                 filter_spec = format.filter_spec
                 classnames = format.classnames
             except KeyError:
