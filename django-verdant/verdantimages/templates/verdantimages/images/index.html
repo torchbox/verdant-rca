@@ -33,27 +33,30 @@
                 <h1>Images</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantimages_add_image' %}" class="button icon add-teal">Add an image</a>
+                <a href="{% url 'verdantimages_add_image' %}" class="button icon icon-plus-inverse">Add an image</a>
             </div>
         </div>
-    </header>
 
-    <div class="nice-padding">
-        <form class="" action="{% url 'verdantimages_search_image' %}" method="get">
+        <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
             <ul class="fields">
                 {% for field in form %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
+                <li class="submit"><input type="submit" value="Search" /></li>
                 {% if popular_tags %}
                     <li>Popular tags:
                         {% for tag in popular_tags %}
-                            <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                            <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
                         {% endfor %}
                     </li>
                 {% endif %}
-                <li><input type="submit" value="Search" /></li>
             </ul>
         </form>
+
+    </header>
+
+    <div class="nice-padding">
+        
 
         <div id="image-results" class="listing horiz images">
             {% if is_searching %}

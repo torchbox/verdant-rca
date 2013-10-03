@@ -143,7 +143,8 @@ body.page-editor{
 
     /* wrapper around add button for mutliple objects */
     p.add{
-        
+        font-weight:700;
+        cursor:pointer;
         margin-top:0;
         margin-bottom:0;
         padding-top:3em;
@@ -153,33 +154,24 @@ body.page-editor{
     /* Object controls */
     .controls{
         position:absolute;
-        right:0;
-        .pull(@grid-content-indent);
+        right:@grid-gutter-width/2;
         text-transform:uppercase;
-        color:@color-grey; 
+        color:@color-grey;
         
         li{
-            position:relative;
+            background-color:lighten(@color-grey-lighter, 5%);
+            display:inline-block;
             cursor:pointer;
         }
         .icon{
-            text-indent:-5000px;
-            width:35px;
-            height:35px;
-            padding:0;
+            padding:0.4em;
+        }
+        .icon:hover{
+            background-color:@color-teal;
 
             &:before{
-                left:0;
-                right:0;
-                margin:auto;
+                color:white;
             }
-
-            &:hover{
-                background-color:@color-teal;
-            }
-        }
-        .move-updown-black{
-            cursor:move;
         }
     }
 }

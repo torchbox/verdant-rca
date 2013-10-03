@@ -1,103 +1,139 @@
-/* white icons */
-.icon.explore{
-    .icon-left(25px, 25px, 0px, 216px, 1);
+@font-face {
+    font-family: "verdant";
+    src:url("@{css-root}fonts/verdant.eot");
+    src:url("@{css-root}fonts/verdant.eot?#iefix") format("embedded-opentype"),
+        url("@{css-root}fonts/verdant.ttf") format("truetype"),
+        url("@{css-root}fonts/verdant.svg#verdant") format("svg"),
+        url("@{css-root}fonts/verdant.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
 }
-.icon.images{
-    .icon-left(25px, 25px, 100%, 100%, 1);
-    /* temporary until image exists */
-    &:before{
-        content:"img";
-    }
+
+.icon.teal{
+    color:@color-teal;
 }
-.icon.snippets{
-    .icon-left(25px, 25px, 100%, 100%, 1);
-    /* temporary until image exists */
-    &:before{
-        content:"sni";
-    }
+.icon.white{
+    color:white
 }
-.icon.documents{
-    .icon-left(25px, 25px, 100%, 100%, 1);
-    /* temporary until image exists */
-    &:before{
-        content:"doc";
-    }
+
+.icon:before,
+.icon:after{
+    font-family: "verdant";
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none !important;
+    speak: none;
+    display: inline-block;
+    text-decoration: none;
+    width: 1.3em;
+    line-height: 1em;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: -20%;
+    font-size:25px;
+    text-align:left;
 }
-.icon.folder{
-    .icon-left(25px, 25px, 148px, 216px, 1);
+
+.icon-cogs:before {
+  content: "a";
 }
-.icon.new, .icon.add{
-    .icon-left(25px, 25px, 207px, 203px, 1);
-    cursor:pointer;
-    position:relative;
-    text-decoration:none;
-    font-weight:700;
+.icon-doc-empty-inverse:before {
+  content: "b";
+}
+.icon-doc-empty:before {
+  content: "c";
+}
+.icon-edit:before {
+  content: "d";
+}
+.icon-arrow-up:before {
+  content: "e";
+}
+.icon-search:before {
+  content: "f";
+}
+.icon-cross:before {
+  content: "g";
+}
+.icon-folder-open-1:before {
+  content: "i";
+}
+.icon-folder-inverse:before {
+  content: "j";
+}
+.icon-mail:before {
+  content: "k";
+}
+.icon-arrows-up-down:before {
+  content: "l";
+}
+.icon-locked:before {
+  content: "m";
+}
+.icon-arrow-right:before {
+  content: "n";
+}
+.icon-doc-full:before {
+  content: "h";
+}
+.icon-image:before {
+  content: "o";
+}
+.icon-unlocked:before {
+  content: "p";
+}
+.icon-arrow-down:before {
+  content: "q";
+}
+.icon-doc-full-inverse:before {
+  content: "r";
+}
+.icon-folder:before {
+  content: "s";
+}
+.icon-plus:before {
+  content: "t";
+}
+.icon-tag:before {
+  content: "u";
+}
+.icon-folder-open-inverse:before {
+  content: "v";
+}
+.icon-cog:before {
+  content: "w";
+}
+.icon-tick:before {
+  content: "x";
+}
+.icon-user:before {
+  content: "y";
+}
+.icon-arrow-left:before {
+  content: "z";
+}
+.icon-tick-inverse:before {
+  content: "A";
+}
+.icon-plus-inverse:before {
+  content: "B";
+}
+.icon-snippet:before {
+  content: "D";
+}
+.icon-verdant:before {
+  content: "V";
+}
+
+.icon.text-replace{
+    text-indent:-200px;
+    overflow:hidden;
+    text-align:left;
 
     &:before{
-        .border-radius(100%);
-        background-color:@color-teal;
+        width:1em;
+        text-indent:200px;
+        margin-left:10%;
+        line-height:1.2em;
     }
-}
-.icon.iconright.arrow-up{
-    .icon-right(18px, 12px, 406px, 215px, 1);
-}
-.icon.arrow-up{
-    .icon-left(18px, 12px, 406px, 215px, 1);
-}
-.icon.arrow-right{
-    .icon-left(18px, 25px, 271px, 216px, 1)
-}
-.icon.arrow-left{
-    .icon-left(18px, 25px, 306px, 216px, 1)
-}
-.icon.iconright.checked-white{
-    .icon-right(18px, 18px, 525px, 216px, 1);
-}
-
-/* black icons */
-.icon.folder-black{
-    .icon-left(25px, 25px, 199px, 281px, 1);
-}
-.icon.arrow-down-black{
-    .icon-left(25px, 16px, 77px, 281px, 1);
-}
-.icon.move-updown-black{
-    .icon-left(27px, 22px, 275px, 275px, 1);
-}
-.icon.orderable-down{
-    .icon-right(15px, 10px, 78px, 280px, 0.7);
-}
-.icon.orderable-up{
-    .icon-right(15px, 10px, 134px, 280px, 0.7);
-}
-
-/* teal icons */
-.icon.checked{
-    .icon-left(18px, 18px, 0, 339px, 1);
-}
-.icon.add-teal{
-    .icon-left(25px, 25px, 50px, 324px, 1); 
-    &:before{
-        .border-radius(100%);
-        background-color:white;
-    }
-}
-.icon.delete{
-    .icon-left(16px, 16px, 168px, 333px, 1);
-
-    &:hover:before{
-        .sprite(469px, 216px, 1);
-    }
-}
-
-
-/* misc  */
-
-h2.icon{
-    position:relative;
-
-    &:before{
-        opacity:0.5;
-        left:0 !important;
-    }   
 }

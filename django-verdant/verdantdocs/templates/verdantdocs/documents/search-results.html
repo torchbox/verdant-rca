@@ -1,5 +1,5 @@
 <h3>{{ documents|length }} matches</h3>
-<ul>
+<ul class="listing">
     {% for doc in documents %}
         <li>
             <a class="document-choice" href="{% url 'verdantdocs_index' %}">
