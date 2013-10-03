@@ -8,14 +8,30 @@
     // TODO: when we implement a mechanism to configure the image format list on a
     // per-installation / per-site basis, we'll need a way to insert the corresponding
     // CSS here.
-    img.left {
-        float: left;
-    }
-    img.right {
-        float: right;
-    }
-    img.full-width {
-        display: block;
+
+    .bodytext-image {
+        margin-top: 16px;
+        img {
+            width:100%;
+        }
+        figcaption {
+            display: block;
+            width: 100%;
+            text-align: right;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        &.small {
+            max-width: 50%;
+        }
+        &.left {
+            float: left;
+            margin-right: 16px;
+        }
+        &.right {
+            float: right;
+            margin-left: 16px;
+        }
     }
 
 }
