@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem
 from datetime import date
 from django.db.models import Min, Max
 
@@ -64,3 +64,10 @@ def rca_now(context, programme):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/includes/modules/research.html', takes_context=True)
+def research(context, programme):
+    research_items = ResearchItem.objects.filter(programme=programme)
+    return {
+        'research_items': research_items,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }

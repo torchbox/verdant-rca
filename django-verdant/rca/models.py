@@ -1395,6 +1395,15 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def feature_image(self):
+        try:
+            return self.carousel_items.filter(image__isnull=False)[0].image
+        except IndexError:
+            try:
+                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
+            except IndexError:
+                return None
+
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ResearchItem, ResearchItemCarouselItem, label="Carousel content"),
