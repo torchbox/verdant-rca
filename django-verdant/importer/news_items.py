@@ -11,7 +11,7 @@ PATH = 'importer/export_news_pretty.xml'
 IMAGE_PATH = 'importer/export_news_images/'
 
 
-def doimport(path=PATH, imagepath=IMAGE_PATH):
+def doimport(path=PATH, image_path=IMAGE_PATH):
     tree = ET.parse(path)
     root = tree.getroot()
     errors = []
