@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage
 from datetime import date
 from django.db.models import Min, Max
 
@@ -34,6 +34,33 @@ def upcoming_events_by_programme(context, opendays=0, programme=""):
     else:
         events = events.exclude(audience='openday')
     return {
+        'opendays': opendays,
         'events': events,
+        'programme': programme,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
+@register.inclusion_tag('rca/includes/modules/staff_by_programme.html', takes_context=True)
+def staff_by_programme(context, programme):
+    staff = StaffPage.objects.filter(roles__programme=programme)
+    return {
+        'staff': staff,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/includes/modules/alumni_by_programme.html', takes_context=True)
+def alumni_by_programme(context, programme):
+    alumni = AlumniPage.objects.filter(programme=programme)
+    return {
+        'alumni': alumni,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/includes/modules/rca_now.html', takes_context=True)
+def rca_now(context, programme):
+    rcanow = RcaNowPage.objects.filter(show_on_homepage=1).filter(programme=programme)
+    return {
+        'rcanow': rcanow,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+

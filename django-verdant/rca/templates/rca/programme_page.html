@@ -33,6 +33,9 @@
     <!-- events -->
     {% upcoming_events_by_programme programme=self.programme %}
 
+    <!-- staff -->
+    {% staff_by_programme programme=self.programme %}
+
 
     <!-- open days -->
     {% upcoming_events_by_programme opendays=1 programme=self.programme %}
@@ -45,8 +48,9 @@
 
             <!--show tabs if there is more than 1 (javascript applies the correct links and active class for the first
             tab as this is hard to do in the template)-->
-            {% if self.tabbed_feature_count > 1 %}
+            {% if self.tabbed_feature_count > 0 %}
                 <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
+            {% endif %}  
                     {% if self.programme_video %}
                         <li><a class="t0">Programme video</a></li>
                     {% endif %}
@@ -56,10 +60,11 @@
                     {% if self.facilities_text or self.facilities_image %}
                         <li><a class="t0">Facilities</a></li>
                     {% endif %}
+            {% if self.tabbed_feature_count > 0 %}
                 </ul>
-
-                <div class="tab-content">
-            {% endif %}
+            {% endif %}    
+            
+            <div class="tab-content">
 
                 {% if self.programme_video %}
                     <h2 class="header"><a class="a0">Programme video</a></h2>
@@ -100,6 +105,7 @@
                     <h2 class="header"><a class="a0">Facilities</a></h2>
                     <div class="tab-pane flush">
                         {% if self.facilities_image %}
+                            image
                             <div class="image">{% image self.facilities_image width-1000 %}</div>
                         {% endif %}
                         {% if self.facilities_text %}
@@ -112,11 +118,7 @@
                         {% endif %}
                     </div>
                 {% endif %}
-
-            {% if self.tabbed_feature_count > 1 %}
-                <!-- close tabs if there is more than 1 -->
-                </div>
-            {% endif %}
+            </div>
 
             {% with self.documents.all as documents %}
                 {% if documents %}
@@ -132,6 +134,13 @@
 
         </section>
     {% endif %}
+
+    <!-- alumni -->
+    {% alumni_by_programme programme=self.programme %}
+
+    <!-- rca now -->
+    {% rca_now programme=self.programme %}
+    
 
     <!-- our sites -->
     {% with self.our_sites.all as our_sites %}
