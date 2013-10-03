@@ -28,6 +28,30 @@ class RcaImage(AbstractImage):
     def default_alt_text(self):
         return self.alt
 
+    def caption_lines(self):
+        if self.creator:
+            first_line = u"%s by %s" % (self.title, self.creator)
+        else:
+            first_line = self.title
+
+        lines = [first_line]
+
+        if self.medium:
+            lines.append(self.medium)
+
+        bottom_line_items = []
+        if self.dimensions:
+            bottom_line_items.append(self.dimensions)
+        if self.permission:
+            bottom_line_items.append(u"\u00a9 %s" % self.permission)  # u00a9 = copyright symbol
+        if self.photographer:
+            bottom_line_items.append(self.photographer)
+
+        if bottom_line_items:
+            lines.append(' | '.join(bottom_line_items))
+
+        return lines
+
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaImage)
 def image_delete(sender, instance, **kwargs):
