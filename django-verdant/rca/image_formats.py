@@ -27,12 +27,15 @@ class CaptionedImageFormat(Format):
         )
 
 unregister_image_format('fullwidth')
-# unregister_image_format('left')
-# unregister_image_format('right')
+unregister_image_format('left')
+unregister_image_format('right')
 
 register_image_format(
-    CaptionedImageFormat('fullwidth', 'Full width', 'bodytext-image', 'fill-304x171')
+    CaptionedImageFormat('fullwidth', 'Full width', 'bodytext-image', 'width-750')
 )
 register_image_format(
-    CaptionedImageFormat('halfwidthright', 'Half width right aligned', 'bodytext-image small', 'fill-304x171')
+    CaptionedImageFormat('left', 'Half width left aligned', 'bodytext-image small left', 'width-400')
+)
+register_image_format(
+    CaptionedImageFormat('right', 'Half width right aligned', 'bodytext-image small right', 'width-400')
 )
