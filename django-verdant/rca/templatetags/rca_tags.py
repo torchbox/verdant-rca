@@ -21,6 +21,10 @@ def news_carousel(context, area="", programme="", count=6):
         news_items = NewsItem.objects.filter(area=area)[:count]
     elif programme:
         news_items = NewsItem.objects.filter(related_programmes__programme=programme)[:count]
+    else:
+        # neither programme nor area specified - return no results
+        news_items = NewsItem.objects.none()
+
     return {
         'news_items': news_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
