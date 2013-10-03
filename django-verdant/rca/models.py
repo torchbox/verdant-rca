@@ -24,6 +24,8 @@ class RcaImage(AbstractImage):
     permission = models.CharField(max_length=255, blank=True)
     photographer = models.CharField(max_length=255, blank=True)
 
+    search_on_fields = ['title', 'creator', 'photographer']
+
     @property
     def default_alt_text(self):
         return self.alt

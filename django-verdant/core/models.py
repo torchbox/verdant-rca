@@ -152,9 +152,10 @@ class Page(MP_Node):
     def is_navigable(self):
         """
         Return true if it's meaningful to browse subpages of this page -
-        i.e. it currently has subpages, or its page type indicates that sub-pages are supported
+        i.e. it currently has subpages, or its page type indicates that sub-pages are supported,
+        or it's at the top level (this rule necessary for empty out-of-the-box sites to have working navigation)
         """
-        return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS)
+        return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS) or self.depth == 2
 
     def get_other_siblings(self):
         # get sibling pages excluding self
@@ -273,17 +274,18 @@ class Page(MP_Node):
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
-    # or are a non-leaf type (indicating that they *could* have children)
+    # or are a non-leaf type (indicating that they *could* have children),
+    # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
     if NAVIGABLE_PAGE_CONTENT_TYPE_IDS:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR content_type_id IN %s
+            WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
             ORDER BY path
         """, [tuple(NAVIGABLE_PAGE_CONTENT_TYPE_IDS)])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0
+            WHERE numchild > 0 OR depth = 2
             ORDER BY path
         """)
 

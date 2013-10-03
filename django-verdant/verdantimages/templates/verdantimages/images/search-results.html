@@ -7,9 +7,9 @@
                 <div class="image">{% image image fill-150x150 %}</div>
                 <h3>{{ image.title }}</h3>
             </a>
-            {% with image.tags.all as tags %}
+            {% with image.prefetched_tags as tags %}
                 {% if tags %}
-                    <p>Tags: {% for tag in image.tags.all %}{{ tag.name }} {% endfor %}</p>
+                    <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
                 {% endif %}
             {% endwith %}
         </li>
