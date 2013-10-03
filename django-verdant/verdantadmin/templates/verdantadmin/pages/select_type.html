@@ -9,7 +9,7 @@
             <p>Page types that a regular editor would be allowed to add:</p>
             <ul class="listing">
                 {% for content_type in page_types %}
-                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon add">{{ content_type.name|title }}</a></li>
+                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -18,7 +18,7 @@
             <p>Page types that you can add as a superuser:</p>
             <ul class="listing">
                 {% for content_type in all_page_types %}
-                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon add">{{ content_type.name|title }}</a></li>
+                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a></li>
                 {% endfor %}
             </ul>
         {% endif %}
