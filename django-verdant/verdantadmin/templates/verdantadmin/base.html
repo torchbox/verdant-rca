@@ -41,14 +41,14 @@
         <div id="nav-toggle" data-afteropen="Collapse">Menu</div>
         <div class="nav-wrapper">
             <div class="inner">
-                <a href="{% url 'verdantadmin_home' %}" class="logo"></a>
+                <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
                 <nav class="nav-main">
                     <ul>
-                        <li class="selected"><a href="#" class="icon icon-page dl-trigger">Pages</a></li>
+                        <li class="selected"><a href="#" class="icon icon-doc-empty-inverse dl-trigger">Pages</a></li>
                         <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
-                        <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-document">Documents</a></li>
+                        <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
                         <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
-                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon icon-plus">New</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
                     </ul>
                 </nav>
             </div>

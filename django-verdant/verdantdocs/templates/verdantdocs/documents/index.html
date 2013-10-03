@@ -31,7 +31,7 @@
                 <h1>Documents</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>
+                <a href="{% url 'verdantdocs_add_document' %}" class="button icon icon-plus-inverse">Add a document</a>
             </div>
         </div>
     </header>
@@ -44,7 +44,7 @@
                 {% if popular_tags %}
                     <li>Popular tags:
                         {% for tag in popular_tags %}
-                            <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                            <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
                         {% endfor %}
                     </li>
                 {% endif %}
@@ -52,12 +52,12 @@
             </ul>
         </form>
 
-        <div id="document-results" class="listing documents">
+        <div id="document-results" class="documents">
             {% if is_searching %}
                 {% include "verdantdocs/documents/search-results.html" %}
             {% else %}
                 <p>Latest added documents</p>
-                <ul>
+                <ul class="listing">
                     {% for doc in documents %}
                         <li>
                             <a href="{% url 'verdantdocs_edit_document' doc.id %}">

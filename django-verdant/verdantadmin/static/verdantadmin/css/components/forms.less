@@ -72,11 +72,6 @@ input, textarea, select, .richtext, .tagit{
     border:0;
 }
 
-.tagit{
-    padding:0.9em 1.2em;
-}
-
-
 input[type=radio],input[type=checkbox]{
     cursor:pointer;
     float:left;
@@ -133,7 +128,7 @@ input[type=checkbox]:checked:before{
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 3em;
+    padding:1.3em 2em;
     border:none;
     background-color: @color-button;
     color:white;
@@ -170,17 +165,6 @@ input[type=submit].button-small, input[type=reset].button-small, input[type=butt
 a.button{
     line-height:3.5em;
 }
-.button.icon{
-    padding-left:45px;
-
-    /* before and after are reserved for the icon container */
-    &:before,
-    &:after{
-        left:1em;
-    }
-}
-
-
 
 
 /* Other text */
@@ -272,8 +256,34 @@ ul.inline li:first-child, li.inline:first-child{
 .chooser {
     /* We show the 'chosen' state...*/
     
-    .chosen { display: block; }
-    .unchosen { display: none; }
+    .chosen {
+        display: block;
+    }
+    .unchosen, .chosen{
+        position:relative;
+        padding-left:@thumbnail-width+15; 
+
+        &:before{
+            .transition(opacity 0.3s ease);
+            font-family:verdant;
+            content:"";           
+            position:absolute;
+            top:0;
+            left:0;
+            margin-top:auto;
+            margin-bottom:auto;
+            display:inline-block;
+            opacity:0.1;
+            font-size:7.5em;
+            line-height:1em;
+        }
+        &:hover:before{
+            opacity:0.2;
+        }    
+    }
+    .unchosen {
+        display: none;      
+    }
 
     /* ...unless the .page-chooser has the 'blank' class set */
     &.blank {
@@ -287,38 +297,169 @@ ul.inline li:first-child, li.inline:first-child{
     }
 }
 
-.image-chooser {
-    .unchosen{
-        padding-left:@thumbnail-width+15;
-        position:relative;
-        height:95px;
+
+.page-chooser {
+    .unchosen, .chosen{
+        height:100px;
 
         &:before{
-            .sprite(836px, 380px, 1);
-            .transition(opacity 0.3s ease);
-            position:absolute;
-            top:0;
-            left:0;
-            margin-top:auto;
-            margin-bottom:auto;
-            content:"";
-            display:inline-block;
-            height:100px;
-            width:@thumbnail-width;
-            opacity:0.1;
+            content:"c";
+            left:0.2em;
         }
-        &:hover:before{
-            opacity:0.2;
-        }    
     }
     .chosen{
-        padding-left:@thumbnail-width+15;
+        &:before{
+            content:"b";
+        }
+        .page-title{
+            float: left;
+            margin-left: -146px;
+            width: 126px;
+            height: 40px;
+            overflow: hidden;
+            font-size: 0.7em;
+            padding: 30px 10px 0 10px;
+            display: block;
+            top: 0px;
+            position: absolute;
+            line-height: 1.4em;
+            text-align: center;
+            color: black;
+
+            &:hover{
+                width:130px;
+                padding:0;
+                top: 0;
+                height: 100px;
+                background-color: white;
+            }
+        }
+    }
+}
+
+.document-chooser {
+    .unchosen, .chosen{
+        height:100px;
+
+        &:before{
+            content:"h";
+            left:0.2em;
+        }
+    }
+    .chosen{
+        &:before{
+            content:"r";
+        }
+        .document-title{
+            float: left;
+            margin-left: -146px;
+            width: 126px;
+            height: 40px;
+            overflow: hidden;
+            font-size: 0.7em;
+            padding: 30px 10px 0 10px;
+            display: block;
+            top: 0px;
+            position: absolute;
+            line-height: 1.4em;
+            text-align: center;
+            color: black;
+
+            &:hover{
+                width:130px;
+                padding:0;
+                top: 0;
+                height: 100px;
+                background-color: white;
+            }
+        }
+    }
+}
+
+
+.image-chooser {
+    .unchosen, .chosen{
+        height:85px;
+
+        &:before{
+            content:"o"; 
+            font-size:7.7em;
+            line-height:0.8em;
+        }
+    }
+    .chosen{
         .preview-image{
             float:left;
             margin-left:-(@thumbnail-width)-15;
         }
     }
 }
+
+.snippet-chooser {
+    .unchosen{
+        height:100px;
+
+        &:before{
+            content:"o"; 
+        }
+    }
+    .chosen{
+        .preview-image{
+            float:left;
+            margin-left:-(@thumbnail-width)-15;
+        }
+    }
+}
+
+/* Tags */
+
+.tagit{
+    padding:0.9em 1.2em;
+}
+
+.tagit .ui-state-default{
+    border:1px solid @color-grey-lighter;
+}
+
+.tagit-choice{
+    border:0;
+}
+ul.tagit li.tagit-choice-editable{
+    padding-right:23px !important; /* having to use important, FML*/
+}
+
+.suggested-tag{
+    padding-right:0.5em;
+    border:1px solid @color-grey-lighter;
+    padding:0.2em 0.5em;
+    color:inherit;
+}
+.tagit-label:before,
+.suggested-tag:before{
+    font-family:verdant;
+    display:inline-block;
+    color:@color-grey-light;
+    content:"u";
+    padding-right:0.5em;
+}
+.tagit-close{
+    .ui-icon-close{
+        margin-left:1em;
+        text-indent:0;
+        background:none;
+    }
+
+    .ui-icon-close:before{
+        font-family:verdant;
+        display:block;
+        color:@color-grey-light;
+        content:"g";
+    }
+    .ui-icon-close:hover:before{
+        color:@color-red
+    }
+}
+
 
 /* search bars  (search integrated into header area) */
 
