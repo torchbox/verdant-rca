@@ -61,6 +61,7 @@
                         </div>
                     </th>
                     <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
+                    <th class="children"></th>
                 </tr>
             </thead>
             <tbody>
@@ -80,14 +81,18 @@
                             <td class="type">{{ page.content_type }}</td>
                             <td class="status"></td>
                             {% if page.is_navigable %}
-                                <td>
-                                    <a href="{% url 'verdantadmin_explore' page.id %}">Explore &raquo;</a>
+                                <td class="children">
+                                    <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                                </td>
+                            {% else %}
+                                <td class="no-children">
+                                    <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
                                 </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                 {% else %}
-                    <tr><td colspan="4" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
+                    <tr><td colspan="5" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
                 {% endif %}
             </tbody>
         </table>

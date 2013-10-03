@@ -35,6 +35,9 @@ ul.listing{
             font-weight:normal;
             white-space: nowrap;
         }
+        th.children{
+            border:0;
+        }
 
         a{
             text-decoration:none;
@@ -149,21 +152,41 @@ ul.listing{
     td:hover .actions{
         visibility:visible;
     }
-  
-    .children{
-        padding-top:0;
-        padding-bottom:0;
-        position:relative;
-        
-        .view{
-            text-align:center;
-            position:absolute;
-            top:0;
-            height:100%;
-            width:100%;
-            border-left:1px dashed @color-input-border;
+    
+    .children,
+    .no-children{
+        .transition(background-color 0.2s ease);
+        width:8%;
+        padding:0;
+        border-left:1px dashed @color-input-border;
+        &:hover{
+            background-color:@color-header-bg;
         }
     }
+    .children a,
+    .no-children a{
+        .transition(all 0.2s ease);
+        color:@color-grey-light;
+        display:block;
+        padding:2em 0;       
+    }
+    
+    .children a:before{
+        font-size:50px
+    }
+
+    .children:hover{
+        background-color:@color-teal;
+
+        a:before{
+            color:white;
+        }
+    }
+    .children{
+        border-left:1px dashed @color-input-border;
+        a{display:block;}
+    }
+
     table .no-results-message{
         .push-padding(@grid-content-indent);
     }
@@ -207,7 +230,17 @@ ul.listing{
                 font-size:1em;
             }
         }
-
+        .no-children {
+            border-color:transparent;
+        }
+        .no-children a{
+            color:@color-teal;
+            opacity:0;
+        }
+        .no-children:hover{
+            border-color:@color-input-border;
+            a{opacity:1;}
+        }
     }
 }
 @media screen and (min-width: @breakpoint-desktop-small){
