@@ -4,22 +4,11 @@ ul.listing{
 }
 
 .listing{
-    /*font-size:0.9em; Don't know what I was thinking with this. Way too presumptuous */
-    
-    &.horiz > li{
-        float:left;
-    }
-
-    &.images > li{
-        width:130px;
-        height:130px;
-        margin:0 @grid-gutter-width @grid-gutter-width 0;
-    }
-
     ul&{
         border-top:1px dashed @color-input-border;
         margin-bottom:2em;
     }
+
     > li{
         padding:1em 0;
         border-bottom:1px dashed @color-input-border;
@@ -177,5 +166,66 @@ ul.listing{
     }
     table .no-results-message{
         .push-padding(@grid-content-indent);
+    }
+}
+
+@media screen and (min-width: @breakpoint-mobile){
+    .listing{
+        &.horiz > li{
+           float:left;
+        }
+        &.images {
+            .clearfix();
+            border: 1px solid @color-grey-lighter;
+            border-width:1px 0 0 1px;
+            > li{
+                .column(4);
+                text-align:center;
+                height:0;
+                padding-bottom:25%+10%;
+                border:1px solid @color-grey-lighter;
+                border-width:0 1px 1px 0px;
+
+                .image{
+                    border:3px solid transparent;
+                    display:inline-block;
+
+                    img{
+                        display:block;
+                    }
+                }
+
+                &:hover{
+                    background-color:@color-header-bg;
+
+                    .image{
+                        border-color:@color-teal;
+                    }
+                }
+            }
+            h3{
+                font-size:1em;
+            }
+        }
+
+    }
+}
+@media screen and (min-width: @breakpoint-desktop-small){
+    .listing.images > li{
+        .column(3);
+        padding-bottom:20%+10%;
+    }
+}
+@media screen and (min-width: @breakpoint-desktop-large){
+    .listing.images > li{
+        .column(2.4);
+        padding-bottom:20%+4%;
+    }
+}
+
+@media screen and (min-width: @breakpoint-desktop-larger){
+        .listing.images > li{
+        .column(2);
+        padding-bottom:16.6%+2%;
     }
 }

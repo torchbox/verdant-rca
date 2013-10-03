@@ -388,6 +388,9 @@ ul.inline li:first-child, li.inline:first-child{
         }
     }
     .chosen{
+        &:before{
+            content:"";
+        }
         .preview-image{
             float:left;
             margin-left:-(@thumbnail-width)-15;
@@ -462,4 +465,45 @@ ul.tagit li.tagit-choice-editable{
 
 
 /* search bars  (search integrated into header area) */
+.search-bar{
+    .nice-padding();
+    margin-top:-2em;
+    padding-top:1em;
+    padding-bottom:1em;
+    background-color:@color-header-bg;
+    border-bottom:1px solid @color-grey-lighter;
+    margin-bottom:2em;
 
+    .fields{
+        position:relative;
+    
+        .field label{
+            display:none;
+        }
+        .field input{
+            padding-left:3em;
+        }
+        .field:before{
+            position:absolute;
+            left:0.5em;
+            top:1em;
+            font-family:verdant;
+            content:"f";
+            font-size:25px;
+            color:@color-grey-light;
+        }
+    }
+    .submit{
+        position:absolute;
+        right:0;
+        top:0;
+        input{
+            padding:1.4em 2em;
+        }
+    }
+    .popular-tags{
+        h3{
+            display:inline;
+        }
+    }
+}

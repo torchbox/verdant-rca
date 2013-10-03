@@ -1,11 +1,11 @@
 {% load image_tags %}
-<h3>{{ images|length }} match{{ images|length|pluralize:"es" }}</h3>
-<ul>
+
+<ul class="listing horiz images">
     {% for image in images %}
         <li>
             <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
-                {% image image fill-130x100 %}
-                {{ image.title }}
+                <div class="image">{% image image fill-150x150 %}</div>
+                <h3>{{ image.title }}</h3>
             </a>
             {% with image.tags.all as tags %}
                 {% if tags %}
