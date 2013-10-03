@@ -2,7 +2,7 @@
 {% if events %}
     <section class="events x-plus row module">
         <!-- to do: add link to events index filtered by programme -->
-        <h2 class="module-title"><a href="#">{{ self.programme }} events</a></h2>
+        <h2 class="module-title">{% if opendays %}Open days{% else %}<a href="#">{{ programme }} events</a>{% endif %}</h2>
         <div class="item-container">
             <ul class="row">
                 {% for event in events %}
@@ -20,7 +20,11 @@
                         </a>  
                     </li>
                 {% endfor %}
-                <li class="load-more"><a href="#">+</a></li>
+                {% if events|length > 2 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% else %}
+                    <li class="space"></li>
+                {% endif %}
             </ul>
         </div>
     </section>

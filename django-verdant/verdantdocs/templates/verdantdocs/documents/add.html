@@ -14,13 +14,15 @@
         <h1>Add document</h1>
     </header>
 
-    <form action="{% url 'verdantdocs_add_document' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <ul class="fields">
-            {% for field in form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-            {% endfor %}
-            <li><input type="submit" value="Save" /></li>
-        </ul>
-    </form>
+    <div class="nice-padding">
+        <form action="{% url 'verdantdocs_add_document' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul class="fields">
+                {% for field in form %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% endfor %}
+                <li><input type="submit" value="Save" /></li>
+            </ul>
+        </form>
+    </div>
 {% endblock %}

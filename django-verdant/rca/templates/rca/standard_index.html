@@ -21,7 +21,9 @@
         {% if self.teasers %}
 
         	<section class="two-plus x-plus module">
-			    <h2 class="module-title">Module title</h2>
+        		{% if self.teasers_title %}
+			    	<h2 class="module-title">{{ self.teasers_title }}</h2>
+			    {% endif %}
 			    <div class="item-container">
 			        <ul class="row">
 

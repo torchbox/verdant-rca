@@ -401,7 +401,6 @@
 
 .tab-nav{
     .clearfix();
-    .unlist();
     position:relative;
     overflow:hidden;
     display:block;
@@ -425,6 +424,9 @@
 
     li.active a{
         background-color:darken(@color-pale-grey, 10%);
+    }
+    &.tabs-1 a{
+        .column(6, @grid-gutter-width);
     }
     &.tabs-2 a{
         .column(6, @grid-gutter-width);

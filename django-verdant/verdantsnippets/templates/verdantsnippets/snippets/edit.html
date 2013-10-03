@@ -8,6 +8,7 @@
         <h1>Editing {{ snippet_type_name }} "{{ instance }}"</h1>
     </header>
 
+    <div class="nice-padding">
     <form action="{% url 'verdantsnippets_edit' content_type.app_label content_type.model instance.id %}" method="POST">
         {% csrf_token %}
         {{ edit_handler.render_as_object }}
@@ -27,6 +28,7 @@
             </ul>
         </footer>
     </form>
+</div>
 
 {% endblock %}
 

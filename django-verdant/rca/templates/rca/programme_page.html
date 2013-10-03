@@ -33,39 +33,42 @@
     <!-- events -->
     {% upcoming_events_by_programme programme=self.programme %}
 
+    <!-- staff -->
+    {% staff_by_programme programme=self.programme %}
+
 
     <!-- open days -->
     {% upcoming_events_by_programme opendays=1 programme=self.programme %}
 
     <!-- tabs -->
     
-    <!-- To do: may need custom tags for tabbed content as below logic does not solve all cases -->
-    
-    {% comment %} 'and' has higher precedent than 'or' so below should work as if document items were in brackets{% endcomment %}
-    {% if self.tabbed_feature_count > 0 or document.download and document.text %}
+    {% if self.tabbed_feature_count > 0 or self.documents %}
         <section class="three-tab row module">
             <h2 class="module-title">Student info</h2>
 
-            <!--show tabs if there is more than 1-->
-            {% if self.tabbed_feature_count > 1 %}
+            <!--show tabs if there is more than 1 (javascript applies the correct links and active class for the first
+            tab as this is hard to do in the template)-->
+            {% if self.tabbed_feature_count > 0 %}
                 <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
+            {% endif %}  
                     {% if self.programme_video %}
-                        <li class="active"><a href="#tab1" class="t0">Programme video</a></li>
+                        <li><a class="t0">Programme video</a></li>
                     {% endif %}
                     {% if self.student_stories %}
-                        <li><a href="#tab2" class="t0">Student stories</a></li>
+                        <li><a class="t0">Student stories</a></li>
                     {% endif %}
                     {% if self.facilities_text or self.facilities_image %}
-                        <li><a href="#tab3" class="t0">Facilities</a></li>
+                        <li><a class="t0">Facilities</a></li>
                     {% endif %}
+            {% if self.tabbed_feature_count > 0 %}
                 </ul>
-
-                <div class="tab-content">
-            {% endif %}
+            {% endif %}    
+            
+            <div class="tab-content">
 
                 {% if self.programme_video %}
-                    <h2 class="header"><a href="#tab1" class="a0 active">Programme video</a></h2>
-                    <div class="tab-pane active flush" id="tab1">
+                    <h2 class="header"><a class="a0">Programme video</a></h2>
+                    <div class="tab-pane flush">
                         <div class="videoembed vimeo">
                             <div class="playpause play">Play</div>
                             {% if self.programme_video_poster_image %}
@@ -79,8 +82,8 @@
                 
                 {% with self.student_stories.all as student_stories %}
                     {% if student_stories %}
-                        <h2 class="header"><a href="#tab2" class="a0">Student stories</a></h2>
-                        <div class="tab-pane" id="tab2">      
+                        <h2 class="header"><a class="a0">Student stories</a></h2>
+                        <div class="tab-pane">      
                             <ul class="two-cols">
                                 {% for story in student_stories %}
                                     {% cycle '<li class="newrow">' '<li>' %}
@@ -99,9 +102,10 @@
                 {% endwith %}
                 
                 {% if self.facilities_text or self.facilities_image %}
-                    <h2 class="header"><a href="#tab3" class="a0">Facilities</a></h2>
-                    <div class="tab-pane flush" id="tab3">
+                    <h2 class="header"><a class="a0">Facilities</a></h2>
+                    <div class="tab-pane flush">
                         {% if self.facilities_image %}
+                            image
                             <div class="image">{% image self.facilities_image width-1000 %}</div>
                         {% endif %}
                         {% if self.facilities_text %}
@@ -114,18 +118,14 @@
                         {% endif %}
                     </div>
                 {% endif %}
-
-            {% if self.tabbed_feature_count > 1 %}
-                <!-- close tabs if there is more than 1 -->
-                </div>
-            {% endif %}
+            </div>
 
             {% with self.documents.all as documents %}
                 {% if documents %}
                     <ul class="button-bar two-button">
                         {% for document in documents %}
-                            {% if document.download and document.text %}
-                                <li><a href="{{ document.document }}" class="button icon icon-download">{{ document.text }}</a></li>
+                            {% if document.document and document.text %}
+                                <li><a href="{{ document.document.url }}" class="button icon icon-download">{{ document.text }}</a></li>
                             {% endif %}
                         {% endfor %}
                     </ul>
@@ -134,6 +134,13 @@
 
         </section>
     {% endif %}
+
+    <!-- alumni -->
+    {% alumni_by_programme programme=self.programme %}
+
+    <!-- rca now -->
+    {% rca_now programme=self.programme %}
+    
 
     <!-- our sites -->
     {% with self.our_sites.all as our_sites %}

@@ -1,5 +1,5 @@
 {% load image_tags %}
-<h3>{{ images|length }} matches</h3>
+<h3>{{ images|length }} match{{ images|length|pluralize:"es" }}</h3>
 <ul>
     {% for image in images %}
         <li>
@@ -7,7 +7,11 @@
                 {% image image fill-130x100 %}
                 {{ image.title }}
             </a>
-                <p>Tags: {% for tag in image.tags.all %}{{ tag.name }} {% endfor %}</p>
+            {% with image.tags.all as tags %}
+                {% if tags %}
+                    <p>Tags: {% for tag in image.tags.all %}{{ tag.name }} {% endfor %}</p>
+                {% endif %}
+            {% endwith %}
         </li>
     {% endfor %}
 </ul>

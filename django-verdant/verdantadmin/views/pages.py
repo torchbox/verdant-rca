@@ -45,13 +45,14 @@ def select_type(request):
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
 
+    page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name)
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
+
     return render(request, 'verdantadmin/pages/add_subpage.html', {
         'parent_page': parent_page,
-        'page_types': [ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()],
-        'all_page_types': get_page_types(),
+        'page_types': page_types,
+        'all_page_types': all_page_types,
     })
-
-
 
 def select_location(request, content_type_app_name, content_type_model_name):
     try:

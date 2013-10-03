@@ -66,19 +66,20 @@
 	padding-right: 100%*(@offset / @grid-columns);
 }
 
-.full-width(){
-    .push(-@grid-content-indent*1.15);
-    .pull(-@grid-content-indent*1.15);
-}
-
-.artist-indent(){
-	.push-padding(@grid-content-indent);
-	.pull-padding(@grid-content-indent);
-}
-
 .row{
 	.row();
 }
 .row-flush{
 	.row-flush();
 }
+
+/* must come after row/row-flush */
+.nice-padding{
+	.push-padding(@grid-content-indent);
+	.pull-padding(@grid-content-indent);
+}
+.nice-margin{
+	.push(@grid-content-indent);
+	.pull(@grid-content-indent);
+}
+

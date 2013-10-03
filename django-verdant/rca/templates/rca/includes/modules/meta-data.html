@@ -19,7 +19,7 @@
                 {% endif %}
 
                 {% with self.related_schools.all as related_schools %}
-                    {% if self.related_schools %}
+                    {% if related_schools %}
                         <dd>From</dd>
                         <dt>
                             <ul>
@@ -32,7 +32,7 @@
                 {% endwith %}
 
                 {% with self.related_programmes.all as related_programmes %}
-                    {% if self.related_programmes %}
+                    {% if related_programmes %}
                         <dd>Programme</dd>
                         <dt>
                             <ul>
