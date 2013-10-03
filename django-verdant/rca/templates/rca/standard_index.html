@@ -55,7 +55,9 @@
 			                {% endif %}
                     {% endfor %}
 
-                	<li class="load-more"><a href="#">+</a></li>
+                    {% if teasers|length > 6 %}
+                		<li class="load-more"><a href="#">+</a></li>
+                	{% endif %}
 		        </ul>
 		    </div>
 		</section>

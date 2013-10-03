@@ -1,10 +1,10 @@
 {% load pageurl image_tags %}
-{% if rcanow_pages %}
+{% if research_items %}
     <section class="three-plus x-plus row module">
-        <h2 class="module-title">RCA now</h2>
+        <h2 class="module-title">Research</h2>
         <div class="item-container">
             <ul class="row">
-                {% for rcanow in rcanow_pages %}
+                {% for research_item in research_items %}
                     {% if forloop.counter == 4 %}
                         <li class="load-more-target">
                     {% elif forloop.counter0|divisibleby:"4" %}
@@ -12,19 +12,19 @@
                     {% else %}
                         <li>
                     {% endif %}
-                        <a href="{% pageurl rcanow %}">
-                            {% if rcanow.feature_image %}
-                                <div class="image">{% image rcanow.feature_image width-400 %}</div>
+                        <a href="{% pageurl research_item %}">
+                            {% if research_item.feature_image %}
+                                <div class="image">{% image research_item.feature_image width-400 %}</div>
                             {% endif %}
                             <div class="content">
-                                <h3 class="h8">{{ rcanow.title }}</h3>
+                                <h3 class="h8">{{ research_item.title }}</h3>
                                 <!-- to do: populate this text -->
-                                <p class="bc5">Student name TBD</p>
+                                <p class="bc5">Research creator TBD</p>
                             </div>
                         </a>
                     </li>
                 {% endfor %}
-                {% if rcanow_pages|length > 6 %} 
+                {% if research_items|length > 6 %} 
                     <li class="load-more"><a href="#">+</a></li>
                 {% endif %}
             </ul>

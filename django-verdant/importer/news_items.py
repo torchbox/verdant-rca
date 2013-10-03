@@ -11,7 +11,7 @@ PATH = 'importer/export_news_pretty.xml'
 IMAGE_PATH = 'importer/export_news_images/'
 
 
-def doimport(path=PATH):
+def doimport(path=PATH, image_path=IMAGE_PATH):
     tree = ET.parse(path)
     root = tree.getroot()
     errors = []
@@ -67,7 +67,7 @@ def doimport(path=PATH):
                 #newimage.height, imageerrors['height'] = text_from_elem(metadata, 'height', length=255)
 
                 filename = urllib2.unquote(image.find('filename').text.strip())
-                with File(open(IMAGE_PATH + filename, 'r')) as f:
+                with File(open(image_path + filename, 'r')) as f:
                     newimage.file = f
                     newimage.save()
 

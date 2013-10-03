@@ -31,7 +31,7 @@
     {% news_carousel programme=self.programme %}
 
     <!-- events -->
-    {% upcoming_events_by_programme programme=self.programme %}
+    {% upcoming_events_by_programme programme=self.programme programme_display_name=self.get_programme_display %}
 
     <!-- staff -->
     {% staff_by_programme programme=self.programme %}
@@ -140,6 +140,9 @@
 
     <!-- rca now -->
     {% rca_now programme=self.programme %}
+
+    <!-- research -->
+    {% research programme=self.programme %}
     
 
     <!-- our sites -->
@@ -167,7 +170,9 @@
                             </a>
                         </li>
                         {% endfor %}
-                        <li class="load-more"><a href="#">+</a></li>
+                        {% if our_sites|length > 3 %}
+                            <li class="load-more"><a href="#">+</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </section>
