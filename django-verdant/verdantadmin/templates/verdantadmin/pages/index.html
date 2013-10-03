@@ -22,7 +22,7 @@
                     {% endcomment %}
                     {% if not parent_page.is_root %}
                         <div class="dropdown">
-                            <div class="dropdown-toggle icon icon-cog">Open drop-down</div> 
+                            <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
                                 <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>

@@ -315,7 +315,7 @@ ul.inline li:first-child, li.inline:first-child{
             float: left;
             margin-left: -146px;
             width: 126px;
-            height: 40px;
+            max-height: 40px;
             overflow: hidden;
             font-size: 0.7em;
             padding: 30px 10px 0 10px;
@@ -326,13 +326,16 @@ ul.inline li:first-child, li.inline:first-child{
             text-align: center;
             color: black;
 
+           
             &:hover{
                 width:130px;
                 padding:0;
                 top: 0;
-                height: 100px;
+                height: 200px;
+                max-height:100%;
                 background-color: white;
             }
+
         }
     }
 }
