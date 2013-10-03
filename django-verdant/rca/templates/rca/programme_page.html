@@ -33,6 +33,9 @@
     <!-- events -->
     {% upcoming_events_by_programme programme=self.programme %}
 
+    <!-- staff -->
+    {% staff_by_programme programme=self.programme %}
+
 
     <!-- open days -->
     {% upcoming_events_by_programme opendays=1 programme=self.programme %}
@@ -131,6 +134,13 @@
 
         </section>
     {% endif %}
+
+    <!-- alumni -->
+    {% alumni_by_programme programme=self.programme %}
+
+    <!-- rca now -->
+    {% rca_now programme=self.programme %}
+    
 
     <!-- our sites -->
     {% with self.our_sites.all as our_sites %}
