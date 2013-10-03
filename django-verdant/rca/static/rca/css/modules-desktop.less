@@ -36,6 +36,7 @@
  * Filters
  * Job summary
  * Job details
+ * Bodytext image
  * Teaser image
  * Quotation
  * Gallery
@@ -677,6 +678,24 @@
         .column(8, 0, 9);
     }
  }
+
+ /**
+ * $Bodytext image
+ */
+
+.bodytext-image {
+    &.small {
+        max-width: 50%;
+    }
+    &.left {
+        float: left;
+        margin-right: @spacing-one;
+    }
+    &.right {
+        float: right;
+        margin-left: @spacing-one;
+    }
+}
 
 /**
  * $Teaser image
