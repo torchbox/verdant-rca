@@ -35,23 +35,23 @@
             </div>
         </div>
     </header>
+    <form class="search-bar" action="{% url 'verdantdocs_search' %}" method="get">
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+            {% endfor %}
+            <li class="submit"><input type="submit" value="Search" /></li>
+            {% if popular_tags %}
+                <li class="popular-tags">
+                    <h3>Popular tags</h3>
+                    {% for tag in popular_tags %}
+                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
+                    {% endfor %}
+                </li>
+            {% endif %}
+        </ul>
+    </form>
     <div class="nice-padding">
-        <form class="" action="{% url 'verdantdocs_search' %}" method="get">
-            <ul class="fields">
-                {% for field in form %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
-                {% if popular_tags %}
-                    <li>Popular tags:
-                        {% for tag in popular_tags %}
-                            <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
-                        {% endfor %}
-                    </li>
-                {% endif %}
-                <li><input type="submit" value="Search" /></li>
-            </ul>
-        </form>
-
         <div id="document-results" class="documents">
             {% if is_searching %}
                 {% include "verdantdocs/documents/search-results.html" %}

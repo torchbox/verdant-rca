@@ -1,5 +1,5 @@
 {% extends "verdantadmin/base.html" %}
-{% load image_tags %}
+{% load image_tags ellipsistrim %}
 
 
 {% block extra_js %}
@@ -36,39 +36,39 @@
                 <a href="{% url 'verdantimages_add_image' %}" class="button icon icon-plus-inverse">Add an image</a>
             </div>
         </div>
-
-        <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
-            <ul class="fields">
-                {% for field in form %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
-                <li class="submit"><input type="submit" value="Search" /></li>
-                {% if popular_tags %}
-                    <li>Popular tags:
-                        {% for tag in popular_tags %}
-                            <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
-                        {% endfor %}
-                    </li>
-                {% endif %}
-            </ul>
-        </form>
-
     </header>
 
-    <div class="nice-padding">
-        
+    <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+            {% endfor %}
+            <li class="submit"><input type="submit" value="Search" /></li>
+            {% if popular_tags %}
+                <li class="popular-tags">
+                    <h3>Popular tags</h3>
+                    {% for tag in popular_tags %}
+                        <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
+                    {% endfor %}
+                </li>
+            {% endif %}
+        </ul>
+    </form>
+    
 
-        <div id="image-results" class="listing horiz images">
+    <div class="nice-padding">
+
+        <div id="image-results">
             {% if is_searching %}
                 {% include "verdantimages/images/search-results.html" %}
             {% else %}
-                <p>Latest added images</p>
-                <ul>
+                <h2>Latest added images</h2>
+                <ul class="listing horiz images">
                     {% for image in images %}
                         <li>
                             <a href="{% url 'verdantimages_edit_image' image.id %}">
-                                {% image image fill-130x100 %}
-                                {{ image.title }}
+                                <div class="image">{% image image fill-150x150 %}</div>
+                                <h3>{{ image.title|ellipsistrim:60 }}</h3>
                             </a>
                         </li>
                     {% endfor %}
