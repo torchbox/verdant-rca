@@ -1,6 +1,9 @@
 <li id="inline_child_{{ child.form.prefix }}">
     <ul class="controls">
-        <li class="icon text-replace teal icon-arrows-up-down" id="">Move</li>
+        {% if self.can_order %}
+            <li class="icon text-replace teal icon-arrow-up" id="{{ child.form.prefix }}-move-up">Move up</li>
+            <li class="icon text-replace teal icon-arrow-down" id="{{ child.form.prefix }}-move-down">Move down</li>
+        {% endif %}
         <li class="icon text-replace teal icon-cross" id="{{ child.form.DELETE.id_for_label }}-button">Delete</li>
     </ul>
     {{ child.render_as_object }}
