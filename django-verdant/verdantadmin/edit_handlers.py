@@ -577,8 +577,8 @@ class BaseInlinePanel(EditHandler):
     def post_save(self):
         if self.can_order:
             self.formset.save(commit=False)
-            for form in self.formset.ordered_forms:
-                form.instance.sort_order = form.cleaned_data['ORDER']
+            for i, form in enumerate(self.formset.ordered_forms):
+                form.instance.sort_order = i
                 form.instance.save()
         else:
             self.formset.save()

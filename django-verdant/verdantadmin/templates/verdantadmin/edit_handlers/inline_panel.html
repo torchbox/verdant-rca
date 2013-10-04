@@ -1,5 +1,5 @@
 {{ self.formset.management_form }}
-<ul class="multiple" id="id_{{ self.formset.prefix }}-FORMS">
+<ul class="multiple {% if self.can_order %}orderable{% endif %}" id="id_{{ self.formset.prefix }}-FORMS">
     {% for child in self.children %}
         {% include "verdantadmin/edit_handlers/inline_panel_child.html" %}
     {% endfor %}
