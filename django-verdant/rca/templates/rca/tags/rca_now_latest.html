@@ -9,8 +9,9 @@
                     {% endif %}
                     <div class="content">
                         <h2 class="h8">{{ rcanow.title }}</h2>
-                        <!-- to do: populate this text -->
-                        <p class="bc5">Student name TBD</p>
+                        {% if rcanow.author %}
+                            <p class="bc5">{{ rcanow.author }}</p>
+                        {% endif %}
                     </div>
                 </a>
             </li>

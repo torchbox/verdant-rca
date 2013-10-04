@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
-from core.models import Page
+from core.models import Page, Orderable
 from core.fields import RichTextField
 
 from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
@@ -502,7 +502,7 @@ NewsIndex.promote_panels = [
 
 # == News Item ==
 
-class NewsItemCarouselItem(CarouselItemFields):
+class NewsItemCarouselItem(CarouselItemFields, Orderable):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
 
 class NewsItemLink(models.Model):
@@ -965,10 +965,10 @@ class JobPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True)
     other_department = models.CharField(max_length=255, blank=True)
     closing_date = models.DateField()
-    interview_date = models.DateField(blank=True)
+    interview_date = models.DateField(null=True, blank=True)
     responsible_to = models.CharField(max_length=255, blank=True)
     required_hours = models.CharField(max_length=255, blank=True)
-    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
     salary = models.CharField(max_length=255, blank=True)
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)

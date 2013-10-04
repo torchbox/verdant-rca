@@ -2,7 +2,7 @@
 
 <!-- Events -->
 {% if showToday %}
-    {% upcoming_events %}
+    {% upcoming_events exclude=self %}
 {% endif %}
 
 <!-- adverts -->
@@ -114,29 +114,12 @@
 {% endif %}
 
 <!-- job adverts -->
-{% if showRelatedJobs %}
-    <div class="other-jobs">
-        <a href="#">
-            <h2>Senior Tutor: animation</h2>
-            <p>School: Design</p>
-        </a>
-    </div>
-    <div class="other-jobs">
-        <a href="#">
-            <h2>Senior Tutor: animation</h2>
-            <p>School: Design</p>
-        </a>
-    </div>
-    <div class="other-jobs">
-        <a href="#">
-            <h2>Senior Tutor: animation</h2>
-            <p>School: Design</p>
-        </a>
-    </div>
+{% if showJobs %}
+    {% upcoming_jobs exclude=self %}
 {% endif %}
 
 {% if showRCANow %}
-    {% rca_now_latest %}
+    {% rca_now_latest exclude=self %}
 {% endif %}
 
 <!-- tags -->
