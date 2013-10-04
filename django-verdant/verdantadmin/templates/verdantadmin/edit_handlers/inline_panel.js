@@ -11,6 +11,6 @@
 
     {% for child in self.children %}
         {{ child.render_js }}
-        panel.initInlineChildDeleteButton(fixPrefix("{{ child.form.prefix }}"));
+        panel.initChildControls(fixPrefix("{{ child.form.prefix }}"));
     {% endfor %}
 })();

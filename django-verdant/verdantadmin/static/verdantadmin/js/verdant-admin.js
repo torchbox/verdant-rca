@@ -84,7 +84,7 @@ $(function() {
 function InlinePanel(opts) {
     var self = {};
 
-    self.initInlineChildDeleteButton = function (prefix) {
+    self.initChildControls = function (prefix) {
         var childId = 'inline_child_' + prefix;
         var deleteInputId = 'id_' + prefix + '-DELETE';
         $('#' + deleteInputId + '-button').click(function() {
@@ -92,6 +92,39 @@ function InlinePanel(opts) {
             $('#' + deleteInputId).val('1');
             $('#' + childId).fadeOut();
         });
+        if (opts.canOrder) {
+            $('#' + prefix + '-move-up').click(function() {
+                var currentChild = $('#' + childId);
+                var currentChildOrderElem = currentChild.find('input[name$="-ORDER"]');
+                var currentChildOrder = currentChildOrderElem.val();
+
+                /* find the previous visible 'inline_child' li before this one */
+                var prevChild = currentChild.prev(':visible');
+                if (!prevChild.length) return;
+                var prevChildOrderElem = prevChild.find('input[name$="-ORDER"]');
+                var prevChildOrder = prevChildOrderElem.val();
+
+                currentChild.insertBefore(prevChild);
+                currentChildOrderElem.val(prevChildOrder);
+                prevChildOrderElem.val(currentChildOrder);
+            })
+
+            $('#' + prefix + '-move-down').click(function() {
+                var currentChild = $('#' + childId);
+                var currentChildOrderElem = currentChild.find('input[name$="-ORDER"]');
+                var currentChildOrder = currentChildOrderElem.val();
+
+                /* find the next visible 'inline_child' li after this one */
+                var nextChild = currentChild.next(':visible');
+                if (!nextChild.length) return;
+                var nextChildOrderElem = nextChild.find('input[name$="-ORDER"]');
+                var nextChildOrder = nextChildOrderElem.val();
+
+                currentChild.insertAfter(nextChild);
+                currentChildOrderElem.val(nextChildOrder);
+                nextChildOrderElem.val(currentChildOrder);
+            })
+        }
     };
 
     buildExpandingFormset(opts.formsetPrefix, {
@@ -99,7 +132,7 @@ function InlinePanel(opts) {
             function fixPrefix(str) {
                 return str.replace(/__prefix__/g, formCount);
             }
-            self.initInlineChildDeleteButton(fixPrefix(opts.emptyChildFormPrefix));
+            self.initChildControls(fixPrefix(opts.emptyChildFormPrefix));
             if (opts.canOrder) {
                 $(fixPrefix('#id_' + opts.emptyChildFormPrefix + '-ORDER')).val(formCount);
             }
