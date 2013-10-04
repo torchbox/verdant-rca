@@ -1,0 +1,19 @@
+{% load pageurl image_tags %}
+{% if rcanow_pages %}
+    <ul class="related-projects">
+        {% for rcanow in rcanow_pages %}
+            <li>
+                <a href="{% pageurl rcanow %}">
+                    {% if rcanow.feature_image %}
+                        <div class="image">{% image rcanow.feature_image width-400 %}</div>
+                    {% endif %}
+                    <div class="content">
+                        <h2 class="h8">{{ rcanow.title }}</h2>
+                        <!-- to do: populate this text -->
+                        <p class="bc5">Student name TBD</p>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

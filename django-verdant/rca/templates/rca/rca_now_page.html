@@ -1,0 +1,17 @@
+{% extends "rca/base.html" %}
+
+{% block content %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showTitle="true" %}
+        {% include "rca/includes/modules/meta-data.html" with showRCANowMeta="true" %}
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRCANow="true" %}
+{% endblock %}
+
+<!-- To dos: all the meta data stuff that is missing, limit other rca pages to 4 -->

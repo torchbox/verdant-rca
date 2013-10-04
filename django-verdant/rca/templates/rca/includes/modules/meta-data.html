@@ -112,6 +112,26 @@
                 {% endwith %}
 
             {% endif %}
+
+            {% if showRCANowMeta %}
+
+                <dd>By</dd>
+                <dt>Needs author field adding to model</dt>
+
+                <dd>Date</dd>
+                <dt>Not currently in model</dt>
+
+                <dd>Programme</dd>
+                <dt>{{ self.get_programme_display }}</dt>
+
+                <dd>Type</dd>
+                <dt>Needs type field adding to model</dt>
+
+                <dd>Tags</dd>
+                <dt>Tags are TBD</dt>
+
+            {% endif %}
+
         </dl>
     </div>
     <div class="single">

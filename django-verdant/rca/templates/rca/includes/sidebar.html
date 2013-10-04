@@ -58,6 +58,13 @@
 
 <!-- related content -->
 {% if showRelatedNews %}
+    {% comment %}
+    {% with self.get_related_news as related_news %}
+        {% if related_news %}
+            found some
+        {% endif %}
+    {% endwith %}
+    {% endcomment %}
     <div class="related-content-item">
         <a href="">
             <figure>
@@ -128,46 +135,8 @@
     </div>
 {% endif %}
 
-<!-- related projects -->
-{% if showRelatedProjects %}
-	<ul class="related-projects">
-        <li>
-            <a href="#">
-                <div class="image"><img src="http://instasrc.com/224x126/nature" /></div>
-                <div class="content">
-                    <h2 class="h8">Project Title</h2>
-                    <p class="bc5">Student Name</p>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <div class="image"><img src="http://instasrc.com/224x126/people" /></div>
-                <div class="content">
-                    <h2 class="h8">Project Title</h2>
-                    <p class="bc5">Student Name</p>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <div class="image"><img src="http://instasrc.com/224x126/animal" /></div>
-                <div class="content">
-                    <h2 class="h8">Project Title</h2>
-                    <p class="bc5">Student Name</p>
-                </div>
-            </a>
-        </li>
-        <li>
-            <a href="#">
-                <div class="image"><img src="http://instasrc.com/224x126/architecture" /></div>
-                <div class="content">
-                    <h2 class="h8">Project Title</h2>
-                    <p class="bc5">Student Name</p>
-                </div>
-            </a>
-        </li>
-    </ul>
+{% if showRCANow %}
+    {% rca_now_latest %}
 {% endif %}
 
 <!-- tags -->
