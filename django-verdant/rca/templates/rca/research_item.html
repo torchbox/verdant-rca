@@ -9,7 +9,7 @@
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
-    {% research_by_programme programme=self.programme %}
+    {% research_by_programme programme=self.programme exclude=self %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
