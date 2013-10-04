@@ -548,7 +548,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
             except IndexError:
                 return None
 
-    def get_related_news(self, count):
+    def get_related_news(self, count=4):
         # Assign each news item a score indicating similarity to this news item:
         # 100 points for a matching area, 10 points for a matching programme,
         # 1 point for a matching school.
@@ -960,21 +960,9 @@ HomePage.promote_panels = [
 
 # == Job page ==
 
-class JobPageRelatedSchool(models.Model):
-    page = models.ForeignKey('rca.JobPage', related_name='related_schools')
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
-
-    panels = [FieldPanel('school')]
-
-class JobPageRelatedProgramme(models.Model):
-    page = models.ForeignKey('rca.JobPage', related_name='related_programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-
-    panels = [FieldPanel('programme')]
-
 class JobPage(Page, SocialFields, CommonPromoteFields):
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text="This is my hel text")
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, null=True, blank=True)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True)
     other_department = models.CharField(max_length=255, blank=True)
     closing_date = models.DateField()
     interview_date = models.DateField(blank=True)
@@ -1073,6 +1061,7 @@ class AlumniPage(Page, SocialFields, CommonPromoteFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     year = models.CharField(max_length=4, blank=True)
     intro = RichTextField(blank=True)
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     biography = RichTextField()
 
 AlumniPage.content_panels = [
@@ -1081,6 +1070,7 @@ AlumniPage.content_panels = [
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('year'),
+    FieldPanel('listing_intro'),
     FieldPanel('intro'),
     FieldPanel('biography'),
 ]
@@ -1308,6 +1298,7 @@ class RcaNowPagePageCarouselItem(CarouselItemFields):
 
 class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     body = RichTextField()
+    author = models.CharField(max_length=255, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
@@ -1327,6 +1318,7 @@ RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
+    FieldPanel('author'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('area'),
