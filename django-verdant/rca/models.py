@@ -502,7 +502,7 @@ NewsIndex.promote_panels = [
 
 # == News Item ==
 
-class NewsItemCarouselItem(CarouselItemFields, Orderable):
+class NewsItemCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
 
 class NewsItemLink(models.Model):
