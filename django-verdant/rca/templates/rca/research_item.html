@@ -5,7 +5,7 @@
     <h1 class="h1">{{ self.title }}</h1>
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-        {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" showDescription="True" %}
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
@@ -18,4 +18,4 @@
     {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
 {% endblock %}
 
-<!-- To dos: check related research is correct, exclude current research item from feed, make sure body works when description name is changed -->
+<!-- To dos: check related research is correct, exclude current research item from feed -->

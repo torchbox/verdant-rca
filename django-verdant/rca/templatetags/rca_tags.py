@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage
 from datetime import date
 from django.db.models import Min, Max
 
@@ -79,8 +79,18 @@ def research_by_programme(context, programme):
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
 def rca_now_latest(context, count=4):
     # FIXME: needs ordering by date added
-    rcanow = RcaNowPage.objects.filter()[:count]
+    rcanow = RcaNowPage.objects.all()[:count]
     return {
         'rcanow_pages': rcanow,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/upcoming_jobs.html', takes_context=True)
+def upcoming_jobs(context, exclude=None, count=6):
+    jobs = JobPage.objects.filter(closing_date__gte=date.today())
+    if exclude:
+        jobs = jobs.exclude(id=exclude.id)
+    return {
+        'jobs': jobs[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
