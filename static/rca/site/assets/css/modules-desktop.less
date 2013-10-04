@@ -720,25 +720,17 @@
 .gallery {
     li {
         float:left;
+        height:500px;
+    
+        &.portrait{
+            .column(3);
+        }
+        &.landscape{
+            .column(6);
+        }
     }
-    .image{        
-        overflow:hidden;
-    }
-    img{
-     
-    }
-   /* .portrait img{
-        height:100%;
-        height:auto;
-        max-height:400px;
-        max-width:none;
-    }
-    .landscape img{
-        height:100%;
-        max-height:none;
-        max-width:400px;
-    }*/
 }
+
 /*
  * Index page intro
  */

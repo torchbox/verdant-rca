@@ -226,6 +226,7 @@ $(function(){
         on: function(){
             /* Packery */
             $('.packery').imagesLoaded( function() {
+                console.log('here');
                 var packery = $('.packery').packery({
                     itemSelector: '.item',
                     stamp: ".stamp"
