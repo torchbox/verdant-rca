@@ -855,9 +855,9 @@ body .ui-tooltip {
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #aaaaaa;
-	background: #ffffff url(images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x;
+	background: #49c0c1 url(images/ui-bg_glass_65_49c0c1_1x400.png) 50% 50% repeat-x !important;
 	font-weight: normal;
-	color: #212121;
+	color: white;
 }
 .ui-state-active a,
 .ui-state-active a:link,
