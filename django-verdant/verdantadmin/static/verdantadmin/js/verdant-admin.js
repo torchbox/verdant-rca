@@ -66,14 +66,6 @@ function createPageChooser(id, pageType, openAtParentId) {
     });
 }
 
-function initInlineChildDeleteButton(childId, deleteInputId) {
-    $('#' + deleteInputId + '-button').click(function() {
-        /* set 'deleted' form field to true */
-        $('#' + deleteInputId).val('1');
-        $('#' + childId).fadeOut();
-    });
-}
-
 function initDateChoosers(context) {
     $('input.friendly_date', context).datepicker({
         dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
@@ -88,3 +80,32 @@ function initDateChooser(id) {
 $(function() {
     initDateChoosers();
 });
+
+function InlinePanel(opts) {
+    var self = {};
+
+    self.initInlineChildDeleteButton = function (prefix) {
+        var childId = 'inline_child_' + prefix;
+        var deleteInputId = 'id_' + prefix + '-DELETE';
+        $('#' + deleteInputId + '-button').click(function() {
+            /* set 'deleted' form field to true */
+            $('#' + deleteInputId).val('1');
+            $('#' + childId).fadeOut();
+        });
+    };
+
+    buildExpandingFormset(opts.formsetPrefix, {
+        onAdd: function(formCount) {
+            function fixPrefix(str) {
+                return str.replace(/__prefix__/g, formCount);
+            }
+            self.initInlineChildDeleteButton(fixPrefix(opts.emptyChildFormPrefix));
+            if (opts.canOrder) {
+                $(fixPrefix('#id_' + opts.emptyChildFormPrefix + '-ORDER')).val(formCount);
+            }
+            opts.onAdd(fixPrefix);
+        }
+    });
+
+    return self;
+}
