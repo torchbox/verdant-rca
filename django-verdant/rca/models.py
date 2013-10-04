@@ -968,7 +968,7 @@ class JobPage(Page, SocialFields, CommonPromoteFields):
     interview_date = models.DateField(blank=True)
     responsible_to = models.CharField(max_length=255, blank=True)
     required_hours = models.CharField(max_length=255, blank=True)
-    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
     salary = models.CharField(max_length=255, blank=True)
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)
