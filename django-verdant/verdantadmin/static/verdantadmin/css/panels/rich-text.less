@@ -1,21 +1,62 @@
 .richtext {
     overflow: hidden;
 
+    /* Resetting various html tags that have been messed with by Verdant's main css */
+    *{
+        display:inherit !important;
+    }
+    *:before,
+    *:after{
+        display:none;
+    }
 
-    // These styles correspond to the image formats defined in verdantimages/formats.py,
-    // so that images displayed in the rich text field receive more or less the same
-    // styling that they would receive on the site front-end.
-    // TODO: when we implement a mechanism to configure the image format list on a
-    // per-installation / per-site basis, we'll need a way to insert the corresponding
-    // CSS here.
-    img.left {
-        float: left;
+    ol,
+    ul {
+        margin: 1em 0;
+        padding: 0 0 0 40px;
     }
-    img.right {
-        float: right;
+    li{
+        display:list-item !important;
     }
-    img.full-width {
-        display: block;
+    ul li{
+        list-style-type:disc !important;
+    }
+    ol li{
+        list-style-type:decimal !important;
+    }
+
+    /*
+    These styles correspond to the image formats defined in verdantimages/formats.py,
+    so that images displayed in the rich text field receive more or less the same
+    styling that they would receive on the site front-end.
+    TODO: when we implement a mechanism to configure the image format list on a
+    per-installation / per-site basis, we'll need a way to insert the corresponding
+    CSS here.
+    */
+
+    .bodytext-image {
+        margin-top: 16px;
+        img {
+            width:100%;
+        }
+        figcaption {
+            display: block;
+            width: 100%;
+            text-align: right;
+            margin-top: 16px;
+            margin-bottom: 16px;
+        }
+        &.small {
+            max-width: 50%;
+        }
+        &.left {
+            float: left;
+            margin-right: 16px;
+        }
+        &.right {
+            float: right;
+            margin-left: 16px;
+        }
     }
 
 }

@@ -34,15 +34,14 @@ class AbstractImage(models.Model, TagSearchable):
             # TODO: keep an in-memory cache of filters, to avoid a db lookup
             filter, created = Filter.objects.get_or_create(spec=filter)
 
-        # TODO: wrap this in a transaction, as it's susceptible to race conditions
         try:
             rendition = self.renditions.get(filter=filter)
         except ObjectDoesNotExist:
             file_field = self.file
             generated_image_file = filter.process_image(file_field.file)
 
-            rendition = self.renditions.create(
-                filter=filter, file=generated_image_file)
+            rendition, created = self.renditions.get_or_create(
+                filter=filter, defaults={'file': generated_image_file})
 
         return rendition
 
@@ -177,6 +176,11 @@ class AbstractRendition(models.Model):
 
 class Rendition(AbstractRendition):
     image = models.ForeignKey('Image', related_name='renditions')
+
+    class Meta:
+        unique_together = (
+            ('image', 'filter'),
+        )
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Rendition)

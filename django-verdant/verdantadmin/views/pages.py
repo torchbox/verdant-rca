@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 
+from treebeard.exceptions import InvalidMoveToDescendant
+
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 
@@ -43,13 +45,14 @@ def select_type(request):
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
 
+    page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name)
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
+
     return render(request, 'verdantadmin/pages/add_subpage.html', {
         'parent_page': parent_page,
-        'page_types': [ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()],
-        'all_page_types': get_page_types(),
+        'page_types': page_types,
+        'all_page_types': all_page_types,
     })
-
-
 
 def select_location(request, content_type_app_name, content_type_model_name):
     try:
@@ -163,6 +166,55 @@ def delete(request, page_id):
     return render(request, 'verdantadmin/pages/confirm_delete.html', {
         'page': page,
         'descendant_count': page.get_descendant_count()
+    })
+
+def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+
+    if viewed_page_id:
+        viewed_page = get_object_or_404(Page, id=viewed_page_id)
+    else:
+        viewed_page = Page.get_first_root_node()
+
+    child_pages = []
+    for page in viewed_page.get_children():
+        # can't move the page into itself or its descendants
+        can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+
+        can_descend = can_choose and page.get_children_count()
+
+        child_pages.append({
+            'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
+        })
+
+    return render(request, 'verdantadmin/pages/move_choose_destination.html', {
+        'page_to_move': page_to_move,
+        'viewed_page': viewed_page,
+        'child_pages': child_pages,
+    })
+
+def move_confirm(request, page_to_move_id, destination_id):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    destination = get_object_or_404(Page, id=destination_id)
+
+    if request.POST:
+        try:
+            page_to_move.move(destination, pos='last-child')
+
+            messages.success(request, "Page '%s' moved." % page_to_move.title)
+            return redirect('verdantadmin_explore', destination.id)
+        except InvalidMoveToDescendant:
+            messages.error(request, "You cannot move this page into itself.")
+            return redirect('verdantadmin_pages_move', page_to_move.id)
+
+    else:
+        if page_to_move == destination or destination.is_descendant_of(page_to_move):
+            messages.error(request, "You cannot move this page into itself.")
+            return redirect('verdantadmin_pages_move', page_to_move.id)
+
+    return render(request, 'verdantadmin/pages/confirm_move.html', {
+        'page_to_move': page_to_move,
+        'destination': destination,
     })
 
 

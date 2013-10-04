@@ -9,7 +9,7 @@
 						<strong>{{ self.contact_title }}</strong><br />
 					{% endif %}
 					{% if self.contact_address %}
-						{{ self.contact.address }}
+						{{ self.contact_address|linebreaks }}
 					{% endif %}
 					{% if self.contact_link and self.contact_link_text %}
 						<a href="{{ self.contact_link }}" class="chevron">{{ self.contact_link_text }}</a>
@@ -18,19 +18,22 @@
 			</li>
 			<li class="col col-2">
 				<p>
-					Tel: +44 (0) 7590 4444 (Main Switchboard)<br />
-					Fax: +44 (0) 7590 4500<br />
-					<a href="">development@rca.ac.uk</a><br />
-					<a href="">personnel@rca.ac.uk</a>
+					{% with self.contact_phone.all as phone_nos %}
+						{% if phone_nos %}
+							{% for phone_no in phone_nos %}
+								{{ phone_no.phone_number }}<br />
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
+					{% with self.contact_email.all as emails %}
+						{% if emails %}
+							{% for email in emails %}
+								<a href="mailto:{{ email.email_address }}">{{ email.email_address }}</a><br />
+							{% endfor %}
+						{% endif %}
+					{% endwith %}
 				</p>
 			</li>
 		</ul>
 	</section>
 {% endif %}
-
-{% comment %}
-contact_title = models.CharField(max_length=255, blank=True)
-    contact_address = models.TextField(blank=True)
-    contact_link = models.URLField(blank=True)
-    contact_link_text
-{% endcomment %}

@@ -27,18 +27,13 @@
                     url: '/admin/images/chooser/?select_format=true' # TODO: don't hard-code this, as it may be changed in urls.py
                     responses:
                         imageChosen: (imageData) ->
-                            img = document.createElement('img')
-                            img.setAttribute('src', imageData.preview.url)
-                            img.setAttribute('width', imageData.preview.width)
-                            img.setAttribute('height', imageData.preview.height)
-                            img.setAttribute('alt', imageData.alt)
-                            img.setAttribute('class', imageData['class'])
-                            img.setAttribute('data-alt', imageData.alt)
-                            img.setAttribute('data-embedtype', 'image')
-                            img.setAttribute('data-id', imageData.id)
-                            img.setAttribute('data-format', imageData.format)
+                            elem = $(imageData.html).get(0)
                             lastSelection.deleteContents()
-                            lastSelection.insertNode(img)
+                            lastSelection.insertNode(elem)
+                            # insert an empty para after the image embed, because
+                            # contenteditable="false" things at the end of a
+                            # rich text area are hard to get rid of
+                            $(elem).after('<p>&nbsp;</p>')
                             widget.options.editable.element.trigger('change')
 
 )(jQuery)

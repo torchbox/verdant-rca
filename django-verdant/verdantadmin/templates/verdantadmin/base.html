@@ -14,8 +14,6 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
-    {% comment %}Font Awesome, required by hallo.js{% endcomment %}
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" >
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
     {% compress css %}
@@ -39,17 +37,20 @@
     <div class="wrapper">
         <div id="nav-toggle" data-afteropen="Collapse">Menu</div>
         <div class="nav-wrapper">
-            <a href="{% url 'verdantadmin_home' %}" class="logo"></a>
-            <nav class="nav-main">
-                <ul>
-                    <li class="selected"><a href="#" class="icon explore dl-trigger">Pages</a></li>
-                    <li><a href="{% url 'verdantimages_index' %}" class="icon images">Images</a></li>
-                    <li><a href="{% url 'verdantdocs_index' %}" class="icon documents">Documents</a></li>
-                    <li><a href="{% url 'verdantsnippets_index' %}" class="icon snippets">Snippets</a></li>
-                    <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon new">New</a></li>
-                </ul>
-            </nav>
-
+            <div class="inner">
+                <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
+                <nav class="nav-main">
+                    <ul>
+                        <li><a href="#" class="icon icon-doc-empty-inverse dl-trigger">Pages</a></li>
+                        <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
+                        <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
+                        <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
+                    </ul>
+                </nav>
+            </div>
+                
+           
             <nav class="explorer">
                 <ul class="dl-menu">
                     {% explorer_nav %}

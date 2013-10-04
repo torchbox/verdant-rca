@@ -10,7 +10,7 @@ from core.models import Page
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
 from verdantimages.models import get_image_model
-from verdantimages.formats import FORMATS_BY_NAME
+from verdantimages.formats import get_image_format
 
 from verdantdocs.models import Document
 
@@ -49,32 +49,12 @@ class ImageEmbedHandler(object):
         Image = get_image_model()
         try:
             image = Image.objects.get(id=attrs['id'])
-            try:
-                format = FORMATS_BY_NAME[attrs['format']]
-                filter_spec = format.filter_spec
-                classnames = format.classnames
-            except KeyError:
-                filter_spec = 'max-1024x768'
-                classnames = None
-
-            rendering = image.get_rendition(filter_spec)
+            format = get_image_format(attrs['format'])
 
             if for_editor:
-                editor_attrs = 'data-embedtype="image" data-id="%d" data-format="%s" data-alt="%s" ' % (
-                    image.id, attrs['format'], attrs['alt']
-                )
+                return format.image_to_editor_html(image, attrs['alt'])
             else:
-                editor_attrs = ''
-
-            if classnames:
-                class_attr = 'class="%s" ' % escape(classnames)
-            else:
-                class_attr = ''
-
-            return '<img %s%ssrc="%s" width="%d" height="%d" alt="%s">' % (
-                editor_attrs, class_attr,
-                escape(rendering.url), rendering.width, rendering.height, attrs['alt']
-            )
+                return format.image_to_html(image, attrs['alt'])
 
         except Image.DoesNotExist:
             return "<img>"

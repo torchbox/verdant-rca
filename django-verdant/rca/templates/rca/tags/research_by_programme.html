@@ -1,0 +1,33 @@
+{% load pageurl image_tags %}
+{% if research_items %}
+    <section class="three-plus x-plus row module">
+        <h2 class="module-title">Research</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for research_item in research_items %}
+                    {% if forloop.counter == 4 %}
+                        <li class="load-more-target">
+                    {% elif forloop.counter0|divisibleby:"4" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl research_item %}">
+                            {% if research_item.feature_image %}
+                                <div class="image">{% image research_item.feature_image width-400 %}</div>
+                            {% endif %}
+                            <div class="content">
+                                <h3 class="h8">{{ research_item.title }}</h3>
+                                <!-- to do: populate this text -->
+                                <p class="bc5">Research creator TBD</p>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if research_items|length > 6 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

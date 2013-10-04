@@ -11,9 +11,9 @@
 
 {% block content %}
     <header>
-        <h1>Edit image</h1>
+        <h1>Editing: <span>{{ image.title }}</span></h1>
     </header>
-    <div class="row row-flush">
+    <div class="row row-flush nice-padding">
         <div class="col6">
             {% image image max-800x600 %}
         </div>

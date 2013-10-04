@@ -1,9 +1,10 @@
+body.page-editor{
+    padding-bottom:100px; /* provides space for the actions bar at the bottom */
+}
 .objects{
-    .full-width();
-
     .object{
         .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
+        padding-right:@grid-gutter-width/2;
         position:relative;
         border:1px dashed @color-input-border;
         border-width:1px 0 0 0;
@@ -16,19 +17,6 @@
             border-color: darken(@color-input-focus, 40%);
         }        
 
-        > h2{
-            .border-radius(2px);
-            color: @color-text-grey;
-            text-transform:uppercase;
-            padding:2px 5px;
-            position:absolute;
-            top:0;
-            left:0;
-            margin-top:-1px;
-            font-size:0.7em;
-            z-index:1;
-        }
-
         fieldset{
             .column(10);
             padding-left:0;
@@ -36,30 +24,30 @@
 
         .object-help{
             .column(2);
+            display:block;
+            position:absolute;
+            z-index:1;
+            right:0;
+            top:0;
+            padding-right:@grid-gutter-width/2;
             float:right;
             margin-top:4em;
             text-align:right;
-            padding-right:0;
             opacity:0;
         }
+
         &:hover .object-help{
             opacity:1;
         }
-    }
-
-    
+    }    
 
     .multiple{
-        .full-width();
+
     }
     .multiple > li{
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
-        border-top: 1px dashed @color-input-border;
+        border-bottom: 1px dashed @color-input-border;
 
-        &:first-child{
-            border:0;
-        }
+
     }
 
     .preview{
@@ -67,24 +55,34 @@
         padding-bottom:0.5em;
     }
 
+    .single-field{
+        h2, .object-help{
+            display:none; /* The field label is used instead */
+        }
+    }
+
+
     /* Special full-width, one-off fields i.e a single text or textarea input */
     .full{
-         
+        padding:0;
+
+        h2{
+            display:none; /* The field label is used instead */
+        }
+
         .object-help{
-            margin-top:1em;
+            display:block;
         }
-        > .help{
-            position:absolute;
-            right:0;
-            top:0;
-            z-index:1;
-        }
+        
         fieldset{
             display:block;
             float:none;
             width:initial;
             padding:0;
-            .full-width();
+
+            .help{
+                display:none;
+            }
         }
         li{
             padding:0;
@@ -94,24 +92,19 @@
             padding:0;
         }
 
-        label{
-            .visuallyhidden();
-        }
         input, textarea, .richtext{
+            .nice-padding;
+            .pull-padding(2);
             font-family:Bitter, Georgia, serif;
             .border-radius(0px);
-            .push-padding(@grid-content-indent);
-            .pull-padding(2);
             border:0;
             padding-top:3em;
             padding-bottom:2em;
+            font-size:1.2em;
+            line-height:1.6em;
         }
 
-        .title input,
-        .title textarea{
-            font-size:2em;
-            padding-top:2em;
-        }
+        
         .error-message{
             .push(@grid-content-indent);
             .pull(@grid-content-indent);
@@ -125,11 +118,33 @@
         }
     }
 
+   
+    .object > h2, .single-field label{
+        .border-radius(2px);
+        color: @color-text-grey;
+        text-transform:uppercase;
+        padding:2px 5px;
+        position:absolute;
+        top:0;
+        left:0;
+        margin-top:-1px;
+        font-size:0.7em;
+        z-index:1;
+        margin:0.2em 0;
+        line-height:1.5em;
+        font-weight:normal;
+    }
+
+    .title input,
+    .title textarea{
+        font-size:2em;
+        padding-top:2em;
+    }
+
     /* wrapper around add button for mutliple objects */
     p.add{
-        .full-width();
-        .push-padding(@grid-content-indent);
-        .pull-padding(@grid-content-indent);
+        font-weight:700;
+        cursor:pointer;
         margin-top:0;
         margin-bottom:0;
         padding-top:3em;
@@ -139,33 +154,29 @@
     /* Object controls */
     .controls{
         position:absolute;
-        right:0;
-        .pull(@grid-content-indent);
+        right:@grid-gutter-width/2;
         text-transform:uppercase;
-        color:@color-grey; 
+        color:@color-grey;
         
         li{
-            position:relative;
+            background-color:lighten(@color-grey-lighter, 5%);
+            display:inline-block;
             cursor:pointer;
         }
         .icon{
-            text-indent:-5000px;
-            width:35px;
-            height:35px;
-            padding:0;
+            padding:0.3em;
+        }
+        .icon:before{
+            vertical-align:middle;
+            font-size:20px;
+            line-height:1.8em;
+        }
+        .icon:hover{
+            background-color:@color-teal;
 
             &:before{
-                left:0;
-                right:0;
-                margin:auto;
+                color:white;
             }
-
-            &:hover{
-                background-color:@color-teal;
-            }
-        }
-        .move-updown-black{
-            cursor:move;
         }
     }
 }

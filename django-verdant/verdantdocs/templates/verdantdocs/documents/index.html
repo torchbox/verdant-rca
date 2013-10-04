@@ -31,41 +31,42 @@
                 <h1>Documents</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantdocs_add_document' %}" class="button icon add-teal">Add a document</a>
+                <a href="{% url 'verdantdocs_add_document' %}" class="button icon icon-plus-inverse">Add a document</a>
             </div>
         </div>
     </header>
-
-    <form class="" action="{% url 'verdantdocs_search' %}" method="get">
+    <form class="search-bar" action="{% url 'verdantdocs_search' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
+            <li class="submit"><input type="submit" value="Search" /></li>
             {% if popular_tags %}
-                <li>Popular tags:
+                <li class="popular-tags">
+                    <h3>Popular tags</h3>
                     {% for tag in popular_tags %}
-                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
                     {% endfor %}
                 </li>
             {% endif %}
-            <li><input type="submit" value="Search" /></li>
         </ul>
     </form>
-
-    <div id="document-results" class="listing documents">
-        {% if is_searching %}
-            {% include "verdantdocs/documents/search-results.html" %}
-        {% else %}
-            <p>Latest added documents</p>
-            <ul>
-                {% for doc in documents %}
-                    <li>
-                        <a href="{% url 'verdantdocs_edit_document' doc.id %}">
-                            {{ doc.title }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    <div class="nice-padding">
+        <div id="document-results" class="documents">
+            {% if is_searching %}
+                {% include "verdantdocs/documents/search-results.html" %}
+            {% else %}
+                <p>Latest added documents</p>
+                <ul class="listing">
+                    {% for doc in documents %}
+                        <li>
+                            <a href="{% url 'verdantdocs_edit_document' doc.id %}">
+                                {{ doc.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}

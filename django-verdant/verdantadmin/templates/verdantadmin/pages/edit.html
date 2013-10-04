@@ -17,9 +17,10 @@
                 <li class="actions">
                     <div class="dropdown dropup match-width">
                         <input type="submit" value="Save" class="button" />
-                        <div class="dropdown-toggle icon iconright arrow-up"></div>
+                        <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
-                            <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete <span class="kbd"><kbd>Shift</kbd> + <kbd>P</kbd></span></a></li>
+                            <li><a href="{{ page.url }}" class="shortcut">View</a></li>
+                            <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
                         </ul>
                     </div>
                 </li>

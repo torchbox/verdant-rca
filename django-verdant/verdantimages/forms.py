@@ -2,7 +2,7 @@ from django import forms
 from django.forms.models import modelform_factory
 
 from verdantimages.models import get_image_model
-from verdantimages.formats import FORMATS
+from verdantimages.formats import get_image_formats
 
 
 def get_image_form():
@@ -18,7 +18,7 @@ class ImageInsertionForm(forms.Form):
     into a rich text area
     """
     format = forms.ChoiceField(
-        choices=[(format.name, format.label) for format in FORMATS],
+        choices=[(format.name, format.label) for format in get_image_formats()],
         widget=forms.RadioSelect
     )
     alt_text = forms.CharField()

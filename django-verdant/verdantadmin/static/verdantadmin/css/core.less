@@ -6,6 +6,7 @@ max z-index: 5;
 @import "variables.less";
 @import "mixins.less";
 @import "grid.less";
+@import "components/explorer.less";
 
 html{
     background-color:@color-header-bg;
@@ -39,6 +40,7 @@ h1{
 
 a{
     color:@color-link;
+    text-decoration:none;
 
     &:hover{
         color:@color-link-hover;
@@ -65,7 +67,7 @@ img{
 }
 
 .wrapper{
-    overflow:hidden;
+    .clearfix();
 }
 
 .nav-wrapper{
@@ -78,25 +80,26 @@ img{
     height:100%;
     min-height:800px;
 }  
-    .nav-main{
-        .box-shadow(inset -5px -10px 10px 0px rgba(0, 0, 0, 0.5));
-        margin-top:150px;
-        background: @color-grey-dark;
-        height:100%;
-        position:absolute;
-    }
-    .explorer{
-        margin-top:150px; /* same as .nav-main */
-    }
-
     .logo{
-        background: url(~"@{static-root}sprites.png") 0 0 no-repeat;
-        background-size:750px 500px;
-        position:absolute;
-        margin:3em auto;
-        height:89px;
-        width:78px;
-        overflow:hidden;
+        display:block;
+        margin:1em auto;
+        text-align:center;
+        text-decoration:none;
+        color:white;
+        opacity:0.4;
+
+        em{
+            font-family: verdant; 
+            font-style: normal;
+            font-size:7.7em; 
+            line-height:1em;
+        }
+        span{
+            display:none;
+        }
+        &:hover{
+            opacity:1;
+        }
     }
 
     #nav-toggle{
@@ -107,6 +110,8 @@ img{
     }
 
     .nav-main{
+        width:100%;
+
         ul, li{
             margin:0;
             padding:0;
@@ -125,42 +130,29 @@ img{
             }
         }
 
-        a {
-            width:240px;       
+        a {    
             text-decoration:none;
             text-transform:uppercase;
             display: block;
             opacity:0.5;
             color: white;
-            font-weight: 600;
-            padding: 1em;
+            padding: 1em 0.8em;
             position:relative;
+            font-size:0.95em;
            
-            &:before{
-                opacity:1;
-                left:1em !important;
-            }
             &:hover{
                 opacity:1;
             }
         }
-    }
-    body.nav-open{
-        .nav-wrapper{
-            .logo{
-                left:0;
-                right:0;
-            }
-            .nav-main{
-                width:100%;
 
-                a{
-                    text-indent:15px;
-                }
-
-            }
+        .icon-plus-inverse{
+            font-weight:600;
         }
+    }
 
+    .explorer{
+        position:absolute;
+        margin-top:144px; /* same as .nav-main */
     }
 
 .content-wrapper{
@@ -172,8 +164,6 @@ img{
 }
     .content{
         .row();
-        .artist-indent();
-        padding-bottom:100px;
     }
 
 /* positioning and setup for sliding items */
@@ -195,12 +185,10 @@ body.nav-open .content-wrapper{
 
 
 header{
-    .full-width();
-    .artist-indent();
+    .nice-padding();
     padding-top:2em;
     padding-bottom:2em;
     background-color:@color-header-bg;
-    //.box-shadow(0 1px 3px 0 rgba(0,0,0,0.1));
     border-bottom:1px solid @color-grey-lighter;
     margin-bottom:2em;
 
@@ -262,9 +250,11 @@ footer, .logo{
 .nav-wrapper,
 .nav-main,
 footer,
-.logo,
-a {
-    .transition(all 0.2s ease)
+.logo{
+    .transition(all 0.2s ease);
+}
+a{
+    .transition(opacity 0.2s ease);
 }
 
 @media screen and (min-width: @breakpoint-mobile){
@@ -306,7 +296,7 @@ a {
     }
     
     body{
-        margin-left:60px;
+        margin-left:@menu-width;
     }
 
     .nav-wrapper, .content-wrapper{
@@ -315,50 +305,36 @@ a {
     }
 
     .nav-wrapper{
+        /* heigt and position necessary to force it to 100% height of screen (with some JS help) */
         position:absolute;
-        height:100%;
-        margin-left:-60px;
         left:0;
-        width:60px;
+        height:100%;
+        width:@menu-width;
+        margin-left:-@menu-width;
     } 
 
-    .explorer{
-        margin-top:0;
-    }
-    .nav-main{
-        position:relative;
-    }
-
-    .logo, .nav-main{
+    .inner{ /* inner only serves a purpose to position content */
+        height:100%;
         position:fixed;
-        width:60px;
-        overflow:hidden;
-    }
-
-    .logo{
-        left:-10px;
-        width:70px;
-    }
-
-    .nav-main a{
-        text-indent:25px;
+        width:@menu-width;
     }
 
     #nav-toggle{
-        left:10px;
-        color:lighten(@color-grey, 20%);
-        text-transform:uppercase;
-        padding:0.5em;
-        text-indent:-200px;
-        font-size:0.9em;
-        .icon-left(10px, 12px, 273px, 215px, 0.6);
-        position:fixed;
-        
-        &:hover{
-            color:white;
-        }
+        display:none;
     }
 
+    .explorer {
+        margin-top:150px;
+        width: 400px;
+        position: absolute;
+        z-index:@explorer-z-index;
+        top:0;
+        left:99%;
+    }
+    .dl-menu {
+        position: absolute;
+    }
+    
     /* UN-set the transformations used on mobile */
     body.nav-open .nav-wrapper, 
     body.nav-open .content-wrapper{
@@ -369,39 +345,11 @@ a {
     body.nav-open .content-wrapper{
         position:relative;
     }
-    body.nav-open .nav-wrapper{
-         width:240px;
-
-        .logo{
-            width:80px;
-            left:70px;
-            right:auto;
-        }
-        .nav-main{
-            width:240px;
-
-            a{
-                text-indent:15px;
-            }
-        }
+    body.nav-open .nav-wrapper,
+    body.nav-open .nav-main{
+        width:@menu-width;
     }
-    body.nav-open #nav-toggle{
-        left:70px;
 
-        &:before{
-            .sprite(305px, 215px, 0.6);
-        }
-        &:after{
-            text-indent: 0;
-            content: attr(data-afteropen);
-            line-height: 1em;
-            padding-left: 25px;
-            position: absolute;
-            left: 0;
-            top: 1em;
-        }
-    }
-    
     footer{
         width:80%;
         margin-left:40px;
@@ -412,7 +360,6 @@ a {
 
 @import "components/icons.less";
 @import "components/tabs.less";
-@import "components/explorer.less";
 @import "components/dropdowns.less";
 @import "components/modals.less";
 @import "components/forms.less";

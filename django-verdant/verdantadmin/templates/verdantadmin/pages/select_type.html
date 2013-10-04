@@ -4,9 +4,23 @@
     <header>
         <h1>Create a new page</h1>
     </header>
-    <ul>
-        {% for content_type in page_types %}
-            <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon add">{{ content_type.name }}</a></li>
-        {% endfor %}
-    </ul>
+    <div class="nice-padding">
+        {% if page_types %}
+            <p>Page types that a regular editor would be allowed to add:</p>
+            <ul class="listing">
+                {% for content_type in page_types %}
+                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if all_page_types %}
+            <p>Page types that you can add as a superuser:</p>
+            <ul class="listing">
+                {% for content_type in all_page_types %}
+                    <li><a href="{% url 'verdantadmin_pages_select_location' content_type.app_label content_type.model %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}

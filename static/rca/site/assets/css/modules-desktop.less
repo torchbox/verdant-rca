@@ -36,6 +36,7 @@
  * Filters
  * Job summary
  * Job details
+ * Bodytext image
  * Teaser image
  * Quotation
  * Gallery
@@ -401,7 +402,6 @@
 
 .tab-nav{
     .clearfix();
-    .unlist();
     position:relative;
     overflow:hidden;
     display:block;
@@ -425,6 +425,9 @@
 
     li.active a{
         background-color:darken(@color-pale-grey, 10%);
+    }
+    &.tabs-1 a{
+        .column(6, @grid-gutter-width);
     }
     &.tabs-2 a{
         .column(6, @grid-gutter-width);
@@ -454,6 +457,9 @@
     border:0;
     .image.full{
         margin:auto;
+    }
+    .facilities {
+       .column(6);
     }
 }
 
@@ -672,6 +678,24 @@
         .column(8, 0, 9);
     }
  }
+
+/**
+ * $Bodytext image
+ */
+
+.bodytext-image {
+    &.small {
+        max-width: 50%;
+    }
+    &.left {
+        float: left;
+        margin-right: @spacing-one;
+    }
+    &.right {
+        float: right;
+        margin-left: @spacing-one;
+    }
+}
 
 /**
  * $Teaser image

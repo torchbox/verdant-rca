@@ -4,10 +4,11 @@
 {% block bodyclass %}page-editor{% endblock %}
 
 {% block content %}
-    <header class="merged">
-        <h1>Editing {{ snippet_type_name }} "{{ instance }}"</h1>
+    <header>
+        <h1>Editing: <span>{{ snippet_type_name }} "{{ instance }}"</span></h1>
     </header>
 
+    
     <form action="{% url 'verdantsnippets_edit' content_type.app_label content_type.model instance.id %}" method="POST">
         {% csrf_token %}
         {{ edit_handler.render_as_object }}
@@ -17,16 +18,19 @@
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <div class="dropdown-toggle icon iconright arrow-up"><input type="submit" value="Save" /></div>
+                        <input type="submit" value="Save" class="button" />
+                        <div class="dropdown-toggle icon icon-arrow-up"><input type="submit" value="Save" /></div>
                         <ul role="menu">
                             <li><a href="{% url 'verdantsnippets_delete' content_type.app_label content_type.model instance.id %}" class="shortcut">Delete <span class="kbd"><kbd>Shift</kbd> + <kbd>P</kbd></span></a></li>
                         </ul>
                     </div>
+                   
                 </li>
                 <li>Something</li>
             </ul>
         </footer>
     </form>
+
 
 {% endblock %}
 

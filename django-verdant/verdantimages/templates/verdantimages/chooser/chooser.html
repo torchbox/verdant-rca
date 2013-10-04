@@ -4,8 +4,9 @@
     <h1>Choose an image</h1>
 </header>
 
-<div class="row row-flush">
+<div class="row row-flush nice-padding">
     <div class="col6">
+        <h2>Search</h2>
         <form class="image-search" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET">
             <ul class="fields">
                 {% for field in searchform %}

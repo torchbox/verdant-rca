@@ -1,13 +1,17 @@
 {% load image_tags %}
-<h3>{{ images|length }} matches</h3>
-<ul>
+
+<ul class="listing horiz images">
     {% for image in images %}
         <li>
             <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
-                {% image image fill-130x100 %}
-                {{ image.title }}
+                <div class="image">{% image image fill-150x150 %}</div>
+                <h3>{{ image.title }}</h3>
             </a>
-                <p>Tags: {% for tag in image.tags.all %}{{ tag.name }} {% endfor %}</p>
+            {% with image.prefetched_tags as tags %}
+                {% if tags %}
+                    <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
+                {% endif %}
+            {% endwith %}
         </li>
     {% endfor %}
 </ul>

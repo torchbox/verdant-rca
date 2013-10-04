@@ -14,9 +14,7 @@
 
         <div class="row row-flush">
             <div class="left col9">
-                <h2 class="icon folder-black">
-                    {{ parent_page.title }}
-
+                <h2>
                     {% comment %}
                         The root node should serve as a container for the homepages of all
                         the sites on this Verdant installation, and not be a usable page itself (and
@@ -24,19 +22,21 @@
                     {% endcomment %}
                     {% if not parent_page.is_root %}
                         <div class="dropdown">
-                            <div class="dropdown-toggle inline icon arrow-down-black">Open drop-down</div> 
+                            <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                <li><a href="{{ parent_page.url }}" class="shortcut">View</a></li>
+                                <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
-                                
                             </ul>
                         </div>
                     {% endif %}
+
+                    {{ parent_page.title }}
                 </h2>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon add-teal">Add page here</a>
+                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add page here</a>
             </div>
         </div>
     </header>
@@ -61,6 +61,7 @@
                         </div>
                     </th>
                     <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
+                    <th class="children"></th>
                 </tr>
             </thead>
             <tbody>
@@ -70,9 +71,9 @@
                             <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
                             <td class="title">
                                 <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
-
                                 <ul class="actions">
                                     <li><a href="{{ page.url }}" target="_blank">View</a></li>
+                                    <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                     <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                     <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
                                 </ul>
@@ -80,14 +81,18 @@
                             <td class="type">{{ page.content_type }}</td>
                             <td class="status"></td>
                             {% if page.is_navigable %}
-                                <td>
-                                    <a href="{% url 'verdantadmin_explore' page.id %}">Explore &raquo;</a>
+                                <td class="children">
+                                    <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                                </td>
+                            {% else %}
+                                <td class="no-children">
+                                    <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
                                 </td>
                             {% endif %}
                         </tr>
                     {% endfor %}
                 {% else %}
-                    <tr><td colspan="4" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
+                    <tr><td colspan="5" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
                 {% endif %}
             </tbody>
         </table>

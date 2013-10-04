@@ -144,9 +144,6 @@
         }
     }
 
-    .carousel {
-        .unlist();
-    }
     .bx-viewport {
         border: none;
         box-shadow: none;
@@ -283,7 +280,6 @@
     }
 
     .row {
-        .unlist();
         .row-flush();
     }
     .row{
@@ -417,7 +413,6 @@
     padding-bottom:100px;
 
     .carousel-content{
-        .unlist();
         margin:0 -15px;
         overflow:hidden;
     }
@@ -493,6 +488,10 @@
         .bc4{
             font-size:0.8em;
         }
+
+        &.flushleft {
+            padding-left: 0;
+        }
     }
 }
 
@@ -557,7 +556,6 @@
 
 .events{
     ul{
-        .unlist();
         position:relative;
         -webkit-overflow-scrolling: touch;
         padding-top:@spacing-one;
@@ -580,7 +578,8 @@
         }
     }
 
-    .load-more{
+    .load-more, .space {
+        border-left:0;
         border-right:0;
         height:100%;
         margin-top:-@spacing-one;
@@ -621,9 +620,6 @@
         border-top:0;
     }
 
-    ul{
-        .unlist();
-    }
     li{
         padding-bottom:@grid-gutter-width;
     }
@@ -645,9 +641,6 @@
 
     &.module{
         border:0;
-    }
-    ul{
-        .unlist();
     }
     li{
         padding-bottom:@grid-gutter-width;
@@ -706,7 +699,6 @@
  */
 .one-plus {
     ul{
-        .unlist();
         li {
             margin-bottom: @spacing-one;
         }
@@ -778,7 +770,8 @@
 .tab-content{
     .clearfix();
     background-color:darken(@color-pale-grey, 10%);
-
+    position: relative;
+    
     .header{
         margin:0;
         border-bottom:1px solid white;
@@ -819,11 +812,15 @@
     &.active{
         display:block;
     }
-    ul{
-        .unlist();
-    }
     .image.full{
         margin:0 -15px; /* negative by amount of body padding (which isn't same as grid gutter) */
+    }
+
+    .facilities {
+        padding: @spacing-one;
+        p {
+            display: inline;
+        }
     }
 }
 
@@ -848,6 +845,10 @@
     .h6,
     .bc3{
         margin:0;
+    }
+
+    div.bc3 p {
+        display: inline;
     }
     
 
@@ -894,7 +895,6 @@
 
 .six-menu-block{
     ul{
-        .unlist();
         .row();
         .row-flush();
         overflow:hidden;
@@ -919,7 +919,6 @@
 
 /*
 .three-stats{
-    .unlist();
     .clearfix();
 
     background-color:@color-light-grey;
@@ -944,7 +943,6 @@
  */
 
 .button-bar{
-    .unlist();
     .clearfix();  
     a {
         display:block;
@@ -968,7 +966,6 @@
 .meta-data {
     border-bottom: 1px solid @color-divider;
     ul {
-        .unlist();
         margin: 0;
         padding: 0;
     }
@@ -994,6 +991,26 @@
         color: @color-highlight-blue;
         &:hover {
             text-decoration: underline;
+        }
+    }
+
+    ul {
+        padding: 0 0 0 40px;
+        margin: 1em 0;
+    }
+
+    ul li {
+        list-style-type: none;
+        &:before {
+            content: '\002D\00A0\00A0\00A0\00A0\00A0'; /* 002D is hex for a hyphen, 00A0 is hex for nbsp */
+            margin-left: -1.5em;
+        }
+    }
+
+    ul ul, ol ol {
+        margin-top: 0; /* make sure nested lists don't have a big space before the indented item */
+        li {
+            font-style: italic;
         }
     }
 }
@@ -1114,9 +1131,6 @@
     font-family:@font-family-benton;
     .row();
 
-    ul{
-        .unlist();
-    }
     li{
         border-bottom:1px solid white;
     }
@@ -1282,18 +1296,15 @@
 
 .bodytext-image {
     margin-top: @spacing-one;
-    //border-top: 1px solid @color-medium-grey;
-    //padding-top: @spacing-half;
     figcaption {
         display: block;
         width: 100%;
         text-align: right;
         margin-top: @spacing-one;
+        margin-bottom: @spacing-one;
     }
     &.small {
-        max-width: 33.33%;
-        float:right;
-        margin-left: @spacing-one;
+        max-width: 100%;
     }
 }
 
@@ -1320,9 +1331,6 @@
  */
 
 .gallery{
-    ul{
-        .unlist();
-    }
     li{
         padding-bottom:@grid-gutter-width;
     }
@@ -1351,6 +1359,9 @@
  * Index page intro
  */
 .index-intro {
+    p {
+        display:inline;
+    }
     .content {
         .bc4{
             font-size:0.8em;

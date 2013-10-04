@@ -1,0 +1,35 @@
+{% load pageurl image_tags %}
+
+{% if staff %}
+    <section class="five-plus x-plus row module">
+        <h2 class="module-title">Staff</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for staffpage in staff %}
+                    {% if forloop.counter == 6 %}
+                        <li class="load-more-target">
+                    {% elif forloop.counter0|divisibleby:"6" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl staffpage %}">
+                            {% if staffpage.profile_image %}
+                                <div class="image">{% image staffpage.profile_image width-400 %}</div>
+                            {% endif %}
+                            <div class="content">
+                                <h3 class="a3">{{ staffpage.title }}</h3>
+                                {% if staffpage.listing_intro %}
+                                    <p class="a4">{{ staffpage.listing_intro }}}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if staff|length > 6 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

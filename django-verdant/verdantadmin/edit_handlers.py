@@ -2,14 +2,15 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django import forms
 from django.db import models
-from django.forms.models import modelform_factory, inlineformset_factory
+from django.forms.models import modelform_factory, inlineformset_factory, ModelForm, ModelFormMetaclass
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 
 import copy
 
 from core.models import Page
 from core.util import camelcase_to_underscore
+from core.fields import RichTextArea
 
 
 class FriendlyDateInput(forms.DateInput):
@@ -28,6 +29,11 @@ FORM_FIELD_OVERRIDES = {
     models.DateField: {'widget': FriendlyDateInput},
 }
 
+WIDGET_JS = {
+    FriendlyDateInput: (lambda id: "initDateChooser(fixPrefix('%s'));" % id),
+    RichTextArea: (lambda id: "makeRichTextEditable(fixPrefix('%s'));" % id),
+}
+
 # Callback to allow us to override the default form fields provided for each model field.
 def formfield_for_dbfield(db_field, **kwargs):
     # snarfed from django/contrib/admin/options.py
@@ -42,6 +48,26 @@ def formfield_for_dbfield(db_field, **kwargs):
     # For any other type of field, just call its formfield() method.
     return db_field.formfield(**kwargs)
 
+class VerdantAdminModelFormMetaclass(ModelFormMetaclass):
+    # Override the behaviour of the regular ModelForm metaclass -
+    # which handles the translation of model fields to form fields -
+    # to use our own formfield_for_dbfield function to do that translation.
+    # This is done by sneaking a formfield_callback property into the class
+    # being defined (unless the class already provides a formfield_callback
+    # of its own).
+    def __new__(cls, name, bases, attrs):
+        if 'formfield_callback' not in attrs or attrs['formfield_callback'] is None:
+            attrs['formfield_callback'] = formfield_for_dbfield
+
+        new_class = super(VerdantAdminModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
+        return new_class
+
+VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', (ModelForm,), {})
+
+# Now, any model forms built off VerdantAdminModelForm instead of ModelForm should pick up
+# the nice form fields defined in FORM_FIELD_OVERRIDES.
+
+
 def get_form_for_model(model, **kwargs):
     # django's modelform_factory with a bit of custom behaviour
     # (dealing with Treebeard's tree-related fields that really should have
@@ -49,7 +75,7 @@ def get_form_for_model(model, **kwargs):
     if issubclass(model, Page):
         kwargs['exclude'] = kwargs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
 
-    kwargs['formfield_callback'] = formfield_for_dbfield
+    kwargs['form'] = VerdantAdminModelForm
 
     return modelform_factory(model, **kwargs)
 
@@ -278,11 +304,10 @@ class BaseFieldPanel(EditHandler):
         self.help_text = self.bound_field.help_text
 
     def object_classnames(self):
-        widget = self.bound_field.field.widget
-        if isinstance(widget, forms.TextInput) or isinstance(widget, forms.Textarea):
-            return 'full'
-        else:
-            return ''
+        try:
+            return "single-field " + self.classname
+        except (AttributeError, TypeError):
+            return "single-field"
 
     def field_type(self):
         return camelcase_to_underscore(self.bound_field.field.__class__.__name__)        
@@ -303,6 +328,16 @@ class BaseFieldPanel(EditHandler):
             'field_content': self.render_as_field(show_help_text=False),
         }))        
 
+    def render_js(self):
+        try:
+            # see if there's an entry for this widget type in WIDGET_JS
+            js_func = WIDGET_JS[self.bound_field.field.widget.__class__]
+        except KeyError:
+            return ''
+
+        return mark_safe(js_func(self.bound_field.id_for_label))
+
+
     field_template = "verdantadmin/edit_handlers/field_panel_field.html"
     def render_as_field(self, show_help_text=True):
         return mark_safe(render_to_string(self.field_template, {
@@ -314,9 +349,10 @@ class BaseFieldPanel(EditHandler):
     def rendered_fields(self):
         return [self.field_name]
 
-def FieldPanel(field_name):
+def FieldPanel(field_name, classname=None):
     return type('_FieldPanel', (BaseFieldPanel,), {
         'field_name': field_name,
+        'classname': classname,
     })
 
 
@@ -379,7 +415,21 @@ class BasePageChooserPanel(BaseChooserPanel):
     def target_content_type(cls):
         if cls._target_content_type is None:
             if cls.page_type:
-                cls._target_content_type = ContentType.objects.get_for_model(cls.page_type)
+                if isinstance(cls.page_type, basestring):
+                    # translate the passed model name into an actual model class
+                    from django.db.models import get_model
+                    try:
+                        app_label, model_name = cls.page_type.split('.')
+                    except ValueError:
+                        raise ImproperlyConfigured("The page_type passed to PageChooserPanel must be of the form 'app_label.model_name'")
+
+                    page_type = get_model(app_label, model_name)
+                    if page_type is None:
+                        raise ImproperlyConfigured("PageChooserPanel refers to model '%s' that has not been installed" % cls.page_type)
+                else:
+                    page_type = cls.page_type
+
+                cls._target_content_type = ContentType.objects.get_for_model(page_type)
             else:
                 # TODO: infer the content type by introspection on the foreign key
                 cls._target_content_type = ContentType.objects.get_by_natural_key('core', 'page')
@@ -406,51 +456,67 @@ def PageChooserPanel(field_name, page_type=None):
 
 
 class BaseInlinePanel(EditHandler):
-    # get_child_form_class is dependent on get_child_edit_handler_class if a panel list is passed
+    # get_formset_class is dependent on get_child_edit_handler_class if a panel list is passed
     #   (so that the edit handler can specify widget overrides on the form);
-    # get_child_edit_handler_class is dependent on get_child_form_class if a panel list is NOT passed
+    # get_child_edit_handler_class is dependent on get_formset_class if a panel list is NOT passed
     #   (because the edit handler needs to find out its panel list from the form).
     # Look ma, no circular dependency!
+
+    @classmethod
+    def get_panel_definitions(cls):
+        # Look for a panels definition in the InlinePanel declaration
+        if cls.panels is not None:
+            return cls.panels
+        # Failing that, see if the related model has one defined
+        elif hasattr(cls.related_model, 'panels'):
+            return cls.related_model.panels
+        else:
+            return None
 
     _child_edit_handler_class = None
     @classmethod
     def get_child_edit_handler_class(cls):
         if cls._child_edit_handler_class is None:
-            # Look for a panels definition in the InlinePanel declaration
-            if cls.panels is not None:
-                panels = cls.panels
-            # Failing that, see if the related model has one defined
-            elif hasattr(cls.related_model, 'panels'):
-                panels = cls.related_model.panels
-            # As a last resort, build the form class and get some basic panel definitions from that
+            panels = cls.get_panel_definitions()
+            if panels:
+                cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
             else:
-                form_class = cls.get_child_form_class()
-                panels = extract_panel_definitions_from_form_class(form_class)
-
-            cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
+                # create the formset class first - this will internally build a modelform class,
+                # which we will pick out and derive panel definitions from
+                formset_class = cls.get_formset_class()
+                panels = extract_panel_definitions_from_form_class(formset_class.form)
+                cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
 
         return cls._child_edit_handler_class
-
-    _child_form_class = None
-    @classmethod
-    def get_child_form_class(cls):
-        if cls._child_form_class is None:
-            if cls.panels is None and not hasattr(cls.related_model, 'panels'):
-                # go ahead and create the formset without any intervention from panel definitions
-                cls._child_form_class = get_form_for_model(cls.related_model)
-            else:
-                # fetch/build the EditHandler first, and let that specify widget overrides
-                edit_handler_class = cls.get_child_edit_handler_class()
-                cls._child_form_class = get_form_for_model(cls.related_model, widgets=edit_handler_class.widget_overrides())
-
-        return cls._child_form_class
 
     _formset_class = None
     @classmethod
     def get_formset_class(cls):
         if cls._formset_class is None:
-            form_class = cls.get_child_form_class()
-            cls._formset_class = inlineformset_factory(cls.base_model, cls.related_model, form=form_class, fk_name=cls.fk_name, extra=0)
+            if cls.get_panel_definitions():
+                # panel definitions have been provided, so build the edit handler first
+                # and pick up any widget overrides from it when building the formset class
+                widget_overrides = cls.get_child_edit_handler_class().widget_overrides()
+
+                # As of Django 1.6 we can pass a 'widgets' argument directly to inlineformset_factory.
+                # In the meantime, we have to assemble a largely useless subclass of VerdantAdminModelForm
+                # with the widget spec baked in... inlineformset_factory will promptly use this to 
+                # create its *own* model-specific subclass, and forget about this one.
+                form_class = get_form_for_model(cls.related_model, widgets=widget_overrides)
+
+                cls._formset_class = inlineformset_factory(
+                    cls.base_model, cls.related_model,
+                    form=form_class,
+                    fk_name=cls.fk_name, extra=0
+                )
+            else:
+                # no panel definitions are provided, so dismiss the possibility of
+                # there being widget overrides
+                cls._formset_class = inlineformset_factory(
+                    cls.base_model, cls.related_model,
+                    form=VerdantAdminModelForm,
+                    fk_name=cls.fk_name, extra=0
+                )
 
             # at this point we can fill in a heading, if we don't have one already
             if not cls.heading:

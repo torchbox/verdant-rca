@@ -34,40 +34,12 @@
                                             {% endif %}
                                         </h3>
                                     {% endif %}
-                                    {% if carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
                                     <p class="caption a4">
-                                        {% if carousel_item.image.title %}
-                                            {{ carousel_item.image.title }}
-                                            {% if carousel_item.image.creator_name %}
-                                                by {{ carousel_item.image.creator_name }}
-                                            {% endif %}
-                                        {% endif %}
-                                        {% if carousel_item.image.medium %}
-                                            {% if carousel_item.image.title %}
-                                                <br />
-                                            {% endif %}
-                                            {{ carousel_item.image.medium }}
-                                        {% endif %}
-                                        {% if carousel_item.image.dimensions %}
-                                            {% if carousel_item.image.title or carousel_item.image.medium %}
-                                                <br />
-                                            {% endif %}
-                                            {{ carousel_item.image.dimensions }}
-                                        {% endif %}
-                                        {% if carousel_item.image.permission %}
-                                            {% if carousel_item.image.medium %}
-                                                &#124;
-                                            {% endif %}
-                                            &copy; {{ carousel_item.image.permission }}
-                                        {% endif %}
-                                        {% if carousel_item.image.photographer %}
-                                            {% if carousel_item.image.medium or carousel_item.image.permission %}
-                                                &#124;
-                                            {% endif %}
-                                            {{ carousel_item.image.photographer }}
-                                        {% endif %}
+                                        {% for line in carousel_item.image.caption_lines %}
+                                            {{ line }}
+                                            {% if not forloop.last %}<br />{% endif %}
+                                        {% endfor %}
                                     </p>
-                                    {% endif %}
                                 </div>
                             {% endif %}
                         </li>
@@ -81,7 +53,9 @@
                         {% endcomment %}
                         <div class="videoembed vimeo">
                             <div class="playpause play">Play</div>
-                            <div class="poster"><img src="http://b.vimeocdn.com/ts/167/267/167267482_640.jpg" /></div>
+                            {% if carousel_item.poster_image %}
+                                <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
+                            {% endif %}
                             {{ carousel_item.embedly_url|embedly:"944" }}
                         </div>
                     {% endif %}

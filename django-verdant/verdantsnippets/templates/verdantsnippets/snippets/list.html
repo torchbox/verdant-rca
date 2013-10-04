@@ -4,16 +4,16 @@
     <header>
         <div class="row row-flush">
             <div class="left col9">
-                <h1>{{ snippet_type_name_plural|capfirst }}</h1>
+                <h1>Snippet: <span>{{ snippet_type_name_plural|capfirst }}</span></h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" class="button icon add-teal">Add {{ snippet_type_name }}</a>
+                <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" class="button icon icon-plus-inverse">Add {{ snippet_type_name }}</a>
                 {# TODO: figure out a way of saying "Add a/an [foo]" #}
             </div>
         </div>
     </header>
-    <div class="listing snippets">
-        <ul>
+    <div class="nice-padding">
+        <ul class="listing">
             {% for item in items %}
                 <li>
                     <a href="{% url 'verdantsnippets_edit' content_type.app_label content_type.model item.id %}">

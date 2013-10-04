@@ -109,9 +109,13 @@
         border-left:1px solid rgba(255,255,255,0.2);
         position:absolute;
         right:0;
-        width:45px;
         height:100%;
-        padding:0;
+        padding:0 0.5em;
+        text-align:center;
+
+        &:before{
+            width:1em;
+        }
 
         &:hover{
             background-color:@color-context-popup-bg-hover;
@@ -143,37 +147,43 @@
 h2 .dropdown{
     display:inline-block;
     font-size:0.7em;
-    margin-left:0.5em;    
+    margin-right:0.5em;   
+
     .dropdown-toggle{
         padding:0.5em 0;
-        border-left:1px solid lighten(@color-grey, 20%);
-        text-indent:-2000px;
+        border-right:1px solid lighten(@color-grey, 40%);
 
         /* icon */
         &:before{
             opacity:0.5;
-            left:0.5em;
-            top:0.2em;
+            padding:0.2em;
+            height:1.1em;
+            text-align:left;
         }
         &:hover{
             background-color:@color-teal;
-            &:before{
-                .sprite(350px, 215px, 1);
-            }
+            border-color:transparent;
         }
     }
     &.open{
         .dropdown-toggle{
             background-color:@color-teal;
-            &:before{
-                .sprite(350px, 215px, 1);
-            }
         }
+
         ul{
-            right:0%;
+            left:0%;
             left:auto;
         }
     }
+
+    .dropdown-toggle:hover:before,
+    &.open .dropdown-toggle:before{
+        background-color:@color-teal;
+        color:white;
+        opacity:1;
+    }
+
+
 }
 
 footer .actions .dropdown-toggle{

@@ -1,0 +1,35 @@
+{% load pageurl image_tags %}
+
+{% if alumni %}
+    <section class="five-plus x-plus row module">
+        <h2 class="module-title">Alumni</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for alumnipage in alumni %}
+                    {% if forloop.counter == 6 %}
+                        <li class="load-more-target">
+                    {% elif forloop.counter0|divisibleby:"6" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl alumnipage %}">
+                            {% if alumnipage.profile_image %}
+                                <div class="image">{% image alumnipage.profile_image width-400 %}</div>
+                            {% endif %}
+                            <div class="content">
+                                <h3 class="a3">{{ alumnipage.title }}</h3>
+                                {% if alumnipage.listing_intro %}
+                                    <p class="a4">{{ alumnipage.listing_intro }}}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+                {% if alumni|length > 6 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

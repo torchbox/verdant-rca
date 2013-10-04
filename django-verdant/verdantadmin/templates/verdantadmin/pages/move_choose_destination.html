@@ -1,0 +1,32 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Move page <span>{{ page_to_move.title }}</span></h1>
+    </header>
+
+    <p>Select a destination for this page</p>
+
+    <p class="breadcrumb">
+        {% for page in viewed_page.get_ancestors %}
+            <a class="navigate-pages" href="{% url 'verdantadmin_pages_move_choose_destination' page_to_move.id page.id %}">{{ page.title }}</a> /
+        {% endfor %}
+        <b>{{ viewed_page.title }}</b> (<a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id viewed_page.id %}">move page here</a>)
+    </p>
+
+    <ul>
+        {% for entry in child_pages %}
+            <li>
+                {% if entry.can_choose %}
+                    <a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id entry.page.id %}">{{ entry.page.title }}</a>
+                {% else %}
+                    {{ entry.page.title }}
+                {% endif %}
+
+                {% if entry.can_descend %}
+                    <a href="{% url 'verdantadmin_pages_move_choose_destination' page_to_move.id entry.page.id %}">&raquo;</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

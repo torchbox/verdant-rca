@@ -64,7 +64,7 @@ max z-index: 510;
     padding-bottom:3em;
     display:inline-block;
     vertical-align: middle;
-    .artist-indent();
+    overflow:hidden;
 }
 
 // Modal background
@@ -82,24 +82,16 @@ max z-index: 510;
 }
 
 .modal .close{ 
-    .icon-left(18px, 18px, 468px, 215px, 1);
     padding:0;
+    position:absolute;
     width:50px;
     height:50px;
-    position:absolute;
     top:1em;
     right:1em;
-    text-indent:-200px;
     z-index:1;
 
     &:before{
-        padding:0;
-        left:0;
-        right:0;
-        top:0;
-        bottom:0;
-        margin: auto;
-
+        margin-left:0.5em;
     }
 }
 
@@ -110,9 +102,6 @@ max z-index: 510;
 
 @media screen and (min-width: @breakpoint-mobile) {
     .modal-dialog {
-        padding:0px 0 3px 60px;
-    }
-    .nav-open .modal-dialog{
-        padding-left:240px;  
+        padding:0px 0 3px @menu-width;
     }
 }

@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>{{ self.title }}</title>
+        <title>{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />

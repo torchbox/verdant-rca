@@ -19,7 +19,7 @@
                 {% endif %}
 
                 {% with self.related_schools.all as related_schools %}
-                    {% if self.related_schools %}
+                    {% if related_schools %}
                         <dd>From</dd>
                         <dt>
                             <ul>
@@ -32,7 +32,7 @@
                 {% endwith %}
 
                 {% with self.related_programmes.all as related_programmes %}
-                    {% if self.related_programmes %}
+                    {% if related_programmes %}
                         <dd>Programme</dd>
                         <dt>
                             <ul>
@@ -58,6 +58,80 @@
                 {% endwith %} 
 
             {% endif %}
+
+            {% if showResearchMeta %}
+
+                {% with self.creator.all as creators %}
+                    {% if creators %}
+                        <dd>creator{% if creators|length > 1 %}s{% endif %}</dd>
+                        <dt>
+                            <ul>
+                                {% for creator in creators %}
+                                    <li>
+                                        {% if creator.person %}
+                                            {{ creator.person.title }}
+                                        {% elif creator.manual_person_name %}
+                                            {{ creator.manual_person_name }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+                <dd>Year</dd>
+                <dt>{{ self.year }}</dt>
+
+                <dd>School</dd>
+                <dt>{{ self.get_school_display }}</dt>
+
+                <dd>Type</dd>
+                <dt>{{ self.get_work_type_display }}</dt>
+
+                <dd>Theme</dd>
+                <dt>{{ self.get_work_theme_display }}</dt>
+                work theme display not working fao Matthew
+
+                {% if self.programme %}
+                    <dd>Programme</dd>
+                    <dt>{{ self.get_programme_display }}</dt>
+                {% endif %}
+
+                {% with self.links.all as links %}
+                    {% if links %}
+                        <dd>Links</dd>
+                        <dt>
+                            <ul>
+                                {% for link in links %}
+                                <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+            {% endif %}
+
+            {% if showRCANowMeta %}
+
+                <dd>By</dd>
+                <dt>Needs author field adding to model</dt>
+
+                <dd>Date</dd>
+                <dt>Not currently in model</dt>
+
+                <dd>Programme</dd>
+                <dt>{{ self.get_programme_display }}</dt>
+
+                <dd>Type</dd>
+                <dt>Needs type field adding to model</dt>
+
+                <dd>Tags</dd>
+                <dt>Tags are TBD</dt>
+
+            {% endif %}
+
         </dl>
     </div>
     <div class="single">

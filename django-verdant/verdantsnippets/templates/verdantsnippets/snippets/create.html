@@ -4,9 +4,10 @@
 {% block bodyclass %}page-editor{% endblock %}
 
 {% block content %}
-	<header class="merged">
-    	<h1>New {{ snippet_type_name }}</h1>
-   	</header>
+    <header>
+        <h1>New {{ snippet_type_name }}</h1>
+    </header>
+
 
     <form action="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" method="POST">
         {% csrf_token %}
@@ -17,14 +18,14 @@
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <div class="dropdown-toggle"><input type="submit" value="Save" /></div>
+                        <div><input type="submit" value="Save" /></div>
                     </div>
                 </li>
                 <li>Something</li>
             </ul>
         </footer>
     </form>
-
+   
 {% endblock %}
 
 {% block extra_css %}
