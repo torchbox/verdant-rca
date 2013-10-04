@@ -3,7 +3,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
-from core.models import Page
+from core.models import Page, Orderable
 from core.fields import RichTextField
 
 from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, RichTextFieldPanel, PageChooserPanel
@@ -502,7 +502,7 @@ NewsIndex.promote_panels = [
 
 # == News Item ==
 
-class NewsItemCarouselItem(CarouselItemFields):
+class NewsItemCarouselItem(CarouselItemFields, Orderable):
     page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
 
 class NewsItemLink(models.Model):
