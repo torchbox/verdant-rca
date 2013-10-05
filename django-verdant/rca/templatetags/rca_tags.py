@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage
 from datetime import date
 from django.db.models import Min, Max
 
@@ -8,10 +8,12 @@ register = template.Library()
 
 # FIXME: order by should really be on the first dates_times object
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
-def upcoming_events(context, count=3):
-    events = EventItem.objects.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).filter(end_date__gte=date.today()).order_by('start_date')[:count]
+def upcoming_events(context, exclude=None, count=3):
+    events = EventItem.objects.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).filter(end_date__gte=date.today()).order_by('start_date')
+    if exclude:
+        events = events.exclude(id=exclude.id)
     return {
-        'events': events,
+        'events': events[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -69,18 +71,32 @@ def rca_now_by_programme(context, programme):
     }
 
 @register.inclusion_tag('rca/tags/research_by_programme.html', takes_context=True)
-def research_by_programme(context, programme):
+def research_by_programme(context, programme, exclude=None):
     research_items = ResearchItem.objects.filter(programme=programme)
+    if exclude:
+        research_items = research_items.exclude(id=exclude.id)
     return {
         'research_items': research_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
-def rca_now_latest(context, count=4):
+def rca_now_latest(context, exclude=None, count=4):
     # FIXME: needs ordering by date added
-    rcanow = RcaNowPage.objects.filter()[:count]
+    rcanow = RcaNowPage.objects.all()
+    if exclude:
+        rcanow = rcanow.exclude(id=exclude.id)
     return {
-        'rcanow_pages': rcanow,
+        'rcanow_pages': rcanow[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/upcoming_jobs.html', takes_context=True)
+def upcoming_jobs(context, exclude=None, count=6):
+    jobs = JobPage.objects.filter(closing_date__gte=date.today())
+    if exclude:
+        jobs = jobs.exclude(id=exclude.id)
+    return {
+        'jobs': jobs[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }

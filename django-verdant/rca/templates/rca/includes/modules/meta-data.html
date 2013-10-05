@@ -90,8 +90,7 @@
                 <dt>{{ self.get_work_type_display }}</dt>
 
                 <dd>Theme</dd>
-                <dt>{{ self.get_work_theme_display }}</dt>
-                work theme display not working fao Matthew
+                <dt>{{ self.get_theme_display }}</dt>
 
                 {% if self.programme %}
                     <dd>Programme</dd>
@@ -115,17 +114,16 @@
 
             {% if showRCANowMeta %}
 
-                <dd>By</dd>
-                <dt>Needs author field adding to model</dt>
+                {% if self.author %}
+                    <dd>By</dd>
+                    <dt>{{ self.author }}</dt>
+                {% endif %}
 
                 <dd>Date</dd>
-                <dt>Not currently in model</dt>
+                <dt>Not currently in model - to be confirmed by Chris</dt>
 
                 <dd>Programme</dd>
                 <dt>{{ self.get_programme_display }}</dt>
-
-                <dd>Type</dd>
-                <dt>Needs type field adding to model</dt>
 
                 <dd>Tags</dd>
                 <dt>Tags are TBD</dt>
