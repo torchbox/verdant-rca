@@ -13,6 +13,8 @@ from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 from verdantsnippets.models import register_snippet
 
+from django_cluster.fields import ParentalKey
+
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -503,10 +505,10 @@ NewsIndex.promote_panels = [
 # == News Item ==
 
 class NewsItemCarouselItem(CarouselItemFields, Orderable):
-    page = models.ForeignKey('rca.NewsItem', related_name='carousel_items')
+    page = ParentalKey('rca.NewsItem', related_name='carousel_items')
 
 class NewsItemLink(models.Model):
-    page = models.ForeignKey('rca.NewsItem', related_name='related_links')
+    page = ParentalKey('rca.NewsItem', related_name='related_links')
     link = models.URLField()
     link_text = models.CharField(max_length=255)
 
