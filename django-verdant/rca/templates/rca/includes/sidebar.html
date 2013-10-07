@@ -28,7 +28,7 @@
 <!-- Related links -->
 {% if showRelatedLinks %}
     {% load pageurl %}
-    {% if self.get_siblings or self.related_links %}
+    {% if self.get_other_siblings or self.related_links %}
     <div class="related expanded">
         <h2>In this section</h2>
         <div class="wrapper">
