@@ -3,6 +3,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
+from datetime import date
+
 from core.models import Page, Orderable
 from core.fields import RichTextField
 
@@ -678,7 +680,7 @@ class EventItemRelatedProgramme(models.Model):
 class EventItemDatesTimes(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
-    date_to = models.DateField("End date", blank=True, help_text="Not required if event is on a single day")
+    date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
     time_from = models.CharField("Start time", max_length=255, blank=True)
     time_to = models.CharField("End time",max_length=255, blank=True)
 
@@ -688,6 +690,13 @@ class EventItemDatesTimes(models.Model):
         FieldPanel('time_from'),
         FieldPanel('time_to'),
     ]
+
+class FutureEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
+            params=[date.today(), date.today()]
+        )
 
 class EventItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
@@ -704,6 +713,8 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    future_objects = FutureEventItemManager()
 
 
 EventItem.content_panels = [

@@ -2,14 +2,13 @@ from django import template
 
 from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage
 from datetime import date
-from django.db.models import Min, Max
+from django.db.models import Min
 
 register = template.Library()
 
-# FIXME: order by should really be on the first dates_times object
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.objects.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).filter(end_date__gte=date.today()).order_by('start_date')
+    events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
@@ -34,7 +33,7 @@ def news_carousel(context, area="", programme="", count=6):
 
 @register.inclusion_tag('rca/tags/upcoming_events_by_programme.html', takes_context=True)
 def upcoming_events_by_programme(context, opendays=0, programme="", programme_display_name=""):
-    events = EventItem.objects.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).filter(end_date__gte=date.today()).filter(related_programmes__programme=programme).order_by('start_date')
+    events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
