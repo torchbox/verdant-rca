@@ -226,7 +226,6 @@ $(function(){
         on: function(){
             /* Packery */
             $('.packery').imagesLoaded( function() {
-                console.log('here');
                 var packery = $('.packery').packery({
                     itemSelector: '.item',
                     stamp: ".stamp"
@@ -297,6 +296,46 @@ $(function(){
         }
 
     });
+    
+    /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
+    $('.gallery').each(function(){
+        var maxWidth = $(this).width();
+        var totalWidth = 0;
+        var rowCounter = 0;
+        var rowArray = [];
+        var items = $('.item', $(this));
+
+        function addToArray(elem){
+            totalWidth += elem.width();
+            if(typeof rowArray[rowCounter] == "undefined"){
+                rowArray[rowCounter] = new Array();
+            }
+            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */   
+        }
+
+        items.each(function(){
+            if(totalWidth + $(this).width() >= maxWidth){
+                rowCounter ++;
+                totalWidth = 0;
+
+                addToArray($(this));
+            }else{
+                addToArray($(this));
+            }
+        });
+        
+        // Change items parent container to a div, to maintain validity
+        if(items.parent().prop('tagName') == 'UL'){
+            items.parent().replaceWith(function(){
+                return $("<div />").append($(this).contents());
+            });
+        }
+
+        for(i = 0; i < rowArray.length; i++){
+            console.log(rowArray[i]);
+            $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
+        }
+    }) 
 
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
