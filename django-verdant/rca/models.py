@@ -1228,40 +1228,48 @@ class StudentPageDegree(models.Model):
 
 class StudentPageExhibition(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255)
+    exhibition = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('exhibition')]
 
 class StudentPageExperience(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='experiences')
-    experience = models.CharField(max_length=255)
+    experience = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('experience')]
 
 class StudentPageAwards(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='awards')
-    award = models.CharField(max_length=255)
+    award = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('award')]
 
-class StudentPageContacts(models.Model):
-    page = models.ForeignKey('rca.StudentPage', related_name='contacts')
+class StudentPageContactsEmail(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='email')
     email = models.EmailField(max_length=255, blank=True)
-    phone = models.CharField(max_length=255, blank=True)
-    website = models.URLField(blank=True)
 
-    panels = [
-        FieldPanel('email'),
-        FieldPanel('phone'),
-        FieldPanel('website'),
-    ]
+    panels = [FieldPanel('email')]
+
+class StudentPageContactsPhone(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='phone')
+    phone = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('phone')]
+
+
+class StudentPageContactsWebsite(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='website')
+    website = models.URLField(max_length=255, blank=True)
+
+    panels = [FieldPanel('website')]
+
 
 class StudentPageCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
 
 class StudentPageWorkCollaborator(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('name')]
 
@@ -1273,13 +1281,14 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
-    statement = RichTextField()
+    statement = RichTextField(blank=True)
     project_title = models.CharField(max_length=255, blank=True)
-    work_description = models.CharField(max_length=255, blank=True)
-    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
-    work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES)
-    work_awards = models.CharField(max_length=255)
-    work_sponsors = models.CharField(max_length=255)
+    work_description = RichTextField(blank=True)
+    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
+    work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    work_awards = models.CharField(max_length=255, blank=True)
+    work_sponsors = models.CharField(max_length=255, blank=True)
+    student_twitter_feed = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
 StudentPage.content_panels = [
@@ -1290,7 +1299,10 @@ StudentPage.content_panels = [
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, StudentPageContacts, label="Student contact"),
+    InlinePanel(StudentPage, StudentPageContactsEmail, label="Email"),
+    InlinePanel(StudentPage, StudentPageContactsPhone, label="Phone"),
+    InlinePanel(StudentPage, StudentPageContactsWebsite, label="Website"),
+    FieldPanel('student_twitter_feed'),
     InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
