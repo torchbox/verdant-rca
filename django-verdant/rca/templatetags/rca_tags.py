@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage
 from datetime import date
 from django.db.models import Min
 
@@ -61,9 +61,12 @@ def alumni_by_programme(context, programme):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/rca_now_by_programme.html', takes_context=True)
-def rca_now_by_programme(context, programme):
-    rcanow = RcaNowPage.objects.filter(show_on_homepage=1).filter(programme=programme)
+@register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
+def rca_now_related(context, programme="", author=""):
+    if programme:
+        rcanow = RcaNowPage.objects.filter(show_on_homepage=1).filter(programme=programme)
+    elif author:
+        rcanow = RcaNowPage.objects.filter(author=author)
     return {
         'rcanow_pages': rcanow,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -97,5 +100,15 @@ def upcoming_jobs(context, exclude=None, count=6):
         jobs = jobs.exclude(id=exclude.id)
     return {
         'jobs': jobs[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
+def students_related(context, programme="", exclude=None, count=4):
+    students = StudentPage.objects.filter(programme=programme)
+    if exclude:
+        students = students.exclude(id=exclude.id)
+    return {
+        'students': students[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }

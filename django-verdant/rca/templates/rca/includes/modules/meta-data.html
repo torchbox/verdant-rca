@@ -130,6 +130,47 @@
 
             {% endif %}
 
+            {% if showStudentMeta %}
+                <dd>Location</dd>
+                <dt>{{ self.get_work_location_display }}</dt>
+
+                {% with self.collaborators.all as collaborators %}
+                    {% if collaborators %}
+                        <dd>Collaborators</dd>
+                        <dt>
+                            <ul>
+                                {% for collaborator in collaborators %}
+                                <li>{{ collaborator.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+                {% with self.awards.all as awards %}
+                    {% if awards %}
+                        <dd>Awards</dd>
+                        <dt>
+                            <ul>
+                                {% for award in awards %}
+                                <li>{{ award.award }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+                <dd>Programme</dd>
+                <dt>{{ self.get_programme_display }}</dt>
+
+                <dd>Work type</dd>
+                <dt>{{ self.get_work_type_display }}</dt>
+
+                <dd>Sponsors</dd>
+                <dt>{{ self.work_sponsors }}</dt>
+                
+            {% endif %}
+
         </dl>
     </div>
     <div class="single">

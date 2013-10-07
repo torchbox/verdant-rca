@@ -1,0 +1,106 @@
+{% extends "rca/base.html" %}
+{% load image_tags rich_text rca_tags %}
+
+{% block body_class %}
+    type-student-profile
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    
+
+    <section class="two-tab row module">
+        <ul class="tab-nav tabs-2">
+            <li class="active"><a href="#tab1" class="t0">Info</a></li>
+            <li><a href="#tab2" class="t0">Selected work</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
+            <div class="tab-pane active flush" id="tab1">
+                <div class="profile">
+                    <ul class="four-cols">
+                        <li class="col first">
+                            {% image self.profile_image width-400 %}
+                        </li>
+                        <li class="col">
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_school_display }}</p>
+
+                            <h3 class="a2 space">Course</h3>
+                            <p class="h7">TBD</p>
+                        </li>
+                        <li class="col">
+                            <h3 class="a2">Contact</h3>
+                            <ul>
+                                <li><a href="">TBD when model updated</a></li>
+                            </ul>
+                        </li>
+                        <li class="col last">
+                        </li>
+                    </ul>
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <div class="row">
+                            {% include "rca/includes/modules/contact-button.html" %}
+                            {% include "rca/includes/modules/share-button.html" %}
+                            </div>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            {{ self.statement|richtext }}
+                        </li>
+                    </ul>
+
+                    <div class="inner">
+
+                            <!-- research -->
+                            Research tbd
+
+                            <!-- rca now -->
+                            {% rca_now_related author=self.title %}
+
+                            
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h2 class="header"><a href="#tab2" class="a0">Work</a></h2>
+            <div class="tab-pane" id="tab2">
+                {% include "rca/includes/modules/carousel.html" %}
+                
+                <section class="row">
+                    <section class="body-text">
+                        {% if self.project_title %}
+                            <h2 class="h5">{{ self.project_title }}</h2>
+                        {% endif %}
+                        <span class="bc3">date TBD</span>
+                        {% if self.work_description %}
+                            <p>{{ self.work_description }}</p>
+                        {% endif %}
+                    </section>
+
+                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
+
+                </section>
+
+            </div>
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+{% endblock %}
+
+<!-- To dos:
+- make tabs optional if this is necessary
+- course as per instructions
+- contact when model gets updated
+- research feed when feedback given
+- date when this field is confirmed
+- updates if required fields get changed
+- name and surname split on related students -->

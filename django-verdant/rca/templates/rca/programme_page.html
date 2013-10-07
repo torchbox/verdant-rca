@@ -1,6 +1,10 @@
 {% extends "rca/base.html" %}
 {% load pageurl image_tags embed_filters rich_text rca_tags %}
 
+{% block body_class %}
+    type-programme
+{% endblock %}
+
 {% block content %}
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
@@ -139,7 +143,7 @@
     {% alumni_by_programme programme=self.programme %}
 
     <!-- rca now -->
-    {% rca_now_by_programme programme=self.programme %}
+    {% rca_now_related programme=self.programme %}
 
     <!-- research -->
     {% research_by_programme programme=self.programme %}
