@@ -135,11 +135,13 @@ function InlinePanel(opts) {
 
     var formsUl = $('#' + opts.formsetPrefix + '-FORMS');
     self.updateMoveButtonDisabledStates = function() {
-        forms = formsUl.children('li:visible');
-        forms.each(function(i) {
-            $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0);
-            $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
-        })
+        if (opts.canOrder) {
+            forms = formsUl.children('li:visible');
+            forms.each(function(i) {
+                $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0);
+                $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
+            });
+        }
     }
 
     buildExpandingFormset(opts.formsetPrefix, {
