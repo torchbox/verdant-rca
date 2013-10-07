@@ -11,7 +11,7 @@
                 {% if carousel_items|length == 1 %}
                     {% for carousel_item in carousel_items %}
                         {% if carousel_item.image %}
-                            <div class="image {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
+                            <div class="image standalone {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
                                 {% image carousel_item.image width-1000 %}
                             </div>
                         {% elif carousel_item.embedly_url %}
