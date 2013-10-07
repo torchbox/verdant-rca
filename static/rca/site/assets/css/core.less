@@ -518,8 +518,6 @@ nav {
     z-index:999;
     height:150px; /* gets overridden by finding tallest submenu */
     overflow:hidden;
-
-   
 }
     nav.open:after{
         .sprite-load(-17px, -1178px, 27px, 15px);
@@ -537,7 +535,18 @@ nav {
         float:left;
         padding-right:0.4em;
         font-weight:normal;
-    }
+
+        &:after{
+            content:"/";
+            font-size:12px;
+            padding-left:5px;
+            line-height:20px;
+            display:inline-block;
+            font-weight:bold;
+            color:black;
+        }
+    }    
+
 
     nav.dl-menuwrapper{
         margin:0;
@@ -557,7 +566,8 @@ nav {
     }
         nav > ul{
             top:10px;
-            left:6%;
+            //left:6%;
+            left:70px;
             width:94%;
             max-width:800px;
         }
@@ -627,6 +637,7 @@ nav {
                     display:block;
                 }
 
+               
                 nav a{
                     font-size:12px;
                     line-height:20px;
@@ -653,19 +664,55 @@ nav {
                         font-weight:bold;
                         color:black;
                     }
-                    &:hover:after{
-                        color:@color-highlight-blue;
-                        visibility:visible;
-                    }
+                   
                 }   
-               
+
                 nav .selected > a{
                     color:black;
+                }
 
-                    &:after{
-                        visibility:visible;
+                
+                /* contains behaviours only when the menu is open AND mouseovered */
+                nav.hovered{
+                    /* hide 'selected' styles, namely colour and after */
+                    .selected > a {
+                        color:#999;
+
+                        &:after{
+                            visibility:hidden;
+                        }
                     }
-                }               
+
+                    li:hover > a{
+                        color:black;
+
+                        /*  &:hover:after{
+                            visibility:hidden;  
+                        }*/
+                        &:after{
+                            visibility:visible;
+                        }
+                        &:hover:after{
+                            visibility:hidden;
+                        }
+                    }
+
+                    .open > a{
+                        &:hover:after{
+                            color:@color-highlight-blue;
+                            visibility:visible !important;
+                        }
+                        /*&:after{
+                            
+                        }*/
+
+                        
+                    }
+
+                }
+
+               
+
                
     .js .menu.ready {
         visibility:hidden;
@@ -704,6 +751,9 @@ nav {
         &:after{
             display:none;
         }
+    }
+    .breadcrumb li:first-child a:before{
+        display:none;
     }
 
 
