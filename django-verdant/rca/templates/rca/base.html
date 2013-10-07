@@ -19,13 +19,15 @@
 
         {% compress css %}
             <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop.less" %}" media="screen and (min-width:768px)" />
+            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
             <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
             {% block extra_css %}{% endblock %}
         {% endcompress %}
 
         <!--[if lt IE 9]>
-            <link rel="stylesheet" href="assets/css/desktop.css" />
+            <link rel="stylesheet" href="assets/css/desktop-small.css" />
+            <link rel="stylesheet" href="assets/css/desktop-regular.css" />
         <![endif]-->
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
