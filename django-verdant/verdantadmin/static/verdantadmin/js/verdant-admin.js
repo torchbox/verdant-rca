@@ -90,7 +90,9 @@ function InlinePanel(opts) {
         $('#' + deleteInputId + '-button').click(function() {
             /* set 'deleted' form field to true */
             $('#' + deleteInputId).val('1');
-            $('#' + childId).fadeOut();
+            $('#' + childId).fadeOut(function() {
+                self.updateMoveButtonDisabledStates();
+            });
         });
         if (opts.canOrder) {
             $('#' + prefix + '-move-up').click(function() {
@@ -107,7 +109,9 @@ function InlinePanel(opts) {
                 currentChild.insertBefore(prevChild);
                 currentChildOrderElem.val(prevChildOrder);
                 prevChildOrderElem.val(currentChildOrder);
-            })
+
+                self.updateMoveButtonDisabledStates();
+            });
 
             $('#' + prefix + '-move-down').click(function() {
                 var currentChild = $('#' + childId);
@@ -123,9 +127,20 @@ function InlinePanel(opts) {
                 currentChild.insertAfter(nextChild);
                 currentChildOrderElem.val(nextChildOrder);
                 nextChildOrderElem.val(currentChildOrder);
-            })
+
+                self.updateMoveButtonDisabledStates();
+            });
         }
     };
+
+    var formsUl = $('#' + opts.formsetPrefix + '-FORMS');
+    self.updateMoveButtonDisabledStates = function() {
+        forms = formsUl.children('li:visible');
+        forms.each(function(i) {
+            $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0);
+            $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
+        })
+    }
 
     buildExpandingFormset(opts.formsetPrefix, {
         onAdd: function(formCount) {
@@ -136,6 +151,7 @@ function InlinePanel(opts) {
             if (opts.canOrder) {
                 $(fixPrefix('#id_' + opts.emptyChildFormPrefix + '-ORDER')).val(formCount);
             }
+            self.updateMoveButtonDisabledStates();
             opts.onAdd(fixPrefix);
         }
     });

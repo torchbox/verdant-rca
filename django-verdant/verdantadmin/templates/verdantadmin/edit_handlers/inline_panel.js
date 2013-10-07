@@ -13,4 +13,5 @@
         {{ child.render_js }}
         panel.initChildControls(fixPrefix("{{ child.form.prefix }}"));
     {% endfor %}
+    panel.updateMoveButtonDisabledStates();
 })();
