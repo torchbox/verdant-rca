@@ -549,22 +549,39 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
                 return None
 
     def get_related_news(self, count=4):
-        # Assign each news item a score indicating similarity to this news item:
+        return NewsItem.get_related(
+            area=self.area,
+            programmes=list(self.related_programmes.values_list('programme', flat=True)),
+            schools=list(self.related_schools.values_list('school', flat=True)),
+            exclude=self,
+            count=count
+        )
+
+    @staticmethod
+    def get_related(area=None, programmes=None, schools=None, exclude=None, count=4):
+        """
+            Get NewsItem objects that have the highest relevance to the specified
+            area (singular), programmes (multiple) and schools (multiple).
+        """
+
+        # Assign each news item a score indicating similarity to these params:
         # 100 points for a matching area, 10 points for a matching programme,
         # 1 point for a matching school.
 
         # if self.area is blank, we don't want to give priority to other news items
         # that also have a blank area field - so instead, set the target area to
         # something that will never match, so that it never contributes to the score
-        my_area = self.area or "this_will_never_match"
+        area = area or "this_will_never_match"
 
-        my_programmes = list(self.related_programmes.values_list('programme', flat=True))
-        my_programmes.append("this_will_never_match_either")  # insert a dummy programme name to avoid an empty IN clause
+        if not programmes:
+            # insert a dummy programme name to avoid an empty IN clause
+            programmes = ["this_will_never_match_either"]
 
-        my_schools = list(self.related_schools.values_list('school', flat=True))
-        my_schools.append("this_will_never_match_either")  # insert a dummy school name to avoid an empty IN clause
+        if not schools:
+            # insert a dummy school name to avoid an empty IN clause
+            schools = ["this_will_never_match_either"]
 
-        return NewsItem.objects.extra(
+        results = NewsItem.objects.extra(
             select={'score': """
                 CASE WHEN rca_newsitem.area = %s THEN 100 ELSE 0 END
                 + (
@@ -578,8 +595,12 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
                         AND rca_newsitemrelatedschool.school IN %s
                 ) * 1
             """},
-            select_params=(my_area, tuple(my_programmes), tuple(my_schools))
-        ).exclude(id=self.id).order_by('-score')[:count]
+            select_params=(area, tuple(programmes), tuple(schools))
+        )
+        if exclude:
+            results = results.exclude(id=exclude.id)
+
+        return results.order_by('-score')[:count]
 
 
 NewsItem.content_panels = [
@@ -1421,6 +1442,14 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
                 return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
             except IndexError:
                 return None
+
+    def get_related_news(self, count=4):
+        return NewsItem.get_related(
+            area='research',
+            programmes=([self.programme] if self.programme else None),
+            schools=([self.school] if self.school else None),
+            count=count,
+        )
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
