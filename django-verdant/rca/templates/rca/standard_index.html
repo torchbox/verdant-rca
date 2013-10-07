@@ -65,7 +65,9 @@
         {% endif %}
     {% endwith %}
 
-    {% news_carousel area=self.news_carousel_area %}
+    {% if self.news_carousel_area %}
+    	{% news_carousel area=self.news_carousel_area %}
+    {% endif %}
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}

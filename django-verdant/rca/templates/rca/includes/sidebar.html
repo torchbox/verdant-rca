@@ -1,4 +1,4 @@
-{% load rca_tags %}
+{% load rca_tags image_tags %}
 
 <!-- Events -->
 {% if showToday %}
@@ -58,40 +58,20 @@
 
 <!-- related content -->
 {% if showRelatedNews %}
-    {% comment %}
     {% with self.get_related_news as related_news %}
         {% if related_news %}
-            found some
+            {% for news_item in related_news %}
+                <div class="related-content-item">
+                    <a href="{% pageurl news_item %}">
+                        <figure>
+                            {% if news_item.feature_image %}{% image news_item.feature_image width-400 %}{% endif %}
+                            <figcaption>{{news_item.title }}</figcaption>
+                        </figure>
+                    </a>
+                </div>
+            {% endfor %}
         {% endif %}
     {% endwith %}
-    {% endcomment %}
-    <div class="related-content-item">
-        <a href="">
-            <figure>
-                <img src="http://instasrc.com/180x100/architecture" alt="" />
-                <figcaption>A new building for Battersea</figcaption>
-            </figure>
-        </a>
-        <a href="" class="index-page-link">News</a>
-    </div>
-    <div class="related-content-item">
-        <a href="">
-            <figure>
-                <img src="http://instasrc.com/180x100/art" alt="" />
-                <figcaption>The Eglu</figcaption>
-            </figure>
-        </a>
-        <a href="" class="index-page-link">News</a>
-    </div>
-    <div class="related-content-item">
-        <a href="">
-            <figure>
-                <img src="http://instasrc.com/180x100/art" alt="" />
-                <figcaption>Talking interiors</figcaption>
-            </figure>
-        </a>
-        <a href="" class="index-page-link">News</a>
-    </div>
 {% endif %}
 
 {% if showRelatedStaff %}
