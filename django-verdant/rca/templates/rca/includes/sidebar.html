@@ -74,23 +74,8 @@
     {% endwith %}
 {% endif %}
 
-{% if showRelatedStaff %}
-    <div class="related-content-item">
-        <a href="">
-            <figure class="staff">
-                <img src="http://instasrc.com/125x125/people" alt="" />
-                <figcaption>Name<span>Surname</span></figcaption>
-            </figure>
-        </a>
-    </div>
-    <div class="related-content-item">
-        <a href="">
-            <figure class="staff">
-                <img src="http://instasrc.com/125x125/people" alt="" />
-                <figcaption>Name<span>Surname</span></figcaption>
-            </figure>
-        </a>
-    </div>
+{% if showRelatedStudents %}
+    {% students_related programme=self.programme exclude=self %}
 {% endif %}
 
 <!-- job adverts -->

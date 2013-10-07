@@ -196,12 +196,14 @@
 }
 
 .portrait{
-    background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
     img {
         width: auto;
         display: block;
         margin: auto;
         
+    }
+    &.standalone {
+        background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
     }
 }
 
@@ -1033,7 +1035,8 @@
             max-width: 200px;
         }
     }
-    h3, p { margin: 0;}
+    h3, p:first-child { margin: 0;}
+
     h2 {
         font-weight: normal;
         margin-top: -1em;
