@@ -680,7 +680,7 @@ class EventItemRelatedProgramme(models.Model):
 class EventItemDatesTimes(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
-    date_to = models.DateField("End date", blank=True, help_text="Not required if event is on a single day")
+    date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
     time_from = models.CharField("Start time", max_length=255, blank=True)
     time_to = models.CharField("End time",max_length=255, blank=True)
 
