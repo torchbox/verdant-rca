@@ -3,6 +3,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
+from datetime import date
+
 from core.models import Page, Orderable
 from core.fields import RichTextField
 
@@ -689,6 +691,13 @@ class EventItemDatesTimes(models.Model):
         FieldPanel('time_to'),
     ]
 
+class FutureEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
+            params=[date.today(), date.today()]
+        )
+
 class EventItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
@@ -704,6 +713,8 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    future_objects = FutureEventItemManager()
 
 
 EventItem.content_panels = [
