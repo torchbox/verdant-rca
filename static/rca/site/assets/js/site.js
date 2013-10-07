@@ -1,3 +1,9 @@
+var breakpoints = {
+    mobile: "screen and (max-width:768px)",
+    desktopSmall: "screen and (min-width:768px)",
+    desktopRegular: "screen and (min-width:1024px)",
+    desktopLarge: "screen and (min-width:1280px)"
+}
 
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
@@ -86,7 +92,6 @@ function applyCarousel(carouselSelector){
     var $this = $(carouselSelector);
 
     function calcHeight(){
-        console.log('this parent width', $this.parent().width())
         return $this.parent().width();
     }
 
@@ -205,7 +210,7 @@ $(function(){
     }
 
     /* mobile rejigging */
-    Harvey.attach('screen and (max-width:768px)', {
+    Harvey.attach(breakpoints.mobile, {
         setup: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
@@ -221,7 +226,7 @@ $(function(){
     });
 
     // Things definitely only for desktop
-    Harvey.attach('screen and (min-width:769px)', {
+    Harvey.attach(breakpoints.desktopSmall, {
         setup: function(){}, 
         on: function(){
             /* Packery */
@@ -258,7 +263,6 @@ $(function(){
             e.preventDefault();
             
             if($this.data('pagination') && paginationContainer.length()){
-                console.log('loading from ', $('.next a', paginationContainer).attr('href'));
                 $('<div></div>').load($('.next a', paginationContainer).attr('href') + " .x-plus ul", function(){
                     loadmore.before($(this).find("li:not(.load-more)"));
                     expandToFit(false);
@@ -332,7 +336,6 @@ $(function(){
         }
 
         for(i = 0; i < rowArray.length; i++){
-            console.log(rowArray[i]);
             $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
         }
     }) 
