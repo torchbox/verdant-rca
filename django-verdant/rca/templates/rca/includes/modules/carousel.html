@@ -63,13 +63,15 @@
                                 <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F69438429"></iframe>
                             </div>
                             {% endcomment %}
-                            <div class="videoembed vimeo">
-                                <div class="playpause play">Play</div>
-                                {% if carousel_item.poster_image %}
-                                    <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
-                                {% endif %}
-                                {{ carousel_item.embedly_url|embedly:"944" }}
-                            </div>
+                            <li>
+                                <div class="videoembed vimeo">
+                                    <div class="playpause play">Play</div>
+                                    {% if carousel_item.poster_image %}
+                                        <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
+                                    {% endif %}
+                                    {{ carousel_item.embedly_url|embedly:"944" }}
+                                </div>
+                            </li>
                         {% endif %}
                     {% endfor %}
                 </ul>

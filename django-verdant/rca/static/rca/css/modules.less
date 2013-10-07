@@ -72,12 +72,8 @@
         width:100%;
         max-width:none;
     }
-    .portrait{
-        width:100%;
-        height:0;
-    }
     .portrait img{
-        height:100%;
+       display:block;
     }
 
     /* iframe {
@@ -199,8 +195,14 @@
 
 }
 
-.portrait img {
-    width: auto;
+.portrait{
+    background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
+    img {
+        width: auto;
+        display: block;
+        margin: auto;
+        
+    }
 }
 
 /**
