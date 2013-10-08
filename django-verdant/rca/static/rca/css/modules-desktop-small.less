@@ -51,6 +51,8 @@
  */
 
 .bx-wrapper {
+    padding-bottom:20px; /* necessary to give pager dots space to exist */
+    
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
         opacity:0
@@ -93,13 +95,6 @@
         The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
 
-    .caption, .hover-content{
-        //.transition(opacity 0.3s ease);
-        //opacity:0;
-    }
-    &:hover .caption, &:hover .hover-content{
-        //opacity:1;
-    }
     .caption{
         bottom:@grid-gutter-width;
         top: auto;
