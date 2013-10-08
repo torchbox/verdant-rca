@@ -105,6 +105,9 @@ function InlinePanel(opts) {
                 if (!prevChild.length) return;
                 var prevChildOrderElem = prevChild.find('input[name$="-ORDER"]');
                 var prevChildOrder = prevChildOrderElem.val();
+                
+                // async swap animation must run before the insertBefore line below, but doesn't need to finish first
+                self.animateSwap(currentChild, prevChild);
 
                 currentChild.insertBefore(prevChild);
                 currentChildOrderElem.val(prevChildOrder);
@@ -124,6 +127,9 @@ function InlinePanel(opts) {
                 var nextChildOrderElem = nextChild.find('input[name$="-ORDER"]');
                 var nextChildOrder = nextChildOrderElem.val();
 
+                // async swap animation must run before the insertAfter line below, but doesn't need to finish first
+                self.animateSwap(currentChild, nextChild);
+
                 currentChild.insertAfter(nextChild);
                 currentChildOrderElem.val(nextChildOrder);
                 nextChildOrderElem.val(currentChildOrder);
@@ -142,6 +148,33 @@ function InlinePanel(opts) {
                 $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
             });
         }
+    }
+
+    self.animateSwap = function(item1, item2){
+        var item1Y = item1.position().top;
+        var item2Y = item2.position().top;
+        var parent = item1.parent();
+
+        // Apply moving class to container (ul.multiple) so it can assist absolute positioning of it's children
+        // Also set it's relatively calculated height to be an absolute one, to prevent the dom collapsing while its children go absolute 
+        parent.addClass('moving').css('height', parent.height());
+                        
+        item1.css('top', item1Y).addClass('moving');
+        item2.css('top', item2Y).addClass('moving');
+
+        // animate swapping around
+        item1.animate({
+            top:item2Y
+        }, 200, function(){
+            parent.removeClass('moving').removeAttr('style');
+            item1.removeClass('moving').removeAttr('style');
+        });
+        item2.animate({
+            top:item1Y
+        }, 200, function(){
+            parent.removeClass('moving').removeAttr('style');
+            item2.removeClass('moving').removeAttr('style');
+        })
     }
 
     buildExpandingFormset(opts.formsetPrefix, {
