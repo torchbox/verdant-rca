@@ -75,7 +75,6 @@ ul.listing{
     
     .bulk{
         .column(1);
-        .push-padding(@grid-content-indent);
         padding-right:0;
 
         label{
@@ -246,6 +245,9 @@ ul.listing{
     .listing.images > li{
         .column(3);
         padding-bottom:20%+10%;
+    }
+    .listing .bulk{
+        .push-padding(@grid-content-indent);
     }
 }
 @media screen and (min-width: @breakpoint-desktop-large){
