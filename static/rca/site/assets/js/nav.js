@@ -94,22 +94,22 @@ var desktopNav = {
 
 			$('li', $self).hoverIntent({
 				over: function(){
+					$('li', $self).removeClass('open');
 					$self.addClass('hovered');
 					$(this).addClass('open');
 					$(this).siblings().find(' > ul').stop().hide()
 					$(this).find(' > ul').fadeIn(200);
 				},
 				out: function(){
-
+					$(this).removeClass('open');
 					if(!$('nav').hasClass('changing')){
-						
 						$(this).find('> ul').stop().hide();
 					}
 				},
 				timeout: 600
 			});
 			$('li' ,$self).bind('mouseout', function(){
-				$(this).removeClass('open');
+				
 			})
 		});
 	},
