@@ -52,7 +52,15 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                 cluster_related_objects[relation_name] = items
 
             for item in new_items:
-                if item not in items:
+                # Check if item is already in the list. Can't do this with a simple 'in'
+                # check due to https://code.djangoproject.com/ticket/18864
+                item_exists = False
+                for other in items:
+                    if (item is other) or (item.pk == other.pk and item.pk is not None):
+                        item_exists = True
+                        break
+
+                if not item_exists:
                     items.append(item)
 
         def clear(self):
