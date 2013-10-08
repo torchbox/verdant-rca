@@ -1125,6 +1125,9 @@ AlumniPage.promote_panels = [
 
 # == Staff profile page ==
 
+class StaffPageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.StaffPage', related_name='carousel_items')
+
 class StaffPageRole(models.Model):
     page = models.ForeignKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255)
@@ -1175,7 +1178,6 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField()
     biography = RichTextField()
     practice = RichTextField(blank=True)
-    practice_link = models.URLField(blank=True)
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
@@ -1188,13 +1190,11 @@ StaffPage.content_panels = [
     FieldPanel('staff_type'),
     InlinePanel(StaffPage, StaffPageRole, label="Roles"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('practice'),
     FieldPanel('biography', classname="full"),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
-    MultiFieldPanel([
-        FieldPanel('practice'),
-        FieldPanel('practice_link'),
-    ], 'Practice'),
+    InlinePanel(StaffPage, StaffPageCarouselItem, label="Selected Work Carousel Content"),
     InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
     InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
 ]
@@ -1288,7 +1288,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True)
     work_sponsors = models.CharField(max_length=255, blank=True)
-    student_twitter_feed = models.CharField(max_length=255, blank=True)
+    student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
 StudentPage.content_panels = [
