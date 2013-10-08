@@ -593,15 +593,17 @@
 
 .filters{
     .row();
+    padding-bottom:4em;
+    position:relative;
 
     ul{
-        .row-flush();
+        position:absolute;
+        width:100%;
     }
+
     li{
         .column(3);
     }
-
-   
 
     .checkboxes{}
 
@@ -615,7 +617,11 @@
 
     &.two-filters{}
 
-    &.four-filters{}   
+    &.four-filters{}
+
+    li{
+        padding:0;
+    }
 }
 
 .type-homepage{
