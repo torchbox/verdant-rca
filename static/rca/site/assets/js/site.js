@@ -108,10 +108,28 @@ function applyCarousel(carouselSelector){
             $this.parent().css('max-height', calcHeight());
             $('li', $this).css('max-height', calcHeight());
             $('.portrait img', $this).css('max-height', calcHeight());
-         }
+        },
+        onSlideBefore: function($slideElement, oldIndex, newIndex){
+            // find vimeos in old slide and stop them if playing
+            post($('.videoembed.vimeo iframe'), 'pause');
+        }
     }); 
 
     return carousel;
+}
+
+// Helper function for sending a message to the player
+function post(frame, action, value) {
+    $(frame).each(function(){
+        var url = $(this).attr('src').split('?')[0];
+        var data = { method: action };
+        
+        if (value) {
+            data.value = value;
+        }
+        
+        $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
+    })
 }
 
 $(function(){
@@ -196,18 +214,6 @@ $(function(){
             $this.toggleClass('playing');
         });
     });
-
-    // Helper function for sending a message to the player
-    function post(frame, action, value) {
-        var url = frame.attr('src').split('?')[0];
-        var data = { method: action };
-        
-        if (value) {
-            data.value = value;
-        }
-        
-        frame[0].contentWindow.postMessage(JSON.stringify(data), url);
-    }
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {

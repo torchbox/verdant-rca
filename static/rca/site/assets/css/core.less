@@ -399,7 +399,7 @@ makes sure that doesn't happen. NB may no longer be needed if we definitely have
 header {
     .clearfix();
     height: @header-height-mobile;
-    z-index: 200;
+    z-index: 4000;
     position: relative;
     .site-name {
         margin-left:-2px; /* necessary to give space for 2 x 1px gaps beside other headers buttons */
@@ -513,7 +513,7 @@ nav {
     background-color:rgba(255,255,255,0.95);
     border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
     border-bottom: 1px solid fade(@color-medium-grey, 40%);
-    padding:10px @grid-gutter-width;
+    padding:9px @grid-gutter-width;
     position:relative;
     z-index:999;
     height:150px; /* gets overridden by finding tallest submenu */
@@ -531,23 +531,20 @@ nav {
         margin:0;
         font-size: 12px;
         text-transform:uppercase;
-        line-height: 20px;
         float:left;
         padding-right:0.4em;
+        line-height:1.5em;
         font-weight:normal;
 
         &:after{
             content:"/";
             font-size:12px;
             padding-left:5px;
-            line-height:20px;
             display:inline-block;
             font-weight:bold;
             color:black;
         }
     }    
-
-
     nav.dl-menuwrapper{
         margin:0;
         height:initial;
@@ -565,8 +562,7 @@ nav {
         width:100%;
     }
         nav > ul{
-            top:10px;
-            //left:6%;
+            top:9px; /* Same value as padding-top of nav element */
             left:70px;
             width:94%;
             max-width:800px;
@@ -594,30 +590,9 @@ nav {
         nav li {
             display:block;
             width:25%;
-            line-height:20px;
             overflow:hidden;
+            line-height:1.2em;
         }
-            /*
-            nav ul{
-                max-width:800px;
-
-                ul{
-                    left:25%;
-                    max-width:600px;
-
-                    ul{
-                        left:33%;
-                        max-width:400px;
-
-                        ul{
-                            left:50%;
-                            max-width:200px;
-                        }
-                    }
-                }
-
-            }
-            */
             nav.dl-menuwrapper li {
                 width:100%;
             }
@@ -636,11 +611,9 @@ nav {
                 nav li.selected > ul {
                     display:block;
                 }
-
                
                 nav a{
                     font-size:12px;
-                    line-height:20px;
                     color:#999;
                     text-decoration:none;
                     text-transform:uppercase;
@@ -658,7 +631,6 @@ nav {
                         width:10px;
                         content:"/";
                         font-size:12px;
-                        line-height:20px;
                         display:inline-block;
                         visibility:hidden;
                         font-weight:bold;
@@ -706,10 +678,7 @@ nav {
                             visibility:visible;
                         }                      
                     }
-
-                }
-
-               
+                }               
 
                
     .js .menu.ready {
@@ -741,7 +710,6 @@ nav {
             width:10px;
             content:"/";
             font-size:12px;
-            line-height:20px;
             display:inline-block;
             font-weight:bold;
             color:black;
