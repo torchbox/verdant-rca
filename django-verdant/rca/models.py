@@ -25,6 +25,8 @@ class RcaImage(AbstractImage):
     dimensions = models.CharField(max_length=255, blank=True)
     permission = models.CharField(max_length=255, blank=True)
     photographer = models.CharField(max_length=255, blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    eprint_docid = models.CharField(max_length=255, blank=True) # for import
 
     search_on_fields = ['title', 'creator', 'photographer']
 
@@ -539,6 +541,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     def feature_image(self):
@@ -1161,6 +1164,7 @@ class StaffPagePublicationExhibition(models.Model):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     panels = [
         FieldPanel('title'),
@@ -1290,6 +1294,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     work_sponsors = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1456,6 +1461,9 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    eprintid = models.CharField(max_length=255, blank=True) # for import
+
 
     def feature_image(self):
         try:
