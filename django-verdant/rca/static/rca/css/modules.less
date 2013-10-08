@@ -60,7 +60,6 @@
     background-color:darken(@color-pale-grey, 10%);
 }
 .bx-wrapper {
-   /* height: @carousel-image-height;*/
     overflow: hidden;
     margin-bottom:0;
 
@@ -128,10 +127,10 @@
 
         &.bx-default-pager a{
             background:transparent;
-            border:1px solid white;
+            border:1px solid black;
 
             &.active{
-                background:white;
+                background:black;
             }
             &:hover{
                 background:@color-highlight-blue;
@@ -144,7 +143,6 @@
         border: none;
         box-shadow: none;
         left: 0;
-       /* height: @carousel-image-height !important;*/ /*important is necessary to override element style */
     }
    
     .bx-loading {
@@ -153,7 +151,6 @@
 
     .content, 
     .hover-content{
-        //background-color:rgba(0,0,0,0.62);
         color:@color-white;
         position:absolute;
         top:0;
