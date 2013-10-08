@@ -17,7 +17,7 @@
             {% if dates %}
             	{% for date in dates %}
                 	<h3 class="h5">
-						{{ date.date_from }}{% if date.date_from != date.date_to %} to {{ date.date_to }}{% endif %}
+						{{ date.date_from }}{% if date.date_to %} to {{ date.date_to }}{% endif %}
 						{% if date.time_from %} &#124;
 							<span>{{ date.time_from }}{% if date.time_to %} - {{ date.time_to }}{% endif %}</span>
 						{% endif %}
