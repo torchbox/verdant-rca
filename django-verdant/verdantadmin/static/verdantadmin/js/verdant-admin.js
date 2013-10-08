@@ -156,7 +156,7 @@ function InlinePanel(opts) {
         var parent = item1.parent();
 
         // Apply moving class to container (ul.multiple) so it can assist absolute positioning of it's children
-        // Also set it's relatively calculated height to be an absolute one, to prevent the dom collapsing while its children go absolute 
+        // Also set it's relatively calculated height to be an absolute one, to prevent the container collapsing while its children go absolute 
         parent.addClass('moving').css('height', parent.height());
                         
         item1.css('top', item1Y).addClass('moving');
