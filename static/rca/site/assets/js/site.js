@@ -141,6 +141,7 @@ $(function(){
     showHide('.showsearch', 'form.search');
     showHide('.filters .checkbox .label', '.filters .checkbox .checkboxes');
     showHideDialogue();
+    showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
 
     /* start any bxslider carousels not found within a tab  */
     $('.carousel:not(.tab-pane .carousel)').each(function(){
