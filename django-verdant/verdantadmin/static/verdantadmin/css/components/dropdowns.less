@@ -147,7 +147,8 @@
 h2 .dropdown{
     display:inline-block;
     font-size:0.7em;
-    margin-right:0.5em;   
+    margin-right:0.5em;
+    vertical-align:middle;
 
     .dropdown-toggle{
         padding:0.5em 0;
@@ -171,12 +172,17 @@ h2 .dropdown{
         }
 
         ul{
-            left:0%;
             left:auto;
         }
     }
 
-    .dropdown-toggle:hover:before,
+    .dropdown-toggle:hover{
+        background-color:@color-grey-light;
+        &:before{
+            color:white;
+            opacity:1;
+        }
+    }
     &.open .dropdown-toggle:before{
         background-color:@color-teal;
         color:white;
