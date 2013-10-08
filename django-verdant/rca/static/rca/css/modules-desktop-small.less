@@ -52,7 +52,7 @@
 
 .bx-wrapper {
     padding-bottom:20px; /* necessary to give pager dots space to exist */
-    
+
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
         opacity:0
@@ -69,28 +69,10 @@
         }
     }
 
-    .bx-next {
-        &:after {
-            .sprite-load(-15px, -821px, 68px, 131px);
-        }
-        &:hover:after{
-            .sprite-load(-15px, -266px, 68px, 131px);
-        }
-    }
-
-    .bx-prev {
-        &:after{
-            .sprite-load(-165px, -821px, 68px, 131px);
-        }
-        &:hover:after{
-            .sprite-load(-165px, -266px, 68px, 131px);
-        }
-    }
-
     .bx-controls-direction a {
         top: 50%;
-        width: 138px; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height: 142px;
+        width: 94px;
+        height: 78px;
         margin-top: ((142px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
         The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
