@@ -86,7 +86,8 @@
         &:after{
             content: " ";
             position: absolute;
-            top:2px;
+            top:0;
+            bottom:0;
             left:0;
             right:0;
             margin:auto;
@@ -113,13 +114,13 @@
             background-position: -301px -441px;
         }
     }
-    /* selectors necessary to override the bxslider theme */
     .bx-controls-direction a {
         width: 87px;
         height: 70px;
         z-index: 2; /* over slide but under header */
-        top: 100%;
-        margin-top: 70px * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
+        top: 50%;
+        margin-top: ((78px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
     .bx-pager{
         text-align:left;
