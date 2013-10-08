@@ -1,6 +1,6 @@
 from django.db.models.fields.related import ForeignKey, ForeignRelatedObjectsDescriptor
 from django.utils.functional import cached_property
-from django_cluster import create_deferring_foreign_related_manager
+from cluster import create_deferring_foreign_related_manager
 
 class ChildObjectsDescriptor(ForeignRelatedObjectsDescriptor):
     def __init__(self, related):

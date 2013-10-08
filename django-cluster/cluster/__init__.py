@@ -7,7 +7,7 @@
 # ni = ClusterableNewsItem(title='test', related_links=[{'link': 'http://torchbox.com'}])
 # ni.related_links.all()
 
-from django_cluster.queryset import FakeQuerySet
+from cluster.queryset import FakeQuerySet
 from django.db import models
 from django.utils.functional import cached_property
 
