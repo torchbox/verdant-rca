@@ -1,8 +1,10 @@
 from django.db import models
+
 from cluster.fields import ParentalKey
+from cluster.models import ClusterableModel
 
 
-class Band(models.Model):
+class Band(ClusterableModel):
     name = models.CharField(max_length=255)
 
 
