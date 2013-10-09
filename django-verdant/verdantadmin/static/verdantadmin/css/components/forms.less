@@ -57,6 +57,7 @@ input, textarea, select, .richtext, .tagit{
     -webkit-appearance: none;
     color:@color-text-input;
     font-size:1em;
+    outline:none;
 
     &:hover{
         background-color:@color-fieldset-hover;
@@ -85,21 +86,26 @@ input[type=radio]{
 }
 
 input[type=radio]:before{
+    font-family: verdant; 
+    font-style: normal;
     text-align:center;
     position:absolute;
     top:-5px;
     left:-2px;
     cursor:pointer;
     display:block;
-    content:"";
+    content:"K";
     width:20px;
     height:20px;
+    line-height:20px;
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
     .border-radius(100%);
+    color:#EEE;
 }
 input[type=radio]:checked:before{
-    .sprite(106px, 329px, 1);
+    content:"K";
+    color:@color-teal;
 }
 
 input[type=checkbox]{
@@ -110,19 +116,23 @@ input[type=checkbox]{
 }
 
 input[type=checkbox]:before{
+    font-family: verdant; 
+    font-style: normal;
     text-align:center;
     position:absolute;
     top:-5px;
     cursor:pointer;
     display:block;
-    content:"";
+    content:"x";
+    line-height:20px;
     width:20px;
     height:20px;
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
+    color:#EEE;
 }
 input[type=checkbox]:checked:before{
-    .sprite(-5px, 332px, 1);
+    color:@color-teal; 
 }
 
 input[type=submit], input[type=reset], input[type=button], .button, button{
@@ -386,8 +396,8 @@ ul.inline li:first-child, li.inline:first-child{
 
         &:before{
             content:"o"; 
-            font-size:7.7em;
-            line-height:0.8em;
+            font-size:120px;
+            line-height:97px;
         }
     }
     .chosen{
@@ -501,7 +511,7 @@ ul.tagit li.tagit-choice-editable{
         right:0;
         top:0;
         input{
-            padding:1.4em 2em;
+            padding:1.35em 2em;
         }
     }
     .popular-tags{

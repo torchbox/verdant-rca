@@ -60,7 +60,6 @@
     background-color:darken(@color-pale-grey, 10%);
 }
 .bx-wrapper {
-   /* height: @carousel-image-height;*/
     overflow: hidden;
     margin-bottom:0;
 
@@ -72,12 +71,8 @@
         width:100%;
         max-width:none;
     }
-    .portrait{
-        width:100%;
-        height:0;
-    }
     .portrait img{
-        height:100%;
+       display:block;
     }
 
     /* iframe {
@@ -91,7 +86,8 @@
         &:after{
             content: " ";
             position: absolute;
-            top:2px;
+            top:0;
+            bottom:0;
             left:0;
             right:0;
             margin:auto;
@@ -106,7 +102,7 @@
             .sprite-load(-211px, -996px, 37px, 66px);
         }
         &:hover:after{
-            .sprite-load(-211px, -441px, 37px, 66px);
+            background-position: -211px -441px;
         }
     }
     .bx-prev {
@@ -115,7 +111,7 @@
             .sprite-load(-301px, -996px, 37px, 66px);
         }
         &:hover:after{
-            .sprite-load(-301px, -441px, 37px, 66px);
+            background-position: -301px -441px;
         }
     }
     /* selectors necessary to override the bxslider theme */
@@ -123,8 +119,9 @@
         width: 87px;
         height: 70px;
         z-index: 2; /* over slide but under header */
-        top: 100%;
-        margin-top: 70px * -1; /* vertically centre by adding a negative top margin which is the same as the button height. */
+        top: 50%;
+        margin-top: ((78px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
     .bx-pager{
         text-align:left;
@@ -132,10 +129,10 @@
 
         &.bx-default-pager a{
             background:transparent;
-            border:1px solid white;
+            border:1px solid black;
 
             &.active{
-                background:white;
+                background:black;
             }
             &:hover{
                 background:@color-highlight-blue;
@@ -148,7 +145,6 @@
         border: none;
         box-shadow: none;
         left: 0;
-       /* height: @carousel-image-height !important;*/ /*important is necessary to override element style */
     }
    
     .bx-loading {
@@ -157,7 +153,6 @@
 
     .content, 
     .hover-content{
-        //background-color:rgba(0,0,0,0.62);
         color:@color-white;
         position:absolute;
         top:0;
@@ -185,6 +180,9 @@
         padding:@grid-gutter-width;
         margin:0;
         display: none;
+        &.showmobile {
+            display: block;
+        }
     }
 }
 
@@ -196,8 +194,16 @@
 
 }
 
-.portrait img {
-    width: auto;
+.portrait{
+    img {
+        width: auto;
+        display: block;
+        margin: auto;
+        
+    }
+    &.standalone {
+        background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
+    }
 }
 
 /**
@@ -337,7 +343,7 @@
     .sprite-load(-188px, -2200px, 45px, @share-link-height);
     cursor: pointer;
     &:hover {
-        .sprite-load(-188px, -1644px, 45px, @share-link-height);
+        background-position:-188px -1644px;
     }
 }
 
@@ -362,7 +368,7 @@
     .sprite-load(-15px, -2200px, 55px, 52px);
     cursor: pointer;
     &:hover {
-        .sprite-load(-15px, -1645px, 55px, 52px);
+        background-position:-15px -1645px;
     }
 }
 
@@ -444,7 +450,7 @@
         max-width:100%;
         overflow:hidden;
         display:none;
-        margin-top:1em;
+        margin-top:0.5em;
 
         .h6{
             margin:0;
@@ -1028,7 +1034,12 @@
             max-width: 200px;
         }
     }
-    h3, p { margin: 0;}
+    h3, p.h7 { margin: 0;}
+
+    .body-text-style p:first-child {
+        margin-top: 0;
+    }
+
     h2 {
         font-weight: normal;
         margin-top: -1em;
@@ -1062,6 +1073,14 @@
 
     .inner {
         padding: 0 @grid-gutter-width;
+    }
+
+    .remainder {
+        display: none;
+    }
+
+    .date {
+        margin-top: -1em;
     }
 }
 
@@ -1132,7 +1151,7 @@
     .row();
 
     li{
-        border-bottom:1px solid white;
+        border-left:1px solid @color-divider;
     }
 
     select, .label{
@@ -1158,7 +1177,6 @@
         font-size:0.85em;
     }
 
-  
     .label{
         margin:0;
     }
@@ -1168,6 +1186,8 @@
             position:relative;
         }
         .checkboxes{
+            background-color:rgba(255,255,255,0.9);
+            margin-left:-1px;
             display:none;
             padding:@grid-gutter-width;
 
@@ -1189,7 +1209,6 @@
     }
 
     .select{
-
         position:relative;
         label{
             .visuallyhidden();
@@ -1227,7 +1246,7 @@
                 .sprite-load(-53px, -1178px, 27px, 14px);
             }
             &:hover:after{
-                .sprite-load(-53px, -623px, 27px, 14px);
+                background-position:-53px -623px;
             }
             
         }
@@ -1278,9 +1297,6 @@
 
 .job-details {
     .module {
-        h2 {
-            margin-bottom: 0;
-        }
         p {
             margin-top: @spacing-half;
         }

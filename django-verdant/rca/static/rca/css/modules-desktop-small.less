@@ -1,12 +1,12 @@
 /**
  * Author(s): Helen Chapman, Dave Cranwell
  *
- * Modules-desktop
+ * Modules-desktop-small
  *
  * Overrides modules.less for desktop styles.
  */
 
- /**
+/**
  * Contents
  * To search quickly for a main section prefix search terms with $
  */
@@ -51,6 +51,8 @@
  */
 
 .bx-wrapper {
+    padding-bottom:20px; /* necessary to give pager dots space to exist */
+
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
         opacity:0
@@ -61,45 +63,13 @@
         }
     }
 
-     .bx-next, .bx-prev {
-        &:after{
-            top:5px;
-        }
-    }
-
-    .bx-next {
-        &:after {
-            .sprite-load(-15px, -821px, 68px, 131px);
-        }
-        &:hover:after{
-            .sprite-load(-15px, -266px, 68px, 131px);
-        }
-    }
-
-    .bx-prev {
-        &:after{
-            .sprite-load(-165px, -821px, 68px, 131px);
-        }
-        &:hover:after{
-            .sprite-load(-165px, -266px, 68px, 131px);
-        }
-    }
-
     .bx-controls-direction a {
-        top: 50%;
-        width: 138px; /* 30 px added to right and 40px added to left of arrow (reverse for the previous button) */
-        height: 142px;
-        margin-top: ((142px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
+        width: 94px;
+        height: 94px;
+        margin-top: ((94px / 2) - 7) * -1; /* vertically centre by adding a negative top margin which is half the button height.
         The extra 7px is because for some reason top: 50% is not accurately setting the top of the button to 50% height of the image; */
     }
 
-    .caption, .hover-content{
-        //.transition(opacity 0.3s ease);
-        //opacity:0;
-    }
-    &:hover .caption, &:hover .hover-content{
-        //opacity:1;
-    }
     .caption{
         bottom:@grid-gutter-width;
         top: auto;
@@ -539,7 +509,7 @@
         .column(1.5, @grid-gutter-width, 3);
     }
 
-    .space-large {
+    .h7.space-large {
         margin-top: 6em; /* attempt to align jobs on staff profile page */
     }
 
@@ -623,15 +593,17 @@
 
 .filters{
     .row();
+    padding-bottom:4em;
+    position:relative;
 
     ul{
-        .row-flush();
+        position:absolute;
+        width:100%;
     }
+
     li{
         .column(3);
     }
-
-   
 
     .checkboxes{}
 
@@ -645,7 +617,11 @@
 
     &.two-filters{}
 
-    &.four-filters{}   
+    &.four-filters{}
+
+    li{
+        padding:0;
+    }
 }
 
 .type-homepage{
@@ -679,7 +655,7 @@
     }
  }
 
- /**
+/**
  * $Bodytext image
  */
 
@@ -718,27 +694,21 @@
  */
 
 .gallery {
+    ul{
+        .row-flush();
+    }
     li {
         float:left;
+    
+        &.portrait{
+            .column(3);
+        }
+        &.landscape{
+            .column(6);
+        }
     }
-    .image{        
-        overflow:hidden;
-    }
-    img{
-     
-    }
-   /* .portrait img{
-        height:100%;
-        height:auto;
-        max-height:400px;
-        max-width:none;
-    }
-    .landscape img{
-        height:100%;
-        max-height:none;
-        max-width:400px;
-    }*/
 }
+
 /*
  * Index page intro
  */

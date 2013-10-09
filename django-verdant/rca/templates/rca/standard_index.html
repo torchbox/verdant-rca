@@ -1,6 +1,10 @@
 {% extends "rca/base.html" %}
 {% load image_tags rich_text pageurl rca_tags %}
 
+{% block body_class %}
+    type-standard-index
+{% endblock %}
+
 {% block content %}
 	{% include "rca/includes/modules/background-image.html" %}
 
@@ -65,7 +69,9 @@
         {% endif %}
     {% endwith %}
 
-    {% news_carousel area=self.news_carousel_area %}
+    {% if self.news_carousel_area %}
+    	{% news_carousel area=self.news_carousel_area %}
+    {% endif %}
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}

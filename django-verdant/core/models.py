@@ -9,12 +9,6 @@ from treebeard.mp_tree import MP_Node
 from core.util import camelcase_to_underscore
 
 
-# We try to do database access on app startup (namely, looking up content types) -
-# which will fail if the db hasn't been initialised (e.g. when running the initial syncdb).
-# So, need to explicitly test whether the database is usable yet. (Ugh.)
-DB_IS_READY = ('django_content_type' in connection.introspection.table_names())
-
-
 class SiteManager(models.Manager):
     def get_by_natural_key(self, hostname):
         return self.get(hostname=hostname)
@@ -44,12 +38,35 @@ class Site(models.Model):
             return Site.objects.get(is_default_site=True)
 
 
-PAGE_CONTENT_TYPES = []
+PAGE_MODEL_CLASSES = []
+_PAGE_CONTENT_TYPES = []
 def get_page_types():
-    return PAGE_CONTENT_TYPES
+    global _PAGE_CONTENT_TYPES
+    if len(_PAGE_CONTENT_TYPES) != len(PAGE_MODEL_CLASSES):
+        _PAGE_CONTENT_TYPES = [
+            ContentType.objects.get_for_model(cls) for cls in PAGE_MODEL_CLASSES
+        ]
+    return _PAGE_CONTENT_TYPES
 
-LEAF_PAGE_CONTENT_TYPE_IDS = []
-NAVIGABLE_PAGE_CONTENT_TYPE_IDS = []
+LEAF_PAGE_MODEL_CLASSES = []
+_LEAF_PAGE_CONTENT_TYPE_IDS = []
+def get_leaf_page_content_type_ids():
+    global _LEAF_PAGE_CONTENT_TYPE_IDS
+    if len(_LEAF_PAGE_CONTENT_TYPE_IDS) != len(LEAF_PAGE_MODEL_CLASSES):
+        _LEAF_PAGE_CONTENT_TYPE_IDS = [
+            ContentType.objects.get_for_model(cls).id for cls in LEAF_PAGE_MODEL_CLASSES
+        ]
+    return _LEAF_PAGE_CONTENT_TYPE_IDS
+
+NAVIGABLE_PAGE_MODEL_CLASSES = []
+_NAVIGABLE_PAGE_CONTENT_TYPE_IDS = []
+def get_navigable_page_content_type_ids():
+    global _NAVIGABLE_PAGE_CONTENT_TYPE_IDS
+    if len(_NAVIGABLE_PAGE_CONTENT_TYPE_IDS) != len(NAVIGABLE_PAGE_MODEL_CLASSES):
+        _NAVIGABLE_PAGE_CONTENT_TYPE_IDS = [
+            ContentType.objects.get_for_model(cls).id for cls in NAVIGABLE_PAGE_MODEL_CLASSES
+        ]
+    return _NAVIGABLE_PAGE_CONTENT_TYPE_IDS
 
 class PageBase(models.base.ModelBase):
     """Metaclass for Page"""
@@ -71,16 +88,13 @@ class PageBase(models.base.ModelBase):
             # subclasses are only abstract if the subclass itself defines itself so
             cls.is_abstract = False
 
-        if DB_IS_READY:
-            if not cls.is_abstract:
-                # register this type in the list of page content types
-                PAGE_CONTENT_TYPES.append(ContentType.objects.get_for_model(cls))
-            if cls.subpage_types:
-                NAVIGABLE_PAGE_CONTENT_TYPE_IDS.append(
-                    ContentType.objects.get_for_model(cls).id)
-            else:
-                LEAF_PAGE_CONTENT_TYPE_IDS.append(
-                    ContentType.objects.get_for_model(cls).id)
+        if not cls.is_abstract:
+            # register this type in the list of page content types
+            PAGE_MODEL_CLASSES.append(cls)
+        if cls.subpage_types:
+            NAVIGABLE_PAGE_MODEL_CLASSES.append(cls)
+        else:
+            LEAF_PAGE_MODEL_CLASSES.append(cls)
 
 
 class Page(MP_Node):
@@ -155,7 +169,7 @@ class Page(MP_Node):
         i.e. it currently has subpages, or its page type indicates that sub-pages are supported,
         or it's at the top level (this rule necessary for empty out-of-the-box sites to have working navigation)
         """
-        return (not self.is_leaf()) or (self.content_type_id not in LEAF_PAGE_CONTENT_TYPE_IDS) or self.depth == 2
+        return (not self.is_leaf()) or (self.content_type_id not in get_leaf_page_content_type_ids()) or self.depth == 2
 
     def get_other_siblings(self):
         # get sibling pages excluding self
@@ -276,12 +290,13 @@ def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
     # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
-    if NAVIGABLE_PAGE_CONTENT_TYPE_IDS:
+    navigable_content_type_ids = get_navigable_page_content_type_ids()
+    if navigable_content_type_ids:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
             WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
             ORDER BY path
-        """, [tuple(NAVIGABLE_PAGE_CONTENT_TYPE_IDS)])
+        """, [tuple(navigable_content_type_ids)])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page

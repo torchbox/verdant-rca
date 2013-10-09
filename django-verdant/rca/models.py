@@ -3,6 +3,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
 
+from datetime import date
+
 from core.models import Page, Orderable
 from core.fields import RichTextField
 
@@ -23,6 +25,8 @@ class RcaImage(AbstractImage):
     dimensions = models.CharField(max_length=255, blank=True)
     permission = models.CharField(max_length=255, blank=True)
     photographer = models.CharField(max_length=255, blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    eprint_docid = models.CharField(max_length=255, blank=True) # for import
 
     search_on_fields = ['title', 'creator', 'photographer']
 
@@ -347,7 +351,7 @@ class ProgrammePageCarouselItem(models.Model):
     page = models.ForeignKey('rca.ProgrammePage', related_name='carousel_items')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
-    url = models.URLField()
+    url = models.URLField(null=True, blank=True)
 
     panels = [
         ImageChooserPanel('image'), 
@@ -537,6 +541,7 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     def feature_image(self):
@@ -678,7 +683,7 @@ class EventItemRelatedProgramme(models.Model):
 class EventItemDatesTimes(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
-    date_to = models.DateField("End date", blank=True, help_text="Not required if event is on a single day")
+    date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
     time_from = models.CharField("Start time", max_length=255, blank=True)
     time_to = models.CharField("End time",max_length=255, blank=True)
 
@@ -688,6 +693,13 @@ class EventItemDatesTimes(models.Model):
         FieldPanel('time_from'),
         FieldPanel('time_to'),
     ]
+
+class FutureEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
+            params=[date.today(), date.today()]
+        )
 
 class EventItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
@@ -704,6 +716,8 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    future_objects = FutureEventItemManager()
 
 
 EventItem.content_panels = [
@@ -986,7 +1000,7 @@ class JobPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True)
     other_department = models.CharField(max_length=255, blank=True)
     closing_date = models.DateField()
-    interview_date = models.DateField(blank=True)
+    interview_date = models.DateField(null=True, blank=True)
     responsible_to = models.CharField(max_length=255, blank=True)
     required_hours = models.CharField(max_length=255, blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
@@ -1114,6 +1128,9 @@ AlumniPage.promote_panels = [
 
 # == Staff profile page ==
 
+class StaffPageCarouselItem(CarouselItemFields):
+    page = models.ForeignKey('rca.StaffPage', related_name='carousel_items')
+
 class StaffPageRole(models.Model):
     page = models.ForeignKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255)
@@ -1147,6 +1164,7 @@ class StaffPagePublicationExhibition(models.Model):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     panels = [
         FieldPanel('title'),
@@ -1164,7 +1182,6 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField()
     biography = RichTextField()
     practice = RichTextField(blank=True)
-    practice_link = models.URLField(blank=True)
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
@@ -1178,12 +1195,10 @@ StaffPage.content_panels = [
     InlinePanel(StaffPage, StaffPageRole, label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
+    FieldPanel('practice'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
-    MultiFieldPanel([
-        FieldPanel('practice'),
-        FieldPanel('practice_link'),
-    ], 'Practice'),
+    InlinePanel(StaffPage, StaffPageCarouselItem, label="Selected Work Carousel Content"),
     InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
     InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
 ]
@@ -1217,40 +1232,48 @@ class StudentPageDegree(models.Model):
 
 class StudentPageExhibition(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255)
+    exhibition = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('exhibition')]
 
 class StudentPageExperience(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='experiences')
-    experience = models.CharField(max_length=255)
+    experience = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('experience')]
 
 class StudentPageAwards(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='awards')
-    award = models.CharField(max_length=255)
+    award = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('award')]
 
-class StudentPageContacts(models.Model):
-    page = models.ForeignKey('rca.StudentPage', related_name='contacts')
+class StudentPageContactsEmail(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='email')
     email = models.EmailField(max_length=255, blank=True)
-    phone = models.CharField(max_length=255, blank=True)
-    website = models.URLField(blank=True)
 
-    panels = [
-        FieldPanel('email'),
-        FieldPanel('phone'),
-        FieldPanel('website'),
-    ]
+    panels = [FieldPanel('email')]
+
+class StudentPageContactsPhone(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='phone')
+    phone = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('phone')]
+
+
+class StudentPageContactsWebsite(models.Model):
+    page = models.ForeignKey('rca.StudentPage', related_name='website')
+    website = models.URLField(max_length=255, blank=True)
+
+    panels = [FieldPanel('website')]
+
 
 class StudentPageCarouselItem(CarouselItemFields):
     page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
 
 class StudentPageWorkCollaborator(models.Model):
     page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('name')]
 
@@ -1262,14 +1285,16 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
-    statement = RichTextField()
+    statement = RichTextField(blank=True)
     project_title = models.CharField(max_length=255, blank=True)
-    work_description = models.CharField(max_length=255, blank=True)
-    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
-    work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES)
-    work_awards = models.CharField(max_length=255)
-    work_sponsors = models.CharField(max_length=255)
+    work_description = RichTextField(blank=True)
+    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
+    work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    work_awards = models.CharField(max_length=255, blank=True)
+    work_sponsors = models.CharField(max_length=255, blank=True)
+    student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1279,7 +1304,10 @@ StudentPage.content_panels = [
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, StudentPageContacts, label="Student contact"),
+    InlinePanel(StudentPage, StudentPageContactsEmail, label="Email"),
+    InlinePanel(StudentPage, StudentPageContactsPhone, label="Phone"),
+    InlinePanel(StudentPage, StudentPageContactsWebsite, label="Website"),
+    FieldPanel('student_twitter_feed'),
     InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
@@ -1433,6 +1461,9 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    eprintid = models.CharField(max_length=255, blank=True) # for import
+
 
     def feature_image(self):
         try:
