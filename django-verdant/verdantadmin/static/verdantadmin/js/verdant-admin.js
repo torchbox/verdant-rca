@@ -105,6 +105,9 @@ function InlinePanel(opts) {
                 if (!prevChild.length) return;
                 var prevChildOrderElem = prevChild.find('input[name$="-ORDER"]');
                 var prevChildOrder = prevChildOrderElem.val();
+                
+                // async swap animation must run before the insertBefore line below, but doesn't need to finish first
+                self.animateSwap(currentChild, prevChild);
 
                 currentChild.insertBefore(prevChild);
                 currentChildOrderElem.val(prevChildOrder);
@@ -124,6 +127,9 @@ function InlinePanel(opts) {
                 var nextChildOrderElem = nextChild.find('input[name$="-ORDER"]');
                 var nextChildOrder = nextChildOrderElem.val();
 
+                // async swap animation must run before the insertAfter line below, but doesn't need to finish first
+                self.animateSwap(currentChild, nextChild);
+
                 currentChild.insertAfter(nextChild);
                 currentChildOrderElem.val(nextChildOrder);
                 nextChildOrderElem.val(currentChildOrder);
@@ -133,15 +139,44 @@ function InlinePanel(opts) {
         }
     };
 
-    var formsUl = $('#' + opts.formsetPrefix + '-FORMS');
+    self.formsUl = $('#' + opts.formsetPrefix + '-FORMS');
+    
     self.updateMoveButtonDisabledStates = function() {
         if (opts.canOrder) {
-            forms = formsUl.children('li:visible');
+            forms = self.formsUl.children('li:visible');
             forms.each(function(i) {
                 $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0);
                 $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
             });
         }
+    }
+
+    self.animateSwap = function(item1, item2){
+        var parent = self.formsUl;
+        var children = parent.children('li:visible');
+
+        // Apply moving class to container (ul.multiple) so it can assist absolute positioning of it's children
+        // Also set it's relatively calculated height to be an absolute one, to prevent the container collapsing while its children go absolute 
+        parent.addClass('moving').css('height', parent.height());
+        
+        children.each(function(){
+            console.log($(this));
+            $(this).css('top', $(this).position().top);
+        }).addClass('moving');
+
+        // animate swapping around
+        item1.animate({
+            top:item2.position().top
+        }, 200, function(){
+            parent.removeClass('moving').removeAttr('style');
+            children.removeClass('moving').removeAttr('style');
+        });
+        item2.animate({
+            top:item1.position().top
+        }, 200, function(){
+            parent.removeClass('moving').removeAttr('style');
+            children.removeClass('moving').removeAttr('style');
+        })
     }
 
     buildExpandingFormset(opts.formsetPrefix, {

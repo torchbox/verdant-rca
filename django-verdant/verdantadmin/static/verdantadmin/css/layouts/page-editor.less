@@ -46,8 +46,15 @@ body.page-editor{
     }
     .multiple > li{
         border-bottom: 1px dashed @color-input-border;
+    }
 
-
+    /* styles applied to an element as it is being reordered */
+    .multiple.moving{
+        position:relative;
+    }
+    .multiple li.moving{
+        position:absolute;
+        width:100%;
     }
 
     .preview{
@@ -177,6 +184,9 @@ body.page-editor{
             &:before{
                 color:white;
             }
+        }
+        .disabled{
+            display:none;
         }
     }
 }
