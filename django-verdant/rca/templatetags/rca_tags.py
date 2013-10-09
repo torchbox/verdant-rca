@@ -72,9 +72,12 @@ def rca_now_related(context, programme="", author=""):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/research_by_programme.html', takes_context=True)
-def research_by_programme(context, programme, exclude=None):
-    research_items = ResearchItem.objects.filter(programme=programme)
+@register.inclusion_tag('rca/tags/research_related.html', takes_context=True)
+def research_related(context, programme="", person="", exclude=None):
+    if programme:
+        research_items = ResearchItem.objects.filter(programme=programme)
+    elif person:
+        research_items = ResearchItem.objects.filter(creator__person=person)
     if exclude:
         research_items = research_items.exclude(id=exclude.id)
     return {
