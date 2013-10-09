@@ -13,7 +13,7 @@
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
-    {% research_by_programme programme=self.programme exclude=self %}
+    {% research_related programme=self.programme exclude=self %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
@@ -21,5 +21,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
 {% endblock %}
-
-<!-- To do: research author issue -->

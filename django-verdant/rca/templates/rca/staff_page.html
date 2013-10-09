@@ -172,8 +172,11 @@
             </div>
             <h2 class="header"><a href="#tab4" class="a0">Research</a></h2>
             <div class="tab-pane" id="tab4">
+                
+                 <!-- research -->
+                {% research_related person=self %}
+
                 {% comment %}
-                {% include modules/three-plus.html %}
                 {% include modules/four-plus.html %}
                 {% endcomment %}
             </div>
@@ -193,4 +196,4 @@
 - name and surname split on random staff
 - share and add to contacts
 - publications and exhibitions once fields confirmed
-- feeds on last tab once confirmed   -->
+- research student feed on last tab once confirmed   -->

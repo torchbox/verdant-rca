@@ -85,7 +85,7 @@
                     <div class="inner">
 
                             <!-- research -->
-                            Research tbd
+                            {% research_related person=self %}
 
                             <!-- rca now -->
                             {% rca_now_related author=self.title %}
@@ -129,7 +129,6 @@
 <!-- To dos:
 - make tabs optional if this is necessary
 - share and add to contacts
-- research feed when feedback given
 - date when this field is confirmed
 - updates if required fields get changed
 - name and surname split on related students -->
