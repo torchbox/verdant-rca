@@ -4,14 +4,16 @@ function makeRichTextEditable(id) {
     richText.insertBefore(input);
     input.hide();
 
-    function removeStylingSpans(context) {
+    var removeStylingPending = false;
+    function removeStyling() {
         /* Strip the 'style' attribute from spans that have no other attributes.
         (we don't remove the span entirely as that messes with the cursor position,
         and spans will be removed anyway by our whitelisting)
         */
-        $('span[style]', context).filter(function() {
+        $('span[style]', richText).filter(function() {
             return this.attributes.length === 1;
         }).removeAttr('style');
+        removeStylingPending = false;
     }
 
     richText.hallo({
@@ -27,10 +29,12 @@ function makeRichTextEditable(id) {
         }
     }).bind('hallomodified', function(event, data) {
         input.val(data.content);
+        if (!removeStylingPending) {
+            setTimeout(removeStyling, 100);
+            removeStylingPending = true;
+        }
     }).bind('paste', function(event, data) {
-        setTimeout(function() {
-            removeStylingSpans(richText);
-        }, 1);
+        setTimeout(removeStyling, 1);
     });
 }
 
