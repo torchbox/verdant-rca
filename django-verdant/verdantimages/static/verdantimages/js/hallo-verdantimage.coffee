@@ -30,10 +30,8 @@
                             elem = $(imageData.html).get(0)
                             lastSelection.deleteContents()
                             lastSelection.insertNode(elem)
-                            # insert an empty para after the image embed, because
-                            # contenteditable="false" things at the end of a
-                            # rich text area are hard to get rid of
-                            $(elem).after('<p>&nbsp;</p>')
+                            if elem.getAttribute('contenteditable') == 'false'
+                                insertRichTextDeleteControl(elem)
                             widget.options.editable.element.trigger('change')
 
 )(jQuery)

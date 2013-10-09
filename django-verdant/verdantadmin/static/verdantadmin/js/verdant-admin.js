@@ -34,6 +34,16 @@ function makeRichTextEditable(id) {
     });
 }
 
+function insertRichTextDeleteControl(elem) {
+    var a = $('<a class="delete-control">Delete</a>');
+    $(elem).addClass('rich-text-deletable').prepend(a);
+    a.click(function() {
+        $(elem).fadeOut(function() {
+            $(elem).remove();
+        });
+    })
+}
+
 
 function createPageChooser(id, pageType, openAtParentId) {
     var chooserElement = $('#' + id + '-chooser');
@@ -79,6 +89,9 @@ function initDateChooser(id) {
 
 $(function() {
     initDateChoosers();
+    $('.richtext [contenteditable="false"]').each(function() {
+        insertRichTextDeleteControl(this);
+    });
 });
 
 function InlinePanel(opts) {

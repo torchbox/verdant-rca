@@ -29,6 +29,22 @@
         font-weight: bold; /* so that it's not totally identical to the <p> style */
     }
 
+    /* Delete controls on embedded blocks with contenteditable="false" */
+    .rich-text-deletable {
+        position: relative;
+        a.delete-control {
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+            display: none;
+        }
+    }
+    &.inEditMode {
+        .rich-text-deletable a.delete-control {
+            display: block;
+        }
+    }
+
     /*
     These styles correspond to the image formats defined in verdantimages/formats.py,
     so that images displayed in the rich text field receive more or less the same
