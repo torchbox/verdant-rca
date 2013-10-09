@@ -11,6 +11,8 @@
                         <h2 class="h8">{{ rcanow.title }}</h2>
                         {% if rcanow.author %}
                             <p class="bc5">{{ rcanow.author }}</p>
+                        {% else %}
+                            <p class="bc5"></p>{% comment %}make sure the spacing works out even without an author{% endcomment %}
                         {% endif %}
                     </div>
                 </a>
