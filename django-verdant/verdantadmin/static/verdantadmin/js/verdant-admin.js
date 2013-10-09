@@ -22,6 +22,7 @@ function makeRichTextEditable(id) {
             'halloformat': {},
             'halloheadings': {formatBlocks: ["p", "h1", "h2", "h3", "h4"]},
             'hallolists': {},
+            'hallohr': {},
             'halloreundo': {},
             'halloverdantimage': {},
             'halloverdantlink': {},
