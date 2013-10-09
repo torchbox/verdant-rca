@@ -18,7 +18,7 @@ function makeRichTextEditable(id) {
         toolbar: 'halloToolbarFixed',
         plugins: {
             'halloformat': {},
-            'halloheadings': {},
+            'halloheadings': {formatBlocks: ["p", "h1", "h2", "h3", "h4"]},
             'hallolists': {},
             'halloreundo': {},
             'halloverdantimage': {},
