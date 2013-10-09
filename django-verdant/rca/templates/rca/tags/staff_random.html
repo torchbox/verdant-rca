@@ -6,7 +6,7 @@
             <a href="{% pageurl staff_member %}">
                 <figure class="staff">
                     {% if staff_member.profile_image %}<div class="image">{% image staff_member.profile_image width-400 %}</div>{% endif %}
-                    <figcaption>Name TBD<span>Surname TBD</span></figcaption>
+                    <figcaption>{{ staff_member.first_name }}<span>{{ staff_member.last_name }}</span></figcaption>
                 </figure>
             </a>
         </div>

@@ -6,7 +6,7 @@
             <a href="{% pageurl student %}">
                 <figure class="staff">
                     <div class="image">{% image student.profile_image width-400 %}</div>
-                    <figcaption>Name TBD<span>Surname TBD</span></figcaption>
+                    <figcaption>{{ student.first_name }}<span>{{ student.last_name }}</span></figcaption>
                 </figure>
             </a>
         </div>
