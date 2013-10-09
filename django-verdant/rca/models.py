@@ -294,6 +294,7 @@ class SchoolPageRelatedLink(Orderable):
     ]
 
 class SchoolPage(Page, SocialFields, CommonPromoteFields):
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
     head_of_school_statement = RichTextField(null=True, blank=True)
@@ -342,6 +343,8 @@ SchoolPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    FieldPanel('school'),
 ]
 
 
@@ -1186,6 +1189,8 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     research_interests = RichTextField(blank=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1198,6 +1203,8 @@ StaffPage.content_panels = [
     FieldPanel('practice'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
+    FieldPanel('first_name'),
+    FieldPanel('last_name'),
     InlinePanel(StaffPage, StaffPageCarouselItem, label="Selected Work Carousel Content"),
     InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
     InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
@@ -1295,6 +1302,8 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1322,6 +1331,8 @@ StudentPage.content_panels = [
     FieldPanel('work_awards'),
     FieldPanel('work_sponsors'),
     FieldPanel('twitter_feed'),
+    FieldPanel('first_name'),
+    FieldPanel('last_name'),
 ]
 
 StudentPage.promote_panels = [
@@ -1348,6 +1359,7 @@ class RcaNowPagePageCarouselItem(Orderable, CarouselItemFields):
 class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     body = RichTextField()
     author = models.CharField(max_length=255, blank=True)
+    date = models.DateField("Creation date")
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
@@ -1368,6 +1380,7 @@ RcaNowPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
+    FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('area'),
