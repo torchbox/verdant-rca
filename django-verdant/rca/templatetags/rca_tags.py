@@ -1,6 +1,6 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage
+from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage, StaffPage
 from datetime import date
 from django.db.models import Min
 
@@ -112,3 +112,18 @@ def students_related(context, programme="", exclude=None, count=4):
         'students': students[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
+@register.inclusion_tag('rca/tags/staff_random.html', takes_context=True)
+def staff_random(context, exclude=None, count=4):
+    staff = StaffPage.objects.all().order_by('?')
+    if exclude:
+        staff = staff.exclude(id=exclude.id)
+    return {
+        'staff': staff[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.filter
+def paragraph_split(value, sep = "</p>"):
+    parts = value.split(sep)
+    return (parts[0], sep.join(parts[1:]))

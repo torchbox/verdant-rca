@@ -143,6 +143,15 @@ $(function(){
     showHideDialogue();
     showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
 
+    /* change text on show more button to 'hide' once it has been clicked */
+    $('.profile .showmore').click(function(eventObject){
+        if($(this).html() == 'hide'){
+            $(this).html('show more');
+        } else {
+            $(this).html('hide');
+        }
+    });
+
     /* start any bxslider carousels not found within a tab  */
     $('.carousel:not(.tab-pane .carousel)').each(function(){
         applyCarousel($(this));

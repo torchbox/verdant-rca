@@ -78,6 +78,10 @@
     {% students_related programme=self.programme exclude=self %}
 {% endif %}
 
+{% if showRandomStaff %}
+    {% staff_random exclude=self %}
+{% endif %}
+
 <!-- job adverts -->
 {% if showJobs %}
     {% upcoming_jobs exclude=self %}
