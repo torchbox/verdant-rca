@@ -15,7 +15,7 @@
 
                 {% if self.area %}
                     <dd>Area</dd>
-                    <dt>{{ self.area }}</dt>
+                    <dt>{{ self.get_area_display }}</dt>
                 {% endif %}
 
                 {% with self.related_schools.all as related_schools %}
@@ -24,7 +24,7 @@
                         <dt>
                             <ul>
                                  {% for school in related_schools %}
-                                    <li>{{ school.school }}</li>
+                                    <li>{{ school.get_school_display }}</li>
                                 {% endfor %}
                             </ul>
                         </dt>
@@ -37,7 +37,7 @@
                         <dt>
                             <ul>
                                  {% for programme in related_programmes %}
-                                    <li>{{ programme.programme }}</li>
+                                    <li>{{ programme.get_programme_display }}</li>
                                 {% endfor %}
                             </ul>
                         </dt>
