@@ -87,10 +87,10 @@ def research_related(context, programme="", person="", exclude=None):
 
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
 def rca_now_latest(context, exclude=None, count=4):
-    # FIXME: needs ordering by date added
     rcanow = RcaNowPage.objects.all()
     if exclude:
         rcanow = rcanow.exclude(id=exclude.id)
+    rcanow = rcanow.order_by('date')
     return {
         'rcanow_pages': rcanow[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
