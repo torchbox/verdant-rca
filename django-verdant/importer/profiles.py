@@ -19,7 +19,7 @@ from django.utils.text import slugify
 from django.core.files import File
 import datetime
 import urllib2
-from importer.import_utils import richtext_from_elem, text_from_elem, makeslug, checklength
+from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
 
 #NEWSINDEX = NewsIndex.objects.all()[0]
 PATH = 'importer/export_2012_2_pretty.xml'
@@ -91,6 +91,7 @@ SUBJECTS = {
     'Ceramics & Glass': 'ceramicsglass',
     'Curating Contemporary Art (College-based)': 'curatingcontemporaryartcollegebased',
     u'Curating Contemporary Art (Work\u2013based)': 'curatingcontemporaryartworkbased',
+    'Curating Contemporary Art (Work-based)': 'curatingcontemporaryartworkbased',
     'Critical & Historical Studies': 'criticalhistoricalstudies',
     'Critical Writing In Art & Design': 'criticalwritinginartdesign',
     'Design Interactions': 'designinteractions',
@@ -150,7 +151,7 @@ def cv_handle(parent, elemname, model, page, **kwargs):
         for entry in h.handle(elem.text).split(';'):
             text = entry.strip()
             if length:
-                text, error = checklength(text, length)
+                text, error = check_length(text, length)
             obj = model()
             setattr(obj, fieldname, text)
             obj.page = page
@@ -176,7 +177,7 @@ def doimport(path=PATH):
         thepage.school = SCHOOLS[thepage.title]
         print thepage.school
         thepage.intro, pageerrors['intro'] = text_from_elem(page, 'intro')
-        thepage.slug = makeslug(thepage)
+        thepage.slug = make_slug(thepage)
 
         synopsis, pageerrors['synopsis'] = text_from_elem(page, 'synopsis')
 
@@ -201,8 +202,11 @@ def doimport(path=PATH):
             sp.title, sp_errs['title'] = text_from_elem(s, 'title', length=255)
             # there is no intro text in any of the data at time of writing
             # intro, sp_errs['intro'] = text_from_elem(s, 'intro')
-            sp.slug = makeslug(sp)
+            sp.slug = make_slug(sp)
             #sp.statement, sp_errs['statement'] = text_from_elem(s, 'statement', length=255)
+            # TODO we may need more detailed parsing of the following
+            # paragraph, to search for 'supported by' and 'collaboration' or
+            # some such, and get them out into a separate field
             sp.statement = richtext_from_elem(s.find('statement'))
 
 
