@@ -2,7 +2,7 @@ from lxml import etree as ET
 from rca.models import NewsItem, RcaImage, NewsIndex, NewsItemCarouselItem
 from django.utils.dateparse import parse_date
 from django.core.files import File
-from importer.import_utils import richtext_from_elem, text_from_elem, makeslug, checklength
+from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
 import datetime
 import urllib2
 
@@ -29,7 +29,7 @@ def doimport(path=PATH, image_path=IMAGE_PATH):
 
         newsitem.date = parse_date(item.find('goinglivedate').text.strip().replace('.','-')) or datetime.date.today()
         
-        newsitem.slug = makeslug(newsitem)
+        newsitem.slug = make_slug(newsitem)
 
         strings = []
         if item.find('texts'):
@@ -75,7 +75,8 @@ def doimport(path=PATH, image_path=IMAGE_PATH):
                     carousel = NewsItemCarouselItem(
                             page = newsitem,
                             image = newimage,
-                            overlay_text = caption,
+                            # don't print the image caption as overlay
+                            #overlay_text = caption,
                             )
                     carousel.save()
                 else:
