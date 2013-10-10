@@ -51,7 +51,7 @@ class RcaImage(AbstractImage):
         if self.permission:
             bottom_line_items.append(u"\u00a9 %s" % self.permission)  # u00a9 = copyright symbol
         if self.photographer:
-            bottom_line_items.append(self.photographer)
+            bottom_line_items.append("Photographer: %s" % self.photographer)
 
         if bottom_line_items:
             lines.append(' | '.join(bottom_line_items))
