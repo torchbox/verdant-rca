@@ -5,12 +5,13 @@ from django.utils.http import urlencode
 
 from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
-from verdantadmin.forms import ExternalLinkChooserForm
+from verdantadmin.forms import ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm
 
 def get_querystring(request):
     return urlencode({
         'page_type': request.GET.get('page_type', ''),
         'allow_external_link': request.GET.get('allow_external_link', ''),
+        'prompt_for_link_text': request.GET.get('prompt_for_link_text', ''),
     })
 
 def browse(request, parent_page_id=None):
@@ -55,17 +56,25 @@ def browse(request, parent_page_id=None):
     )
 
 def external_link(request):
+    prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
+
+    if prompt_for_link_text:
+        form_class = ExternalLinkChooserWithLinkTextForm
+    else:
+        form_class = ExternalLinkChooserForm
+
     if request.POST:
-        form = ExternalLinkChooserForm(request.POST)
+        form = form_class(request.POST)
         if form.is_valid():
             return render_modal_workflow(request,
                 None, 'verdantadmin/choose_page/external_link_chosen.js',
                 {
                     'url': form.cleaned_data['url'],
+                    'link_text': form.cleaned_data['link_text'] if prompt_for_link_text else form.cleaned_data['url']
                 }
             )
     else:
-        form = ExternalLinkChooserForm()
+        form = form_class()
 
     return render_modal_workflow(request,
         'verdantadmin/choose_page/external_link.html', 'verdantadmin/choose_page/external_link.js',

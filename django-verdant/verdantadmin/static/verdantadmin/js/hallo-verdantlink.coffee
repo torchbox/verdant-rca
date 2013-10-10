@@ -38,8 +38,15 @@
                 else
                     # commence workflow to add a link
                     lastSelection = widget.options.editable.getSelection()
+
+                    if lastSelection.collapsed
+                        # TODO: don't hard-code this, as it may be changed in urls.py
+                        url = '/admin/choose-page/?allow_external_link=true&prompt_for_link_text=true'
+                    else
+                        url = '/admin/choose-page/?allow_external_link=true'
+
                     ModalWorkflow
-                        url: '/admin/choose-page/?allow_external_link=true' # TODO: don't hard-code this, as it may be changed in urls.py
+                        url: url
                         responses:
                             pageChosen: (pageData) ->
                                 a = document.createElement('a')
