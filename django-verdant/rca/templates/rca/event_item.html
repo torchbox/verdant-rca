@@ -36,8 +36,8 @@
 	<div class="col-2">
 		{% include "rca/includes/modules/calendar-button.html" %}
 		{% include "rca/includes/modules/share-button.html" %}
-		{% if self.signup_link %}
-			<a href="{{ self.signup_link }}" class="button icon icon-link-away">Book now</a>
+		{% if self.eventbrite_id %}
+			<a href="http://www.eventbrite.com/event/{{ self.eventbrite_id }}" class="button icon icon-link-away">Book now</a>
 		{% endif %}
 	</div>
 	</section>

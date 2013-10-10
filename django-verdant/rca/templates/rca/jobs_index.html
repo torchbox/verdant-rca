@@ -1,0 +1,28 @@
+{% extends "rca/base.html" %}
+{% load rca_tags rich_text %}
+
+
+{% block body_class %}
+    type-jobs-index
+{% endblock %}
+
+{% block content %}
+
+	{% include "rca/includes/modules/h1-major.html" %}
+
+	{% if self.intro %}
+		<div class="content bc3">{{ self.intro|richtext }}</div>
+	{% endif %}
+
+    {% jobs_listing %}
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+{% endblock %}
+<!-- To dos
+	- proper text for no vacancies
+	- ads
+-->

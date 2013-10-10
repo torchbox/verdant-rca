@@ -98,11 +98,19 @@ def rca_now_latest(context, exclude=None, count=4):
 
 @register.inclusion_tag('rca/tags/upcoming_jobs.html', takes_context=True)
 def upcoming_jobs(context, exclude=None, count=6):
-    jobs = JobPage.objects.filter(closing_date__gte=date.today())
+    jobs = JobPage.objects.filter(closing_date__gte=date.today()).order_by('closing_date')
     if exclude:
         jobs = jobs.exclude(id=exclude.id)
     return {
         'jobs': jobs[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/jobs_listing.html', takes_context=True)
+def jobs_listing(context):
+    jobs = JobPage.objects.filter(closing_date__gte=date.today()).order_by('closing_date')
+    return {
+        'jobs': jobs,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -125,6 +133,7 @@ def staff_random(context, exclude=None, count=4):
         'staff': staff[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
 
 @register.filter
 def paragraph_split(value, sep = "</p>"):

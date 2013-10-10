@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+    
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
@@ -58,7 +59,7 @@
                     {% if self.programme_video %}
                         <li><a class="t0">Programme video</a></li>
                     {% endif %}
-                    {% if self.student_stories %}
+                    {% if self.student_stories.all|length %}
                         <li><a class="t0">Student stories</a></li>
                     {% endif %}
                     {% if self.facilities_text or self.facilities_image %}
