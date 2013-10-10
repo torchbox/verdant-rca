@@ -34,6 +34,7 @@
                     # remove existing link
                     $(enclosingLink).replaceWith(enclosingLink.innerHTML)
                     button.hallobutton('checked', false)
+                    widget.options.editable.element.trigger('change')
                 else
                     # commence workflow to add a link
                     lastSelection = widget.options.editable.getSelection()
