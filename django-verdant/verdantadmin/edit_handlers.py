@@ -441,7 +441,7 @@ class BasePageChooserPanel(BaseChooserPanel):
         parent = page.get_parent() if page else None
         content_type = self.__class__.target_content_type()
 
-        return mark_safe("createPageChooser(fixPrefix('%s'), '%s/%s', %s);" % (
+        return mark_safe("createPageChooser(fixPrefix('%s'), '%s.%s', %s);" % (
             self.bound_field.id_for_label,
             content_type.app_label,
             content_type.model,

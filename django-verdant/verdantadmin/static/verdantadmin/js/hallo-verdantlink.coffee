@@ -39,13 +39,14 @@
                     # commence workflow to add a link
                     lastSelection = widget.options.editable.getSelection()
                     ModalWorkflow
-                        url: '/admin/choose-page/core/page/' # TODO: don't hard-code this, as it may be changed in urls.py
+                        url: '/admin/choose-page/?allow_external_link=true' # TODO: don't hard-code this, as it may be changed in urls.py
                         responses:
                             pageChosen: (pageData) ->
                                 a = document.createElement('a')
                                 a.setAttribute('href', pageData.url)
-                                a.setAttribute('data-id', pageData.id)
-                                a.setAttribute('data-linktype', 'page')
+                                if pageData.id
+                                    a.setAttribute('data-id', pageData.id)
+                                    a.setAttribute('data-linktype', 'page')
 
                                 if (not lastSelection.collapsed) and lastSelection.canSurroundContents()
                                     # use the selected content as the link text

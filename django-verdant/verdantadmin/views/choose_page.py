@@ -1,12 +1,22 @@
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.utils.http import urlencode
 
 from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
+from verdantadmin.forms import ExternalLinkChooserForm
 
-def browse(request, content_type_app_name, content_type_model_name, parent_page_id=None):
+def get_querystring(request):
+    return urlencode({
+        'page_type': request.GET.get('page_type', ''),
+        'allow_external_link': request.GET.get('allow_external_link', ''),
+    })
 
+def browse(request, parent_page_id=None):
+
+    page_type = request.GET.get('page_type') or 'core.page'
+    content_type_app_name, content_type_model_name = page_type.split('.')
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
@@ -37,9 +47,30 @@ def browse(request, content_type_app_name, content_type_model_name, parent_page_
     return render_modal_workflow(request,
         'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',
         {
-            'content_type_app_name': content_type_app_name,
-            'content_type_model_name': content_type_model_name,
+            'allow_external_link': request.GET.get('allow_external_link'),
+            'querystring': get_querystring(request),
             'parent_page': parent_page,
             'pages': shown_pages,
+        }
+    )
+
+def external_link(request):
+    if request.POST:
+        form = ExternalLinkChooserForm(request.POST)
+        if form.is_valid():
+            return render_modal_workflow(request,
+                None, 'verdantadmin/choose_page/external_link_chosen.js',
+                {
+                    'url': form.cleaned_data['url'],
+                }
+            )
+    else:
+        form = ExternalLinkChooserForm()
+
+    return render_modal_workflow(request,
+        'verdantadmin/choose_page/external_link.html', 'verdantadmin/choose_page/external_link.js',
+        {
+            'querystring': get_querystring(request),
+            'form': form,
         }
     )

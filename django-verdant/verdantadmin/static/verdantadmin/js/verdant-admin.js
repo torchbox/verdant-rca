@@ -56,13 +56,14 @@ function createPageChooser(id, pageType, openAtParentId) {
     var input = $('#' + id);
 
     $('.action-choose', chooserElement).click(function() {
-        var initialUrl = '/admin/choose-page/' + pageType + '/';
+        var initialUrl = '/admin/choose-page/';
         /* TODO: don't hard-code this URL, as it may be changed in urls.py */
         if (openAtParentId) {
             initialUrl += openAtParentId + '/';
         }
         ModalWorkflow({
             'url': initialUrl,
+            'urlParams': {'page_type': pageType},
             'responses': {
                 'pageChosen': function(pageData) {
                     input.val(pageData.id);

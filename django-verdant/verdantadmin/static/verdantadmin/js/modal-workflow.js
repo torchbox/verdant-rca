@@ -26,6 +26,10 @@ function ModalWorkflow(opts) {
         $.get(url, urlParams, self.loadResponseText, 'text');
     };
 
+    self.postForm = function(url, formData) {
+        $.post(url, formData, self.loadResponseText, 'text');
+    }
+
     self.loadResponseText = function(responseText) {
         var response = eval('(' + responseText + ')');
         self.loadBody(response);
