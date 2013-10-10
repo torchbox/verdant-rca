@@ -3,8 +3,12 @@
 </header>
 
 <div class="nice-padding">
-    {% if allow_external_link %}
-        <p class="link-types"><b>Internal link</b> | <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a></p>
+    {% if allow_external_link or allow_email_link %}
+        <p class="link-types">
+            <b>Internal link</b>
+            {% if allow_external_link %}| <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a>{% endif %}
+            {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
+        </p>
     {% endif %}
 
     <p class="breadcrumb">
