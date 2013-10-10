@@ -1192,6 +1192,16 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
+    def tabbed_feature_count(self):
+        count = 1 #profile tab will always show
+        if self.carousel_items:
+            count = count + 1
+        if self.publications_exhibitions:
+            count = count + 1
+        if len(ResearchItem.objects.filter(creator__person=self)) > 0: #matches the query for related research
+            count = count + 1
+        return count
+
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('school'),
