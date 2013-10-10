@@ -713,7 +713,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
-    signup_link = models.URLField(blank=True)
+    eventbrite_id = models.CharField(max_length=255, blank=True)
     external_link = models.URLField(blank=True)
     external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
@@ -733,7 +733,7 @@ EventItem.content_panels = [
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
         FieldPanel('cost'),
-        FieldPanel('signup_link'),
+        FieldPanel('eventbrite_id'),
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
     ], 'Event detail'),
