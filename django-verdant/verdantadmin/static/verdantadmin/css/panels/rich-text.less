@@ -29,10 +29,6 @@
         list-style-type:decimal !important;
     }
 
-    h4 {
-        font-weight: bold; /* so that it's not totally identical to the <p> style */
-    }
-
     /* Delete controls on embedded blocks with contenteditable="false" */
     .rich-text-deletable {
         position: relative;
@@ -47,6 +43,26 @@
         .rich-text-deletable a.delete-control {
             display: block;
         }
+    }
+
+    /* === CSS BELOW THIS POINT IS CUSTOM TO RCA === */
+
+    h2 {
+        font-size: 2.666em;
+        line-height: 1.2em;
+    }
+    h3 {
+        font-size: 2.400em;
+        line-height: 1.194em;
+    }
+    h4 {
+        font-size: 2.000em;
+        line-height: 1.267em;
+    }
+    h5 {
+        /* used for large body text, not really heading */
+        font-size: 1.200em;
+        line-height: 1.278em;
     }
 
     /*
