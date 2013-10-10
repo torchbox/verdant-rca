@@ -431,7 +431,7 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
             count = count + 1;
         if self.facilities_text or self.facilities_image:
             count = count + 1;
-        if self.student_stories:
+        if self.student_stories.exists():
             count = count + 1;
         return count;
 
@@ -1012,7 +1012,7 @@ class JobPage(Page, SocialFields, CommonPromoteFields):
     grade = models.CharField(max_length=255, blank=True)
     description = RichTextField()
     download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
-    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing jobs', blank=True)
+    listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
 JobPage.content_panels = [
@@ -1194,9 +1194,9 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
 
     def tabbed_feature_count(self):
         count = 1 #profile tab will always show
-        if self.carousel_items:
+        if self.carousel_items.exists():
             count = count + 1
-        if self.publications_exhibitions:
+        if self.publications_exhibitions.exists():
             count = count + 1
         if len(ResearchItem.objects.filter(creator__person=self)) > 0: #matches the query for related research
             count = count + 1
