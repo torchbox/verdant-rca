@@ -1017,6 +1017,40 @@
             font-style: italic;
         }
     }
+    /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
+    hello.js will allow and we can't add classes. This mimics the intro style on the standard page. */
+    h5 {
+        font-family: @font-family-benton-light;
+        font-size: @font-size-18;
+        line-height: @line-height-5;
+        text-transform: none;
+        font-weight: normal;
+    }
+
+    /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h2, .h3 etc */
+    h2 {
+        font-family: @font-family-benton;
+        font-size: @font-size-16;
+        line-height: @line-height-13;
+        font-weight: normal;
+    }
+
+    h3 {
+        font-family: @font-family-benton;
+        font-size: @font-size-14;
+        line-height: @line-height-14;
+        font-weight: normal;
+    }
+
+    /* note that there is no separate desktop style for .h4 but I have done one for the rich text editor
+    so the headings are always nicely nested */
+    h4 {
+        font-family: @font-family-benton;
+        font-size: @font-size-12;
+        line-height: @line-height-14;
+        font-weight: normal;
+    }
+
 }
 
 

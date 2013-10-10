@@ -713,7 +713,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
-    eventbrite_id = models.CharField(max_length=255, blank=True)
+    eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
     external_link = models.URLField(blank=True)
     external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
@@ -1137,12 +1137,16 @@ class StaffPageCarouselItem(Orderable, CarouselItemFields):
 class StaffPageRole(Orderable):
     page = models.ForeignKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255)
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, blank=True, choices=PROGRAMME_CHOICES)
+    area = models.CharField(max_length=255, blank=True, choices=AREA_CHOICES)
     email = models.EmailField(max_length=255)
 
     panels = [
         FieldPanel('title'),
+        FieldPanel('school'),
         FieldPanel('programme'),
+        FieldPanel('area'),
         FieldPanel('email'),
     ]
 
