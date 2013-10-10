@@ -504,7 +504,6 @@ form.search.expanded {
     display: block;
 }
 
-
 /**
  * $Top navigation
  */
@@ -679,7 +678,7 @@ nav {
                             visibility:visible;
                         }                      
                     }
-                }
+                }               
 
                
     .js .menu.ready {
@@ -711,7 +710,6 @@ nav {
             width:10px;
             content:"/";
             font-size:12px;
-            line-height:20px;
             display:inline-block;
             font-weight:bold;
             color:black;
@@ -719,6 +717,9 @@ nav {
         &:after{
             display:none;
         }
+    }
+    .breadcrumb li:first-child a:before{
+        display:none;
     }
 
 
