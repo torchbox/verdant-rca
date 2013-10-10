@@ -1027,27 +1027,29 @@
         font-weight: normal;
     }
 
-    /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h2, .h3 etc */
+    /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h5, .h6, .h7;
+    this ensures that they have a sensible range of heading sizes available for body text,
+    which wouldn't be the case if we mapped them to .h2, .h3, .h4 (they're all too big).
+    */
     h2 {
         font-family: @font-family-benton;
-        font-size: @font-size-16;
-        line-height: @line-height-13;
+        font-size: @font-size-22;
+        line-height: @line-height-4;
         font-weight: normal;
     }
 
     h3 {
         font-family: @font-family-benton;
-        font-size: @font-size-14;
-        line-height: @line-height-14;
-        font-weight: normal;
+        font-size: @font-size-18;
+        line-height: @line-height-5;
+        font-weight:normal;
     }
 
-    /* note that there is no separate desktop style for .h4 but I have done one for the rich text editor
-    so the headings are always nicely nested */
     h4 {
         font-family: @font-family-benton;
-        font-size: @font-size-12;
-        line-height: @line-height-14;
+        font-size: @font-size-15;
+        line-height: @line-height-3;
+        text-transform: none;
         font-weight: normal;
     }
 
