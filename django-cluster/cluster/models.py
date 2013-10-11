@@ -8,12 +8,12 @@ class ClusterableModel(models.Model):
         via kwargs
         """
         try:
-            child_relations = self._meta.child_relations
+            child_relation_names = [rel.get_accessor_name() for rel in self._meta.child_relations]
         except AttributeError:
-            child_relations = []
+            child_relation_names = []
 
         is_passing_child_relations = False
-        for rel_name in child_relations:
+        for rel_name in child_relation_names:
             if rel_name in kwargs:
                 is_passing_child_relations = True
                 break
@@ -21,7 +21,7 @@ class ClusterableModel(models.Model):
         if is_passing_child_relations:
             kwargs_for_super = kwargs.copy()
             relation_assignments = {}
-            for rel_name in child_relations:
+            for rel_name in child_relation_names:
                 if rel_name in kwargs:
                     relation_assignments[rel_name] = kwargs_for_super.pop(rel_name)
 
@@ -36,19 +36,19 @@ class ClusterableModel(models.Model):
         Save the model and commit all child relations.
         """
         try:
-            child_relations = self._meta.child_relations
+            child_relation_names = [rel.get_accessor_name() for rel in self._meta.child_relations]
         except AttributeError:
-            child_relations = []
+            child_relation_names = []
 
         update_fields = kwargs.pop('update_fields', None)
         if update_fields is None:
             real_update_fields = None
-            relations_to_commit = child_relations
+            relations_to_commit = child_relation_names
         else:
             real_update_fields = []
             relations_to_commit = []
             for field in update_fields:
-                if field in child_relations:
+                if field in child_relation_names:
                     relations_to_commit.append(field)
                 else:
                     real_update_fields.append(field)

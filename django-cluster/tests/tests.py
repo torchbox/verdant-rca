@@ -1,6 +1,6 @@
 from django.test import TestCase
 from .models import Band, BandMember
-from cluster.forms import transientmodelformset_factory, childformset_factory
+from cluster.forms import transientmodelformset_factory, childformset_factory, ClusterForm
 
 
 class ClusterTest(TestCase):
@@ -98,6 +98,11 @@ class ChildFormsetTest(TestCase):
         self.assertEqual(5, len(band_members_formset.forms))
         self.assertEqual('John Lennon', band_members_formset.forms[0].instance.name)
 
+    def test_empty_formset(self):
+        BandMembersFormset = childformset_factory(Band, BandMember, extra=3)
+        band_members_formset = BandMembersFormset()
+        self.assertEqual(3, len(band_members_formset.forms))
+
     def test_incoming_formset_data(self):
         beatles = Band(name='The Beatles', members=[
             BandMember(name='George Harrison'),
@@ -128,6 +133,67 @@ class ChildFormsetTest(TestCase):
 
         self.assertEqual(2, len(members))
         self.assertEqual('John Lennon', members[0].name)
+
+        self.assertEqual(2, beatles.members.count())
+        self.assertEqual('John Lennon', beatles.members.all()[0].name)
+
+        # should not exist in the database yet
+        self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+        beatles.save()
+        # this should create database entries
+        self.assertTrue(Band.objects.filter(name='The Beatles').exists())
+        self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
+
+class ClusterFormTest(TestCase):
+    def test_cluster_form(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        self.assertTrue(BandForm.formsets)
+
+        beatles = Band(name='The Beatles', members=[
+            BandMember(name='John Lennon'),
+            BandMember(name='Paul McCartney'),
+        ])
+
+        form = BandForm(instance=beatles)
+
+        self.assertEqual(5, len(form.formsets['members'].forms))
+
+    def test_incoming_form_data(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        beatles = Band(name='The Beatles', members=[
+            BandMember(name='George Harrison'),
+        ])
+        form = BandForm({
+            'name': "The Beatles",
+
+            'members-TOTAL_FORMS': 4,
+            'members-INITIAL_FORMS': 1,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'members-0-name': 'George Harrison',
+            'members-0-DELETE': 'members-0-DELETE',
+            'members-0-id': '',
+
+            'members-1-name': 'John Lennon',
+            'members-1-id': '',
+
+            'members-2-name': 'Paul McCartney',
+            'members-2-id': '',
+
+            'members-3-name': '',
+            'members-3-id': '',
+        }, instance=beatles)
+
+        self.assertTrue(form.is_valid())
+        result = form.save(commit=False)
+        self.assertEqual(result, beatles)
 
         self.assertEqual(2, beatles.members.count())
         self.assertEqual('John Lennon', beatles.members.all()[0].name)

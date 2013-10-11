@@ -145,6 +145,6 @@ class ParentalKey(ForeignKey):
         # store this as a child field in meta
         try:
             # TODO: figure out how model inheritance works with this
-            cls._meta.child_relations.append(related.get_accessor_name())
+            cls._meta.child_relations.append(related)
         except AttributeError:
-            cls._meta.child_relations = [related.get_accessor_name()]
+            cls._meta.child_relations = [related]

@@ -1,4 +1,4 @@
-from django.forms.models import BaseModelFormSet, modelformset_factory, ModelForm, _get_foreign_key
+from django.forms.models import BaseModelFormSet, modelformset_factory, ModelForm, _get_foreign_key, ModelFormMetaclass
 from django.db.models.fields.related import RelatedObject
 
 
@@ -87,3 +87,65 @@ def childformset_factory(parent_model, model, form=ModelForm,
     FormSet = modelformset_factory(model, **kwargs)
     FormSet.fk = fk
     return FormSet
+
+
+class ClusterFormMetaclass(ModelFormMetaclass):
+    def __new__(cls, name, bases, attrs):
+        try:
+            parents = [b for b in bases if issubclass(b, ClusterForm)]
+        except NameError:
+            # We are defining ClusterForm itself.
+            parents = None
+
+        new_class = super(ClusterFormMetaclass, cls).__new__(cls, name, bases, attrs)
+        if not parents:
+            return new_class
+
+        opts = new_class._meta
+        if opts.model is None:
+            raise ValueError('ModelForm has no model class specified.')
+
+        try:
+            child_relations = opts.model._meta.child_relations
+        except AttributeError:
+            child_relations = []
+
+        formsets = {}
+        for rel in child_relations:
+            # to build a childformset class from this relation, need to know
+            # the base model (opts.model), the child model, and the fk_name from the child model to the base
+            formset = childformset_factory(opts.model, rel.model, fk_name=rel.field.name)
+            formsets[rel.get_accessor_name()] = formset
+
+        new_class.formsets = formsets
+
+        return new_class
+
+class ClusterForm(ModelForm):
+    __metaclass__ = ClusterFormMetaclass
+
+    def __init__(self, data=None, files=None, instance=None, prefix=None, **kwargs):
+        super(ClusterForm, self).__init__(data, files, instance=instance, prefix=prefix, **kwargs)
+
+        self.formsets = {}
+        for rel_name, formset_class in self.__class__.formsets.items():
+            if prefix:
+                formset_prefix = "%s-%s" % (prefix, rel_name)
+            else:
+                formset_prefix = rel_name
+            self.formsets[rel_name] = formset_class(data, files, instance=instance, prefix=formset_prefix)
+
+    def as_p(self):
+        form_as_p = super(ClusterForm, self).as_p()
+        return form_as_p + u''.join([formset.as_p() for formset in self.formsets.values()])
+
+    def is_valid(self):
+        form_is_valid = super(ClusterForm, self).is_valid()
+        formsets_are_valid = all([formset.is_valid() for formset in self.formsets.values()])
+        return form_is_valid and formsets_are_valid
+
+    def save(self, commit=True):
+        result = super(ClusterForm, self).save(commit=commit)
+        for formset in self.formsets.values():
+            formset.save(commit=commit)
+        return result
