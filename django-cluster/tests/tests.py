@@ -24,6 +24,21 @@ class ClusterTest(TestCase):
         self.assertTrue(Band.objects.filter(name='The Beatles').exists())
         self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
 
+        john_lennon = BandMember.objects.get(name='John Lennon')
+        beatles.members = [john_lennon]
+        # reassigning should take effect on the in-memory record
+        self.assertEqual(1, beatles.members.count())
+        # but not the database
+        self.assertEqual(2, Band.objects.get(name='The Beatles').members.count())
+
+        beatles.save()
+        # now updated in the database
+        self.assertEqual(1, Band.objects.get(name='The Beatles').members.count())
+        self.assertEqual(1, BandMember.objects.filter(name='John Lennon').count())
+        # removed member should be deleted from the db entirely
+        self.assertEqual(0, BandMember.objects.filter(name='Paul McCartney').count())
+
+
     def test_can_pass_child_relations_as_constructor_kwargs(self):
         beatles = Band(name='The Beatles', members=[
             BandMember(name='John Lennon'),
