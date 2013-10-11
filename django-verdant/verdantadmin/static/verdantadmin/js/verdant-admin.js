@@ -52,7 +52,7 @@ function insertRichTextDeleteControl(elem) {
 
 function createPageChooser(id, pageType, openAtParentId) {
     var chooserElement = $('#' + id + '-chooser');
-    var pageTitle = chooserElement.find('.page-title');
+    var pageTitle = chooserElement.find('.title');
     var input = $('#' + id);
 
     $('.action-choose', chooserElement).click(function() {

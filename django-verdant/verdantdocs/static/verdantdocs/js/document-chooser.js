@@ -1,6 +1,6 @@
 function createDocumentChooser(id) {
     var chooserElement = $('#' + id + '-chooser');
-    var docTitle = chooserElement.find('.document-title');
+    var docTitle = chooserElement.find('.title');
     var input = $('#' + id);
 
     $('.action-choose', chooserElement).click(function() {

@@ -1,9 +1,11 @@
 <header>
-	<h1>Choose {{ snippet_type_name }}</h1>
+    <h1>Choose <span>{{ snippet_type_name }}</span></h1>
 </header>
 
-<ul class="listing snippets">
-    {% for item in items %}
-        <li><a class="snippet-choice" href="{% url 'verdantsnippets_chosen' content_type.app_label content_type.model item.id %}">{{ item }}</a></li>
-    {% endfor %}
-</ul>
+<div class="nice-padding">
+    <ul class="listing snippets">
+        {% for item in items %}
+            <li><a class="snippet-choice" href="{% url 'verdantsnippets_chosen' content_type.app_label content_type.model item.id %}">{{ item }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
