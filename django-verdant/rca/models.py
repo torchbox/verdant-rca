@@ -678,7 +678,7 @@ class EventItemRelatedProgramme(models.Model):
 
 class EventItemRelatedArea(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='related_areas')
-    programme = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
     panels = [FieldPanel('area')]
 
