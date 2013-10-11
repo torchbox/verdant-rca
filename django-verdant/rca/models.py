@@ -781,6 +781,9 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def future_events(self):
+        return EventItem.future_objects.filter(path__startswith=self.path)
+
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
