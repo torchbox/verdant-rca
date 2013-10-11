@@ -1,0 +1,48 @@
+{% extends "rca/base.html" %}
+{% load rca_tags rich_text pageurl %}
+
+
+{% block body_class %}
+    type-events-index
+{% endblock %}
+
+{% block content %}
+
+	{% include "rca/includes/modules/h1-major.html" %}
+
+	{% if self.intro %}
+		<div class="content bc3">{{ self.intro|richtext }}</div>
+	{% endif %}
+
+	<form id="programme-listing-filter" action="{% pageurl self %}" method="GET">
+		<label for="programme">programme:</label><input type="text" name="programme">
+		<label for="school">school:</label><input type="text" name="school">
+		<label for="location">location:</label><input type="text" name="location">
+		<label for="location_other">other location:</label><input type="text" name="location_other">
+		<input type="submit">
+	</form>
+    
+    <div id="listing">
+    	{% include "rca/includes/events_listing.html" %}
+	</div>
+
+	<ul class="pagination">
+		<li class="next"><a href="events-index-2.html">Next</a></li>
+	</ul>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+{% endblock %}
+
+
+{% block extra_js %}
+	<script src="/static/rca/js/events-listing.js"></script>
+{% endblock %}
+
+<!-- To dos
+	- listing image not feature image
+	- ads
+-->

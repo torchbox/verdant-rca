@@ -661,15 +661,8 @@ class EventItemSpeaker(Orderable):
     ]
     
 
-class EventItemCarouselItem(Orderable):
+class EventItemCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.EventItem', related_name='carousel_items')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    embedly_url = models.URLField(blank=True)
-
-    panels=[
-        ImageChooserPanel('image'), 
-        FieldPanel('embedly_url'),
-    ]
 
 class EventItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='related_schools')
@@ -682,6 +675,12 @@ class EventItemRelatedProgramme(models.Model):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
 
     panels = [FieldPanel('programme')]
+
+class EventItemRelatedArea(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='related_areas')
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+
+    panels = [FieldPanel('area')]
 
 class EventItemDatesTimes(Orderable):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
@@ -721,6 +720,15 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     future_objects = FutureEventItemManager()
+
+    def feature_image(self):
+        try:
+            return self.carousel_items.filter(image__isnull=False)[0].image
+        except IndexError:
+            try:
+                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
+            except IndexError:
+                return None
 
 
 EventItem.content_panels = [
@@ -762,6 +770,7 @@ EventItem.promote_panels = [
    
     InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
     InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
+    InlinePanel(EventItem, EventItemRelatedArea, label="Related areas"),
 ]
 
 
@@ -780,6 +789,35 @@ class EventIndexRelatedLink(Orderable):
 class EventIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    def future_events(self):
+        return EventItem.future_objects.filter(path__startswith=self.path)
+
+    def serve(self, request):
+        events = self.future_events()
+
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        location = request.GET.get('location')
+        location_other = request.GET.get('location_other')
+        if programme:
+            events = events.filter(related_programmes__programme=programme)
+        if school:
+            events = events.filter(related_schools__school=school)
+        if location:
+            events = events.filter(location=location)
+        if location_other:
+            events = events.filter(location_other=location_other)
+        if request.is_ajax():
+            return render(request, "rca/includes/events_listing.html", {
+                'self': self,
+                'events': events
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'events': events
+            })
 
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1348,6 +1386,13 @@ class StudentPageWorkCollaborator(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPageWorkSponsors(Orderable):
+    page = models.ForeignKey('rca.StudentPage', related_name='sponsors')
+    sponsors = models.CharField(max_length=255, blank=True)
+    panels = [FieldPanel('sponsors')]
+
+
+
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -1362,7 +1407,6 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True)
-    work_sponsors = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
@@ -1392,6 +1436,7 @@ StudentPage.content_panels = [
     FieldPanel('work_type'),
     FieldPanel('work_location'),
     InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
+    InlinePanel(StudentPage, StudentPageWorkSponsors, label="Work sponsors"),
     FieldPanel('work_awards'),
     FieldPanel('work_sponsors'),
     FieldPanel('twitter_feed'),
