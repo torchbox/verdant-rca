@@ -57,6 +57,7 @@ input, textarea, select, .richtext, .tagit{
     -webkit-appearance: none;
     color:@color-text-input;
     font-size:1em;
+    outline:none;
 
     &:hover{
         background-color:@color-fieldset-hover;
@@ -73,8 +74,10 @@ input, textarea, select, .richtext, .tagit{
 }
 
 input[type=radio],input[type=checkbox]{
+    .border-radius(0);
     cursor:pointer;
     float:left;
+    border:0;
 }
 
 input[type=radio]{
@@ -85,21 +88,26 @@ input[type=radio]{
 }
 
 input[type=radio]:before{
+    .border-radius(100%);
+    font-family: verdant; 
+    font-style: normal;
     text-align:center;
     position:absolute;
     top:-5px;
     left:-2px;
     cursor:pointer;
     display:block;
-    content:"";
+    content:"K";
     width:20px;
     height:20px;
+    line-height:20px;
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
-    .border-radius(100%);
+    color:#EEE;
 }
 input[type=radio]:checked:before{
-    .sprite(106px, 329px, 1);
+    content:"K";
+    color:@color-teal;
 }
 
 input[type=checkbox]{
@@ -110,19 +118,23 @@ input[type=checkbox]{
 }
 
 input[type=checkbox]:before{
+    font-family: verdant; 
+    font-style: normal;
     text-align:center;
     position:absolute;
     top:-5px;
     cursor:pointer;
     display:block;
-    content:"";
+    content:"x";
+    line-height:20px;
     width:20px;
     height:20px;
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
+    color:#EEE;
 }
 input[type=checkbox]:checked:before{
-    .sprite(-5px, 332px, 1);
+    color:@color-teal; 
 }
 
 input[type=submit], input[type=reset], input[type=button], .button, button{
@@ -297,8 +309,10 @@ ul.inline li:first-child, li.inline:first-child{
     }
 }
 
-
-.page-chooser {
+/* standard way of doing a chooser where the chosen object's title is overlayed */
+.page-chooser,
+.snippet-chooser,
+.document-chooser {
     .unchosen, .chosen{
         height:100px;
 
@@ -311,7 +325,7 @@ ul.inline li:first-child, li.inline:first-child{
         &:before{
             content:"b";
         }
-        .page-title{
+        .title{
             float: left;
             margin-left: -146px;
             width: 126px;
@@ -335,8 +349,14 @@ ul.inline li:first-child, li.inline:first-child{
                 max-height:100%;
                 background-color: white;
             }
-
         }
+    }
+}
+
+.snippet-chooser {
+    .unchosen:before,
+    .chosen:before{
+        content:"D"; 
     }
 }
 
@@ -349,36 +369,10 @@ ul.inline li:first-child, li.inline:first-child{
             left:0.2em;
         }
     }
-    .chosen{
-        &:before{
-            content:"r";
-        }
-        .document-title{
-            float: left;
-            margin-left: -146px;
-            width: 126px;
-            height: 40px;
-            overflow: hidden;
-            font-size: 0.7em;
-            padding: 30px 10px 0 10px;
-            display: block;
-            top: 0px;
-            position: absolute;
-            line-height: 1.4em;
-            text-align: center;
-            color: black;
-
-            &:hover{
-                width:130px;
-                padding:0;
-                top: 0;
-                height: 100px;
-                background-color: white;
-            }
-        }
+    .chosen:before{
+        content:"r";
     }
 }
-
 
 .image-chooser {
     .unchosen, .chosen{
@@ -386,30 +380,14 @@ ul.inline li:first-child, li.inline:first-child{
 
         &:before{
             content:"o"; 
-            font-size:7.7em;
-            line-height:0.8em;
+            font-size:120px;
+            line-height:97px;
         }
     }
     .chosen{
         &:before{
             content:"";
         }
-        .preview-image{
-            float:left;
-            margin-left:-(@thumbnail-width)-15;
-        }
-    }
-}
-
-.snippet-chooser {
-    .unchosen{
-        height:100px;
-
-        &:before{
-            content:"o"; 
-        }
-    }
-    .chosen{
         .preview-image{
             float:left;
             margin-left:-(@thumbnail-width)-15;
@@ -439,6 +417,7 @@ ul.tagit li.tagit-choice-editable{
     border:1px solid @color-grey-lighter;
     padding:0.2em 0.5em;
     color:inherit;
+    line-height:2em;
 }
 .tagit-label:before,
 .suggested-tag:before{
@@ -501,7 +480,7 @@ ul.tagit li.tagit-choice-editable{
         right:0;
         top:0;
         input{
-            padding:1.4em 2em;
+            padding:1.35em 2em;
         }
     }
     .popular-tags{

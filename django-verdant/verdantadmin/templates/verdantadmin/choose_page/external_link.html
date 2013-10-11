@@ -1,0 +1,21 @@
+<header>
+    <h1>Add an external link</h1>
+</header>
+
+<div class="nice-padding">
+    <p class="link-types">
+        <a href="{% url 'verdantadmin_choose_page' %}?{{ querystring }}">Internal link</a>
+        | <b>External link</b>
+        {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
+    </p>
+
+    <form action="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}" method="post">
+        {% csrf_token %}
+        <ul class="fields">
+            {% for field in form %}
+                {% include "verdantadmin/shared/field_as_li.html" %}
+            {% endfor %}
+            <li><input type="submit" value="Insert link" /></li>
+        </ul>
+    </form>
+</div>

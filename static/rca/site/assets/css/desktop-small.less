@@ -95,9 +95,6 @@ body {
     right:0;
     top:0;
 
-    header{
-
-    }
     .site-name{
         display:none;
     }
@@ -108,7 +105,7 @@ body {
 
 header {
     height:auto;
-    margin:auto;
+    margin:auto auto 49px auto;
 
     a.site-name {
         .clearfix();
@@ -136,6 +133,7 @@ header {
     /* mimics the style of the page-content below to make sure the search and navigation
     fill the correct width at the desktop size */
     .clearfix();
+    position:absolute;
     width:100%;
 
     .inner{
@@ -152,7 +150,7 @@ nav {
         .sprite-load(-53px, -1178px, 27px, 15px);
         content: ' ';
         position: absolute;
-        top: @spacing-half;
+        top: 10px; /* fairly arbitrary. Whatever looks good */
         right: @spacing-half;
     }
 }
@@ -181,7 +179,6 @@ form.search {
 }
 
 .page-content {
-    margin-top: @spacing-onepointfive;
     float: left;
     width: 100%;
 
@@ -193,7 +190,6 @@ form.search {
 aside {
     float: right;
     width: @right-col-width;
-    margin-top:@grid-gutter-width;
     margin-left: -@right-col-width;
     display:block;
     overflow: hidden;
@@ -325,36 +321,16 @@ footer {
 }
 
 .type-event {
-}
-.type-events-index,
-.type-jobs-index {
-    .one-plus {
-        ul{
-            margin:0;
-        }
-        li {
-            .column(6, @grid-gutter-width * 2);
-            &.newrow {
-                padding-left: 0;
-            }
-            &:not(.newrow) {
-                padding-right: 0;
-            }
-        }
-    }
+
 }
 
 .type-events-index {
-    .one-plus {
-        li.first {
-            .column(2, @grid-gutter-width/2, 6);
-            background-color: @color-light-pink;
-            padding: @spacing-half;
-        }
-        li.second {
-            margin-left: 8.33%; /* one column width */
-            .column(3.5, @grid-gutter-width/2, 6);
-        }
+    /* events index styles for the columns under the image move to mobile at this resolution.
+    This overrides the desktop styles shared with .one-plus so they also revert to mobile at this res */
+    .one-plus li {
+        width: 100%;
+        padding: 0 8px;
+        display:list-item;
     }
 }
 
@@ -363,11 +339,12 @@ footer {
         li.col {
             .column(3, @grid-gutter-width/2, 6);
             padding-left: 0;
+            min-width: 200px;
         }
     }
 }
 
-@import "modules-desktop.less";
+@import "modules-desktop-small.less";
 
 
 .col1{
@@ -406,4 +383,3 @@ footer {
 .col12{
     .column(12);
 }
-

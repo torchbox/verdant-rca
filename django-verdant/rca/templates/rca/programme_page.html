@@ -1,7 +1,12 @@
 {% extends "rca/base.html" %}
 {% load pageurl image_tags embed_filters rich_text rca_tags %}
 
+{% block body_class %}
+    type-programme
+{% endblock %}
+
 {% block content %}
+    
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
@@ -54,7 +59,7 @@
                     {% if self.programme_video %}
                         <li><a class="t0">Programme video</a></li>
                     {% endif %}
-                    {% if self.student_stories %}
+                    {% if self.student_stories.all|length %}
                         <li><a class="t0">Student stories</a></li>
                     {% endif %}
                     {% if self.facilities_text or self.facilities_image %}
@@ -139,10 +144,10 @@
     {% alumni_by_programme programme=self.programme %}
 
     <!-- rca now -->
-    {% rca_now_by_programme programme=self.programme %}
+    {% rca_now_related programme=self.programme %}
 
     <!-- research -->
-    {% research_by_programme programme=self.programme %}
+    {% research_related programme=self.programme %}
     
 
     <!-- our sites -->

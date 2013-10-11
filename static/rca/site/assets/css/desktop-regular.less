@@ -1,0 +1,50 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop
+ *
+ * Overrides core.less for desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+.type-events-index,
+.type-jobs-index {
+    .one-plus {
+        ul{
+            margin:0;
+        }
+        li {
+            .column(6, @grid-gutter-width);
+            &.newrow {
+                padding-left: 0;
+            }
+            &:not(.newrow) {
+                padding-right: 0;
+            }
+        }
+    }
+}
+
+.type-events-index {
+    .one-plus {
+        li.first {
+            margin-right: @spacing-one;
+            .column(3.5, @grid-gutter-width/2, 6);
+            padding-left: 0;
+        }
+        li.second {
+            .column(2, @grid-gutter-width/2, 6);
+            background-color: @color-light-pink;
+            padding: @spacing-half;
+        }
+    }
+}
+
+
+/* must come at bottom of file*/
+@import "modules-desktop-regular.less";

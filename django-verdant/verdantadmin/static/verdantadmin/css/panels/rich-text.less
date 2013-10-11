@@ -1,9 +1,15 @@
+@import "../variables.less";
+
 .richtext {
     overflow: hidden;
 
     /* Resetting various html tags that have been messed with by Verdant's main css */
-    *{
-        display:inherit !important;
+    h2 {
+        display:block !important;
+    }
+    h1 span {
+        font-weight: normal;
+        color: inherit;
     }
     *:before,
     *:after{
@@ -23,6 +29,49 @@
     }
     ol li{
         list-style-type:decimal !important;
+    }
+
+    /* Delete controls on embedded blocks with contenteditable="false" */
+    .rich-text-deletable {
+        position: relative;
+        a.delete-control {
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+            display: none;
+
+            &:before{
+                background-color:rgba(255,255,255,0.8);
+            }
+            &:hover:before{
+                background-color:white;
+            }
+        }
+    }
+    &.inEditMode {
+        .rich-text-deletable a.delete-control {
+            display: block;
+        }
+    }
+
+    /* === CSS BELOW THIS POINT IS CUSTOM TO RCA === */
+
+    h2 {
+        font-size: 2.666em;
+        line-height: 1.2em;
+    }
+    h3 {
+        font-size: 2.400em;
+        line-height: 1.194em;
+    }
+    h4 {
+        font-size: 2.000em;
+        line-height: 1.267em;
+    }
+    h5 {
+        /* used for large body text, not really heading */
+        font-size: 1.200em;
+        line-height: 1.278em;
     }
 
     /*

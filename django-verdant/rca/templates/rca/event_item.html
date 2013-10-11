@@ -2,6 +2,10 @@
 {% extends "rca/base.html" %}
 {% load rich_text image_tags %}
 
+{% block body_class %}
+    type-event
+{% endblock %}
+
 {% block content %}
 	<span class="a2">{{ self.audience }}</span>
     <h1 class="h1">{{ self.title }}</h1>
@@ -13,7 +17,7 @@
             {% if dates %}
             	{% for date in dates %}
                 	<h3 class="h5">
-						{{ date.date_from }}{% if date.date_from != date.date_to %} to {{ date.date_to }}{% endif %}
+						{{ date.date_from }}{% if date.date_to %} to {{ date.date_to }}{% endif %}
 						{% if date.time_from %} &#124;
 							<span>{{ date.time_from }}{% if date.time_to %} - {{ date.time_to }}{% endif %}</span>
 						{% endif %}
@@ -32,8 +36,8 @@
 	<div class="col-2">
 		{% include "rca/includes/modules/calendar-button.html" %}
 		{% include "rca/includes/modules/share-button.html" %}
-		{% if self.signup_link %}
-			<a href="{{ self.signup_link }}" class="button icon icon-link-away">Book now</a>
+		{% if self.eventbrite_id %}
+			<a href="http://www.eventbrite.com/event/{{ self.eventbrite_id }}" class="button icon icon-link-away">Book now</a>
 		{% endif %}
 	</div>
 	</section>

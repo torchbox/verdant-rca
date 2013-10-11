@@ -1,79 +1,132 @@
 {% extends "rca/base.html" %}
+{% load rca_tags rich_text %}
+
+{% block body_class %}
+    type-job
+{% endblock %}
 
 {% block content %}
 
 	<h1 class="h1">{{ self.title }}</h1>
 
 	<ul class="row">
-		<li class="three body-text-style">
-			{% include modules/job-summary.html %}
+		<li class="three">
 			<section class="job-summary">
-		<h3 class="a2">Closing date</h3>
-		<p>17th May 2013</p>
+				<h3 class="a2">Closing date</h3>
+				<p>{{ self.closing_date|date:"j F Y" }}</p>
 
-		<h3 class="a2">Interview date</h3>
-		<p>17th May 2013</p>
+				{% if self.interview_date %}
+					<h3 class="a2">Interview date</h3>
+					<p>{{ self.interview_date|date:"j F Y" }}</p>
+				{% endif %}
 
-		<h3 class="a2">School</h3>
-		<p>School of design</p>
+				{% if self.school %}
+					<h3 class="a2">School</h3>
+					<p>{{ self.get_school_display }}</p>
+				{% endif %}
 
-		<h3 class="a2">Responsible to</h3>
-		<p>GID Head of Programme</p>
+				{% if self.programme %}
+					<h3 class="a2">Programme</h3>
+					<p>{{ self.get_programme_display }}</p>
+				{% endif %}
 
-		<h3 class="a2">Required hours</h3>
-		<p>Full time</p>
+				{% if self.other_department %}
+					<h3 class="a2">Department</h3>
+					<p>{{ self.other_department }}</p>
+				{% endif %}
 
-		<h3 class="a2">Programme</h3>
-		<p>The Global Innovation Design</p>
+				{% if self.responsible_to %}
+					<h3 class="a2">Responsible to</h3>
+					<p>{{ self.responsible_to }}</p>
+				{% endif %}
 
-		<h3 class="a2">Campus</h3>
-		<p>Kensington</p>
+				{% if self.required_hours %}
+					<h3 class="a2">Required hours</h3>
+					<p>{{ self.required_hours }}</p>
+				{% endif %}
 
-		<h3 class="a2">Salary</h3>
-		<p>&pound;49,448 - &pound;55,367 pro-rata</p>
+				{% if self.campus %}
+					<h3 class="a2">Campus</h3>
+					<p>{{ self.get_campus_display }}</p>
+				{% endif %}
 
-		<h3 class="a2">Ref no</h3>
-		<p>8110560</p>
+				{% if self.salary %}
+					<h3 class="a2">Salary</h3>
+					<p>{{ self.salary }}</p>
+				{% endif %}
 
-		<h3 class="a2">Grade</h3>
-		<p>10</p>
+				{% if self.ref_number %}
+					<h3 class="a2">Ref no</h3>
+					<p>{{ self.ref_number }}</p>
+				{% endif %}
 
-		<div class="row">
-			{% include modules/download-button.html %}
-			{% include modules/share-button.html %}
-		</div>
+				{% if self.grade %}
+					<h3 class="a2">Grade</h3>
+					<p>{{ self.grade }}</p>
+				{% endif %}
 
-	</section>
+				<div class="row">
+					{% if self.download_info %}
+						<div class="download-wrapper">
+							<a href="{{ self.download_info.url }}">
+								<div class="download">
+									Download
+								</div>
+							</a>
+						</div>
+					{% endif %}
+					{% include "rca/includes/modules/share-button.html" %}
+				</div>
+
+			</section>
 		</li>
-		<li class="nine body-text-style">
-			{% include modules/job-details.html %}
+		<li class="nine">
 			<section class="job-details">
-		<section class="module job-description body-text-style">
-			<ul class="row">
-				<li class="col-8">
-					<h2 class="module-title">Job Description</h2>
-					<p>The Global Innovation Design (GID) programme is a new programme and offers a two-year double Masters MA (RCA) / MSC (Imperial College London) where students study in London, New York and Tokyo.</p>
+				<section class="module job-description">
+					<ul class="row">
+						<li class="col-8 body-text-style">
+							<h2 class="module-title">Job Description</h2>
+							{{ self.description|richtext }}
+						</li>
+					</ul>
+				</section>
 
-					<p>The programme is run jointly with Imperial College London and currently collaboratively with Keio university in Japan and the Pratt Institute in the U.S.A. It takes a diverse range of applicants (engineers, technologists, designers, commercially experienced people and from many other disciplines) and introduces them.</p>
-				</li>
-			</ul>
-		</section>
+				<section class="module">
+					<ul class="row">
+						<li class="col-8 body-text-style">
+							<h2 class="module-title">Application and equal opportunities monitoring form</h2>
+							<p>Please click to download the Application Form (<a href="">Word version</a> or <a href="">PDF version</a>) and <a href="">Equal Opportunities Monitoring Form</a> (Word version).</p>
+							
+							<p>Please note it is vital that all sections of the application form are completed. CVs cannot be accepted as a substitute for any section.</p>
 
-		<section class="module body-text-style">
-			<ul class="row">
-				<li class="col-8">
-					<h2 class="module-title">Application and equal opportunities monitoring form</h2>
-					<p>Please the <a href="">Application Form</a> (Word version or PDF version) and <a href="">Equal Opportunities Monitoring Form</a> (Word version).
-					Please note it is vital that all sections of the application form are completed. CVs cannot be accepted as a substitute for any section.
-					The ‘Additional Information’ section is particularly important to the selection process; you should use this to outline the skills, knowledge and experience that you have that relates specifically to the job description and person specification for the post. You may continue sections on separate sheets if necessary.</p>
+							<p>The ‘Additional Information’ section is particularly important to the selection process; you should use this to outline the skills, knowledge and experience that you have that relates specifically to the job description and person specification for the post. You may continue sections on separate sheets if necessary.</p>
 
-					<p>If you are disabled and require help completing your application form, or if you will require help or special facilities should you be short-listed for interview, please telephone the personnel Assistant on +44 (0)20 7590 4148 or email personnel@rca.ac.uk.</p>
-				</li>
-			</ul>
-		</section>
+							<p>If you are disabled and require help completing your application form, or if you will require help or special facilities should you be short-listed for interview, please telephone the Personnel Assistant on +44 (0)20 7590 4148 or email <a href="mailto:personnel@rca.ac.uk">personnel@rca.ac.uk</a>.</p>
+						</li>
+					</ul>
+				</section>
 
-		{% include "rca/includes/modules/contact.html" %}
-	</section>
+				<section class="module contact">
+					<h2 class="module-title">Personnel contact</h2>
+					<ul class="row">
+						<li class="col col-1">
+							<p>
+								Royal College of Art<br />
+								Kensington Gore<br />
+								London<br />
+								SW7 2EU<br />
+							</p>
+						</li>
+						<li class="col col-2">
+							<p>
+								Tel: +44 (0)20 7590 4138 (24-hour answerphone)<br />
+								<a href="mailto:personnel@rca.ac.uk">personnel@rca.ac.uk</a>
+							</p>
+						</li>
+					</ul>
+				</section>
+				{% include "rca/includes/modules/contact.html" %}
+			</section>
 		</li>
 	</ul>
 
@@ -84,3 +137,5 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showJobs="true" %}
 {% endblock %}
+
+<!-- To dos: confirmation re download links from Chris required -->

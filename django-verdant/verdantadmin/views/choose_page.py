@@ -1,12 +1,24 @@
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.http import Http404
+from django.utils.http import urlencode
 
 from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
+from verdantadmin.forms import ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
 
-def browse(request, content_type_app_name, content_type_model_name, parent_page_id=None):
+def get_querystring(request):
+    return urlencode({
+        'page_type': request.GET.get('page_type', ''),
+        'allow_external_link': request.GET.get('allow_external_link', ''),
+        'allow_email_link': request.GET.get('allow_email_link', ''),
+        'prompt_for_link_text': request.GET.get('prompt_for_link_text', ''),
+    })
 
+def browse(request, parent_page_id=None):
+
+    page_type = request.GET.get('page_type') or 'core.page'
+    content_type_app_name, content_type_model_name = page_type.split('.')
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
@@ -37,9 +49,70 @@ def browse(request, content_type_app_name, content_type_model_name, parent_page_
     return render_modal_workflow(request,
         'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',
         {
-            'content_type_app_name': content_type_app_name,
-            'content_type_model_name': content_type_model_name,
+            'allow_external_link': request.GET.get('allow_external_link'),
+            'allow_email_link': request.GET.get('allow_email_link'),
+            'querystring': get_querystring(request),
             'parent_page': parent_page,
             'pages': shown_pages,
+        }
+    )
+
+def external_link(request):
+    prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
+
+    if prompt_for_link_text:
+        form_class = ExternalLinkChooserWithLinkTextForm
+    else:
+        form_class = ExternalLinkChooserForm
+
+    if request.POST:
+        form = form_class(request.POST)
+        if form.is_valid():
+            return render_modal_workflow(request,
+                None, 'verdantadmin/choose_page/external_link_chosen.js',
+                {
+                    'url': form.cleaned_data['url'],
+                    'link_text': form.cleaned_data['link_text'] if prompt_for_link_text else form.cleaned_data['url']
+                }
+            )
+    else:
+        form = form_class()
+
+    return render_modal_workflow(request,
+        'verdantadmin/choose_page/external_link.html', 'verdantadmin/choose_page/external_link.js',
+        {
+            'querystring': get_querystring(request),
+            'allow_email_link': request.GET.get('allow_email_link'),
+            'form': form,
+        }
+    )
+
+def email_link(request):
+    prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
+
+    if prompt_for_link_text:
+        form_class = EmailLinkChooserWithLinkTextForm
+    else:
+        form_class = EmailLinkChooserForm
+
+    if request.POST:
+        form = form_class(request.POST)
+        if form.is_valid():
+            return render_modal_workflow(request,
+                None, 'verdantadmin/choose_page/external_link_chosen.js',
+                {
+                    'url': 'mailto:' + form.cleaned_data['email_address'],
+                    'link_text': form.cleaned_data['link_text'] if (prompt_for_link_text and form.cleaned_data['link_text']) else form.cleaned_data['email_address']
+                }
+            )
+    else:
+        form = form_class()
+
+    return render_modal_workflow(request,
+        'verdantadmin/choose_page/email_link.html', 'verdantadmin/choose_page/email_link.js',
+        {
+            'querystring': get_querystring(request),
+            'allow_external_link': request.GET.get('allow_external_link'),
+            'form': form,
         }
     )

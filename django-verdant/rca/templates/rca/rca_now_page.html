@@ -1,5 +1,9 @@
 {% extends "rca/base.html" %}
 
+{% block body_class %}
+    type-rcanow
+{% endblock %}
+
 {% block content %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
@@ -14,4 +18,7 @@
     {% include "rca/includes/sidebar.html" with showRCANow="true" %}
 {% endblock %}
 
-<!-- To dos: all the meta data stuff that is missing, limit other rca pages to 4 -->
+<!-- To dos:
+- all the meta data stuff that is missing
+- listing page image not feature image
+-->

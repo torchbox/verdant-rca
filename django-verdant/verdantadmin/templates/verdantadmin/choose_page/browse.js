@@ -1,5 +1,5 @@
 function(modal) {
-    $('a.navigate-pages', modal.body).click(function() {
+    $('a.navigate-pages, .link-types a', modal.body).click(function() {
         modal.loadUrl(this.href);
         return false;
     });

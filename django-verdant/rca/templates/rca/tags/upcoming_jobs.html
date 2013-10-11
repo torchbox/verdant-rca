@@ -1,0 +1,17 @@
+{% load pageurl %}
+{% if jobs %}
+    {% for job in jobs %}
+        <div class="other-jobs">
+            <a href="{% pageurl job %}">
+                <h2>{{ job.title }}</h2>
+                {% if job.programme %}
+                    <p> Programme: {{ job.get_programme_display }}</p>
+                {% elif job.school %}
+                    <p> School: {{ job.get_school_display }}</p>
+                {% elif job.other_department %}
+                    <p> Department: {{ job.other_department }}</p>
+                {% endif %}
+            </a>
+        </div>
+    {% endfor %}
+{% endif %}

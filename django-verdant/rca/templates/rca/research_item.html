@@ -1,15 +1,19 @@
 {% extends "rca/base.html" %}
 {% load rca_tags %}
 
+{% block body_class %}
+    type-research
+{% endblock %}
+
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-        {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" showDescription="True" %}
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
-    {% research_by_programme programme=self.programme %}
+    {% research_related programme=self.programme exclude=self %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
@@ -18,4 +22,7 @@
     {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
 {% endblock %}
 
-<!-- To dos: check related research is correct, exclude current research item from feed, make sure body works when description name is changed -->
+<!--
+To dos:
+- listing page image not feature image
+-->

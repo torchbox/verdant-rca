@@ -441,7 +441,7 @@ class BasePageChooserPanel(BaseChooserPanel):
         parent = page.get_parent() if page else None
         content_type = self.__class__.target_content_type()
 
-        return mark_safe("createPageChooser(fixPrefix('%s'), '%s/%s', %s);" % (
+        return mark_safe("createPageChooser(fixPrefix('%s'), '%s.%s', %s);" % (
             self.bound_field.id_for_label,
             content_type.app_label,
             content_type.model,
@@ -506,7 +506,7 @@ class BaseInlinePanel(EditHandler):
 
                 cls._formset_class = inlineformset_factory(
                     cls.base_model, cls.related_model,
-                    form=form_class,
+                    form=form_class, can_order=cls.can_order,
                     fk_name=cls.fk_name, extra=0
                 )
             else:
@@ -514,7 +514,7 @@ class BaseInlinePanel(EditHandler):
                 # there being widget overrides
                 cls._formset_class = inlineformset_factory(
                     cls.base_model, cls.related_model,
-                    form=VerdantAdminModelForm,
+                    form=VerdantAdminModelForm, can_order=cls.can_order,
                     fk_name=cls.fk_name, extra=0
                 )
 
@@ -537,12 +537,20 @@ class BaseInlinePanel(EditHandler):
         for subform in self.formset.forms:
             # override the DELETE field to have a hidden input
             subform.fields['DELETE'].widget = forms.HiddenInput()
+
+            # ditto for the ORDER field, if present
+            if self.can_order:
+                subform.fields['ORDER'].widget = forms.HiddenInput()
+
             self.children.append(
                 child_edit_handler_class(data, files, instance=subform.instance, form=subform)
             )
 
         empty_form = self.formset.empty_form
         empty_form.fields['DELETE'].widget = forms.HiddenInput()
+        if self.can_order:
+            empty_form.fields['ORDER'].widget = forms.HiddenInput()
+
         self.empty_child = child_edit_handler_class(data, files, instance=empty_form.instance, form=empty_form)
 
     template = "verdantadmin/edit_handlers/inline_panel.html"
@@ -567,7 +575,14 @@ class BaseInlinePanel(EditHandler):
             child.pre_save()
 
     def post_save(self):
-        self.formset.save()
+        if self.can_order:
+            self.formset.save(commit=False)
+            for i, form in enumerate(self.formset.ordered_forms):
+                form.instance.sort_order = i
+                form.instance.save()
+        else:
+            self.formset.save()
+
         for child in self.children:
             child.post_save()
 
@@ -579,6 +594,7 @@ def InlinePanel(base_model, related_model, panels=None, label='', help_text='', 
         'heading': label,
         'fk_name': fk_name,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
+        'can_order': ('sort_order' in related_model._meta.get_all_field_names()),
     })
 
 

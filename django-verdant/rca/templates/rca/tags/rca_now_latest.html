@@ -9,8 +9,11 @@
                     {% endif %}
                     <div class="content">
                         <h2 class="h8">{{ rcanow.title }}</h2>
-                        <!-- to do: populate this text -->
-                        <p class="bc5">Student name TBD</p>
+                        {% if rcanow.author %}
+                            <p class="bc5">{{ rcanow.author }}</p>
+                        {% else %}
+                            <p class="bc5"></p>{% comment %}make sure the spacing works out even without an author{% endcomment %}
+                        {% endif %}
                     </div>
                 </a>
             </li>

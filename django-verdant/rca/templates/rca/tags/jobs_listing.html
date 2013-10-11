@@ -1,0 +1,40 @@
+{% load pageurl %}
+{% if jobs %}
+	<section class="one-plus x-plus module" data-pagination=".pagination">
+    	<h2 class="module-title">Current vacancies</h2>
+    	<div class="item-container">
+    		<ul class="row">
+	    		{% for job in jobs %}
+	    			{% if forloop.counter0|divisibleby:"2" %}
+	    				<li class="newrow">
+	    			{% else %}
+	    				<li>
+	    			{% endif %}
+	    			<div class="content">
+	    				<a href="{% pageurl job %}"><h2 class="h5">{{ job.title }}</h2></a>
+	    				{% if page.school %}
+                    		<h3 class="bc3">{{ job.get_school_display }}}</h3>
+                    	{% endif %}
+	                    <ul class="details">
+	                    	{% if job.salary %}
+		                        <li class="col">
+		                            <h3 class="a2">Salary</h3>
+		                            <p class="bc4">{{ job.salary }}</p>
+		                        </li>
+	                        {% endif %}
+	                        <li class="col">
+	                            <h3 class="a2">Closing date</h3>
+	                            <p class="bc4">{{ job.closing_date|date:"j F Y" }}</p>
+	                        </li>
+	                    </ul>
+	                    {% if job.listing_intro %}
+	                    	<p class="newrow">{{ job.listing_intro }}</p>
+	                    {% endif %}
+	    			</div>
+	    		{% endfor %}
+    		</ul>
+    	</div>
+	</section>
+{% else %}
+	<p>There are no current vacancies.</p>
+{% endif %}

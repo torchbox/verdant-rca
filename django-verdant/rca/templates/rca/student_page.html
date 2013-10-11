@@ -1,0 +1,133 @@
+{% extends "rca/base.html" %}
+{% load image_tags rich_text rca_tags %}
+
+{% block body_class %}
+    type-student-profile
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    
+
+    <section class="two-tab row module">
+        <ul class="tab-nav tabs-2">
+            <li class="active"><a href="#tab1" class="t0">Info</a></li>
+            <li><a href="#tab2" class="t0">Selected work</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
+            <div class="tab-pane active flush" id="tab1">
+                <div class="profile">
+                    <ul class="four-cols">
+                        <li class="col first">
+                            {% image self.profile_image width-400 %}
+                        </li>
+                        <li class="col">
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_school_display }}</p>
+
+                            {% if self.degree_qualification or self.degree_subject %}
+                                <h3 class="a2 space">Course</h3>
+                                <p class="h7">{% if self.degree_qualification %}{{ self.get_degree_qualification_display }} {% endif %}{% if self.degree_subject %}{{ self.get_degree_subject_display }}{% endif %}{% if self.degree_year %}, {{ self.degree_year }}{% endif %}</p>
+                            {% endif %}
+
+                        </li>
+                        <li class="col">
+                            
+                            {% if self.email.all|length > 0  or self.phone.all|length > 0 or self.website.all|length > 0 or self.student_twitter_feed %}
+                            
+                                <h3 class="a2">Contact</h3>
+                                <ul>
+                                    {% with self.email.all as emails %}
+                                        {% if emails %}
+                                            {% for email in emails %}
+                                                <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                    {% with self.phone.all as phone_nos %}
+                                        {% if phone_nos %}
+                                            {% for phone_no in phone_nos %}
+                                                <li>{{ phone_no.phone }}</li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                    {% with self.website.all as websites %}
+                                        {% if websites %}
+                                            {% for website in websites %}
+                                                <li><a href="{{ website.website }}">{{ website.website }}</a></li>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                    {% if self.student_twitter_feed %}
+                                        <a href="http://www.twitter.com/{{ self.student_twitter_feed }}">&#64;{{ self.student_twitter_feed }}</a>
+                                    {% endif %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                        <li class="col last">
+                        </li>
+                    </ul>
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <div class="row">
+                            {% include "rca/includes/modules/contact-button.html" %}
+                            {% include "rca/includes/modules/share-button.html" %}
+                            </div>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            {{ self.statement|richtext }}
+                        </li>
+                    </ul>
+
+                    <div class="inner">
+
+                            <!-- research -->
+                            {% research_related person=self %}
+
+                            <!-- rca now -->
+                            {% rca_now_related author=self.title %}
+
+                            
+                    </div>
+                </div>
+            </div>
+
+
+
+            <h2 class="header"><a href="#tab2" class="a0">Work</a></h2>
+            <div class="tab-pane" id="tab2">
+                {% include "rca/includes/modules/carousel.html" %}
+                
+                <section class="row">
+                    <section class="body-text">
+                        {% if self.project_title %}
+                            <h2 class="h5">{{ self.project_title }}</h2>
+                        {% endif %}
+                        <span class="bc3">date TBD</span>
+                        {% if self.work_description %}
+                            {{ self.work_description|richtext }}
+                        {% endif %}
+                    </section>
+
+                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
+
+                </section>
+
+            </div>
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+{% endblock %}
+
+<!-- To dos:
+- make tabs optional if this is necessary
+- share and add to contacts
+- date when this field is confirmed
+- updates if required fields get changed -->

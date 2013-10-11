@@ -1,0 +1,199 @@
+{% extends "rca/base.html" %}
+{% load image_tags rich_text rca_tags %}
+
+{% block body_class %}
+    type-staff-profile
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    <section class="four-tab row module">
+
+        <ul class="tab-nav tabs-4">
+            <li class="active"><a href="#tab1" class="t0">Info</a></li>
+            <li><a href="#tab2" class="t0">Selected work</a></li>
+            <li><a href="#tab3" class="t0">Publications &amp; exhibitions</a></li>
+            <li><a href="#tab4" class="t0">Research</a></li>
+        </ul>
+
+        <div class="tab-content">
+
+            <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
+            <div class="tab-pane active flush" id="tab1">
+                <div class="profile">
+                    <ul class="four-cols">
+                        <li class="col first">
+                            {% if self.profile_image %}
+                                {% image self.profile_image width-400 %}
+                            {% endif %}
+                        </li>
+                        <li class="col">{% comment %} note closed within forloop {% endcomment %}
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_school_display }}</p>
+
+                            {% with self.roles.all as roles %}
+                                {% if roles %}
+                                    {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}
+                                        {% if forloop.counter == 1 %}
+                                            <h3 class="a2 space">Job</h3>
+                                        {% else %}
+                                            <li class="col">
+                                        {% endif %}
+                                        <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
+                                        <ul>
+                                            <li>{{ role.get_programme_display }}</li>
+                                            <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
+                                        </ul>
+                                    </li> {% comment %} close col {% endcomment %}
+                                    {% endfor %}
+                                {% else %}
+                                    </li>{% comment %}close col li if no roles{% endcomment %}
+                                {% endif %}
+                            {% endwith %}
+
+                    </ul>
+
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <div class="row">
+                                {% include "rca/includes/modules/contact-button.html" %}
+                                {% include "rca/includes/modules/share-button.html" %}
+                            </div>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            {{ self.intro|richtext }}
+                        </li>
+                    </ul>
+
+
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="a2">Biography</h3>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+
+                            {% with self.biography|paragraph_split:"</p>" as parts %}
+                                {{ parts.0|richtext }}
+                                {% if parts.1 %}
+                                    <a class="t2 showmore">Show more</a>
+                                    <div class="remainder">{{ parts.1|richtext }}</div>
+                                {% endif %}
+                            {% endwith %}
+                        </li>
+                    </ul>
+                    {% if self.practice %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="a2">Practice</h3>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                 {{ self.practice|richtext }}
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    {% with self.collaborations.all as collaborations %}
+                        {% if collaborations %}
+                            <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="a2">External collaborations</h3>
+                                </li>
+                                <li class="col col-9 last">
+                                    {% for collaboration in collaborations %}
+                                        
+                                        <h3 class="h7{% if forloop.counter != 1 %} space{% endif %}"><a href="{{ collaboration.link }}">{{ collaboration.title }}</a></h3>
+
+                                        {% if collaboration.text %}
+                                            <div class="body-text-style">{{ collaboration.text|richtext }}</div>
+                                        {% endif %}
+                                        {% if collaboration.date %}
+                                            <p class="date">{{ collaboration.date }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+
+            <h2 class="header"><a href="#tab2" class="a0">Selected work</a></h2>
+            <div class="tab-pane" id="tab2">
+                {% include "rca/includes/modules/carousel.html" %}
+            </div>
+
+            <h2 class="header"><a href="#tab3" class="a0">Publications &amp; exhibitions</a></h2>
+            <div class="tab-pane x-plus" id="tab3">
+                <div class="item-container">
+                    <ul class="two-cols two-cols-image-big">
+                        <!--<li class="newrow">
+                            <div class="image"><img src="http://instasrc.com/96x96/art" /></div>
+                            <div class="content">
+                                <h3 class="h6">Liva Lima</h3>
+                                <p class="bc3">Explored in the Kingsdale Festival is one of the first contemporary public buildings....<a href="#" class="bc5 caps">continue</a></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="image"><img src="http://instasrc.com/96x96/architecture" /></div>
+                            <div class="content">
+                                <h3 class="h6">Lima Morgan</h3>
+                                <p class="bc3">The UK to be built entirely of timber, with a timber core and stairs. its experimental structure consists of a combined horizontal and a vertical cantilever...<a href="#" class="bc5 caps">continue</a>
+                            </div>
+                        </li>
+                        <li class="newrow">
+                            <div class="image"><img src="http://instasrc.com/96x96/people" /></div>
+                            <div class="content">
+                                <h3 class="h6">Catrin Morgan Lima</h3>
+                                <p class="bc3">And is the third in a series of structural typology studies using CLt, the previous two being the shed...<a href="#" class="bc5 caps">continue</a></p>
+                            </div>
+                        </li>
+                        <li class="load-more-target">
+                            <div class="image"><img src="http://instasrc.com/96x96/art" /></div>
+                            <div class="content">
+                                <h3 class="h6">Liva Lima</h3>
+                                <p class="bc3">Explored in the Kingsdale Festival is one of the first contemporary public buildings....<a href="#" class="bc5 caps">continue</a></p>
+                            </div>
+                        </li>
+                        <li class="newrow">
+                            <div class="image"><img src="http://instasrc.com/96x96/architecture" /></div>
+                            <div class="content">
+                                <h3 class="h6">Lima Morgan</h3>
+                                <p class="bc3">The UK to be built entirely of timber, with a timber core and stairs. its experimental structure consists of a combined horizontal and a vertical cantilever...<a href="#" class="bc5 caps">continue</a>
+                            </div>
+                        </li>
+                        <li class="load-more"><a href="#">+</a></li>-->
+                    </ul>
+                </div>
+            </div>
+            <h2 class="header"><a href="#tab4" class="a0">Research</a></h2>
+            <div class="tab-pane" id="tab4">
+                
+                 <!-- research -->
+                {% research_related person=self %}
+
+                {% comment %}
+                {% include modules/four-plus.html %}
+                {% endcomment %}
+            </div>
+        </div>
+        
+    </section>
+    
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRandomStaff="true" %}
+{% endblock %}
+
+<!-- To dos:
+- are tabs optional?
+- share and add to contacts
+- publications and exhibitions once fields confirmed
+- research student feed on last tab once confirmed   -->

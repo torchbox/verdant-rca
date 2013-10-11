@@ -60,6 +60,7 @@ class Whitelister(object):
         'h4': allow_without_attributes,
         'h5': allow_without_attributes,
         'h6': allow_without_attributes,
+        'hr': allow_without_attributes,
         'i': allow_without_attributes,
         'img': attribute_rule({'src': check_url, 'width': True, 'height': True, 'alt': True}),
         'li': allow_without_attributes,

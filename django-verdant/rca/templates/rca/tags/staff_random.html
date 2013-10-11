@@ -1,0 +1,14 @@
+{% load pageurl image_tags %}
+{% if staff %}
+
+    {% for staff_member in staff %}
+        <div class="related-content-item">
+            <a href="{% pageurl staff_member %}">
+                <figure class="staff">
+                    {% if staff_member.profile_image %}<div class="image">{% image staff_member.profile_image width-400 %}</div>{% endif %}
+                    <figcaption>{{ staff_member.first_name }}<span>{{ staff_member.last_name }}</span></figcaption>
+                </figure>
+            </a>
+        </div>
+    {% endfor %}
+{% endif %}
