@@ -1,6 +1,6 @@
 function createSnippetChooser(id, contentType) {
     var chooserElement = $('#' + id + '-chooser');
-    var docTitle = chooserElement.find('.snippet-string');
+    var docTitle = chooserElement.find('.title');
     var input = $('#' + id);
 
     $('.action-choose', chooserElement).click(function() {

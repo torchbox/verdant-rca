@@ -1091,6 +1091,56 @@ JobsIndex.promote_panels = [
 ]
 
 
+
+# == Alumni index page ==
+
+class AlumniIndexRelatedLink(Orderable):
+    page = models.ForeignKey('rca.AlumniIndex', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
+class AlumniIndexAd(Orderable):
+    page = models.ForeignKey('rca.AlumniIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class AlumniIndex(Page, SocialFields, CommonPromoteFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+AlumniIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(AlumniIndex, AlumniIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(AlumniIndex, AlumniIndexAd, fk_name='page', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+AlumniIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+    ], 'Cross-page behaviour'),
+    
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 # == Alumni profile page ==
 
 class AlumniPage(Page, SocialFields, CommonPromoteFields):
