@@ -15,7 +15,10 @@
 	{% endif %}
 
 	<form id="programme-listing-filter" action="{% pageurl self %}" method="GET">
-		<input type="text" name="programme">
+		<label for="programme">programme:</label><input type="text" name="programme">
+		<label for="school">school:</label><input type="text" name="school">
+		<label for="location">location:</label><input type="text" name="location">
+		<label for="location_other">other location:</label><input type="text" name="location_other">
 		<input type="submit">
 	</form>
     

@@ -8,6 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'EventItemRelatedArea'
+        db.create_table(u'rca_eventitemrelatedarea', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_areas', to=orm['rca.EventItem'])),
+            ('programme', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+        ))
+        db.send_create_signal(u'rca', ['EventItemRelatedArea'])
+
         # Adding field 'EventItemCarouselItem.overlay_text'
         db.add_column(u'rca_eventitemcarouselitem', 'overlay_text',
                       self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
@@ -25,6 +33,9 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
+        # Deleting model 'EventItemRelatedArea'
+        db.delete_table(u'rca_eventitemrelatedarea')
+
         # Deleting field 'EventItemCarouselItem.overlay_text'
         db.delete_column(u'rca_eventitemcarouselitem', 'overlay_text')
 
@@ -184,6 +195,12 @@ class Migration(SchemaMigration):
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'time_from': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'time_to': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+        },
+        u'rca.eventitemrelatedarea': {
+            'Meta': {'object_name': 'EventItemRelatedArea'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_areas'", 'to': u"orm['rca.EventItem']"}),
+            'programme': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.eventitemrelatedprogramme': {
             'Meta': {'object_name': 'EventItemRelatedProgramme'},
@@ -818,7 +835,6 @@ class Migration(SchemaMigration):
             'work_awards': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'work_description': ('core.fields.RichTextField', [], {'blank': 'True'}),
             'work_location': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'work_sponsors': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'work_type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.studentpageawards': {
@@ -887,6 +903,13 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'collaborators'", 'to': u"orm['rca.StudentPage']"}),
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'rca.studentpageworksponsors': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'StudentPageWorkSponsors'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sponsors'", 'to': u"orm['rca.StudentPage']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'sponsors': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'taggit.tag': {
             'Meta': {'object_name': 'Tag'},

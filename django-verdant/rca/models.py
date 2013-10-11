@@ -676,6 +676,12 @@ class EventItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
+class EventItemRelatedArea(models.Model):
+    page = models.ForeignKey('rca.EventItem', related_name='related_areas')
+    programme = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+
+    panels = [FieldPanel('area')]
+
 class EventItemDatesTimes(Orderable):
     page = models.ForeignKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
@@ -764,6 +770,7 @@ EventItem.promote_panels = [
    
     InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
     InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
+    InlinePanel(EventItem, EventItemRelatedArea, label="Related areas"),
 ]
 
 
@@ -790,9 +797,17 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         events = self.future_events()
 
         programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        location = request.GET.get('location')
+        location_other = request.GET.get('location_other')
         if programme:
             events = events.filter(related_programmes__programme=programme)
-
+        if school:
+            events = events.filter(related_schools__school=school)
+        if location:
+            events = events.filter(location=location)
+        if location_other:
+            events = events.filter(location_other=location_other)
         if request.is_ajax():
             return render(request, "rca/includes/events_listing.html", {
                 'self': self,
