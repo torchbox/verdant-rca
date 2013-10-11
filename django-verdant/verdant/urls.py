@@ -11,6 +11,7 @@ from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
 
+from rca import app_urls
 
 admin.autodiscover()
 
@@ -32,6 +33,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(verdantadmin_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),
+
+    url(r'^app/', include(app_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
