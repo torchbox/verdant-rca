@@ -1371,6 +1371,13 @@ class StudentPageWorkCollaborator(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPageWorkSponsors(Orderable):
+    page = models.ForeignKey('rca.StudentPage', related_name='sponsors')
+    sponsors = models.CharField(max_length=255, blank=True)
+    panels = [FieldPanel('sponsors')]
+
+
+
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -1385,7 +1392,6 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True)
-    work_sponsors = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
@@ -1415,6 +1421,7 @@ StudentPage.content_panels = [
     FieldPanel('work_type'),
     FieldPanel('work_location'),
     InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
+    InlinePanel(StudentPage, StudentPageWorkSponsors, label="Work sponsors"),
     FieldPanel('work_awards'),
     FieldPanel('work_sponsors'),
     FieldPanel('twitter_feed'),
