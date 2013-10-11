@@ -83,29 +83,44 @@ class ChildFormsetTest(TestCase):
         self.assertEqual(5, len(band_members_formset.forms))
         self.assertEqual('John Lennon', band_members_formset.forms[0].instance.name)
 
-    def _test_incoming_formset_data(self):
+    def test_incoming_formset_data(self):
         beatles = Band(name='The Beatles', members=[
             BandMember(name='George Harrison'),
         ])
         BandMembersFormset = childformset_factory(Band, BandMember, extra=3)
 
         band_members_formset = BandMembersFormset({
-            'members-TOTAL_FORMS': 3,
-            'members-INITIAL_FORMS': 1,
-            'members-MAX_NUM_FORMS': 1000,
+            'form-TOTAL_FORMS': 4,
+            'form-INITIAL_FORMS': 1,
+            'form-MAX_NUM_FORMS': 1000,
 
-            'members-0-name': 'John Lennon',
-            'members-0-band': '',
-            'members-0-id': '',
+            'form-0-name': 'George Harrison',
+            'form-0-DELETE': 'form-0-DELETE',
+            'form-0-id': '',
 
-            'members-1-name': 'Paul McCartney',
-            'members-1-band': '',
-            'members-1-id': '',
+            'form-1-name': 'John Lennon',
+            'form-1-id': '',
 
-            'members-2-name': '',
-            'members-2-band': '',
-            'members-2-id': '',
+            'form-2-name': 'Paul McCartney',
+            'form-2-id': '',
+
+            'form-3-name': '',
+            'form-3-id': '',
         }, instance=beatles)
 
         self.assertTrue(band_members_formset.is_valid())
-        band_members_formset.save(commit=False)
+        members = band_members_formset.save(commit=False)
+
+        self.assertEqual(2, len(members))
+        self.assertEqual('John Lennon', members[0].name)
+
+        self.assertEqual(2, beatles.members.count())
+        self.assertEqual('John Lennon', beatles.members.all()[0].name)
+
+        # should not exist in the database yet
+        self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+        beatles.save()
+        # this should create database entries
+        self.assertTrue(Band.objects.filter(name='The Beatles').exists())
+        self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
