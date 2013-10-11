@@ -40,7 +40,7 @@ function makeRichTextEditable(id) {
 }
 
 function insertRichTextDeleteControl(elem) {
-    var a = $('<a class="delete-control">Delete</a>');
+    var a = $('<a class="icon icon-cross text-replace delete-control">Delete</a>');
     $(elem).addClass('rich-text-deletable').prepend(a);
     a.click(function() {
         $(elem).fadeOut(function() {
