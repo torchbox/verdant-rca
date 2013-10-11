@@ -1,10 +1,14 @@
 {% comment %}
-	Loads an h1 major heading and makes sure the first word is grey
+	Loads an h1 major heading and makes sure the first word is grey (if more than one word)
 {% endcomment %}
 
 <h1 class="h1 major">
-	{% with self.title.split as titleword %}
-	    <span class="medium-grey">{{ titleword|slice:":1"|join:" " }}</span> 
-	    {{ titleword|slice:"1:"|join:" " }}
-	{% endwith %}
+	{% if self.title.split|length == 1 %}
+		{{ self.title }}
+	{% else %}
+		{% with self.title.split as titleword %}
+		    <span class="medium-grey">{{ titleword|slice:":1"|join:" " }}</span> 
+		    {{ titleword|slice:"1:"|join:" " }}
+		{% endwith %}
+	{% endif %}
 </h1>

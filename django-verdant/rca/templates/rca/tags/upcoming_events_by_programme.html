@@ -14,7 +14,7 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl event %}">
-                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{{ event.location }}</span></h3>
+                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{% if event.location_other %}{{ event.location_other }}{% elif event.location %}{{ event.get_location_display }}{% endif %}</span></h3>
                             <p class="h7">{{ event.title }}</p>
                             {% if event.audience %}<p class="meta a2">{{ event.audience }}</p>{% endif %}
                         </a>  

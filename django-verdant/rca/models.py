@@ -661,15 +661,8 @@ class EventItemSpeaker(Orderable):
     ]
     
 
-class EventItemCarouselItem(Orderable):
+class EventItemCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.EventItem', related_name='carousel_items')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    embedly_url = models.URLField(blank=True)
-
-    panels=[
-        ImageChooserPanel('image'), 
-        FieldPanel('embedly_url'),
-    ]
 
 class EventItemRelatedSchool(models.Model):
     page = models.ForeignKey('rca.EventItem', related_name='related_schools')
@@ -721,6 +714,15 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     future_objects = FutureEventItemManager()
+
+    def feature_image(self):
+        try:
+            return self.carousel_items.filter(image__isnull=False)[0].image
+        except IndexError:
+            try:
+                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
+            except IndexError:
+                return None
 
 
 EventItem.content_panels = [
@@ -783,6 +785,24 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
 
     def future_events(self):
         return EventItem.future_objects.filter(path__startswith=self.path)
+
+    def serve(self, request):
+        events = self.future_events()
+
+        programme = request.GET.get('programme')
+        if programme:
+            events = events.filter(related_programmes__programme=programme)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/events_listing.html", {
+                'self': self,
+                'events': events
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'events': events
+            })
 
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
