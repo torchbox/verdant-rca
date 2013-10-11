@@ -74,8 +74,10 @@ input, textarea, select, .richtext, .tagit{
 }
 
 input[type=radio],input[type=checkbox]{
+    .border-radius(0);
     cursor:pointer;
     float:left;
+    border:0;
 }
 
 input[type=radio]{
@@ -86,6 +88,7 @@ input[type=radio]{
 }
 
 input[type=radio]:before{
+    .border-radius(100%);
     font-family: verdant; 
     font-style: normal;
     text-align:center;
@@ -100,7 +103,6 @@ input[type=radio]:before{
     line-height:20px;
     background-color:white;
     border:1px solid lighten(@color-grey, 50%);
-    .border-radius(100%);
     color:#EEE;
 }
 input[type=radio]:checked:before{
@@ -415,6 +417,7 @@ ul.tagit li.tagit-choice-editable{
     border:1px solid @color-grey-lighter;
     padding:0.2em 0.5em;
     color:inherit;
+    line-height:2em;
 }
 .tagit-label:before,
 .suggested-tag:before{
