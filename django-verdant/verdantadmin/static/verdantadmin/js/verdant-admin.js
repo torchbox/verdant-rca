@@ -18,6 +18,7 @@ function makeRichTextEditable(id) {
 
     richText.hallo({
         toolbar: 'halloToolbarFixed',
+        toolbarcssClass: 'testy',
         plugins: {
             'halloformat': {},
             'halloheadings': {formatBlocks: ["p", "h2", "h3", "h4", "h5"]},
@@ -26,7 +27,7 @@ function makeRichTextEditable(id) {
             'halloreundo': {},
             'halloverdantimage': {},
             'halloverdantlink': {},
-            'halloverdantdoclink': {}
+            'halloverdantdoclink': {},
         }
     }).bind('hallomodified', function(event, data) {
         input.val(data.content);
