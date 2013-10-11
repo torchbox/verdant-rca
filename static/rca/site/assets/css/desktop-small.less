@@ -321,36 +321,16 @@ footer {
 }
 
 .type-event {
-}
-.type-events-index,
-.type-jobs-index {
-    .one-plus {
-        ul{
-            margin:0;
-        }
-        li {
-            .column(6, @grid-gutter-width * 2);
-            &.newrow {
-                padding-left: 0;
-            }
-            &:not(.newrow) {
-                padding-right: 0;
-            }
-        }
-    }
+
 }
 
 .type-events-index {
-    .one-plus {
-        li.first {
-            .column(2, @grid-gutter-width/2, 6);
-            background-color: @color-light-pink;
-            padding: @spacing-half;
-        }
-        li.second {
-            margin-left: 8.33%; /* one column width */
-            .column(3.5, @grid-gutter-width/2, 6);
-        }
+    /* events index styles for the columns under the image move to mobile at this resolution.
+    This overrides the desktop styles shared with .one-plus so they also revert to mobile at this res */
+    .one-plus li {
+        width: 100%;
+        padding: 0 8px;
+        display:list-item;
     }
 }
 
@@ -359,6 +339,7 @@ footer {
         li.col {
             .column(3, @grid-gutter-width/2, 6);
             padding-left: 0;
+            min-width: 200px;
         }
     }
 }
