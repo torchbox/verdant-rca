@@ -1380,17 +1380,19 @@ class StudentPageContactsWebsite(Orderable):
 class StudentPageCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
 
+
 class StudentPageWorkCollaborator(Orderable):
     page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
     name = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('name')]
 
-class StudentPageWorkSponsors(Orderable):
-    page = models.ForeignKey('rca.StudentPage', related_name='sponsors')
-    sponsors = models.CharField(max_length=255, blank=True)
-    panels = [FieldPanel('sponsors')]
 
+class StudentPageWorkSponsor(Orderable):
+    page = models.ForeignKey('rca.StudentPage', related_name='sponsor')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
 
 
 class StudentPage(Page, SocialFields, CommonPromoteFields):
@@ -1436,9 +1438,8 @@ StudentPage.content_panels = [
     FieldPanel('work_type'),
     FieldPanel('work_location'),
     InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
-    InlinePanel(StudentPage, StudentPageWorkSponsors, label="Work sponsors"),
+    InlinePanel(StudentPage, StudentPageWorkSponsor, label="Work sponsor"),
     FieldPanel('work_awards'),
-    FieldPanel('work_sponsors'),
     FieldPanel('twitter_feed'),
     FieldPanel('first_name'),
     FieldPanel('last_name'),
