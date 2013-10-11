@@ -835,6 +835,7 @@
     margin-bottom:@grid-gutter-width;
 
     li{
+        .column(12);
         padding-bottom:@grid-gutter-width;
     }
 
@@ -1183,12 +1184,9 @@
 .filters{
     font-family:@font-family-benton;
     .row();
-
+        
     li{
-        border-left:1px solid @color-divider;
-    }
-    li:first-child{
-        border:0;
+        margin-bottom:1px;
     }
 
     select, .label{
@@ -1252,13 +1250,7 @@
         }
     }
 
-    &.one-filters{
-        .two,
-        .three,
-        .four {
-            display: none;
-        }
-    }
+    &.one-filters{}
 
     &.two-filters{}
 

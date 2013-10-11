@@ -1,6 +1,6 @@
 $(function(){
 
-	Harvey.attach('screen and (max-width:768px)', {
+	Harvey.attach('screen and (max-width:767px)', {
 		setup: function(){}, // called when the query becomes valid for the first time
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({

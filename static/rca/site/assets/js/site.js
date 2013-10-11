@@ -178,10 +178,8 @@ $(function(){
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
-            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
-                pager: function(){return $(this).hasClass('paginated')}
-            });
-            $(this).data('carousel', true)
+            applyCarousel($('.carousel', $($(this).attr('href'))));
+            $(this).data('carousel', true);
         }
     });   
 

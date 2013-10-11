@@ -141,7 +141,7 @@ $(function(){
     showHide('.showsearch', 'form.search');
     showHide('.filters .checkbox .label', '.filters .checkbox .checkboxes');
     showHideDialogue();
-    showHideSlide('.profile .showmore', '.profile .remainder', '.profile .remainder');
+    showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
 
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
@@ -178,10 +178,8 @@ $(function(){
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
-            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
-                pager: function(){return $(this).hasClass('paginated')}
-            });
-            $(this).data('carousel', true)
+            applyCarousel($('.carousel', $($(this).attr('href'))));
+            $(this).data('carousel', true);
         }
     });   
 
