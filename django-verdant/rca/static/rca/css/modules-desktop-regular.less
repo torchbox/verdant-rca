@@ -13,5 +13,278 @@
 
 /**
  * Contents
- * Add more here...
+ * Scrolling of two plus and three plus items and mobile sizes
+ * Events
+ * One plus
+ * Two plus
+ * Three plus
+ * Four plus
+ * Five plus
+ * Speakers
+ * Filters
+ * Packery
+ * Gallery
  */
+
+
+/**
+ *$Scrolling of two plus and three plus items and mobile sizes. 
+ */
+
+.events, .two-plus, .three-plus, .four-plus, .five, .five-plus, .speakers{
+    overflow:visible;
+    ul{
+        white-space:normal;
+    }
+    ul li{
+        display:inline;
+        white-space:normal;
+        float:left;
+    }
+
+    .load-more{
+        display:initial;
+    }
+}
+
+
+/**
+ *$Event block
+ */
+
+.events{ 
+    margin-bottom:0 !important;
+    .row{
+        margin:0;
+    }
+    ul{
+        background-color:@color-light-pink;
+    }
+    li{
+        .column(4, @grid-gutter-width);
+        padding-left:74px;
+        margin-bottom:@grid-gutter-width;
+
+        &:before{
+            margin-left:-64px;
+        }        
+    }
+    .load-more{
+        border-left:0;
+        margin-left:-1px;
+    }
+}
+
+
+/**
+ *$One plus
+ */
+.one-plus{
+    ul {
+        .row-flush();
+    }
+    li{
+        .column(6);       
+    }
+    .first{
+        clear:left;
+    }
+    .load-more{
+        display:initial;
+    }
+}
+
+/**
+ *$Two plus
+ */
+.two-plus{
+    li{
+        .column(4);         
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+}
+
+/**
+ *$Three plus
+ */
+.three-plus{
+    li{
+        .column(3); 
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+    .a3, .a4{
+        margin:0;
+        font-size: @font-size-11;
+    }
+}
+.col9 .three-plus li{
+    .column(2, @grid-gutter-width/2, 9);
+}
+
+/**
+ *$Four plus
+ */
+.four-plus{
+    li{
+        .column(2);
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+   
+}
+
+/**
+ *$Five plus
+ */
+.five-plus{
+    li{
+        .column(2);
+    }
+
+    .image{
+        height:auto;
+    }
+
+    .image{
+        margin-bottom:@grid-gutter-width/2;
+    }
+    .a3, .a4{
+        margin:0;
+        font-size: @font-size-11;
+    }
+}
+
+/**
+ *$Speakers
+ */
+.speakers {
+    margin-left: @spacing-two;
+    ul {
+        margin-left: @grid-gutter-width * -1;
+    }
+    li {
+        .column(2, @grid-gutter-width, 4);
+        margin-bottom: @spacing-one;
+    }
+    .h8, .bc5 {
+        font-size: @font-size-12;
+    }
+}
+
+
+/**
+ * $Styles used to prepare a group of items for appearance with the + button
+ */
+.x-plus{
+    /* because all LI items in an x-plus have bottom padding, margin of proceeding elements needs to be catered for */
+    margin-bottom:-@grid-gutter-width;
+
+    li{
+        .transition(opacity 0.5s ease);
+        opacity:1;
+        padding-bottom:@grid-gutter-width;
+    }
+    li.hidden{
+        display:none;
+        opacity:0;
+    }
+    li.fade-in-before{
+        opacity:0;
+    }
+    li.fade-in-after{
+        opacity:1;
+    }
+
+    &.expanded .load-more {
+        a:after{
+            background-position:-377px -996px;
+        }
+
+        a:hover:after{
+            background-position:-377px -441px;
+        }
+    }
+}
+
+
+/**
+ * $Filters
+ */
+
+.filters{
+    .row();
+    padding-bottom:4em;
+    position:relative;
+
+    ul{
+        position:absolute;
+        width:100%;
+    }
+
+    li{
+    	border-left:1px solid @color-divider;
+        .column(3);
+    }
+    li:first-child{
+    	border-left:0;
+    }
+
+    .checkboxes{}
+
+    .select{}
+
+    &.one-filters{
+        li {
+            .column(6);
+        }
+    }
+
+    &.two-filters{}
+
+    &.four-filters{}   
+
+    li{
+        padding:0;
+    }
+}
+
+
+/**
+ * $Packery
+ */
+
+.packery{
+    .single{
+        .column(2);
+    }
+    .double{
+        .column(4);
+    }
+    .three-quarters{
+        .column(8);
+    }
+    .full{
+        .column(12);
+    }
+}
+
+/**
+ * $Gallery
+ */
+
+.gallery {
+    li {
+        &.portrait{
+            .column(3);
+        }
+        &.landscape{
+            .column(6);
+        }
+    }
+}
+
