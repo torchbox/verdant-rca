@@ -1601,9 +1601,8 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
-    profile_image = models.ForeignKey('rca.RcaImage', related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', related_name='+', blank=True)
     statement = RichTextField(blank=True)
-    project_title = models.CharField(max_length=255, blank=True)
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
@@ -1633,7 +1632,6 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
     FieldPanel('statement'),
     InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
-    FieldPanel('project_title'),
     FieldPanel('work_description'),
     FieldPanel('work_type'),
     FieldPanel('work_location'),
