@@ -15,6 +15,8 @@ from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 from verdantsnippets.models import register_snippet
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -993,6 +995,18 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
             events = events.filter(related_areas__area=area)
         if audience:
             events = events.filter(audience=audience)
+
+        page = request.GET.get('page')
+        paginator = Paginator(events, 10) # Show 10 events per page
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            events = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            events = paginator.page(paginator.num_pages)
+
         if request.is_ajax():
             return render(request, "rca/includes/events_listing.html", {
                 'self': self,
@@ -1604,6 +1618,7 @@ StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('school'),
     FieldPanel('programme'),
+    FieldPanel('specialism'),
     FieldPanel('degree_qualification'),
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),

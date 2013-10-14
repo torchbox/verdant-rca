@@ -15,23 +15,48 @@
 	{% endif %}
 
 	<form id="programme-listing-filter" action="{% pageurl self %}" method="GET">
-		<label for="programme">programme:</label><input type="text" name="programme">
-		<label for="school">school:</label><input type="text" name="school">
-		<label for="location">location:</label><input type="text" name="location">
+		<fieldset>
+			<legend>School</legend>
+			{% for key, value in global_schools %} 
+			  	<input type="radio" name="school" value="{{ key }}"><label for="{{ key }}">{{ value }}</label>
+			{% endfor %}
+		</fieldset>
+		<fieldset>
+			<legend>Programme</legend>
+			{% for key, value in global_programmes %} 
+			  	<input type="radio" name="programme" value="{{ key }}"><label for="{{ key }}">{{ value }}</label>
+			{% endfor %}
+		</fieldset>
+		<fieldset>
+			<legend>Location</legend>
+			{% for key, value in global_locations %} 
+			  	<input type="radio" name="location" value="{{ key }}"><label for="{{ key }}">{{ value }}</label>
+			{% endfor %}
+		</fieldset>
 		<label for="location_other">other location:</label><input type="text" name="location_other">
-		<label for="area">area:</label><input type="text" name="area">
-		<label for="audience">audience:</label><input type="text" name="audience">
-		<label for="past">upcoming or past:</label><input type="text" name="past">
+		<fieldset>
+			<legend>Area</legend>
+			{% for key, value in global_areas %} 
+			  	<input type="radio" name="area" value="{{ key }}"><label for="{{ key }}">{{ value }}</label>
+			{% endfor %}
+		</fieldset>
+		<fieldset>
+			<legend>Audience</legend>
+			{% for key, value in global_audiences %} 
+			  	<input type="radio" name="audience" value="{{ key }}"><label for="{{ key }}">{{ value }}</label>
+			{% endfor %}
+		</fieldset>
+		<fieldset>
+			<legend>Upcoming?</legend>
+			<input type="radio" name="past" value="upcoming" selected="selected"><label for="past">past</label>
+			<input type="radio" name="past" value="past"><label for="past">past</label>
+		</fieldset>
 		<input type="submit">
 	</form>
     
     <div id="listing">
     	{% include "rca/includes/events_listing.html" %}
 	</div>
-
-	<ul class="pagination">
-		<li class="next"><a href="events-index.html">Next</a></li>
-	</ul>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
@@ -48,4 +73,7 @@
 <!-- To dos
 	- listing image not feature image
 	- ads
+	- js when selecting each radio button
+	- styling of filters
+	- values to be set on radio buttons based on filters
 -->
