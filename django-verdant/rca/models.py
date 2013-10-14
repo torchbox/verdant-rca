@@ -866,6 +866,13 @@ class FutureEventItemManager(models.Manager):
             params=[date.today(), date.today()]
         )
 
+class PastEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(PastEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from <= %s OR date_to <= %s)"],
+            params=[date.today(), date.today()]
+        )
+
 class EventItem(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
@@ -883,6 +890,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     future_objects = FutureEventItemManager()
+    past_objects = PastEventItemManager()
 
     def feature_image(self):
         try:
@@ -956,13 +964,23 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
     def future_events(self):
         return EventItem.future_objects.filter(path__startswith=self.path)
 
-    def serve(self, request):
-        events = self.future_events()
+    def past_events(self):
+        return EventItem.past_objects.filter(path__startswith=self.path)
 
+    def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         location = request.GET.get('location')
         location_other = request.GET.get('location_other')
+        area = request.GET.get('area')
+        audience = request.GET.get('audience')
+        past = request.GET.get('past')
+
+        if past=='past':
+            events = self.past_events()
+        else:
+            events = self.future_events()
+
         if programme:
             events = events.filter(related_programmes__programme=programme)
         if school:
@@ -971,6 +989,10 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
             events = events.filter(location=location)
         if location_other:
             events = events.filter(location_other=location_other)
+        if area:
+            events = events.filter(related_areas__area=area)
+        if audience:
+            events = events.filter(audience=audience)
         if request.is_ajax():
             return render(request, "rca/includes/events_listing.html", {
                 'self': self,
