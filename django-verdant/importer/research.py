@@ -166,6 +166,7 @@ def doimport(**kwargs):
                         ri.school = SCHOOLS[department]
                         break
                     except KeyError:
+                        # munge the title, as some of them are unicode, and raw_input doesn't like that
                         simpletitle = str(ri.title.encode('utf-8').decode('ascii', 'ignore'))
                         department = raw_input(u"Eprint id: %s\nResearch item: %s\nClaimed programme: %s\n\nPlease type the real name of the programme or leave blank:\n" % (eprintid, simpletitle, department))
                 if save:

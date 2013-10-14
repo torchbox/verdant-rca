@@ -37,7 +37,7 @@ from importer.constants import DEGREE_SUBJECTS, SCHOOLS, PROGRAMMES, PROGRAMME_S
 
 #NEWSINDEX = NewsIndex.objects.all()[0]
 PATH = 'importer/export_2012_2_pretty.xml'
-IMAGE_PATH = 'importer/show_2012_images/'
+IMAGE_PATH = 'importer/show_images/'
 SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
 PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
 YEARS = [
