@@ -1189,7 +1189,7 @@
         margin-bottom:1px;
     }
 
-    select, .label{
+    .label{
         border-radius:0;
         font-family:inherit;
         -webkit-appearance: none;
@@ -1206,6 +1206,10 @@
             color:white;
         }
     }
+    .expanded .label{
+        background-color:@color-pink;
+        color:white;
+    }
 
     select, label, .label{
         text-transform:uppercase;
@@ -1214,70 +1218,49 @@
   
     .label{
         margin:0;
+        position:relative;
+
+        &:after{
+            position:absolute;
+            top:0;
+            bottom:0;
+            right:@grid-gutter-width;
+            margin:auto;
+            content:"";
+            display:block;
+            .sprite-load(-53px, -1178px, 27px, 14px);
+        }
+        &:hover:after{
+            background-position:-53px -623px;
+        }
     }
 
-    .checkbox{
-        .label{
-            position:relative;
-        }
-        .checkboxes{
-            background-color:rgba(255,255,255,0.9);
-            margin-left:-1px;
-            display:none;
-            padding:@grid-gutter-width;
+    .options{
+        background-color:rgba(255,255,255,0.95);
+        margin-left:-1px;
+        display:none;
+        padding:@grid-gutter-width;
 
-            label{
-                display:block;
-                font-family:@font-family-benton-light;
-                font-size:0.8em;
-                padding:@grid-gutter-width/4 0 @grid-gutter-width/4 20px;
-            }
-            input{
-                float:left;
-                margin-left:-20px;
-            }
-
-            &.expanded{
-                display:block;
-            }
+        label{
+            display:block;
+            font-family:@font-family-benton-light;
+            font-size:0.8em;
+            padding:@grid-gutter-width/4 0 @grid-gutter-width/4 22px;
         }
+        input{
+            float:left;
+            margin-left:-20px;
+        }
+    }
+
+    .expanded .options{
+        display:block;
     }
 
     .select{
         position:relative;
         label{
             .visuallyhidden();
-        }
-    }
-
-    &.one-filters{}
-
-    &.two-filters{}
-
-    &.four-filters{}   
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {  
-    .filters{
-        select{
-            padding-right:37px;
-        }
-
-        .checkbox .label, .select{           
-            &:after{
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:@grid-gutter-width;
-                margin:auto;
-                content:"";
-                display:block;
-                .sprite-load(-53px, -1178px, 27px, 14px);
-            }
-            &:hover:after{
-                background-position:-53px -623px;
-            }
-            
         }
     }
 }

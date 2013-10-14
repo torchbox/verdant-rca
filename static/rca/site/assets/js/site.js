@@ -139,9 +139,9 @@ $(function(){
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
-    showHide('.filters .checkbox .label', '.filters .checkbox .checkboxes');
     showHideDialogue();
     showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
+    
 
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
@@ -352,8 +352,14 @@ $(function(){
         for(i = 0; i < rowArray.length; i++){
             $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
         }
-    }) 
+    })
 
+    /* Search filters */
+    $('.filters .label').click(function(){
+        $(this).parent().toggleClass('expanded');
+        $(this).parent().siblings().removeClass('expanded');
+    });
+    
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 });
