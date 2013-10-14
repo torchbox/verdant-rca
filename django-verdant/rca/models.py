@@ -1618,6 +1618,7 @@ StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('school'),
     FieldPanel('programme'),
+    FieldPanel('specialism'),
     FieldPanel('degree_qualification'),
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),

@@ -21,15 +21,24 @@
                 <div class="profile">
                     <ul class="four-cols">
                         <li class="col first">
-                            {% image self.profile_image width-400 %}
+                            {% if self.profile_image %}
+                                {% image self.profile_image width-400 %}
+                            {% else %}
+                                default image chris to supply
+                            {% endif %}
                         </li>
                         <li class="col">
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_school_display }}</p>
 
                             {% if self.degree_qualification or self.degree_subject %}
-                                <h3 class="a2 space">Course</h3>
+                                <h3 class="a2 space">Programme</h3>
                                 <p class="h7">{% if self.degree_qualification %}{{ self.get_degree_qualification_display }} {% endif %}{% if self.degree_subject %}{{ self.get_degree_subject_display }}{% endif %}{% if self.degree_year %}, {{ self.degree_year }}{% endif %}</p>
+                            {% endif %}
+
+                            {% if self.specialism %}
+                                <h3 class="a2 space">Specialism</h3>
+                                <p class="h7">{{ self.specialism }}</p>
                             {% endif %}
 
                         </li>
@@ -89,7 +98,6 @@
 
                             <!-- rca now -->
                             {% rca_now_related author=self.title %}
-
                             
                     </div>
                 </div>
@@ -103,10 +111,6 @@
                 
                 <section class="row">
                     <section class="body-text">
-                        {% if self.project_title %}
-                            <h2 class="h5">{{ self.project_title }}</h2>
-                        {% endif %}
-                        <span class="bc3">date TBD</span>
                         {% if self.work_description %}
                             {{ self.work_description|richtext }}
                         {% endif %}
@@ -127,7 +131,6 @@
 {% endblock %}
 
 <!-- To dos:
-- make tabs optional if this is necessary
-- share and add to contacts
-- date when this field is confirmed
-- updates if required fields get changed -->
+- default profile image if one is not supplied
+- make tabs optional
+- share and add to contacts -->
