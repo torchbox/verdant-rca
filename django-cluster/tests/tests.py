@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Band, BandMember
 from cluster.forms import transientmodelformset_factory, childformset_factory, ClusterForm
+from django.forms import Textarea
 
 
 class ClusterTest(TestCase):
@@ -162,6 +163,14 @@ class ClusterFormTest(TestCase):
 
         self.assertEqual(5, len(form.formsets['members'].forms))
 
+    def test_empty_cluster_form(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        form = BandForm()
+        self.assertEqual(3, len(form.formsets['members'].forms))
+
     def test_incoming_form_data(self):
         class BandForm(ClusterForm):
             class Meta:
@@ -205,3 +214,18 @@ class ClusterFormTest(TestCase):
         # this should create database entries
         self.assertTrue(Band.objects.filter(name='The Beatles').exists())
         self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_widget_overrides(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+                widgets = {
+                    'name': Textarea(),
+                    'members': {
+                        'name': Textarea()
+                    }
+                }
+
+        form = BandForm()
+        self.assertEqual(Textarea, type(form['name'].field.widget))
+        self.assertEqual(Textarea, type(form.formsets['members'].forms[0]['name'].field.widget))
