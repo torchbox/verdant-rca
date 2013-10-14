@@ -97,6 +97,11 @@ class ClusterFormMetaclass(ModelFormMetaclass):
             # We are defining ClusterForm itself.
             parents = None
 
+        # grab any formfield_callback that happens to be defined in attrs -
+        # so that we can pass it on to child formsets - before ModelFormMetaclass deletes it.
+        # BAD METACLASS NO BISCUIT.
+        formfield_callback = attrs.get('formfield_callback')
+
         new_class = super(ClusterFormMetaclass, cls).__new__(cls, name, bases, attrs)
         if not parents:
             return new_class
@@ -134,7 +139,8 @@ class ClusterFormMetaclass(ModelFormMetaclass):
             else:
                 form_class = ModelForm
 
-            formset = childformset_factory(opts.model, rel.model, form=form_class, fk_name=rel.field.name)
+            formset = childformset_factory(opts.model, rel.model,
+                form=form_class, formfield_callback=formfield_callback, fk_name=rel.field.name)
             formsets[rel_name] = formset
 
         new_class.formsets = formsets

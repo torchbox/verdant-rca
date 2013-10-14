@@ -1,7 +1,7 @@
 from django.test import TestCase
 from .models import Band, BandMember
 from cluster.forms import transientmodelformset_factory, childformset_factory, ClusterForm
-from django.forms import Textarea
+from django.forms import Textarea, CharField
 
 
 class ClusterTest(TestCase):
@@ -227,5 +227,20 @@ class ClusterFormTest(TestCase):
                 }
 
         form = BandForm()
+        self.assertEqual(Textarea, type(form['name'].field.widget))
+        self.assertEqual(Textarea, type(form.formsets['members'].forms[0]['name'].field.widget))
+
+    def test_formfield_callback(self):
+
+        def formfield_for_dbfield(db_field, **kwargs):
+            # a particularly stupid formfield_callback that just uses Textarea for everything
+            return CharField(widget=Textarea, **kwargs)
+
+        class BandFormWithFFC(ClusterForm):
+            formfield_callback = formfield_for_dbfield
+            class Meta:
+                model = Band
+
+        form = BandFormWithFFC()
         self.assertEqual(Textarea, type(form['name'].field.widget))
         self.assertEqual(Textarea, type(form.formsets['members'].forms[0]['name'].field.widget))
