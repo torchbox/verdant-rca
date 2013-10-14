@@ -152,6 +152,7 @@ def doimport(**kwargs):
 
             statement_text, sponsors, collaborators = statement_extract(statement)
             sp.statement = statement_text
+            sp.work_description = statement_text
 
             # handle the metadata fields
             metadata = s.find('metadata')
