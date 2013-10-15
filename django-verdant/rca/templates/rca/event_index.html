@@ -88,6 +88,10 @@
 
 
 {% block extra_js %}
+	<script type="text/javascript">
+		//global var for events_index set here so that it can be used by the script being called
+		var events_index = "{{ global_events_index }}";
+	</script>
 	<script src="/static/rca/js/events-listing.js"></script>
 {% endblock %}
 
