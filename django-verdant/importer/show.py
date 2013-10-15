@@ -65,6 +65,7 @@ YEARS = [
 
 def cv_handle(parent, elemname, model, page, **kwargs):
     length = kwargs.get('length', False)
+    save = kwargs.get('save', False)
     fieldname = kwargs.get('fieldname', elemname)
 
     elem = parent.find(elemname)
@@ -83,7 +84,8 @@ def cv_handle(parent, elemname, model, page, **kwargs):
             obj = model()
             setattr(obj, fieldname, text)
             obj.page = page
-            obj.save()
+            if save:
+                obj.save()
             errors.append(error)
     return errors
 
@@ -227,13 +229,13 @@ def doimport(**kwargs):
             cv = s.find('cv')
 
             sp_errs['degree'] = cv_handle(
-                    cv, 'degrees', StudentPageDegree, sp, length=255, fieldname='degree')
+                    cv, 'degrees', StudentPageDegree, sp, length=255, fieldname='degree', save=save)
             sp_errs['exhibition'] = cv_handle(
-                    cv, 'exhibition', StudentPageExhibition, sp, length=255)
+                    cv, 'exhibition', StudentPageExhibition, sp, length=255, save=save)
             sp_errs['experience'] = cv_handle(
-                    cv, 'experience', StudentPageExperience, sp, length=255)
+                    cv, 'experience', StudentPageExperience, sp, length=255, save=save)
             sp_errs['awards'] = cv_handle(
-                    cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award')
+                    cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award', save=save)
             # currently the model doesn't have publications or conferences
             #sp_errs['publications'] = cv_handle(
             #        cv, 'publications', StudentPagePublications, sp, length=255)
