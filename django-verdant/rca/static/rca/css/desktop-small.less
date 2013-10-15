@@ -31,7 +31,7 @@
  */
 
 body {
-	padding: 0;
+    padding: 0;
 }
 
 /**
@@ -115,7 +115,7 @@ header {
         background-color:transparent;
     }
     a.site-name p {
-        background-image: url('/static/rca/images/logo-header.png');
+        background-image: url('../images/logo-header.png');
         width: 210px;
         height: 91px;
         margin:30px 0;
@@ -145,17 +145,181 @@ header {
 nav {
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
-
-    &:after {
-        .sprite-load(-53px, -1178px, 27px, 15px);
-        content: ' ';
-        position: absolute;
-        top: 10px; /* fairly arbitrary. Whatever looks good */
-        right: @spacing-half;
-    }
 }
+    nav h2{
+        .transition(border-color 0.3s ease);
+        position:absolute;
+        top:0px;
+        z-index:1;
+        right:0;
+        cursor:pointer;
+        margin:0 0 0 @grid-gutter-width;
+        font-size: 12px;
+        text-transform:uppercase;
+        float:right;
+        padding:8px 45px 8px @grid-gutter-width;
+        line-height:1.6em;
+        border-left:1px solid fade(@color-medium-grey, 40%);
+        &:after {
+            .sprite-load(-53px, -1178px, 27px, 15px);
+            content: ' ';
+            position: absolute;
+            top: 10px; /* Arbitrary. Whatever looks good */
+            right: @spacing-half;
+        }
+      
+        &:hover{
+            border-color:#ffffff;
+        }
+    }   
+    nav.open h2:after{
+        background-position:-17px -1178px;
+    }   
 
+    /* these settings change when the menu is ready*/
+    nav.ready{
+        height:34px;  //adjusted by eye to match search box 
+    
+        .menu{
+            /* only hide after its max height has been calculated */
+            display:none;
+        }
+        li > ul{
+            display:none;
+        }
+    }
 
+    nav.open{
+        background-color:white;
+
+        h2{
+            border-color:#ffffff;
+        }
+    }
+
+    nav.changing ul{
+        pointer-events:none;
+    } 
+
+    nav .menu{
+        position:relative;
+        left:@grid-gutter-width;
+        top:2em;
+    }
+   
+    nav .children{
+        display:none;
+    }
+    nav li {
+        width:25%;
+    }
+        nav li > ul{
+            left:25%;
+            /* increases hover-area to include space below visible items */
+            padding-bottom:200px;
+            margin-bottom:-200px;
+        }
+        nav li.selected > ul {
+            display:block;
+        }
+
+    nav a:after{
+        position:absolute;
+        margin-left:2%;
+        width:10px;
+        content:"/";
+        font-size:12px;
+        display:inline-block;
+        visibility:hidden;
+        font-weight:bold;
+        color:black;
+    }
+    nav .selected > a{
+        color:black;
+
+        &:after{
+            visibility:visible;
+        }
+    }
+
+    /* contains behaviours only when the menu is open AND mouseovered */
+    nav.hovered .menu{
+        /* hide 'selected' styles, namely colour and after */
+        .selected > a {
+            color:#999;
+
+            &:after{
+                visibility:hidden;
+            }
+        }
+
+        li:hover > a{
+            color:black;
+            &:after{
+                visibility:visible;
+            }
+            &:hover:after{
+                visibility:hidden;
+            }
+        }
+
+        li.open > a{
+            &:after{
+                visibility:visible;
+            }
+            &:hover:after{
+                color:@color-highlight-blue;
+                visibility:visible;
+            }                      
+        }
+    }
+
+    .breadcrumb{
+        width:100%;
+        max-width:100%;
+        position:relative;
+        top:0;
+        left:0;
+        padding-right:100px;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+        overflow:hidden;
+    
+        li{
+            display:inline;
+            float:none;
+            width:auto;
+        }
+        a{
+            display:inline;
+            width:auto;
+            padding:0;
+            
+            &:before{
+                width:10px;
+                content:"/";
+                font-size:12px;
+                display:inline;
+                font-weight:bold;
+                color:black;
+                padding-right:0.4em;
+            }
+            &:after{
+                display:none;
+            }
+        }
+        li:first-child a:before{
+            display:none;
+        }
+    }
+    nav.open .breadcrumb,
+    nav.changing .breadcrumb{
+        overflow:visible;
+        white-space: normal;
+        padding-bottom:@grid-gutter-width/2;
+        border-bottom:1px solid fade(@color-medium-grey, 20%);
+    }
+        
 /* Search moves alongside the menu above the content */
 form.search {
     display: block;
@@ -246,21 +410,21 @@ aside {
 footer {
     padding:2em 0 0 0;
 
-	section {
-		.column(4, @grid-gutter-width, 12);
-		.row();
-	}
-	a.footer-logo {
-		background-image: url('/static/rca/images/logo-footer.png');
-		padding-top: 72px;
+    section {
+        .column(4, @grid-gutter-width, 12);
+        .row();
+    }
+    a.footer-logo {
+        background-image: url('../images/logo-footer.png');
+        padding-top: 72px;
         width: 145px;
         height: 63px;
-	}
+    }
     h3 {
         margin-top: @spacing-three;
     }
-	ul.social {
-      	li {
+    ul.social {
+        li {
             text-indent: 0px;
             a {
                 padding: @spacing-half;
@@ -277,18 +441,18 @@ footer {
         }
     }
     .smallprint {
-    	font-style: italic;
+        font-style: italic;
         margin: @spacing-onepointfive 0 @spacing-three 0;
         border-top: 1px solid @color-dark-grey;
         border-bottom: 1px solid @color-dark-grey;
-    	
+        
         ul {
             float: right;
             li {
                 display: inline-block;
                 margin: 0 2em;
                 a {
-                	padding: 0;
+                    padding: 0;
                 }
             }
         }

@@ -35,11 +35,24 @@ from importer.import_utils import (
         )
 from importer.constants import DEGREE_SUBJECTS, SCHOOLS, PROGRAMMES, PROGRAMME_SPECIALISMS
 
-#NEWSINDEX = NewsIndex.objects.all()[0]
 PATH = 'importer/export_2012_2_pretty.xml'
 IMAGE_PATH = 'importer/show_images/'
-SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
-PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
+try:
+    SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
+except StandardIndex.DoesNotExist:
+    print "Create an index page with slug 'show-rca'"
+    raise
+# try:
+#     PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
+# except RcaImage.DoesNotExist:
+#     newimage = RcaImage(title='placeholder',rca_content_id='placeholder')
+#     while not newimage.id:
+#         image_path = raw_input(u"Placeholder image not found.\nEnter the path of an image to use as placeholder:\n")
+#         with File(open(image_path, 'r')) as f:
+#             newimage.file = f
+#             newimage.save()
+#     PLACEHOLDER_IMAGE = newimage
+
 YEARS = [
         '2013',
         '2012',
@@ -175,7 +188,7 @@ def doimport(**kwargs):
             else:
                 sp.specialism = specialism
             # no profile images yet, use a nice one
-            sp.profile_image = PLACEHOLDER_IMAGE
+            # sp.profile_image = PLACEHOLDER_IMAGE
 
             # save the studentpage for foreignkey purposes
             if save:
@@ -293,6 +306,8 @@ def doimport(**kwargs):
                     filename = urllib2.unquote(image.find('filename').text.strip())
                     try:
                         with File(open(image_path + filename, 'r')) as f:
+                            if theimage.id:
+                                theimage.delete()
                             theimage.file = f
                             if save:
                                 theimage.save()
@@ -305,15 +320,11 @@ def doimport(**kwargs):
                         print "Unexpected error:", sys.exc_info()[0]
                         raise
 
-                    try:
-                        carousel = StudentPageCarouselItem.objects.get(page=sp, image=theimage)
-                    except StudentPageCarouselItem.DoesNotExist:
-                        carousel = StudentPageCarouselItem(
-                            page = sp,
-                            image = theimage,
-                            #overlay_text = caption,
+                    carousel, created = StudentPageCarouselItem.objects.get_or_create(
+                            page=sp,
+                            image=theimage
                             )
-                    if save:
+                    if save and created:
                         carousel.save()
 
                     imageerrordict = dict((k, v) for k, v in imageerrors.iteritems() if v)

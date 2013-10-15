@@ -27,8 +27,8 @@ class RcaImage(AbstractImage):
     dimensions = models.CharField(max_length=255, blank=True)
     permission = models.CharField(max_length=255, blank=True)
     photographer = models.CharField(max_length=255, blank=True)
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
-    eprint_docid = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
 
     search_on_fields = ['title', 'creator', 'photographer']
 
@@ -1613,7 +1613,7 @@ class StudentPageWorkSponsor(Orderable):
 
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    programme = models.CharField(max_length=255, choices=ALL_PROGRAMMES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.IntegerField(max_length=255)
