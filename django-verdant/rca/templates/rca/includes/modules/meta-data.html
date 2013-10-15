@@ -131,8 +131,10 @@
             {% endif %}
 
             {% if showStudentMeta %}
-                <dd>Location</dd>
-                <dt>{{ self.get_work_location_display }}</dt>
+                {% if self.work_location %}
+                    <dd>Location</dd>
+                    <dt>{{ self.get_work_location_display }}</dt>
+                {% endif %}
 
                 {% with self.collaborators.all as collaborators %}
                     {% if collaborators %}
@@ -163,8 +165,10 @@
                 <dd>Programme</dd>
                 <dt>{{ self.get_programme_display }}</dt>
 
-                <dd>Work type</dd>
-                <dt>{{ self.get_work_type_display }}</dt>
+                {% if self.work_type %}
+                    <dd>Work type</dd>
+                    <dt>{{ self.get_work_type_display }}</dt>
+                {% endif %}
 
                 {% with self.sponsor.all as sponsors %}
                     {% if sponsors %}
