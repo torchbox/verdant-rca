@@ -320,15 +320,11 @@ def doimport(**kwargs):
                         print "Unexpected error:", sys.exc_info()[0]
                         raise
 
-                    try:
-                        carousel = StudentPageCarouselItem.objects.get(page=sp, image=theimage)
-                    except StudentPageCarouselItem.DoesNotExist:
-                        carousel = StudentPageCarouselItem(
-                            page = sp,
-                            image = theimage,
-                            #overlay_text = caption,
+                    carousel, created = StudentPageCarouselItem.objects.get_or_create(
+                            page=sp,
+                            image=theimage
                             )
-                    if save:
+                    if save and created:
                         carousel.save()
 
                     imageerrordict = dict((k, v) for k, v in imageerrors.iteritems() if v)
