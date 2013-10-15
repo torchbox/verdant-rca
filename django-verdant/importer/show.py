@@ -42,16 +42,16 @@ try:
 except StandardIndex.DoesNotExist:
     print "Create an index page with slug 'show-rca'"
     raise
-try:
-    PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
-except RcaImage.DoesNotExist:
-    newimage = RcaImage(title='placeholder',rca_content_id='placeholder')
-    while not newimage.id:
-        image_path = raw_input(u"Placeholder image not found.\nEnter the path of an image to use as placeholder:\n")
-        with File(open(image_path, 'r')) as f:
-            newimage.file = f
-            newimage.save()
-    PLACEHOLDER_IMAGE = newimage
+# try:
+#     PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
+# except RcaImage.DoesNotExist:
+#     newimage = RcaImage(title='placeholder',rca_content_id='placeholder')
+#     while not newimage.id:
+#         image_path = raw_input(u"Placeholder image not found.\nEnter the path of an image to use as placeholder:\n")
+#         with File(open(image_path, 'r')) as f:
+#             newimage.file = f
+#             newimage.save()
+#     PLACEHOLDER_IMAGE = newimage
 
 YEARS = [
         '2013',
@@ -188,7 +188,7 @@ def doimport(**kwargs):
             else:
                 sp.specialism = specialism
             # no profile images yet, use a nice one
-            sp.profile_image = PLACEHOLDER_IMAGE
+            # sp.profile_image = PLACEHOLDER_IMAGE
 
             # save the studentpage for foreignkey purposes
             if save:
