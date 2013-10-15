@@ -65,6 +65,7 @@ YEARS = [
 
 def cv_handle(parent, elemname, model, page, **kwargs):
     length = kwargs.get('length', False)
+    save = kwargs.get('save', False)
     fieldname = kwargs.get('fieldname', elemname)
 
     elem = parent.find(elemname)
@@ -83,7 +84,8 @@ def cv_handle(parent, elemname, model, page, **kwargs):
             obj = model()
             setattr(obj, fieldname, text)
             obj.page = page
-            obj.save()
+            if save:
+                obj.save()
             errors.append(error)
     return errors
 
@@ -126,14 +128,14 @@ def doimport(**kwargs):
         pageerrors = {}
         dept_title, pageerrors['title'] = text_from_elem(page, 'title')
         specialism = ''
-        print '\nNow importing: ' + dept_title
+        print '\nNow importing: ' + repr(dept_title)
         if dept_title in PROGRAMME_SPECIALISMS.keys():
             dept_title, specialism = PROGRAMME_SPECIALISMS[dept_title]
-        print 'dept: ' + dept_title
+        print 'dept: ' + repr(dept_title)
         theprogramme = PROGRAMMES[dept_title]
-        print 'prog: ' + theprogramme
+        print 'prog: ' + repr(theprogramme)
         theschool = SCHOOLS[dept_title]
-        print 'scho: ' + theschool
+        print 'scho: ' + repr(theschool)
 
         h = html2text.HTML2Text()
         h.body_width = 0
@@ -142,7 +144,7 @@ def doimport(**kwargs):
         except AttributeError:
             blurb = page.find('synopsis')
         blurb = h.handle(blurb.text).strip()
-        print "Blurb: " + blurb
+        print "Blurb: " + repr(blurb)
         print "******* note that the above text will not be imported *******"
 
         student_count = 0
@@ -204,13 +206,13 @@ def doimport(**kwargs):
             # handle the sponsors and collaborators from earlier
             for spon in sponsors:
                 name, sp_errs['sponsors'] = check_length(spon, 255)
-                sponpage = StudentPageWorkSponsor(page=sp, name=name)
                 if save:
+                    sponpage = StudentPageWorkSponsor(page=sp, name=name)
                     sponpage.save()
             for col in collaborators:
                 name, sp_errs['collaborators'] = check_length(col, 255)
-                colpage = StudentPageWorkCollaborator(page=sp, name=name)
                 if save:
+                    colpage = StudentPageWorkCollaborator(page=sp, name=name)
                     colpage.save()
 
             # TODO work_despritpion is the same as statement
@@ -227,13 +229,13 @@ def doimport(**kwargs):
             cv = s.find('cv')
 
             sp_errs['degree'] = cv_handle(
-                    cv, 'degrees', StudentPageDegree, sp, length=255, fieldname='degree')
+                    cv, 'degrees', StudentPageDegree, sp, length=255, fieldname='degree', save=save)
             sp_errs['exhibition'] = cv_handle(
-                    cv, 'exhibition', StudentPageExhibition, sp, length=255)
+                    cv, 'exhibition', StudentPageExhibition, sp, length=255, save=save)
             sp_errs['experience'] = cv_handle(
-                    cv, 'experience', StudentPageExperience, sp, length=255)
+                    cv, 'experience', StudentPageExperience, sp, length=255, save=save)
             sp_errs['awards'] = cv_handle(
-                    cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award')
+                    cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award', save=save)
             # currently the model doesn't have publications or conferences
             #sp_errs['publications'] = cv_handle(
             #        cv, 'publications', StudentPagePublications, sp, length=255)
@@ -243,41 +245,43 @@ def doimport(**kwargs):
             if s.find('emails') is not None:
                 for emailaddress in s.find('emails').getchildren():
                     emailtext = emailaddress.text.strip()
-                    emailpage = StudentPageContactsEmail.objects.get_or_create(
+                    if save:
+                        emailpage = StudentPageContactsEmail.objects.get_or_create(
                             page=sp,
                             email=emailtext,
                             )
-                    try:
-                        if save:
+                        try:
                             emailpage.save()
-                    except Exception, e:
-                        sp_errs['email ' + emailaddress.text.strip()] = e.message
+                        except Exception, e:
+                            sp_errs['email ' + emailaddress.text.strip()] = e.message
 
             if s.find('phonenumbers') is not None:
                 for num in s.find('phonenumbers').getchildren():
                     phonenumber = num.text.strip()
-                    phonepage = StudentPageContactsPhone.objects.get_or_create(
-                            page=sp,
-                            phone=phonenumber,
-                            )
-                    try:
-                        if save:
-                            phonepage.save()
-                    except Exception, e:
-                        sp_errs['phone ' + num.text.strip()] = e.message
+                    if save:
+                        phonepage = StudentPageContactsPhone.objects.get_or_create(
+                                page=sp,
+                                phone=phonenumber,
+                                )
+                        try:
+                            if save:
+                                phonepage.save()
+                        except Exception, e:
+                            sp_errs['phone ' + num.text.strip()] = e.message
 
             if s.find('urls') is not None:
                 for url in s.find('urls').getchildren():
                     urltext = url.text.strip()
-                    websitepage = StudentPageContactsWebsite.objects.get_or_create(
-                            page=sp,
-                            website=urltext,
-                            )
-                    try:
-                        if save:
-                            websitepage.save()
-                    except Exception, e:
-                        sp_errs['website ' + url.text.strip()] = e.message
+                    if save:
+                        websitepage = StudentPageContactsWebsite.objects.get_or_create(
+                                page=sp,
+                                website=urltext,
+                                )
+                        try:
+                            if save:
+                                websitepage.save()
+                        except Exception, e:
+                            sp_errs['website ' + url.text.strip()] = e.message
 
             # handle images tag
             images = s.find('images')
@@ -320,12 +324,13 @@ def doimport(**kwargs):
                         print "Unexpected error:", sys.exc_info()[0]
                         raise
 
-                    carousel, created = StudentPageCarouselItem.objects.get_or_create(
-                            page=sp,
-                            image=theimage
-                            )
-                    if save and created:
-                        carousel.save()
+                    if save:
+                        carousel, created = StudentPageCarouselItem.objects.get_or_create(
+                                page=sp,
+                                image=theimage
+                                )
+                        if created:
+                            carousel.save()
 
                     imageerrordict = dict((k, v) for k, v in imageerrors.iteritems() if v)
                     if imageerrordict:
