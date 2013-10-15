@@ -355,11 +355,42 @@ $(function(){
     })
 
     /* Search filters */
-    $('.filters .label').click(function(){
-        $(this).parent().toggleClass('expanded');
-        $(this).parent().siblings().removeClass('expanded');
+    $('.filters').each(function(){
+        $self = $(this);
+        $('label', $self).click(function(){
+            $(this).parent().toggleClass('expanded');
+            $(this).parent().siblings().removeClass('expanded');
+        });
+
+        /* create popouts from existing select options */
+        $('select', $self).each(function(){
+            var options = $('option', $(this));
+            var newOptions = '';
+            var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
+            for(var i = 0; i < options.length; i++){
+                if(options[i].value){
+                    newOptions = newOptions + '<li data-val="' + options[i].value + '" class="'+ (options[i].selected ? "selected":"") +'">' + options[i].text + '</li>';
+
+                    /* if form already has items selected, replicate this */
+                    if(options[i].selected){
+                        $('.filters label[for=' + $(this).attr('id') + ']').html(options[i].text).addClass('active');
+                    }
+                }
+            }
+            newOptions = newOptions + '</ul>';
+            var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
+            $(this).addClass('enhanced').after(thisOption);
+        });
+
+        /* Change label values when options are chosen */
+        $('.options li', $self).on('click keydown', function(){
+            $(this).siblings().removeClass('selected');
+            $(this).addClass('selected');
+            $('.filters label[for=' + $(this).parent().data('id') + ']').html($(this).html()).addClass('active');
+            $('#' + $(this).parent().data('id')).val($(this).data('val'));
+        });
     });
-    
+ 
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 });
