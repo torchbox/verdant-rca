@@ -42,6 +42,7 @@ def upcoming_events_by_programme(context, opendays=0, programme="", programme_di
         'opendays': opendays,
         'events': events,
         'programme_display_name': programme_display_name,
+        'programme': programme,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 

@@ -384,6 +384,7 @@ class SocialFields(models.Model):
 class CommonPromoteFields(models.Model):
     seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
     show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     class Meta:
         abstract = True
@@ -502,6 +503,7 @@ SchoolPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -631,6 +633,7 @@ ProgrammePage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -664,6 +667,7 @@ NewsIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -796,6 +800,7 @@ NewsItem.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -934,6 +939,7 @@ EventItem.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
     
     MultiFieldPanel([
@@ -976,9 +982,9 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         location_other = request.GET.get('location_other')
         area = request.GET.get('area')
         audience = request.GET.get('audience')
-        past = request.GET.get('past')
+        period = request.GET.get('period')
 
-        if past=='past':
+        if period=='past':
             events = self.past_events()
         else:
             events = self.future_events()
@@ -1033,6 +1039,7 @@ EventIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
     
     MultiFieldPanel([
@@ -1083,6 +1090,7 @@ StandardPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1181,6 +1189,7 @@ StandardIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1224,6 +1233,7 @@ HomePage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1279,6 +1289,7 @@ JobPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1319,6 +1330,7 @@ JobsIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
     
     MultiFieldPanel([
@@ -1369,6 +1381,7 @@ AlumniIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
     
     MultiFieldPanel([
@@ -1408,6 +1421,7 @@ AlumniPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1522,6 +1536,7 @@ StaffPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('show_on_programme_page'),
         FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1651,6 +1666,7 @@ StudentPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1704,6 +1720,7 @@ RcaNowPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1744,6 +1761,7 @@ RcaNowIndex.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
     
     MultiFieldPanel([
@@ -1828,6 +1846,7 @@ ResearchItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1940,6 +1959,7 @@ ResearchInnovationPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1969,6 +1989,7 @@ CurrentResearchPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1990,6 +2011,7 @@ GalleryPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2011,6 +2033,7 @@ ContactUsPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
