@@ -220,64 +220,66 @@
     .row();
     padding-bottom:4em;
     position:relative;
-
+    
     ul{
         position:absolute;
         width:100%;
     }
+    .options ul{
+        position:relative;
+    }
 
-    li{
+    .filter{
         border-left:1px solid @color-divider;
-    }
-    li:first-child{
-        border-left:0;
-    }
 
-    &.one-filters{
-        li {
-            .column(12, 0);
+        &:first-child{
+            border-left:0;
         }
-    }
-    &.two-filters{
-        li{
-            .column(6, 0);
-        }
-    }
-    &.three-filters{
-        li{
-            .column(4, 0);
-        }
-    }
-    &.four-filters{
-        li{
-            .column(3, 0);
-        }
-    }
-    &.five-filters{
-        li{
-            .column(2.4, 0);
-        }
-    }
-    &.six-filters{
-        li{
-            .column(2, 0);
-        }
-    }
 
-    .options{
-        &.three-cols{
+        &.three-cols .options{
             width:301%;
             -moz-column-count: 3;
             -webkit-column-count: 3;
             -moz-column-gap: 20px;
             -webkit-column-gap : 20px;
         }
-        &.four-cols{
+        &.four-cols .options{
             width:401%;
             -moz-column-count: 4;
             -webkit-column-count: 4;
             -moz-column-gap: 20px;
             -webkit-column-gap : 20px;
+        }
+    }
+
+    &.one-filters{
+        .filter{
+            .column(12, 0);
+        }
+    }
+    &.two-filters{
+        .filter{
+            .column(6, 0);
+        }
+    }
+    &.three-filters{
+        .filter{
+            .column(4, 0);
+        }
+    }
+    &.four-filters{
+        .filter{
+            .column(3, 0);
+        }
+    }
+    &.five-filters{
+        .filter{
+            .column(2.4, 0);
+        }
+    }
+    &.six-filters{
+        .filter{
+            .column(2, 0);
         }
     }
 }

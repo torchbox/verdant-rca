@@ -1190,7 +1190,9 @@
         margin-bottom:1px;
     }
 
-    .label{
+    label{
+        text-transform:uppercase;
+        font-size:0.85em;
         border-radius:0;
         font-family:inherit;
         -webkit-appearance: none;
@@ -1199,28 +1201,18 @@
         outline:none;
         display:block;
         width:100%;
-        padding:@grid-gutter-width;
+        margin:0;
+        padding:@grid-gutter-width 49px @grid-gutter-width @grid-gutter-width;
         cursor:pointer;
+        position:relative;
+        text-overflow:ellipsis;
+        overflow:hidden;
+        white-space: nowrap;
 
         &:hover{
             background-color:@color-pink;
             color:white;
         }
-    }
-    .expanded .label{
-        background-color:@color-pink;
-        color:white;
-    }
-
-    select, label, .label{
-        text-transform:uppercase;
-        font-size:0.85em;
-    }
-  
-    .label{
-        margin:0;
-        position:relative;
-
         &:after{
             position:absolute;
             top:0;
@@ -1236,17 +1228,36 @@
         }
     }
 
+    .expanded label{
+        background-color:@color-pink;
+        color:white;
+    }      
+
+    select.enhanced{
+        /* this class added once select has been replicated as a list of text */
+        display:none;
+    }
+
     .options{
         background-color:rgba(255,255,255,0.95);
         margin-left:-1px;
         display:none;
         padding:@grid-gutter-width;
 
-        label{
-            display:block;
+        li{
             font-family:@font-family-benton-light;
+            text-transform:uppercase;
             font-size:0.8em;
-            padding:@grid-gutter-width/4 0 @grid-gutter-width/4 22px;
+            padding:@grid-gutter-width/4 0;
+            cursor:pointer;
+
+            &:hover{
+                color:@color-pink;
+            }
+            &.selected{
+                font-family:@font-family-benton;
+                color: @color-highlight-blue
+            }
         }
         input{
             float:left;
@@ -1258,12 +1269,12 @@
         display:block;
     }
 
-    .select{
+   /* .select{
         position:relative;
         label{
             .visuallyhidden();
         }
-    }
+    }*/
     
     input[type="submit"] {
         display:none;
