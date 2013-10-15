@@ -306,6 +306,8 @@ def doimport(**kwargs):
                     filename = urllib2.unquote(image.find('filename').text.strip())
                     try:
                         with File(open(image_path + filename, 'r')) as f:
+                            if theimage.id:
+                                theimage.delete()
                             theimage.file = f
                             if save:
                                 theimage.save()
