@@ -4,22 +4,21 @@
 
 {% block content %}
     <header>
-        <h1>Explorer</h1>
-
-        <p class="breadcrumb">
-            {% for page in parent_page.get_ancestors %}
-                <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a> /
-            {% endfor %}
-        </p>
-
         <div class="row row-flush">
             <div class="left col9">
-                <h2>
+                <h1>Explorer</h1>
+                 <p class="breadcrumb">
+                    {% for page in parent_page.get_ancestors %}
+                        <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a> /
+                    {% endfor %}
+                    {{ parent_page.title }}
+                </p>
+                <!-- <h2>
                     {% comment %}
                         The root node should serve as a container for the homepages of all
                         the sites on this Verdant installation, and not be a usable page itself (and
                         as such, we don't offer these edit actions for it).
-                    {% endcomment %}
+                    
                     {% if not parent_page.is_root %}
                         <div class="dropdown">
                             <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
@@ -31,12 +30,13 @@
                             </ul>
                         </div>
                     {% endif %}
+                    {% endcomment %}
 
-                    {{ parent_page.title }}
-                </h2>
+                    
+                </h2> -->
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add page here</a>
+                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add a page</a>
             </div>
         </div>
     </header>
@@ -64,6 +64,32 @@
             </tr>
         </thead>
         <tbody>
+            <tr class="divider">
+                <td colspan="5">Index page</td>
+            </tr>
+            <tr class="index">
+                <td class="bulk"></td>
+                <td class="title">
+                    <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
+                    <ul class="actions">
+                        <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">Edit</a></li>
+                        <li><a href="{{ parent_page.url }}" target="_blank">View</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
+                        <li><a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">Add subpage</a></li>
+                    </ul>
+                </td>
+                <td class="type">{{ parent_page.content_type }}</td>
+                <td class="status"></td>
+                <td class="no-children">
+                    <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ parent_page.title }}'">Add subpage</a>
+                </td>
+            </tr>
+
+            <tr class="divider">
+                <td colspan="5">Sub-pages</td>
+            </tr>
+
             {% if pages %}
                 {% for page in pages %}
                     <tr>
@@ -71,6 +97,7 @@
                         <td class="title">
                             <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
                             <ul class="actions">
+                                <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">Edit</a></li>
                                 <li><a href="{{ page.url }}" target="_blank">View</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>

@@ -68,9 +68,13 @@ ul.listing{
 
     tbody tr{
         border-bottom:1px dashed @color-input-border;
-        &:first-child{
+        /*&:first-child{
             border-top:1px dashed @color-input-border;
-        }
+        }*/
+    }
+    tbody tr.divider,
+    tbody tr.index{
+        border:0;
     }
     
     .bulk{
@@ -90,7 +94,6 @@ ul.listing{
             margin-top:3px;
             
         }
-       
     }
     
     .title{
@@ -182,12 +185,25 @@ ul.listing{
     }
     .children{
         border-left:1px dashed @color-input-border;
-        a{display:block;}
+        a{
+            display:block;
+        }
     }
 
     table .no-results-message{
         .push-padding(@grid-content-indent);
     }
+    table& .divider{
+        text-transform:uppercase;
+        font-size:0.8em;
+        background-color:lighten(@color-grey-lighter, 5%);
+        td{
+           .push-padding(@grid-content-indent);
+           padding-top:0.5em;
+           padding-bottom:0.5em;
+        }
+    } 
+
 }
 
 @media screen and (min-width: @breakpoint-mobile){
@@ -237,8 +253,17 @@ ul.listing{
         }
         .no-children:hover{
             border-color:@color-input-border;
-            a{opacity:1;}
+            a{
+                opacity:1;
+            }
         }
+        .index .no-children{
+            border-left:1px dashed @color-input-border;
+            a{
+                opacity:1;
+            }
+        }
+        
     }
 }
 @media screen and (min-width: @breakpoint-desktop-small){
