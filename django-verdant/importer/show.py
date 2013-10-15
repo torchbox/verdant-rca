@@ -74,7 +74,8 @@ def cv_handle(parent, elemname, model, page, **kwargs):
     errors = []
     if elem is not None and elem.text is not None:
         # first clear all existing ones
-        model.objects.filter(page=page).delete()
+        if save:
+            model.objects.filter(page=page).delete()
 
         for entry in BeautifulSoup(elem.text, 'html.parser').text.split(';'):
             text = entry.strip()
