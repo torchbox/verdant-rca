@@ -91,13 +91,70 @@
                         </li>
                     </ul>
 
+                    <!--degrees-->
+                    {% with self.degrees.all as degrees %}
+                        {% if degrees %}
+                            <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Degrees</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    <ul>
+                                    {% for degree in degrees %}
+                                        {{ degree.degree }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- experience -->
+                    {% with self.experiences.all as experiences %}
+                        {% if experiences %}
+                            <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Experience</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    <ul>
+                                    {% for experience in experiences %}
+                                        {{ experience.experience }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- exhibitions -->
+                    {% with self.exhibitions.all as exhibitions %}
+                        {% if exhibitions %}
+                            <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Exhibitions</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    <ul>
+                                    {% for exhibition in exhibitions %}
+                                        {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </ul>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    {% endwith %}
+
                     <div class="inner">
+            
+                        <!-- research -->
+                        {% research_related person=self %}
 
-                            <!-- research -->
-                            {% research_related person=self %}
-
-                            <!-- rca now -->
-                            {% rca_now_related author=self.title %}
+                        <!-- rca now -->
+                        {% rca_now_related author=self.title %}
                             
                     </div>
                 </div>
