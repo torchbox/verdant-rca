@@ -653,6 +653,42 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     subpage_types = ['NewsItem']
 
+    def serve(self, request):
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        area = request.GET.get('area')
+
+        news = NewsItem.objects.filter(path__startswith=self.path)
+
+        if programme and programme != 'all':
+            news = news.filter(related_programmes__programme=programme)
+        if school and school != 'all':
+            news = news.filter(related_schools__school=school)
+        if area and area != 'all':
+            news = news.filter(area=area)
+
+        page = request.GET.get('page')
+        paginator = Paginator(news, 10) # Show 10 news items per page
+        try:
+            news = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            news = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            news = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/news_listing.html", {
+                'self': self,
+                'news': news
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'news': news
+            })
+
 NewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),

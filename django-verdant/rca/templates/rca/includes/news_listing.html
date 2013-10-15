@@ -1,0 +1,28 @@
+{% load pageurl image_tags %}
+
+{% if news %}
+    <section class="one-plus x-plus module" data-pagination=".pagination">
+        <div class="item-container">
+            <ul class="row">
+                {% for news_item in news %}
+                    {% if forloop.counter0|divisibleby:"2" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl news_item %}">
+                            {% if news_item.feature_image %}
+                                <div class="image">{% image news_item.feature_image width-400 %}</div>
+                            {% endif %}
+                            <div class="content">
+                                {% if news_item.listing_intro %}
+                                <h3 class="h5">{{ news_item.listing_intro }}</h3>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>   
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endif %}
