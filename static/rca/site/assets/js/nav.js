@@ -31,70 +31,103 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
+		
+
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
-			// find tallest submenu
+			var $self = $(this);
 			var maxHeight = 0;
-			$(this).find('ul').each(function(){
+			var selected = $('.selected', $self).clone();
+			var menu = $('.menu', $self);
+			var toggle = $('h2', $self);
+
+			// find tallest submenu
+			$self.find('ul').each(function(){
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
-
-			$(this).data('maxHeight', maxHeight + 16);
-
-			var selected = $(this).find('.selected').clone();
+			
+			/* create breadcrumb menu from selected items */
 			selected.find('ul').remove();
-			$(this).append($('<ul class="breadcrumb"></ul>').append(selected));
-			$(this).addClass('ready')
+			menu.before($('<ul class="breadcrumb"></ul>').append(selected));
 
-			var $self = $(this);
+			$self.data('maxHeight', maxHeight + 70);
+			
+			// set menu as ready
+			$self.addClass('ready');			
 
-			$self.hoverIntent({
+
+			function openMenu(){
+				$self.addClass('changing');
+				setTimeout(function(){
+					$self.removeClass('changing');
+				}, 400)
+
+				$self.find('.breadcrumb').stop().hide();
+
+				$self.stop().animate({
+					height: $self.data('maxHeight')
+				},200, function(){
+					$self.removeClass('changing').addClass('open');
+				})
+
+				menu.stop().fadeIn(200, function(){
+					//necessary to avoid some kind of weird race bug where opacity stops getting changed to 1
+					menu.css({opacity:1,display:'block'})
+					$self.removeClass('changing').addClass('open');
+				});
+			}
+
+			function closeMenu(){
+				$self.addClass('changing').removeClass('hovered');
+				
+				menu.stop().hide()
+
+				$self.stop().animate({
+					height: 34
+				}, 200, function(){
+					$self.find('.selected > ul').stop().show()
+					$self.removeClass('changing').removeClass('open');
+				});
+
+				$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
+					$(this).find('.selected > ul').fadeIn(100)
+				});
+
+				$self.find('.breadcrumb').stop().fadeIn(200, function(){
+					$(this).removeClass('changing');
+				})
+			}
+
+			toggle.hoverIntent({
 				over: function(){
-					$self.addClass('changing');
-					setTimeout(function(){
-						$self.removeClass('changing');
-					}, 400)
+					openMenu();
+				},
+				out: function(e){
+					if($(e.toElement).get(0) != $self.get(0) && $(e.toElement).closest('nav').get(0) != $self.get(0)){
+						closeMenu();
+					}
+				},
+				timeout:500
+			})
 
-					$self.find('.breadcrumb').stop().hide();
+			$(document).on('click', function(e){
+				if($(e.toElement).get(0) != toggle.get(0)){
+					closeMenu();
+				}
+			});
 
-					$self.stop().animate({
-						height: $self.data('maxHeight')
-					},200, function(){
-						$self.removeClass('changing').addClass('open');
-					})
-
-					$self.find('.menu').stop().fadeIn(200, function(){
-						//necessary to avoid some kind of weird race bug where opacity stops getting changed to 1
-						$self.find('.menu').css({opacity:1,display:'block'})
-						$self.removeClass('changing').addClass('open');
-					});
+			menu.hoverIntent({				
+				over: function(){
+					openMenu();
 				}, 
 				out: function(){
-
-					$self.addClass('changing').removeClass('hovered');
-				
-					$self.find('.menu').stop().hide()
-
-					$self.stop().animate({
-						height: 34
-					}, 200, function(){
-						$self.find('.selected > ul').stop().show()
-						$self.removeClass('changing').removeClass('open');
-					});
-
-					$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
-						$(this).find('.selected > ul').fadeIn(100)
-					});
-
-					$self.find('.breadcrumb').stop().fadeIn(200, function(){
-						$(this).removeClass('changing');
-					})
+					closeMenu();
 				},
 				timeout:500
 			})	
 
-			$('li', $self).hoverIntent({
+			$('li', menu).hoverIntent({
 				over: function(){
-					$('li', $self).removeClass('open');
+					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
 					$(this).addClass('open');
 					$(this).siblings().find(' > ul').stop().hide()
