@@ -20,6 +20,7 @@
 				<li>
 	                <p class="label">School</p>
 	                <div class="options">
+	                <label><input type="radio" name="school" value="all" {% if not request.GET.school or request.GET.school == 'all' %}checked="checked"{% endif %}>all</label>
 					{% for key, value in global_schools %} 
 					  	<label><input type="radio" name="school" value="{{ key }}" {% if request.GET.school == key %}checked="checked"{% endif %}>{{ value }}</label>
 					{% endfor %}
@@ -28,6 +29,7 @@
 				<li>
 	                <p class="label">Programme</p>
 	                <div class="options three-cols">
+	                	<label><input type="radio" name="programme" value="all" {% if not request.GET.programme or request.GET.programme == 'all' %}checked="checked"{% endif %}>all</label>
 	                	{% for key, value in global_programmes %} 
 						  	<label><input type="radio" name="programme" value="{{ key }}" {% if request.GET.programme == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
@@ -36,15 +38,16 @@
 	            <li>
 	                <p class="label">Location</p>
 	                <div class="options">
+	                	<label><input type="radio" name="location" value="all" {% if not request.GET.location or request.GET.location == 'all' %}checked="checked"{% endif %}>all</label>
 	                	{% for key, value in global_locations %} 
-						  	<label><input type="radio" name="location" value="{{ key }}" {% if request.GET.location == key %}checked="checked"{% endif %}>{{ value }}</label>
+						  	<label><input type="radio" name="location" value="{{ key }}" {% if request.GET.location == key %}checked="checked"{% endif %}>{% if key == 'other' %}Other location{% else %}{{ value }}{% endif %}</label>
 						{% endfor %}
-						<label for="location_other">other location:</label><input type="text" name="location_other">
 	                </div>
 	            </li>
 				<li>
 	                <p class="label">Area</p>
 	                <div class="options">
+	                	<label><input type="radio" name="area" value="all" {% if not request.GET.area or request.GET.area == 'all' %}checked="checked"{% endif %}>all</label>
 	                	{% for key, value in global_areas %} 
 						  	<label><input type="radio" name="area" value="{{ key }}" {% if request.GET.area == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
@@ -53,6 +56,7 @@
 	            <li>
 	                <p class="label">Audience</p>
 	                <div class="options">
+	                	<label><input type="radio" name="audience" value="all" {% if not request.GET.audience or request.GET.audience == 'all' %}checked="checked"{% endif %}>all</label>
 	                	{% for key, value in global_audiences %} 
 						  	<label><input type="radio" name="audience" value="{{ key }}" {% if request.GET.audience == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
