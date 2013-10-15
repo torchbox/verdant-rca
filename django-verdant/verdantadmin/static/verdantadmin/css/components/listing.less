@@ -22,6 +22,11 @@ ul.listing{
         padding-bottom:1.5em;
     }
 
+    &.small td, th{
+        padding-top:1em;
+        padding-bottom:1em;
+    }
+
     thead{
         background-color:@color-thead-bg;
         color: @color-grey;
@@ -72,6 +77,10 @@ ul.listing{
             border-top:1px dashed @color-input-border;
         }
     }
+
+    &.small tbody tr{
+        font-size:1em;
+    }
     
     .bulk{
         .column(1);
@@ -91,34 +100,6 @@ ul.listing{
             
         }
        
-    }
-    
-    .title{
-        .column(4);
-
-        h2{
-            margin:0;
-            font-size:1.2em;
-            font-weight:700;
-            color:darken(@color-grey, 10%);
-            line-height:1.5em;
-        
-            a{
-                color:inherit;
-                text-decoration:none;
-
-                &:hover{
-                    color:@color-link;
-                }
-            }
-        }
-    }
-
-    .type{
-        .column(2);
-    }
-    .status{
-        .column(2);
     }
 
     ul{
@@ -153,9 +134,8 @@ ul.listing{
     
     .children,
     .no-children{
+        padding:0 !important;
         .transition(background-color 0.2s ease);
-        width:8%;
-        padding:0;
         border-left:1px dashed @color-input-border;
         &:hover{
             background-color:@color-header-bg;
@@ -171,6 +151,9 @@ ul.listing{
     
     .children a:before{
         font-size:50px
+    }
+    &.small .children a:before{
+        font-size:30px;
     }
 
     td.children:hover{
@@ -188,6 +171,44 @@ ul.listing{
     table .no-results-message{
         .push-padding(@grid-content-indent);
     }
+
+
+
+    /* column widths */
+    .title{
+        .column(4);
+
+        h2{
+            margin:0;
+            font-size:1.2em;
+            font-weight:700;
+            color:darken(@color-grey, 10%);
+            line-height:1.5em;
+        
+            a{
+                color:inherit;
+                text-decoration:none;
+
+                &:hover{
+                    color:@color-link;
+                }
+            }
+        }
+    }
+    &.chooser .title{
+        .column(7)
+    }
+    .type{
+        .column(2);
+    }
+    .status{
+        .column(2);
+    }
+    .children{
+        width:8%;
+        padding:0;
+    }
+
 }
 
 @media screen and (min-width: @breakpoint-mobile){

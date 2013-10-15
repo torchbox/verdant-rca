@@ -326,29 +326,32 @@ ul.inline li:first-child, li.inline:first-child{
             content:"b";
         }
         .title{
+            z-index:0;
             float: left;
             margin-left: -146px;
             width: 126px;
             max-height: 40px;
             overflow: hidden;
             font-size: 0.7em;
-            padding: 30px 10px 0 10px;
+            padding: 30px 10px 0px 10px;
             display: block;
             top: 0px;
             position: absolute;
             line-height: 1.4em;
             text-align: center;
             color: black;
-
-           
-            &:hover{
-                width:130px;
-                padding:0;
-                top: 0;
-                height: 200px;
-                max-height:100%;
-                background-color: white;
-            }
+            white-space:nowrap;
+            text-overflow:ellipsis;
+        }
+        &:hover .title{
+            text-align:left;
+            white-space:normal;
+            width:126px;
+            padding:10px;
+            top: 0;
+            height: 80px;
+            max-height:100%;
+            background-color: white;
         }
     }
 }
@@ -376,7 +379,7 @@ ul.inline li:first-child, li.inline:first-child{
 
 .image-chooser {
     .unchosen, .chosen{
-        height:85px;
+        height:95px;
 
         &:before{
             content:"o"; 

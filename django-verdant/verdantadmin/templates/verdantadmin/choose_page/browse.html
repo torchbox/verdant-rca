@@ -1,7 +1,27 @@
 <header>
-    <h1>Choose a page</h1>
+    <h1>Choose a page</h1>   
 </header>
-
+<form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
+    <ul class="fields">
+        <li>
+            <div class="field">
+                <input type="text" name="q" />
+            </div>
+        </li>
+        {% for field in form %}
+            {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+        {% endfor %}
+        <li class="submit"><input type="submit" value="Search" /></li>
+        {% if popular_tags %}
+            <li class="popular-tags">
+                <h3>Popular tags</h3>
+                {% for tag in popular_tags %}
+                    <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
+                {% endfor %}
+            </li>
+        {% endif %}
+    </ul>
+</form>
 <div class="nice-padding">
     {% if allow_external_link or allow_email_link %}
         <p class="link-types">
@@ -9,27 +29,37 @@
             {% if allow_external_link %}| <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a>{% endif %}
             {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
         </p>
-    {% endif %}
+    {% endif %}    
 
-    <p class="breadcrumb">
+
+     <p class="breadcrumb">
         {% for page in parent_page.get_ancestors %}
             <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' page.id %}?{{ querystring }}">{{ page.title }}</a> /
         {% endfor %}
         <b>{{ parent_page.title }}</b>
     </p>
 
-    <ul>
-        {% for entry in pages %}
-            <li>
-                {% if entry.can_choose %}
-                    <a class="choose-page" href="#{{ entry.page.id }}" data-id="{{ entry.page.id }}" data-title="{{ entry.page.title }}" data-url="{{ entry.page.url }}">{{ entry.page.title }}</a>
-                {% else %}
-                    {{ entry.page.title }}
-                {% endif %}
-                {% if entry.can_descend %}
-                    <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' entry.page.id %}?{{ querystring }}">&raquo;</a>
-                {% endif %}
-            </li>
-        {% endfor %}
-    </ul>
+    <table class="listing small chooser">
+        
+        <tbody>
+            {% for entry in pages %}
+                <tr>
+                    <td class="title">
+                        {% if entry.can_choose %}
+                            <a class="choose-page" href="#{{ entry.page.id }}" data-id="{{ entry.page.id }}" data-title="{{ entry.page.title }}" data-url="{{ entry.page.url }}">{{ entry.page.title }}</a>
+                        {% else %}
+                            {{ entry.page.title }}
+                        {% endif %}
+                    </td>
+                    <td class="type">{{ page.content_type }}</td>
+                    <td class="status"></td>
+                    <td class="{% if entry.can_descend %}children{% else %}no-children{% endif %}">
+                        {% if entry.can_descend %}
+                            <a href="{% url 'verdantadmin_choose_page_child' entry.page.id %}?{{ querystring }}" class="icon text-replace icon-arrow-right navigate-pages" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
