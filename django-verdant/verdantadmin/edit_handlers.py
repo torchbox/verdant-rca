@@ -225,6 +225,13 @@ class EditHandler(object):
 
         return mark_safe(u''.join(missing_fields_html))
 
+    def render_form_content(self):
+        """
+        Render this as an 'object', along with any unaccounted-for fields to make this
+        a valid submittable form
+        """
+        return mark_safe(self.render_as_object() + self.render_missing_fields())
+
 
 class BaseCompositeEditHandler(EditHandler):
     """

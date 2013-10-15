@@ -11,8 +11,7 @@
 
     <form action="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" method="POST">
         {% csrf_token %}
-        {{ edit_handler.render_as_object }}
-        {{ edit_handler.render_missing_fields }}
+        {{ edit_handler.render_form_content }}
         
         <footer>
             <ul>
