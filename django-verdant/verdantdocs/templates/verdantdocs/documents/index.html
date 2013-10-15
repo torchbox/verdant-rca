@@ -35,7 +35,7 @@
             </div>
         </div>
     </header>
-    <form class="search-bar" action="{% url 'verdantdocs_search' %}" method="get">
+    <form class="search-bar full-width" action="{% url 'verdantdocs_search' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}

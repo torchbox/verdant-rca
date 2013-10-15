@@ -10,6 +10,8 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
+    {% include "rca/includes/modules/strapline.html" %}
+
 	{% include "rca/includes/modules/carousel.html" %}
 
 	{% if self.intro %}
@@ -22,7 +24,7 @@
 
 	<!--teaser block-->
 	{% with self.teasers.all as teasers %}
-        {% if self.teasers %}
+        {% if self.teasers.all|length > 0 %}
 
         	<section class="two-plus x-plus module">
         		{% if self.teasers_title %}

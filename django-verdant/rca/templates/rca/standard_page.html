@@ -6,14 +6,15 @@
 
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
         {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
         <section class="four">
-            <div class="single">
+            {% include "rca/includes/modules/quotation.html" %}
+            <div class="single borders">
                 {% include "rca/includes/modules/share-button.html" %}
             </div>
-            {% include "rca/includes/modules/quotation.html" %}
         </section>
     </section>
     {% include "rca/includes/modules/twitter-feed.html" %}

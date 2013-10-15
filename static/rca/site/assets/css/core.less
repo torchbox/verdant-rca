@@ -411,7 +411,7 @@ header {
     }
     .site-name p { /* logo */
         text-indent: -2000px;
-        background-image: url('../images/logo-header-mobile.png');
+        background-image: url('@{path-static}images/logo-header-mobile.png');
         background-repeat: no-repeat;
         display: block;
         width: 110px;
@@ -508,49 +508,23 @@ form.search.expanded {
  * $Top navigation
  */
 
+/* General menu styles */
 nav {
     background-color:white;
     background-color:rgba(255,255,255,0.95);
     border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
     border-bottom: 1px solid fade(@color-medium-grey, 40%);
-    padding:8px @grid-gutter-width;
+    padding:8px @grid-gutter-width/2;
     position:relative;
     z-index:999;
     height:150px; /* gets overridden by finding tallest submenu */
     overflow:hidden;
+    display: none;
 }
-    nav.open:after{
-        .sprite-load(-17px, -1178px, 27px, 15px);
+    nav.expanded {
+        display: block;
     }
-
-    .js nav {
-        height:34px;  //adjusted by eye to match search box 
-    }
-
-    nav h2{
-        margin:0;
-        font-size: 12px;
-        text-transform:uppercase;
-        float:left;
-        padding-right:0.4em;
-        line-height:1.6em;
-        font-weight:normal;
-
-        &:after{
-            content:"/";
-            font-size:12px;
-            padding-left:5px;
-            display:inline-block;
-            font-weight:bold;
-            color:black;
-        }
-    }    
-    nav.dl-menuwrapper{
-        margin:0;
-        height:initial;
-        overflow:visible;
-    }
-
+   
     nav ul, nav li{
         margin:0;
         padding:0;
@@ -567,171 +541,49 @@ nav {
             width:94%;
             max-width:800px;
         }
-
-        nav.ready .menu{
-            display:none;
-        }
-        nav.changing ul{
-            pointer-events:none;
-        }
-        nav.dl-menuwrapper ul{
-            left:0;
-            top:initial;
-            background-color:white;
-            position:relative;
-            width:auto;
-        }
-        nav .children{
-            display:none;
-        }
-        nav.dl-menuwrapper .children{
-            display:block;
-        }
         nav li {
             display:block;
-            width:25%;
             overflow:hidden;
             line-height:1.3em;
         }
-            nav.dl-menuwrapper li {
-                width:100%;
-            }
-            nav li > ul{
-                display:none;
-                left:25%;
-                /* increases hover-area to include space below visible items */
-                padding-bottom:200px;
-                margin-bottom:-200px;
-            }
-                nav.dl-menuwrapper li > ul{
-                    display:block;
-                    left:0;
-                }
-
-                nav li.selected > ul {
-                    display:block;
-                }
-               
-                nav a{
-                    font-size:12px;
-                    color:#999;
-                    text-decoration:none;
-                    text-transform:uppercase;
-                    display:block;
-                    position:relative;
-                    padding-right:7%;
-
-                    &:hover{
-                        color:rgb(0,150,255) !important;
-                    }
-               
-                    &:after{
-                        position:absolute;
-                        margin-left:2%;
-                        width:10px;
-                        content:"/";
-                        font-size:12px;
-                        display:inline-block;
-                        visibility:hidden;
-                        font-weight:bold;
-                        color:black;
-                    }
-                   
-                }   
-
-                nav .selected > a{
-                    color:black;
-
-                     &:after{
-                        visibility:visible;
-                    }
-                }
-
-                
-                /* contains behaviours only when the menu is open AND mouseovered */
-                nav.hovered{
-                    /* hide 'selected' styles, namely colour and after */
-                    .selected > a {
-                        color:#999;
-
-                        &:after{
-                            visibility:hidden;
-                        }
-                    }
-
-                    li:hover > a{
-                        color:black;
-                        &:after{
-                            visibility:visible;
-                        }
-                        &:hover:after{
-                            visibility:hidden;
-                        }
-                    }
-
-                    li.open > a{
-                        &:after{
-                            visibility:visible;
-                        }
-                        &:hover:after{
-                            color:@color-highlight-blue;
-                            visibility:visible;
-                        }                      
-                    }
-                }               
-
-               
-    .js .menu.ready {
-        visibility:hidden;
-    }
-
-    nav.dl-menuwrapper,
-    nav.ready .menu{
-        visibility:visible;
-    }
-
-    .breadcrumb{
-        width:100%;
-        max-width:100%;
-        position:relative;
-        top:0;
-        left:0;
-    }
-    .breadcrumb li{
-        float:left;
-        width:auto;
-        padding-right:0.4em;
-    }
-    .breadcrumb a{
-        display:block;
-        width:auto;
-        padding:0;
-        &:before{
-            width:10px;
-            content:"/";
+        nav a{
             font-size:12px;
-            display:inline-block;
-            font-weight:bold;
-            color:black;
-        }
-        &:after{
-            display:none;
-        }
-    }
-    .breadcrumb li:first-child a:before{
-        display:none;
-    }
+            color:#999;
+            text-decoration:none;
+            text-transform:uppercase;
+            display:block;
+            position:relative;
+            padding-right:7%;
 
+            &:hover{
+                color:rgb(0, 150, 255) !important;
+            }                   
+        }   
 
-
-
-nav {
-    display: none;
+/* DL menu styles */
+nav.dl-menuwrapper{
+    margin:0;
+    height:initial;
+    overflow:visible;
+    visibility:visible;
 }
-
-nav.expanded {
-    display: block;
-}
+    nav.dl-menuwrapper ul{
+        left:0;
+        top:initial;
+        background-color:white;
+        position:relative;
+        width:auto;
+    }
+    nav.dl-menuwrapper .children{
+        display:block;
+    }
+        nav.dl-menuwrapper li {
+            width:100%;
+        }
+            nav.dl-menuwrapper li > ul{
+                display:block;
+                left:0;
+            }               
 
 /**
  *$Common grid divisions
@@ -835,6 +687,7 @@ nav.expanded {
     h2 {
         .transition(background-color 0.3s ease);
         position: relative;
+        cursor:pointer;
         &:after {
             content:' ';
             .sprite-load(-53px, -623px, 27px, 15px);
@@ -869,6 +722,7 @@ nav.expanded {
 
     h2 {
         .transition(background-color 0.3s ease);
+        cursor:pointer;
         margin: 0;
         padding: @spacing-half;
         .t2;
@@ -1008,7 +862,7 @@ footer {
     }
     a.footer-logo {
         display: block;
-        background-image: url('../images/logo-footer-mobile.png');
+        background-image: url('@{path-static}images/logo-footer-mobile.png');
         background-repeat: no-repeat;
         padding-top: 60px;
         text-indent: -9999px;

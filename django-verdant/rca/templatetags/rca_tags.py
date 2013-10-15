@@ -32,7 +32,7 @@ def news_carousel(context, area="", programme="", count=6):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_by_programme.html', takes_context=True)
-def upcoming_events_by_programme(context, opendays=0, programme="", programme_display_name=""):
+def upcoming_events_by_programme(context, opendays=0, programme="", programme_display_name="", events_index_url="/events/"):
     events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
@@ -42,6 +42,8 @@ def upcoming_events_by_programme(context, opendays=0, programme="", programme_di
         'opendays': opendays,
         'events': events,
         'programme_display_name': programme_display_name,
+        'programme': programme,
+        'events_index_url': events_index_url,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 

@@ -9,7 +9,7 @@ $(function(){
         animationClasses : {
             classin : 'dl-animate-in-2', 
             classout : 'dl-animate-out-2'
-        }
+        } 
     });
 
     // Resize nav to fit height of window. This is an unimportant bell/whistle to make it look nice
@@ -38,7 +38,7 @@ $(function(){
     });
 
     /* tabs */
-    $('.tab-nav a').click(function (e) {
+    $(document).on('click', '.tab-nav a', function (e) {
         e.preventDefault()
         $(this).tab('show');
     });   
@@ -48,5 +48,12 @@ $(function(){
 
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
+    });
+
+    /* Bulk-selection */
+    $(document).on('click', 'thead .bulk', function(){
+        $(this).closest('table').find('tbody .bulk input').each(function(){
+            $(this).prop('checked', !$(this).prop('checked'));            
+        })
     });
 })

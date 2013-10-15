@@ -1,0 +1,50 @@
+{% load pageurl image_tags %}
+
+{% if events %}
+	<section class="one-plus x-plus module" data-pagination=".pagination">
+	    <div class="item-container">
+	        <ul class="row">
+	        	{% for event in events %}
+	        		{% if forloop.counter0|divisibleby:"2" %}
+	    				<li class="newrow">
+	    			{% else %}
+	    				<li>
+	    			{% endif %}
+	    				<a href="{% pageurl event %}">
+		    				{% if event.feature_image %}
+	                    		<div class="image">{% image event.feature_image width-400 %}</div>
+	                    	{% endif %}
+		                    <ul class="content">
+		                        <li class="first">
+		                            <h2 class="h5">{{ event.title }}</h2>
+		                            {% if event.listing_intro %}
+		                            	<p>{{ event.listing_intro }}</p>
+		                            {% endif %}
+		                            
+		                        </li>
+		                        <li class="second">
+		                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{% if event.location_other %}{{ event.location_other }}{% elif event.location %}{{ event.get_location_display }}{% endif %}</span></h3>
+		                            <p class="a2">{{ event.get_audience_display }}</p>
+		                        </li>
+		                    </ul>
+		                </a>
+		            </li>
+	        	{% endfor %}
+	        	<!--<li class="load-more"><a href="#">+</a></li>-->
+	        </ul>
+	    </div>
+	</section>
+
+	<ul class="pagination">
+		<!--
+		{% if events.has_previous %}
+	        <li class="previous"><a href="?page={{ events.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
+	    {% endif %}
+		-->
+
+	    {% if events.has_next %}
+	        <li class="next"><a href="?page={{ events.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
+	    {% endif %}
+	</ul>
+
+{% endif %}

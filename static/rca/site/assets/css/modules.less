@@ -46,6 +46,7 @@
  * Gallery
  * Index page intro
  * Contact
+ * Strapline
  */
 
 /**
@@ -326,7 +327,6 @@
     &.borders {
         .share-wrapper {
             border-top: 1px solid @color-medium-grey;
-            border-bottom: 1px solid @color-medium-grey;
             padding: @spacing-one 0;
             margin-bottom: @spacing-one;
         }
@@ -835,6 +835,7 @@
     margin-bottom:@grid-gutter-width;
 
     li{
+        .column(12);
         padding-bottom:@grid-gutter-width;
     }
 
@@ -1183,15 +1184,14 @@
 .filters{
     font-family:@font-family-benton;
     .row();
-
+  
     li{
-        border-left:1px solid @color-divider;
-    }
-    li:first-child{
-        border:0;
+        margin-bottom:1px;
     }
 
-    select, .label{
+    label{
+        text-transform:uppercase;
+        font-size:0.85em;
         border-radius:0;
         font-family:inherit;
         -webkit-appearance: none;
@@ -1200,93 +1200,83 @@
         outline:none;
         display:block;
         width:100%;
-        padding:@grid-gutter-width;
+        margin:0;
+        padding:@grid-gutter-width 49px @grid-gutter-width @grid-gutter-width;
         cursor:pointer;
+        position:relative;
+        text-overflow:ellipsis;
+        overflow:hidden;
+        white-space: nowrap;
 
         &:hover{
             background-color:@color-pink;
             color:white;
         }
-    }
-
-    select, label, .label{
-        text-transform:uppercase;
-        font-size:0.85em;
-    }
-  
-    .label{
-        margin:0;
-    }
-
-    .checkbox{
-        .label{
-            position:relative;
+        &:after{
+            position:absolute;
+            top:0;
+            bottom:0;
+            right:@grid-gutter-width;
+            margin:auto;
+            content:"";
+            display:block;
+            .sprite-load(-53px, -1178px, 27px, 14px);
         }
-        .checkboxes{
-            background-color:rgba(255,255,255,0.9);
-            margin-left:-1px;
-            display:none;
-            padding:@grid-gutter-width;
-
-            label{
-                display:block;
-                font-family:@font-family-benton-light;
-                font-size:0.8em;
-                padding:@grid-gutter-width/4 0 @grid-gutter-width/4 20px;
-            }
-            input{
-                float:left;
-                margin-left:-20px;
-            }
-
-            &.expanded{
-                display:block;
-            }
+        &:hover:after{
+            background-position:-53px -623px;
         }
     }
 
-    .select{
+    .expanded label{
+        background-color:@color-pink;
+        color:white;
+    }      
+
+    select.enhanced{
+        /* this class added once select has been replicated as a list of text */
+        display:none;
+    }
+
+    .options{
+        background-color:rgba(255,255,255,0.95);
+        margin-left:-1px;
+        display:none;
+        padding:@grid-gutter-width;
+
+        li{
+            font-family:@font-family-benton-light;
+            text-transform:uppercase;
+            font-size:0.8em;
+            padding:@grid-gutter-width/4 0;
+            cursor:pointer;
+
+            &:hover{
+                color:@color-pink;
+            }
+            &.selected{
+                font-family:@font-family-benton;
+                color: @color-highlight-blue
+            }
+        }
+        input{
+            float:left;
+            margin-left:-20px;
+        }
+    }
+
+    .expanded .options{
+        display:block;
+    }
+
+   /* .select{
         position:relative;
         label{
             .visuallyhidden();
         }
-    }
-
-    &.one-filters{
-        .two,
-        .three,
-        .four {
-            display: none;
-        }
-    }
-
-    &.two-filters{}
-
-    &.four-filters{}   
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {  
-    .filters{
-        select{
-            padding-right:37px;
-        }
-
-        .checkbox .label, .select{           
-            &:after{
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:@grid-gutter-width;
-                margin:auto;
-                content:"";
-                display:block;
-                .sprite-load(-53px, -1178px, 27px, 14px);
-            }
-            &:hover:after{
-                background-position:-53px -623px;
-            }
-            
-        }
+    }*/
+    
+    input[type="submit"] {
+        display:none;
     }
 }
 
@@ -1439,3 +1429,13 @@
         }
     }
 }
+
+/**
+ * Strapline
+ */
+
+ .strapline {
+    border-bottom: 1px solid @color-dark-grey;
+    margin-bottom: @spacing-one;
+    padding-bottom: @spacing-one;
+ }

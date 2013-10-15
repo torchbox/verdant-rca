@@ -18,7 +18,16 @@ from verdantimages import image_ops
 
 class AbstractImage(models.Model, TagSearchable):
     title = models.CharField(max_length=255)
-    file = models.ImageField(upload_to='original_images', width_field='width', height_field='height')
+
+    def get_upload_to(self, filename):
+        folder_name = 'original_images'
+        filename = self.file.field.storage.get_valid_name(filename)
+        while len(os.path.join(folder_name, filename)) >= 95:
+            prefix, dot, extension = filename.rpartition('.')
+            filename = prefix[:-1] + dot + extension
+        return os.path.join(folder_name, filename)
+
+    file = models.ImageField(upload_to=get_upload_to, width_field='width', height_field='height')
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)

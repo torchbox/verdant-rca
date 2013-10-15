@@ -36,14 +36,14 @@
     {% news_carousel programme=self.programme %}
 
     <!-- events -->
-    {% upcoming_events_by_programme programme=self.programme programme_display_name=self.get_programme_display %}
+    {% upcoming_events_by_programme programme=self.programme programme_display_name=self.get_programme_display events_index_url=global_events_index_url %}
 
     <!-- staff -->
     {% staff_by_programme programme=self.programme %}
 
 
     <!-- open days -->
-    {% upcoming_events_by_programme opendays=1 programme=self.programme %}
+    {% upcoming_events_by_programme opendays=1 programme=self.programme events_index_url=global_events_index_url %}
 
     <!-- tabs -->
     

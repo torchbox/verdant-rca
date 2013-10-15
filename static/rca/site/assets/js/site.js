@@ -5,6 +5,9 @@ var breakpoints = {
     desktopLarge: "screen and (min-width:1280px)"
 }
 
+var expansionAnimationSpeed = 300;
+
+
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
  * The rest should be handled by the css, including display:none or display:block No sliding. */
@@ -18,7 +21,7 @@ function showHide(clickElement, classElement){
 function showHideFooter() {
     $('.footer-expand').click(function(eventObject){
         $(this).parent().toggleClass('expanded');
-        $(this).prev().slideToggle();
+        $(this).prev().slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -52,7 +55,7 @@ with a slide */
 function showHideSlide(clickElement, classElement, showElement) {
     $(clickElement).click(function(eventObject){
         $(classElement).toggleClass('expanded');
-        $(showElement).slideToggle();
+        $(showElement).slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -139,9 +142,9 @@ $(function(){
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
-    showHide('.filters .checkbox .label', '.filters .checkbox .checkboxes');
     showHideDialogue();
     showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
+    
 
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
@@ -178,10 +181,8 @@ $(function(){
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
-            var tabCarousel = $('.carousel', $($(this).attr('href'))).bxSlider({
-                pager: function(){return $(this).hasClass('paginated')}
-            });
-            $(this).data('carousel', true)
+            applyCarousel($('.carousel', $($(this).attr('href'))));
+            $(this).data('carousel', true);
         }
     });   
 
@@ -297,7 +298,7 @@ $(function(){
                 if(animateHeight){
                     itemContainer.css('height', itemContainer.height());
                     hidden.removeClass('hidden');
-                    itemContainer.animate({height:ul.height()}, 300);
+                    itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
                 }
 
                 var time = 0;
@@ -354,8 +355,45 @@ $(function(){
         for(i = 0; i < rowArray.length; i++){
             $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
         }
-    }) 
+    })
 
+    /* Search filters */
+    $('.filters').each(function(){
+        $self = $(this);
+        $('label', $self).click(function(){
+            $(this).parent().toggleClass('expanded');
+            $(this).parent().siblings().removeClass('expanded');
+        });
+
+        /* create popouts from existing select options */
+        $('select', $self).each(function(){
+            var options = $('option', $(this));
+            var newOptions = '';
+            var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
+            for(var i = 0; i < options.length; i++){
+                if(options[i].value){
+                    newOptions = newOptions + '<li data-val="' + options[i].value + '" class="'+ (options[i].selected ? "selected":"") +'">' + options[i].text + '</li>';
+
+                    /* if form already has items selected, replicate this */
+                    if(options[i].selected){
+                        $('.filters label[for=' + $(this).attr('id') + ']').html(options[i].text).addClass('active');
+                    }
+                }
+            }
+            newOptions = newOptions + '</ul>';
+            var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
+            $(this).addClass('enhanced').after(thisOption);
+        });
+
+        /* Change label values when options are chosen */
+        $('.options li', $self).on('click keydown', function(){
+            $(this).siblings().removeClass('selected');
+            $(this).addClass('selected');
+            $('.filters label[for=' + $(this).parent().data('id') + ']').html($(this).html()).addClass('active');
+            $('#' + $(this).parent().data('id')).val($(this).data('val'));
+        });
+    });
+ 
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 });

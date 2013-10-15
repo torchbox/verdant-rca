@@ -166,8 +166,18 @@
                 <dd>Work type</dd>
                 <dt>{{ self.get_work_type_display }}</dt>
 
-                <dd>Sponsors</dd>
-                <dt>{{ self.work_sponsors }}</dt>
+                {% with self.sponsor.all as sponsors %}
+                    {% if sponsors %}
+                        <dd>Sponsors</dd>
+                        <dt>
+                            <ul>
+                                {% for sponsor in sponsors %}
+                                <li>{{ sponsor.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
                 
             {% endif %}
 
