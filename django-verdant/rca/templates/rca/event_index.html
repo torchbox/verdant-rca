@@ -21,7 +21,7 @@
 	                <p class="label">School</p>
 	                <div class="options">
 					{% for key, value in global_schools %} 
-					  	<label><input type="radio" name="school" value="{{ key }}">{{ value }}</label>
+					  	<label><input type="radio" name="school" value="{{ key }}" {% if request.GET.school == key %}checked="checked"{% endif %}>{{ value }}</label>
 					{% endfor %}
 					</div>
 				</li>
@@ -29,7 +29,7 @@
 	                <p class="label">Programme</p>
 	                <div class="options three-cols">
 	                	{% for key, value in global_programmes %} 
-						  	<label><input type="radio" name="programme" value="{{ key }}">{{ value }}</label>
+						  	<label><input type="radio" name="programme" value="{{ key }}" {% if request.GET.programme == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
 	                </div>
 	            </li>
@@ -37,7 +37,7 @@
 	                <p class="label">Location</p>
 	                <div class="options">
 	                	{% for key, value in global_locations %} 
-						  	<label><input type="radio" name="location" value="{{ key }}">{{ value }}</label>
+						  	<label><input type="radio" name="location" value="{{ key }}" {% if request.GET.location == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
 						<label for="location_other">other location:</label><input type="text" name="location_other">
 	                </div>
@@ -46,7 +46,7 @@
 	                <p class="label">Area</p>
 	                <div class="options">
 	                	{% for key, value in global_areas %} 
-						  	<label><input type="radio" name="area" value="{{ key }}">{{ value }}</label>
+						  	<label><input type="radio" name="area" value="{{ key }}" {% if request.GET.area == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
 	                </div>
 	            </li>
@@ -54,15 +54,16 @@
 	                <p class="label">Audience</p>
 	                <div class="options">
 	                	{% for key, value in global_audiences %} 
-						  	<label><input type="radio" name="audience" value="{{ key }}">{{ value }}</label>
+						  	<label><input type="radio" name="audience" value="{{ key }}" {% if request.GET.audience == key %}checked="checked"{% endif %}>{{ value }}</label>
 						{% endfor %}
 	                </div>
 	            </li>
 	            <li>
-	                <p class="label">Upcoming?</p>
+	                <p class="label">Upcoming or past</p>
 	                <div class="options">
-	                	<label><input type="radio" name="past" value="upcoming" selected="selected">upcoming</label>
-						<label><input type="radio" name="past" value="past">past</label>
+	                	<!--upcoming events checked by default - only deselected if someone has explicitly selected past results -->
+	                	<label><input type="radio" name="period" value="upcoming"  {% if request.GET.period != 'past' %}checked="checked"{% endif %}>upcoming</label>
+						<label><input type="radio" name="period" value="past" {% if request.GET.period == 'past' %}checked="checked"{% endif %}>past</label>
 	                </div>
 	            </li>
 				<input type="submit" />
@@ -89,7 +90,4 @@
 <!-- To dos
 	- listing image not feature image
 	- ads
-	- js when selecting each radio button
-	- styling of filters
-	- values to be set on radio buttons based on filters
 -->

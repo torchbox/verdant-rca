@@ -982,9 +982,9 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         location_other = request.GET.get('location_other')
         area = request.GET.get('area')
         audience = request.GET.get('audience')
-        past = request.GET.get('past')
+        period = request.GET.get('period')
 
-        if past=='past':
+        if period=='past':
             events = self.past_events()
         else:
             events = self.future_events()
