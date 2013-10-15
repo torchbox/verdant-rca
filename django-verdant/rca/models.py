@@ -1582,6 +1582,35 @@ StaffPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks')
 ]
+
+# == Staff index page ==
+
+class StaffIndex(Page, SocialFields, CommonPromoteFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+StaffIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('twitter_feed'),
+]
+
+StaffIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
    
 # == Student profile page ==
 
@@ -2039,7 +2068,14 @@ CurrentResearchPage.promote_panels = [
 # == Gallery Page ==
 
 class GalleryPage(Page, SocialFields, CommonPromoteFields):
-    pass
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+GalleryPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('twitter_feed'),
+]
 
 GalleryPage.promote_panels = [
     MultiFieldPanel([
