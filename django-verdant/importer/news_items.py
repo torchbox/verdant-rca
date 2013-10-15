@@ -13,6 +13,26 @@ IMAGE_PATH = 'importer/export_news_images/'
 NEWS_INDEX = NewsIndex.objects.get(slug='master-news-index')
 
 
+def clear_news_items():
+    newsindex=NEWS_INDEX
+    pages = newsindex.get_children()
+    print str(pages.count()) + ' news items to be deleted'
+    for page in pages:
+        newsitem = NewsItem.objects.get(id=page.id)
+        for c in NewsItemCarouselItem.objects.filter(page=newsitem):
+            c.image.delete()
+        soup = BeautifulSoup(newsitem.body, 'html.parser')
+        to_delete_ids = []
+        for x in soup.find_all('embed'):
+            try:
+                to_delete_ids.append(int(x.attrs['id']))
+            except ValueError:
+                pass
+        if to_delete_ids:
+            RcaImage.objects.filter(id__in=to_delete_ids).delete()
+        page.delete()
+
+
 def doimport(**kwargs):
     path = kwargs.get('path', PATH)
     save = kwargs.get('save', False)

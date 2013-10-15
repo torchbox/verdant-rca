@@ -215,16 +215,6 @@ def doimport(**kwargs):
                     colpage = StudentPageWorkCollaborator(page=sp, name=name)
                     colpage.save()
 
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # profile image = optional
-            # remove project title field
-
-
-
             # handle the cv fields
             cv = s.find('cv')
 
@@ -236,6 +226,9 @@ def doimport(**kwargs):
                     cv, 'experience', StudentPageExperience, sp, length=255, save=save)
             sp_errs['awards'] = cv_handle(
                     cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award', save=save)
+            if cv.find('sponsors') is not None:
+                sp_errs['sponsors'] = cv_handle(
+                        cv, 'sponsors', StudentPageWorkSponsor, sp, length=255, fieldname='name', save=save)
             # currently the model doesn't have publications or conferences
             #sp_errs['publications'] = cv_handle(
             #        cv, 'publications', StudentPagePublications, sp, length=255)
