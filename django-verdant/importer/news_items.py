@@ -108,7 +108,7 @@ def doimport(**kwargs):
                 #theimage.height, imageerrors['height'] = text_from_elem(metadata, 'height', length=255)
 
                 try:
-                    with File(open(image_path + filename, 'r')) as f:
+                    with File(open(image_path + filename.encode('utf-8'), 'r')) as f:
                         if theimage.id:
                             if save:
                                 theimage.delete()
