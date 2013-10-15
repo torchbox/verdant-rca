@@ -2,6 +2,13 @@ from django.db import models
 from django.db.models.fields.related import ForeignKey, ForeignRelatedObjectsDescriptor
 from django.utils.functional import cached_property
 
+try:
+    from south.modelsinspector import add_introspection_rules
+except ImportError:
+    # south is not in use, so make add_introspection_rules a no-op
+    def add_introspection_rules(*args):
+        pass
+
 from cluster.queryset import FakeQuerySet
 
 
@@ -148,3 +155,5 @@ class ParentalKey(ForeignKey):
             cls._meta.child_relations.append(related)
         except AttributeError:
             cls._meta.child_relations = [related]
+
+add_introspection_rules([], ["^cluster\.fields\.ParentalKey"])
