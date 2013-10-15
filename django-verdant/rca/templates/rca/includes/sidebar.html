@@ -28,7 +28,7 @@
 <!-- Related links -->
 {% if showRelatedLinks %}
     {% load pageurl %}
-    {% if self.get_other_siblings or self.related_links %}
+    {% if self.get_other_siblings|length > 0 or self.related_links.all|length > 0 %}
     <div class="related expanded">
         <h2>In this section</h2>
         <div class="wrapper">
@@ -46,7 +46,9 @@
                     <h3>See also</h3>
                     <ul class="extra-links">
                     {% for link in related_links %}
-                        <li><a href="{% pageurl link.link %}">{{ link.link_text }}</a></li>
+                        {% if link.link and link.link_text %}
+                            <li><a href="{% pageurl link.link %}">{{ link.link_text }}</a></li>
+                        {% endif %}
                     {% endfor %}
                     </ul>
                 {% endif %}
