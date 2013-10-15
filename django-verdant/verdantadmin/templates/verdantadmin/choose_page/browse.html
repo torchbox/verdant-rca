@@ -3,23 +3,10 @@
 </header>
 <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
     <ul class="fields">
-        <li>
-            <div class="field">
-                <input type="text" name="q" />
-            </div>
-        </li>
         {% for field in form %}
             {% include "verdantadmin/shared/field_as_li.html" with field=field %}
         {% endfor %}
         <li class="submit"><input type="submit" value="Search" /></li>
-        {% if popular_tags %}
-            <li class="popular-tags">
-                <h3>Popular tags</h3>
-                {% for tag in popular_tags %}
-                    <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
-                {% endfor %}
-            </li>
-        {% endif %}
     </ul>
 </form>
 <div class="nice-padding">
@@ -30,7 +17,6 @@
             {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
         </p>
     {% endif %}    
-
 
      <p class="breadcrumb">
         {% for page in parent_page.get_ancestors %}
