@@ -126,14 +126,14 @@ def doimport(**kwargs):
         pageerrors = {}
         dept_title, pageerrors['title'] = text_from_elem(page, 'title')
         specialism = ''
-        print '\nNow importing: ' + dept_title
+        print '\nNow importing: ' + repr(dept_title)
         if dept_title in PROGRAMME_SPECIALISMS.keys():
             dept_title, specialism = PROGRAMME_SPECIALISMS[dept_title]
-        print 'dept: ' + dept_title
+        print 'dept: ' + repr(dept_title)
         theprogramme = PROGRAMMES[dept_title]
-        print 'prog: ' + theprogramme
+        print 'prog: ' + repr(theprogramme)
         theschool = SCHOOLS[dept_title]
-        print 'scho: ' + theschool
+        print 'scho: ' + repr(theschool)
 
         h = html2text.HTML2Text()
         h.body_width = 0
@@ -142,7 +142,7 @@ def doimport(**kwargs):
         except AttributeError:
             blurb = page.find('synopsis')
         blurb = h.handle(blurb.text).strip()
-        print "Blurb: " + blurb
+        print "Blurb: " + repr(blurb)
         print "******* note that the above text will not be imported *******"
 
         student_count = 0
