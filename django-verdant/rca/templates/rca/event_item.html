@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-	<span class="a2"><a href="/events/?audience={{ self.audience }}">{{ self.audience }}</a></span>
+	<span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.audience }}</a></span>
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="event-info row">

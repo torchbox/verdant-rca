@@ -989,17 +989,15 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         else:
             events = self.future_events()
 
-        if programme:
+        if programme and programme != 'all':
             events = events.filter(related_programmes__programme=programme)
-        if school:
+        if school and school != 'all':
             events = events.filter(related_schools__school=school)
-        if location:
+        if location and location != 'all':
             events = events.filter(location=location)
-        if location_other:
-            events = events.filter(location_other=location_other)
-        if area:
+        if area and area != 'all':
             events = events.filter(related_areas__area=area)
-        if audience:
+        if audience and audience != 'all':
             events = events.filter(audience=audience)
 
         page = request.GET.get('page')
