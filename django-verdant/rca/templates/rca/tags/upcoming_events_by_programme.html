@@ -1,8 +1,7 @@
 {% load pageurl %}
 {% if events %}
     <section class="events x-plus row module">
-        <!-- to do: add link to events index filtered by programme -->
-        <h2 class="module-title">{% if opendays %}Open days{% else %}<a href="#">{{ programme_display_name }} events</a>{% endif %}</h2>
+        <h2 class="module-title">{% if opendays %}<a href="/events/?audience=openday">Open days</a>{% else %}<a href="/events/?programme={{ programme }}">{{ programme_display_name }} events</a>{% endif %}</h2>
         <div class="item-container">
             <ul class="row">
                 {% for event in events %}

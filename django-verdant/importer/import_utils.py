@@ -2,6 +2,7 @@
 import html2text
 import markdown
 import re
+from bs4 import BeautifulSoup
 from django.utils.text import slugify
 
 
@@ -118,3 +119,38 @@ def mdclean(target):
             target
             )
     return target
+
+
+def statement_extract(statement):
+    """
+        Extract paragraphs beginning "Supported by:" or "Collaboration:" or "Collaborations:"
+
+        >>> statement_extract('<p>Sample paragraph.</p><p>Second sample.</p><p>Supported by: Rod, Jane, Freddy</p><p>Collaborations: Bill, Ben</p>")
+        ('<p>Sample paragraph.</p><p>Second sample.</p>', [u'Rod', u'Jane', u'Freddy'], [u'Bill', u'Ben'])
+    """
+    soup = BeautifulSoup(statement, 'html.parser')
+    supporters = []
+    collaborators = []
+    for p in soup.find_all('p'):
+        text = p.text
+        supported = 'Supported by: '
+        collaborate = 'Collaboration'
+
+        if text.startswith(supported):
+            text = text[len(supported):]
+            for entry in text.split(','):
+                supporters.append(entry.strip())
+            p.decompose()
+            continue
+
+        if text.startswith(collaborate):
+            text = text[len(collaborate):]
+            if text.startswith('s: '):
+                text = text[3:]
+            if text.startswith(': '):
+                text = text[2:]
+            for entry in text.split(','):
+                collaborators.append(entry.strip())
+            p.decompose()
+            continue
+    return str(soup), supporters, collaborators
