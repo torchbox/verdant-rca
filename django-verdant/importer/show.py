@@ -178,7 +178,7 @@ def doimport(**kwargs):
                 degree_subject = degree_subject[:-1]
             sp.degree_subject = DEGREE_SUBJECTS[degree_subject]
             degree_qualification, sp_errs['deg_qual'] = text_from_elem(metadata, 'degree', length=255)
-            sp.degree_qualification = degree_qualification
+            sp.degree_qualification = degree_qualification.lower()
             # metadata contains first and last names in separate fields
             sp.first_name, sp_errs['first_name'] = text_from_elem(metadata, 'firstname', length=255)
             sp.last_name, sp_errs['last_name'] = text_from_elem(metadata, 'surname', length=255)
