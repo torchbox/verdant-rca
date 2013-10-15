@@ -6,8 +6,8 @@
         {% if carousel_items %}
             <section class="row">
 
-
                 {% comment %}Don't output carousel controls and overlay text if there is only one image or video in the carousel{% endcomment %}
+                {% comment %}
                 {% if carousel_items|length == 1 %}
                     {% for carousel_item in carousel_items %}
                         {% if carousel_item.image %}
@@ -25,6 +25,7 @@
                         {% endif %}
                     {% endfor %}
                 {% else %}
+                {% endcomment %}
 
                 <ul class="carousel paginated">
                     {% for carousel_item in carousel_items %}
@@ -75,8 +76,9 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-
+                {% comment %}
                 {% endif %}
+                {% endcomment %}
             </section>
         {% endif %}
     {% endwith %}
