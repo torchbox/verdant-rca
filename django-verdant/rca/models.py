@@ -1072,9 +1072,11 @@ class StandardPageQuotation(Orderable):
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
+    strapline = models.CharField(max_length=255, blank=True)
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
@@ -1148,6 +1150,7 @@ class StandardIndexContactEmail(Orderable):
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    strapline = models.CharField(max_length=255, blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -1159,6 +1162,7 @@ class StandardIndex(Page, SocialFields, CommonPromoteFields):
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
     MultiFieldPanel([
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
