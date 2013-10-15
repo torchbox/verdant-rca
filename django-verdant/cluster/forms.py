@@ -107,43 +107,41 @@ class ClusterFormMetaclass(ModelFormMetaclass):
             return new_class
 
         opts = new_class._meta
-        if opts.model is None:
-            raise ValueError('ModelForm has no model class specified.')
-
-        try:
-            child_relations = opts.model._meta.child_relations
-        except AttributeError:
-            child_relations = []
-
-        formsets = {}
-        for rel in child_relations:
-            # to build a childformset class from this relation, we need to specify:
-            # - the base model (opts.model)
-            # - the child model (rel.model)
-            # - the fk_name from the child model to the base (rel.field.name)
-            # Additionally, to specify widgets, we need to construct a custom ModelForm subclass.
-            # (As of Django 1.6, modelformset_factory can be passed a widgets kwarg directly,
-            # and it would make sense for childformset_factory to support that as well)
-
-            rel_name = rel.get_accessor_name()
+        if opts.model:
             try:
-                subform_widgets = opts.widgets.get(rel_name)
-            except AttributeError:  # thrown if opts.widgets is None
-                subform_widgets = None
+                child_relations = opts.model._meta.child_relations
+            except AttributeError:
+                child_relations = []
 
-            if subform_widgets:
-                class CustomModelForm(ModelForm):
-                    class Meta:
-                        widgets = subform_widgets
-                form_class = CustomModelForm
-            else:
-                form_class = ModelForm
+            formsets = {}
+            for rel in child_relations:
+                # to build a childformset class from this relation, we need to specify:
+                # - the base model (opts.model)
+                # - the child model (rel.model)
+                # - the fk_name from the child model to the base (rel.field.name)
+                # Additionally, to specify widgets, we need to construct a custom ModelForm subclass.
+                # (As of Django 1.6, modelformset_factory can be passed a widgets kwarg directly,
+                # and it would make sense for childformset_factory to support that as well)
 
-            formset = childformset_factory(opts.model, rel.model,
-                form=form_class, formfield_callback=formfield_callback, fk_name=rel.field.name)
-            formsets[rel_name] = formset
+                rel_name = rel.get_accessor_name()
+                try:
+                    subform_widgets = opts.widgets.get(rel_name)
+                except AttributeError:  # thrown if opts.widgets is None
+                    subform_widgets = None
 
-        new_class.formsets = formsets
+                if subform_widgets:
+                    class CustomModelForm(ModelForm):
+                        class Meta:
+                            widgets = subform_widgets
+                    form_class = CustomModelForm
+                else:
+                    form_class = ModelForm
+
+                formset = childformset_factory(opts.model, rel.model,
+                    form=form_class, formfield_callback=formfield_callback, fk_name=rel.field.name)
+                formsets[rel_name] = formset
+
+            new_class.formsets = formsets
 
         return new_class
 
