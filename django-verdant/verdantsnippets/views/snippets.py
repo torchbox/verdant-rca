@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 
 from verdantsnippets.models import get_snippet_content_types
-from verdantadmin.edit_handlers import ObjectList, get_form_for_model, extract_panel_definitions_from_form_class
+from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==
 
@@ -37,13 +37,8 @@ def get_content_type_from_url_params(app_name, model_name):
 SNIPPET_EDIT_HANDLERS = {}
 def get_snippet_edit_handler(model):
     if model not in SNIPPET_EDIT_HANDLERS:
-        if hasattr(model, 'panels'):
-            edit_handler = ObjectList(model.panels)
-            # form = edit_handler.get_form_class()
-        else:
-            form = get_form_for_model(model)
-            panels = extract_panel_definitions_from_form_class(form)
-            edit_handler = ObjectList(panels)
+        panels = extract_panel_definitions_from_model_class(model)
+        edit_handler = ObjectList(panels)
 
         SNIPPET_EDIT_HANDLERS[model] = edit_handler
 
