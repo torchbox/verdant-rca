@@ -38,7 +38,7 @@
         </div>
     </header>
 
-    <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
+    <form class="search-bar full-width" action="{% url 'verdantimages_search_image' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}

@@ -448,13 +448,16 @@ ul.tagit li.tagit-choice-editable{
 
 /* search bars  (search integrated into header area) */
 .search-bar{
-    .nice-padding();
     margin-top:-2em;
     padding-top:1em;
     padding-bottom:1em;
-    background-color:@color-header-bg;
-    border-bottom:1px solid @color-grey-lighter;
     margin-bottom:2em;
+
+    &.full-width{
+        .nice-padding();
+        background-color:@color-header-bg;
+        border-bottom:1px solid @color-grey-lighter;
+    }
 
     .fields{
         position:relative;

@@ -38,7 +38,7 @@ $(function(){
     });
 
     /* tabs */
-    $('.tab-nav a').click(function (e) {
+    $(document).on('click', '.tab-nav a', function (e) {
         e.preventDefault()
         $(this).tab('show');
     });   

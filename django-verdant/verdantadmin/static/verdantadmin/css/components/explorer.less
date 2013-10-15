@@ -46,7 +46,9 @@ max z-index: unknown;
         display: block;
         position: relative;
         outline: none;
-        
+        white-space: nowrap;
+        text-overflow:ellipsis;
+        overflow:hidden;
 
         &:before{
             opacity:0.5;
@@ -57,6 +59,10 @@ max z-index: unknown;
             background:@color-teal;
             color:white;
         }
+    }
+
+    .has-children a{
+        padding-right:5em;
     }
 
 
