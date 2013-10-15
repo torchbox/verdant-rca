@@ -1618,7 +1618,7 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.IntegerField(max_length=255)
     specialism = models.CharField(max_length=255, blank=True)
-    profile_image = models.ForeignKey('rca.RcaImage', related_name='+', blank=True)
+    profile_image = models.ForeignKey('rca.RcaImage', related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
