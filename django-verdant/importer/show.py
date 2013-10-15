@@ -35,11 +35,24 @@ from importer.import_utils import (
         )
 from importer.constants import DEGREE_SUBJECTS, SCHOOLS, PROGRAMMES, PROGRAMME_SPECIALISMS
 
-#NEWSINDEX = NewsIndex.objects.all()[0]
 PATH = 'importer/export_2012_2_pretty.xml'
 IMAGE_PATH = 'importer/show_images/'
-SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
-PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
+try:
+    SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
+except StandardIndex.DoesNotExist:
+    print "Create an index page with slug 'show-rca'"
+    raise
+try:
+    PLACEHOLDER_IMAGE = RcaImage.objects.get(rca_content_id='placeholder')
+except RcaImage.DoesNotExist:
+    newimage = RcaImage(title='placeholder',rca_content_id='placeholder')
+    while not newimage.id:
+        image_path = raw_input(u"Placeholder image not found.\nEnter the path of an image to use as placeholder:\n")
+        with File(open(image_path, 'r')) as f:
+            newimage.file = f
+            newimage.save()
+    PLACEHOLDER_IMAGE = newimage
+
 YEARS = [
         '2013',
         '2012',
