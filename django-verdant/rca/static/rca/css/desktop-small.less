@@ -147,7 +147,7 @@ nav {
     margin-right:@right-col-width + @grid-gutter-width;
 }
     nav h2{
-        .transition(border-color 0.3s ease);
+        .transition(all 0.3s ease);
         position:absolute;
         top:0px;
         z-index:1;
@@ -169,12 +169,21 @@ nav {
         }
       
         &:hover{
-            border-color:#ffffff;
+            color:@color-white;
+            background-color:@color-pink;
+
+            &:after{
+                background-position:-53px -623px;
+            }
         }
     }   
-    nav.open h2:after{
-        background-position:-17px -1178px;
-    }   
+    nav.open h2{
+        color:black;
+        background-color:white;
+        &:after{
+            background-position:-17px -1178px;
+        }   
+    }
 
     /* these settings change when the menu is ready*/
     nav.ready{

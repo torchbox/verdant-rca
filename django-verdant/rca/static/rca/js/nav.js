@@ -1,5 +1,4 @@
 $(function(){
-
 	Harvey.attach('screen and (max-width:767px)', {
 		setup: function(){}, // called when the query becomes valid for the first time
 		on: function(){
@@ -31,8 +30,6 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
-		
-
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
@@ -97,20 +94,24 @@ var desktopNav = {
 				})
 			}
 
-			toggle.hoverIntent({
-				over: function(){
-					openMenu();
-				},
-				out: function(e){
-					if($(e.toElement).get(0) != $self.get(0) && $(e.toElement).closest('nav').get(0) != $self.get(0)){
-						closeMenu();
-					}
-				},
-				timeout:500
+			// toggle.hoverIntent({
+			// 	over: function(){
+			// 		openMenu();
+			// 	},
+			// 	out: function(e){
+			// 		var relTarg = e.relatedTarget || e.toElement;
+			// 		if($(relTarg).get(0) != $self.get(0) && $(relTarg).closest('nav').get(0) != $self.get(0)){
+			// 			closeMenu();
+			// 		}
+			// 	},
+			// 	timeout:500
+			// })
+			toggle.click(function(){
+				openMenu();
 			})
 
 			$(document).on('click', function(e){
-				if($(e.toElement).get(0) != toggle.get(0)){
+				if($(e.target).get(0) != toggle.get(0)){
 					closeMenu();
 				}
 			});

@@ -5,6 +5,9 @@ var breakpoints = {
     desktopLarge: "screen and (min-width:1280px)"
 }
 
+var expansionAnimationSpeed = 300;
+
+
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
  * The rest should be handled by the css, including display:none or display:block No sliding. */
@@ -18,7 +21,7 @@ function showHide(clickElement, classElement){
 function showHideFooter() {
     $('.footer-expand').click(function(eventObject){
         $(this).parent().toggleClass('expanded');
-        $(this).prev().slideToggle();
+        $(this).prev().slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -52,7 +55,7 @@ with a slide */
 function showHideSlide(clickElement, classElement, showElement) {
     $(clickElement).click(function(eventObject){
         $(classElement).toggleClass('expanded');
-        $(showElement).slideToggle();
+        $(showElement).slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -295,7 +298,7 @@ $(function(){
                 if(animateHeight){
                     itemContainer.css('height', itemContainer.height());
                     hidden.removeClass('hidden');
-                    itemContainer.animate({height:ul.height()}, 300);
+                    itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
                 }
 
                 var time = 0;
