@@ -39,6 +39,9 @@ class ClusterTest(TestCase):
         # removed member should be deleted from the db entirely
         self.assertEqual(0, BandMember.objects.filter(name='Paul McCartney').count())
 
+        # queries on beatles.members should now revert to SQL
+        self.assertTrue(beatles.members.extra(where=["tests_bandmember.name='John Lennon'"]).exists())
+
 
     def test_can_pass_child_relations_as_constructor_kwargs(self):
         beatles = Band(name='The Beatles', members=[

@@ -107,6 +107,9 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                 else:
                     item.save()
 
+            # purge the _cluster_related_objects entry, so we switch back to live SQL
+            del self.instance._cluster_related_objects[relation_name]
+
     return DeferringRelatedManager
 
 
