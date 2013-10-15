@@ -204,13 +204,13 @@ def doimport(**kwargs):
             # handle the sponsors and collaborators from earlier
             for spon in sponsors:
                 name, sp_errs['sponsors'] = check_length(spon, 255)
-                sponpage = StudentPageWorkSponsor(page=sp, name=name)
                 if save:
+                    sponpage = StudentPageWorkSponsor(page=sp, name=name)
                     sponpage.save()
             for col in collaborators:
                 name, sp_errs['collaborators'] = check_length(col, 255)
-                colpage = StudentPageWorkCollaborator(page=sp, name=name)
                 if save:
+                    colpage = StudentPageWorkCollaborator(page=sp, name=name)
                     colpage.save()
 
             # TODO work_despritpion is the same as statement
@@ -243,41 +243,43 @@ def doimport(**kwargs):
             if s.find('emails') is not None:
                 for emailaddress in s.find('emails').getchildren():
                     emailtext = emailaddress.text.strip()
-                    emailpage = StudentPageContactsEmail.objects.get_or_create(
+                    if save:
+                        emailpage = StudentPageContactsEmail.objects.get_or_create(
                             page=sp,
                             email=emailtext,
                             )
-                    try:
-                        if save:
+                        try:
                             emailpage.save()
-                    except Exception, e:
-                        sp_errs['email ' + emailaddress.text.strip()] = e.message
+                        except Exception, e:
+                            sp_errs['email ' + emailaddress.text.strip()] = e.message
 
             if s.find('phonenumbers') is not None:
                 for num in s.find('phonenumbers').getchildren():
                     phonenumber = num.text.strip()
-                    phonepage = StudentPageContactsPhone.objects.get_or_create(
-                            page=sp,
-                            phone=phonenumber,
-                            )
-                    try:
-                        if save:
-                            phonepage.save()
-                    except Exception, e:
-                        sp_errs['phone ' + num.text.strip()] = e.message
+                    if save:
+                        phonepage = StudentPageContactsPhone.objects.get_or_create(
+                                page=sp,
+                                phone=phonenumber,
+                                )
+                        try:
+                            if save:
+                                phonepage.save()
+                        except Exception, e:
+                            sp_errs['phone ' + num.text.strip()] = e.message
 
             if s.find('urls') is not None:
                 for url in s.find('urls').getchildren():
                     urltext = url.text.strip()
-                    websitepage = StudentPageContactsWebsite.objects.get_or_create(
-                            page=sp,
-                            website=urltext,
-                            )
-                    try:
-                        if save:
-                            websitepage.save()
-                    except Exception, e:
-                        sp_errs['website ' + url.text.strip()] = e.message
+                    if save:
+                        websitepage = StudentPageContactsWebsite.objects.get_or_create(
+                                page=sp,
+                                website=urltext,
+                                )
+                        try:
+                            if save:
+                                websitepage.save()
+                        except Exception, e:
+                            sp_errs['website ' + url.text.strip()] = e.message
 
             # handle images tag
             images = s.find('images')
@@ -320,12 +322,13 @@ def doimport(**kwargs):
                         print "Unexpected error:", sys.exc_info()[0]
                         raise
 
-                    carousel, created = StudentPageCarouselItem.objects.get_or_create(
-                            page=sp,
-                            image=theimage
-                            )
-                    if save and created:
-                        carousel.save()
+                    if save:
+                        carousel, created = StudentPageCarouselItem.objects.get_or_create(
+                                page=sp,
+                                image=theimage
+                                )
+                        if created:
+                            carousel.save()
 
                     imageerrordict = dict((k, v) for k, v in imageerrors.iteritems() if v)
                     if imageerrordict:
