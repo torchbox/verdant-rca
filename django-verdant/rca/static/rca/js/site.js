@@ -263,59 +263,79 @@ $(function(){
 
     $('.x-plus').each(function(){
         var $this = $(this);
-        var paginationContainer = $($this.data('pagination'));
+        var paginationContainer = $this.data('pagination');
         var loadmore = $('.load-more', $this);
         var loadmoreTarget = $('.load-more-target', $this);
         var itemContainer = $('.item-container', $this);
         var ul = $('> ul', itemContainer);
         var items = $('> li', ul);
         var step = 100
+        var hiddenClasses = 'hidden fade-in-before';
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
         var loadmoreIndex = items.index(loadmore);
-        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
+        var newItems = items.slice(loadmoreTargetIndex, loadmoreIndex);
+
+        var prepareNewItems = function(items){
+            items.addClass(hiddenClasses);
+        }
+
+        var showNewItems = function(){
+            itemContainer.css('height', itemContainer.height());
+            newItems.removeClass('hidden');
+            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
+
+            var time = 0;
+            newItems.each(function(index){
+                var $item = $(this);
+                setTimeout( function(){ 
+                    $item.addClass('fade-in-after');
+                }, time);
+                time += step;
+            });
+        }
+
+        var hideNewItems = function(){
+            $this.removeClass('expanded');
+            itemContainer.removeAttr('style');
+            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+        }
+
+        // prepare the items already in the page (if non-inifinite-scroll)
+        prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
         loadmore.click(function(e){
             e.preventDefault();
             
-            if($this.data('pagination') && paginationContainer.length()){
-                $('<div></div>').load($('.next a', paginationContainer).attr('href') + " .x-plus ul", function(){
-                    loadmore.before($(this).find("li:not(.load-more)"));
-                    expandToFit(false);
-                });
+            if(paginationContainer && $(paginationContainer).length){
+                var nextLink = $('.next a', $(paginationContainer));
+                var nextLinkUrl = nextLink.attr('href');
+
+                // get next set of results
+                var nextPage = $('<html></html>').load(nextLinkUrl, function(){
+                    newItems = $('.x-plus li:not(.load-more)', nextPage);
+                    prepareNewItems(newItems);
+                    loadmore.before(newItems);
+                    
+                    // get next pagination link
+                    if($(paginationContainer + ' .next a', nextPage).length){
+                        nextLink.attr('href', $(paginationContainer + ' .next a', nextPage).attr('href'));
+                    }else{
+                        loadmore.remove();
+                    }
+
+                    showNewItems();
+                });                
+            }else if(!$this.hasClass('expanded')){
+                showNewItems();
+                $this.addClass('expanded');
             }else{
-                expandToFit(true);
+                hideNewItems();
             }
 
             return false;
         });
-
-        var expandToFit = function(animateHeight){
-            if(!$this.hasClass('expanded')){
-                $this.addClass('expanded');
-
-                if(animateHeight){
-                    itemContainer.css('height', itemContainer.height());
-                    hidden.removeClass('hidden');
-                    itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
-                }
-
-                var time = 0;
-                hidden.each(function(index){
-                    var $this = $(this);
-                    setTimeout( function(){ 
-                        $this.addClass('fade-in-after');
-                    }, time);
-                    time += step;
-                });
-            }else{
-                $this.removeClass('expanded');
-                itemContainer.removeAttr('style');
-                hidden.removeClass('fade-in-after').addClass('hidden');
-            }
-        }
-
     });
     
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
