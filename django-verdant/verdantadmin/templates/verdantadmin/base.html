@@ -35,7 +35,7 @@
     <![endif]-->
 
     <div class="wrapper">
-        <div id="nav-toggle" data-afteropen="Collapse">Menu</div>
+        <div id="nav-toggle" data-afteropen="Collapse" class="icon icon-verdant text-replace">Menu</div>
         <div class="nav-wrapper">
             <div class="inner">
                 <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
@@ -51,7 +51,6 @@
                 </nav>
             </div>
                 
-           
             <nav class="explorer">
                 <ul class="dl-menu">
                     {% explorer_nav %}
@@ -61,7 +60,6 @@
 
         <div class="content-wrapper">
             <div class="content">
-                
                 {% if messages %}
                     <div class="messages">
                         <ul>
