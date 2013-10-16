@@ -13,7 +13,7 @@ class TagSearchable(object):
     search_on_fields = ['title']
 
     @classmethod
-    def search(cls, q, results_per_page=None, page=1):
+    def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
         terms = q.split()
         if not terms:
             return cls.objects.none()
@@ -32,7 +32,9 @@ class TagSearchable(object):
             else:
                 search_query &= term_query
 
-        results = cls.objects.filter(search_query).distinct().prefetch_related('tagged_items__tag')
+        results = cls.objects.filter(search_query).distinct()
+        if prefetch_tags:
+            results = results.prefetch_related('tagged_items__tag')
 
         # if results_per_page is set, return a paginator
         if results_per_page is not None:
