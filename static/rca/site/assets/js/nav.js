@@ -107,8 +107,12 @@ var desktopNav = {
 			// 	timeout:500
 			// })
 			toggle.click(function(){
-				openMenu();
-			})
+				if($self.hasClass('open')){
+					closeMenu();
+				}else{
+					openMenu();
+				}
+			});
 
 			$(document).on('click', function(e){
 				if($(e.target).get(0) != toggle.get(0)){

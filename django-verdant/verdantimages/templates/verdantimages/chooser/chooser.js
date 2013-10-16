@@ -46,8 +46,15 @@ function(modal) {
         var wait = setTimeout(search, 50);
         $(this).data('timer', wait);
     });
+    $('a.suggested-tag').click(function() {
+        $('#id_q').val($(this).text());
+        search();
+        return false;
+    })
 
     {% url 'verdantadmin_tag_autocomplete' as autocomplete_url %}
+    
+    /* where is this used? */
     $('#id_tags', modal.body).tagit({
         autocomplete: {source: "{{ autocomplete_url|addslashes }}"}
     });

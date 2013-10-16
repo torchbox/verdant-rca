@@ -42,10 +42,13 @@ def chooser(request):
     else:
         searchform = SearchForm()
 
-    return render_modal_workflow(
-        request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
-        {'images': images, 'uploadform': uploadform, 'searchform': searchform, 'will_select_format': request.GET.get('select_format')}
-    )
+    return render_modal_workflow(request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',{
+        'images': images, 
+        'uploadform': uploadform, 
+        'searchform': searchform, 
+        'will_select_format': request.GET.get('select_format'),
+        'popular_tags': Image.popular_tags(),
+    })
 
 
 def image_chosen(request, image_id):
