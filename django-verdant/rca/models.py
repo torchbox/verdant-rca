@@ -1103,10 +1103,19 @@ class StandardPageQuotation(Orderable):
     quotee = models.CharField(max_length=255, blank=True)
     quotee_job_title = models.CharField(max_length=255, blank=True)
 
+class StandardPageRelatedDocument(Orderable):
+    page = models.ForeignKey('rca.StandardPage', related_name='documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+
+class StandardPageImage(Orderable):
+    page = models.ForeignKey('rca.StandardPage', related_name='images')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1115,7 +1124,10 @@ StandardPage.content_panels = [
     FieldPanel('body', classname="full"),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
+    FieldPanel('middle_column_body', classname="full"),
+    InlinePanel(StandardPage, StandardPageRelatedDocument, label="Document"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
+    InlinePanel(StandardPage, StandardPageImage, label="Middle column image"),
 ]
 
 StandardPage.promote_panels = [
