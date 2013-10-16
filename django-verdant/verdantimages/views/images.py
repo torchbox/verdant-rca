@@ -81,17 +81,23 @@ def add(request):
 def search(request):
     Image = get_image_model()
     images = []
+    q = None
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
-            images = Image.search(q)
+
+            # page number
+            p = request.GET.get("p", 1)
+
+            images = Image.search(q, results_per_page=10, page=p)
     else:
         form = SearchForm()
 
     if request.is_ajax():
         return render(request, "verdantimages/images/search-results.html", {
             'images': images,
+            'q': q,
         })
     else:
         return render(request, "verdantimages/images/index.html", {
@@ -99,4 +105,5 @@ def search(request):
             'images': images,
             'is_searching': True,
             'popular_tags': Image.popular_tags(),
+            'q': q,
         })

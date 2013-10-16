@@ -32,11 +32,16 @@ def chooser(request):
 
     uploadform = ImageForm()
     images = []
+    q = None
     if 'q' in request.GET:
         searchform = SearchForm(request.GET)
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
-            images = Image.search(q)
+            
+            # page number
+            p = request.GET.get("p", 1)
+            
+            images = Image.search(q, results_per_page=10, page=p)
         return render(request, "verdantimages/chooser/search_results.html", {
             'images': images, 'will_select_format': request.GET.get('select_format')})
     else:

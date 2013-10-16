@@ -1,20 +1,40 @@
 {% load image_tags %}
 
-<ul class="listing horiz images">
-    {% for image in images %}
-        <li>
-            <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
-                <div class="image">{% image image fill-150x150 %}</div>
-                <h3>{{ image.title }}</h3>
-            </a>
-            {% comment %}
-                I'm not sure why it would ever be necessary to list the tags on an image in search results
-                {% with image.prefetched_tags as tags %}
-                    {% if tags %}
-                        <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                    {% endif %}
-                {% endwith %}
-            {% endcomment %}
-        </li>
-    {% endfor %}
-</ul>
+
+{% if images %}
+    <ul class="listing horiz images">
+        {% for image in images %}
+            <li>
+                <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
+                    <div class="image">{% image image fill-150x150 %}</div>
+                    <h3>{{ image.title }}</h3>
+                </a>
+                {% comment %}
+                    I'm not sure why it would ever be necessary to list the tags on an image in search results
+                    {% with image.prefetched_tags as tags %}
+                        {% if tags %}
+                            <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
+                        {% endif %}
+                    {% endwith %}
+                {% endcomment %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if images.has_previous %}
+                <a href="?q={{ q }}&p={{ images.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ images.number }} of {{ images.paginator.num_pages }}.
+            </span>
+
+            {% if images.has_next %}
+                <a href="?q={{ q }}&p={{ images.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
+
+{% endif %}

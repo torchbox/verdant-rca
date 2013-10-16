@@ -4,6 +4,12 @@ function(modal) {
             modal.loadUrl(this.href);
             return false;
         });
+
+        $('a.pagination_link', context).click(function() {
+            var page = this.getAttribute("data-page");
+            set_page(page);
+            return false;
+        });
     };
 
     var searchUrl = $('form.image-search', modal.body).attr('action');
@@ -11,6 +17,17 @@ function(modal) {
         $.ajax({
             url: searchUrl,
             data: {q: "" + $('#id_q').val() + ""},
+            success: function(data, status) {
+                $('#image-results').html(data);
+                ajaxifyLinks($('#image-results'));
+            }
+        });
+        return false;
+    };
+    function set_page (page) {
+        $.ajax({
+            url: searchUrl,
+            data: {q: "" + $('#id_q').val() + "", p: page},
             success: function(data, status) {
                 $('#image-results').html(data);
                 ajaxifyLinks($('#image-results'));

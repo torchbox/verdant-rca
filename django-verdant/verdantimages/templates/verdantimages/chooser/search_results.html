@@ -1,5 +1,6 @@
 {% load image_tags %}
 
+
 {% if images %}
     <ul class="listing horiz images chooser">
         {% for image in images %}
@@ -19,4 +20,20 @@
             </li>
         {% endfor %}
     </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if images.has_previous %}
+                <a href="#" class="pagination_link" data-page="{{ images.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ images.number }} of {{ images.paginator.num_pages }}.
+            </span>
+
+            {% if images.has_next %}
+                <a href="#" class="pagination_link" data-page="{{ images.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
 {% endif %}
