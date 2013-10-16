@@ -2,6 +2,7 @@
     .clearfix();
     border:1px solid @color-grey-lighter;
     border-width:0 0 1px 1px;
+    padding:0;
 
     li{
         border:1px solid @color-grey-lighter;
@@ -63,9 +64,13 @@
         padding:0;
     }
 
-    .page-editor .tab-nav li{
+    .page-editor .tab-nav li,
+    .modal-content .tab-nav li{
         .column(2);
         padding:0;
         min-width:110px;
+    }
+    .modal-content .tab-nav li{
+        min-width:0;
     }
 }

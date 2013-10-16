@@ -7,11 +7,14 @@
                 <div class="image">{% image image fill-150x150 %}</div>
                 <h3>{{ image.title }}</h3>
             </a>
-            {% with image.prefetched_tags as tags %}
-                {% if tags %}
-                    <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                {% endif %}
-            {% endwith %}
+            {% comment %}
+                I'm not sure why it would ever be necessary to list the tags on an image in search results
+                {% with image.prefetched_tags as tags %}
+                    {% if tags %}
+                        <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
+                    {% endif %}
+                {% endwith %}
+            {% endcomment %}
         </li>
     {% endfor %}
 </ul>

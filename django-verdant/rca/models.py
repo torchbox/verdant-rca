@@ -752,15 +752,6 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
-
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area=self.area,
@@ -935,15 +926,6 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
-
 
 EventItem.content_panels = [
     MultiFieldPanel([
@@ -1103,10 +1085,20 @@ class StandardPageQuotation(Orderable):
     quotee = models.CharField(max_length=255, blank=True)
     quotee_job_title = models.CharField(max_length=255, blank=True)
 
+class StandardPageRelatedDocument(Orderable):
+    page = models.ForeignKey('rca.StandardPage', related_name='documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document_name = models.CharField(max_length=255)
+
+class StandardPageImage(Orderable):
+    page = models.ForeignKey('rca.StandardPage', related_name='images')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1115,7 +1107,10 @@ StandardPage.content_panels = [
     FieldPanel('body', classname="full"),
     InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
     InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
+    FieldPanel('middle_column_body', classname="full"),
+    InlinePanel(StandardPage, StandardPageRelatedDocument, label="Document"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
+    InlinePanel(StandardPage, StandardPageImage, label="Middle column image"),
 ]
 
 StandardPage.promote_panels = [
@@ -1757,14 +1752,6 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     # TODO: tags
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
@@ -1869,16 +1856,6 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
-
-
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(

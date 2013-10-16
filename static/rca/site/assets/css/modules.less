@@ -994,6 +994,7 @@
 .body-text-style /* allows highlighted links etc without the column stuff */ {
     a {
         color: @color-highlight-blue;
+        font-weight: bold;
         &:hover {
             text-decoration: underline;
         }
@@ -1037,6 +1038,9 @@
         font-size: @font-size-22;
         line-height: @line-height-4;
         font-weight: normal;
+        padding-top: @spacing-half;
+        border-top: 1px solid @color-dark-grey;
+        margin-top: @spacing-one;
     }
 
     h3 {
