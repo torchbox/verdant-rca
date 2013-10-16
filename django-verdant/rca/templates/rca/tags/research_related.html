@@ -13,8 +13,8 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl research_item %}">
-                            {% if research_item.feature_image %}
-                                <div class="image">{% image research_item.feature_image width-400 %}</div>
+                            {% if research_item.feed_image %}
+                                <div class="image">{% image research_item.feed_image width-400 %}</div>
                             {% endif %}
                             <div class="content">
                                 <h3 class="h8">{{ research_item.title }}</h3>

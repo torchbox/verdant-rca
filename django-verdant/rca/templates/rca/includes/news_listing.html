@@ -11,8 +11,8 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl news_item %}">
-                            {% if news_item.feature_image %}
-                                <div class="image">{% image news_item.feature_image width-400 %}</div>
+                            {% if news_item.feed_image %}
+                                <div class="image">{% image news_item.feed_image width-400 %}</div>
                             {% endif %}
                             <div class="content">
                                 {% if news_item.listing_intro %}

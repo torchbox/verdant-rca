@@ -752,15 +752,6 @@ class NewsItem(Page, SocialFields, CommonPromoteFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
-
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area=self.area,
@@ -934,15 +925,6 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
 
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
-
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
 
 
 EventItem.content_panels = [
@@ -1770,14 +1752,6 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     # TODO: tags
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
@@ -1882,16 +1856,6 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
-
-
-    def feature_image(self):
-        try:
-            return self.carousel_items.filter(image__isnull=False)[0].image
-        except IndexError:
-            try:
-                return self.carousel_items.filter(poster_image__isnull=False)[0].poster_image
-            except IndexError:
-                return None
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
