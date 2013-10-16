@@ -17,58 +17,57 @@
 	<section class="filters six-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>
-				<li>
-	                <p class="label">School</p>
-	                <div class="options">
-	                <label><input type="radio" name="school" value="all" {% if not request.GET.school or request.GET.school == 'all' %}checked="checked"{% endif %}>all</label>
-					{% for key, value in global_schools %} 
-					  	<label><input type="radio" name="school" value="{{ key }}" {% if request.GET.school == key %}checked="checked"{% endif %}>{{ value }}</label>
-					{% endfor %}
-					</div>
-				</li>
-				<li>
-	                <p class="label">Programme</p>
-	                <div class="options three-cols">
-	                	<label><input type="radio" name="programme" value="all" {% if not request.GET.programme or request.GET.programme == 'all' %}checked="checked"{% endif %}>all</label>
-	                	{% for key, value in global_programmes %} 
-						  	<label><input type="radio" name="programme" value="{{ key }}" {% if request.GET.programme == key %}checked="checked"{% endif %}>{{ value }}</label>
+	        	<li class="filter">
+	                <label for="school">School</label>
+	                <select id="school" name="school">
+	                    <option value="all" {% if request.GET.school == 'all' %}selected="selected"{% endif %}>All schools</option>
+	                    {% for key, value in global_schools %}
+	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
-	                </div>
+	                </select>
 	            </li>
-	            <li>
-	                <p class="label">Location</p>
-	                <div class="options">
-	                	<label><input type="radio" name="location" value="all" {% if not request.GET.location or request.GET.location == 'all' %}checked="checked"{% endif %}>all</label>
-	                	{% for key, value in global_locations %} 
-						  	<label><input type="radio" name="location" value="{{ key }}" {% if request.GET.location == key %}checked="checked"{% endif %}>{% if key == 'other' %}Other location{% else %}{{ value }}{% endif %}</label>
+				<li class="filter three-cols">
+	                <label for="programme">Programme</label>
+	                <select id="programme" name="programme">
+	                    <option value="all" {% if request.GET.programme == 'all' %}selected="selected"{% endif %}>All programmes</option>
+	                    {% for key, value in global_programmes %}
+	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
-	                </div>
+	                </select>
 	            </li>
-				<li>
-	                <p class="label">Area</p>
-	                <div class="options">
-	                	<label><input type="radio" name="area" value="all" {% if not request.GET.area or request.GET.area == 'all' %}checked="checked"{% endif %}>all</label>
-	                	{% for key, value in global_areas %} 
-						  	<label><input type="radio" name="area" value="{{ key }}" {% if request.GET.area == key %}checked="checked"{% endif %}>{{ value }}</label>
+	            <li class="filter">
+	            	<label for="location">Location</label>
+                	<select id="location" name="location">
+	                    <option value="all" {% if request.GET.location == 'all' %}selected="selected"{% endif %}>All locations</option>
+	                    {% for key, value in global_locations %}
+	                    	<option value="{{ key }}" {% if request.GET.location == key %}selected="selected"{% endif %}>{% if key == 'other' %}Other location{% else %}{{ value }}{% endif %}</option>
 						{% endfor %}
-	                </div>
+					</select>
 	            </li>
-	            <li>
-	                <p class="label">Audience</p>
-	                <div class="options">
-	                	<label><input type="radio" name="audience" value="all" {% if not request.GET.audience or request.GET.audience == 'all' %}checked="checked"{% endif %}>all</label>
-	                	{% for key, value in global_audiences %} 
-						  	<label><input type="radio" name="audience" value="{{ key }}" {% if request.GET.audience == key %}checked="checked"{% endif %}>{{ value }}</label>
+				<li class="filter">
+	                <label for="area">Area</label>
+	                <select id="area" name="area">
+	                    <option value="all" {% if request.GET.area == 'all' %}selected="selected"{% endif %}>All areas</option>
+	                    {% for key, value in global_areas %}
+	                    	<option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
-	                </div>
+	                </select>
 	            </li>
-	            <li>
-	                <p class="label">Upcoming or past</p>
-	                <div class="options">
-	                	<!--upcoming events checked by default - only deselected if someone has explicitly selected past results -->
-	                	<label><input type="radio" name="period" value="upcoming"  {% if request.GET.period != 'past' %}checked="checked"{% endif %}>upcoming</label>
-						<label><input type="radio" name="period" value="past" {% if request.GET.period == 'past' %}checked="checked"{% endif %}>past</label>
-	                </div>
+	            <li class="filter">
+	                <label for="audience">Audience</label>
+	                <select id="audience" name="audience">
+	                    <option value="all" {% if request.GET.audience == 'all' %}selected="selected"{% endif %}>All audiences</option>
+	                    {% for key, value in global_audiences %}
+	                    	<option value="{{ key }}" {% if request.GET.audience == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <li class="filter">
+	                <label for="period">Upcoming or past</label>
+	                <select id="period" name="period">
+	                    <option value="upcoming" {% if request.GET.period == 'upcoming' %}selected="selected"{% endif %}>Upcoming events</option>
+	                    <option value="past" {% if request.GET.period == 'past' %}selected="selected"{% endif %}>Past events</option>
+	                </select>
 	            </li>
 				<input type="submit" />
 			</ul>
