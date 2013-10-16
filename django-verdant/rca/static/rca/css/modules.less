@@ -47,6 +47,7 @@
  * Index page intro
  * Contact
  * Strapline
+ * Pagination
  */
 
 /**
@@ -1438,8 +1439,18 @@
  * Strapline
  */
 
- .strapline {
+.strapline {
     border-bottom: 1px solid @color-dark-grey;
     margin-bottom: @spacing-one;
     padding-bottom: @spacing-one;
- }
+}
+
+
+/**
+ * Pagination
+ */
+.pagination{
+    &.infinite{
+        display:none;
+    }
+}
