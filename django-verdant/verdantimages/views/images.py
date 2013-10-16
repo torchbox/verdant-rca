@@ -97,7 +97,7 @@ def search(request):
     if request.is_ajax():
         return render(request, "verdantimages/images/search-results.html", {
             'images': images,
-            'q': q,
+            'search_query': q,
         })
     else:
         return render(request, "verdantimages/images/index.html", {
@@ -105,5 +105,5 @@ def search(request):
             'images': images,
             'is_searching': True,
             'popular_tags': Image.popular_tags(),
-            'q': q,
+            'search_query': q,
         })
