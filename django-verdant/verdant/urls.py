@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^admin/images/', include(verdantimages_urls)),
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
+    url(r'^admin/users/', include(verdantusers_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),
