@@ -1061,8 +1061,22 @@ input[type=button], button, .button{
 .type-standard {
     .button-bar,
     .teaser-image,
-    .quotation {
+    .quotation,
+    .middle-column-body-text {
         margin-bottom: @spacing-two;
+    }
+    .button-bar li {
+        width: 100%;
+    }
+    .four figcaption {
+        float: right;
+        text-align: right;
+        margin-top: @spacing-one;
+    }
+
+    .four figure {
+        .clearfix();
+        margin-bottom: @spacing-one;
     }
 }
 
