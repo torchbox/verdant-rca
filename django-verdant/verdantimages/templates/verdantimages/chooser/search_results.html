@@ -1,5 +1,6 @@
 {% load image_tags ellipsistrim %}
 
+
 {% if images %}
     <ul class="listing horiz images chooser">
         {% for image in images %}
@@ -8,15 +9,23 @@
                     <div class="image">{% image image max-180x180 %}</div>
                     <h3>{{ image.title|ellipsistrim:60 }}</h3>
                 </a>
-                {% comment %}
-                    I'm not sure why it would ever be necessary to list the tags on an image in search results
-                    {% with image.prefetched_tags as tags %}
-                        {% if tags %}
-                            <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                        {% endif %}
-                    {% endwith %}
-                {% endcomment %}
             </li>
         {% endfor %}
     </ul>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if images.has_previous %}
+                <a href="#" class="pagination_link" data-page="{{ images.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ images.number }} of {{ images.paginator.num_pages }}.
+            </span>
+
+            {% if images.has_next %}
+                <a href="#" class="pagination_link" data-page="{{ images.next_page_number }}">next</a>
+            {% endif %}
+        </span>
+    </div>
 {% endif %}
