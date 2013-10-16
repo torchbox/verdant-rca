@@ -103,11 +103,13 @@ img{
     }
 
     #nav-toggle{
+        .push(0.5);
+        .box-shadow(0px 0px 10px 5px rgba(255, 255, 255, 0.5));
         cursor:pointer;
         position:fixed;
-        left:0%;
         background: @color-grey-dark;
         width:40px;
+        opacity:0.8;
 
         &:before{
             font-size:30px;
@@ -199,12 +201,11 @@ body.nav-open #nav-toggle{
 
 header{
     .nice-padding();
-    padding-top:1em;
+    padding-top:5em;
     padding-bottom:1em;
     background-color:@color-header-bg;
     border-bottom:1px solid @color-grey-lighter;
     margin-bottom:2em;
-    padding-left:60px;
 
     h1, h2{
         margin:0;
