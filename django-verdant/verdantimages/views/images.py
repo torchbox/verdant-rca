@@ -90,7 +90,7 @@ def search(request):
             # page number
             p = request.GET.get("p", 1)
 
-            images = Image.search(q, results_per_page=10, page=p)
+            images = Image.search(q, results_per_page=20, page=p)
     else:
         form = SearchForm()
 
