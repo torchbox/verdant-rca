@@ -17,9 +17,17 @@
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
                 <li class="submit"><input type="submit" value="Search" /></li>
+                {% if popular_tags %}
+                    <li class="popular-tags">
+                        <h3>Popular tags</h3>
+                        {% for tag in popular_tags %}
+                            <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
+                        {% endfor %}
+                    </li>
+                {% endif %}
             </ul>
         </form>
-        <div id="image-results" class="listing images">
+        <div id="image-results">
             {% include "verdantimages/chooser/search_results.html" %}
         </div>
     </section>
