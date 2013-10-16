@@ -1,4 +1,5 @@
 {% extends "rca/base.html" %}
+{% load rca_tags pageurl %}
 
 {% block body_class %}
     type-news-index
@@ -7,17 +8,41 @@
 {% block content %}
 	<h1 class="h1 major">News</h1>
 
-	{% comment %}
-	{% include modules/filters.html number="four" %}
+	<section class="filters three-filters row">
+	    <form id="filters" action="{% pageurl self %}" method="GET">
+	        <ul>
+	        	<li class="filter">
+	                <label for="school">School</label>
+	                <select id="school" name="school">
+	                    <option value="all" {% if request.GET.school == 'all' %}selected="selected"{% endif %}>All schools</option>
+	                    {% for key, value in global_schools %}
+	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	           <li class="filter three-cols">
+	                <label for="programme">Programme</label>
+	                <select id="programme" name="programme">
+	                    <option value="all" {% if request.GET.programme == 'all' %}selected="selected"{% endif %}>All programmes</option>
+	                    {% for key, value in global_programmes %}
+	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <li class="filter three-cols">
+	                <label for="area">Area</label>
+	                <select id="area" name="area">
+	                    <option value="all" {% if request.GET.area == 'all' %}selected="selected"{% endif %}>All areas</option>
+	                    {% for key, value in global_areas %}
+	                    	<option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	        </ul>
+	        <input type="submit" />
+	    </form>
+	</section>
 
-	{% include modules/one-plus.html %}
-
-
-	<ul class="pagination">
-		<li class="next"><a href="news-index-2.html">Next</a></li>
-	</ul>
-
-	{% endcomment %}
 
 	<div id="listing">
 	    {% include "rca/includes/news_listing.html" %}
@@ -30,3 +55,17 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
 {% endblock %}
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for news_index set here so that it can be used by the script being called
+		var news_index = "{{ global_news_index }}";
+	</script>
+	<script src="/static/rca/js/news-listing.js"></script>
+{% endblock %}
+
+<!-- To dos:
+- ads
+- infinite scroll
+- filter of programmes when school is selected
+ -->

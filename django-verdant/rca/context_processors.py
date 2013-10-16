@@ -9,4 +9,5 @@ def global_vars(request):
 		'global_areas': AREA_CHOICES,
 		'global_audiences': EVENT_AUDIENCE_CHOICES,
 		'global_events_index_url': '/events/',
+		'global_news_index_url': '/news/',
 	}

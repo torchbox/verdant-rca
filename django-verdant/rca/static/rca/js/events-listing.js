@@ -10,5 +10,5 @@ $(function(){
 			$(this).closest('li').removeClass('expanded');
 			return false;
 		}
-	})
+	});
 });
