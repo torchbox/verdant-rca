@@ -1,31 +1,9 @@
 
 {% load image_tags embed_filters %}
 
-    
     {% with self.carousel_items.all as carousel_items %}
         {% if carousel_items %}
             <section class="row">
-
-                {% comment %}Don't output carousel controls and overlay text if there is only one image or video in the carousel{% endcomment %}
-                {% comment %}
-                {% if carousel_items|length == 1 %}
-                    {% for carousel_item in carousel_items %}
-                        {% if carousel_item.image %}
-                            <div class="image standalone {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
-                                {% image carousel_item.image width-1000 %}
-                            </div>
-                        {% elif carousel_item.embedly_url %}
-                            <div class="videoembed vimeo">
-                                <div class="playpause play">Play</div>
-                                {% if carousel_item.poster_image %}
-                                    <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
-                                {% endif %}
-                                {{ carousel_item.embedly_url|embedly:"944" }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                {% endcomment %}
 
                 <ul class="carousel paginated">
                     {% for carousel_item in carousel_items %}
@@ -76,9 +54,6 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
-                {% comment %}
-                {% endif %}
-                {% endcomment %}
             </section>
         {% endif %}
     {% endwith %}
