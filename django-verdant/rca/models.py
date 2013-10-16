@@ -1106,6 +1106,7 @@ class StandardPageQuotation(Orderable):
 class StandardPageRelatedDocument(Orderable):
     page = models.ForeignKey('rca.StandardPage', related_name='documents')
     document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document_name = models.CharField(max_length=255)
 
 class StandardPageImage(Orderable):
     page = models.ForeignKey('rca.StandardPage', related_name='images')
