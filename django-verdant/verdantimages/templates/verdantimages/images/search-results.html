@@ -1,20 +1,22 @@
-{% load image_tags %}
+{% load image_tags ellipsistrim %}
 
-<ul class="listing horiz images">
-    {% for image in images %}
-        <li>
-            <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
-                <div class="image">{% image image fill-150x150 %}</div>
-                <h3>{{ image.title }}</h3>
-            </a>
-            {% comment %}
-                I'm not sure why it would ever be necessary to list the tags on an image in search results
-                {% with image.prefetched_tags as tags %}
-                    {% if tags %}
-                        <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                    {% endif %}
-                {% endwith %}
-            {% endcomment %}
-        </li>
-    {% endfor %}
-</ul>
+{% if images %}
+    <ul class="listing horiz images">
+        {% for image in images %}
+            <li>
+                <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
+                    <div class="image">{% image image max-180x180 %}</div>
+                    <h3>{{ image.title|ellipsistrim:60 }}</h3>
+                </a>
+                {% comment %}
+                    I'm not sure why it would ever be necessary to list the tags on an image in search results
+                    {% with image.prefetched_tags as tags %}
+                        {% if tags %}
+                            <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
+                        {% endif %}
+                    {% endwith %}
+                {% endcomment %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

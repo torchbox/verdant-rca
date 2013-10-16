@@ -67,7 +67,7 @@
                     {% for image in images %}
                         <li>
                             <a href="{% url 'verdantimages_edit_image' image.id %}">
-                                <div class="image">{% image image fill-150x150 %}</div>
+                                <div class="image">{% image image max-180x180 %}</div>
                                 <h3>{{ image.title|ellipsistrim:60 }}</h3>
                             </a>
                         </li>

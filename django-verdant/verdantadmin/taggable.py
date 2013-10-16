@@ -30,7 +30,7 @@ class TagSearchable(object):
             else:
                 search_query &= term_query
 
-        return cls.objects.filter(search_query).distinct().prefetch_related('tagged_items__tag')
+        return cls.objects.filter(search_query).distinct().prefetch_related('tagged_items__tag')[:20] # TODO ideally we shouldn't have to limit to 20, the results would instead be paginated
 
     def prefetched_tags(self):
         # a hack to do the equivalent of self.tags.all() but take advantage of the
