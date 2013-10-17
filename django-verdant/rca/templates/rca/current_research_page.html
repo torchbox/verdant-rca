@@ -21,7 +21,7 @@
 						{% endfor %}
 	                </select>
 	            </li>
-	           <li class="filter three-cols">
+	           <li class="filter">
 	                <label for="school">School</label>
 	                <select id="school" name="school">
 	                    <option value="all" {% if request.GET.school == 'all' %}selected="selected"{% endif %}>All schools</option>
@@ -58,4 +58,17 @@
 	</div>
 
 	{% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
+
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for current_research_page set here so that it can be used by the script being called
+		var current_research_page = "{{ global_current_research_url }}";
+	</script>
+	<script src="/static/rca/js/current-research-listing.js"></script>
 {% endblock %}

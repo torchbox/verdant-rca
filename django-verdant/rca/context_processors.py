@@ -13,4 +13,5 @@ def global_vars(request):
 		'global_work_types': WORK_TYPES_CHOICES,
 		'global_events_index_url': '/events/',
 		'global_news_index_url': '/news/',
+		'global_current_research_url': '/current-research/',
 	}

@@ -2030,7 +2030,7 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter()
+        research_items = ResearchItem.objects.all()
 
         if research_type and research_type != 'all':
             research_items = research_items.filter(research_type=research_type)
