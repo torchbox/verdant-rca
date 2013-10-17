@@ -1090,14 +1090,29 @@ class StandardPageQuotation(Orderable):
     quotee = models.CharField(max_length=255, blank=True)
     quotee_job_title = models.CharField(max_length=255, blank=True)
 
+    panels = [
+        FieldPanel('quotation'),
+        FieldPanel('quotee'),
+        FieldPanel('quotee_job_title')
+    ]
+
 class StandardPageRelatedDocument(Orderable):
     page = models.ForeignKey('rca.StandardPage', related_name='documents')
     document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
     document_name = models.CharField(max_length=255)
 
+    panels = [
+        DocumentChooserPanel('document'),
+        FieldPanel('document_name')
+    ] 
+
 class StandardPageImage(Orderable):
     page = models.ForeignKey('rca.StandardPage', related_name='images')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
+    panels = [
+        ImageChooserPanel('image'),
+    ]
 
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
