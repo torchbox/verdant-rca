@@ -284,8 +284,11 @@ $(function(){
         var showNewItems = function(){
             itemContainer.css('height', itemContainer.height());
             newItems.removeClass('hidden');
-            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
+            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+            });
 
+            // Fade in each item one by one
             var time = 0;
             newItems.each(function(index){
                 var $item = $(this);
