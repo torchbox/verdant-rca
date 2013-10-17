@@ -1526,8 +1526,10 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing this staff member's Twitter handle (or any hashtag or search term)")
     intro = RichTextField()
-    biography = RichTextField()
+    biography = RichTextField(blank=True)
     practice = RichTextField(blank=True)
+    publications_exhibtions_and_other_outcomes_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate publications/events if needed.")
+    external_collaborations_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate external collaborations if needed.")
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
@@ -1554,6 +1556,8 @@ StaffPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     FieldPanel('practice'),
+    FieldPanel('publications_exhibtions_and_other_outcomes_placeholder'),
+    FieldPanel('external_collaborations_placeholder'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
     FieldPanel('first_name'),
