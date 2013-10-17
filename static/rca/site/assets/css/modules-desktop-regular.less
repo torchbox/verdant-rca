@@ -56,17 +56,19 @@
     margin-bottom:0 !important;
     .row{
         margin:0;
-    }
-    ul{
-        background-color:@color-light-pink;
+        padding:0;
     }
     li{
         .column(4, @grid-gutter-width);
+        padding-top:@grid-gutter-width;
+        background-color:@color-light-pink;
         padding-left:74px;
         margin-bottom:@grid-gutter-width;
+        border-left:2px solid white; /* this is a deliberate divergence from the design, which was hard to pull off without extraneous markup */
 
         &:before{
-            margin-left:-64px;
+            padding-right:0;
+            margin-left:-64px !important;
         }        
     }
     .load-more{
@@ -184,6 +186,10 @@
     /* because all LI items in an x-plus have bottom padding, margin of proceeding elements needs to be catered for */
     margin-bottom:-@grid-gutter-width;
 
+    .item-container{
+        margin-bottom:0;
+    }
+
     li{
         .transition(opacity 0.5s ease);
         opacity:1;
@@ -223,6 +229,7 @@
     
     ul{
         position:absolute;
+        z-index:5;
         width:100%;
     }
     .options ul{
