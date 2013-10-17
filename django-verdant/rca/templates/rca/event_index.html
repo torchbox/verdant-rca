@@ -18,7 +18,7 @@
 	        	<li class="filter">
 	                <label for="school">School</label>
 	                <select id="school" name="school">
-	                    <option value="all" {% if request.GET.school == 'all' %}selected="selected"{% endif %}>All schools</option>
+	                    <option value="">All schools</option>
 	                    {% for key, value in global_schools %}
 	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
@@ -27,7 +27,7 @@
 				<li class="filter three-cols">
 	                <label for="programme">Programme</label>
 	                <select id="programme" name="programme">
-	                    <option value="all" {% if request.GET.programme == 'all' %}selected="selected"{% endif %}>All programmes</option>
+	                    <option value="">All programmes</option>
 	                    {% for key, value in global_programmes %}
 	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
@@ -36,7 +36,7 @@
 	            <li class="filter">
 	            	<label for="location">Location</label>
                 	<select id="location" name="location">
-	                    <option value="all" {% if request.GET.location == 'all' %}selected="selected"{% endif %}>All locations</option>
+	                    <option value="">All locations</option>
 	                    {% for key, value in global_locations %}
 	                    	<option value="{{ key }}" {% if request.GET.location == key %}selected="selected"{% endif %}>{% if key == 'other' %}Other location{% else %}{{ value }}{% endif %}</option>
 						{% endfor %}
@@ -45,7 +45,7 @@
 				<li class="filter">
 	                <label for="area">Area</label>
 	                <select id="area" name="area">
-	                    <option value="all" {% if request.GET.area == 'all' %}selected="selected"{% endif %}>All areas</option>
+	                    <option value="">All areas</option>
 	                    {% for key, value in global_areas %}
 	                    	<option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
@@ -54,7 +54,7 @@
 	            <li class="filter">
 	                <label for="audience">Audience</label>
 	                <select id="audience" name="audience">
-	                    <option value="all" {% if request.GET.audience == 'all' %}selected="selected"{% endif %}>All audiences</option>
+	                    <option value="">All audiences</option>
 	                    {% for key, value in global_audiences %}
 	                    	<option value="{{ key }}" {% if request.GET.audience == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}

@@ -661,11 +661,11 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
 
         news = NewsItem.objects.filter(path__startswith=self.path)
 
-        if programme and programme != 'all':
+        if programme and programme != '':
             news = news.filter(related_programmes__programme=programme)
-        if school and school != 'all':
+        if school and school != '':
             news = news.filter(related_schools__school=school)
-        if area and area != 'all':
+        if area and area != '':
             news = news.filter(area=area)
 
         news = news.order_by('-date')
@@ -1011,15 +1011,15 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         else:
             events = self.future_events()
 
-        if programme and programme != 'all':
+        if programme and programme != '':
             events = events.filter(related_programmes__programme=programme)
         if school and school != 'all':
             events = events.filter(related_schools__school=school)
-        if location and location != 'all':
+        if location and location != '':
             events = events.filter(location=location)
         if area and area != 'all':
             events = events.filter(related_areas__area=area)
-        if audience and audience != 'all':
+        if audience and audience != '':
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
         
@@ -2036,13 +2036,13 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
 
         research_items = ResearchItem.objects.all()
 
-        if research_type and research_type != 'all':
+        if research_type and research_type != '':
             research_items = research_items.filter(research_type=research_type)
-        if school and school != 'all':
+        if school and school != '':
             research_items = research_items.filter(school=school)
-        if theme and theme != 'all':
+        if theme and theme != '':
             research_items = research_items.filter(theme=theme)
-        if work_type and work_type != 'all':
+        if work_type and work_type != '':
             research_items = research_items.filter(work_type=work_type)
 
         research_items.order_by('-year')
