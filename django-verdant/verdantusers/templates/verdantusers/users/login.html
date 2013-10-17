@@ -1,2 +1,35 @@
-{% extends "verdantadmin/base.html" %}
-{% load image_tags ellipsistrim %}
+{% extends "verdantadmin/skeleton.html" %}
+{% block bodyclass %}login{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/layouts/login.less" type="text/less" />
+{% endblock %}
+
+{% block furniture %}
+<form>
+    <h1>Sign in to <span>V</span>erdant</h1>
+    <ul class="fields">
+        <li class="full">
+            <div class="field">
+                <label>Email or username</label>
+                <input type="email" placeholder="Enter your email or username" />
+            </div>
+        </li>
+        <li class="full">
+            <div class="field">
+                <label>Password</label>
+                <input type="password" placeholder="Enter password"/>
+            </div>
+            <p class="help"><a href="#">Forgotten it?</a></p>
+        </li>
+        <li>
+            <div class="field">
+                <label><input type="checkbox" /> Remember me</label>
+            </div>
+        </li>
+        <li>
+            <input type="submit" value="Sign in"/>
+        </li>
+    </ul>
+</form>
+{% endblock %}
