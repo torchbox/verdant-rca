@@ -851,7 +851,7 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    link = models.URLField()
+    link = models.URLField(blank=True)
 
     panels=[
         FieldPanel('name'), 
