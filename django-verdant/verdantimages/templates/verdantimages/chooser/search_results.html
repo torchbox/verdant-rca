@@ -2,6 +2,7 @@
 
 
 {% if images %}
+    <h2>{{ images|length }} match{{ images|pluralize:"es" }}</h2>
     <ul class="listing horiz images chooser">
         {% for image in images %}
             <li>
