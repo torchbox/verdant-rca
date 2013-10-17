@@ -6,7 +6,13 @@ class BaseTransientModelFormSet(BaseModelFormSet):
     """ A ModelFormSet that doesn't assume that all its initial data instances exist in the db """
     def _construct_form(self, i, **kwargs):
         if self.is_bound and i < self.initial_form_count():
-            kwargs['instance'] = self.model()
+            pk_name = self.model._meta.pk.name
+            pk_key = "%s-%s" % (self.add_prefix(i), pk_name)
+            pk_val = self.data[pk_key]
+            if pk_val:
+                kwargs['instance'] = self.queryset.get(**{pk_name: pk_val})
+            else:
+                kwargs['instance'] = self.model()
         elif i < self.initial_form_count():
             kwargs['instance'] = self.get_queryset()[i]
         elif self.initial_extra:
@@ -43,7 +49,8 @@ class BaseChildFormSet(BaseTransientModelFormSet):
             if self.can_delete and self._should_delete_form(form):
                 continue
             else:
-                final_objects.append(form.save(commit=False))
+                obj = form.save(commit=False)
+                final_objects.append(obj)
 
         for form in self.extra_forms:
             if not form.has_changed():
@@ -53,10 +60,10 @@ class BaseChildFormSet(BaseTransientModelFormSet):
             else:
                 final_objects.append(form.save(commit=False))
 
-
         setattr(self.instance, self.rel_name, final_objects)
         if commit:
             getattr(self.instance, self.rel_name).commit()
+
         return final_objects
 
 def childformset_factory(parent_model, model, form=ModelForm,

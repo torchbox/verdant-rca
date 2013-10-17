@@ -51,7 +51,7 @@ class ClusterTest(TestCase):
         self.assertEqual(2, beatles.members.count())
 
 class TransientFormsetTest(TestCase):
-    BandMembersFormset = transientmodelformset_factory(BandMember, exclude=['band'], extra=3)
+    BandMembersFormset = transientmodelformset_factory(BandMember, exclude=['band'], extra=3, can_delete=True)
 
     def test_can_create_formset(self):
         beatles = Band(name='The Beatles', members=[
@@ -89,6 +89,89 @@ class TransientFormsetTest(TestCase):
         self.assertEqual('John Lennon', members[0].name)
         # should not exist in the database yet
         self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_save_commit_false(self):
+        john = BandMember(name='John Lennon')
+        paul = BandMember(name='Paul McCartney')
+        ringo = BandMember(name='Richard Starkey')
+        beatles = Band(name='The Beatles', members=[
+            john, paul, ringo
+        ])
+        beatles.save()
+
+        john_id, paul_id, ringo_id = john.id, paul.id, ringo.id
+
+        self.assertTrue(john_id)
+        self.assertTrue(paul_id)
+
+        band_members_formset = self.BandMembersFormset({
+            'form-TOTAL_FORMS': 4,
+            'form-INITIAL_FORMS': 3,
+            'form-MAX_NUM_FORMS': 1000,
+
+            'form-0-name': 'John Lennon',
+            'form-0-DELETE': 'form-0-DELETE',
+            'form-0-id': john_id,
+
+            'form-1-name': 'Paul McCartney',
+            'form-1-id': paul_id,
+
+            'form-2-name': 'Ringo Starr',  # changing data of an existing record
+            'form-2-id': ringo_id,
+
+            'form-3-name': '',
+            'form-3-id': '',
+        }, queryset=beatles.members.all())
+        self.assertTrue(band_members_formset.is_valid())
+
+        updated_members = band_members_formset.save(commit=False)
+        self.assertEqual(1, len(updated_members))
+        self.assertEqual('Ringo Starr', updated_members[0].name)
+        self.assertEqual(ringo_id, updated_members[0].id)
+
+    def test_save_commit_true(self):
+        john = BandMember(name='John Lennon')
+        paul = BandMember(name='Paul McCartney')
+        ringo = BandMember(name='Richard Starkey')
+        beatles = Band(name='The Beatles', members=[
+            john, paul, ringo
+        ])
+        beatles.save()
+
+        john_id, paul_id, ringo_id = john.id, paul.id, ringo.id
+
+        self.assertTrue(john_id)
+        self.assertTrue(paul_id)
+
+        band_members_formset = self.BandMembersFormset({
+            'form-TOTAL_FORMS': 4,
+            'form-INITIAL_FORMS': 3,
+            'form-MAX_NUM_FORMS': 1000,
+
+            'form-0-name': 'John Lennon',
+            'form-0-DELETE': 'form-0-DELETE',
+            'form-0-id': john_id,
+
+            'form-1-name': 'Paul McCartney',
+            'form-1-id': paul_id,
+
+            'form-2-name': 'Ringo Starr',  # changing data of an existing record
+            'form-2-id': ringo_id,
+
+            'form-3-name': '',
+            'form-3-id': '',
+        }, queryset=beatles.members.all())
+        self.assertTrue(band_members_formset.is_valid())
+
+        updated_members = band_members_formset.save()
+        self.assertEqual(1, len(updated_members))
+        self.assertEqual('Ringo Starr', updated_members[0].name)
+        self.assertEqual(ringo_id, updated_members[0].id)
+
+        self.assertFalse(BandMember.objects.filter(id=john_id).exists())
+        self.assertEqual('Paul McCartney', BandMember.objects.get(id=paul_id).name)
+        self.assertEqual('Ringo Starr', BandMember.objects.get(id=ringo_id).name)
+
 
 class ChildFormsetTest(TestCase):
     def test_can_create_formset(self):
