@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load rca_tags rich_text pageurl %}
+{% load rca_tags pageurl %}
 
 
 {% block body_class %}
@@ -10,9 +10,7 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	{% if self.intro %}
-		<div class="content bc3">{{ self.intro|richtext }}</div>
-	{% endif %}
+	{% include "rca/includes/modules/intro-large.html" %}
 
 	<section class="filters six-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">

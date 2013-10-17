@@ -14,13 +14,7 @@
 
 	{% include "rca/includes/modules/carousel.html" %}
 
-	{% if self.intro %}
-	<section class="index-intro row module">
-	    
-	        <div class="content bc0">{{ self.intro|richtext }}{% if self.intro_link %}<a href="{% pageurl self.intro_link %}">...<span class="bc4 caps">Continue</span></a>{% endif %}</div>
-	    
-	</section>
-	{% endif %}
+	{% include "rca/includes/modules/intro-large.html" %}
 
 	<!--teaser block-->
 	{% with self.teasers.all as teasers %}

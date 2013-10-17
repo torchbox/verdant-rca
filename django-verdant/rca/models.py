@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
+from django.db.models import Min
 
 from datetime import date
 
@@ -667,6 +668,8 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
         if area and area != 'all':
             news = news.filter(area=area)
 
+        news = news.order_by('-date')
+
         page = request.GET.get('page')
         paginator = Paginator(news, 10) # Show 10 news items per page
         try:
@@ -1018,7 +1021,8 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
             events = events.filter(related_areas__area=area)
         if audience and audience != 'all':
             events = events.filter(audience=audience)
-
+        events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        
         page = request.GET.get('page')
         paginator = Paginator(events, 10) # Show 10 events per page
         try:
@@ -2037,7 +2041,7 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
         if work_type and work_type != 'all':
             research_items = research_items.filter(work_type=work_type)
 
-        research_items.order_by('year')
+        research_items.order_by('-year')
 
         page = request.GET.get('page')
         paginator = Paginator(research_items, 10) # Show 10 research items per page
