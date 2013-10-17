@@ -923,6 +923,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
+    objects = models.Manager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
