@@ -108,16 +108,15 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(instance=page, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            edit_handler.post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
+        else:
+            edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
@@ -137,14 +136,13 @@ def edit(request, page_id):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(instance=page, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             form.save()
-            edit_handler.post_save()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
+        else:
+            edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)

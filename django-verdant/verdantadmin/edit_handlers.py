@@ -188,28 +188,6 @@ class EditHandler(object):
         """
         return ""
 
-    def is_valid(self):
-        """
-        Return false if any of the data that this EditHandler is responsible for handling
-        is invalid. (NB very few EditHandlers actually handle data; in particular,
-        FieldPanels don't (the accompanying Form instance does it instead).)
-        """
-        return True
-
-    def pre_save(self):
-        """
-        Do the manipulations that have to be done before the instance is saved.
-        (Again, few if any EditHandlers actually have to do anything here;
-        usually the form object will handle it.)
-        """
-        pass
-
-    def post_save(self):
-        """
-        Do the manipulations that have to be done after the instance is saved.
-        """
-        pass
-
     def rendered_fields(self):
         """
         return a list of the fields of the passed form which are rendered by this
@@ -271,17 +249,6 @@ class BaseCompositeEditHandler(EditHandler):
 
     def render_js(self):
         return mark_safe(u'\n'.join([handler.render_js() for handler in self.children]))
-
-    def is_valid(self):
-        return all([child.is_valid() for child in self.children])
-
-    def pre_save(self):
-        for handler in self.children:
-            handler.pre_save()
-
-    def post_save(self):
-        for handler in self.children:
-            handler.post_save()
 
     def rendered_fields(self):
         result = []
@@ -543,14 +510,7 @@ class BaseInlinePanel(EditHandler):
             'self': self,
         }))
 
-    def is_valid(self):
-        return all([child.is_valid() for child in self.children])
-
-    def pre_save(self):
-        for child in self.children:
-            child.pre_save()
-
-    def post_save(self):
+    # def post_save(self):
         #if self.can_order:
         #    self.formset.save(commit=False)
         #    for i, form in enumerate(self.formset.ordered_forms):
@@ -558,9 +518,6 @@ class BaseInlinePanel(EditHandler):
         #        form.instance.save()
         #else:
         #    self.formset.save()
-
-        for child in self.children:
-            child.post_save()
 
 def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
     rel = getattr(base_model, relation_name).related

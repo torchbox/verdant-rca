@@ -85,18 +85,17 @@ def create(request, content_type_app_name, content_type_model_name):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=instance)
-        edit_handler = edit_handler_class(instance=instance, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             form.save()
-            edit_handler.post_save()
 
             messages.success(
                 request,
                 "%s '%s' created." % (capfirst(get_snippet_type_name(content_type)[0]), instance)
             )
             return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+        else:
+            edit_handler = edit_handler_class(instance=instance, form=form)
     else:
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
@@ -118,18 +117,17 @@ def edit(request, content_type_app_name, content_type_model_name, id):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=instance)
-        edit_handler = edit_handler_class(instance=instance, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             form.save()
-            edit_handler.post_save()
 
             messages.success(
                 request,
                 "%s '%s' updated." % (capfirst(snippet_type_name), instance)
             )
             return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+        else:
+            edit_handler = edit_handler_class(instance=instance, form=form)
     else:
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
