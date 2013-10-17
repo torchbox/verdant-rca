@@ -38,15 +38,10 @@
     font-size:25px;
     text-align:left;
 }
-
-.hallotoolbar [class^="icon-"],
-.hallotoolbar [class*=" icon-"]:before,
-.hallotoolbar [class*=" icon-"]:before,
+.icon:after,
 .hallotoolbar [class^="icon-"]:after,
-.hallotoolbar [class^="icon-"]:before{
-    width:1em;
-    font-size:16px;
-    vertical-align:-8%;
+.hallotoolbar [class^="icon-"]:after{
+    text-align:right;
 }
 
 
@@ -91,7 +86,8 @@
 .icon-locked:before {
     content: "m";
 }
-.icon-arrow-right:before {
+.icon-arrow-right:before,
+.icon-arrow-right-after:after {
     content: "n";
 }
 .icon-doc-full:before,

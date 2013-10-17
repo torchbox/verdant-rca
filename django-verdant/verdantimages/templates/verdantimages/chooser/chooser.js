@@ -1,11 +1,11 @@
 function(modal) {
     function ajaxifyLinks (context) {
-        $('a.image-choice', context).click(function() {
+        $('.listing a', context).click(function() {
             modal.loadUrl(this.href);
             return false;
         });
 
-        $('a.pagination_link', context).click(function() {
+        $('.pagination a', context).click(function() {
             var page = this.getAttribute("data-page");
             setPage(page);
             return false;
