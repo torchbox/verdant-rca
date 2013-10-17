@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models.fields.related import ForeignKey, ForeignRelatedObjectsDescriptor
 from django.utils.functional import cached_property
 
@@ -12,7 +12,7 @@ except ImportError:
 from cluster.queryset import FakeQuerySet
 
 
-def create_deferring_foreign_related_manager(relation_name, original_manager_cls):
+def create_deferring_foreign_related_manager(relation_name, original_manager_cls, related_model):
     """
     Create a DeferringRelatedManager class that wraps an ordinary RelatedManager
     with 'deferring' behaviour: any updates to the object set (via e.g. add() or clear())
@@ -41,10 +41,12 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
 
             return FakeQuerySet(*results)
 
-        def add(self, *new_items):
+        def get_object_list(self):
             """
-            Add the passed items to the stored object set, but do not commit them
-            to the database
+            return the mutable list that forms the current in-memory state of
+            this relation. If there is no such list (i.e. the manager is returning
+            querysets from the live database instead), one is created, populating it
+            with the live database state
             """
             try:
                 cluster_related_objects = self.instance._cluster_related_objects
@@ -53,22 +55,66 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                 self.instance._cluster_related_objects = cluster_related_objects
 
             try:
-                items = cluster_related_objects[relation_name]
+                object_list = cluster_related_objects[relation_name]
             except KeyError:
-                items = list(self.get_live_query_set())
-                cluster_related_objects[relation_name] = items
+                object_list = list(self.get_live_query_set())
+                cluster_related_objects[relation_name] = object_list
 
-            for item in new_items:
-                # Check if item is already in the list. Can't do this with a simple 'in'
-                # check due to https://code.djangoproject.com/ticket/18864
-                item_exists = False
-                for other in items:
-                    if (item is other) or (item.pk == other.pk and item.pk is not None):
-                        item_exists = True
+            return object_list
+
+
+        def add(self, *new_items):
+            """
+            Add the passed items to the stored object set, but do not commit them
+            to the database
+            """
+            items = self.get_object_list()
+
+            # Rule for checking whether an item in the list matches one of our targets.
+            # We can't do this with a simple 'in' check due to https://code.djangoproject.com/ticket/18864 -
+            # instead, we consider them to match IF:
+            # - they are exactly the same Python object (by reference), or
+            # - they have a non-null primary key that matches
+            items_match = lambda item, target: (item is target) or (item.pk == target.pk and item.pk is not None)
+
+            for target in new_items:
+                item_matched = False
+                for i, item in enumerate(items):
+                    if items_match(item, target):
+                        # Replace the matched item with the new one. This ensures that any
+                        # modifications to that item's fields take effect within the recordset -
+                        # i.e. we can perform a virtual UPDATE to an object in the list
+                        # by calling add(updated_object). Which is semantically a bit dubious,
+                        # but it does the job...
+                        items[i] = target
+                        item_matched = True
                         break
+                if not item_matched:
+                    items.append(target)
 
-                if not item_exists:
-                    items.append(item)
+        def remove(self, *items_to_remove):
+            """
+            Remove the passed items from the stored object set, but do not commit the change
+            to the database
+            """
+            items = self.get_object_list()
+
+            # Rule for checking whether an item in the list matches one of our targets.
+            # We can't do this with a simple 'in' check due to https://code.djangoproject.com/ticket/18864 -
+            # instead, we consider them to match IF:
+            # - they are exactly the same Python object (by reference), or
+            # - they have a non-null primary key that matches
+            items_match = lambda item, target: (item is target) or (item.pk == target.pk and item.pk is not None)
+
+            for target in items_to_remove:
+                # filter items list in place: see http://stackoverflow.com/a/1208792/1853523
+                items[:] = [item for item in items if not items_match(item, target)]
+
+        def create(self, **kwargs):
+            items = self.get_object_list()
+            new_item = related_model(**kwargs)
+            items.append(new_item)
+            return new_item
 
         def clear(self):
             """
@@ -88,6 +134,9 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
             Any objects removed from the initial set will be deleted entirely
             from the database.
             """
+            if not self.instance.pk:
+                raise IntegrityError("Cannot commit relation %r on an unsaved model" % relation_name)
+
             try:
                 final_items = self.instance._cluster_related_objects[relation_name]
             except (AttributeError, KeyError):
@@ -102,10 +151,7 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                     item.delete()
 
             for item in final_items:
-                if item not in live_items:
-                    original_manager.add(item)
-                else:
-                    item.save()
+                original_manager.add(item)
 
             # purge the _cluster_related_objects entry, so we switch back to live SQL
             del self.instance._cluster_related_objects[relation_name]
@@ -132,7 +178,8 @@ class ChildObjectsDescriptor(ForeignRelatedObjectsDescriptor):
     def child_object_manager_cls(self):
         return create_deferring_foreign_related_manager(
             self.related.get_accessor_name(),
-            self.related_manager_cls
+            self.related_manager_cls,
+            self.related.model,
         )
 
 
