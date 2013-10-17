@@ -17,12 +17,12 @@
         <ul>
             <li class="prev">
                 {% if images.has_previous %}
-                    <a href="?q={{ search_query|urlencode }}&amp;p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                    <a href="{% url 'verdantimages_search_image' %}?q={{ search_query|urlencode }}&amp;p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
                 {% endif %}
             </li>
             <li class="next">
                 {% if images.has_next %}
-                    <a href="?q={{ search_query|urlencode }}&amp;p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                    <a href="{% url 'verdantimages_search_image' %}?q={{ search_query|urlencode }}&amp;p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
                 {% endif %}
             </li>
         </ul>
