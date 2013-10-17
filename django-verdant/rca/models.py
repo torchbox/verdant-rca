@@ -478,7 +478,7 @@ class SchoolPage(Page, SocialFields, CommonPromoteFields):
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(SchoolPage, SchoolPageCarouselItem, label="Carousel content", help_text="test"),
+    InlinePanel(SchoolPage, 'carousel_items', label="Carousel content", help_text="test"),
     PageChooserPanel('head_of_school', 'rca.StaffPage'),
     FieldPanel('head_of_school_statement', classname="full"),
     PageChooserPanel('head_of_school_link'),
@@ -489,11 +489,11 @@ SchoolPage.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ], 'Contact'),
-    InlinePanel(SchoolPage, SchoolPageContactTelEmail, label="Contact phone numbers/emails"),
+    InlinePanel(SchoolPage, 'contact_tel_email', label="Contact phone numbers/emails"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
-    InlinePanel(SchoolPage, SchoolPageRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(SchoolPage, 'related_links', label="Related links"),
 ]
 
 SchoolPage.promote_panels = [
@@ -606,23 +606,23 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
     FieldPanel('title', classname="full title"),
-    InlinePanel(ProgrammePage, ProgrammePageCarouselItem, label="Carousel content", help_text="You want to use this carousel becaus eit is nice"),
-    InlinePanel(ProgrammePage, ProgrammePageRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(ProgrammePage, 'carousel_items', label="Carousel content", help_text="You want to use this carousel becaus eit is nice"),
+    InlinePanel(ProgrammePage, 'related_links', label="Related links"),
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     FieldPanel('head_of_programme_statement'),
     PageChooserPanel('head_of_programme_link'),
-    InlinePanel(ProgrammePage, ProgrammePageOurSites, label="Our sites"),
+    InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Video'),
-    InlinePanel(ProgrammePage, ProgrammePageStudentStory, fk_name='page', label="Student stories"),
+    InlinePanel(ProgrammePage, 'student_stories', label="Student stories"),
     MultiFieldPanel([
         ImageChooserPanel('facilities_image'),
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
     ], 'Facilities'),        
-    InlinePanel(ProgrammePage, ProgrammeDocuments, fk_name='page', label="Documents"),
+    InlinePanel(ProgrammePage, 'documents', label="Documents"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -823,8 +823,8 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(NewsItem, NewsItemLink, label="Links"),
-    InlinePanel(NewsItem, NewsItemCarouselItem, label="Carousel content"),
+    InlinePanel(NewsItem, 'related_links', label="Links"),
+    InlinePanel(NewsItem, 'carousel_items', label="Carousel content"),
 ]
 
 NewsItem.promote_panels = [
@@ -846,8 +846,8 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('area'),
-    InlinePanel(NewsItem, NewsItemRelatedSchool, label="Related schools"),
-    InlinePanel(NewsItem, NewsItemRelatedProgramme, label="Related programmes"),
+    InlinePanel(NewsItem, 'related_schools', label="Related schools"),
+    InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
 ]
 
 
@@ -962,9 +962,9 @@ EventItem.content_panels = [
         FieldPanel('external_link_text'),
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
-    InlinePanel(EventItem, EventItemDatesTimes, label="Dates and times"),
-    InlinePanel(EventItem, EventItemSpeaker, label="Speaker"),
-    InlinePanel(EventItem, EventItemCarouselItem, label="Carousel content"),
+    InlinePanel(EventItem, 'dates_times', label="Dates and times"),
+    InlinePanel(EventItem, 'speakers', label="Speaker"),
+    InlinePanel(EventItem, 'carousel_items', label="Carousel content"),
 ]
 
 EventItem.promote_panels = [
@@ -985,9 +985,9 @@ EventItem.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
    
-    InlinePanel(EventItem, EventItemRelatedSchool, label="Related schools"),
-    InlinePanel(EventItem, EventItemRelatedProgramme, label="Related programmes"),
-    InlinePanel(EventItem, EventItemRelatedArea, label="Related areas"),
+    InlinePanel(EventItem, 'related_schools', label="Related schools"),
+    InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
+    InlinePanel(EventItem, 'related_areas', label="Related areas"),
 ]
 
 
@@ -1063,7 +1063,7 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(EventIndex, EventIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(EventIndex, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1115,9 +1115,9 @@ StandardPage.content_panels = [
     FieldPanel('strapline', classname="full"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardPage, StandardPageCarouselItem, label="Carousel content"),
-    InlinePanel(StandardPage, StandardPageRelatedLink, fk_name='page', label="Related links"),
-    InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
+    InlinePanel(StandardPage, 'carousel_items', label="Carousel content"),
+    InlinePanel(StandardPage, 'related_links', label="Related links"),
+    InlinePanel(StandardPage, 'quotations', label="Quotation"),
 ]
 
 StandardPage.promote_panels = [
@@ -1203,10 +1203,10 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    InlinePanel(StandardIndex, StandardIndexCarouselItem, label="Carousel content"),
+    InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
-    InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
-    InlinePanel(StandardIndex, StandardIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
+    InlinePanel(StandardIndex, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -1216,8 +1216,8 @@ StandardIndex.content_panels = [
         FieldPanel('contact_link_text'),
         
     ],'Contact'),
-    InlinePanel(StandardIndex, StandardIndexContactPhone, label="Contact phone number"),
-    InlinePanel(StandardIndex, StandardIndexContactEmail, label="Contact email address"),
+    InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
+    InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
 ]
 
@@ -1358,7 +1358,7 @@ class JobsIndex(Page, SocialFields, CommonPromoteFields):
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(JobsIndex, JobsIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(JobsIndex, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1408,8 +1408,8 @@ class AlumniIndex(Page, SocialFields, CommonPromoteFields):
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(AlumniIndex, AlumniIndexRelatedLink, fk_name='page', label="Related links"),
-    InlinePanel(AlumniIndex, AlumniIndexAd, fk_name='page', label="Manual adverts"),
+    InlinePanel(AlumniIndex, 'related_links', label="Related links"),
+    InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1552,7 +1552,7 @@ StaffPage.content_panels = [
     FieldPanel('school'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
-    InlinePanel(StaffPage, StaffPageRole, label="Roles"),
+    InlinePanel(StaffPage, 'roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     FieldPanel('practice'),
@@ -1560,9 +1560,9 @@ StaffPage.content_panels = [
     FieldPanel('research_interests', classname="full"),
     FieldPanel('first_name'),
     FieldPanel('last_name'),
-    InlinePanel(StaffPage, StaffPageCarouselItem, label="Selected Work Carousel Content"),
-    InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
-    InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
+    InlinePanel(StaffPage, 'carousel_items', label="Selected Work Carousel Content"),
+    InlinePanel(StaffPage, 'collaborations', label="Collaborations"),
+    InlinePanel(StaffPage, 'publications_exhibitions', label="Publications and Exhibitions"),
 ]
 
 StaffPage.promote_panels = [
@@ -1706,21 +1706,21 @@ StudentPage.content_panels = [
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, StudentPageContactsEmail, label="Email"),
-    InlinePanel(StudentPage, StudentPageContactsPhone, label="Phone"),
-    InlinePanel(StudentPage, StudentPageContactsWebsite, label="Website"),
+    InlinePanel(StudentPage, 'email', label="Email"),
+    InlinePanel(StudentPage, 'phone', label="Phone"),
+    InlinePanel(StudentPage, 'website', label="Website"),
     FieldPanel('student_twitter_feed'),
-    InlinePanel(StudentPage, StudentPageDegree, label="Previous degrees"),
-    InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
-    InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
-    InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
+    InlinePanel(StudentPage, 'degrees', label="Previous degrees"),
+    InlinePanel(StudentPage, 'exhibitions', label="Exhibition"),
+    InlinePanel(StudentPage, 'experiences', label="Experience"),
+    InlinePanel(StudentPage, 'awards', label="Awards"),
     FieldPanel('statement'),
-    InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
+    InlinePanel(StudentPage, 'carousel_items', label="Carousel content"),
     FieldPanel('work_description'),
     FieldPanel('work_type'),
     FieldPanel('work_location'),
-    InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
-    InlinePanel(StudentPage, StudentPageWorkSponsor, label="Work sponsor"),
+    InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
+    InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
     FieldPanel('first_name'),
@@ -1769,7 +1769,7 @@ class RcaNowPage(Page, SocialFields, CommonPromoteFields):
                 return None
 
 RcaNowPage.content_panels = [
-    InlinePanel(RcaNowPage, RcaNowPagePageCarouselItem, label="Carousel content"),
+    InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
@@ -1818,7 +1818,7 @@ class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(RcaNowIndex, RcaNowIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(RcaNowIndex, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1892,9 +1892,9 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
-    InlinePanel(ResearchItem, ResearchItemCarouselItem, label="Carousel content"),
+    InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
-    InlinePanel(ResearchItem, ResearchItemCreator, fk_name='page', label="Creator"),
+    InlinePanel(ResearchItem, 'creator', label="Creator"),
     FieldPanel('ref'),
     FieldPanel('year'),
     FieldPanel('school'),
@@ -1903,7 +1903,7 @@ ResearchItem.content_panels = [
     FieldPanel('work_type_other'),
     FieldPanel('theme'),
     FieldPanel('description'),
-    InlinePanel(ResearchItem, ResearchItemLink, label="Links"),
+    InlinePanel(ResearchItem, 'links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2001,11 +2001,11 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageCurrentResearch, fk_name='page', label="Current research"),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageCarouselItem, label="Carousel content"),
+    InlinePanel(ResearchInnovationPage, 'current_research', label="Current research"),
+    InlinePanel(ResearchInnovationPage, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageTeaser, label="Teaser content"),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(ResearchInnovationPage, 'teasers', label="Teaser content"),
+    InlinePanel(ResearchInnovationPage, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -2015,8 +2015,8 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('contact_link_text'),
         
     ],'Contact'),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageContactPhone, label="Contact phone number"),
-    InlinePanel(ResearchInnovationPage, ResearchInnovationPageContactEmail, label="Contact email address"),
+    InlinePanel(ResearchInnovationPage, 'contact_phone', label="Contact phone number"),
+    InlinePanel(ResearchInnovationPage, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
 ]
 

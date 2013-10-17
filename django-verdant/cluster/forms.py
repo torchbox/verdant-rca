@@ -130,6 +130,8 @@ def childformset_factory(parent_model, model, form=ModelForm,
 
 
 class ClusterFormMetaclass(ModelFormMetaclass):
+    extra_form_count = 3
+
     def __new__(cls, name, bases, attrs):
         try:
             parents = [b for b in bases if issubclass(b, ClusterForm)]
@@ -178,6 +180,7 @@ class ClusterFormMetaclass(ModelFormMetaclass):
                     form_class = ModelForm
 
                 formset = childformset_factory(opts.model, rel.model,
+                    extra=cls.extra_form_count,
                     form=form_class, formfield_callback=formfield_callback, fk_name=rel.field.name)
                 formsets[rel_name] = formset
 

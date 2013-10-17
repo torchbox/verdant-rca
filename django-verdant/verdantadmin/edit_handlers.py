@@ -11,6 +11,7 @@ import copy
 from core.models import Page
 from core.util import camelcase_to_underscore
 from core.fields import RichTextArea
+from cluster.forms import ClusterForm, ClusterFormMetaclass
 
 
 class FriendlyDateInput(forms.DateInput):
@@ -48,13 +49,18 @@ def formfield_for_dbfield(db_field, **kwargs):
     # For any other type of field, just call its formfield() method.
     return db_field.formfield(**kwargs)
 
-class VerdantAdminModelFormMetaclass(ModelFormMetaclass):
+class VerdantAdminModelFormMetaclass(ClusterFormMetaclass):
     # Override the behaviour of the regular ModelForm metaclass -
     # which handles the translation of model fields to form fields -
     # to use our own formfield_for_dbfield function to do that translation.
     # This is done by sneaking a formfield_callback property into the class
     # being defined (unless the class already provides a formfield_callback
     # of its own).
+
+    # while we're at it, we'll also set extra_form_count to 0, as we're creating
+    # extra forms in JS
+    extra_form_count = 0
+
     def __new__(cls, name, bases, attrs):
         if 'formfield_callback' not in attrs or attrs['formfield_callback'] is None:
             attrs['formfield_callback'] = formfield_for_dbfield
@@ -62,7 +68,7 @@ class VerdantAdminModelFormMetaclass(ModelFormMetaclass):
         new_class = super(VerdantAdminModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
         return new_class
 
-VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', (ModelForm,), {})
+VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', (ClusterForm,), {})
 
 # Now, any model forms built off VerdantAdminModelForm instead of ModelForm should pick up
 # the nice form fields defined in FORM_FIELD_OVERRIDES.
@@ -472,12 +478,6 @@ def PageChooserPanel(field_name, page_type=None):
 
 
 class BaseInlinePanel(EditHandler):
-    # get_formset_class is dependent on get_child_edit_handler_class if a panel list is passed
-    #   (so that the edit handler can specify widget overrides on the form);
-    # get_child_edit_handler_class is dependent on get_formset_class if a panel list is NOT passed
-    #   (because the edit handler needs to find out its panel list from the form).
-    # Look ma, no circular dependency!
-
     @classmethod
     def get_panel_definitions(cls):
         # Look for a panels definition in the InlinePanel declaration
@@ -496,37 +496,19 @@ class BaseInlinePanel(EditHandler):
 
         return cls._child_edit_handler_class
 
-    _formset_class = None
     @classmethod
-    def get_formset_class(cls):
-        if cls._formset_class is None:
-            widget_overrides = cls.get_child_edit_handler_class().widget_overrides()
-
-            # As of Django 1.6 we can pass a 'widgets' argument directly to inlineformset_factory.
-            # In the meantime, we have to assemble a largely useless subclass of VerdantAdminModelForm
-            # with the widget spec baked in... inlineformset_factory will promptly use this to 
-            # create its *own* model-specific subclass, and forget about this one.
-            form_class = get_form_for_model(cls.related_model, widgets=widget_overrides)
-
-            cls._formset_class = inlineformset_factory(
-                cls.base_model, cls.related_model,
-                form=form_class, can_order=cls.can_order,
-                fk_name=cls.fk_name, extra=0
-            )
-
-            # at this point we can fill in a heading, if we don't have one already
-            if not cls.heading:
-                relation_name = cls._formset_class.fk.rel.related_name
-                cls.heading = relation_name.replace('_', ' ').capitalize()
-
-        return cls._formset_class
+    def widget_overrides(cls):
+        overrides = cls.get_child_edit_handler_class().widget_overrides()
+        if overrides:
+            return {cls.relation_name: overrides}
+        else:
+            return {}
 
 
     def __init__(self, data=None, files=None, instance=None, form=None):
         super(BaseInlinePanel, self).__init__(data, files, instance=instance, form=form)
 
-        formset_class = self.__class__.get_formset_class()
-        self.formset = formset_class(data, files, instance=self.instance)
+        self.formset = form.formsets[self.__class__.relation_name]
 
         child_edit_handler_class = self.__class__.get_child_edit_handler_class()
         self.children = []
@@ -562,35 +544,33 @@ class BaseInlinePanel(EditHandler):
         }))
 
     def is_valid(self):
-        formset_is_valid = self.formset.is_valid()
-        children_are_valid = all([child.is_valid() for child in self.children])
-        return (formset_is_valid and children_are_valid)
+        return all([child.is_valid() for child in self.children])
 
     def pre_save(self):
         for child in self.children:
             child.pre_save()
 
     def post_save(self):
-        if self.can_order:
-            self.formset.save(commit=False)
-            for i, form in enumerate(self.formset.ordered_forms):
-                form.instance.sort_order = i
-                form.instance.save()
-        else:
-            self.formset.save()
+        #if self.can_order:
+        #    self.formset.save(commit=False)
+        #    for i, form in enumerate(self.formset.ordered_forms):
+        #        form.instance.sort_order = i
+        #        form.instance.save()
+        #else:
+        #    self.formset.save()
 
         for child in self.children:
             child.post_save()
 
-def InlinePanel(base_model, related_model, panels=None, label='', help_text='', fk_name=None):
+def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
+    rel = getattr(base_model, relation_name).related
     return type('_InlinePanel', (BaseInlinePanel,), {
-        'base_model': base_model,
-        'related_model': related_model,
+        'relation_name': relation_name,
+        'related_model': rel.model,
         'panels': panels,
         'heading': label,
-        'fk_name': fk_name,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
-        'can_order': ('sort_order' in related_model._meta.get_all_field_names()),
+        'can_order': False,  # ('sort_order' in rel.model._meta.get_all_field_names()),
     })
 
 
