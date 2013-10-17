@@ -4,19 +4,13 @@
         <div class="item-container">
             <ul class="row">
                 {% for research_item in research_items %}
-                    {% if forloop.counter == 4 %}
-                        <li class="load-more-target">
-                    {% elif forloop.counter0|divisibleby:"4" %}
+                    {% if forloop.counter0|divisibleby:"4" %}
                         <li class="newrow">
                     {% else %}
                         <li>
                     {% endif %}
-                        {% include "rca/includes/modules/research_item.html" %}
-                    </li>
+                    {% include "rca/includes/modules/research_item.html" %}
                 {% endfor %}
-                {% if research_items|length > 6 %} 
-                    <li class="load-more"><a href="#">+</a></li>
-                {% endif %}
             </ul>
         </div>
     </section>

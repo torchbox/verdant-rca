@@ -2019,6 +2019,47 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        research_type = request.GET.get('research_type')
+        school = request.GET.get('school')
+        theme = request.GET.get('theme')
+        work_type = request.GET.get('work_type')
+
+        research_items = ResearchItem.objects.filter()
+
+        if research_type and research_type != 'all':
+            research_items = research_items.filter(research_type=research_type)
+        if school and school != 'all':
+            research_items = research_items.filter(school=school)
+        if theme and theme != 'all':
+            research_items = research_items.filter(theme=theme)
+        if work_type and work_type != 'all':
+            research_items = research_items.filter(work_type=work_type)
+
+        research_items.order_by('year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(research_items, 10) # Show 10 research items per page
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/current_research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
+
 CurrentResearchPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
