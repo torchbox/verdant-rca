@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django import forms
 from django.db import models
-from django.forms.models import fields_for_model, modelform_factory, inlineformset_factory, ModelForm, ModelFormMetaclass
+from django.forms.models import fields_for_model, modelform_factory
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 
@@ -131,7 +131,7 @@ class EditHandler(object):
             cls._form_class = get_form_for_model(model, widgets=cls.widget_overrides())
         return cls._form_class
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
+    def __init__(self, instance=None, form=None):
         if not instance:
             raise ValueError("EditHandler did not receive an instance object")
         self.instance = instance
@@ -256,11 +256,11 @@ class BaseCompositeEditHandler(EditHandler):
 
         return cls._widget_overrides
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseCompositeEditHandler, self).__init__(data, files, instance=instance, form=form)
+    def __init__(self, instance=None, form=None):
+        super(BaseCompositeEditHandler, self).__init__(instance=instance, form=form)
 
         self.children = [
-            handler_class(data, files, instance=self.instance, form=self.form)
+            handler_class(instance=self.instance, form=self.form)
             for handler_class in self.__class__.children
         ]
 
@@ -318,8 +318,8 @@ def MultiFieldPanel(children, heading=""):
 
 
 class BaseFieldPanel(EditHandler):
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseFieldPanel, self).__init__(data, files, instance=instance, form=form)
+    def __init__(self, instance=None, form=None):
+        super(BaseFieldPanel, self).__init__(instance=instance, form=form)
         self.bound_field = self.form[self.field_name]
 
         self.heading = self.bound_field.label
@@ -505,8 +505,8 @@ class BaseInlinePanel(EditHandler):
             return {}
 
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseInlinePanel, self).__init__(data, files, instance=instance, form=form)
+    def __init__(self, instance=None, form=None):
+        super(BaseInlinePanel, self).__init__(instance=instance, form=form)
 
         self.formset = form.formsets[self.__class__.relation_name]
 
@@ -521,7 +521,7 @@ class BaseInlinePanel(EditHandler):
                 subform.fields['ORDER'].widget = forms.HiddenInput()
 
             self.children.append(
-                child_edit_handler_class(data, files, instance=subform.instance, form=subform)
+                child_edit_handler_class(instance=subform.instance, form=subform)
             )
 
         empty_form = self.formset.empty_form
@@ -529,7 +529,7 @@ class BaseInlinePanel(EditHandler):
         if self.can_order:
             empty_form.fields['ORDER'].widget = forms.HiddenInput()
 
-        self.empty_child = child_edit_handler_class(data, files, instance=empty_form.instance, form=empty_form)
+        self.empty_child = child_edit_handler_class(instance=empty_form.instance, form=empty_form)
 
     template = "verdantadmin/edit_handlers/inline_panel.html"
     def render(self):

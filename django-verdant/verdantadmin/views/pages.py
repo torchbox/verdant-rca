@@ -108,7 +108,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
+        edit_handler = edit_handler_class(instance=page, form=form)
 
         if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
@@ -137,7 +137,7 @@ def edit(request, page_id):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
+        edit_handler = edit_handler_class(instance=page, form=form)
 
         if all([form.is_valid(), edit_handler.is_valid()]):
             edit_handler.pre_save()
