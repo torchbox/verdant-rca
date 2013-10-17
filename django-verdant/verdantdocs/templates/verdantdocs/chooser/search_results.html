@@ -1,5 +1,5 @@
 {% if documents %}
-    <h2>Results</h2>
+    <h2>{{ documents|length }} match{{ documents|pluralize:"es" }}</h2>
     <ul class="listing">
         {% for doc in documents %}
             <li>

@@ -98,7 +98,7 @@ ul.listing{
 
         h2{
             margin:0;
-            font-size:1.2em;
+            font-size:1.1em;
             font-weight:700;
             color:darken(@color-grey, 10%);
             line-height:1.5em;
@@ -125,11 +125,16 @@ ul.listing{
         .unlist();
     }
 
+    h3{
+        margin:0;
+        font-size:0.95em;
+    }
+
     .actions{
         margin-top:0.5em;
         visibility: hidden;
         text-transform:uppercase;
-        font-size:0.9em;
+        font-size:0.85em;
 
         a{
             text-decoration:none;
@@ -190,6 +195,29 @@ ul.listing{
     }
 }
 
+
+.pagination{
+    text-align:center;
+    p{
+        margin:0;
+    }
+    ul{
+        .unlist();
+    }
+    ul{
+        margin-top:-1.7em;
+    }
+    li{
+        line-height:1em;
+    }
+    .prev{
+        float:left;
+    }
+    .next{
+        float:right;
+    } 
+}
+
 @media screen and (min-width: @breakpoint-mobile){
     .listing{
         &.horiz > li{
@@ -203,25 +231,36 @@ ul.listing{
             > li{
                 padding:@grid-gutter-width/2;
                 width:200px;
-                height:200px;
+                height:220px;
                 text-align:center;
                 margin-top:-1px;
                 border:1px solid @color-grey-lighter;
-                border-width:1px 1px 1px 0px;
+                border-width:1px 1px 1px 0px;               
 
                 .image{
-                    border:3px solid transparent;
-                    display:inline-block;
+                    
+                    text-align:center;
+                    height:180px;
+                   
+                    &:before {
+                        content: '';
+                        display: inline-block;
+                        height: 100%;
+                        vertical-align: middle;
+                        margin-right: -0.25em;
+                    }
 
                     img{
-                        display:block;
+                        border:3px solid transparent;
+                        display:inline-block;
+                        vertical-align: middle;
                     }
                 }
 
                 &:hover{
                     background-color:@color-header-bg;
 
-                    .image{
+                    img{
                         border-color:@color-teal;
                     }
                 }
@@ -229,9 +268,7 @@ ul.listing{
             a{
                 color:inherit;
             }
-            h3{
-                font-size:1em;
-            }
+            
         }   
         .no-children {
             border-color:transparent;

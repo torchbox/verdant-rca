@@ -1,22 +1,31 @@
 {% load image_tags ellipsistrim %}
 
 {% if images %}
+    <h2>{{ images|length }} match{{ images|pluralize:"es" }}</h2>
     <ul class="listing horiz images">
         {% for image in images %}
             <li>
                 <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
-                    <div class="image">{% image image max-180x180 %}</div>
+                    <div class="image">{% image image max-165x165 %}</div>
                     <h3>{{ image.title|ellipsistrim:60 }}</h3>
                 </a>
-                {% comment %}
-                    I'm not sure why it would ever be necessary to list the tags on an image in search results
-                    {% with image.prefetched_tags as tags %}
-                        {% if tags %}
-                            <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                        {% endif %}
-                    {% endwith %}
-                {% endcomment %}
             </li>
         {% endfor %}
     </ul>
+
+    <div class="pagination">
+        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
+        <ul>
+            <li class="prev">
+                {% if images.has_previous %}
+                    <a href="{% url 'verdantimages_search_image' %}?q={{ search_query|urlencode }}&amp;p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                {% endif %}
+            </li>
+            <li class="next">
+                {% if images.has_next %}
+                    <a href="{% url 'verdantimages_search_image' %}?q={{ search_query|urlencode }}&amp;p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
 {% endif %}

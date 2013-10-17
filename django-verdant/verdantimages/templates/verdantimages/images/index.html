@@ -54,10 +54,8 @@
             {% endif %}
         </ul>
     </form>
-    
 
     <div class="nice-padding">
-
         <div id="image-results">
             {% if is_searching %}
                 {% include "verdantimages/images/search-results.html" %}
@@ -67,7 +65,7 @@
                     {% for image in images %}
                         <li>
                             <a href="{% url 'verdantimages_edit_image' image.id %}">
-                                <div class="image">{% image image max-180x180 %}</div>
+                                <div class="image">{% image image max-165x165 %}</div>
                                 <h3>{{ image.title|ellipsistrim:60 }}</h3>
                             </a>
                         </li>

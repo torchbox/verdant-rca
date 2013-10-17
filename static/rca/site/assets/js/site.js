@@ -284,8 +284,11 @@ $(function(){
         var showNewItems = function(){
             itemContainer.css('height', itemContainer.height());
             newItems.removeClass('hidden');
-            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
+            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+            });
 
+            // Fade in each item one by one
             var time = 0;
             newItems.each(function(index){
                 var $item = $(this);
@@ -380,9 +383,19 @@ $(function(){
     /* Search filters */
     $('.filters').each(function(){
         $self = $(this);
+
+        function setLabel(option){
+            $('label[for=' + $(option).parent().data('id') + ']', $self).html($(option).html()).addClass('active');
+        }
+
         $('label', $self).click(function(){
             $(this).parent().toggleClass('expanded');
             $(this).parent().siblings().removeClass('expanded');
+        });
+
+        /* save original label val to data */
+        $('label', $self).each(function(){
+            $(this).data('original-label', $(this).html());
         });
 
         /* create popouts from existing select options */
@@ -390,28 +403,41 @@ $(function(){
             var options = $('option', $(this));
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
-            for(var i = 0; i < options.length; i++){
-                if(options[i].value){
-                    newOptions = newOptions + '<li data-val="' + options[i].value + '" class="'+ (options[i].selected ? "selected":"") +'">' + options[i].text + '</li>';
+            options.each(function(){
+                newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ ($(this).prop('selected') ? "selected":"") +'">' + $(this).html() + '</li>';
+            })
 
-                    /* if form already has items selected, replicate this */
-                    if(options[i].selected){
-                        $('.filters label[for=' + $(this).attr('id') + ']').html(options[i].text).addClass('active');
-                    }
-                }
-            }
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
+        });
+
+        /* if form already has items selected, replicate this */
+        $('.options li', $self).each(function(){
+            if($(this).hasClass('selected') && $(this).data('val')){
+                setLabel($(this));
+            }
         });
 
         /* Change label values when options are chosen */
         $('.options li', $self).on('click keydown', function(){
             $(this).siblings().removeClass('selected');
             $(this).addClass('selected');
-            $('.filters label[for=' + $(this).parent().data('id') + ']').html($(this).html()).addClass('active');
+            if($(this).data('val')){
+                setLabel($(this));
+            }else{
+                $('label[for=' + $(this).parent().data('id') + ']', $self).each(function(){
+                    $(this).html($(this).data('original-label')).removeClass('active');
+                });
+            }
             $('#' + $(this).parent().data('id')).val($(this).data('val'));
         });
+
+        $(document).on('click', function(e){
+            if(!$(e.target).parent().hasClass('filter')){
+                $('label', $self).parent().removeClass('expanded');
+            }
+        })
     });
  
     /* Google maps for contact page */

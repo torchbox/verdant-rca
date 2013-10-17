@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.shortcuts import render
+from django.db.models import Min
 
 from datetime import date
 
@@ -660,12 +661,14 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
 
         news = NewsItem.objects.filter(path__startswith=self.path)
 
-        if programme and programme != 'all':
+        if programme and programme != '':
             news = news.filter(related_programmes__programme=programme)
-        if school and school != 'all':
+        if school and school != '':
             news = news.filter(related_schools__school=school)
-        if area and area != 'all':
+        if area and area != '':
             news = news.filter(area=area)
+
+        news = news.order_by('-date')
 
         page = request.GET.get('page')
         paginator = Paginator(news, 10) # Show 10 news items per page
@@ -848,7 +851,7 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    link = models.URLField()
+    link = models.URLField(blank=True)
 
     panels=[
         FieldPanel('name'), 
@@ -923,6 +926,7 @@ class EventItem(Page, SocialFields, CommonPromoteFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
+    objects = models.Manager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
@@ -1007,17 +1011,18 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         else:
             events = self.future_events()
 
-        if programme and programme != 'all':
+        if programme and programme != '':
             events = events.filter(related_programmes__programme=programme)
         if school and school != 'all':
             events = events.filter(related_schools__school=school)
-        if location and location != 'all':
+        if location and location != '':
             events = events.filter(location=location)
         if area and area != 'all':
             events = events.filter(related_areas__area=area)
-        if audience and audience != 'all':
+        if audience and audience != '':
             events = events.filter(audience=audience)
-
+        events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        
         page = request.GET.get('page')
         paginator = Paginator(events, 10) # Show 10 events per page
         try:
@@ -1521,8 +1526,10 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing this staff member's Twitter handle (or any hashtag or search term)")
     intro = RichTextField()
-    biography = RichTextField()
+    biography = RichTextField(blank=True)
     practice = RichTextField(blank=True)
+    publications_exhibtions_and_other_outcomes_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate publications/events if needed.")
+    external_collaborations_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate external collaborations if needed.")
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
@@ -1549,6 +1556,8 @@ StaffPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     FieldPanel('practice'),
+    FieldPanel('publications_exhibtions_and_other_outcomes_placeholder'),
+    FieldPanel('external_collaborations_placeholder'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
     FieldPanel('first_name'),
@@ -2018,6 +2027,47 @@ ResearchInnovationPage.promote_panels = [
 class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    def serve(self, request):
+        research_type = request.GET.get('research_type')
+        school = request.GET.get('school')
+        theme = request.GET.get('theme')
+        work_type = request.GET.get('work_type')
+
+        research_items = ResearchItem.objects.all()
+
+        if research_type and research_type != '':
+            research_items = research_items.filter(research_type=research_type)
+        if school and school != '':
+            research_items = research_items.filter(school=school)
+        if theme and theme != '':
+            research_items = research_items.filter(theme=theme)
+        if work_type and work_type != '':
+            research_items = research_items.filter(work_type=work_type)
+
+        research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(research_items, 10) # Show 10 research items per page
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/current_research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
 CurrentResearchPage.content_panels = [
     FieldPanel('title', classname="full title"),

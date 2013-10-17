@@ -19,7 +19,7 @@
             margin:0;
         }
         li {
-            .column(6, @grid-gutter-width);
+            .column(6, @grid-gutter-width/2);
             &.newrow {
                 padding-left: 0;
             }
@@ -41,10 +41,21 @@
             .column(2, @grid-gutter-width/2, 6);
             background-color: @color-light-pink;
             padding: @spacing-half;
+            float:right;
         }
     }
 }
 
+.type-jobs-index {
+    .one-plus {
+        li.col {
+            .column(3, @grid-gutter-width/2, 6);
+            padding-left: 0;
+            min-width: 200px;
+            margin-bottom: 0;
+        }
+    }
+}
 
 /* must come at bottom of file*/
 @import "modules-desktop-regular.less";
