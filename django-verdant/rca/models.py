@@ -1858,6 +1858,11 @@ class ResearchItemCreator(Orderable):
     person = models.ForeignKey('core.Page', null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
     manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
+    panels=[
+        FieldPanel('person'),
+        PageChooserPanel('manual_person_name')
+    ]
+
 class ResearchItemLink(Orderable):
     page = models.ForeignKey('rca.ResearchItem', related_name='links')
     link = models.URLField()
