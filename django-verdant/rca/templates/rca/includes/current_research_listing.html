@@ -11,11 +11,12 @@
                     {% endif %}
                     {% include "rca/includes/modules/research_item.html" %}
                 {% endfor %}
+                <li class="load-more{% if research_items|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
             </ul>
         </div>
     </section>
 
-    <ul class="pagination">
+    <ul class="pagination infinite">
         <!--
         {% if research_items.has_previous %}
             <li class="previous"><a href="?page={{ research_items.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
