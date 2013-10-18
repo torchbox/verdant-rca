@@ -1059,7 +1059,7 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
         
         page = request.GET.get('page')
-        paginator = Paginator(events, 2) # Show 10 events per page
+        paginator = Paginator(events, 10) # Show 10 events per page
         try:
             events = paginator.page(page)
         except PageNotAnInteger:
