@@ -1,7 +1,8 @@
 from django import template
 
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage, StaffPage
+from rca.models import *
 from datetime import date
+from itertools import chain
 from django.db.models import Min
 
 register = template.Library()
@@ -136,6 +137,25 @@ def staff_random(context, exclude=None, count=4):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
+def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5):
+    news = NewsItem.objects.filter(show_on_homepage=1)#.order_by('date')
+    staff = StaffPage.objects.filter(show_on_homepage=1)
+    student = StudentPage.objects.filter(show_on_homepage=1)
+    rcanow = RcaNowPage.objects.filter(show_on_homepage=1)#.order_by('date')
+    standard = StandardPage.objects.filter(show_on_homepage=1)
+    #tweets =
+
+    packeryItems = list(chain(news[:news_count], staff[:staff_count], student[:student_count], news[:rcanow_count], standard[:standard_count]))
+
+    return {
+        'packery': packeryItems,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.filter
+def content_type(value):
+    return value.__class__.__name__.lower()
 
 @register.filter
 def paragraph_split(value, sep = "</p>"):

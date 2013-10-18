@@ -83,38 +83,30 @@ var desktopNav = {
 			}
 
 			function closeMenu(){
+				console.log('closing');
 				$self.addClass('changing').removeClass('hovered');
-				
+					
+				// reset or submenu
+				$('ul', menu).stop().removeAttr('style');
+
 				menu.stop().hide()
 
 				$self.stop().animate({
 					height: 34
 				}, 200, function(){
-					$self.find('.selected > ul').stop().show()
+					// $self.find('.selected > ul').stop().show()
 					$self.removeClass('changing').removeClass('open');
 				});
 
-				$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
-					$(this).find('.selected > ul').fadeIn(100)
-				});
+				// $self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
+				// 	$(this).find('.selected > ul').fadeIn(100)
+				// });
 
 				$self.find('.breadcrumb').stop().fadeIn(200, function(){
 					$(this).removeClass('changing');
 				})
 			}
 
-			// toggle.hoverIntent({
-			// 	over: function(){
-			// 		openMenu();
-			// 	},
-			// 	out: function(e){
-			// 		var relTarg = e.relatedTarget || e.toElement;
-			// 		if($(relTarg).get(0) != $self.get(0) && $(relTarg).closest('nav').get(0) != $self.get(0)){
-			// 			closeMenu();
-			// 		}
-			// 	},
-			// 	timeout:500
-			// })
 			toggle.click(function(){
 				if($self.hasClass('open')){
 					closeMenu();
@@ -136,7 +128,7 @@ var desktopNav = {
 				out: function(){
 					closeMenu();
 				},
-				timeout:500
+				timeout:600
 			})	
 
 			$('li', menu).hoverIntent({
@@ -144,16 +136,14 @@ var desktopNav = {
 					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
 					$(this).addClass('open');
-					$(this).siblings().find(' > ul').stop().hide()
-					$(this).find(' > ul').fadeIn(200);
+					$(this).siblings().find(' > ul').stop().hide();
+					$(this).find(' > ul').stop().fadeIn(200);
 				},
 				out: function(){
 					$(this).removeClass('open');
-					if(!$('nav').hasClass('changing')){
-						$(this).find('> ul').stop().hide();
-					}
+					$(this).find('> ul').stop().hide();
 				},
-				timeout: 600
+				timeout: 500
 			});
 			$('li' ,$self).bind('mouseout', function(){
 				

@@ -1325,7 +1325,7 @@ class HomePage(Page, SocialFields, CommonPromoteFields):
     news_item_2 = models.ForeignKey('core.Page', null=True, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_student_work = models.IntegerField("Number of student work items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_standard = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
@@ -1754,17 +1754,14 @@ class StudentPageContactsPhone(Orderable):
 
     panels = [FieldPanel('phone')]
 
-
 class StudentPageContactsWebsite(Orderable):
     page = models.ForeignKey('rca.StudentPage', related_name='website')
     website = models.URLField(max_length=255, blank=True)
 
     panels = [FieldPanel('website')]
 
-
 class StudentPageCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.StudentPage', related_name='carousel_items')
-
 
 class StudentPageWorkCollaborator(Orderable):
     page = models.ForeignKey('rca.StudentPage', related_name='collaborators')
@@ -1772,13 +1769,11 @@ class StudentPageWorkCollaborator(Orderable):
 
     panels = [FieldPanel('name')]
 
-
 class StudentPageWorkSponsor(Orderable):
     page = models.ForeignKey('rca.StudentPage', related_name='sponsor')
     name = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('name')]
-
 
 class StudentPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
