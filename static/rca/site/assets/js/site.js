@@ -329,7 +329,7 @@ $(function(){
 
                 // get next set of results
                 var nextPage = $('<html></html>').load(nextLinkUrl, function(){
-                    newItems = $('.x-plus > ul > li:not(.load-more)', nextPage);
+                    newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
                     
