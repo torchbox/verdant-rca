@@ -187,6 +187,18 @@ nav {
         }  
     }
 
+    /* these settings change when the menu is ready*/
+    nav.ready{
+        .menu{
+            /* only hide after its max height has been calculated */
+            display:none;
+            text-indent:0;
+        }
+        li > ul{
+            display:none;
+        }
+    }
+
     nav.open{
         background-color:white;
 
@@ -200,7 +212,7 @@ nav {
     } 
 
     nav .menu{
-        display:none;
+        text-indent:-2000px;
         position:relative;
         left:@grid-gutter-width;
         top:2em;
@@ -213,7 +225,6 @@ nav {
         width:25%;
     }
         nav li > ul{
-            display:none;
             left:25%;
             /* increases hover-area to include space below visible items */
             padding-bottom:200px;
