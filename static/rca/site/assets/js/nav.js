@@ -60,7 +60,6 @@ var desktopNav = {
 			// set menu as ready
 			$self.addClass('ready');			
 
-
 			function openMenu(){
 				$self.addClass('changing');
 				setTimeout(function(){
@@ -87,7 +86,10 @@ var desktopNav = {
 				$self.addClass('changing').removeClass('hovered');
 					
 				// reset or submenu
-				$('ul', menu).stop().removeAttr('style');
+				setTimeout(function(){
+					$('ul', menu).stop().removeAttr('style');
+				}, 600)
+				
 
 				menu.stop().hide()
 
@@ -98,9 +100,9 @@ var desktopNav = {
 					$self.removeClass('changing').removeClass('open');
 				});
 
-				// $self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
-				// 	$(this).find('.selected > ul').fadeIn(100)
-				// });
+				$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
+					$(this).find('.selected > ul').fadeIn(100)
+				});
 
 				$self.find('.breadcrumb').stop().fadeIn(200, function(){
 					$(this).removeClass('changing');
@@ -121,15 +123,14 @@ var desktopNav = {
 				}
 			});
 
-			menu.hoverIntent({				
-				over: function(){
+			menu.hover(			
+				function(){
 					openMenu();
 				}, 
-				out: function(){
+				function(){
 					closeMenu();
-				},
-				timeout:600
-			})	
+				}
+			)
 
 			$('li', menu).hoverIntent({
 				over: function(){
@@ -145,9 +146,6 @@ var desktopNav = {
 				},
 				timeout: 500
 			});
-			$('li' ,$self).bind('mouseout', function(){
-				
-			})
 		});
 	},
 
