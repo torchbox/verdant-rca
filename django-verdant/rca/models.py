@@ -1165,6 +1165,7 @@ class StandardPage(Page, SocialFields, CommonPromoteFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
+    show_on_homepage = models.BooleanField()
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1188,6 +1189,7 @@ StandardPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
