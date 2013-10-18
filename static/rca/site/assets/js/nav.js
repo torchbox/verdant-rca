@@ -1,6 +1,6 @@
 $(function(){
-	Harvey.attach('screen and (max-width:767px)', {
-		setup: function(){}, // called when the query becomes valid for the first time
+	Harvey.attach(breakpoints.mobile, {
+		setup: function(){},
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({
 				animationClasses : { 
@@ -8,23 +8,32 @@ $(function(){
 					classout : 'dl-animate-out-2' 
 				}
 			});
-		}, // called each time the query is activated
+		}, 
 		off: function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
 			$('nav *').removeClass('dl-subview dl-subviewopen');
 			$('nav .dl-back').remove();
 
-		} // called each time the query is deactivated
+		}
 	});
-	Harvey.attach('screen and (min-width:768px)', {
-		setup: function(){}, // called when the query becomes valid for the first time
+	Harvey.attach(breakpoints.desktopSmall, {
+		setup: function(){},
 		on: function(){
+			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
+
+			//enable desktop dropdown nav
 			desktopNav.apply()
-		}, // called each time the query is activated
+		},
 		off: function(){
+			//kill desktop dropdown nav
 			desktopNav.revoke()
-		} // called each time the query is deactivated
+		}
 	});
+
+	/* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
+    $('.lt-ie9').each(function(){
+        desktopNav.apply()
+    })
 
 });
 
