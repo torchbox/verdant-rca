@@ -460,6 +460,14 @@ class SchoolPageRelatedLink(Orderable):
         FieldPanel('link_text'),
     ]
 
+class SchoolPageAd(Orderable):
+    page = models.ForeignKey('rca.SchoolPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class SchoolPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -494,6 +502,7 @@ SchoolPage.content_panels = [
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
     InlinePanel(SchoolPage, SchoolPageRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(SchoolPage, SchoolPageAd, fk_name='page', label="Manual adverts"),
 ]
 
 SchoolPage.promote_panels = [
@@ -576,6 +585,14 @@ class ProgrammePageStudentStory(Orderable):
         PageChooserPanel('link'),
     ]
 
+class ProgrammePageAd(Orderable):
+    page = models.ForeignKey('rca.ProgrammePage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
@@ -623,6 +640,7 @@ ProgrammePage.content_panels = [
         PageChooserPanel('facilities_link'),
     ], 'Facilities'),        
     InlinePanel(ProgrammePage, ProgrammeDocuments, fk_name='page', label="Documents"),
+    InlinePanel(ProgrammePage, ProgrammePageAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -648,6 +666,14 @@ ProgrammePage.promote_panels = [
 
 
 # == News Index ==
+
+class NewsIndexAd(Orderable):
+    page = models.ForeignKey('rca.NewsIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
 
 class NewsIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
@@ -695,6 +721,7 @@ class NewsIndex(Page, SocialFields, CommonPromoteFields):
 NewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    InlinePanel(NewsIndex, NewsIndexAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -987,6 +1014,14 @@ class EventIndexRelatedLink(Orderable):
         FieldPanel('link_text'),
     ]
 
+class EventIndexAd(Orderable):
+    page = models.ForeignKey('rca.EventIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class EventIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
@@ -1024,7 +1059,7 @@ class EventIndex(Page, SocialFields, CommonPromoteFields):
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
         
         page = request.GET.get('page')
-        paginator = Paginator(events, 10) # Show 10 events per page
+        paginator = Paginator(events, 2) # Show 10 events per page
         try:
             events = paginator.page(page)
         except PageNotAnInteger:
@@ -1049,6 +1084,7 @@ EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     InlinePanel(EventIndex, EventIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(EventIndex, EventIndexAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1114,6 +1150,14 @@ class StandardPageImage(Orderable):
         ImageChooserPanel('image'),
     ]
 
+class StandardPageAd(Orderable):
+    page = models.ForeignKey('rca.StandardPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class StandardPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
@@ -1131,6 +1175,7 @@ StandardPage.content_panels = [
     InlinePanel(StandardPage, StandardPageRelatedDocument, label="Document"),
     InlinePanel(StandardPage, StandardPageQuotation, label="Quotation"),
     InlinePanel(StandardPage, StandardPageImage, label="Middle column image"),
+    InlinePanel(StandardPage, StandardPageAd, fk_name='page', label="Manual adverts"),
 ]
 
 StandardPage.promote_panels = [
@@ -1196,6 +1241,14 @@ class StandardIndexContactEmail(Orderable):
         FieldPanel('email_address')
     ]
 
+class StandardIndexAd(Orderable):
+    page = models.ForeignKey('rca.StandardIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class StandardIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1220,6 +1273,7 @@ StandardIndex.content_panels = [
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, StandardIndexTeaser, label="Teaser content"),
     InlinePanel(StandardIndex, StandardIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(StandardIndex, StandardIndexAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -1254,6 +1308,14 @@ StandardIndex.promote_panels = [
 
 # == Home page ==
 
+class HomePageAd(Orderable):
+    page = models.ForeignKey('rca.HomePage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class HomePage(Page, SocialFields, CommonPromoteFields):
     news_item_1 = models.ForeignKey('core.Page', null=True, related_name='+')
     news_item_2 = models.ForeignKey('core.Page', null=True, related_name='+')
@@ -1275,7 +1337,8 @@ HomePage.content_panels = [
     FieldPanel('packery_tweets'),
     FieldPanel('packery_rcanow'),
     FieldPanel('packery_standard'),
-    ], 'Packery content')
+    ], 'Packery content'),
+    InlinePanel(HomePage, HomePageAd, fk_name='page', label="Manual adverts"),
 ]
 
 HomePage.promote_panels = [
@@ -1364,6 +1427,14 @@ class JobsIndexRelatedLink(Orderable):
         FieldPanel('link_text'),
     ]
 
+class JobsIndexAd(Orderable):
+    page = models.ForeignKey('rca.JobsIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class JobsIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
@@ -1372,6 +1443,7 @@ JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     InlinePanel(JobsIndex, JobsIndexRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(JobsIndex, JobsIndexAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1604,6 +1676,14 @@ StaffPage.promote_panels = [
 
 # == Staff index page ==
 
+class StaffIndexAd(Orderable):
+    page = models.ForeignKey('rca.StaffIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class StaffIndex(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
@@ -1611,6 +1691,7 @@ class StaffIndex(Page, SocialFields, CommonPromoteFields):
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    InlinePanel(StaffIndex, StaffIndexAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1987,6 +2068,14 @@ class ResearchInnovationPageCurrentResearch(Orderable):
         # needs to be shortened to avoid hitting limit on the permissions table - https://code.djangoproject.com/ticket/8548
         verbose_name = "research innov. page current research"
 
+class ResearchInnovationPageAd(Orderable):
+    page = models.ForeignKey('rca.ResearchInnovationPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
 class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -2010,6 +2099,7 @@ ResearchInnovationPage.content_panels = [
     FieldPanel('teasers_title'),
     InlinePanel(ResearchInnovationPage, ResearchInnovationPageTeaser, label="Teaser content"),
     InlinePanel(ResearchInnovationPage, ResearchInnovationPageRelatedLink, fk_name='page', label="Related links"),
+    InlinePanel(ResearchInnovationPage, ResearchInnovationPageAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -2043,6 +2133,13 @@ ResearchInnovationPage.promote_panels = [
 
    
 # == Current research page ==
+class CurrentResearchPageAd(Orderable):
+    page = models.ForeignKey('rca.CurrentResearchPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
 
 class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
@@ -2092,6 +2189,7 @@ class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
 CurrentResearchPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    InlinePanel(CurrentResearchPage, CurrentResearchPageAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
