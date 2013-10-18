@@ -143,6 +143,7 @@ header {
 }
 
 nav {
+    height:34px;  //adjusted by eye to match search box 
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
 }
@@ -188,11 +189,10 @@ nav {
 
     /* these settings change when the menu is ready*/
     nav.ready{
-        height:34px;  //adjusted by eye to match search box 
-    
         .menu{
             /* only hide after its max height has been calculated */
             display:none;
+            text-indent:0;
         }
         li > ul{
             display:none;
@@ -212,6 +212,7 @@ nav {
     } 
 
     nav .menu{
+        text-indent:-2000px;
         position:relative;
         left:@grid-gutter-width;
         top:2em;
