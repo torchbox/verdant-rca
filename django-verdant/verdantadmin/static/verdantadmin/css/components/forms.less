@@ -35,7 +35,7 @@ legend{
 }
 
 label{
-    font-weight:300;
+    font-weight:normal;
     display:block;
     padding:0 0 0.5em 0;
     line-height:1em;
@@ -182,7 +182,7 @@ a.button{
 /* Other text */
 .help, .error-message{
     font-size:0.85em;
-    font-weight:300;
+    font-weight:normal;
     margin:0 0 0.5em 0;
 }
 .help{
@@ -221,9 +221,9 @@ li.focused > .help{
     color:@color-red;
     clear:both;
 }
-.error input, .error textarea, .error select, .error .tagit{
+.error input[type=text], input[type=email], input[type=tel], .error textarea, .error select, .error .tagit{
     border-color:@color-red;
-    background-color:lighten(@color-red, 45%);
+    background-color:@color-input-error-bg;
 }
 
 /* field sizing */
