@@ -143,6 +143,7 @@ header {
 }
 
 nav {
+    height:34px;  //adjusted by eye to match search box 
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
 }
@@ -186,19 +187,6 @@ nav {
         }  
     }
 
-    /* these settings change when the menu is ready*/
-    nav.ready{
-        height:34px;  //adjusted by eye to match search box 
-    
-        .menu{
-            /* only hide after its max height has been calculated */
-            display:none;
-        }
-        li > ul{
-            display:none;
-        }
-    }
-
     nav.open{
         background-color:white;
 
@@ -212,6 +200,7 @@ nav {
     } 
 
     nav .menu{
+        display:none;
         position:relative;
         left:@grid-gutter-width;
         top:2em;
@@ -224,6 +213,7 @@ nav {
         width:25%;
     }
         nav li > ul{
+            display:none;
             left:25%;
             /* increases hover-area to include space below visible items */
             padding-bottom:200px;
