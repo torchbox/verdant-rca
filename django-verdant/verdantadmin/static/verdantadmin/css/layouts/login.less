@@ -41,9 +41,13 @@ form{
         padding-top:1em;
         padding-bottom:1em;
     }
+    .fields .checkbox{
+        padding-top:2em;
+        padding-bottom:2em;
+    }
 }
 label{
-    color:@color-grey-light;
+    color:white;
 }
 input[type=submit]{
     font-size:1.5em;
@@ -57,15 +61,25 @@ input[type=checkbox]:before{
 .fields li.full{
     position:relative;
     padding:0;
-    border-top: 1px dashed @color-input-border;
-    &:first-child{
-        border-top:0;
+    
+    label{
+        color:@color-grey;
     }
+    input{
+        border-top: 1px dashed @color-input-border;
+    }
+}
+.fields li:first-child input{
+    border-top:0;
 }
 
 .field{
     padding:0;
 }
+.field.icon:before{
+    display:none;
+}
+
 
 .full label{
     .border-radius(2px);
@@ -101,7 +115,12 @@ input[type=checkbox]:before{
     margin-top:-0.5em;
     right:5%;
 }
+
 @media screen and (min-width: @breakpoint-mobile){
+    body{
+        font-size:85%;
+    }
+
     /* centres login form vertically */
     .wrapper{
         height:100%;
@@ -118,12 +137,36 @@ input[type=checkbox]:before{
         width:99.5%;
         display:inline-block;
         vertical-align: middle;
+
+        .fields li{
+            padding-left:10%;
+        }
     }
 
     h1{
-        .nice-padding();
+        padding-left:10%;
         font-weight:300;
         font-size:4em;
         line-height:1em;
+    }
+    .full input{
+        padding-left:10%;
+    }
+    .field.icon:before{
+        display:inline-block;
+        position: absolute;
+        color:@color-grey-lighter;
+        border: 2px solid @color-grey-lighter;
+        border-radius: 100%;
+        width: 1em;
+        padding: 0.3em;
+        left: 12%;
+        margin-left: 80px;
+        margin-left: -25px;
+        top: 50%;
+        margin-top: -25px;
+    }
+    .full input{
+        padding-left:15%;
     }
 }
