@@ -8,12 +8,35 @@
 <!-- adverts -->
 {% if showAdverts %}
     <!-- adverts -->
-    <div class="apply">
+    {% if global_adverts %}
+        <!--<span class="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' as adcolors %}</span>-->
+        {% for advert in global_adverts %}
+            <div class="{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' as adcolors %}">
+                {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
+                    <h2>{{ advert.text }}</h2>
+                    {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
+                {% if advert.url or advert.page %}</a>{% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% with self.manual_adverts.all as adverts %}
+        {% if adverts %}
+            {% for advert in adverts %}
+                <div class="{% cycle adcolors %}">
+                    {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
+                    <h2>{{ advert.text }}</h2>
+                    {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
+                {% if advert.url or advert.page %}</a>{% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <!--<div class="apply">
         <a href="#">
             <h2>Apply to Study</h2>
             <p>at the Royal College of Art</p>
         </a>
-    </div>
+    </div>-->
 {% endif %}
 
 <!--open days-->

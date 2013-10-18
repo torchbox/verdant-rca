@@ -415,13 +415,15 @@ class CarouselItemFields(models.Model):
 class Advert(models.Model):
     page = models.ForeignKey('core.Page', related_name='adverts', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=255, help_text="bold text")
+    plain_text = models.CharField(max_length=255, blank=True)
     show_globally = models.BooleanField(default=False)
 
     panels = [
         PageChooserPanel('page'),
         FieldPanel('url'),
         FieldPanel('text'),
+        FieldPanel('plain_text'),
         FieldPanel('show_globally'),
     ]
 
