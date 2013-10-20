@@ -452,6 +452,22 @@ class SchoolPageContactTelEmail(Orderable):
         FieldPanel('email'),
     ]
 
+class SchoolPageContactPhone(Orderable):
+    page = models.ForeignKey('rca.SchoolPage', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class SchoolPageContactEmail(Orderable):
+    page = models.ForeignKey('rca.SchoolPage', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
 class SchoolPageRelatedLink(Orderable):
     page = models.ForeignKey('rca.SchoolPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -470,6 +486,7 @@ class SchoolPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+
 class SchoolPage(Page, SocialFields, CommonPromoteFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -484,6 +501,7 @@ class SchoolPage(Page, SocialFields, CommonPromoteFields):
     head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
     head_of_research_statement = RichTextField(null=True, blank=True)
     head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
 
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -500,6 +518,8 @@ SchoolPage.content_panels = [
         FieldPanel('contact_link_text'),
     ], 'Contact'),
     InlinePanel(SchoolPage, SchoolPageContactTelEmail, label="Contact phone numbers/emails"),
+    InlinePanel(SchoolPage, SchoolPageContactPhone, label="Contact phone numbers"),
+    InlinePanel(SchoolPage, SchoolPageContactEmail, label="Contact phone emails"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
