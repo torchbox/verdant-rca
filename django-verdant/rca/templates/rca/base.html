@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>{% if self.seo_title %}{{ self.seo_title }} | Royal College of Art{% else %}{{ self.title }} | Royal College of Art{% endif %}</title>
+        <title>{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | Royal College of Art</title>
         <meta name="description" content="" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
@@ -26,8 +26,10 @@
         {% endcompress %}
 
         <!--[if lt IE 9]>
-            <link rel="stylesheet" href="assets/css/desktop-small.css" />
-            <link rel="stylesheet" href="assets/css/desktop-regular.css" />
+            {% compress css %}
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" />
+            {% endcompress %}
         <![endif]-->
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -58,6 +60,7 @@
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
         <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
         {% compress js%}
             <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
             <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
@@ -74,7 +77,6 @@
             
             {% block extra_js %}{% endblock %}
         {% endcompress %}
-        
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
@@ -85,4 +87,3 @@
         </script>
     </body>
 </html>
-
