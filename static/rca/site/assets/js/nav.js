@@ -109,6 +109,7 @@ var desktopNav = {
 				})
 			}
 
+			// open/close menu based on toggle click
 			toggle.click(function(){
 				if($self.hasClass('open')){
 					closeMenu();
@@ -117,34 +118,28 @@ var desktopNav = {
 				}
 			});
 
+			// close menu on all clicks outside the toggle
 			$(document).on('click', function(e){
 				if($(e.target).get(0) != toggle.get(0)){
 					closeMenu();
 				}
 			});
 
-			menu.hover(			
-				function(){
-					openMenu();
-				}, 
-				function(){
-					closeMenu();
-				}
-			)
-
 			$('li', menu).hoverIntent({
-				over: function(){
+				over: function(e){
+					var relTarg = e.relateTarget || e.fromElement;
+					if($(relTarg).closest('li').hasClass('dl-submenu') || $(relTarg).closest('li').parent().hasClass('dl-submenu')){
+						$('ul', $(relTarg).closest('li')).stop().hide();
+					}
+					
 					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
 					$(this).addClass('open');
 					$(this).siblings().find(' > ul').stop().hide();
 					$(this).find(' > ul').stop().fadeIn(200);
 				},
-				out: function(){
-					$(this).removeClass('open');
-					$(this).find('> ul').stop().hide();
-				},
-				timeout: 500
+				out: function(){},
+				timeout: 400
 			});
 		});
 	},
