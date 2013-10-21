@@ -11,7 +11,7 @@
     {% if global_adverts %}
         <!--<span class="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' as adcolors %}</span>-->
         {% for advert in global_adverts %}
-            <div class="{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' as adcolors %}">
+            <div class="{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}">
                 {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
                     <h2>{{ advert.text }}</h2>
                     {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
@@ -23,10 +23,10 @@
         {% if adverts %}
             {% for advert in adverts %}
                 <div class="{% cycle adcolors %}">
-                    {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
-                    <h2>{{ advert.text }}</h2>
-                    {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
-                {% if advert.url or advert.page %}</a>{% endif %}
+                    {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
+                    <h2>{{ advert.ad.text }}</h2>
+                    {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
+                {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
                 </div>
             {% endfor %}
         {% endif %}
