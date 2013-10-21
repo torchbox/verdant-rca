@@ -15,7 +15,7 @@ Configuration of the fields, content blocks and templates is all done within [si
 *	"InlinePanel": This is for content blocks that repeat an unknown/unpredicatable number of times. While single, unrepeating fields can be defined as denormalised fields of your Page, the database can't forever add new fields for every instance of a mulitple content block. E.g a "Date published" is likely to be a single item on your page however a "Carousel item" would need to have multiple entries, each potentially comprising many fields. InlinePanel therefore creates a ForeignKey association between your Page and any Model you've created to represent this repeating content block.
 
 
-# Troubleshooting / Idiosyncrasies
+## Troubleshooting / Idiosyncrasies
 
 * 	New installations of Verdant will appear to have no means of creating a first page. To solve: User needs to visit /admin/pages/2 and start from there.
 
@@ -25,3 +25,35 @@ Configuration of the fields, content blocks and templates is all done within [si
 
 	The solution is to manually namespace. Rather than creating a template/Page called "Author", call it "AuthorPage". (This of course means you can't then create a separate template on which you have a field called AuthorPage, but hey ho).
 
+
+## Templating
+
+Most templates should extend a base template. How you implement this inheiritance for each client may vary, but an `extends` command will usually be the first entry in the file.
+
+### Tags (General)
+
+Following this you'll want to load some common tags `{% load image_tags rich_text %}` includes the image manipulation tag and the rich text filter. Beware that the name of the tag may not necessarily be the same as the way you invoke e.g rich_text is a filter invoked as `blah|richtext` without the underscore.
+
+### Accessing model variables
+
+Django's standard Mustache tags work as normal, but the fields of a page model are all accessed through the `self` variable. So the model field "intro" will be displayed as `{{ self.intro }}` (in fact more likely `{{ self.intro|richtext }}` given that an intro is likely to be rich text formatted).
+
+### Tags: Image
+
+The image tag allows you to format an image on the fly and looks something like this `{% image self.myphoto fill-300x200 %}`. The arguments are `{% image [image field from mode] [manipulation method]-[dimensions as width x height or just width/height] %}`.
+
+Verdant currently supports the methods:
+
+*	min - Non-destrutive. Resize image down to cover the given dimensions, preserving aspect ratio. Will leave image unchanged if width or height is already within those limits.
+*	max - Non-destrutive. Resize image up to fit a maximum of the given dimensions, preserving aspect ratio. Will leave image unchanged if it's already within those dimensions.
+*	width - Non-destrutive. Resize image down to the given width, preserving aspect ratio. Will leave image unchanged if it's already within that width.
+*	height - Non-destrutive. Resize image down to the given height, preserving aspect ratio. Will leave image unchanged if it's already within that height.
+* 	fill - Destructive. Resize down and crop image to fill the given dimensions. Most suitable for thumbnails. (The final image will match the requested size, unless one or the other dimension is already smaller than the target size)
+
+The `width` and `height` methods do not require width-x-height dimensions, only a single dimension for the width or height, as appropriate.
+
+### Model choice fields
+
+Model fields where a choice is available will require the implementer to define a list of key/value pairs for each choice. The Value may not be human readable, so for output on a template, conversion to human readable versions is done via the standard Django method here: https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_FOO_display
+
+So to output a field `my_choice` in your template you'd need: `{{ self.get_my_choice_display }}` (note that parenthesis aren't necessary)
