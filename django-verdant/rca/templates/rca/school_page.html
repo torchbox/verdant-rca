@@ -61,7 +61,7 @@
     {% news_carousel school=self.school %}
 
     <!-- events -->
-    {% upcoming_events_by_school school=self.school school_display_name=self.get_school_display events_index_url=global_events_index_url %}
+    {% upcoming_events_related school=self.school display_name=self.get_school_display events_index_url=global_events_index_url %}
 
 	{% include "rca/includes/modules/contact.html" %}	
     
