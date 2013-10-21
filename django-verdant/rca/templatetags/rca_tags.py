@@ -177,3 +177,7 @@ def content_type(value):
 def paragraph_split(value, sep = "</p>"):
     parts = value.split(sep)
     return (parts[0], sep.join(parts[1:]))
+
+@register.filter
+def title_split(value):
+    return value.split(' ')
