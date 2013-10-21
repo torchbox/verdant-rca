@@ -17,7 +17,7 @@
             
             {% if self.head_of_school.profile_image %}
                 <a href="{% pageurl self.head_of_school %}">
-                    <div class="image">{% image self.head_of_school.profile_image width-400 %}</div>
+                    <div class="image">{% image self.head_of_school.profile_image width-200 %}</div>
                 </a>
             {% endif %}
             <div class="content bc1{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
@@ -41,7 +41,7 @@
             
             {% if self.head_of_research.profile_image %}
                 <a href="{% pageurl self.head_of_research %}">
-                    <div class="image">{% image self.head_of_research.profile_image width-400 %}</div>
+                    <div class="image">{% image self.head_of_research.profile_image width-200 %}</div>
                 </a>
             {% endif %}
             <div class="content bc1{% if not self.head_of_research.profile_image %} flushleft{% endif %}">

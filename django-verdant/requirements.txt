@@ -15,3 +15,4 @@ BeautifulSoup==3.2.1
 Embedly==0.4.4
 Markdown==2.3.1
 html2text==3.200.3
+django-debug-toolbar-template-timings==0.5.1
