@@ -101,10 +101,8 @@ SECRET_KEY = 'ncbi!(%ae=!*2ififuzlfq@=5*opoakdn5g%m9g^++c6@jm^r)'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    ('django.template.loaders.cached.Loader', (
-        'django.template.loaders.filesystem.Loader',
-        'django.template.loaders.app_directories.Loader',
-    )),
+-    'django.template.loaders.filesystem.Loader',
+-    'django.template.loaders.app_directories.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
