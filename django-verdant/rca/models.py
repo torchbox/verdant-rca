@@ -1674,9 +1674,10 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     research_interests = RichTextField(blank=True)
+    title_prefix = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisedStudentOther = models.CharField(max_length=255, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
+    supervisedStudentOther = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     def tabbed_feature_count(self):
@@ -1703,6 +1704,7 @@ StaffPage.content_panels = [
     FieldPanel('currentRecentResearch'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
+    FieldPanel('title_prefix'),
     FieldPanel('first_name'),
     FieldPanel('last_name'),
     FieldPanel('supervisedStudentOther'),
