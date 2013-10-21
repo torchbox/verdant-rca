@@ -34,9 +34,12 @@ def news_carousel(context, area="", programme="", school="", count=6):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/upcoming_events_by_programme.html', takes_context=True)
-def upcoming_events_by_programme(context, opendays=0, programme="", programme_display_name="", events_index_url="/events/"):
-    events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+@register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", events_index_url="/events/"):
+    if school:
+        events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
+    elif programme:
+        events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -44,24 +47,9 @@ def upcoming_events_by_programme(context, opendays=0, programme="", programme_di
     return {
         'opendays': opendays,
         'events': events,
-        'programme_display_name': programme_display_name,
-        'programme': programme,
-        'events_index_url': events_index_url,
-        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
-    }
-
-@register.inclusion_tag('rca/tags/upcoming_events_by_school.html', takes_context=True)
-def upcoming_events_by_school(context, opendays=0, school="", school_display_name="", events_index_url="/events/"):
-    events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
-    if opendays:
-        events = events.filter(audience='openday')
-    else:
-        events = events.exclude(audience='openday')
-    return {
-        'opendays': opendays,
-        'events': events,
-        'school_display_name': school_display_name,
+        'display_name': display_name,
         'school': school,
+        'programme': programme,
         'events_index_url': events_index_url,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
