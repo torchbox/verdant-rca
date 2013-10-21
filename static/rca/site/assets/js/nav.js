@@ -131,10 +131,12 @@ var desktopNav = {
 					// if(!$(this, $(relTarg).parent()).length && $(relTarg).closest('li').find('.dl-submenu').length){
 					// 	$('ul', $(relTarg).closest('li')).stop().hide();
 					// }
-					
-					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
+					
+					$(this).siblings().removeClass('open');
+					$('.open', $(this)).removeClass('open');
 					$(this).addClass('open');
+					
 					$(this).siblings().find(' > ul').stop().hide();
 					$(this).find(' > ul').stop().fadeIn(200);
 				},
