@@ -7,9 +7,6 @@
 	{% if showIntro %}
     	<div class="bc3">{{ self.intro|richtext }}</div>
     {% endif %}
-    {% if showDescription %}
-    	{{ self.description|richtext }}
-    {% else %}
-    	{{ self.body|richtext }}
-    {% endif %}
+    
+    {{ body|richtext }}
 </section>
