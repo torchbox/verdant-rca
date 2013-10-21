@@ -1689,6 +1689,10 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    MultiFieldPanel([
+        FieldPanel('first_name'),
+        FieldPanel('last_name'),
+    ], 'Full name'),
     FieldPanel('school'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
@@ -1700,8 +1704,7 @@ StaffPage.content_panels = [
     FieldPanel('external_collaborations_placeholder'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
-    FieldPanel('first_name'),
-    FieldPanel('last_name'),
+  
     InlinePanel(StaffPage, StaffPageCarouselItem, label="Selected Work Carousel Content"),
     InlinePanel(StaffPage, StaffPageCollaborations, label="Collaborations"),
     InlinePanel(StaffPage, StaffPagePublicationExhibition, label="Publications and Exhibitions"),
@@ -1846,6 +1849,10 @@ class StudentPage(Page, SocialFields, CommonPromoteFields):
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    MultiFieldPanel([
+        FieldPanel('first_name'),
+        FieldPanel('last_name'),
+    ], 'Full name'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('specialism'),
@@ -1870,8 +1877,6 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, StudentPageWorkSponsor, label="Work sponsor"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
-    FieldPanel('first_name'),
-    FieldPanel('last_name'),
 ]
 
 StudentPage.promote_panels = [

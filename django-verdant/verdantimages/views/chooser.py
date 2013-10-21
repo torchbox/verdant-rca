@@ -31,7 +31,8 @@ def chooser(request):
     ImageForm = get_image_form()
 
     uploadform = ImageForm()
-    images = []
+    images = Image.objects.order_by('-created_at')[:12]
+
     q = None
     if 'q' in request.GET:
         searchform = SearchForm(request.GET)
@@ -43,14 +44,18 @@ def chooser(request):
             
             images = Image.search(q, results_per_page=10, page=p)
         return render(request, "verdantimages/chooser/search_results.html", {
-            'images': images, 'will_select_format': request.GET.get('select_format')})
+            'images': images, 
+            'is_searching': True,
+            'will_select_format': request.GET.get('select_format')
+        })
     else:
         searchform = SearchForm()
 
     return render_modal_workflow(request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',{
         'images': images, 
         'uploadform': uploadform, 
-        'searchform': searchform, 
+        'searchform': searchform,
+        'is_searching': False,
         'will_select_format': request.GET.get('select_format'),
         'popular_tags': Image.popular_tags(),
     })

@@ -14,19 +14,19 @@
         {% endfor %}
     </ul>
 
-    <ul class="pagination">
-        <li class="prev">
-            {% if images.has_previous %}
-                <a href="#" data-page="{{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
-            {% endif %}
-        </li>
-        <li class="current">
-            Page {{ images.number }} of {{ images.paginator.num_pages }}.
-        </li>
-        <li class="next">
-            {% if images.has_next %}
-                <a href="#" data-page="{{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
-            {% endif %}
-        </span>
-    </ul>
+    <div class="pagination">
+        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
+        <ul>
+            <li class="prev">
+                {% if images.has_previous %}
+                    <a href="#" data-page="{{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                {% endif %}
+            </li>
+            <li class="next">
+                {% if images.has_next %}
+                    <a href="#" data-page="{{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                {% endif %}
+            </span>
+        </ul>
+    </div>
 {% endif %}

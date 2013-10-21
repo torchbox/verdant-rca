@@ -1,4 +1,4 @@
-{% load image_tags %}
+{% load image_tags ellipsistrim%}
 
 <header class="merged">
     <h1>Choose an image</h1>
@@ -11,7 +11,7 @@
 
 <div class="tab-content">
     <section id="search" class="active nice-padding">
-        <form class="image-search search-bar" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET">
+        <form class="image-search search-bar" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET" autocomplete="off">
             <ul class="fields">
                 {% for field in searchform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
@@ -28,7 +28,21 @@
             </ul>
         </form>
         <div id="image-results">
-            {% include "verdantimages/chooser/search_results.html" %}
+            {% if is_searching %}
+                {% include "verdantimages/chooser/search_results.html" %}
+            {% else %}
+                <h2>Latest added images</h2>
+                <ul class="listing horiz images">
+                    {% for image in images %}
+                        <li>
+                            <a class="image-choice" href="{% if will_select_format %}{% url 'verdantimages_chooser_select_format' image.id %}{% else %}{% url 'verdantimages_image_chosen' image.id %}{% endif %}">
+                                <div class="image">{% image image max-165x165 %}</div>
+                                <h3>{{ image.title|ellipsistrim:60 }}</h3>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
     </section>
     <section id="upload" class="nice-padding">

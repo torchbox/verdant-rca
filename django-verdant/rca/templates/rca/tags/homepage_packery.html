@@ -18,6 +18,19 @@
                             </a>
                         </div>
                     </li>
+                {% elif item|content_type = 'rcanowpage' %}
+                    <li class="item double">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                    <p class="a2">RCA Now</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
                 {% elif item|content_type = 'staffpage' %}
                 <li class="item single">
                     <div class="inner">
@@ -26,7 +39,7 @@
                             <div class="content">
                                 <h3 class="h6">{{ item.title }}</h3>
                                 <p class="bc4">{{ item.specific.listing_intro }}</p>
-                                <p class="a2">News</p>
+                                <p class="a2">Staff</p>
                             </div>
                         </a>
                     </div>
@@ -39,7 +52,7 @@
                                 <div class="content">
                                     <h3 class="h6">{{ item.title }}</h3>
                                     <p class="bc4">{{ item.specific.listing_intro }}</p>
-                                    <p class="a2">News</p>
+                                    <p class="a2">Work</p>
                                 </div>
                             </a>
                         </div>
@@ -52,7 +65,7 @@
                                 <div class="content">
                                     <h3 class="h6">{{ item.title }}</h3>
                                     <p class="bc4">Fiona is a readt wasn't until I was looking for ideas for a final-year project and my mum suggested that I update my deign for a chicken coop that I er in Design Interactions. She is a partner in the design partnership Dunn</p>
-                                    <p class="a2">News</p>
+                                    <p class="a2">TODO</p>
                                 </div>
                             </a>
                         </div>
