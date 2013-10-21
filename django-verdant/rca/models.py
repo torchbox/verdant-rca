@@ -2029,6 +2029,7 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
+    show_on_homepage = models.BooleanField()
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
@@ -2063,6 +2064,7 @@ ResearchItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
