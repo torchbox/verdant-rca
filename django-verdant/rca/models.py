@@ -1675,6 +1675,7 @@ class StaffPage(Page, SocialFields, CommonPromoteFields):
     research_interests = RichTextField(blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     def tabbed_feature_count(self):
         count = 1 #profile tab will always show
