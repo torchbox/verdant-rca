@@ -127,21 +127,16 @@ var desktopNav = {
 
 			$('li', menu).hoverIntent({
 				over: function(e){
-					// var relTarg = e.relateTarget || e.fromElement;
-					// if(!$(this, $(relTarg).parent()).length && $(relTarg).closest('li').find('.dl-submenu').length){
-					// 	$('ul', $(relTarg).closest('li')).stop().hide();
-					// }
 					$self.addClass('hovered');
 					
-					$(this).siblings().removeClass('open');
-					$('.open', $(this)).removeClass('open');
-					$(this).addClass('open');
+					$('.open', $(this).parent()).removeClass('open');
+					$(this).addClass('open').parents('li').addClass('open');
 					
 					$(this).siblings().find(' > ul').stop().hide();
 					$(this).find(' > ul').stop().fadeIn(200);
 				},
 				out: function(){},
-				timeout: 400
+				timeout: 200
 			});
 		});
 	},
