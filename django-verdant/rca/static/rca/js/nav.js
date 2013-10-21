@@ -127,10 +127,10 @@ var desktopNav = {
 
 			$('li', menu).hoverIntent({
 				over: function(e){
-					var relTarg = e.relateTarget || e.fromElement;
-					if($(relTarg).closest('li').hasClass('dl-submenu') || $(relTarg).closest('li').parent().hasClass('dl-submenu')){
-						$('ul', $(relTarg).closest('li')).stop().hide();
-					}
+					// var relTarg = e.relateTarget || e.fromElement;
+					// if(!$(this, $(relTarg).parent()).length && $(relTarg).closest('li').find('.dl-submenu').length){
+					// 	$('ul', $(relTarg).closest('li')).stop().hide();
+					// }
 					
 					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
