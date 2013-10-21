@@ -942,9 +942,13 @@
 
 .button-bar{
     .clearfix();  
+    li {
+        position:relative;
+    }
     a {
         display:block;
         border-bottom:1px solid white;
+        padding-right: 48px;
     }
     .icon-download:after{
         content:"";
@@ -953,8 +957,9 @@
         zoom:0.6;
         -moz-transform:scale(0.6);
         -moz-transform-origin: 0 0;
-        float:right;
-        margin:-10px 0;
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
     }
 }
 
