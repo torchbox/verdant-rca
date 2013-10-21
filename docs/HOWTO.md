@@ -1,10 +1,6 @@
 # How to
 
-## Content configuration
-
-Configuration of the fields, content blocks and templates is all done within [site-app]/models.py. This file defines the templates that are available for use within Verdant, also the discreet blocks of content available on that template e.g Title, Related Link, Carousel. Furthermore it defines the fields that comprise any content block e.g A "Carousel item" might include an image, a link and a caption.
-
-### Terminology
+## Terminology
 
 *	"Page": Defines the template for a kind of page and defines all the fields to be stored in the database against it. Any templates you create will subclass Page as it provides a few core fields by default: Title and Slug. e.g "def BlogPage(Page):" would create a template suitable for Blog entries, based on the basic Page model. 
 
@@ -14,16 +10,26 @@ Configuration of the fields, content blocks and templates is all done within [si
 
 *	"InlinePanel": This is for content blocks that repeat an unknown/unpredicatable number of times. While single, unrepeating fields can be defined as denormalised fields of your Page, the database can't forever add new fields for every instance of a mulitple content block. E.g a "Date published" is likely to be a single item on your page however a "Carousel item" would need to have multiple entries, each potentially comprising many fields. InlinePanel therefore creates a ForeignKey association between your Page and any Model you've created to represent this repeating content block.
 
+## Content configuration
 
-## Troubleshooting / Idiosyncrasies
+Configuration of the fields, content blocks and templates is all done within [site-app]/models.py. This file defines the templates that are available for use within Verdant, also the discreet blocks of content available on that template e.g Title, Related Link, Carousel. Furthermore it defines the fields that comprise any content block e.g A "Carousel item" might include an image, a link and a caption.
 
-* 	New installations of Verdant will appear to have no means of creating a first page. To solve: User needs to visit /admin/pages/2 and start from there.
+### Some kind of explanation of the following...
 
-* 	Foreign key fields linked to other first-class Verdant citizens, e.g Images or Documents, declare "related_name='+'" in the ForeignKey definition. This is clumsy but necessary. It creates a bogus link to avoid a reference back to the object in which it is defined.
+#### UI interface functions
 
-* 	You can't create a Field at any point in the site, with the same name as an existing Model . e.g if you create a News page/template with a field "Author", you will run into difficulties if you also have a separate template/Page model tcalled "Author." 
+*	panels = [*]
+*	FieldPanel
+*	InlinePanel
+*	MultiFieldPanel
+*	PageChooserPanel
+*	ImageChooserPanel
+*	DocumentChooserPanel
+*	SnippetChooserPanel
 
-	The solution is to manually namespace. Rather than creating a template/Page called "Author", call it "AuthorPage". (This of course means you can't then create a separate template on which you have a field called AuthorPage, but hey ho).
+#### Model methods/
+
+*	serve
 
 
 ## Templating
@@ -36,7 +42,7 @@ Following this you'll want to load some common tags `{% load image_tags rich_tex
 
 ### Accessing model variables
 
-Django's standard Mustache tags work as normal, but the fields of a page model are all accessed through the `self` variable. So the model field "intro" will be displayed as `{{ self.intro }}` (in fact more likely `{{ self.intro|richtext }}` given that an intro is likely to be rich text formatted).
+Django's standard Mustache tags work as normal, but the fields of a page model are all accessed through the `self` variable. So the model field "intro" will be displayed as `{{ self.intro }}`
 
 ### Tags: Image
 
@@ -44,10 +50,10 @@ The image tag allows you to format an image on the fly and looks something like 
 
 Verdant currently supports the methods:
 
-*	min - Non-destrutive. Resize image down to cover the given dimensions, preserving aspect ratio. Will leave image unchanged if width or height is already within those limits.
-*	max - Non-destrutive. Resize image up to fit a maximum of the given dimensions, preserving aspect ratio. Will leave image unchanged if it's already within those dimensions.
-*	width - Non-destrutive. Resize image down to the given width, preserving aspect ratio. Will leave image unchanged if it's already within that width.
-*	height - Non-destrutive. Resize image down to the given height, preserving aspect ratio. Will leave image unchanged if it's already within that height.
+*	min - Non-destructive. Resize image down to cover the given dimensions, preserving aspect ratio. Will leave image unchanged if width or height is already within those limits.
+*	max - Non-destructive. Resize image up to fit a maximum of the given dimensions, preserving aspect ratio. Will leave image unchanged if it's already within those dimensions.
+*	width - Non-destructive. Resize image down to the given width, preserving aspect ratio. Will leave image unchanged if it's already within that width.
+*	height - Non-destructive. Resize image down to the given height, preserving aspect ratio. Will leave image unchanged if it's already within that height.
 * 	fill - Destructive. Resize down and crop image to fill the given dimensions. Most suitable for thumbnails. (The final image will match the requested size, unless one or the other dimension is already smaller than the target size)
 
 The `width` and `height` methods do not require width-x-height dimensions, only a single dimension for the width or height, as appropriate.
@@ -57,3 +63,15 @@ The `width` and `height` methods do not require width-x-height dimensions, only 
 Model fields where a choice is available will require the implementer to define a list of key/value pairs for each choice. The Value may not be human readable, so for output on a template, conversion to human readable versions is done via the standard Django method here: https://docs.djangoproject.com/en/dev/ref/models/instances/#django.db.models.Model.get_FOO_display
 
 So to output a field `my_choice` in your template you'd need: `{{ self.get_my_choice_display }}` (note that parenthesis aren't necessary)
+
+
+## Troubleshooting / Idiosyncrasies
+
+* 	New installations of Verdant will appear to have no means of creating a first page. To solve: User needs to visit /admin/pages/2 and start from there.
+
+* 	Foreign key fields linked to other first-class Verdant citizens, e.g Images or Documents, declare "related_name='+'" in the ForeignKey definition. This is clumsy but necessary. It creates a bogus link to avoid a reference back to the object in which it is defined.
+
+* 	You can't create a Field at any point in the site, with the same name as an existing Model . e.g if you create a News page/template with a field "Author", you will run into difficulties if you also have a separate template/Page model tcalled "Author." 
+
+	The solution is to manually namespace. Rather than creating a template/Page called "Author", call it "AuthorPage". (This of course means you can't then create a separate template on which you have a field called AuthorPage, but hey ho).
+
