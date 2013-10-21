@@ -518,8 +518,8 @@ SchoolPage.content_panels = [
         FieldPanel('contact_link_text'),
     ], 'Contact'),
     InlinePanel(SchoolPage, SchoolPageContactTelEmail, label="Contact phone numbers/emails"),
-    InlinePanel(SchoolPage, SchoolPageContactPhone, label="Contact phone numbers"),
-    InlinePanel(SchoolPage, SchoolPageContactEmail, label="Contact phone emails"),
+    InlinePanel(SchoolPage, SchoolPageContactPhone, label="Contact phone number"),
+    InlinePanel(SchoolPage, SchoolPageContactEmail, label="Contact email"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
@@ -569,6 +569,22 @@ class ProgrammePageRelatedLink(Orderable):
     panels = [
         PageChooserPanel('link'),
         FieldPanel('link_text'),
+    ]
+
+class ProgrammePageContactPhone(Orderable):
+    page = models.ForeignKey('rca.ProgrammePage', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class ProgrammePageContactEmail(Orderable):
+    page = models.ForeignKey('rca.ProgrammePage', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
     ]
 
 class ProgrammePageOurSites(Orderable):
@@ -625,6 +641,10 @@ class ProgrammePage(Page, SocialFields, CommonPromoteFields):
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternate Twitter handle, hashtag or search term")
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
     download_document_url = models.CharField(max_length=255, blank=True)
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
@@ -664,6 +684,14 @@ ProgrammePage.content_panels = [
     InlinePanel(ProgrammePage, ProgrammeDocuments, fk_name='page', label="Documents"),
     InlinePanel(ProgrammePage, ProgrammePageAd, fk_name='page', label="Manual adverts"),
     FieldPanel('twitter_feed'),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+    ], 'Contact'),
+    InlinePanel(ProgrammePage, ProgrammePageContactPhone, label="Contact phone number"),
+    InlinePanel(ProgrammePage, ProgrammePageContactEmail, label="Contact email"),
 ]
 
 ProgrammePage.promote_panels = [
