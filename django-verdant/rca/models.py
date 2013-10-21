@@ -1557,7 +1557,6 @@ AlumniPage.content_panels = [
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('year'),
-    FieldPanel('listing_intro'),
     FieldPanel('intro'),
     FieldPanel('biography'),
 ]
@@ -1571,6 +1570,7 @@ AlumniPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('listing_intro'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
