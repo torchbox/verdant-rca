@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'treebeard',
     'taggit',
     'django_embedly',
+    'gunicorn',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
