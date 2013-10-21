@@ -54,6 +54,13 @@ class BaseChildFormSet(BaseTransientModelFormSet):
         manager.add(*saved_instances)
         manager.remove(*self.deleted_objects)
 
+        # if model has a sort_order_field defined, assign order indexes to the attribute
+        # named in it
+        if self.can_order and hasattr(self.model, 'sort_order_field'):
+            sort_order_field = getattr(self.model, 'sort_order_field')
+            for i, form in enumerate(self.ordered_forms):
+                setattr(form.instance, sort_order_field, i)
+
         if commit:
             manager.commit()
 
@@ -119,12 +126,14 @@ def childformset_factory(parent_model, model, form=ModelForm,
         'formset': formset,
         'extra': extra,
         'can_delete': can_delete,
-        'can_order': can_order,
+        # if the model supplies a sort_order_field, enable ordering regardless of
+        # the current setting of can_order
+        'can_order': (can_order or hasattr(model, 'sort_order_field')),
         'fields': fields,
         'exclude': exclude,
         'max_num': max_num,
     }
-    FormSet = modelformset_factory(model, **kwargs)
+    FormSet = transientmodelformset_factory(model, **kwargs)
     FormSet.fk = fk
     return FormSet
 

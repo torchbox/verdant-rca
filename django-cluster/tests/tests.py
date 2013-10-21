@@ -340,6 +340,10 @@ class ClusterFormTest(TestCase):
 
             'members-3-name': '',
             'members-3-id': '',
+
+            'albums-TOTAL_FORMS': 0,
+            'albums-INITIAL_FORMS': 0,
+            'albums-MAX_NUM_FORMS': 1000,
         }, instance=beatles)
 
         self.assertTrue(form.is_valid())
@@ -420,6 +424,10 @@ class ClusterFormTest(TestCase):
 
             'members-3-name': '',
             'members-3-id': '',
+
+            'albums-TOTAL_FORMS': 0,
+            'albums-INITIAL_FORMS': 0,
+            'albums-MAX_NUM_FORMS': 1000,
         }, instance=beatles)
         self.assertTrue(form.is_valid())
         form.save()
@@ -453,6 +461,10 @@ class ClusterFormTest(TestCase):
 
             'members-3-name': '',
             'members-3-id': '',
+
+            'albums-TOTAL_FORMS': 0,
+            'albums-INITIAL_FORMS': 0,
+            'albums-MAX_NUM_FORMS': 1000,
         })
         self.assertTrue(form.is_valid())
         beatles = form.save()
@@ -463,3 +475,43 @@ class ClusterFormTest(TestCase):
         self.assertEqual(2, beatles.members.count())
         self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
         self.assertFalse(BandMember.objects.filter(name='Pete Best').exists())
+
+    def test_sort_order_is_output_on_form(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        form = BandForm()
+        form_html = form.as_p()
+        self.assertTrue('albums-0-ORDER' in form_html)
+        self.assertFalse('members-0-ORDER' in form_html)
+
+    def test_sort_order_is_committed(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        form = BandForm({
+            'name': "The Beatles",
+
+            'members-TOTAL_FORMS': 0,
+            'members-INITIAL_FORMS': 0,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'albums-TOTAL_FORMS': 2,
+            'albums-INITIAL_FORMS': 0,
+            'albums-MAX_NUM_FORMS': 1000,
+
+            'albums-0-name': 'With The Beatles',
+            'albums-0-id': '',
+            'albums-0-ORDER': 2,
+
+            'albums-1-name': 'Please Please Me',
+            'albums-1-id': '',
+            'albums-1-ORDER': 1,
+        })
+        self.assertTrue(form.is_valid())
+        beatles = form.save()
+
+        self.assertEqual('Please Please Me', beatles.albums.all()[0].name)
+        self.assertEqual('With The Beatles', beatles.albums.all()[1].name)
