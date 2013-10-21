@@ -212,7 +212,8 @@ class ClusterForm(ModelForm):
         return form_is_valid and formsets_are_valid
 
     def save(self, commit=True):
-        result = super(ClusterForm, self).save(commit=commit)
+        instance = super(ClusterForm, self).save(commit=commit)
         for formset in self.formsets.values():
+            formset.instance = instance
             formset.save(commit=commit)
-        return result
+        return instance

@@ -423,3 +423,43 @@ class ClusterFormTest(TestCase):
         }, instance=beatles)
         self.assertTrue(form.is_valid())
         form.save()
+
+        new_beatles = Band.objects.get(id=beatles.id)
+        self.assertEqual('The New Beatles', new_beatles.name)
+        self.assertTrue(BandMember.objects.filter(name='George Harrison').exists())
+        self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_creation(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        form = BandForm({
+            'name': "The Beatles",
+
+            'members-TOTAL_FORMS': 4,
+            'members-INITIAL_FORMS': 0,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'members-0-name': 'John Lennon',
+            'members-0-id': '',
+
+            'members-1-name': 'Paul McCartney',
+            'members-1-id': '',
+
+            'members-2-name': 'Pete Best',
+            'members-2-DELETE': 'members-0-DELETE',
+            'members-2-id': '',
+
+            'members-3-name': '',
+            'members-3-id': '',
+        })
+        self.assertTrue(form.is_valid())
+        beatles = form.save()
+
+        self.assertTrue(beatles.id)
+        self.assertEqual('The Beatles', beatles.name)
+        self.assertEqual('The Beatles', Band.objects.get(id=beatles.id).name)
+        self.assertEqual(2, beatles.members.count())
+        self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
+        self.assertFalse(BandMember.objects.filter(name='Pete Best').exists())
