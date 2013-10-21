@@ -22,7 +22,9 @@
                         </a>
                     </li>   
                 {% endfor %}
-                <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% if news.paginator.count > 10 %}
+                    <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% endif %}
             </ul>
         </div>
     </section>

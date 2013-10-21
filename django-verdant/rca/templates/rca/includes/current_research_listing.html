@@ -9,9 +9,12 @@
                     {% else %}
                         <li>
                     {% endif %}
-                    {% include "rca/includes/modules/research_item.html" %}
+                            {% include "rca/includes/modules/research_item.html" %}
+                        </li>
                 {% endfor %}
-                <li class="load-more{% if research_items|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% if research_items.paginator.count > 8 %}
+                    <li class="load-more{% if research_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% endif %}
             </ul>
         </div>
     </section>

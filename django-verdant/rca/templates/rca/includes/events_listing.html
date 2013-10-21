@@ -30,12 +30,14 @@
 		                </a>
 		            </li>
 	        	{% endfor %}
-	        	<li class="load-more{% if events|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+	        	{% if events.paginator.count > 10 %}
+	        		<li class="load-more{% if events|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+	        	{% endif %}
 	        </ul>
 	    </div>
 	</section>
 
-	<ul class="pagination infinite">
+	<ul class="pagination">
 		<!--
 		{% if events.has_previous %}
 	        <li class="previous"><a href="?page={{ events.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
