@@ -990,6 +990,15 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
+    
+    .intro {
+        margin-top: @spacing-one;
+    }
+
+    p {
+        margin: 12px 0;
+    }
+
     a {
         color: @color-highlight-blue;
         font-weight: bold;
@@ -1025,6 +1034,7 @@
         line-height: @line-height-5;
         text-transform: none;
         font-weight: normal;
+        margin-top: @spacing-one;
     }
 
     /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h5, .h6, .h7;
@@ -1036,9 +1046,9 @@
         font-size: @font-size-22;
         line-height: @line-height-4;
         font-weight: normal;
-        padding-top: @spacing-half;
+        padding-top: @spacing-one;
         border-top: 1px solid @color-dark-grey;
-        margin-top: @spacing-one;
+        margin-top: @spacing-two;
     }
 
     h3 {
@@ -1344,12 +1354,12 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-one;
+    margin-top: @spacing-two;
     figcaption {
         display: block;
         width: 100%;
         text-align: right;
-        margin-top: @spacing-one;
+        margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
     &.small {
