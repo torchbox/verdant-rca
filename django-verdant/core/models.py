@@ -343,6 +343,7 @@ def get_navigation_menu_items():
 
 class Orderable(models.Model):
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
+    sort_order_field = 'sort_order'
 
     class Meta:
         abstract = True

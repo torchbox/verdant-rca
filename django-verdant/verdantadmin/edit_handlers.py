@@ -484,7 +484,7 @@ class BaseInlinePanel(EditHandler):
             subform.fields['DELETE'].widget = forms.HiddenInput()
 
             # ditto for the ORDER field, if present
-            if self.can_order:
+            if self.formset.can_order:
                 subform.fields['ORDER'].widget = forms.HiddenInput()
 
             self.children.append(
@@ -493,7 +493,7 @@ class BaseInlinePanel(EditHandler):
 
         empty_form = self.formset.empty_form
         empty_form.fields['DELETE'].widget = forms.HiddenInput()
-        if self.can_order:
+        if self.formset.can_order:
             empty_form.fields['ORDER'].widget = forms.HiddenInput()
 
         self.empty_child = child_edit_handler_class(instance=empty_form.instance, form=empty_form)
@@ -502,22 +502,15 @@ class BaseInlinePanel(EditHandler):
     def render(self):
         return mark_safe(render_to_string(self.template, {
             'self': self,
+            'can_order': self.formset.can_order,
         }))
 
     js_template = "verdantadmin/edit_handlers/inline_panel.js"
     def render_js(self):
         return mark_safe(render_to_string(self.js_template, {
             'self': self,
+            'can_order': self.formset.can_order,
         }))
-
-    # def post_save(self):
-        #if self.can_order:
-        #    self.formset.save(commit=False)
-        #    for i, form in enumerate(self.formset.ordered_forms):
-        #        form.instance.sort_order = i
-        #        form.instance.save()
-        #else:
-        #    self.formset.save()
 
 def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
     rel = getattr(base_model, relation_name).related
@@ -527,7 +520,6 @@ def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
         'panels': panels,
         'heading': label,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
-        'can_order': False,  # ('sort_order' in rel.model._meta.get_all_field_names()),
     })
 
 

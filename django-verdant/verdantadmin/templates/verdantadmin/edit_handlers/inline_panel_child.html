@@ -1,6 +1,6 @@
 <li id="inline_child_{{ child.form.prefix }}">
     <ul class="controls">
-        {% if self.can_order %}
+        {% if can_order %}
             <li class="icon text-replace teal icon-arrow-up-big inline-child-move-up" id="{{ child.form.prefix }}-move-up">Move up</li>
             <li class="icon text-replace teal icon-arrow-down-big inline-child-move-down" id="{{ child.form.prefix }}-move-down">Move down</li>
         {% endif %}
