@@ -39,11 +39,21 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="header-wrapper" data-spy="affix" data-offset-top="151">
-            {% include "rca/includes/header.html" %}
+        <div class="mobile-menu-wrapper">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </div>
 
-        <div class="slider">
+        <div class="mobile-content-wrapper">
+
+            <div class="header-wrapper" data-spy="affix" data-offset-top="151">
+                {% include "rca/includes/header.html" %}
+            </div>
+
             <div class="page-wrapper" data-spy="affix" data-offset-top="151">
                 <div class="page-content">
                     <div class="inner">
@@ -54,8 +64,10 @@
                     {% block sidebar %}{% endblock %}
                 </aside>
             </div>
+
+            {% include "rca/includes/footer.html" %}
+
         </div>
-        {% include "rca/includes/footer.html" %}
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
@@ -74,8 +86,15 @@
             <script src="{% static "rca/js/carousel-news.js" %}"></script>
             <script src="{% static "rca/js/site.js" %}"></script>
             <script src="{% static "rca/js/nav.js" %}"></script>
-            
+
             {% block extra_js %}{% endblock %}
+
+            <script type="text/javascript">
+                $(window).on("load", function(){
+                    // $(".mobile-menu-wrapper").animate({width: "200px"}, 1000);
+                })
+            </script>
+
         {% endcompress %}
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
