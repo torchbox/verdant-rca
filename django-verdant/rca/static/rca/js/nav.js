@@ -60,7 +60,6 @@ var desktopNav = {
 			// set menu as ready
 			$self.addClass('ready');			
 
-
 			function openMenu(){
 				$self.addClass('changing');
 				setTimeout(function(){
@@ -83,14 +82,21 @@ var desktopNav = {
 			}
 
 			function closeMenu(){
+				console.log('closing');
 				$self.addClass('changing').removeClass('hovered');
+					
+				// reset or submenu
+				setTimeout(function(){
+					$('ul', menu).stop().removeAttr('style');
+				}, 600)
 				
+
 				menu.stop().hide()
 
 				$self.stop().animate({
 					height: 34
 				}, 200, function(){
-					$self.find('.selected > ul').stop().show()
+					// $self.find('.selected > ul').stop().show()
 					$self.removeClass('changing').removeClass('open');
 				});
 
@@ -103,18 +109,7 @@ var desktopNav = {
 				})
 			}
 
-			// toggle.hoverIntent({
-			// 	over: function(){
-			// 		openMenu();
-			// 	},
-			// 	out: function(e){
-			// 		var relTarg = e.relatedTarget || e.toElement;
-			// 		if($(relTarg).get(0) != $self.get(0) && $(relTarg).closest('nav').get(0) != $self.get(0)){
-			// 			closeMenu();
-			// 		}
-			// 	},
-			// 	timeout:500
-			// })
+			// open/close menu based on toggle click
 			toggle.click(function(){
 				if($self.hasClass('open')){
 					closeMenu();
@@ -123,41 +118,29 @@ var desktopNav = {
 				}
 			});
 
+			// close menu on all clicks outside the toggle
 			$(document).on('click', function(e){
 				if($(e.target).get(0) != toggle.get(0)){
 					closeMenu();
 				}
 			});
 
-			menu.hoverIntent({				
-				over: function(){
-					openMenu();
-				}, 
-				out: function(){
-					closeMenu();
-				},
-				timeout:500
-			})	
-
 			$('li', menu).hoverIntent({
-				over: function(){
+				over: function(e){
+					var relTarg = e.relateTarget || e.fromElement;
+					if($(relTarg).closest('li').hasClass('dl-submenu') || $(relTarg).closest('li').parent().hasClass('dl-submenu')){
+						$('ul', $(relTarg).closest('li')).stop().hide();
+					}
+					
 					$('li', menu).removeClass('open');
 					$self.addClass('hovered');
 					$(this).addClass('open');
-					$(this).siblings().find(' > ul').stop().hide()
-					$(this).find(' > ul').fadeIn(200);
+					$(this).siblings().find(' > ul').stop().hide();
+					$(this).find(' > ul').stop().fadeIn(200);
 				},
-				out: function(){
-					$(this).removeClass('open');
-					if(!$('nav').hasClass('changing')){
-						$(this).find('> ul').stop().hide();
-					}
-				},
-				timeout: 600
+				out: function(){},
+				timeout: 400
 			});
-			$('li' ,$self).bind('mouseout', function(){
-				
-			})
 		});
 	},
 
