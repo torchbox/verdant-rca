@@ -14,7 +14,7 @@
 
 Configuration of the fields, content blocks and templates is all done within [site-app]/models.py. This file defines the templates that are available for use within Verdant, also the discreet blocks of content available on that template e.g Title, Related Link, Carousel. Furthermore it defines the fields that comprise any content block e.g A "Carousel item" might include an image, a link and a caption.
 
-### Some kind of explanation of the following...
+### TODO: Some kind of explanation of the following...
 
 #### UI interface functions
 
