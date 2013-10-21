@@ -1443,7 +1443,7 @@ JobPage.content_panels = [
     FieldPanel('salary'),
     FieldPanel('ref_number'),
     FieldPanel('grade'),
-    FieldPanel('description'),
+    FieldPanel('description', classname="full"),
     DocumentChooserPanel('download_info'),
 ]
 
@@ -1585,8 +1585,8 @@ AlumniPage.content_panels = [
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('year'),
-    FieldPanel('intro'),
-    FieldPanel('biography'),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('biography', classname="full"),
 ]
 
 AlumniPage.promote_panels = [
@@ -1861,9 +1861,9 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, StudentPageExhibition, label="Exhibition"),
     InlinePanel(StudentPage, StudentPageExperience, label="Experience"),
     InlinePanel(StudentPage, StudentPageAwards, label="Awards"),
-    FieldPanel('statement'),
+    FieldPanel('statement', classname="full"),
     InlinePanel(StudentPage, StudentPageCarouselItem, label="Carousel content"),
-    FieldPanel('work_description'),
+    FieldPanel('work_description', classname="full"),
     FieldPanel('work_type'),
     FieldPanel('work_location'),
     InlinePanel(StudentPage, StudentPageWorkCollaborator, label="Work collaborator"),
