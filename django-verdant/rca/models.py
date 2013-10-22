@@ -1570,6 +1570,7 @@ class AlumniPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     biography = RichTextField()
+    show_on_homepage = models.BooleanField()
 
 AlumniPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1589,6 +1590,7 @@ AlumniPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
     ], 'Cross-page behaviour'),
