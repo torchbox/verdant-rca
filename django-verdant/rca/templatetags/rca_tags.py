@@ -179,6 +179,23 @@ def sidebar_links(context, calling_page=None):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/research_students_feed.html', takes_context=True)
+def research_students_feed(context, staff_page=None):
+    students = StudentPage.objects.filter(supervisor=staff_page)
+    return {
+        'students': students,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/research_students_list.html', takes_context=True)
+def research_students_list(context, staff_page=None):
+    students = StudentPage.objects.filter(supervisor=staff_page)
+    return {
+        'students': students,
+        'staff_page': staff_page, #needed to get the supervisedStudentOther field to list research students without profile pages
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
 @register.filter
 def content_type(value):
     return value.__class__.__name__.lower()

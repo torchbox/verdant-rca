@@ -1675,12 +1675,10 @@ class StaffPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     def tabbed_feature_count(self):
-        count = 1 #profile tab will always show
+        count = 2 #info tab and research tab will always show
         if self.carousel_items.exists():
             count = count + 1
         if self.publications_exhibitions.exists():
-            count = count + 1
-        if len(ResearchItem.objects.filter(creator__person=self)) > 0: #matches the query for related research
             count = count + 1
         return count
 

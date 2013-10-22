@@ -10,7 +10,7 @@
 
     <section class="four-tab row module">
 
-        <ul class="tab-nav tabs-4">
+        <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
             <li class="active"><a href="#tab1" class="t0">Info</a></li>
             <li><a href="#tab2" class="t0">Selected work</a></li>
             <li><a href="#tab3" class="t0">Publications &amp; exhibitions</a></li>
@@ -71,7 +71,7 @@
                     <div class="divider"></div>
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
-                            <h2 class="a2">Biography</h3>
+                            <h2 class="a2">Biography</h2>
                         </li>
                         <li class="col col-9 last body-text-style">
 
@@ -88,7 +88,7 @@
                         <div class="divider"></div>
                         <ul class="three-nine-cols">
                             <li class="col col-3 first">
-                                <h2 class="a2">Practice</h3>
+                                <h2 class="a2">Practice</h2>
                             </li>
                             <li class="col col-9 last body-text-style">
                                  {{ self.practice|richtext }}
@@ -101,7 +101,7 @@
                             <div class="divider"></div>
                             <ul class="three-nine-cols">
                                 <li class="col col-3 first">
-                                    <h2 class="a2">External collaborations</h3>
+                                    <h2 class="a2">External collaborations</h2>
                                 </li>
                                 <li class="col col-9 last">
                                     {% for collaboration in collaborations %}
@@ -119,6 +119,33 @@
                             </ul>
                         {% endif %}
                     {% endwith %}
+
+                    {% if self.external_collaborations_placeholder %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="a2">External collaborations</h2>
+                            </li>
+                            <li class="col col-9 last">
+                                <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    {% if self.publications_exhibtions_and_other_outcomes_placeholder %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="a2">Publications, exhibitions and other outcomes</h2>
+                            </li>
+                            <li class="col col-9 last">
+                                <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                            </li>
+                        </ul>
+                    {% endif %}
+
+                    {% research_students_list staff_page=self %}
+
                 </div>
             </div>
 
@@ -131,54 +158,59 @@
             <div class="tab-pane x-plus" id="tab3">
                 <div class="item-container">
                     <ul class="two-cols two-cols-image-big">
-                        <!--<li class="newrow">
-                            <div class="image"><img src="http://instasrc.com/96x96/art" /></div>
-                            <div class="content">
-                                <h3 class="h6">Liva Lima</h3>
-                                <p class="bc3">Explored in the Kingsdale Festival is one of the first contemporary public buildings....<a href="#" class="bc5 caps">continue</a></p>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="image"><img src="http://instasrc.com/96x96/architecture" /></div>
-                            <div class="content">
-                                <h3 class="h6">Lima Morgan</h3>
-                                <p class="bc3">The UK to be built entirely of timber, with a timber core and stairs. its experimental structure consists of a combined horizontal and a vertical cantilever...<a href="#" class="bc5 caps">continue</a>
-                            </div>
-                        </li>
-                        <li class="newrow">
-                            <div class="image"><img src="http://instasrc.com/96x96/people" /></div>
-                            <div class="content">
-                                <h3 class="h6">Catrin Morgan Lima</h3>
-                                <p class="bc3">And is the third in a series of structural typology studies using CLt, the previous two being the shed...<a href="#" class="bc5 caps">continue</a></p>
-                            </div>
-                        </li>
-                        <li class="load-more-target">
-                            <div class="image"><img src="http://instasrc.com/96x96/art" /></div>
-                            <div class="content">
-                                <h3 class="h6">Liva Lima</h3>
-                                <p class="bc3">Explored in the Kingsdale Festival is one of the first contemporary public buildings....<a href="#" class="bc5 caps">continue</a></p>
-                            </div>
-                        </li>
-                        <li class="newrow">
-                            <div class="image"><img src="http://instasrc.com/96x96/architecture" /></div>
-                            <div class="content">
-                                <h3 class="h6">Lima Morgan</h3>
-                                <p class="bc3">The UK to be built entirely of timber, with a timber core and stairs. its experimental structure consists of a combined horizontal and a vertical cantilever...<a href="#" class="bc5 caps">continue</a>
-                            </div>
-                        </li>
-                        <li class="load-more"><a href="#">+</a></li>-->
+                        {% with self.publications_exhibitions.all as publications %}
+                            {% if publications %}
+                                {% for publication in publications %}
+                                    {% if forloop.counter0|divisibleby:"2" %}
+                                        <li class="newrow">
+                                    {% elif forloop.counter == 4 %}
+                                        <li class="load-more-target">
+                                    {% else %}
+                                        <li>
+                                    {% endif %}
+                                            
+                                            {% if publication.image %}
+                                                <div class="image">
+                                                    {% image publication.image width-150 %}
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <div class="content{% if not publication.image %} flushleft{% endif %}">
+                                                <p class="bc3 a2">{{ publication.typeof }}</p>
+                                                {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
+                                                    <h3 class="h6">{{ publication.title }}</h3>
+                                                {% if publication.link %}</a>{% endif %}
+                                                <p class="bc4">{{ publication.location_year }}</p>
+                                                {% if publication.authors_collaborators %}
+                                                    <p class="bc4">{{ publication.authors_collaborators|linebreaks }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                {% endfor %}
+                                {% if publications|length > 3 %} 
+                                    <li class="load-more"><a href="#">+</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% endwith %}
                     </ul>
                 </div>
             </div>
             <h2 class="header"><a href="#tab4" class="a0">Research</a></h2>
             <div class="tab-pane" id="tab4">
+
+                {% if self.currentRecentResearch %}
+                    <h3 class="h6">Research interests</h3>
+                    <div class="body-text-style">
+                        {{ self.currentRecentResearch|richtext }}
+                    </div>
+                {% endif %}
                 
                  <!-- research -->
                 {% research_related person=self %}
 
-                {% comment %}
-                {% include modules/four-plus.html %}
-                {% endcomment %}
+                <!-- research students -->
+                {% research_students_feed staff_page=self %}
+
             </div>
         </div>
         
@@ -195,5 +227,4 @@
 <!-- TODOs:
 - are tabs optional?
 - share and add to contacts
-- publications and exhibitions once fields confirmed
-- research student feed on last tab once confirmed   -->
+- default student image on research student feed   -->
