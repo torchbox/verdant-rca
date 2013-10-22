@@ -1352,6 +1352,9 @@ StandardIndex.promote_panels = [
 
 # == Home page ==
 
+class HomePageCarouselItem(Orderable, CarouselItemFields):
+    page = models.ForeignKey('rca.HomePage', related_name='carousel_items')
+
 class HomePageAd(Orderable):
     page = models.ForeignKey('rca.HomePage', related_name='manual_adverts')
     ad = models.ForeignKey('rca.Advert', related_name='+')
@@ -1373,7 +1376,8 @@ class HomePage(Page, SocialFields):
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
-    ImageChooserPanel('feed_image'),
+    ImageChooserPanel('background_image'),
+    InlinePanel(HomePage, HomePageCarouselItem, label="Carousel content"),
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
     MultiFieldPanel([
