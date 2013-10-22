@@ -586,7 +586,11 @@ class BaseInlinePanel(EditHandler):
         for child in self.children:
             child.post_save()
 
-def InlinePanel(base_model, related_model, panels=None, label='', help_text='', fk_name=None):
+def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
+    relation = getattr(base_model, relation_name).related
+    related_model = relation.model
+    fk_name = relation.field.name
+
     return type('_InlinePanel', (BaseInlinePanel,), {
         'base_model': base_model,
         'related_model': related_model,

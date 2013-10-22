@@ -1,18 +1,36 @@
 $(function(){
+
+	/* configure left slideout menu toggle */
+	$(".mobile-menu-button").toggleClick(function(){
+		$("body").addClass("show-mobile-menu");
+	},function(){
+		$("body").removeClass("show-mobile-menu");
+	});
+
+
+	// copy the sidebar so that we can show it on the left in the mobile version
+	if(!$(".mobile-menu-wrapper > aside").length){
+		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	}
+
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({
-				animationClasses : { 
-					classin : 'dl-animate-in-2', 
-					classout : 'dl-animate-out-2' 
+				animationClasses : {
+					classin : 'dl-animate-in-2',
+					classout : 'dl-animate-out-2'
 				}
 			});
-		}, 
+		},
 		off: function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
 			$('nav *').removeClass('dl-subview dl-subviewopen');
 			$('nav .dl-back').remove();
+
+			// remove width from page content which is needed to keep it constant when showing the mobile menu
+			$("body").removeClass("show-mobile-menu");
+			$("body, .mobile-content-wrapper").removeAttr("style");
 
 		}
 	});
@@ -39,6 +57,7 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
+		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
@@ -50,15 +69,15 @@ var desktopNav = {
 			$self.find('ul').each(function(){
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
-			
+
 			/* create breadcrumb menu from selected items */
 			selected.find('ul').remove();
 			menu.before($('<ul class="breadcrumb"></ul>').append(selected));
 
 			$self.data('maxHeight', maxHeight + 70);
-			
+
 			// set menu as ready
-			$self.addClass('ready');			
+			$self.addClass('ready');
 
 			function openMenu(){
 				$self.addClass('changing');
@@ -82,14 +101,13 @@ var desktopNav = {
 			}
 
 			function closeMenu(){
-				console.log('closing');
 				$self.addClass('changing').removeClass('hovered');
-					
+
 				// reset or submenu
 				setTimeout(function(){
 					$('ul', menu).stop().removeAttr('style');
 				}, 600)
-				
+
 
 				menu.stop().hide()
 
@@ -128,10 +146,10 @@ var desktopNav = {
 			$('li', menu).hoverIntent({
 				over: function(e){
 					$self.addClass('hovered');
-					
+
 					$('.open', $(this).parent()).removeClass('open');
 					$(this).addClass('open').parents('li').addClass('open');
-					
+
 					$(this).siblings().find(' > ul').stop().hide();
 					$(this).find(' > ul').stop().fadeIn(200);
 				},

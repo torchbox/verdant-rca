@@ -45,7 +45,7 @@
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
 	
-		{% include "rca/includes/modules/body-text.html" body=self.body %}
+		{% include "rca/includes/modules/body-text.html" with body=self.body %}
 
 		<section class="four">
 			{% with self.speakers.all as speakers %}

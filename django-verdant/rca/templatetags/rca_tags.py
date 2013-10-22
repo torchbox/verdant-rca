@@ -1,9 +1,10 @@
+import random
 from django import template
-
 from rca.models import *
 from datetime import date
 from itertools import chain
 from django.db.models import Min
+from core.models import get_navigation_menu_items
 
 register = template.Library()
 
@@ -154,15 +155,18 @@ def staff_random(context, exclude=None, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5):
-    news = NewsItem.objects.filter(show_on_homepage=1)#.order_by('date')
-    staff = StaffPage.objects.filter(show_on_homepage=1)
-    student = StudentPage.objects.filter(show_on_homepage=1)
-    rcanow = RcaNowPage.objects.filter(show_on_homepage=1)#.order_by('date')
-    standard = StandardPage.objects.filter(show_on_homepage=1)
-    #tweets =
+def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5, research_count=5, alumni_count=5):
+    news = NewsItem.objects.filter(show_on_homepage=1).order_by('?')
+    staff = StaffPage.objects.filter(show_on_homepage=1).order_by('?')
+    student = StudentPage.objects.filter(show_on_homepage=1).order_by('?')
+    rcanow = RcaNowPage.objects.filter(show_on_homepage=1).order_by('?')
+    standard = StandardPage.objects.filter(show_on_homepage=1).order_by('?')
+    research = ResearchItem.objects.filter(show_on_homepage=1).order_by('?')
+    alumni = AlumniPage.objects.filter(show_on_homepage=1).order_by('?')
+    tweets = [[],[],[],[],[]]
 
-    packeryItems = list(chain(news[:news_count], staff[:staff_count], student[:student_count], news[:rcanow_count], standard[:standard_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], standard[:standard_count], research[:research_count], alumni[:alumni_count], tweets[:tweets_count]))
+    random.shuffle(packeryItems)
 
     return {
         'packery': packeryItems,
@@ -208,3 +212,18 @@ def paragraph_split(value, sep = "</p>"):
 @register.filter
 def title_split(value):
     return value.split(' ')
+
+
+@register.inclusion_tag('rca/tags/explorer_nav.html')
+def menu(current_page=None):
+    nodes = get_navigation_menu_items(depth=4)
+    return {
+        'nodes': nodes,
+    }
+
+
+@register.inclusion_tag('rca/tags/explorer_nav.html')
+def menu_subnav(nodes):
+    return {
+        'nodes': nodes,
+    }

@@ -2,7 +2,11 @@
 
 
 {% if images %}
-    <h2>{{ images.paginator.count }} match{{ images.paginator.count|pluralize:"es" }}</h2>
+    {% if is_searching %}
+        <h2>{{ images.paginator.count }} match{{ images.paginator.count|pluralize:"es" }}</h2>
+    {% else %}
+        <h2>Latest images</h2>
+    {% endif %}
     <ul class="listing horiz images chooser">
         {% for image in images %}
             <li>
