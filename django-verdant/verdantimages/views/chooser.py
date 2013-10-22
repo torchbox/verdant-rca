@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 import json
 
@@ -29,12 +30,10 @@ def get_image_json(image):
 def chooser(request):
     Image = get_image_model()
     ImageForm = get_image_form()
-
     uploadform = ImageForm()
-    images = Image.objects.order_by('-created_at')[:12]
 
     q = None
-    if 'q' in request.GET:
+    if 'q' in request.GET or 'p' in request.GET:
         searchform = SearchForm(request.GET)
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
@@ -43,13 +42,42 @@ def chooser(request):
             p = request.GET.get("p", 1)
             
             images = Image.search(q, results_per_page=10, page=p)
-        return render(request, "verdantimages/chooser/search_results.html", {
+
+            is_searching = True
+
+        else:
+            images = Image.objects.order_by('-created_at')
+            p = request.GET.get("p", 1)
+            paginator = Paginator(images, 10)
+
+            try:
+                images = paginator.page(p)
+            except PageNotAnInteger:
+                images = paginator.page(1)
+            except EmptyPage:
+                images = paginator.page(paginator.num_pages)
+            
+            is_searching = False
+
+        return render(request, "verdantimages/chooser/results.html", {
             'images': images, 
-            'is_searching': True,
+            'is_searching': is_searching,
             'will_select_format': request.GET.get('select_format')
         })
     else:
         searchform = SearchForm()
+
+        images = Image.objects.order_by('-created_at')
+        p = request.GET.get("p", 1)
+        paginator = Paginator(images, 10)
+
+        try:
+            images = paginator.page(p)
+        except PageNotAnInteger:
+            images = paginator.page(1)
+        except EmptyPage:
+            images = paginator.page(paginator.num_pages)
+        
 
     return render_modal_workflow(request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',{
         'images': images, 
