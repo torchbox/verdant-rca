@@ -80,9 +80,11 @@ html, body {
     .transition(width 1s ease-in-out);
 }
 
-.show-mobile-menu{
-    .transition(width 1s ease-in-out);
-    width: 30%;
+body.show-mobile-menu{
+    .mobile-menu-wrapper{
+        width: 30%;
+        .transition(width 1s ease-in-out);
+    }
 }
 
 .mobile-menu-button{
