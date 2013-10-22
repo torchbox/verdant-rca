@@ -21,6 +21,7 @@
 /**
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
+ * Mobile menu styles.........Only visible in mobile layout
  * Images.....................img and picture
  * Links and lists............default styles for links and lists
  * Typography.................reusable typographical styles
@@ -60,7 +61,12 @@ html, body {
     min-height:100%;
 }
 
+/**
+ * $Mobile menu styles
+ */
+
 .mobile-content-wrapper{
+    position: relative;
     overflow: hidden;
     padding: 0 15px 0 15px; /* padding for mobile */
 }
@@ -71,6 +77,39 @@ html, body {
     margin: 0;
     width: 0%;
     height: 100%;
+    .transition(width 1s ease-in-out);
+}
+
+.show-mobile-menu{
+    .transition(width 1s ease-in-out);
+    width: 30%;
+}
+
+.mobile-menu-button{
+    display: block;
+    position: absolute;
+    z-index: 2;
+    left: 2em;
+    top: 6em;
+    background: #1E567C;
+    color: white;
+    padding: 8px 14px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    outline: none !important;
+    transform: rotate(90deg);
+    transform-origin: top left;
+    -moz-transform: rotate(90deg);
+    -moz-transform-origin: top left;
+    -webkit-transform: rotate(90deg);
+    -webkit-transform-origin: top left;
+    -o-transform: rotate(90deg);
+    -o-transform-origin: top left;
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    zoom: 1;
+    &:hover{
+        cursor: pointer;
+    }
 }
 
 /**
