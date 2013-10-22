@@ -2007,8 +2007,8 @@ class ResearchItemCreator(Orderable):
     manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
     panels=[
-        FieldPanel('person'),
-        PageChooserPanel('manual_person_name')
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
     ]
 
 class ResearchItemLink(Orderable):
