@@ -1710,6 +1710,7 @@ StaffPage.content_panels = [
     FieldPanel('publications_exhibtions_and_other_outcomes_placeholder'),
     FieldPanel('external_collaborations_placeholder'),
     FieldPanel('current_recent_research'),
+    FieldPanel('awards_and_grants'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
     FieldPanel('supervised_student_other'),
@@ -2006,8 +2007,8 @@ class ResearchItemCreator(Orderable):
     manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
     panels=[
-        FieldPanel('person'),
-        PageChooserPanel('manual_person_name')
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
     ]
 
 class ResearchItemLink(Orderable):

@@ -67,7 +67,7 @@ function(modal) {
 
     $('#id_q').on('input', function() {
         clearTimeout($.data(this, 'timer'));
-        var wait = setTimeout(search, 50);
+        var wait = setTimeout(search, 200);
         $(this).data('timer', wait);
     });
     $('a.suggested-tag').click(function() {

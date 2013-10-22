@@ -67,6 +67,7 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
+		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
