@@ -1,0 +1,82 @@
+{% extends "rca/base.html" %}
+{% load rca_tags pageurl %}
+
+{% block body_class %}
+    type-current-research
+{% endblock %}
+
+{% block content %}
+
+	<h1 class="h1 major">Current research</h1>
+
+	{% include "rca/includes/modules/intro-large.html" %}
+
+	<section class="filters four-filters row">
+	    <form id="filters" action="{% pageurl self %}" method="GET">
+	        <ul>
+	        	<li class="filter">
+	                <label for="research_type">Staff / student</label>
+	                <select id="research_type" name="research_type">
+	                    <option value="">Both</option>
+	                    {% for key, value in global_research_types %}
+	                    	<option value="{{ key }}" {% if request.GET.research_type == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	           <li class="filter">
+	                <label for="school">School</label>
+	                <select id="school" name="school">
+	                    <option value="">All schools</option>
+	                    {% for key, value in global_schools %}
+	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <li class="filter">
+	                <label for="theme">Theme</label>
+	                <select id="theme" name="theme">
+	                    <option value="">All themes</option>
+	                    {% for key, value in global_work_themes %}
+	                    	<option value="{{ key }}" {% if request.GET.theme == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <li class="filter">
+	                <label for="work_type">Type of research</label>
+	                <select id="work_type" name="work_type">
+	                    <option value="">All research types</option>
+	                    {% for key, value in global_work_types %}
+	                    	<option value="{{ key }}" {% if request.GET.work_type == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	        </ul>
+	        <input type="submit" />
+	    </form>
+	</section>
+
+	<div id="listing">
+	    {% include "rca/includes/current_research_listing.html" %}
+	</div>
+
+	{% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
+
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for current_research_page set here so that it can be used by the script being called
+		var current_research_page = "{{ global_current_research_url }}";
+	</script>
+	<script src="/static/rca/js/current-research-listing.js"></script>
+{% endblock %}
+
+<!-- TODO:
+- ads
+- infinite scroll
+- filter of programmes when school is selected (or other filtering to be discussed)
+ -->

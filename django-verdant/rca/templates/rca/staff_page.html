@@ -25,7 +25,7 @@
                     <ul class="four-cols">
                         <li class="col first">
                             {% if self.profile_image %}
-                                {% image self.profile_image width-400 %}
+                                {% image self.profile_image width-300 %}
                             {% endif %}
                         </li>
                         <li class="col">{% comment %} note closed within forloop {% endcomment %}
@@ -192,7 +192,7 @@
     {% include "rca/includes/sidebar.html" with showRandomStaff="true" %}
 {% endblock %}
 
-<!-- To dos:
+<!-- TODOs:
 - are tabs optional?
 - share and add to contacts
 - publications and exhibitions once fields confirmed

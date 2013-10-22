@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form
@@ -7,15 +8,49 @@ from verdantadmin.forms import SearchForm
 
 def index(request):
     Image = get_image_model()
-    images = Image.objects.order_by('-created_at')[:12]
     form = SearchForm()
 
-    return render(request, "verdantimages/images/index.html", {
-        'images': images,
-        'form': form,
-        'popular_tags': Image.popular_tags(),
-        'is_searching': False,
-    })
+    q = None
+    p = request.GET.get("p", 1)
+    is_searching = False
+
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+            is_searching = True
+            images = Image.search(q, results_per_page=20, page=p)
+        else:
+            images = Image.objects.order_by('-created_at')
+    else:
+        images = Image.objects.order_by('-created_at')
+        form = SearchForm()
+
+    if not is_searching:
+        paginator = Paginator(images, 20)
+
+        try:
+            images = paginator.page(p)
+        except PageNotAnInteger:
+            images = paginator.page(1)
+        except EmptyPage:
+            images = paginator.page(paginator.num_pages)
+
+    if request.is_ajax():
+        return render(request, "verdantimages/images/results.html", {
+            'images': images,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
+    else:
+        return render(request, "verdantimages/images/index.html", {
+            'form': form,
+            'images': images,
+            'is_searching': is_searching,
+            'popular_tags': Image.popular_tags(),
+            'search_query': q,
+        })
 
 
 def edit(request, image_id):
@@ -81,22 +116,31 @@ def add(request):
 def search(request):
     Image = get_image_model()
     images = []
+    q = None
+    is_searching = False
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
-            images = Image.search(q)
+
+            # page number
+            p = request.GET.get("p", 1)
+            is_searching = True
+            images = Image.search(q, results_per_page=20, page=p)
     else:
         form = SearchForm()
 
     if request.is_ajax():
-        return render(request, "verdantimages/images/search-results.html", {
+        return render(request, "verdantimages/images/results.html", {
             'images': images,
+            'is_searching': is_searching,
+            'search_query': q,
         })
     else:
         return render(request, "verdantimages/images/index.html", {
             'form': form,
             'images': images,
-            'is_searching': True,
+            'is_searching': is_searching,
             'popular_tags': Image.popular_tags(),
+            'search_query': q,
         })

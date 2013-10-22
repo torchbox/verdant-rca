@@ -138,6 +138,12 @@ ul {
     span.light-grey{
         color:@color-light-grey;
     }
+    span.charcoal {
+        color:@color-charcoal;
+    }
+    span.black {
+        color:@color-black;
+    }
 }
 
 .ho-b-heading {
@@ -153,6 +159,7 @@ ul {
     font-size: @font-size-24;
     line-height: @line-height-12;
     margin-top: 0;
+    margin-bottom: @spacing-one;
     &.major {
         .ho-a-heading;
 
@@ -659,8 +666,24 @@ nav.dl-menuwrapper{
  */
 
 /* advert */
-.apply {
-    .mixin-sidebar-advert(@color-rca-blue, 100%);
+.advert-grey {
+    .mixin-sidebar-advert(@color-dark-grey, 20%);
+}
+
+.advert-pale-blue {
+    .mixin-sidebar-advert(@color-highlight-blue, 10%);
+}
+
+.advert-green {
+    .mixin-sidebar-advert(@color-green, 85%);
+}
+
+.advert-blue {
+    .mixin-sidebar-advert(@color-rca-blue, 100%, white);
+}
+
+.advert-pink {
+    .mixin-sidebar-advert(@color-advert-pink, 100%, white);
 }
 
 .open-days{
@@ -1061,8 +1084,23 @@ input[type=button], button, .button{
 .type-standard {
     .button-bar,
     .teaser-image,
-    .quotation {
+    .quotation,
+    .middle-column-body-text {
         margin-bottom: @spacing-two;
+        clear:both;
+    }
+    .button-bar li {
+        width: 100%;
+    }
+    .four figcaption {
+        float: right;
+        text-align: right;
+        margin-top: @spacing-one;
+    }
+
+    .four figure {
+        .clearfix();
+        margin-bottom: @spacing-one;
     }
 }
 

@@ -1,20 +1,46 @@
-
 {% load image_tags embed_filters %}
 
-    
-    {% with self.carousel_items.all as carousel_items %}
-        {% if carousel_items %}
-            <section class="row">
-
-
-                {% comment %}Don't output carousel controls and overlay text if there is only one image or video in the carousel{% endcomment %}
-                {% if carousel_items|length == 1 %}
-                    {% for carousel_item in carousel_items %}
-                        {% if carousel_item.image %}
-                            <div class="image standalone {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
+{% with self.carousel_items.all as carousel_items %}
+    {% if carousel_items %}
+        <section clas="row">
+            <ul class="carousel paginated">
+                {% for carousel_item in carousel_items %}
+                    {% if carousel_item.image %}
+                        <li>
+                            <div class="image {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
                                 {% image carousel_item.image width-1000 %}
                             </div>
-                        {% elif carousel_item.embedly_url %}
+                            {% if carousel_item.overlay_text or carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
+                                <div class="{% if not overlayvisible %}hover-{% endif %}content">
+                                    {% if carousel_item.overlay_text %}
+                                        <h3 class="bc1">
+                                            {% if carousel_item.link %}
+                                                <a href="{{ carousel_item.link }}">
+                                            {% endif %}
+                                            {{ carousel_item.overlay_text }}...<span class="bc4 caps">Continue</span></a>
+                                            {% if carousel_item.link %}
+                                                </a>
+                                            {% endif %}
+                                        </h3>
+                                    {% endif %}
+                                    <p class="caption a4{% if not carousel_item.overlay_text %} showmobile{% endif %}">
+                                        {% for line in carousel_item.image.caption_lines %}
+                                            {{ line }}
+                                            {% if not forloop.last %}<br />{% endif %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% elif carousel_item.embedly_url %}
+                        {% comment %}
+                        <div class="videoembed vimeo">
+                            <div class="playpause play">Play</div>
+                            <div class="poster"><img src="https://i4.sndcdn.com/avatars-000012482606-k0gy7a-t200x200.jpg?3eddc42" height="531" /></div>
+                            <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F69438429"></iframe>
+                        </div>
+                        {% endcomment %}
+                        <li>
                             <div class="videoembed vimeo">
                                 <div class="playpause play">Play</div>
                                 {% if carousel_item.poster_image %}
@@ -22,61 +48,10 @@
                                 {% endif %}
                                 {{ carousel_item.embedly_url|embedly:"944" }}
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-
-                <ul class="carousel paginated">
-                    {% for carousel_item in carousel_items %}
-                        {% if carousel_item.image %}
-                            <li>
-                                <div class="image {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
-                                    {% image carousel_item.image width-1000 %}
-                                </div>
-                                {% if carousel_item.overlay_text or carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
-                                    <div class="content">
-                                        {% if carousel_item.overlay_text %}
-                                            <h3 class="bc1">
-                                                {% if carousel_item.link %}
-                                                    <a href="{{ carousel_item.link }}">
-                                                {% endif %}
-                                                {{ carousel_item.overlay_text }}...<span class="bc4 caps">Continue</span></a>
-                                                {% if carousel_item.link %}
-                                                    </a>
-                                                {% endif %}
-                                            </h3>
-                                        {% endif %}
-                                        <p class="caption a4{% if not carousel_item.overlay_text %} showmobile{% endif %}">
-                                            {% for line in carousel_item.image.caption_lines %}
-                                                {{ line }}
-                                                {% if not forloop.last %}<br />{% endif %}
-                                            {% endfor %}
-                                        </p>
-                                    </div>
-                                {% endif %}
-                            </li>
-                        {% elif carousel_item.embedly_url %}
-                            {% comment %}
-                            <div class="videoembed vimeo">
-                                <div class="playpause play">Play</div>
-                                <div class="poster"><img src="https://i4.sndcdn.com/avatars-000012482606-k0gy7a-t200x200.jpg?3eddc42" height="531" /></div>
-                                <iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F69438429"></iframe>
-                            </div>
-                            {% endcomment %}
-                            <li>
-                                <div class="videoembed vimeo">
-                                    <div class="playpause play">Play</div>
-                                    {% if carousel_item.poster_image %}
-                                        <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
-                                    {% endif %}
-                                    {{ carousel_item.embedly_url|embedly:"944" }}
-                                </div>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-
-                {% endif %}
-            </section>
-        {% endif %}
-    {% endwith %}
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+{% endwith %}

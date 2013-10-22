@@ -5,14 +5,18 @@
 	    <div class="item-container">
 	        <ul class="row">
 	        	{% for event in events %}
-	        		{% if forloop.counter0|divisibleby:"2" %}
+	        		{% comment %}The forloop counter just gives the index for the current set of reseults, and we need to know the overall
+	        		index of the event item to know when to correctly apply the newrow class. This isn't available from the django
+	        		paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
+	        		start_index is 1 based not 0 based) gives the correct calculation. {% endcomment %}
+	        		{% if forloop.counter0|add:events.start_index|add:"-1"|divisibleby:"2" %}
 	    				<li class="newrow">
 	    			{% else %}
 	    				<li>
 	    			{% endif %}
 	    				<a href="{% pageurl event %}">
-		    				{% if event.feature_image %}
-	                    		<div class="image">{% image event.feature_image width-400 %}</div>
+		    				{% if event.feed_image %}
+	                    		<div class="image">{% image event.feed_image width-600 %}</div>
 	                    	{% endif %}
 		                    <ul class="content">
 		                        <li class="first">
@@ -30,12 +34,14 @@
 		                </a>
 		            </li>
 	        	{% endfor %}
-	        	<!--<li class="load-more"><a href="#">+</a></li>-->
+	        	{% if events.paginator.count > 10 %}
+	        		<li class="load-more{% if events|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+	        	{% endif %}
 	        </ul>
 	    </div>
 	</section>
 
-	<ul class="pagination">
+	<ul class="pagination infinite">
 		<!--
 		{% if events.has_previous %}
 	        <li class="previous"><a href="?page={{ events.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>

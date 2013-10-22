@@ -1,4 +1,4 @@
-{% load image_tags %}
+{% load image_tags ellipsistrim%}
 
 <header class="merged">
     <h1>Choose an image</h1>
@@ -11,16 +11,24 @@
 
 <div class="tab-content">
     <section id="search" class="active nice-padding">
-        <form class="image-search search-bar" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET">
+        <form class="image-search search-bar" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET" autocomplete="off">
             <ul class="fields">
                 {% for field in searchform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
                 <li class="submit"><input type="submit" value="Search" /></li>
+                {% if popular_tags %}
+                    <li class="popular-tags">
+                        <h3>Popular tags</h3>
+                        {% for tag in popular_tags %}
+                            <a class="suggested-tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
+                        {% endfor %}
+                    </li>
+                {% endif %}
             </ul>
         </form>
-        <div id="image-results" class="listing images">
-            {% include "verdantimages/chooser/search_results.html" %}
+        <div id="image-results">
+            {% include "verdantimages/chooser/results.html" %}
         </div>
     </section>
     <section id="upload" class="nice-padding">

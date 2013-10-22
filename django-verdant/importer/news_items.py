@@ -20,7 +20,8 @@ def clear_news_items():
     for page in pages:
         newsitem = NewsItem.objects.get(id=page.id)
         for c in NewsItemCarouselItem.objects.filter(page=newsitem):
-            c.image.delete()
+            if c.image:
+                c.image.delete()
         soup = BeautifulSoup(newsitem.body, 'html.parser')
         to_delete_ids = []
         for x in soup.find_all('embed'):
@@ -52,21 +53,10 @@ def doimport(**kwargs):
         date = parse_date(item.find('goinglivedate').text.strip().replace('.','-')) or datetime.date.today()
         try:
             newsitem = NewsItem.objects.get(rca_content_id=news_contentid)
-            newsitem.title = title
-            newsitem.date = date
         except NewsItem.DoesNotExist:
-            try:
-                newsitem = NewsItem.objects.get(
-                    title=title,
-                    date=date
-                    )
-            except NewsItem.DoesNotExist:
-                newsitem = NewsItem(
-                    title=title,
-                    date=date
-                    )
-            newsitem.rca_content_id = news_contentid
-
+            newsitem = NewsItem(rca_content_id=news_contentid)
+        newsitem.title = title
+        newsitem.date = date
         newsitem.intro = richtext_from_elem(item.find('intro'))
         newsitem.slug = make_slug(newsitem)
 

@@ -143,6 +143,7 @@ header {
 }
 
 nav {
+    height:34px;  //adjusted by eye to match search box 
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
 }
@@ -177,21 +178,21 @@ nav {
             }
         }
     }   
-    nav.open h2{
-        color:black;
-        background-color:white;
+   nav.open h2{
         &:after{
             background-position:-17px -1178px;
-        }   
+        }
+        &:hover:after{
+            background-position:-17px -623px;
+        }  
     }
 
     /* these settings change when the menu is ready*/
     nav.ready{
-        height:34px;  //adjusted by eye to match search box 
-    
         .menu{
             /* only hide after its max height has been calculated */
             display:none;
+            text-indent:0;
         }
         li > ul{
             display:none;
@@ -205,15 +206,13 @@ nav {
             border-color:#ffffff;
         }
     }
-
-    nav.changing ul{
-        pointer-events:none;
-    } 
-
     nav .menu{
+        text-indent:-2000px;
         position:relative;
         left:@grid-gutter-width;
         top:2em;
+        padding-bottom:200px;
+        margin-bottom:-200px;
     }
    
     nav .children{
@@ -273,6 +272,7 @@ nav {
         }
 
         li.open > a{
+            color:black;
             &:after{
                 visibility:visible;
             }
@@ -502,18 +502,17 @@ footer {
     This overrides the desktop styles shared with .one-plus so they also revert to mobile at this res */
     .one-plus li {
         width: 100%;
-        padding: 0 8px;
         display:list-item;
     }
 }
 
-.type-jobs-index {
-    .one-plus {
-        li.col {
-            .column(3, @grid-gutter-width/2, 6);
-            padding-left: 0;
-            min-width: 200px;
-        }
+.type-events-index
+.type-news-index,
+.type-current-research  {
+    /* override 3/4 width intro style */
+    .index-intro .content {
+        width: 100%;
+        padding-right:0;
     }
 }
 

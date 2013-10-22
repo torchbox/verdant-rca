@@ -4,8 +4,8 @@
         {% for rcanow in rcanow_pages %}
             <li>
                 <a href="{% pageurl rcanow %}">
-                    {% if rcanow.feature_image %}
-                        <div class="image">{% image rcanow.feature_image width-400 %}</div>
+                    {% if rcanow.feed_image %}
+                        <div class="image">{% image rcanow.feed_image width-180 %}</div>
                     {% endif %}
                     <div class="content">
                         <h2 class="h8">{{ rcanow.title }}</h2>

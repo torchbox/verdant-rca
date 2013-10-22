@@ -18,7 +18,7 @@
             
             {% if self.head_of_programme.profile_image %}
                 <a href="{% pageurl self.head_of_programme %}">
-                    <div class="image">{% image self.head_of_programme.profile_image width-400 %}</div>
+                    <div class="image">{% image self.head_of_programme.profile_image width-200 %}</div>
                 </a>
             {% endif %}
             <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
@@ -36,14 +36,14 @@
     {% news_carousel programme=self.programme %}
 
     <!-- events -->
-    {% upcoming_events_by_programme programme=self.programme programme_display_name=self.get_programme_display events_index_url=global_events_index_url %}
+    {% upcoming_events_related programme=self.programme display_name=self.get_programme_display events_index_url=global_events_index_url %}
 
     <!-- staff -->
     {% staff_by_programme programme=self.programme %}
 
 
     <!-- open days -->
-    {% upcoming_events_by_programme opendays=1 programme=self.programme events_index_url=global_events_index_url %}
+    {% upcoming_events_related opendays=1 programme=self.programme events_index_url=global_events_index_url %}
 
     <!-- tabs -->
     
@@ -185,6 +185,7 @@
     {% endwith %}
     
     {% include "rca/includes/modules/twitter-feed.html" %}
+    {% include "rca/includes/modules/contact.html" %}   
 {% endblock %}
 
 {% block sidebar %}

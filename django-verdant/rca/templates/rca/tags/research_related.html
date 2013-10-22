@@ -1,4 +1,3 @@
-{% load pageurl image_tags %}
 {% if research_items %}
     <section class="three-plus x-plus row module">
         <h2 class="module-title">Research</h2>
@@ -12,23 +11,7 @@
                     {% else %}
                         <li>
                     {% endif %}
-                        <a href="{% pageurl research_item %}">
-                            {% if research_item.feature_image %}
-                                <div class="image">{% image research_item.feature_image width-400 %}</div>
-                            {% endif %}
-                            <div class="content">
-                                <h3 class="h8">{{ research_item.title }}</h3>
-                                {% with research_item.creator.all as creators %}
-                                    {% if creators %}
-                                        <p class="bc5">
-                                            {% for creator in creators %}
-                                                {% if creator.person %}{{ creator.person.title }}{% elif creator.manual_person_name %}{{ creator.manual_person_name }}{% endif %}{% if not forloop.last %}, {% endif %}
-                                            {% endfor %}
-                                        </p>
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
-                        </a>
+                        {% include "rca/includes/modules/research_item.html" %}
                     </li>
                 {% endfor %}
                 {% if research_items|length > 6 %} 

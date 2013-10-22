@@ -20,8 +20,6 @@
 .icon:after,
 .hallotoolbar [class^="icon-"],
 .hallotoolbar [class*=" icon-"]:before,
-.hallotoolbar [class*=" icon-"]:before,
-.hallotoolbar [class^="icon-"]:after,
 .hallotoolbar [class^="icon-"]:before{
     font-family: "verdant";
     font-style: normal;
@@ -38,19 +36,23 @@
     font-size:25px;
     text-align:left;
 }
+.icon:after,
+.hallotoolbar [class^="icon-"]:after,
+.hallotoolbar [class^="icon-"]:after{
+    text-align:right;
+}
 
 .hallotoolbar [class^="icon-"],
 .hallotoolbar [class*=" icon-"]:before,
 .hallotoolbar [class*=" icon-"]:before,
-.hallotoolbar [class^="icon-"]:after,
 .hallotoolbar [class^="icon-"]:before{
-    width:1em;
-    font-size:16px;
-    vertical-align:-8%;
+    font-size:1.1em;
+    vertical-align:-10%;
+    font-size:1.05em;
 }
 
 
-.icon-cogs:before {
+.icon-cogs:before, {
     content: "a";
 }
 .icon-doc-empty-inverse:before {
@@ -62,8 +64,13 @@
 .icon-edit:before {
     content: "d";
 }
-.icon-arrow-up:before {
+.icon-arrow-up:before,
+.icon-arrow-up-after:after {
     content: "e";
+}
+.icon-arrow-down:before,
+.icon-arrow-down-after:after {
+    content: "q";
 }
 .icon-search:before {
     content: "f";
@@ -86,7 +93,8 @@
 .icon-locked:before {
     content: "m";
 }
-.icon-arrow-right:before {
+.icon-arrow-right:before,
+.icon-arrow-right-after:after {
     content: "n";
 }
 .icon-doc-full:before,
@@ -100,9 +108,7 @@
 .icon-unlocked:before {
     content: "p";
 }
-.icon-arrow-down:before {
-    content: "q";
-}
+
 .icon-doc-full-inverse:before {
     content: "r";
 }

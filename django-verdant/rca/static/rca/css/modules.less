@@ -47,13 +47,14 @@
  * Index page intro
  * Contact
  * Strapline
+ * Pagination
  */
 
 /**
  *$Carousel
  */
 
-/* TO DO: handle landscape / portrait images nicely */
+/* TODO: handle landscape / portrait images nicely */
 
 @carousel-image-height: 500px;
 
@@ -316,6 +317,7 @@
 }
 
 .single {
+    clear: both;
     .share-wrapper {
         margin: @spacing-one 0 0 0;
         width: 180px;
@@ -562,18 +564,16 @@
     ul{
         position:relative;
         -webkit-overflow-scrolling: touch;
-        padding-top:@spacing-one;
     }
     li{
         .column(7, @grid-gutter-width);
-        padding-left:74px;
-        min-height:100px;
+        min-height:120px;
         border-left:1px solid fade(@color-divider, 50%);
         
         &:before{
-            margin-left:-64px !important; /* importants necessary to undo .unlist() on this limited occasion */
             content:"" !important;
             display:inline-block;
+            padding-right:@grid-gutter-width;
             float:left;
             .sprite-load(-772px, -2200px, 54px, 43px);
         }
@@ -582,30 +582,23 @@
         }
     }
 
-    .load-more, .space {
+    .load-more{
         border-left:0;
         border-right:0;
-        height:100%;
-        margin-top:-@spacing-one;
         background-color:@color-white;
+        padding-top:0;
+        padding-bottom:0;
         padding-left:@grid-gutter-width;
-        padding-bottom:148px;
-        margin-bottom:-148px;
 
         &:before{
             display:none;
         }
 
         a{
-            position:absolute;
             height:132px; /* height and width are min-height of 100 + top/bottom padding of 16 as on UL above */
             width:132px;
         }
     }
-    &.expanded .load-more a{
-        margin-top:@grid-gutter-width;
-    }
-
     
     .h7, .a2, .bc4 {
         margin:0;
@@ -949,9 +942,13 @@
 
 .button-bar{
     .clearfix();  
+    li {
+        position:relative;
+    }
     a {
         display:block;
         border-bottom:1px solid white;
+        padding-right: 48px;
     }
     .icon-download:after{
         content:"";
@@ -960,8 +957,9 @@
         zoom:0.6;
         -moz-transform:scale(0.6);
         -moz-transform-origin: 0 0;
-        float:right;
-        margin:-10px 0;
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
     }
 }
 
@@ -992,8 +990,18 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
+    
+    .intro {
+        margin-top: @spacing-one;
+    }
+
+    p {
+        margin: 12px 0;
+    }
+
     a {
         color: @color-highlight-blue;
+        font-weight: bold;
         &:hover {
             text-decoration: underline;
         }
@@ -1026,6 +1034,7 @@
         line-height: @line-height-5;
         text-transform: none;
         font-weight: normal;
+        margin-top: @spacing-one;
     }
 
     /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h5, .h6, .h7;
@@ -1037,6 +1046,9 @@
         font-size: @font-size-22;
         line-height: @line-height-4;
         font-weight: normal;
+        padding-top: @spacing-one;
+        border-top: 1px solid @color-dark-grey;
+        margin-top: @spacing-two;
     }
 
     h3 {
@@ -1225,6 +1237,10 @@
         &:hover:after{
             background-position:-53px -623px;
         }
+
+        &.active{
+            color:@color-highlight-blue
+        }
     }
 
     .expanded label{
@@ -1338,12 +1354,12 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-one;
+    margin-top: @spacing-two;
     figcaption {
         display: block;
         width: 100%;
         text-align: right;
-        margin-top: @spacing-one;
+        margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
     &.small {
@@ -1402,6 +1418,7 @@
  * Index page intro
  */
 .index-intro {
+    margin-bottom: @spacing-one;
     p {
         display:inline;
     }
@@ -1434,8 +1451,16 @@
  * Strapline
  */
 
- .strapline {
-    border-bottom: 1px solid @color-dark-grey;
+.strapline {
     margin-bottom: @spacing-one;
-    padding-bottom: @spacing-one;
- }
+}
+
+
+/**
+ * Pagination
+ */
+.pagination{
+    &.infinite{
+        display:none;
+    }
+}

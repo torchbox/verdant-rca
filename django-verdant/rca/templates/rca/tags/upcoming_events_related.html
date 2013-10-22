@@ -1,0 +1,28 @@
+{% load pageurl %}
+{% if events %}
+    <section class="events x-plus row module">
+        <h2 class="module-title">{% if opendays %}<a href="{{ events_index_url }}?audience=openday">Open days</a>{% elif school %}<a href="{{ events_index_url }}?school=school">{{ display_name }} events</a>{% else %}<a href="{{ events_index_url }}?programme={{ programme }}">{{ display_name }} events</a>{% endif %}</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for event in events %}
+                    {% if forloop.counter == 3 %}
+                        <li class="load-more-target">
+                    {% elif forloop.counter0|divisibleby:"3" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl event %}">
+                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{% if event.location_other %}{{ event.location_other }}{% elif event.location %}{{ event.get_location_display }}{% endif %}</span></h3>
+                            <p class="h7">{{ event.title }}</p>
+                            {% if event.audience %}<p class="meta a2">{{ event.get_audience_display }}</p>{% endif %}
+                        </a>  
+                    </li>
+                {% endfor %}
+                {% if events|length > 2 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

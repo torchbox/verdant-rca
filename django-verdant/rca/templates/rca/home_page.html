@@ -1,0 +1,50 @@
+{% extends "rca/base.html" %}
+{% load rca_tags pageurl image_tags %}
+
+{% block body_class %}type-homepage{% endblock %}
+
+{% block content %}
+    {% include "rca/includes/modules/background-image.html" %}
+
+    {% include "rca/includes/modules/carousel.html" with overlayvisible=1 %}
+
+    <section class="half-double module row ">
+        <ul>
+            {% if self.news_item_1 %}
+                <li>
+                    <a href="{% pageurl self.news_item_1 %}">
+                        <div class="image">{% image self.news_item_1.specific.feed_image width-464 %}</div>
+                        <div class="content">
+                            <h2 class="h5">{{ self.news_item_1.title }}</h2>
+                            {% if self.news_item_1.specific.listing_intro %}
+                                <p class="bc4">{{ self.news_item_1.specific.listing_intro }}</p>
+                            {% endif %} 
+                            <p class="a2">News</p>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+            {% if self.news_item_2 %}
+                <li>
+                    <a href="{% pageurl self.news_item_2 %}">
+                        <div class="image">{% image self.news_item_2.specific.feed_image width-464 %}</div>
+                        <div class="content">
+                            <h2 class="h5">{{ self.news_item_2.title }}</h2>
+                            {% if self.news_item_2.specific.listing_intro %}
+                                <p class="bc4">{{ self.news_item_2.specific.listing_intro }}</p>
+                            {% endif %} 
+                            <p class="a2">News</p>
+                        </div>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </section>
+
+    {% homepage_packery %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
+{% endblock %}

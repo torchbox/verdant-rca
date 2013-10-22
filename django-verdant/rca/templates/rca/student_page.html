@@ -22,7 +22,7 @@
                     <ul class="four-cols">
                         <li class="col first">
                             {% if self.profile_image %}
-                                {% image self.profile_image width-400 %}
+                                {% image self.profile_image width-300 %}
                             {% else %}
                                 default image chris to supply
                             {% endif %}
@@ -187,7 +187,7 @@
     {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
 {% endblock %}
 
-<!-- To dos:
+<!-- TODOs:
 - default profile image if one is not supplied
 - make tabs optional
 - share and add to contacts -->

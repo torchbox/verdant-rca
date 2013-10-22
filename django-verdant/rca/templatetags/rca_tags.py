@@ -1,7 +1,8 @@
+import random
 from django import template
-
-from rca.models import EventItem, NewsItem, StaffPage, AlumniPage, RcaNowPage, ResearchItem, JobPage, StudentPage, StaffPage
+from rca.models import *
 from datetime import date
+from itertools import chain
 from django.db.models import Min
 
 register = template.Library()
@@ -17,11 +18,13 @@ def upcoming_events(context, exclude=None, count=3):
     }
 
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
-def news_carousel(context, area="", programme="", count=6):
+def news_carousel(context, area="", programme="", school="", count=6):
     if area:
         news_items = NewsItem.objects.filter(area=area)[:count]
     elif programme:
         news_items = NewsItem.objects.filter(related_programmes__programme=programme)[:count]
+    elif school:
+        news_items = NewsItem.objects.filter(related_schools__school=school)[:count]
     else:
         # neither programme nor area specified - return no results
         news_items = NewsItem.objects.none()
@@ -31,9 +34,12 @@ def news_carousel(context, area="", programme="", count=6):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/upcoming_events_by_programme.html', takes_context=True)
-def upcoming_events_by_programme(context, opendays=0, programme="", programme_display_name="", events_index_url="/events/"):
-    events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+@register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", events_index_url="/events/"):
+    if school:
+        events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
+    elif programme:
+        events = EventItem.future_objects.annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -41,9 +47,18 @@ def upcoming_events_by_programme(context, opendays=0, programme="", programme_di
     return {
         'opendays': opendays,
         'events': events,
-        'programme_display_name': programme_display_name,
+        'display_name': display_name,
+        'school': school,
         'programme': programme,
         'events_index_url': events_index_url,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/programmes_by_school.html', takes_context=True)
+def programme_by_school(context, school):
+    programmes = ProgrammePage.objects.filter(school=school)
+    return {
+        'programmes': programmes,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -75,11 +90,13 @@ def rca_now_related(context, programme="", author=""):
     }
 
 @register.inclusion_tag('rca/tags/research_related.html', takes_context=True)
-def research_related(context, programme="", person="", exclude=None):
+def research_related(context, programme="", person="", school="", exclude=None):
     if programme:
         research_items = ResearchItem.objects.filter(programme=programme)
     elif person:
         research_items = ResearchItem.objects.filter(creator__person=person)
+    elif school:
+        research_items = ResearchItem.objects.filter(school=school)
     if exclude:
         research_items = research_items.exclude(id=exclude.id)
     return {
@@ -136,8 +153,44 @@ def staff_random(context, exclude=None, count=4):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
+def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5, research_count=5, alumni_count=5):
+    news = NewsItem.objects.filter(show_on_homepage=1).order_by('?')
+    staff = StaffPage.objects.filter(show_on_homepage=1).order_by('?')
+    student = StudentPage.objects.filter(show_on_homepage=1).order_by('?')
+    rcanow = RcaNowPage.objects.filter(show_on_homepage=1).order_by('?')
+    standard = StandardPage.objects.filter(show_on_homepage=1).order_by('?')
+    research = ResearchItem.objects.filter(show_on_homepage=1).order_by('?')
+    alumni = AlumniPage.objects.filter(show_on_homepage=1).order_by('?')
+    tweets = [[],[],[],[],[]]
+
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], standard[:standard_count], research[:research_count], alumni[:alumni_count], tweets[:tweets_count]))
+    random.shuffle(packeryItems)
+
+    return {
+        'packery': packeryItems,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/sidebar_links.html', takes_context=True)
+def sidebar_links(context, calling_page=None):
+    if calling_page:
+        pages = calling_page.get_children().filter(show_in_menus=True)
+    return {
+        'pages': pages,
+        'calling_page': calling_page, # needed to get related links from the tag
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.filter
+def content_type(value):
+    return value.__class__.__name__.lower()
 
 @register.filter
 def paragraph_split(value, sep = "</p>"):
     parts = value.split(sep)
     return (parts[0], sep.join(parts[1:]))
+
+@register.filter
+def title_split(value):
+    return value.split(' ')

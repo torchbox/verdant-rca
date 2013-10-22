@@ -10,6 +10,63 @@
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
 
+   <!-- head of school -->
+    {% if self.head_of_school %}
+        <section class="head-of-programme row module">
+            <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Head of school</a></h2>
+            
+            {% if self.head_of_school.profile_image %}
+                <a href="{% pageurl self.head_of_school %}">
+                    <div class="image">{% image self.head_of_school.profile_image width-200 %}</div>
+                </a>
+            {% endif %}
+            <div class="content bc1{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
+                <strong>{{ self.head_of_school.title }}</strong>
+                {{ self.head_of_school_statement|richtext }}
+                {% if self.head_of_school_link %}
+                    ...<a href="{% pageurl self.head_of_school_link %}"><span class="bc4 caps">Continue</a></span>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- programmes -->
+    {% programme_by_school school=self.school %}
+
     
+   <!-- head of research -->
+    {% if self.head_of_research %}
+        <section class="head-of-programme row module">
+            <h2 class="module-title"><a href="{% pageurl self.head_of_research %}">Head of Research</a></h2>
+            
+            {% if self.head_of_research.profile_image %}
+                <a href="{% pageurl self.head_of_research %}">
+                    <div class="image">{% image self.head_of_research.profile_image width-200 %}</div>
+                </a>
+            {% endif %}
+            <div class="content bc1{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
+                <strong>{{ self.head_of_research.title }}</strong>
+                {{ self.head_of_research_statement|richtext }}
+                {% if self.head_of_research_link %}
+                    ...<a href="{% pageurl self.head_of_research_link %}"><span class="bc4 caps">Continue</a></span>
+                {% endif %}
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- research -->
+    {% research_related school=self.school %}
+
+    <!-- news carousel -->
+    {% news_carousel school=self.school %}
+
+    <!-- events -->
+    {% upcoming_events_related school=self.school display_name=self.get_school_display events_index_url=global_events_index_url %}
+
+	{% include "rca/includes/modules/contact.html" %}	
     
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAds="true" showRelatedLinks="true" %}
 {% endblock %}

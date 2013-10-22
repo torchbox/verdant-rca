@@ -1,0 +1,41 @@
+{% extends "rca/base.html" %}
+{% load image_tags rca_tags rich_text %}
+
+{% block body_class %}type-alumni{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    <div class="image">{% image self.profile_image width-945 %}</div>
+
+    <div class="row">
+       {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.biography %}
+        
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    <dd>Year</dd>
+                    <dt>{{ self.year }}</dt>
+                    
+                    <dd>School</dd>
+                    <dt>{{ self.get_school_display }}</dt>
+
+                    <dd>Programme</dd>
+                    <dt>{{ self.get_programme_display }}</dt>
+                </dl>
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </div>
+    
+    {% include "rca/includes/modules/twitter-feed.html" %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showJobs="true" %}
+{% endblock %}
+
+<!-- TODO: confirmation re download links from Chris required -->
