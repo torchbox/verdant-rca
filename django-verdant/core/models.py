@@ -294,7 +294,7 @@ class Page(MP_Node):
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
 
 
-def get_navigation_menu_items():
+def get_navigation_menu_items(depth=2):
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
     # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
@@ -302,15 +302,15 @@ def get_navigation_menu_items():
     if navigable_content_type_ids:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
+            WHERE numchild > 0 OR content_type_id IN %s OR depth = %s
             ORDER BY path
-        """, [tuple(navigable_content_type_ids)])
+        """, [tuple(navigable_content_type_ids), depth])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR depth = 2
+            WHERE numchild > 0 OR depth = %s
             ORDER BY path
-        """)
+        """, [depth])
 
     # Turn this into a tree structure:
     #     tree_node = (page, children)

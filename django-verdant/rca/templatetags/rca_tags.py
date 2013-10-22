@@ -4,6 +4,7 @@ from rca.models import *
 from datetime import date
 from itertools import chain
 from django.db.models import Min
+from core.models import get_navigation_menu_items
 
 register = template.Library()
 
@@ -194,3 +195,18 @@ def paragraph_split(value, sep = "</p>"):
 @register.filter
 def title_split(value):
     return value.split(' ')
+
+
+@register.inclusion_tag('rca/tags/explorer_nav.html')
+def menu(current_page=None):
+    nodes = get_navigation_menu_items(depth=4)
+    return {
+        'nodes': nodes,
+    }
+
+
+@register.inclusion_tag('rca/tags/explorer_nav.html')
+def menu_subnav(nodes):
+    return {
+        'nodes': nodes,
+    }
