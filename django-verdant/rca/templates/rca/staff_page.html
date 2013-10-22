@@ -10,17 +10,27 @@
 
     <section class="four-tab row module">
 
+        {% comment %}
+        tab headers. Selected work and publications and exhibitions are optional.
+        Links are added by javascript
+        {% endcomment %}
         <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
-            <li class="active"><a href="#tab1" class="t0">Info</a></li>
-            <li><a href="#tab2" class="t0">Selected work</a></li>
-            <li><a href="#tab3" class="t0">Publications &amp; exhibitions</a></li>
-            <li><a href="#tab4" class="t0">Research</a></li>
+            <li class="active"><a class="t0">Info</a></li>
+            {% if self.carousel_items.all|length > 0 %}
+                <li><a class="t0">Selected work</a></li>
+            {% endif %}
+            {% if self.publications_exhibitions.all|length > 0 %}
+                <li><a class="t0">Publications &amp; exhibitions</a></li>
+            {% endif %}
+            <li><a class="t0">Research</a></li>
         </ul>
 
         <div class="tab-content">
 
-            <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
-            <div class="tab-pane active flush" id="tab1">
+            <!--INFO TAB-->
+            <!-- links and ids added by javascript -->
+            <h2 class="header"><a class="a0 active">Info</a></h2>
+            <div class="tab-pane active flush">
                 <div class="profile">
                     <ul class="four-cols">
                         <li class="col first">
@@ -148,60 +158,77 @@
 
                 </div>
             </div>
+            <!-- end info tab -->
 
-            <h2 class="header"><a href="#tab2" class="a0">Selected work</a></h2>
-            <div class="tab-pane" id="tab2">
-                {% include "rca/includes/modules/carousel.html" %}
-            </div>
 
-            <h2 class="header"><a href="#tab3" class="a0">Publications &amp; exhibitions</a></h2>
-            <div class="tab-pane x-plus" id="tab3">
-                <div class="item-container">
-                    <ul class="two-cols two-cols-image-big">
-                        {% with self.publications_exhibitions.all as publications %}
-                            {% if publications %}
-                                {% for publication in publications %}
-                                    {% if forloop.counter0|divisibleby:"2" %}
-                                        <li class="newrow">
-                                    {% elif forloop.counter == 4 %}
-                                        <li class="load-more-target">
-                                    {% else %}
-                                        <li>
-                                    {% endif %}
-                                            
-                                            {% if publication.image %}
-                                                <div class="image">
-                                                    {% image publication.image width-150 %}
-                                                </div>
-                                            {% endif %}
-                                            
-                                            <div class="content{% if not publication.image %} flushleft{% endif %}">
-                                                <p class="bc3 a2">{{ publication.typeof }}</p>
-                                                {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
-                                                    <h3 class="h6">{{ publication.title }}</h3>
-                                                {% if publication.link %}</a>{% endif %}
-                                                <p class="bc4">{{ publication.location_year }}</p>
-                                                {% if publication.authors_collaborators %}
-                                                    <p class="bc4">{{ publication.authors_collaborators|linebreaks }}</p>
-                                                {% endif %}
-                                            </div>
-                                        </li>
-                                {% endfor %}
-                                {% if publications|length > 3 %} 
-                                    <li class="load-more"><a href="#">+</a></li>
-                                {% endif %}
-                            {% endif %}
-                        {% endwith %}
-                    </ul>
+            <!-- SELECTED WORK TAB-->
+            <!-- links and ids added by javascript -->
+            {% if self.carousel_items.all|length > 0 %}
+                <h2 class="header"><a class="a0">Selected work</a></h2>
+                <div class="tab-pane">
+                    {% include "rca/includes/modules/carousel.html" %}
                 </div>
-            </div>
-            <h2 class="header"><a href="#tab4" class="a0">Research</a></h2>
-            <div class="tab-pane" id="tab4">
+            {% endif %}
+            <!-- end selected work tab-->
 
-                {% if self.currentRecentResearch %}
+
+            <!-- PUBLICATIONS AND EXHIBITIONS TAB-->
+            <!-- links and ids added by javascript -->
+            {% if self.publications_exhibitions.all|length > 0 %}
+                <h2 class="header"><a class="a0">Publications &amp; exhibitions</a></h2>
+                <div class="tab-pane x-plus">
+                    <div class="item-container">
+                        <ul class="two-cols two-cols-image-big">
+                            {% with self.publications_exhibitions.all as publications %}
+                                {% if publications %}
+                                    {% for publication in publications %}
+                                        {% if forloop.counter0|divisibleby:"2" %}
+                                            <li class="newrow">
+                                        {% elif forloop.counter == 4 %}
+                                            <li class="load-more-target">
+                                        {% else %}
+                                            <li>
+                                        {% endif %}
+                                                
+                                                {% if publication.image %}
+                                                    <div class="image">
+                                                        {% image publication.image width-150 %}
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="content{% if not publication.image %} flushleft{% endif %}">
+                                                    <p class="bc3 a2">{{ publication.typeof }}</p>
+                                                    {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
+                                                        <h3 class="h6">{{ publication.title }}</h3>
+                                                    {% if publication.link %}</a>{% endif %}
+                                                    <p class="bc4">{{ publication.location_year }}</p>
+                                                    {% if publication.authors_collaborators %}
+                                                        <p class="bc4">{{ publication.authors_collaborators|linebreaks }}</p>
+                                                    {% endif %}
+                                                </div>
+                                            </li>
+                                    {% endfor %}
+                                    {% if publications|length > 3 %} 
+                                        <li class="load-more"><a href="#">+</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- end publications and exhibitions tab-->
+
+
+            <!-- RESEARCH TAB -->
+            <!-- links and ids added by javascript -->
+            <h2 class="header"><a class="a0">Research</a></h2>
+            <div class="tab-pane">
+
+                {% if self.research_interests %}
                     <h3 class="h6">Research interests</h3>
                     <div class="body-text-style">
-                        {{ self.currentRecentResearch|richtext }}
+                        {{ self.research_interests|richtext }}
                     </div>
                 {% endif %}
                 
@@ -212,8 +239,8 @@
                 {% research_students_feed staff_page=self %}
 
             </div>
+            <!-- end research tab-->
         </div>
-        
     </section>
     
 
@@ -225,6 +252,7 @@
 {% endblock %}
 
 <!-- TODOs:
-- are tabs optional?
+- possibly refactor to make research tab optional. Because it's impossible to know
+on the template if the tag feeds have any content it would require refactoring the code
 - share and add to contacts
 - default student image on research student feed   -->

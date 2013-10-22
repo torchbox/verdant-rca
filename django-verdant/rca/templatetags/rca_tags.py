@@ -196,7 +196,7 @@ def research_students_list(context, staff_page=None):
     students = StudentPage.objects.filter(supervisor=staff_page)
     return {
         'students': students,
-        'staff_page': staff_page, #needed to get the supervisedStudentOther field to list research students without profile pages
+        'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
