@@ -34,6 +34,13 @@ body {
     padding: 0;
 }
 
+.mobile-content-wrapper{
+    padding: 0;
+}
+.mobile-menu-wrapper, .mobile-menu-button{
+    display: none;
+}
+
 /**
  * $Typography
  * Note that in order for elements to pick up the desktop versions of these styles the class h3 or bc1 etc must be applied
@@ -143,7 +150,7 @@ header {
 }
 
 nav {
-    height:34px;  //adjusted by eye to match search box 
+    height:34px;  //adjusted by eye to match search box
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
 }
@@ -168,7 +175,7 @@ nav {
             top: 10px; /* Arbitrary. Whatever looks good */
             right: @spacing-half;
         }
-      
+
         &:hover{
             color:@color-white;
             background-color:@color-pink;
@@ -177,14 +184,14 @@ nav {
                 background-position:-53px -623px;
             }
         }
-    }   
+    }
    nav.open h2{
         &:after{
             background-position:-17px -1178px;
         }
         &:hover:after{
             background-position:-17px -623px;
-        }  
+        }
     }
 
     /* these settings change when the menu is ready*/
@@ -214,7 +221,7 @@ nav {
         padding-bottom:200px;
         margin-bottom:-200px;
     }
-   
+
     nav .children{
         display:none;
     }
@@ -279,7 +286,7 @@ nav {
             &:hover:after{
                 color:@color-highlight-blue;
                 visibility:visible;
-            }                      
+            }
         }
     }
 
@@ -293,7 +300,7 @@ nav {
         text-overflow:ellipsis;
         white-space: nowrap;
         overflow:hidden;
-    
+
         li{
             display:inline;
             float:none;
@@ -303,7 +310,7 @@ nav {
             display:inline;
             width:auto;
             padding:0;
-            
+
             &:before{
                 width:10px;
                 content:"/";
@@ -328,7 +335,7 @@ nav {
         padding-bottom:@grid-gutter-width/2;
         border-bottom:1px solid fade(@color-medium-grey, 20%);
     }
-        
+
 /* Search moves alongside the menu above the content */
 form.search {
     display: block;
@@ -454,7 +461,7 @@ footer {
         margin: @spacing-onepointfive 0 @spacing-three 0;
         border-top: 1px solid @color-dark-grey;
         border-bottom: 1px solid @color-dark-grey;
-        
+
         ul {
             float: right;
             li {

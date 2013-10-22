@@ -1,18 +1,46 @@
 $(function(){
+
+	$(".mobile-menu-button").click(function(){
+		if($(".mobile-menu-wrapper").width() === 0){
+			$(".mobile-content-wrapper").width($(".mobile-content-wrapper").width() + "px");
+			$("body")
+				.css({
+					"width": "150%",
+					"overflow-x": "hidden"
+				})
+				.addClass("show-mobile-menu");
+		}else{
+			$("body").removeClass("show-mobile-menu");
+			setTimeout(function(){
+				$("body, .mobile-content-wrapper").removeAttr("style");
+			}, 1100);
+		}
+		return false;
+	});
+
+	// copy the sidebar so that we can show it on the left in the mobile version
+	if(!$(".mobile-menu-wrapper > aside").length){
+		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	}
+
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({
-				animationClasses : { 
-					classin : 'dl-animate-in-2', 
-					classout : 'dl-animate-out-2' 
+				animationClasses : {
+					classin : 'dl-animate-in-2',
+					classout : 'dl-animate-out-2'
 				}
 			});
-		}, 
+		},
 		off: function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
 			$('nav *').removeClass('dl-subview dl-subviewopen');
 			$('nav .dl-back').remove();
+
+			// remove width from page content which is needed to keep it constant when showing the mobile menu
+			$("body").removeClass("show-mobile-menu");
+			$("body, .mobile-content-wrapper").removeAttr("style");
 
 		}
 	});
@@ -31,9 +59,9 @@ $(function(){
 	});
 
 	/* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
-    $('.lt-ie9').each(function(){
-        desktopNav.apply()
-    })
+	$('.lt-ie9').each(function(){
+		desktopNav.apply()
+	})
 
 });
 
@@ -50,15 +78,15 @@ var desktopNav = {
 			$self.find('ul').each(function(){
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
-			
+
 			/* create breadcrumb menu from selected items */
 			selected.find('ul').remove();
 			menu.before($('<ul class="breadcrumb"></ul>').append(selected));
 
 			$self.data('maxHeight', maxHeight + 70);
-			
+
 			// set menu as ready
-			$self.addClass('ready');			
+			$self.addClass('ready');
 
 			function openMenu(){
 				$self.addClass('changing');
@@ -84,12 +112,12 @@ var desktopNav = {
 			function closeMenu(){
 				console.log('closing');
 				$self.addClass('changing').removeClass('hovered');
-					
+
 				// reset or submenu
 				setTimeout(function(){
 					$('ul', menu).stop().removeAttr('style');
 				}, 600)
-				
+
 
 				menu.stop().hide()
 
@@ -128,10 +156,10 @@ var desktopNav = {
 			$('li', menu).hoverIntent({
 				over: function(e){
 					$self.addClass('hovered');
-					
+
 					$('.open', $(this).parent()).removeClass('open');
 					$(this).addClass('open').parents('li').addClass('open');
-					
+
 					$(this).siblings().find(' > ul').stop().hide();
 					$(this).find(' > ul').stop().fadeIn(200);
 				},
