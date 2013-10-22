@@ -1649,6 +1649,7 @@ class StaffPagePublicationExhibition(Orderable):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     panels = [
@@ -1657,6 +1658,7 @@ class StaffPagePublicationExhibition(Orderable):
         FieldPanel('location_year'),
         FieldPanel('authors_collaborators'),
         FieldPanel('link'),
+        ImageChooserPanel('image'),
     ]
 
 class StaffPage(Page, SocialFields, CommonPromoteFields):
