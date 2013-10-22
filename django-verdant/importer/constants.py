@@ -90,6 +90,9 @@ PROGRAMMES = {
     u'Conservation': 'conservation',
     u'RCA/V&A Conservation': 'conservation',
     u'Communication Art & Design': 'communicationartdesign',
+
+    # extras for staff page
+    'School of Humanities': 'schoolofhumanities',
 }
 
 DEGREE_SUBJECTS = {
