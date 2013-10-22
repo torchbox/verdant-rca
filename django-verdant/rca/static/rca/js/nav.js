@@ -12,15 +12,16 @@ $(function(){
 		}else{
 			$("body").removeClass("show-mobile-menu");
 			setTimeout(function(){
-				$("body").css({
-					"overflow-x": "auto",
-					"width": "auto"
-				});
-				$(".mobile-content-wrapper").css("width", "auto");
+				$("body, .mobile-content-wrapper").removeAttr("style");
 			}, 1100);
 		}
 		return false;
 	});
+
+	// copy the sidebar so that we can show it on the left in the mobile version
+	if(!$(".mobile-menu-wrapper > aside").length){
+		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	}
 
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
@@ -36,6 +37,10 @@ $(function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
 			$('nav *').removeClass('dl-subview dl-subviewopen');
 			$('nav .dl-back').remove();
+
+			// remove width from page content which is needed to keep it constant when showing the mobile menu
+			$("body").removeClass("show-mobile-menu");
+			$("body, .mobile-content-wrapper").removeAttr("style");
 
 		}
 	});
