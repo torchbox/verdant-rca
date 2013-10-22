@@ -4,7 +4,9 @@
 {% block body_class %}type-homepage{% endblock %}
 
 {% block content %}
-    {% include "rca/includes/modules/carousel.html" %}
+    {% include "rca/includes/modules/background-image.html" %}
+
+    {% include "rca/includes/modules/carousel.html" with overlayvisible=1 %}
 
     <section class="half-double module row ">
         <ul>
