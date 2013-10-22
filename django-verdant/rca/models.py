@@ -1671,6 +1671,7 @@ class StaffPage(Page, SocialFields):
     publications_exhibtions_and_other_outcomes_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate publications/events if needed.")
     external_collaborations_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate external collaborations if needed.")
     current_recent_research = RichTextField(blank=True)
+    awards_and_grants = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
