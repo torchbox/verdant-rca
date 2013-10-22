@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'treebeard',
     'taggit',
     'django_embedly',
+    'cluster',
     'gunicorn',
 
     'django.contrib.admin',
