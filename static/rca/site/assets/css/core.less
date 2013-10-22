@@ -65,49 +65,55 @@ html, body {
  * $Mobile menu styles
  */
 
+.mobile-content-wrapper, 
+.movile-menu-wrapper{
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+}
+
 .mobile-content-wrapper{
+    .transition(all 0.2s ease);
+    background-color:white;
     position: relative;
+    float:right;
+    width:100%;
     overflow: hidden;
     padding: 0 15px 0 15px; /* padding for mobile */
 }
 
 .mobile-menu-wrapper{
+    position:relative;
     float: left;
-    overflow: hidden;
-    margin: 0;
-    width: 0%;
-    height: 100%;
-    .transition(width 1s ease-in-out);
-}
-
-body.show-mobile-menu{
-    .mobile-menu-wrapper{
-        width: 180px;
-        .transition(width 1s ease-in-out);
-    }
-}
-
-.mobile-menu-wrapper aside{
-    display: block;
     width: 180px;
-    .related{
-        margin-top: 0;
+    margin-left:-180px;
+
+    aside{
+        border-right:1px solid @color-pink;
+        display: block;
+        width: 180px;
+        .related{
+            margin-top: 0;
+        }
     }
 }
-
 
 .mobile-menu-button{
+    @button-height:40px;
+
+    font-family:@font-family-benton;
     display: block;
     position: absolute;
     z-index: 3000;
-    left: 2em;
+    left: @button-height;
+    line-height:@button-height;
     top: 6em;
-    background: #1E567C;
+    background:#333;
     color: white;
-    padding: 8px 14px;
-    font-size: 1.2em;
+    padding: 0 @grid-gutter-width*1.1;
+    font-size: 1em;
     text-transform: uppercase;
     outline: none !important;
+
     transform: rotate(90deg);
     transform-origin: top left;
     -moz-transform: rotate(90deg);
@@ -118,8 +124,26 @@ body.show-mobile-menu{
     -o-transform-origin: top left;
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     zoom: 1;
+
     &:hover{
         cursor: pointer;
+    }
+}
+
+body.show-mobile-menu{
+    overflow-x:hidden;
+
+    .mobile-menu-wrapper{
+        transform: translate3d(100%,0,0);
+        -webkit-transform: translate3d(100%,0,0);
+    }
+    .mobile-content-wrapper{
+        transform: translate3d(180px,0,0);
+        -webkit-transform: translate3d(180px,0,0);
+    }
+    .mobile-menu-button{
+        color:white;
+        background-color:@color-pink;
     }
 }
 
