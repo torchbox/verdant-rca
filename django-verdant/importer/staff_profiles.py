@@ -1,5 +1,5 @@
 from lxml import etree as ET
-from rca.models import StaffPage, RcaImage, StaffIndex, StaffPageRole
+from rca.models import StaffPage, StaffPageCarouselItem, RcaImage, StaffIndex, StaffPageRole, CurrentResearchPage, ResearchItem, ResearchItemCarouselItem, ResearchItemCreator, ResearchInnovationPageCurrentResearch
 from django.utils.dateparse import parse_date
 from django.core.files import File
 from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
@@ -9,29 +9,65 @@ import urllib2
 from bs4 import BeautifulSoup
 
 
-# TODO
-# All staff are Acedemic
-# Look into underscores issue
-# "Current and recent research", "practise" and "research interests" are like the placeholders
-# Carousel content is all images except those associated with a research item
-# All child pages except for the placeholder pages are research items
-# Remove profile pictures
-# Cleanup & Better error checking
+# Interesting pages are pages that map onto fields in the staff page model
+interesting_pages = {
+    "Publications, Exhibitions & Other Outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publication, Exhibitions & Other Outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications, Exhibitions and Other Outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications/Exhibitions/Other outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications and Exhibitions": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications & Exhibitions": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Exhibitions & Other Outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications & Other Outcomes": "publications_exhibtions_and_other_outcomes_placeholder",
+    "Publications": "publications_exhibtions_and_other_outcomes_placeholder",
+
+    "External Collaborations": "external_collaborations_placeholder",
+    "External Collaborationns": "external_collaborations_placeholder",
+
+    "Practice": "practice",
+
+    "Research": "research_interests",
+
+    "Current and Recent Projects": "current_recent_research",
+    "Current and Recent Research Projects": "current_recent_research",
+
+    "Awards/Grants": "awards_and_grants",
+}
 
 
 PATH = 'importer/data/export_staff_profiles.xml'
 IMAGE_PATH = 'importer/data/export_staff_images/'
-STAFF_INDEX_PAGE = StaffIndex.objects.get(slug='staff-index-page')
+STAFF_INDEX_PAGE = StaffIndex.objects.get(slug='staff')
+RESEARCH_INDEX_PAGE = CurrentResearchPage.objects.get(slug='current-research')
+
+
+def cleanup_html(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    # Remove HR tags
+    for hr in soup.find_all("hr"):
+        hr.decompose()
+
+    return unicode(soup)
+
 
 def import_texts(element):
     errors = {}
 
     html = ""
+    first_text = True
     for text in element.findall('text'):
-        text_title, errors["title"] = text_from_elem(text, 'title', length=255, textify=True)
-        text_content, errors["content"] = text_from_elem(text, 'content', length=255)
-        html = "".join([html, "<b>", text_title, "</b>", text_content, "<hr>"])
+        if first_text:
+            first_text = False
+        else:
+            html = "".join([html, "<hr>"])
+        text_title, errors["title"] = text_from_elem(text, 'title', length=255)
+        text_content, errors["content"] = text_from_elem(text, 'content')
+
+        html = "".join([html, "<b>", text_title, "</b>", cleanup_html(text_content)])
+
     return html, errors
+
 
 def import_image(element):
     errors = {}
@@ -39,7 +75,7 @@ def import_image(element):
     # Get image info
     image_contentid = element.attrib['contentid']
     image_filename, errors['filename'] = text_from_elem(element, 'filename', length=255, textify=True)
-    image_caption, errors['caption'] = text_from_elem(element, 'caption', length=255, textify=True)
+    image_caption, errors['caption'] = text_from_elem(element, 'caption', length=255)
 
     image_metadata = element.find('imagemetadata')
     image_title, errors['title'] = text_from_elem(image_metadata, 'title', length=255, textify=True)
@@ -82,36 +118,87 @@ def import_image(element):
     return image, errors
 
 
-def import_staff_research_childpage(staffpage, element):
-    errors = {}
-
-    # Get page info
-    page_contentid = element.attrib['contentid']
-    page_title, errors['title'] = text_from_elem(element, 'title', length=255, textify=True)
-    page_texts_element = element.find('texts')
-
-    # If the page is about Publications or External Collaborations, add it into the staffpage
-    if page_title == "Publications, Exhibitions & Other Outcomes":
-        staffpage.publications_exhibtions_and_other_outcomes_placeholder, errors['texts'] = import_texts(page_texts_element)
-    elif page_title == "External Collaborations":
-        staffpage.external_collaborations_placeholder, errors['texts'] = import_texts(page_texts_element)
-
-    return errors
-
-
 def import_staff_researchpage(staffpage, element):
     errors = {}
 
     # Get page info
     page_contentid = element.attrib['contentid']
     page_title, errors['title'] = text_from_elem(element, 'title', length=255, textify=True)
-    page_texts_element = element.find('texts')
+    page_texts, errors['texts'] = import_texts(element.find('texts'))
 
-    # If the page is about Publications or External Collaborations, add it into the staffpage
-    if page_title == "Publications, Exhibitions & Other Outcomes":
-        staffpage.publications_exhibtions_and_other_outcomes_placeholder, errors['texts'] = import_texts(page_texts_element)
-    elif page_title == "External Collaborations":
-        staffpage.external_collaborations_placeholder, errors['texts'] = import_texts(page_texts_element)
+    # Check if this is an interesting page
+    if page_title in interesting_pages:
+        # Set the field for this page
+        setattr(staffpage, interesting_pages[page_title], page_texts)
+
+        # Get carousel images
+        images_element = element.find('images')
+        if images_element is not None:
+            for image in images_element.findall('image'):
+                # Import the image
+                theimage, error = import_image(image)
+
+                # Add to carousel
+                # TODO: Replace with get_or_create
+                try:
+                    carouselitem = StaffPageCarouselItem.objects.get(page=staffpage, image=theimage)
+                except StaffPageCarouselItem.DoesNotExist:
+                    carouselitem = StaffPageCarouselItem()
+                    carouselitem.page = staffpage
+                    carouselitem.image = theimage
+
+                carouselitem.save()
+
+    else:
+        # Get school and programme from staffpage role
+        try:
+            staffpagerole = StaffPageRole.objects.get(page=staffpage)
+            school = staffpagerole.school
+            programme = staffpagerole.programme
+        except StaffPageRole.DoesNotExist:
+            school = ""
+            programme = ""
+
+        # Create research item
+        try:
+            researchitem = ResearchItem.objects.get(rca_content_id=page_contentid)
+        except ResearchItem.DoesNotExist:
+            researchitem = ResearchItem()
+            researchitem.rca_content_id = page_contentid
+        researchitem.title = page_title
+        researchitem.research_type = "staff"
+        researchitem.year = "0000"
+        researchitem.description = page_texts
+        researchitem.school = school
+        researchitem.programme = programme
+        researchitem.slug = make_slug(researchitem)
+
+        if researchitem.id:
+            researchitem.save()
+        else:
+            RESEARCH_INDEX_PAGE.add_child(researchitem)
+
+        # Link to creator
+        ResearchItemCreator.objects.get_or_create(page=researchitem, person=staffpage)
+
+        # Get carousel images
+        images_element = element.find('images')
+        if images_element is not None:
+            for image in images_element.findall('image'):
+                # Import the image
+                theimage, error = import_image(image)
+
+                # Add to carousel
+                # TODO: Replace with get_or_create
+                try:
+                    carouselitem = ResearchItemCarouselItem.objects.get(page=researchitem, image=theimage)
+                except ResearchItemCarouselItem.DoesNotExist:
+                    carouselitem = ResearchItemCarouselItem()
+                    carouselitem.page = researchitem
+                    carouselitem.image = theimage
+
+                carouselitem.save()
+
 
     return errors
 
@@ -124,8 +211,8 @@ def import_staff(element):
     staff_title, errors['title'] = text_from_elem(element, 'title', length=255, textify=True)
     staff_name, errors['name'] = text_from_elem(element, 'staffname', length=255, textify=True)
     staff_programme, errors['programme'] = text_from_elem(element, 'programme', length=255, textify=True)
-    staff_statement, errors['statement'] = text_from_elem(element, 'statement', textify=True)
-    staff_biography, errors['biography'] = text_from_elem(element, 'biography', textify=True)
+    staff_statement, errors['statement'] = text_from_elem(element, 'statement')
+    staff_biography, errors['biography'] = text_from_elem(element, 'biography')
     staff_school, errors['school'] = text_from_elem(element, 'school', length=255, textify=True)
     staff_editorialreference, errors['editorialreference'] = text_from_elem(element, 'editorialreference', length=255, textify=True)
 
@@ -152,6 +239,10 @@ def import_staff(element):
             if supervised_student is not None:
                 staff_supervisedstudents.append(supervisedstudent.text)
 
+    # Cleanup statement and biography
+    staff_statement = cleanup_html(staff_statement)
+    staff_biography = cleanup_html(staff_biography)
+
     # Split name into first name, last name and title
     name_split = staff_name.split()
     if name_split[0] == "Professor" or name_split[0] == "Dr" or name_split[0] == "Sir":
@@ -164,9 +255,9 @@ def import_staff(element):
         staff_lastname = " ".join(name_split[1:])
 
     # Remove "Programme" from staff_programme if it is there
-    programme_split = staff_programme.split()
-    if programme_split[-1] == "Programme":
-        staff_programme = " ".join(programme_split[:-1])
+    staff_programme_split = staff_programme.split()
+    if staff_programme_split[-1] == "Programme" or staff_programme_split[-1] == "Programmes":
+        staff_programme = " ".join(staff_programme_split[:-1])
 
     # Slugs
     staff_programme_slug = constants.PROGRAMMES.get(staff_programme, "")
@@ -180,6 +271,7 @@ def import_staff(element):
         staffpage.rca_content_id = staff_contentid
     staffpage.title = staff_name
     staffpage.school = staff_school_slug
+    staffpage.staff_type = "academic"
     staffpage.intro = staff_statement
     staffpage.biography = staff_biography
     staffpage.show_on_homepage = False
@@ -188,7 +280,7 @@ def import_staff(element):
     staffpage.first_name = staff_firstname
     staffpage.last_name = staff_lastname
     if len(staff_supervisedstudents) > 0:
-        staffpage.supervisedStudentOther = ", ".join(staff_supervisedstudents)
+        staffpage.supervised_student_other = ", ".join(staff_supervisedstudents)
     staffpage.slug = make_slug(staffpage)
     if staffpage.id:
         staffpage.save()
@@ -205,19 +297,28 @@ def import_staff(element):
     staffpagerole.title = staff_title
     staffpagerole.school = staff_school_slug
     staffpagerole.programme = staff_programme_slug
+    if len(staff_emails) > 0:
+        staffpagerole.email = staff_emails[0]
     staffpagerole.save()
 
     # Images
-    staff_images = []
     images_element = element.find('images')
     if images_element is not None:
         for image in images_element.findall('image'):
             theimage, error = import_image(image)
-            staff_images.append(theimage)
+            # Import the image
+            theimage, error = import_image(image)
 
-    # Set first found image as profile picture
-    if len(staff_images) > 0:
-        staffpage.profile_image = staff_images[0]
+            # Add to carousel
+            # TODO: Replace with get_or_create
+            try:
+                carouselitem = StaffPageCarouselItem.objects.get(page=staffpage, image=theimage)
+            except StaffPageCarouselItem.DoesNotExist:
+                carouselitem = StaffPageCarouselItem()
+                carouselitem.page = staffpage
+                carouselitem.image = theimage
+
+            carouselitem.save()
 
     # Research pages
     researchpages_element = element.find('researchpages')
@@ -229,7 +330,7 @@ def import_staff(element):
         research_childpages_element = researchpages_element.find('childpages')
         if research_childpages_element is not None:
             for childpage in research_childpages_element.findall('page'):
-                import_staff_research_childpage(staffpage, childpage)
+                import_staff_researchpage(staffpage, childpage)
 
     # Resave page
     staffpage.save()
@@ -252,7 +353,7 @@ def import_department(element):
 
 
 def doimport(**kwargs):
-    root = ET.parse(path).getroot()
+    root = ET.parse(PATH).getroot()
 
     # Departments
     for department in root.findall('department'):
