@@ -135,8 +135,23 @@ def jobs_listing(context):
     }
 
 @register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
-def students_related(context, programme="", exclude=None, count=4):
+def students_related(context, programme="", year="", exclude=None, count=4):
     students = StudentPage.objects.filter(programme=programme)
+    students = students.filter(degree_year=year)
+    if exclude:
+        students = students.exclude(id=exclude.id)
+    return {
+        'students': students[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+# Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
+@register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
+def students_related_work(context, year="", exclude=None, count=4):
+    students = StudentPage.objects.filter(degree_year=year)
+    students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
+    students=students.distinct()
+
     if exclude:
         students = students.exclude(id=exclude.id)
     return {

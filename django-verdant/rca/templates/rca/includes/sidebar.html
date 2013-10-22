@@ -75,7 +75,11 @@
 {% endif %}
 
 {% if showRelatedStudents %}
-    {% students_related programme=self.programme exclude=self %}
+    {% students_related programme=self.programme year=self.degree_year exclude=self %}
+{% endif %}
+
+{% if showRelatedStudentsWork %}
+    {% students_related_work year=self.degree_year exclude=self %}
 {% endif %}
 
 {% if showRandomStaff %}
