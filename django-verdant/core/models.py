@@ -109,9 +109,9 @@ class Page(MP_Node):
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
     # and decide which (if any) of these are more generally useful and should be kept in Verdant core
-    seo_title_core = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
-    show_in_menus_core = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
-    feed_image_core = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
+    show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # End RCA-specific fields
 
     def __init__(self, *args, **kwargs):
