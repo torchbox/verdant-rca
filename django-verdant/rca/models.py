@@ -1670,7 +1670,7 @@ class StaffPage(Page, SocialFields):
     practice = RichTextField(blank=True)
     publications_exhibtions_and_other_outcomes_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate publications/events if needed.")
     external_collaborations_placeholder = RichTextField(blank=True, help_text="This is a placeholder field for data import. Individual items can be split out into seperate external collaborations if needed.")
-    currentRecentResearch = RichTextField(blank=True)
+    current_recent_research = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
     show_on_programme_page = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
@@ -1678,7 +1678,7 @@ class StaffPage(Page, SocialFields):
     title_prefix = models.CharField(max_length=255, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisedStudentOther = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
+    supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     def tabbed_feature_count(self):
@@ -1707,10 +1707,10 @@ StaffPage.content_panels = [
     FieldPanel('practice'),
     FieldPanel('publications_exhibtions_and_other_outcomes_placeholder'),
     FieldPanel('external_collaborations_placeholder'),
-    FieldPanel('currentRecentResearch'),
+    FieldPanel('current_recent_research'),
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
-    FieldPanel('supervisedStudentOther'),
+    FieldPanel('supervised_student_other'),
 
     InlinePanel(StaffPage, 'carousel_items', label="Selected Work Carousel Content"),
     InlinePanel(StaffPage, 'collaborations', label="Collaborations"),
