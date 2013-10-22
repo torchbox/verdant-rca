@@ -28,21 +28,7 @@
             </ul>
         </form>
         <div id="image-results">
-            {% if is_searching %}
-                {% include "verdantimages/chooser/search_results.html" %}
-            {% else %}
-                <h2>Latest added images</h2>
-                <ul class="listing horiz images">
-                    {% for image in images %}
-                        <li>
-                            <a class="image-choice" href="{% if will_select_format %}{% url 'verdantimages_chooser_select_format' image.id %}{% else %}{% url 'verdantimages_image_chosen' image.id %}{% endif %}">
-                                <div class="image">{% image image max-165x165 %}</div>
-                                <h3>{{ image.title|ellipsistrim:60 }}</h3>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            {% include "verdantimages/chooser/results.html" %}
         </div>
     </section>
     <section id="upload" class="nice-padding">
