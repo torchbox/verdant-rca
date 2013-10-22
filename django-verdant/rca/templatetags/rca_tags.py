@@ -172,7 +172,7 @@ def homepage_packery(context, news_count=5, staff_count=5, student_count=5, twee
 @register.inclusion_tag('rca/tags/sidebar_links.html', takes_context=True)
 def sidebar_links(context, calling_page=None):
     if calling_page:
-        pages = calling_page.get_children()#.filter(show_in_menus=True)
+        pages = calling_page.get_children().filter(show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag
