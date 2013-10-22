@@ -27,10 +27,11 @@ Configuration of the fields, content blocks and templates is all done within [si
 *	DocumentChooserPanel
 *	SnippetChooserPanel
 
+`Editable = False` on model fields will prevent them being rendered in the admin UI. This is useful for fields which must exist in the database, but shouldn't be visible to any kind of user, e.g for import uniqueness identifiers.
+
 #### Model methods/
 
 *	serve
-
 
 ## Templating
 
