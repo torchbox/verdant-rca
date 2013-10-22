@@ -382,14 +382,6 @@ class SocialFields(models.Model):
     class Meta:
         abstract = True
 
-class CommonPromoteFields(models.Model):
-    seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
-    show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
-
-    class Meta:
-        abstract = True
-
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
@@ -487,7 +479,7 @@ class SchoolPageAd(Orderable):
     ]
 
 
-class SchoolPage(Page, SocialFields, CommonPromoteFields):
+class SchoolPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
@@ -631,7 +623,7 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class ProgrammePage(Page, SocialFields, CommonPromoteFields):
+class ProgrammePage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -725,7 +717,7 @@ class NewsIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class NewsIndex(Page, SocialFields, CommonPromoteFields):
+class NewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     subpage_types = ['NewsItem']
@@ -821,7 +813,7 @@ class NewsItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
-class NewsItem(Page, SocialFields, CommonPromoteFields):
+class NewsItem(Page, SocialFields):
     author = models.CharField(max_length=255)
     date = models.DateField()
     intro = RichTextField()
@@ -987,7 +979,7 @@ class PastEventItemManager(models.Manager):
             params=[date.today(), date.today()]
         )
 
-class EventItem(Page, SocialFields, CommonPromoteFields):
+class EventItem(Page, SocialFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
@@ -1072,7 +1064,7 @@ class EventIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class EventIndex(Page, SocialFields, CommonPromoteFields):
+class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -1208,7 +1200,7 @@ class StandardPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class StandardPage(Page, SocialFields, CommonPromoteFields):
+class StandardPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
@@ -1301,7 +1293,7 @@ class StandardIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class StandardIndex(Page, SocialFields, CommonPromoteFields):
+class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
@@ -1368,7 +1360,7 @@ class HomePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class HomePage(Page, SocialFields, CommonPromoteFields):
+class HomePage(Page, SocialFields):
     news_item_1 = models.ForeignKey('core.Page', null=True, related_name='+')
     news_item_2 = models.ForeignKey('core.Page', null=True, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
@@ -1413,7 +1405,7 @@ HomePage.promote_panels = [
 
 # == Job page ==
 
-class JobPage(Page, SocialFields, CommonPromoteFields):
+class JobPage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, null=True, blank=True)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True)
     other_department = models.CharField(max_length=255, blank=True)
@@ -1487,7 +1479,7 @@ class JobsIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class JobsIndex(Page, SocialFields, CommonPromoteFields):
+class JobsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -1538,7 +1530,7 @@ class AlumniIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class AlumniIndex(Page, SocialFields, CommonPromoteFields):
+class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -1570,7 +1562,7 @@ AlumniIndex.promote_panels = [
 
 # == Alumni profile page ==
 
-class AlumniPage(Page, SocialFields, CommonPromoteFields):
+class AlumniPage(Page, SocialFields):
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -1578,6 +1570,7 @@ class AlumniPage(Page, SocialFields, CommonPromoteFields):
     intro = RichTextField(blank=True)
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     biography = RichTextField()
+    show_on_homepage = models.BooleanField()
 
 AlumniPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1597,6 +1590,7 @@ AlumniPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
     ], 'Cross-page behaviour'),
@@ -1649,6 +1643,7 @@ class StaffPagePublicationExhibition(Orderable):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     panels = [
@@ -1657,9 +1652,10 @@ class StaffPagePublicationExhibition(Orderable):
         FieldPanel('location_year'),
         FieldPanel('authors_collaborators'),
         FieldPanel('link'),
+        ImageChooserPanel('image'),
     ]
 
-class StaffPage(Page, SocialFields, CommonPromoteFields):
+class StaffPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
@@ -1746,7 +1742,7 @@ class StaffIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class StaffIndex(Page, SocialFields, CommonPromoteFields):
+class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -1833,7 +1829,7 @@ class StudentPageWorkSponsor(Orderable):
 
     panels = [FieldPanel('name')]
 
-class StudentPage(Page, SocialFields, CommonPromoteFields):
+class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=ALL_PROGRAMMES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
@@ -1910,7 +1906,7 @@ StudentPage.promote_panels = [
 class RcaNowPagePageCarouselItem(Orderable, CarouselItemFields):
     page = models.ForeignKey('rca.RcaNowPage', related_name='carousel_items')
 
-class RcaNowPage(Page, SocialFields, CommonPromoteFields):
+class RcaNowPage(Page, SocialFields):
     body = RichTextField()
     author = models.CharField(max_length=255, blank=True)
     date = models.DateField("Creation date")
@@ -1964,7 +1960,7 @@ class RcaNowIndexRelatedLink(Orderable):
         FieldPanel('link_text'),
     ]
 
-class RcaNowIndex(Page, SocialFields, CommonPromoteFields):
+class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -2016,7 +2012,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link'),
         FieldPanel('link_text')
     ]
-class ResearchItem(Page, SocialFields, CommonPromoteFields):
+class ResearchItem(Page, SocialFields):
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
     ref = models.CharField(max_length=255, blank=True)
     year = models.CharField(max_length=4)
@@ -2029,6 +2025,7 @@ class ResearchItem(Page, SocialFields, CommonPromoteFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
+    show_on_homepage = models.BooleanField()
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
@@ -2063,6 +2060,7 @@ ResearchItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
 
@@ -2139,7 +2137,7 @@ class ResearchInnovationPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class ResearchInnovationPage(Page, SocialFields, CommonPromoteFields):
+class ResearchInnovationPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
@@ -2204,7 +2202,7 @@ class CurrentResearchPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class CurrentResearchPage(Page, SocialFields, CommonPromoteFields):
+class CurrentResearchPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -2275,7 +2273,7 @@ CurrentResearchPage.promote_panels = [
    
 # == Gallery Page ==
 
-class GalleryPage(Page, SocialFields, CommonPromoteFields):
+class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
@@ -2304,7 +2302,7 @@ GalleryPage.promote_panels = [
 
 # == Contact Us page ==
 
-class ContactUsPage(Page, SocialFields, CommonPromoteFields):
+class ContactUsPage(Page, SocialFields):
     pass
 
 ContactUsPage.promote_panels = [
