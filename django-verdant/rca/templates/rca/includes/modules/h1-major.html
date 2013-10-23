@@ -1,14 +1,7 @@
-{% comment %}
-	Loads an h1 major heading and makes sure the first word is grey (if more than one word)
-{% endcomment %}
+{% load rca_tags %}
 
 <h1 class="h1 major">
-	{% if self.title.split|length == 1 %}
-		{{ self.title }}
-	{% else %}
-		{% with self.title.split as titleword %}
-		    <span class="medium-grey">{{ titleword|slice:":1"|join:" " }}</span> 
-		    {{ titleword|slice:"1:"|join:" " }}
-		{% endwith %}
-	{% endif %}
+	{% for word in self.title|title_split %}
+    	<span class="{% cycle 'dark-grey' 'light-grey' 'charcoal' 'medium-grey' 'black' %}">{{ word }}</span>
+	{% endfor %}
 </h1>

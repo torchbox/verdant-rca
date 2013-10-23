@@ -22,9 +22,9 @@
                     <ul class="four-cols">
                         <li class="col first">
                             {% if self.profile_image %}
-                                {% image self.profile_image width-400 %}
+                                {% image self.profile_image width-300 %}
                             {% else %}
-                                default image chris to supply
+                                <img src="/static/rca/images/student-default-image.png" width="300">
                             {% endif %}
                         </li>
                         <li class="col">
@@ -82,8 +82,7 @@
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
                             <div class="row">
-                            {% include "rca/includes/modules/contact-button.html" %}
-                            {% include "rca/includes/modules/share-button.html" %}
+                                {% include "rca/includes/modules/share-button.html" %}
                             </div>
                         </li>
                         <li class="col col-9 last body-text-style">
@@ -100,11 +99,9 @@
                                     <h2 class="module-title">Degrees</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for degree in degrees %}
                                         {{ degree.degree }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -119,11 +116,9 @@
                                     <h2 class="module-title">Experience</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for experience in experiences %}
                                         {{ experience.experience }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -138,11 +133,9 @@
                                     <h2 class="module-title">Exhibitions</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for exhibition in exhibitions %}
                                         {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -184,10 +177,13 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% comment %}
+    If the student has some work, show related work for that student, otherwise
+    show related students
+    {% endcomment %}
+    {% if self.carousel_items.all|length > 0 %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudentsWork="true" %}
+    {% else %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% endif %}
 {% endblock %}
-
-<!-- To dos:
-- default profile image if one is not supplied
-- make tabs optional
-- share and add to contacts -->

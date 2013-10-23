@@ -23,7 +23,6 @@
  * Body text
  * Tabbed content
  * Profile
- * Event info
  * Half-width double item
  * Packery
  * Job summary
@@ -66,7 +65,7 @@
         bottom:@grid-gutter-width;
         top: auto;
     }
-    .bc1, .caption {
+    .hover-content .bc1, .caption {
         display: block;
         .transition(opacity 0.3s ease);
         opacity:0;
@@ -317,12 +316,9 @@
     .col.last {
         padding-right: @grid-gutter-width;
     }
-    .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .h7.space-large {
-        margin-top: 6em; /* attempt to align jobs on staff profile page */
+        margin-top: 5.5em; /* attempt to align jobs on staff profile page */
     }
 
     .dialogue {
@@ -330,31 +326,6 @@
     }
 }
 
-/**
- * Event info
- */
-.event-info {
-    .col-1 {
-        .column(9);
-    }
-    .col-2 {
-        .column(3);
-    }
-
-    .calendar-wrapper, .share-wrapper,  {
-        .column(1.5, @grid-gutter-width, 3);
-        border-top: none;
-    }
-
-    .dialogue {
-        width: 180px;
-    }
-    .button {
-        max-width: none;
-        margin: auto;
-    }
-
-}
 
 /** 
  *$Half-width double item
@@ -412,9 +383,6 @@
  */
 
 .job-summary {
-    .share-wrapper, .download-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .dialogue {
         width: 180px;
@@ -437,7 +405,7 @@
 
 .bodytext-image {
     &.small {
-        max-width: 50%;
+        max-width: 45%;
     }
     &.left {
         float: left;

@@ -15,12 +15,12 @@
                     {% endif %}
                         <a href="{% pageurl alumnipage %}">
                             {% if alumnipage.profile_image %}
-                                <div class="image">{% image alumnipage.profile_image width-400 %}</div>
+                                <div class="image">{% image alumnipage.profile_image width-200 %}</div>
                             {% endif %}
                             <div class="content">
                                 <h3 class="a3">{{ alumnipage.title }}</h3>
                                 {% if alumnipage.listing_intro %}
-                                    <p class="a4">{{ alumnipage.listing_intro }}}</p>
+                                    <p class="a4">{{ alumnipage.listing_intro }}</p>
                                 {% endif %}
                             </div>
                         </a>

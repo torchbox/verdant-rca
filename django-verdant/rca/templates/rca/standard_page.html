@@ -1,4 +1,5 @@
 {% extends "rca/base.html" %}
+{% load rich_text image_tags %}
 
 {% block body_class %}
     type-standard
@@ -9,9 +10,30 @@
     {% include "rca/includes/modules/strapline.html" %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-        {% include "rca/includes/modules/body-text.html" with showIntro="true" %}
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.body %}
         <section class="four">
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+                    {{ self.middle_column_body|richtext }}
+                </div>
+            {% endif %}
+            {% include "rca/includes/modules/downloads.html" %}
             {% include "rca/includes/modules/quotation.html" %}
+            {% with self.images.all as images %}
+                {% if images %}
+                    {% for image in images %}
+                        <figure>
+                            <div class="image">{% image image.image width-400 %}</div>
+                            <figcaption class="a4">
+                                {% for line in image.image.caption_lines %}
+                                    {{ line }}
+                                    {% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </figcaption>
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             <div class="single borders">
                 {% include "rca/includes/modules/share-button.html" %}
             </div>
@@ -21,5 +43,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}

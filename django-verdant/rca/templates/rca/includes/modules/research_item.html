@@ -1,0 +1,19 @@
+{% load pageurl image_tags %}
+
+<a href="{% pageurl research_item %}">
+    {% if research_item.feed_image %}
+        <div class="image">{% image research_item.feed_image width-300 %}</div>
+    {% endif %}
+    <div class="content">
+        <h3 class="h8">{{ research_item.title }}</h3>
+        {% with research_item.creator.all as creators %}
+            {% if creators %}
+                <p class="bc5">
+                    {% for creator in creators %}
+                        {% if creator.person %}{{ creator.person.title }}{% elif creator.manual_person_name %}{{ creator.manual_person_name }}{% endif %}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+        {% endwith %}
+    </div>
+</a>

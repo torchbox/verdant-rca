@@ -1,0 +1,38 @@
+{% extends "rca/base.html" %}
+{% load rca_tags rich_text %}
+
+
+{% block body_class %}
+    type-jobs-index
+{% endblock %}
+
+{% block content %}
+
+	{% include "rca/includes/modules/h1-major.html" %}
+
+	{% if self.intro %}
+		<div class="content bc3">{{ self.intro|richtext }}</div>
+	{% endif %}
+
+    <div id="listing">
+    	{% include "rca/includes/rca_now_listing.html" %}
+	</div>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showTags="true" %}
+{% endblock %}
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for rca_now_index set here so that it can be used by the script being called
+		var current_page = "{{ global_rca_now_index_url }}";
+	</script>
+	<script src="/static/rca/js/filters.js"></script>
+{% endblock %}
+
+<!-- TODOs
+	- filter of programme by school (or other filtering to be discussed)
+-->

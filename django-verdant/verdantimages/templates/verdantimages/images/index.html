@@ -6,7 +6,7 @@
     <script>
         $('#id_q').on('input', function() {
             clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(search, 50);
+            var wait = setTimeout(search, 200);
             $(this).data('timer', wait);
         });
         $('a.suggested-tag').click(function() {
@@ -16,8 +16,8 @@
         })
         function search () {
             $.ajax({
-                url: "{%url 'verdantimages_search_image' %}",
-                data: {q: "" + $('#id_q').val() + ""},
+                url: "{%url 'verdantimages_index' %}",
+                data: {q: $('#id_q').val()},
                 success: function(data, status) {
                     $('#image-results').html(data);
                 },
@@ -38,7 +38,7 @@
         </div>
     </header>
 
-    <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
+    <form class="search-bar full-width" action="{% url 'verdantimages_index' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}
@@ -54,26 +54,10 @@
             {% endif %}
         </ul>
     </form>
-    
 
     <div class="nice-padding">
-
         <div id="image-results">
-            {% if is_searching %}
-                {% include "verdantimages/images/search-results.html" %}
-            {% else %}
-                <h2>Latest added images</h2>
-                <ul class="listing horiz images">
-                    {% for image in images %}
-                        <li>
-                            <a href="{% url 'verdantimages_edit_image' image.id %}">
-                                <div class="image">{% image image fill-150x150 %}</div>
-                                <h3>{{ image.title|ellipsistrim:60 }}</h3>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
+            {% include "verdantimages/images/results.html" %}
         </div>
     </div>
 {% endblock %}

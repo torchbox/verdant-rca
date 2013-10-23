@@ -13,8 +13,8 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl rcanow %}">
-                            {% if rcanow.feature_image %}
-                                <div class="image">{% image rcanow.feature_image width-400 %}</div>
+                            {% if rcanow.feed_image %}
+                                <div class="image">{% image rcanow.feed_image width-300 %}</div>
                             {% endif %}
                             <div class="content">
                                 <h3 class="h8">{{ rcanow.title }}</h3>

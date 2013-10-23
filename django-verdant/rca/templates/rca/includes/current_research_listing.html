@@ -1,0 +1,38 @@
+{% if research_items %}
+    <section class="three-plus x-plus row module" data-pagination=".pagination">
+        <h2 class="module-title">Research</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for research_item in research_items %}
+                    {% comment %}The forloop counter just gives the index for the current set of reseults, and we need to know the overall
+                    index of the research item to know when to correctly apply the newrow class. This isn't available from the django
+                    paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
+                    start_index is 1 based not 0 based) gives the correct calculation. {% endcomment %}
+                    {% if forloop.counter0|add:research_items.start_index|add:"-1"|divisibleby:"4" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                            {% include "rca/includes/modules/research_item.html" %}
+                        </li>
+                {% endfor %}
+                {% if research_items.paginator.count > 8 %}
+                    <li class="load-more{% if research_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+    <ul class="pagination infinite">
+        <!--
+        {% if research_items.has_previous %}
+            <li class="previous"><a href="?page={{ research_items.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
+        {% endif %}
+        -->
+
+        {% if research_items.has_next %}
+            <li class="next"><a href="?page={{ research_items.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
+        {% endif %}
+    </ul>
+    
+{% endif %}

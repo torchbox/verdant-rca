@@ -145,7 +145,6 @@ $(function(){
     showHideDialogue();
     showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
     
-
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -246,6 +245,8 @@ $(function(){
     Harvey.attach(breakpoints.desktopSmall, {
         setup: function(){}, 
         on: function(){
+            /* Duplicate anything added to this function, into the ".lt-ie9" section below */
+
             /* Packery */
             $('.packery').imagesLoaded( function() {
                 var packery = $('.packery').packery({
@@ -259,63 +260,97 @@ $(function(){
         }
     });
 
+    /* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
+    $('.lt-ie9').each(function(){
+        /* Packery */
+        $('.packery').imagesLoaded( function() {
+            var packery = $('.packery').packery({
+                itemSelector: '.item',
+                stamp: ".stamp"
+            });
+        });
+    })
+
     /* x-plus functionality */
 
     $('.x-plus').each(function(){
         var $this = $(this);
-        var paginationContainer = $($this.data('pagination'));
+        var paginationContainer = $this.data('pagination');
         var loadmore = $('.load-more', $this);
         var loadmoreTarget = $('.load-more-target', $this);
         var itemContainer = $('.item-container', $this);
         var ul = $('> ul', itemContainer);
         var items = $('> li', ul);
         var step = 100
+        var hiddenClasses = 'hidden fade-in-before';
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
         var loadmoreIndex = items.index(loadmore);
-        var hidden = items.slice(loadmoreTargetIndex, loadmoreIndex).addClass('hidden fade-in-before');
+        var newItems = items.slice(loadmoreTargetIndex, loadmoreIndex);
+
+        var prepareNewItems = function(items){
+            items.addClass(hiddenClasses);
+        }
+
+        var showNewItems = function(){
+            itemContainer.css('height', itemContainer.height());
+            newItems.removeClass('hidden');
+            itemContainer.animate({height:ul.height()}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+            });
+
+            // Fade in each item one by one
+            var time = 0;
+            newItems.each(function(index){
+                var $item = $(this);
+                setTimeout( function(){ 
+                    $item.addClass('fade-in-after');
+                }, time);
+                time += step;
+            });
+        }
+
+        var hideNewItems = function(){
+            $this.removeClass('expanded');
+            itemContainer.removeAttr('style');
+            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+        }
+
+        // prepare the items already in the page (if non-inifinite-scroll)
+        prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
         loadmore.click(function(e){
             e.preventDefault();
             
-            if($this.data('pagination') && paginationContainer.length()){
-                $('<div></div>').load($('.next a', paginationContainer).attr('href') + " .x-plus ul", function(){
-                    loadmore.before($(this).find("li:not(.load-more)"));
-                    expandToFit(false);
-                });
+            if(paginationContainer && $(paginationContainer).length){
+                var nextLink = $('.next a', $(paginationContainer));
+                var nextLinkUrl = nextLink.attr('href');
+
+                // get next set of results
+                var nextPage = $('<html></html>').load(nextLinkUrl, function(){
+                    newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
+                    prepareNewItems(newItems);
+                    loadmore.before(newItems);
+                    
+                    // get next pagination link
+                    if($(paginationContainer + ' .next a', nextPage).length){
+                        nextLink.attr('href', $(paginationContainer + ' .next a', nextPage).attr('href'));
+                    }else{
+                        loadmore.remove();
+                    }
+
+                    showNewItems();
+                });                
+            }else if(!$this.hasClass('expanded')){
+                showNewItems();
+                $this.addClass('expanded');
             }else{
-                expandToFit(true);
+                hideNewItems();
             }
 
             return false;
         });
-
-        var expandToFit = function(animateHeight){
-            if(!$this.hasClass('expanded')){
-                $this.addClass('expanded');
-
-                if(animateHeight){
-                    itemContainer.css('height', itemContainer.height());
-                    hidden.removeClass('hidden');
-                    itemContainer.animate({height:ul.height()}, expansionAnimationSpeed);
-                }
-
-                var time = 0;
-                hidden.each(function(index){
-                    var $this = $(this);
-                    setTimeout( function(){ 
-                        $this.addClass('fade-in-after');
-                    }, time);
-                    time += step;
-                });
-            }else{
-                $this.removeClass('expanded');
-                itemContainer.removeAttr('style');
-                hidden.removeClass('fade-in-after').addClass('hidden');
-            }
-        }
-
     });
     
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
@@ -360,9 +395,19 @@ $(function(){
     /* Search filters */
     $('.filters').each(function(){
         $self = $(this);
+
+        function setLabel(option){
+            $('label[for=' + $(option).parent().data('id') + ']', $self).html($(option).html()).addClass('active');
+        }
+
         $('label', $self).click(function(){
             $(this).parent().toggleClass('expanded');
             $(this).parent().siblings().removeClass('expanded');
+        });
+
+        /* save original label val to data */
+        $('label', $self).each(function(){
+            $(this).data('original-label', $(this).html());
         });
 
         /* create popouts from existing select options */
@@ -370,28 +415,41 @@ $(function(){
             var options = $('option', $(this));
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
-            for(var i = 0; i < options.length; i++){
-                if(options[i].value){
-                    newOptions = newOptions + '<li data-val="' + options[i].value + '" class="'+ (options[i].selected ? "selected":"") +'">' + options[i].text + '</li>';
+            options.each(function(){
+                newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ ($(this).prop('selected') ? "selected":"") +'">' + $(this).html() + '</li>';
+            })
 
-                    /* if form already has items selected, replicate this */
-                    if(options[i].selected){
-                        $('.filters label[for=' + $(this).attr('id') + ']').html(options[i].text).addClass('active');
-                    }
-                }
-            }
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
+        });
+
+        /* if form already has items selected, replicate this */
+        $('.options li', $self).each(function(){
+            if($(this).hasClass('selected') && $(this).data('val')){
+                setLabel($(this));
+            }
         });
 
         /* Change label values when options are chosen */
         $('.options li', $self).on('click keydown', function(){
             $(this).siblings().removeClass('selected');
             $(this).addClass('selected');
-            $('.filters label[for=' + $(this).parent().data('id') + ']').html($(this).html()).addClass('active');
+            if($(this).data('val')){
+                setLabel($(this));
+            }else{
+                $('label[for=' + $(this).parent().data('id') + ']', $self).each(function(){
+                    $(this).html($(this).data('original-label')).removeClass('active');
+                });
+            }
             $('#' + $(this).parent().data('id')).val($(this).data('val'));
         });
+
+        $(document).on('click', function(e){
+            if(!$(e.target).parent().hasClass('filter')){
+                $('label', $self).parent().removeClass('expanded');
+            }
+        })
     });
  
     /* Google maps for contact page */

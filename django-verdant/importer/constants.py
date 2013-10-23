@@ -48,7 +48,23 @@ SCHOOLS = {
     'Fashion': 'schoolofmaterial',
     'Conservation': 'schoolofhumanities',
     u'RCA/V&A Conservation': 'schoolofhumanities',
-    }
+    
+    # extras for staff page
+    'School of Humanities': 'schoolofhumanities',
+    'School of Fine Art': 'schooloffineart',
+    'School of Material': 'schoolofmaterial',
+    'School of Materials': 'schoolofmaterial',
+    'School of Communication': 'schoolofcommunication',
+    'School of Design': 'schoolofdesign',
+    'School of Design for Production': 'schoolofdesign',
+    'School of DesignVisiting Tutor': 'schoolofdesign',
+    'School of Architecture': 'schoolofarchitecture',
+    'school of Architecture': 'schoolofarchitecture',
+    'Department of Goldsmithing, Silversmithing, Metalwork and Jewellery': 'schoolofmaterial',
+    'Department of Photography': 'schooloffineart',
+    'humanities-research@rca.ac.uk': 'schoolofhumanities',
+}
+
 
 PROGRAMMES = {
     u'Architecture': 'architecture',
@@ -90,7 +106,16 @@ PROGRAMMES = {
     u'Conservation': 'conservation',
     u'RCA/V&A Conservation': 'conservation',
     u'Communication Art & Design': 'communicationartdesign',
+    
+    # Extras for staff page
+    "History of Design (RCA)": "historyofdesign", 
+    "Department of Goldsmithing, Silversmithing, Metalwork & Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Goldsmithing, Silversmithing, Metalwork and Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Sculpture ProgrammeResearch Leader": "sculpture",
+    "School of Architecturearchitecture-research@rca.ac.uk": "architecture",
+    "Critical Writing in Art & Design": "criticalwritinginartdesign",
 }
+
 
 DEGREE_SUBJECTS = {
     'Animation': 'animation',

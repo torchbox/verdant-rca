@@ -1,0 +1,23 @@
+{% load pageurl %}
+{% if students or staff_page.supervised_student_other %}
+    <div class="divider"></div>
+        <ul class="three-nine-cols">
+            <li class="col col-3 first">
+                <h2 class="a2">Research students</h2>
+            </li>
+            <li class="col col-9 last">
+
+                {% if students %}
+                    {% for student in students %}
+                        <a href="{% pageurl student %}">
+                            {{ student.first_name }} {{ student.last_name }}{% if not forloop.last %},{% endif %}{% if forloop.last and staff_page.supervised_student_other %}, {% endif %}
+                        </a>
+                    {% endfor %}
+                {% endif %}
+                {% if staff_page.supervised_student_other %}
+                    {{ staff_page.supervised_student_other }}
+                {% endif %}
+            </li>
+        </ul>
+{% endif %}
+

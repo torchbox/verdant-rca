@@ -77,7 +77,7 @@ def search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
-            documents = Document.search(q)
+            documents = Document.search(q, prefetch_tags=True)
     else:
         form = SearchForm()
 

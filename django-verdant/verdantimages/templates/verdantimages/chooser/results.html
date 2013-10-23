@@ -1,0 +1,36 @@
+{% load image_tags ellipsistrim %}
+
+
+{% if images %}
+    {% if is_searching %}
+        <h2>{{ images.paginator.count }} match{{ images.paginator.count|pluralize:"es" }}</h2>
+    {% else %}
+        <h2>Latest images</h2>
+    {% endif %}
+    <ul class="listing horiz images chooser">
+        {% for image in images %}
+            <li>
+                <a class="image-choice" href="{% if will_select_format %}{% url 'verdantimages_chooser_select_format' image.id %}{% else %}{% url 'verdantimages_image_chosen' image.id %}{% endif %}">
+                    <div class="image">{% image image max-165x165 %}</div>
+                    <h3>{{ image.title|ellipsistrim:60 }}</h3>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
+        <ul>
+            <li class="prev">
+                {% if images.has_previous %}
+                    <a href="#" data-page="{{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                {% endif %}
+            </li>
+            <li class="next">
+                {% if images.has_next %}
+                    <a href="#" data-page="{{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+{% endif %}

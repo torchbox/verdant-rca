@@ -47,13 +47,15 @@
  * Index page intro
  * Contact
  * Strapline
+ * Pagination
+ * Forms
  */
 
 /**
  *$Carousel
  */
 
-/* TO DO: handle landscape / portrait images nicely */
+/* TODO: handle landscape / portrait images nicely */
 
 @carousel-image-height: 500px;
 
@@ -316,6 +318,7 @@
 }
 
 .single {
+    clear: both;
     .share-wrapper {
         margin: @spacing-one 0 0 0;
         width: 180px;
@@ -562,18 +565,16 @@
     ul{
         position:relative;
         -webkit-overflow-scrolling: touch;
-        padding-top:@spacing-one;
     }
     li{
         .column(7, @grid-gutter-width);
-        padding-left:74px;
-        min-height:100px;
+        min-height:120px;
         border-left:1px solid fade(@color-divider, 50%);
         
         &:before{
-            margin-left:-64px !important; /* importants necessary to undo .unlist() on this limited occasion */
             content:"" !important;
             display:inline-block;
+            padding-right:@grid-gutter-width;
             float:left;
             .sprite-load(-772px, -2200px, 54px, 43px);
         }
@@ -582,30 +583,23 @@
         }
     }
 
-    .load-more, .space {
+    .load-more{
         border-left:0;
         border-right:0;
-        height:100%;
-        margin-top:-@spacing-one;
         background-color:@color-white;
+        padding-top:0;
+        padding-bottom:0;
         padding-left:@grid-gutter-width;
-        padding-bottom:148px;
-        margin-bottom:-148px;
 
         &:before{
             display:none;
         }
 
         a{
-            position:absolute;
             height:132px; /* height and width are min-height of 100 + top/bottom padding of 16 as on UL above */
             width:132px;
         }
     }
-    &.expanded .load-more a{
-        margin-top:@grid-gutter-width;
-    }
-
     
     .h7, .a2, .bc4 {
         margin:0;
@@ -949,9 +943,13 @@
 
 .button-bar{
     .clearfix();  
+    li {
+        position:relative;
+    }
     a {
         display:block;
         border-bottom:1px solid white;
+        padding-right: 48px;
     }
     .icon-download:after{
         content:"";
@@ -960,8 +958,9 @@
         zoom:0.6;
         -moz-transform:scale(0.6);
         -moz-transform-origin: 0 0;
-        float:right;
-        margin:-10px 0;
+        position: absolute;
+        right: 16px;
+        bottom: 16px;
     }
 }
 
@@ -992,8 +991,17 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
+    .intro {
+        margin-top: @spacing-one;
+    }
+
+    p {
+        margin: 12px 0;
+    }
+
     a {
         color: @color-highlight-blue;
+        font-weight: bold;
         &:hover {
             text-decoration: underline;
         }
@@ -1026,6 +1034,7 @@
         line-height: @line-height-5;
         text-transform: none;
         font-weight: normal;
+        margin-top: @spacing-one;
     }
 
     /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h5, .h6, .h7;
@@ -1037,6 +1046,9 @@
         font-size: @font-size-22;
         line-height: @line-height-4;
         font-weight: normal;
+        padding-top: @spacing-one;
+        border-top: 1px solid @color-dark-grey;
+        margin-top: @spacing-two;
     }
 
     h3 {
@@ -1080,25 +1092,13 @@
         margin-top: -1em;
     }
     .space {
-        margin-top: @spacing-two;
+        margin-top: @spacing-onepointfive;
     }
 
     .divider {
         border-bottom: 1px solid @color-medium-grey;
         max-width: 100%;
         margin: @spacing-one @grid-gutter-width;
-    }
-
-    .share-wrapper, .contact-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        margin-top: @spacing-one * -1; /* sit flush against divider */
-        border-right: 1px solid @color-medium-grey;
-        min-width: 75px;
-    }
-
-    .share, .add-to-contacts {
-        margin: 0 auto;
     }
 
     .dialogue {
@@ -1187,6 +1187,7 @@
   
     li{
         margin-bottom:1px;
+        padding:0;
     }
 
     label{
@@ -1224,6 +1225,10 @@
         }
         &:hover:after{
             background-position:-53px -623px;
+        }
+
+        &.active{
+            color:@color-highlight-blue
         }
     }
 
@@ -1296,21 +1301,6 @@
     &:first-child {
         padding-top: 4px;
     }
-    .share-wrapper, .download-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        border-top: 1px solid @color-medium-grey;
-        min-width: 75px;
-        margin-bottom: @spacing-one;
-    }
-
-    .download-wrapper {
-        border-right: 1px solid @color-medium-grey;
-    }
-
-    .share, .download {
-        margin: 0 auto;
-    }
 
     .dialogue {
         bottom: @share-link-height + @spacing-one;
@@ -1331,6 +1321,9 @@
     .job-description.module {
         margin-top: 0;
     }
+    .button-bar {
+        margin: @spacing-one 0 @spacing-onepointfive 0;
+    }
 }
 
 /**
@@ -1338,12 +1331,12 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-one;
+    margin-top: @spacing-two;
     figcaption {
         display: block;
         width: 100%;
         text-align: right;
-        margin-top: @spacing-one;
+        margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
     &.small {
@@ -1390,18 +1383,19 @@
  * $Related projects
  */
 .related-projects {
-	h2 {
-		margin-bottom: 0;
-	}
-	p {
-		margin-top: 0;
-	}
+    h2 {
+        margin-bottom: 0;
+    }
+    p {
+        margin-top: 0;
+    }
 }
 
 /**
  * Index page intro
  */
 .index-intro {
+    margin-bottom: @spacing-one;
     p {
         display:inline;
     }
@@ -1434,8 +1428,118 @@
  * Strapline
  */
 
- .strapline {
-    border-bottom: 1px solid @color-dark-grey;
+.strapline {
     margin-bottom: @spacing-one;
-    padding-bottom: @spacing-one;
- }
+}
+
+
+/**
+ * Pagination
+ */
+.pagination{
+    &.infinite{
+        display:none;
+    }
+}
+
+
+/**
+ * Forms
+ */
+
+fieldset{
+    border:0;
+    border-bottom:1px solid @color-light-grey;
+    margin:0 0 @grid-gutter-width*2;
+    padding:0 0 @grid-gutter-width;
+}
+legend{
+    .h5;
+    padding:0 0 @grid-gutter-width;
+}
+
+label{
+    .a1;
+    display:block;
+    margin-bottom:@grid-gutter-width/2;
+}
+input, textarea, select{
+    width:100%;
+    border:0;
+    background-color:@color-pale-grey;
+    padding:@grid-gutter-width;
+    -webkit-appearance: none;
+    outline:none;
+}
+input[type=submit],input[type=reset],input[type=button],input[type=checkbox],input[type=radio]{
+    width:auto;
+}
+input[type=checkbox]{
+    -webkit-appearance: checkbox;
+}
+input[type=radio]{
+    -webkit-appearance: radio;
+}
+input[type=checkbox], input[type=radio]{
+    margin-right:@grid-gutter-width/2;
+}
+select{
+    .border-radius(0px);
+}
+.select:after{
+    .sprite-load(-53px, -1178px, 27px, 15px);
+    display:block;
+    content: ' ';
+    position: relative;
+    float:right;
+    margin:-3em 0 0 0;
+    background-color:@color-pale-grey;
+    border:1em solid @color-pale-grey;
+}
+input[type=submit],input[type=reset],input[type=button], button, .button{
+    .t0;
+    background-color:@color-highlight-blue;
+    color:@color-white;
+    padding:@grid-gutter-width @grid-gutter-width;
+    display:inline-block;
+
+    &:hover{
+        color:@color-white;
+        background-color:@color-pink;
+    }
+}
+form li{
+    padding-bottom:@grid-gutter-width;
+}
+form li.error{
+    input,textarea,select{
+        border:1px solid @color-pink;
+    }
+
+}
+form .help{
+    .a4;
+    margin:@grid-gutter-width/2 0 0 0;
+
+    + input,
+    + label{
+        margin-top:@grid-gutter-width/2;
+    }
+}
+form .divider{
+    margin-top:@grid-gutter-width;
+    padding-top:@grid-gutter-width;
+    border-top:1px solid @color-light-grey;
+}
+form .error-message{
+    color:@color-pink;
+    margin:@grid-gutter-width/2 0 0 0 ;
+}
+form .messages{
+    &.error h2, .errorlist{
+        color:@color-pink;
+    }
+}
+form .heading{
+    .a0;
+}

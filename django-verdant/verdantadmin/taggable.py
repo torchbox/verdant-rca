@@ -1,6 +1,8 @@
 from taggit.models import Tag
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count, Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 class TagSearchable(object):
     """
@@ -11,7 +13,7 @@ class TagSearchable(object):
     search_on_fields = ['title']
 
     @classmethod
-    def search(cls, q):
+    def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
         terms = q.split()
         if not terms:
             return cls.objects.none()
@@ -30,7 +32,21 @@ class TagSearchable(object):
             else:
                 search_query &= term_query
 
-        return cls.objects.filter(search_query).distinct().prefetch_related('tagged_items__tag')
+        results = cls.objects.filter(search_query).distinct()
+        if prefetch_tags:
+            results = results.prefetch_related('tagged_items__tag')
+
+        # if results_per_page is set, return a paginator
+        if results_per_page is not None:
+            paginator = Paginator(results, results_per_page)
+            try:
+                return paginator.page(page)
+            except PageNotAnInteger:
+                return paginator.page(1)
+            except EmptyPage:
+                return paginator.page(paginator.num_pages)
+        else:
+            return results
 
     def prefetched_tags(self):
         # a hack to do the equivalent of self.tags.all() but take advantage of the

@@ -5,7 +5,13 @@
         <div class="related-content-item">
             <a href="{% pageurl staff_member %}">
                 <figure class="staff">
-                    {% if staff_member.profile_image %}<div class="image">{% image staff_member.profile_image width-400 %}</div>{% endif %}
+                    <div class="image">
+                    {% if staff_member.profile_image %}
+                        {% image staff_member.profile_image width-180 %}
+                    {% else %}
+                        <img src="/static/rca/images/staff-default-image.png" width="180">
+                    {% endif %}
+                    </div>
                     <figcaption>{{ staff_member.first_name }}<span>{{ staff_member.last_name }}</span></figcaption>
                 </figure>
             </a>
