@@ -63,20 +63,18 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" %}
 {% endblock %}
 
 
 {% block extra_js %}
 	<script type="text/javascript">
-		//global var for current_research_page set here so that it can be used by the script being called
-		var current_research_page = "{{ global_current_research_url }}";
+		//global var for current_page set here so that it can be used by the script being called
+		var current_page = "{{ global_current_research_url }}";
 	</script>
-	<script src="/static/rca/js/current-research-listing.js"></script>
+	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
 
 <!-- TODO:
-- ads
-- infinite scroll
 - filter of programmes when school is selected (or other filtering to be discussed)
  -->

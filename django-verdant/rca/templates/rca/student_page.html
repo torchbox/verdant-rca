@@ -184,10 +184,17 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% comment %}
+    If the student has some work, show related work for that student, otherwise
+    show related students
+    {% endcomment %}
+    {% if self.carousel_items.all|length > 0 %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudentsWork="true" %}
+    {% else %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% endif %}
 {% endblock %}
 
 <!-- TODOs:
 - default profile image if one is not supplied
-- make tabs optional
 - share and add to contacts -->

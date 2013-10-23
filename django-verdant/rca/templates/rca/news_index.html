@@ -54,18 +54,17 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}
 
 {% block extra_js %}
 	<script type="text/javascript">
-		//global var for news_index set here so that it can be used by the script being called
-		var news_index = "{{ global_news_index }}";
+		//global var for current_page set here so that it can be used by the script being called
+		var current_page = "{{ global_news_index }}";
 	</script>
-	<script src="/static/rca/js/news-listing.js"></script>
+	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
 
 <!-- TODOs:
-	- manual ads
 	- filter of programme by school (or other filtering to be discussed)
  -->

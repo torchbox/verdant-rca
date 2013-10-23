@@ -51,8 +51,8 @@
         <section class="three-tab row module">
             <h2 class="module-title">Student info</h2>
 
-            <!--show tabs if there is more than 1 (javascript applies the correct links and active class for the first
-            tab as this is hard to do in the template)-->
+            <!--show tabs if there is more than 1 (javascript applies the correct links and active class for the
+            tabs as this is hard to do in the template)-->
             {% if self.tabbed_feature_count > 0 %}
                 <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
             {% endif %}  
@@ -189,5 +189,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showAds="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showRelatedLinks="true" %}
 {% endblock %}

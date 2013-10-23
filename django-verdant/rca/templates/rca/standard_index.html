@@ -35,7 +35,6 @@
                      	{% else %}
                      		<li>
                      	{% endif %}
-                     	{% comment %}{% cycle '<li>' '<li>' '<li>' '<li class="newrow"> <li> <li class="load-more-target">' %}{% endcomment %}
                      		{% if teaser.url %}
                      		<a href="{{ teaser.url }}">
                      		{% endif %}
@@ -75,5 +74,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}

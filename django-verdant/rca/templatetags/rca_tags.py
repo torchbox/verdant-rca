@@ -135,8 +135,23 @@ def jobs_listing(context):
     }
 
 @register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
-def students_related(context, programme="", exclude=None, count=4):
+def students_related(context, programme="", year="", exclude=None, count=4):
     students = StudentPage.objects.filter(programme=programme)
+    students = students.filter(degree_year=year)
+    if exclude:
+        students = students.exclude(id=exclude.id)
+    return {
+        'students': students[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+# Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
+@register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
+def students_related_work(context, year="", exclude=None, count=4):
+    students = StudentPage.objects.filter(degree_year=year)
+    students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
+    students=students.distinct()
+
     if exclude:
         students = students.exclude(id=exclude.id)
     return {
@@ -180,6 +195,23 @@ def sidebar_links(context, calling_page=None):
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/research_students_feed.html', takes_context=True)
+def research_students_feed(context, staff_page=None):
+    students = StudentPage.objects.filter(supervisor=staff_page)
+    return {
+        'students': students,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/research_students_list.html', takes_context=True)
+def research_students_list(context, staff_page=None):
+    students = StudentPage.objects.filter(supervisor=staff_page)
+    return {
+        'students': students,
+        'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 

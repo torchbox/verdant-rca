@@ -1684,12 +1684,10 @@ class StaffPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     def tabbed_feature_count(self):
-        count = 1 #profile tab will always show
+        count = 2 #info tab and research tab will always show
         if self.carousel_items.exists():
             count = count + 1
         if self.publications_exhibitions.exists():
-            count = count + 1
-        if len(ResearchItem.objects.filter(creator__person=self)) > 0: #matches the query for related research
             count = count + 1
         return count
 
@@ -1958,15 +1956,6 @@ RcaNowPage.promote_panels = [
 
 # == RCA Now index ==
 
-class RcaNowIndexRelatedLink(Orderable):
-    page = ParentalKey('rca.RcaNowIndex', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
-
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_text'),
-    ]
 
 class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
@@ -1975,7 +1964,6 @@ class RcaNowIndex(Page, SocialFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(RcaNowIndex, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 

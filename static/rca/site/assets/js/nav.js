@@ -1,22 +1,12 @@
 $(function(){
 
-	$(".mobile-menu-button").click(function(){
-		if($(".mobile-menu-wrapper").width() === 0){
-			$(".mobile-content-wrapper").width($(".mobile-content-wrapper").width() + "px");
-			$("body")
-				.css({
-					"width": "150%",
-					"overflow-x": "hidden"
-				})
-				.addClass("show-mobile-menu");
-		}else{
-			$("body").removeClass("show-mobile-menu");
-			setTimeout(function(){
-				$("body, .mobile-content-wrapper").removeAttr("style");
-			}, 1100);
-		}
-		return false;
+	/* configure left slideout menu toggle */
+	$(".mobile-menu-button").toggleClick(function(){
+		$("body").addClass("show-mobile-menu");
+	},function(){
+		$("body").removeClass("show-mobile-menu");
 	});
+
 
 	// copy the sidebar so that we can show it on the left in the mobile version
 	if(!$(".mobile-menu-wrapper > aside").length){
@@ -111,7 +101,6 @@ var desktopNav = {
 			}
 
 			function closeMenu(){
-				console.log('closing');
 				$self.addClass('changing').removeClass('hovered');
 
 				// reset or submenu
