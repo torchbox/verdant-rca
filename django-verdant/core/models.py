@@ -158,7 +158,7 @@ class Page(MP_Node, ClusterableModel):
             remaining_components = path_components[1:]
 
             try:
-                subpage = self.get_children().get(slug=child_slug, live=True)
+                subpage = self.get_children().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
 
@@ -166,7 +166,10 @@ class Page(MP_Node, ClusterableModel):
 
         else:
             # request is for this very page
-            return self.serve(request)
+            if self.live:
+                return self.serve(request)
+            else:
+                raise Http404
 
     def serve(self, request):
         return render(request, self.template, {
