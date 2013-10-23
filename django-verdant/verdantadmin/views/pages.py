@@ -166,6 +166,22 @@ def delete(request, page_id):
         'descendant_count': page.get_descendant_count()
     })
 
+def unpublish(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.POST:
+        parent_id = page.get_parent().id
+        page.live = False
+        page.save()
+        page.get_descendants().update(live=False)
+        messages.success(request, "Page '%s' unpublished." % page.title)
+        return redirect('verdantadmin_explore', parent_id)
+
+    return render(request, 'verdantadmin/pages/confirm_unpublish.html', {
+        'page': page,
+        'descendant_count': page.get_descendant_count(),
+    })
+
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
 

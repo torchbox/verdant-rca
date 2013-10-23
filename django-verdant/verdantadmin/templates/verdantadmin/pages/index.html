@@ -25,15 +25,21 @@
                             <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                {% if page.live %}
+                                    <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
+                                {% if parent_page.live %}<li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>{% endif %}
                             </ul>
                         </div>
                     {% endif %}
 
                     {{ parent_page.title }}
                 </h2>
+                {% if not parent_page.live %}
+                    <p>This page is currently unpublished.</p>
+                {% endif %}
             </div>
             <div class="right col3">
                 <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add page here</a>
@@ -68,11 +74,16 @@
                     <tr>
                        
                         <td class="title">
-                            <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
+                            <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a> {% if not page.live %}(unpublished){% endif %}</h2>
                             <ul class="actions">
-                                <li><a href="{{ page.url }}" target="_blank">View</a></li>
+                                {% if page.live %}
+                                    <li><a href="{{ page.url }}" target="_blank">View</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
+                                {% if page.live %}
+                                    <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
                             </ul>
                         </td>
