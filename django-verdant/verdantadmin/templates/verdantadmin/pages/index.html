@@ -25,12 +25,16 @@
                             <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                {% if page.live %}
+                                {% if parent_page.live %}
                                     <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'verdantadmin_pages_preview' parent_page.id %}" target="_blank" class="shortcut">View draft</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
-                                {% if parent_page.live %}<li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>{% endif %}
+                                {% if parent_page.live %}
+                                    <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     {% endif %}
@@ -78,6 +82,8 @@
                             <ul class="actions">
                                 {% if page.live %}
                                     <li><a href="{{ page.url }}" target="_blank">View</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'verdantadmin_pages_preview' page.id %}" target="_blank">View draft</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>

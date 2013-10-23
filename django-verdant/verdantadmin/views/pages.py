@@ -175,6 +175,10 @@ def delete(request, page_id):
         'descendant_count': page.get_descendant_count()
     })
 
+def preview(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+    return page.specific.serve(request)
+
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
