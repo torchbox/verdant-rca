@@ -24,7 +24,7 @@
                             {% if self.profile_image %}
                                 {% image self.profile_image width-300 %}
                             {% else %}
-                                default image chris to supply
+                                <img src="/static/rca/images/student-default-image.png" width="300">
                             {% endif %}
                         </li>
                         <li class="col">
@@ -82,8 +82,7 @@
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
                             <div class="row">
-                            {% include "rca/includes/modules/contact-button.html" %}
-                            {% include "rca/includes/modules/share-button.html" %}
+                                {% include "rca/includes/modules/share-button.html" %}
                             </div>
                         </li>
                         <li class="col col-9 last body-text-style">
