@@ -5,6 +5,7 @@ from datetime import date
 from itertools import chain
 from django.db.models import Min
 from core.models import get_navigation_menu_items
+from verdantdocs.models import Document
 
 register = template.Library()
 
@@ -212,6 +213,15 @@ def research_students_list(context, staff_page=None):
     return {
         'students': students,
         'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+#queries all docs with a tag of 'jobapplication' - these are used for equal opportunites monitoring form etc which appear on every job page
+@register.inclusion_tag('rca/tags/job_documents.html', takes_context=True)
+def job_documents(context):
+    documents = Document.objects.filter(tags__name = "jobapplication")
+    return {
+        'documents': documents,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
