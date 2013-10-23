@@ -16,11 +16,16 @@
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
             
-            {% if self.head_of_programme.profile_image %}
-                <a href="{% pageurl self.head_of_programme %}">
-                    <div class="image">{% image self.head_of_programme.profile_image width-200 %}</div>
-                </a>
-            {% endif %}
+            <a href="{% pageurl self.head_of_programme %}">
+                <div class="image">
+                    {% if self.head_of_programme.profile_image %}
+                        {% image self.head_of_programme.profile_image width-200 %}
+                    {% else %}
+                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                    {% endif %}
+                </div>
+            </a>
+                    
             <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_programme.title }}</strong>
                 {{ self.head_of_programme_statement|richtext }}
@@ -191,7 +196,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showRelatedLinks="true" %}
 {% endblock %}
-
-
-<!-- TODOs:
-- default staff image if no profile picture for head of programme and staff feed   -->
