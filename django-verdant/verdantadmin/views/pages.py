@@ -111,6 +111,12 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+
+            if request.POST.get('action-publish'):
+                page.live = True
+            else:
+                page.live = False
+
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
 
             messages.success(request, "Page '%s' created." % page.title)
