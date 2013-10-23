@@ -15,11 +15,15 @@
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Head of school</a></h2>
             
-            {% if self.head_of_school.profile_image %}
-                <a href="{% pageurl self.head_of_school %}">
-                    <div class="image">{% image self.head_of_school.profile_image width-200 %}</div>
-                </a>
-            {% endif %}
+            <a href="{% pageurl self.head_of_school %}">
+                <div class="image">
+                    {% if self.head_of_school.profile_image %}
+                        {% image self.head_of_school.profile_image width-200 %}
+                    {% else %}
+                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                    {% endif %}
+                </div>
+            </a>
             <div class="content bc1{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_school.title }}</strong>
                 {{ self.head_of_school_statement|richtext }}
@@ -38,12 +42,17 @@
     {% if self.head_of_research %}
         <section class="head-of-programme row module">
             <h2 class="module-title"><a href="{% pageurl self.head_of_research %}">Head of Research</a></h2>
-            
-            {% if self.head_of_research.profile_image %}
-                <a href="{% pageurl self.head_of_research %}">
-                    <div class="image">{% image self.head_of_research.profile_image width-200 %}</div>
-                </a>
-            {% endif %}
+
+            <a href="{% pageurl self.head_of_research %}">
+                <div class="image">
+                    {% if self.head_of_research.profile_image %}
+                        {% image self.head_of_research.profile_image width-200 %}
+                    {% else %}
+                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                    {% endif %}
+                </div>
+            </a>
+
             <div class="content bc1{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_research.title }}</strong>
                 {{ self.head_of_research_statement|richtext }}
@@ -70,6 +79,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showRelatedLinks="true" %}
 {% endblock %}
-
-<!-- TODOs:
-- default staff image if no profile picture for head of research and head of school   -->
