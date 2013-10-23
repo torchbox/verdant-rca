@@ -1961,6 +1961,44 @@ class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        area = request.GET.get('area')
+
+        rca_now_items = RcaNowPage.objects.all()
+
+        if programme and programme != '':
+            rca_now_items = rca_now_items.filter(programme=programme)
+        if school and school != '':
+            rca_now_items = rca_now_items.filter(school=school)
+        if area and area != '':
+            rca_now_items = rca_now_items.filter(area=area)
+
+        rca_now_items = rca_now_items.order_by('-date')
+
+        page = request.GET.get('page')
+        paginator = Paginator(rca_now_items, 10) # Show 10 rca now items per page
+        try:
+            rca_now_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            rca_now_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            rca_now_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/rca_now_listing.html", {
+                'self': self,
+                'rca_now_items': rca_now_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'rca_now_items': rca_now_items
+            })
+
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
