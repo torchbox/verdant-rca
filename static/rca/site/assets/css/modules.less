@@ -990,7 +990,6 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
-    
     .intro {
         margin-top: @spacing-one;
     }
@@ -1312,21 +1311,6 @@
     &:first-child {
         padding-top: 4px;
     }
-    .share-wrapper, .download-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        border-top: 1px solid @color-medium-grey;
-        min-width: 75px;
-        margin-bottom: @spacing-one;
-    }
-
-    .download-wrapper {
-        border-right: 1px solid @color-medium-grey;
-    }
-
-    .share, .download {
-        margin: 0 auto;
-    }
 
     .dialogue {
         bottom: @share-link-height + @spacing-one;
@@ -1346,6 +1330,9 @@
     }
     .job-description.module {
         margin-top: 0;
+    }
+    .button-bar {
+        margin: @spacing-one 0 @spacing-onepointfive 0;
     }
 }
 
