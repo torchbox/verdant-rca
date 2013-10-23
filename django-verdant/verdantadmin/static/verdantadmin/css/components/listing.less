@@ -74,7 +74,7 @@ ul.listing{
     }
     
     .bulk{
-        .column(1);
+        .table-column(1);
         padding-right:0;
 
         label{
@@ -94,7 +94,7 @@ ul.listing{
     }
     
     .title{
-        .column(4);
+        .table-column(4);
 
         h2{
             margin:0;
@@ -115,10 +115,10 @@ ul.listing{
     }
 
     .type{
-        .column(2);
+        .table-column(2);
     }
     .status{
-        .column(2);
+        .table-column(2);
     }
 
     ul{
@@ -285,7 +285,8 @@ ul.listing{
 }
 
 @media screen and (min-width: @breakpoint-desktop-small){
-    .listing .bulk{
+    table.listing td:first-child,
+    table.listing th:first-child{
         .push-padding(@grid-content-indent);
     }
 }
