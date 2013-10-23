@@ -15,11 +15,18 @@
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <input type="submit" value="Save" class="button" />
+                        {% if page.live %}{# currently no option to save a currently-live page as draft #}
+                            <input type="submit" value="Save" class="button" />
+                        {% else %}
+                            <input type="submit" value="Save as draft" class="button" />
+                        {% endif %}
                         <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
                             <li><a href="{{ page.url }}" class="shortcut">View</a></li>
                             <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
+                            {% if not page.live %}
+                                <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
+                            {% endif %}
                         </ul>
                     </div>
                 </li>

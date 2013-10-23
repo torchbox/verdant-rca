@@ -144,6 +144,9 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
+            if request.POST.get('action-publish'):
+                page.live = True
+
             form.save()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
