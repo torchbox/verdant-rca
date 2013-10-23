@@ -50,6 +50,14 @@ $(function(){
         $(this).closest('.dropdown').toggleClass('open');
     });
 
+    /* close all dropdowns on body clicks */
+    $(document).on('click', function(e){
+        var relTarg = e.relatedTarget || e.toElement;
+        if(!$(relTarg).hasClass('dropdown-toggle')){
+            $('.dropdown').removeClass('open');
+        }
+    })
+
     /* Bulk-selection */
     $(document).on('click', 'thead .bulk', function(){
         $(this).closest('table').find('tbody .bulk input').each(function(){
