@@ -35,7 +35,7 @@
             </div>
         </div>
     </header>
-    <form class="search-bar" action="{% url 'verdantdocs_search' %}" method="get">
+    <form class="search-bar full-width" action="{% url 'verdantdocs_search' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}
@@ -56,7 +56,7 @@
             {% if is_searching %}
                 {% include "verdantdocs/documents/search-results.html" %}
             {% else %}
-                <p>Latest added documents</p>
+                <h2>Latest added documents</h2>
                 <ul class="listing">
                     {% for doc in documents %}
                         <li>

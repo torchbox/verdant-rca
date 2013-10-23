@@ -35,7 +35,7 @@ legend{
 }
 
 label{
-    font-weight:300;
+    font-weight:normal;
     display:block;
     padding:0 0 0.5em 0;
     line-height:1em;
@@ -56,7 +56,7 @@ input, textarea, select, .richtext, .tagit{
     background-color:white;
     -webkit-appearance: none;
     color:@color-text-input;
-    font-size:1em;
+    font-size:1.1em;
     outline:none;
 
     &:hover{
@@ -182,7 +182,7 @@ a.button{
 /* Other text */
 .help, .error-message{
     font-size:0.85em;
-    font-weight:300;
+    font-weight:normal;
     margin:0 0 0.5em 0;
 }
 .help{
@@ -221,9 +221,9 @@ li.focused > .help{
     color:@color-red;
     clear:both;
 }
-.error input, .error textarea, .error select, .error .tagit{
+.error input[type=text], input[type=email], input[type=tel], .error textarea, .error select, .error .tagit{
     border-color:@color-red;
-    background-color:lighten(@color-red, 45%);
+    background-color:@color-input-error-bg;
 }
 
 /* field sizing */
@@ -376,7 +376,7 @@ ul.inline li:first-child, li.inline:first-child{
 
 .image-chooser {
     .unchosen, .chosen{
-        height:85px;
+        height:95px;
 
         &:before{
             content:"o"; 
@@ -448,13 +448,16 @@ ul.tagit li.tagit-choice-editable{
 
 /* search bars  (search integrated into header area) */
 .search-bar{
-    .nice-padding();
     margin-top:-2em;
     padding-top:1em;
     padding-bottom:1em;
-    background-color:@color-header-bg;
-    border-bottom:1px solid @color-grey-lighter;
     margin-bottom:2em;
+
+    &.full-width{
+        .nice-padding();
+        background-color:@color-header-bg;
+        border-bottom:1px solid @color-grey-lighter;
+    }
 
     .fields{
         position:relative;
@@ -480,7 +483,7 @@ ul.tagit li.tagit-choice-editable{
         right:0;
         top:0;
         input{
-            padding:1.35em 2em;
+            padding:1.55em 2em;
         }
     }
     .popular-tags{

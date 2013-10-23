@@ -1,0 +1,48 @@
+{% load pageurl image_tags %}
+
+{% if news %}
+    <section class="one-plus x-plus module" data-pagination=".pagination">
+        <div class="item-container">
+            <ul class="row">
+                {% for news_item in news %}
+                    {% comment %}The forloop counter just gives the index for the current set of reseults, and we need to know the overall
+                    index of the news item to know when to correctly apply the newrow class. This isn't available from the django
+                    paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
+                    start_index is 1 based not 0 based) gives the correct calculation. {% endcomment %}
+                    {% if forloop.counter0|add:news.start_index|add:"-1"|divisibleby:"2" %}
+                        <li class="newrow">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                        <a href="{% pageurl news_item %}">
+                            {% if news_item.feed_image %}
+                                <div class="image">{% image news_item.feed_image width-600 %}</div>
+                            {% endif %}
+                            <div class="content">
+                                {% if news_item.listing_intro %}
+                                <h3 class="h5">{{ news_item.listing_intro }}</h3>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>   
+                {% endfor %}
+                {% if news.paginator.count > 10 %}
+                    <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+    <ul class="pagination infinite">
+        <!--
+        {% if news.has_previous %}
+            <li class="previous"><a href="?page={{ news.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
+        {% endif %}
+        -->
+
+        {% if news.has_next %}
+            <li class="next"><a href="?page={{ news.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
+        {% endif %}
+    </ul>
+
+{% endif %}

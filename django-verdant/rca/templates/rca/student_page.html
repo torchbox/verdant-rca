@@ -22,7 +22,7 @@
                     <ul class="four-cols">
                         <li class="col first">
                             {% if self.profile_image %}
-                                {% image self.profile_image width-400 %}
+                                {% image self.profile_image width-300 %}
                             {% else %}
                                 default image chris to supply
                             {% endif %}
@@ -184,10 +184,17 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% comment %}
+    If the student has some work, show related work for that student, otherwise
+    show related students
+    {% endcomment %}
+    {% if self.carousel_items.all|length > 0 %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudentsWork="true" %}
+    {% else %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% endif %}
 {% endblock %}
 
-<!-- To dos:
+<!-- TODOs:
 - default profile image if one is not supplied
-- make tabs optional
 - share and add to contacts -->

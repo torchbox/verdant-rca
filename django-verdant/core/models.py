@@ -106,6 +106,14 @@ class Page(MP_Node):
     # level rather than db, since there is no explicit parent relation in the db)
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
 
+    # RCA-specific fields
+    # TODO: decide on the best way of implementing site-specific but site-global fields,
+    # and decide which (if any) of these are more generally useful and should be kept in Verdant core
+    seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
+    show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    # End RCA-specific fields
+
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
         if not self.id and not self.content_type_id:
@@ -286,7 +294,7 @@ class Page(MP_Node):
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
 
 
-def get_navigation_menu_items():
+def get_navigation_menu_items(depth=2):
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
     # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
@@ -294,15 +302,15 @@ def get_navigation_menu_items():
     if navigable_content_type_ids:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
+            WHERE numchild > 0 OR content_type_id IN %s OR depth = %s
             ORDER BY path
-        """, [tuple(navigable_content_type_ids)])
+        """, [tuple(navigable_content_type_ids), depth])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR depth = 2
+            WHERE numchild > 0 OR depth = %s
             ORDER BY path
-        """)
+        """, [depth])
 
     # Turn this into a tree structure:
     #     tree_node = (page, children)

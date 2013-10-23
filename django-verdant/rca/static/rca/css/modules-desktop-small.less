@@ -23,7 +23,6 @@
  * Body text
  * Tabbed content
  * Profile
- * Event info
  * Half-width double item
  * Packery
  * Job summary
@@ -66,7 +65,7 @@
         bottom:@grid-gutter-width;
         top: auto;
     }
-    .bc1, .caption {
+    .hover-content .bc1, .caption {
         display: block;
         .transition(opacity 0.3s ease);
         opacity:0;
@@ -330,31 +329,6 @@
     }
 }
 
-/**
- * Event info
- */
-.event-info {
-    .col-1 {
-        .column(9);
-    }
-    .col-2 {
-        .column(3);
-    }
-
-    .calendar-wrapper, .share-wrapper,  {
-        .column(1.5, @grid-gutter-width, 3);
-        border-top: none;
-    }
-
-    .dialogue {
-        width: 180px;
-    }
-    .button {
-        max-width: none;
-        margin: auto;
-    }
-
-}
 
 /** 
  *$Half-width double item
@@ -437,7 +411,7 @@
 
 .bodytext-image {
     &.small {
-        max-width: 50%;
+        max-width: 45%;
     }
     &.left {
         float: left;
@@ -462,7 +436,7 @@
  */
 
 .quotation {
-    margin: @spacing-three * 4 0;
+    margin: @spacing-one 0;
 }
 
 /**

@@ -1,0 +1,43 @@
+{% load image_tags ellipsistrim %}
+
+{% if images %}
+    {% if is_searching %}
+        <h2>{{ images.paginator.count }} match{{ images.paginator.count|pluralize:"es" }}</h2>
+    {% else %}
+        <h2>Latest images</h2>
+    {% endif %}
+    <ul class="listing horiz images">
+        {% for image in images %}
+            <li>
+                <a class="image-choice" href="{% url 'verdantimages_edit_image' image.id %}">
+                    <div class="image">{% image image max-165x165 %}</div>
+                    <h3>{{ image.title|ellipsistrim:60 }}</h3>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="pagination">
+        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
+        <ul>
+            <li class="prev">
+                {% if images.has_previous %}
+                    {% if is_searching %}
+                        <a href="{% url 'verdantimages_index' %}?q={{ search_query|urlencode }}&amp;p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                    {% else %}
+                        <a href="{% url 'verdantimages_index' %}?p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+            <li class="next">
+                {% if images.has_next %}
+                    {% if is_searching %}
+                        <a href="{% url 'verdantimages_index' %}?q={{ search_query|urlencode }}&amp;p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                    {% else %}
+                        <a href="{% url 'verdantimages_index' %}?p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                    {% endif %}
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+{% endif %}

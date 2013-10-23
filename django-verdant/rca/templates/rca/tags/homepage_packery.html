@@ -1,0 +1,124 @@
+{% load pageurl image_tags rca_tags %}
+
+
+{% if packery %}
+    <section class="packery module row">
+        <ul>
+            {% for item in packery %}
+                {% if item|content_type = 'newsitem' %}
+                    <li class="item double">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                    <p class="a2">News</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'staffpage' %}
+                    <li class="item single">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image fill-80x80 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                    <p class="a2">Staff</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'studentpage' %}
+                    <li class="item full">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                {% with item.carousel_items.all|first as carouselitem %}
+                                    <div class="image">{% image carouselitem.image width-944 %}</div>
+                                {% endwith %}
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                    <p class="a2">Work</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'rcanowpage' %}
+                    <li class="item double">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                    {% if item.author %}
+                                        <p class="a0">{{ item.author }}</p>
+                                    {% endif %}
+                                    <p class="a2">RCA Now</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'standardpage' %}
+                    <li class="item three-quarters">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image width-624 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">Fiona is a readt wasn't until I was looking for ideas for a final-year project and my mum suggested that I update my deign for a chicken coop that I er in Design Interactions. She is a partner in the design partnership Dunn</p>
+                                    <p class="a2">TODO</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'researchitem' %}
+                    <li class="item three-quarters">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image width-624 %}</div>
+                                <div class="content">
+                                    <h3 class="h6">{{ item.title }}</h3>
+                                    <p class="bc4">Fiona is a readt wasn't until I was looking for ideas for a final-year project and my mum suggested that I update my deign for a chicken coop that I er in Design Interactions. She is a partner in the design partnership Dunn</p>
+                                    <p class="a2">Research</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% elif item|content_type = 'alumnipage' %}
+                    <li class="item single">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                <div class="image">{% image item.specific.feed_image fill-80x80 %}</div>
+                                <div class="content">
+                                    <p class="bc4">{{ item.listing_intro }}</p>
+                                    <p class="a0">{{ item.title }}</p>
+                                    <p class="a1">{{ item.get_programme_display }} Graduate, {{ item.year }}</p>
+                                    <p class="a2">Alumni</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% else %}
+                    <!-- tweets-->
+                    <li class="item double">
+                        <div class="inner">
+                            <a href="#">
+                               <div class="content">
+                                    <h3 class="h7 highlight-blue">@RCAevents</h3>
+                                    <p class="bc4">This will be the tweet that appears on the page, pulled from Twitter API periodically </p>
+                                    <p class="a2">15 mins ago from @rcavisualcomm</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            <li class="stamp load-more"><a href="#">+</a></li>
+        </ul>
+    </section>
+{% endif %}

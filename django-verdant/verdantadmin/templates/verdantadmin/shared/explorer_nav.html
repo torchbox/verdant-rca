@@ -1,7 +1,7 @@
 {% load explorer_nav %}
 
 {% for page, children in nodes %}
-    <li>
+    <li {% if children %}class="has-children"{% endif %}>
         <a href="{% url 'verdantadmin_explore' page.id %}" class="icon icon-folder-inverse">{{ page.title }}</a>
         {% if children %}
             <div class="children icon icon-arrow-right"></div>

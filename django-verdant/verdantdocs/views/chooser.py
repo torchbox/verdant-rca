@@ -15,7 +15,7 @@ def chooser(request):
         searchform = SearchForm(request.GET)
         if searchform.is_valid():
             q = searchform.cleaned_data['q']
-            documents = Document.search(q)
+            documents = Document.search(q, prefetch_tags=True)
         return render(request, "verdantdocs/chooser/search_results.html", {'documents': documents})
     else:
         searchform = SearchForm()

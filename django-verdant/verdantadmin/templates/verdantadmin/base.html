@@ -1,101 +1,45 @@
-<!doctype html>
-{% load compress %}
+{% extends "verdantadmin/skeleton.html" %}
 {% load explorer_nav %}
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <title>Verdant</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
-
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
-    {% compress css %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/core.less" type="text/less" />
-    {% endcompress %}
-
-    {% compress css %}
-        {% comment %}
-            Per-page CSS is compressed separately so that the global stuff doesn't get re-downloaded each time 
-        {% endcomment %}
-        {% block extra_css %}{% endblock %}
-    {% endcompress %}
-</head>
-<body class="{% block bodyclass %}{% endblock %}">
-    <!--[if lt IE 7]>
-        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
-    <![endif]-->
-
-    <div class="wrapper">
-        <div id="nav-toggle" data-afteropen="Collapse">Menu</div>
-        <div class="nav-wrapper">
-            <div class="inner">
-                <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
-                <nav class="nav-main">
-                    <ul>
-                        <li><a href="#" class="icon icon-doc-empty-inverse dl-trigger">Pages</a></li>
-                        <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
-                        <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
-                        <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
+{% block furniture %}
+    <div id="nav-toggle" data-afteropen="Collapse" class="icon icon-verdant text-replace">Menu</div>
+    <div class="nav-wrapper">
+        <div class="inner">
+            <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
+            <nav class="nav-main">
+                <ul>
+                    <li><a href="#" class="icon icon-doc-empty-inverse dl-trigger">Explorer</a></li>
+                    <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
+                    <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
+                    <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
+                    {% comment %}
+                        Removed until functionality exists/works as expected
                         <li><a href="" class="icon icon-user">Users</a></li>
                         <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
-                    </ul>
-                </nav>
-            </div>
-                
-           
-            <nav class="explorer">
-                <ul class="dl-menu">
-                    {% explorer_nav %}
+                    {% endcomment %}
                 </ul>
             </nav>
         </div>
-
-        <div class="content-wrapper">
-            <div class="content">
-                
-                {% if messages %}
-                    <div class="messages">
-                        <ul>
-                            {% for message in messages %}
-                                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                {% endif %}
-
-                {% block content %}{% endblock %}
-            </div>
-        </div>
+            
+        <nav class="explorer">
+            <ul class="dl-menu">
+                {% explorer_nav %}
+            </ul>
+        </nav>
     </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    {% compress js %}
-        {% comment %}
-            Core JS includes (for inclusion on all pages) to be specified here
-        {% endcomment %}
+    <div class="content-wrapper">
+        <div class="content">
+            {% if messages %}
+                <div class="messages">
+                    <ul>
+                        {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-ui-1.10.3.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.autosize.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-modal.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-tab.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.dlmenu.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/core.js"></script>
-    {% endcompress %}
-
-    {% compress js %}
-        {% comment %}
-            Per-page JS is compressed separately so that the global stuff doesn't get re-downloaded each time 
-        {% endcomment %}
-        {% block extra_js %}{% endblock %}
-    {% endcompress %}
-</body>
-</html>
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

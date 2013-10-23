@@ -13,8 +13,9 @@ html{
 }
 
 body{
+    -webkit-font-smoothing: antialiased; /* Do not remove! */
     font-family:Open Sans,Arial,sans-serif;
-    font-size:85%;
+    font-size:80%;
     line-height:1.5em;
     color:@color-text-base;
     overflow-x: hidden;
@@ -37,7 +38,11 @@ h1{
         color:@color-grey-dark;
     }
 }
-
+h2{
+    font-size:1.4em;
+    font-family:Open Sans;
+    font-weight:300;
+}
 a{
     color:@color-link;
     text-decoration:none;
@@ -82,7 +87,7 @@ img{
 }  
     .logo{
         display:block;
-        margin:1em auto;
+        margin:2em auto;
         text-align:center;
         text-decoration:none;
         color:white;
@@ -103,10 +108,19 @@ img{
     }
 
     #nav-toggle{
+        .push(0.5);
+        .box-shadow(0px 0px 10px 5px rgba(255, 255, 255, 0.5));
         cursor:pointer;
         position:fixed;
-        left:0px;
         background: @color-grey-dark;
+        width:40px;
+        opacity:0.8;
+
+        &:before{
+            font-size:30px;
+            color:white;
+            line-height:40px;
+        }       
     }
 
     .nav-main{
@@ -138,7 +152,8 @@ img{
             color: white;
             padding: 1em 0.8em;
             position:relative;
-            font-size:0.95em;
+            font-size:1em;
+            font-weight:600;
            
             &:hover{
                 opacity:1;
@@ -164,6 +179,7 @@ img{
 }
     .content{
         .row();
+        padding-bottom:3em;
     }
 
 /* positioning and setup for sliding items */
@@ -182,12 +198,18 @@ body.nav-open .content-wrapper{
 
     position:fixed;
 }
+body.nav-open #nav-toggle{
+    left:80%;
+    &:before{
+        content:"z";
+    }
+}
 
 
 header{
     .nice-padding();
-    padding-top:2em;
-    padding-bottom:2em;
+    padding-top:5em;
+    padding-bottom:1em;
     background-color:@color-header-bg;
     border-bottom:1px solid @color-grey-lighter;
     margin-bottom:2em;
@@ -249,6 +271,7 @@ footer, .logo{
 .content-wrapper,
 .nav-wrapper,
 .nav-main,
+#nav-toggle,
 footer,
 .logo{
     .transition(all 0.2s ease); /* TODO: ensure that nav-wrapper can't be seen to be gradually expanding to fill height of screen, by removing unnecessary transitions */
@@ -256,6 +279,7 @@ footer,
 a{
     .transition(opacity 0.2s ease);
 }
+
 
 @media screen and (min-width: @breakpoint-mobile){
     .col1{
@@ -349,7 +373,11 @@ a{
     body.nav-open .nav-main{
         width:@menu-width;
     }
-
+    header{
+        padding-top:2em;
+        padding-bottom:2em;
+        .nice-padding();
+    }
     footer{
         width:80%;
         margin-left:40px;

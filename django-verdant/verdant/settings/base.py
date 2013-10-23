@@ -103,7 +103,6 @@ SECRET_KEY = 'ncbi!(%ae=!*2ififuzlfq@=5*opoakdn5g%m9g^++c6@jm^r)'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -145,12 +144,14 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'south',
-    'devserver',
     'compressor',
     'debug_toolbar',
+    'template_timings_panel',
     'treebeard',
     'taggit',
     'django_embedly',
+    'cluster',
+    'gunicorn',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -173,6 +174,19 @@ INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
 }
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
+)
 
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (

@@ -1,0 +1,32 @@
+{% load pageurl %}
+    
+{% if pages or calling_page.related_links.all|length %}
+    <div class="related expanded">
+        {% if pages %}
+            <h2>In this section</h2>
+        {% endif %}
+            <div class="wrapper">
+            <!-- <h3 class="dark">In this section</h3> -->
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        
+            {% with calling_page.related_links.all as related_links %}
+                {% if related_links %}
+                    <h3>See also</h3>
+                    <ul class="extra-links">
+                    {% for link in related_links %}
+                        {% if link.link and link.link_text %}
+                            <li><a href="{% pageurl link.link %}">{{ link.link_text }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endif %}

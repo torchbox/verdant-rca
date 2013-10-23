@@ -4,3 +4,4 @@
 /django-verdant/static
 /django-verdant/media
 /django-verdant/verdant/settings/local.py
+/static/rca/site/assets/css/*.css

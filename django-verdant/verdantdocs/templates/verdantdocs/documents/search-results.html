@@ -1,15 +1,18 @@
-<h3>{{ documents|length }} matches</h3>
+<h2>{{ documents|length }} match{{ documents|pluralize:"es" }}</h2>
 <ul class="listing">
     {% for doc in documents %}
         <li>
             <a class="document-choice" href="{% url 'verdantdocs_index' %}">
-                {{ doc.title }}
+                <h3>{{ doc.title }}</h3>
             </a>
-            {% with doc.prefetched_tags as tags %}
-                {% if tags %}
-                    <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
-                {% endif %}
-            {% endwith %}
+            {% comment %}
+                Don't think it's that beneficial to list tags here. it clutters listing too
+                {% with doc.prefetched_tags as tags %}
+                    {% if tags %}
+                        <p>Tags: {% for tag in tags %}{{ tag.name }} {% endfor %}</p>
+                    {% endif %}
+                {% endwith %}
+            {% endcomment %}
         </li>
     {% endfor %}
 </ul>

@@ -1,0 +1,9 @@
+{% with self.documents.all as documents %}
+	{% if documents %}
+		{% for document in documents %}
+			<ul class="button-bar">
+            	<li><a href="{{ document.document.url }}" class="button icon icon-download">{{ document.document_name }}</a></li>
+        	</ul>
+        {% endfor %}
+	{% endif %}
+{% endwith %}

@@ -34,6 +34,7 @@ from importer.import_utils import (
         statement_extract,
         )
 from importer.constants import DEGREE_SUBJECTS, SCHOOLS, PROGRAMMES, PROGRAMME_SPECIALISMS
+from bs4 import BeautifulSoup
 
 PATH = 'importer/export_2012_2_pretty.xml'
 IMAGE_PATH = 'importer/show_images/'
@@ -73,11 +74,10 @@ def cv_handle(parent, elemname, model, page, **kwargs):
     errors = []
     if elem is not None and elem.text is not None:
         # first clear all existing ones
-        model.objects.filter(page=page).delete()
+        if save:
+            model.objects.filter(page=page).delete()
 
-        h = html2text.HTML2Text()
-        h.body_width = 0
-        for entry in h.handle(elem.text).split(';'):
+        for entry in BeautifulSoup(elem.text, 'html.parser').text.split(';'):
             text = entry.strip()
             if length:
                 text, error = check_length(text, length)
@@ -178,7 +178,7 @@ def doimport(**kwargs):
                 degree_subject = degree_subject[:-1]
             sp.degree_subject = DEGREE_SUBJECTS[degree_subject]
             degree_qualification, sp_errs['deg_qual'] = text_from_elem(metadata, 'degree', length=255)
-            sp.degree_qualification = degree_qualification
+            sp.degree_qualification = degree_qualification.lower()
             # metadata contains first and last names in separate fields
             sp.first_name, sp_errs['first_name'] = text_from_elem(metadata, 'firstname', length=255)
             sp.last_name, sp_errs['last_name'] = text_from_elem(metadata, 'surname', length=255)
@@ -215,16 +215,6 @@ def doimport(**kwargs):
                     colpage = StudentPageWorkCollaborator(page=sp, name=name)
                     colpage.save()
 
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # TODO work_despritpion is the same as statement
-            # profile image = optional
-            # remove project title field
-
-
-
             # handle the cv fields
             cv = s.find('cv')
 
@@ -236,6 +226,9 @@ def doimport(**kwargs):
                     cv, 'experience', StudentPageExperience, sp, length=255, save=save)
             sp_errs['awards'] = cv_handle(
                     cv, 'awards', StudentPageAwards, sp, length=255, fieldname='award', save=save)
+            if cv.find('sponsors') is not None:
+                sp_errs['sponsors'] = cv_handle(
+                        cv, 'sponsors', StudentPageWorkSponsor, sp, length=255, fieldname='name', save=save)
             # currently the model doesn't have publications or conferences
             #sp_errs['publications'] = cv_handle(
             #        cv, 'publications', StudentPagePublications, sp, length=255)
@@ -297,7 +290,10 @@ def doimport(**kwargs):
                     theimage.title, imageerrors['title'] = text_from_elem(metadata, 'title', length=255)
                     theimage.creator, imageerrors['creator'] = text_from_elem(metadata, 'creator', length=255)
                     theimage.medium, imageerrors['medium'] = text_from_elem(metadata, 'media', length=255)
-                    theimage.photographer, imageerrors['photographer'] = text_from_elem(metadata, 'photographer', length=255)
+                    photographer, imageerrors['photographer'] = text_from_elem(metadata, 'photographer', length=255)
+                    if '&copy;' in photographer:
+                        photographer = photographer.replace('&copy;', '').strip()
+                    theimage.photographer = photographer
                     theimage.permissions, imageerrors['permissions'] = text_from_elem(metadata, 'rights', length=255)
 
                     caption, imageerrors['caption'] = text_from_elem(metadata, 'caption', length=255, textify=True)

@@ -19,7 +19,6 @@ max z-index: unknown;
     -webkit-perspective-origin: 50% 200%;
     -moz-perspective-origin: 50% 200%;
     perspective-origin: 50% 200%;
-
     ul {
         background: @color-grey-dark;
         padding: 0;
@@ -46,7 +45,9 @@ max z-index: unknown;
         display: block;
         position: relative;
         outline: none;
-        
+        white-space: nowrap;
+        text-overflow:ellipsis;
+        overflow:hidden;
 
         &:before{
             opacity:0.5;
@@ -57,6 +58,10 @@ max z-index: unknown;
             background:@color-teal;
             color:white;
         }
+    }
+
+    .has-children a{
+        padding-right:5em;
     }
 
 

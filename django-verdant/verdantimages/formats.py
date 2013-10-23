@@ -37,7 +37,6 @@ class Format(object):
         )
 
 
-
 FORMATS = []
 FORMATS_BY_NAME = {}
 
