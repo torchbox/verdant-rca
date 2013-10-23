@@ -14,12 +14,7 @@
 		<div class="content bc3">{{ self.intro|richtext }}</div>
 	{% endif %}
 
-    <div id="listing">
-    	{% comment %}
-    	{% include "rca/includes/events_listing.html" %}
-    	{% endcomment %}
-	</div>
-
+    {% jobs_listing %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
