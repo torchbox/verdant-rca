@@ -727,7 +727,7 @@ nav.dl-menuwrapper{
     color: @color-white;
     h2, h3 {
         margin: 0;
-        padding: @spacing-half;
+        padding: 10px @spacing-half;
         .t2();
         background-color: lighten(@color-black, 60%);
     }
@@ -747,9 +747,9 @@ nav.dl-menuwrapper{
     }
     li {
         .h7();
-        padding: 0 @spacing-half;
+        padding: 0 10px;
         a {
-            padding: @spacing-half 0;
+            padding: 10px 0;
             display: block;
             color: @color-white;
             border-bottom: 1px solid @color-light-grey;
@@ -850,7 +850,7 @@ nav.dl-menuwrapper{
         .transition(background-color 0.3s ease);
         cursor:pointer;
         margin: 0;
-        padding: @spacing-half;
+        padding: @spacing-half 10px;
         .t2;
         background-color: @color-dark-grey; /* fallback for ie8 */
         background-color: fade(@color-dark-grey, 20%);
@@ -881,7 +881,7 @@ nav.dl-menuwrapper{
         margin: 0;
         border-bottom: 1px solid @color-black;
         padding: @spacing-one 0;
-        margin: 0 @spacing-half;
+        margin: 0 10px;
         &:last-child {
             border: none;
         }
@@ -931,9 +931,10 @@ div.related-content-item {
 footer,
 footer a {
     color: @color-white;
-    &:hover {
-        color: lighten(@color-highlight-blue, 30%);
-    }
+}
+
+footer a:hover {
+    color: lighten(@color-highlight-blue, 30%);
 }
 
 div.submenu-block {
