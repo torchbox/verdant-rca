@@ -99,11 +99,9 @@
                                     <h2 class="module-title">Degrees</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for degree in degrees %}
                                         {{ degree.degree }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -118,11 +116,9 @@
                                     <h2 class="module-title">Experience</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for experience in experiences %}
                                         {{ experience.experience }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -137,11 +133,9 @@
                                     <h2 class="module-title">Exhibitions</h2>
                                 </li>
                                 <li class="col col-9 last body-text-style">
-                                    <ul>
                                     {% for exhibition in exhibitions %}
                                         {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
-                                </ul>
                                 </li>
                             </ul>
                         {% endif %}
@@ -193,7 +187,3 @@
         {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
     {% endif %}
 {% endblock %}
-
-<!-- TODOs:
-- default profile image if one is not supplied
-- share and add to contacts -->
