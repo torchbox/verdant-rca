@@ -106,6 +106,7 @@ class Page(MP_Node, ClusterableModel):
     # TODO: enforce uniqueness on slug field per parent (will have to be done at the Django
     # level rather than db, since there is no explicit parent relation in the db)
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
+    live = models.BooleanField(default=True, editable=False)
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -157,7 +158,7 @@ class Page(MP_Node, ClusterableModel):
             remaining_components = path_components[1:]
 
             try:
-                subpage = self.get_children().get(slug=child_slug)
+                subpage = self.get_children().get(slug=child_slug, live=True)
             except Page.DoesNotExist:
                 raise Http404
 
