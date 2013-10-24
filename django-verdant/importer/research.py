@@ -2,8 +2,7 @@ from importer.import_utils import richtext_from_elem, text_from_elem, make_slug,
 from importer.data.staffdata import staff_data
 from importer import constants
 from django.utils.dateparse import parse_date
-from django.core.files import File
-from rca.models import ResearchItem, StaffIndex, CurrentResearchPage, RcaImage
+from rca.models import ResearchItem, StaffIndex, CurrentResearchPage
 from core.models import Page
 import os
 import httplib2
@@ -36,51 +35,6 @@ WORK_TYPES_CHOICES = {
 }
 
 
-VIDEO_TYPES = [
-    'video/mp4',
-    'video/ogg',
-    'video/quicktime',
-]
-
-AUDIO_TYPES = [
-    'audio/ogg',
-    'audio/mp4',
-]
-
-IMAGE_TYPES = [
-    'image/png',
-    'image/jpeg',
-    'image/gif',
-    'image/jpg',
-]
-
-TEXT_TYPES = [
-    'text/plain',
-]
-
-PROGRAM_TYPES = [
-    'text/x-pl1',
-    'text/x-java',
-    'text/x-c',
-    'text/x-c++',
-]
-
-DOC_TYPES = [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword',
-    'application/x-zip',
-    'text/html',
-]
-
-UNHANDLED_TYPES = [
-    'application/octet-stream',
-    'image/tiff',
-]
-
-INTERESTING_TYPES = IMAGE_TYPES
-
-
 class ResearchImporter(object):
     def __init__(self, staff_index, research_index, **kwargs):
         self.staff_index = staff_index
@@ -88,108 +42,18 @@ class ResearchImporter(object):
         self.cache_directory = kwargs.get("cache_directory", "importer/data/research/")
         self.save = kwargs.get("save", True)
         self.research_cache_directory = self.cache_directory + "research/"
-        self.file_cache_directory = self.cache_directory + "files/"
         self.http = httplib2.Http()
 
         # Stats
         self.total_staff = 0
         self.ignored_staff = 0
         self.total_researchitems = 0
-        self.total_documents = 0
-        self.total_file_size = 0
 
         # Create cache directories
         try:
             os.makedirs(self.research_cache_directory)
         except OSError: # Directory alredy exists
             pass
-
-        try:
-            os.makedirs(self.file_cache_directory)
-        except OSError: # Directory alredy exists
-            pass
-
-    def import_image_from_file(self, docid, thefile):
-        # Get an RcaImage object
-        try:
-            image = RcaImage.objects.get(eprint_docid=docid)
-        except RcaImage.DoesNotExist:
-            image = RcaImage(eprint_docid=docid)
-
-        # Set the file
-        image.file = File(thefile)
-
-        # Save
-        if self.save:
-            image.save()
-
-        return image
-
-    def download_file(self, url, filename):
-        status, response = self.http.request(url)
-        if status["status"] == "200":
-            f = open(filename, "w")
-            f.write(response)
-            f.close()
-            return True
-        else:
-            return False
-
-    def import_file(self, thefile):
-        self.total_file_size += int(thefile["filesize"])
-
-        # Get file info
-        file_uri = thefile["uri"]
-        file_fileid = thefile["fileid"]
-
-        filename = self.file_cache_directory + str(file_fileid)
-        try:
-            f = open(filename, "r")
-        except IOError:
-            if self.download_file(file_uri, filename):
-                f = open(filename, "r")
-            else:
-                print "Unable to download file " + file_fileid
-                return None
-
-        return f
-
-    def import_document(self, researchitem, document):
-        self.total_documents += 1
-
-        # Ignore password protected files
-        if document["security"] == "staffonly":
-            return
-
-        # Ignore thumbnails
-        if "relation" in document:
-            if "isVersionOf" in document["relation"][0]["type"]:
-                return
-
-        # Get basic info
-        document_docid = document["docid"]
-        document_mime_type = document["mime_type"]
-
-        # Check if document is interesting
-        if document_mime_type in INTERESTING_TYPES:
-            print "Importing file " + str(document_docid)
-            
-            # Import file (theres always one)
-            document_file = self.import_file(document["files"][0])
-
-            # Check that the file imported correctly
-            if document_file is None:
-                return
-
-            # Check if this document is an image
-            if document_mime_type in IMAGE_TYPES:
-                # Import image
-                image = self.import_image_from_file(document_docid, document_file)
-
-                # Attach to research item carousel
-                if self.save:
-                    ResearchItemCarouselItem.objects.get_or_create(page=researchitem, image=image)
-
 
     def import_researchitem(self, staffpage, researchitem):
         self.total_researchitems += 1
@@ -241,11 +105,6 @@ class ResearchImporter(object):
 
             # Link to staff page
             ResearchItemCreator.objects.get_or_create(page=researchitempage, person=staffpage)
-
-        # Documents
-        if "documents" in researchitem:
-            for document in researchitem["documents"]:
-                self.import_document(researchitem, document)
 
     def download_staff_research(self, username, filename):
         url = "http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=" % {
