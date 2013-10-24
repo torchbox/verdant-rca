@@ -288,6 +288,16 @@ class ChildFormsetTest(TestCase):
         self.assertTrue(BandMember.objects.filter(name='George Harrison').exists())
         self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
 
+class SerializeTest(TestCase):
+    def test_serialize(self):
+        beatles = Band(name='The Beatles', members=[
+            BandMember(name='John Lennon'),
+            BandMember(name='Paul McCartney'),
+        ])
+
+        expected = {'pk': None, 'albums': [], 'name': u'The Beatles', 'members': [{'pk': None, 'name': u'John Lennon', 'band': None}, {'pk': None, 'name': u'Paul McCartney', 'band': None}]}
+        self.assertEqual(expected, beatles.serializable_data())
+
 class ClusterFormTest(TestCase):
     def test_cluster_form(self):
         class BandForm(ClusterForm):

@@ -1,4 +1,25 @@
 from django.db import models
+from django.utils.encoding import is_protected_type
+
+import json
+
+
+def get_serializable_data_for_fields(model):
+    obj = {'pk': model._get_pk_val()}
+
+    for field in model._meta.fields:
+        if field.serialize:
+            if field.rel is None:
+                value = field._get_val_from_obj(model)
+                if is_protected_type(value):
+                    obj[field.name] = value
+                else:
+                    obj[field.name] = field.value_to_string(model)
+            else:
+                value = getattr(model, field.get_attname())
+                obj[field.name] = value
+
+    return obj
 
 
 class ClusterableModel(models.Model):
@@ -57,6 +78,28 @@ class ClusterableModel(models.Model):
 
         for relation in relations_to_commit:
             getattr(self, relation).commit()
+
+    def serializable_data(self):
+        obj = get_serializable_data_for_fields(self)
+
+        try:
+            child_relations = self._meta.child_relations
+        except AttributeError:
+            child_relations = []
+
+        for rel in child_relations:
+            rel_name = rel.get_accessor_name()
+            children = getattr(self, rel_name).all()
+
+            if hasattr(rel.model, 'serializable_data'):
+                obj[rel_name] = [child.serializable_data() for child in children]
+            else:
+                obj[rel_name] = [get_serializable_data_for_fields(child) for child in children]
+
+        return obj
+
+    def to_json(self):
+        return json.dumps(self.serializable_data())
 
     class Meta:
         abstract = True
