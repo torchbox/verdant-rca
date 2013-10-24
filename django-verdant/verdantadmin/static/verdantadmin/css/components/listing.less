@@ -103,7 +103,7 @@ ul.listing{
     }
     
     .title{
-        .table-column(4);
+        .table-column(5);
 
         h2{
             margin:0;
@@ -124,10 +124,10 @@ ul.listing{
     }
 
     .type{
-        .table-column(2);
+        .table-column(1);
     }
     .status{
-        .table-column(2);
+        .table-column(1);
     }
 
     .actions{
@@ -192,6 +192,11 @@ ul.listing{
 
     table .no-results-message{
         .push-padding(@grid-content-indent);
+    }
+
+
+    .inactive h2{
+        opacity:0.5;
     }
 }
 
