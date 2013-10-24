@@ -71,6 +71,7 @@ class ClusterTest(TestCase):
             BandMember(name='Paul McCartney'),
         ])
         self.assertEqual(2, beatles.members.count())
+        self.assertEqual(beatles, beatles.members.all()[0].band)
 
     def test_can_only_commit_on_saved_parent(self):
         beatles = Band(name='The Beatles', members=[
