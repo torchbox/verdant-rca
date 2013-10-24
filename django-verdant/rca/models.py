@@ -1208,11 +1208,13 @@ class ReviewPage(Page, SocialFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
+    author = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
 
 ReviewPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
+    FieldPanel('author'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
