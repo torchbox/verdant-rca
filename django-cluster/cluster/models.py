@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.fields import FieldDoesNotExist
 from django.utils.encoding import is_protected_type
 
 import json
@@ -20,6 +21,26 @@ def get_serializable_data_for_fields(model):
                 obj[field.name] = value
 
     return obj
+
+def model_from_serializable_data(model, data):
+    kwargs = {'pk': data['pk']}
+    for field_name, field_value in data.iteritems():
+        try:
+            field = model._meta.get_field(field_name)
+        except FieldDoesNotExist:
+            continue
+
+        if field.rel and isinstance(field.rel, models.ManyToManyRel):
+            raise Exception('m2m relations not supported yet')
+        elif field.rel and isinstance(field.rel, models.ManyToOneRel):
+            if field_value is None:
+                kwargs[field.attname] = None
+            else:
+                kwargs[field.attname] = field.rel.to._meta.get_field(field.rel.field_name).to_python(field_value)
+        else:
+            kwargs[field.name] = field.to_python(field_value)
+
+    return model(**kwargs)
 
 
 class ClusterableModel(models.Model):
@@ -100,6 +121,35 @@ class ClusterableModel(models.Model):
 
     def to_json(self):
         return json.dumps(self.serializable_data())
+
+    @classmethod
+    def from_serializable_data(cls, data):
+        obj = model_from_serializable_data(cls, data)
+
+        try:
+            child_relations = cls._meta.child_relations
+        except AttributeError:
+            child_relations = []
+
+        for rel in child_relations:
+            rel_name = rel.get_accessor_name()
+            try:
+                child_data_list = data[rel_name]
+            except KeyError:
+                continue
+
+            if hasattr(rel.model, 'from_serializable_data'):
+                children = [rel.model.from_serializable_data(child_data) for child_data in child_data_list]
+            else:
+                children = [model_from_serializable_data(rel.model, child_data) for child_data in child_data_list]
+
+            setattr(obj, rel_name, children)
+
+        return obj
+
+    @classmethod
+    def from_json(cls, json_data):
+        return cls.from_serializable_data(json.loads(json_data))
 
     class Meta:
         abstract = True

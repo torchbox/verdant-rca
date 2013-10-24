@@ -298,6 +298,28 @@ class SerializeTest(TestCase):
         expected = {'pk': None, 'albums': [], 'name': u'The Beatles', 'members': [{'pk': None, 'name': u'John Lennon', 'band': None}, {'pk': None, 'name': u'Paul McCartney', 'band': None}]}
         self.assertEqual(expected, beatles.serializable_data())
 
+    def test_deserialize(self):
+        beatles = Band.from_serializable_data({
+            'pk': 9,
+            'albums': [],
+            'name': u'The Beatles',
+            'members': [
+                {'pk': None, 'name': u'John Lennon', 'band': None},
+                {'pk': None, 'name': u'Paul McCartney', 'band': None},
+            ]
+        })
+        self.assertEqual(9, beatles.id)
+        self.assertEqual('The Beatles', beatles.name)
+        self.assertEqual(2, beatles.members.count())
+        self.assertEqual(BandMember, beatles.members.all()[0].__class__)
+
+    def test_deserialize_json(self):
+        beatles = Band.from_json('{"pk": 9, "albums": [], "name": "The Beatles", "members": [{"pk": null, "name": "John Lennon", "band": null}, {"pk": null, "name": "Paul McCartney", "band": null}]}')
+        self.assertEqual(9, beatles.id)
+        self.assertEqual('The Beatles', beatles.name)
+        self.assertEqual(2, beatles.members.count())
+        self.assertEqual(BandMember, beatles.members.all()[0].__class__)
+
 class ClusterFormTest(TestCase):
     def test_cluster_form(self):
         class BandForm(ClusterForm):
