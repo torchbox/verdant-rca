@@ -140,7 +140,11 @@ class Page(MP_Node, ClusterableModel):
         # the ContentType.objects manager keeps a cache, so this should potentially
         # avoid a database lookup over doing self.content_type. I think.
         content_type = ContentType.objects.get_for_id(self.content_type_id)
-        return content_type.get_object_for_this_type(id=self.id)
+        if isinstance(self, content_type.model_class()):
+            # self is already the an instance of the most specific class
+            return self
+        else:
+            return content_type.get_object_for_this_type(id=self.id)
 
     @property
     def specific_class(self):
@@ -173,6 +177,13 @@ class Page(MP_Node, ClusterableModel):
 
     def save_revision(self):
         self.revisions.create(content_json=self.to_json())
+
+    def get_latest_revision(self):
+        try:
+            revision = self.revisions.order_by('-created_at')[0]
+        except IndexError:
+            return self.specific
+        return self.specific_class.from_json(revision.content_json)
 
     def serve(self, request):
         return render(request, self.template, {

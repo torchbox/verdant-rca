@@ -23,7 +23,12 @@ def get_serializable_data_for_fields(model):
     return obj
 
 def model_from_serializable_data(model, data):
-    kwargs = {'pk': data['pk']}
+    pk_field = model._meta.pk
+    # If model is a child via multitable inheritance, use parent's pk
+    while pk_field.rel and pk_field.rel.parent_link:
+        pk_field = pk_field.rel.to._meta.pk
+
+    kwargs = {pk_field.attname: data['pk']}
     for field_name, field_value in data.iteritems():
         try:
             field = model._meta.get_field(field_name)

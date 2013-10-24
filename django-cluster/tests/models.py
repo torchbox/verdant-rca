@@ -31,3 +31,13 @@ class Album(models.Model):
 
     class Meta:
         ordering = ['sort_order']
+
+
+class Place(ClusterableModel):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+class Restaurant(Place):
+    serves_hot_dogs = models.BooleanField()

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Band, BandMember
+from .models import Band, BandMember, Restaurant
 from cluster.forms import transientmodelformset_factory, childformset_factory, ClusterForm
 from django.forms import Textarea, CharField
 from django.db import IntegrityError
@@ -320,6 +320,10 @@ class SerializeTest(TestCase):
         self.assertEqual('The Beatles', beatles.name)
         self.assertEqual(2, beatles.members.count())
         self.assertEqual(BandMember, beatles.members.all()[0].__class__)
+
+    def test_deserialize_with_multi_table_inheritance(self):
+        fatduck = Restaurant.from_json('{"pk": 42, "name": "The Fat Duck", "serves_hot_dogs": false}')
+        self.assertEqual(42, fatduck.id)
 
 class ClusterFormTest(TestCase):
     def test_cluster_form(self):

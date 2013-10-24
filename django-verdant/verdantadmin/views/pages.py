@@ -137,7 +137,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 
 def edit(request, page_id):
-    page = get_object_or_404(Page, id=page_id).specific
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
@@ -178,8 +178,8 @@ def delete(request, page_id):
     })
 
 def preview(request, page_id):
-    page = get_object_or_404(Page, id=page_id)
-    return page.specific.serve(request)
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    return page.serve(request)
 
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
