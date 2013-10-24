@@ -325,6 +325,10 @@ class SerializeTest(TestCase):
         fatduck = Restaurant.from_json('{"pk": 42, "name": "The Fat Duck", "serves_hot_dogs": false}')
         self.assertEqual(42, fatduck.id)
 
+        data = fatduck.serializable_data()
+        self.assertEqual(42, data['pk'])
+        self.assertEqual("The Fat Duck", data['name'])
+
 class ClusterFormTest(TestCase):
     def test_cluster_form(self):
         class BandForm(ClusterForm):

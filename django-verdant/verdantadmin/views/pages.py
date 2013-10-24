@@ -145,11 +145,22 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            if request.POST.get('action-publish'):
-                page.live = True
+            is_publishing = request.POST.get('action-publish')
 
-            form.save()
+            if is_publishing:
+                page.live = True
+                form.save()
+            else:
+                # not publishing the page
+                if page.live:
+                    # To avoid overwriting the live version, we only save the page
+                    # to the revisions table
+                    form.save(commit=False)
+                else:
+                    form.save()
+
             page.save_revision()
+
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:

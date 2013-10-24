@@ -5,20 +5,27 @@ from django.utils.encoding import is_protected_type
 import json
 
 
+def get_field_value(field, model):
+    if field.rel is None:
+        value = field._get_val_from_obj(model)
+        if is_protected_type(value):
+            return value
+        else:
+            return field.value_to_string(model)
+    else:
+        return getattr(model, field.get_attname())
+
 def get_serializable_data_for_fields(model):
-    obj = {'pk': model._get_pk_val()}
+    pk_field = model._meta.pk
+    # If model is a child via multitable inheritance, use parent's pk
+    while pk_field.rel and pk_field.rel.parent_link:
+        pk_field = pk_field.rel.to._meta.pk
+
+    obj = {'pk': get_field_value(pk_field, model)}
 
     for field in model._meta.fields:
         if field.serialize:
-            if field.rel is None:
-                value = field._get_val_from_obj(model)
-                if is_protected_type(value):
-                    obj[field.name] = value
-                else:
-                    obj[field.name] = field.value_to_string(model)
-            else:
-                value = getattr(model, field.get_attname())
-                obj[field.name] = value
+            obj[field.name] = get_field_value(field, model)
 
     return obj
 
