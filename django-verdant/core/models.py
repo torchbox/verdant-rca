@@ -171,6 +171,9 @@ class Page(MP_Node, ClusterableModel):
             else:
                 raise Http404
 
+    def save_revision(self):
+        self.revisions.create(content_json=self.to_json())
+
     def serve(self, request):
         return render(request, self.template, {
             'self': self
@@ -360,3 +363,9 @@ class Orderable(models.Model):
     class Meta:
         abstract = True
         ordering = ['sort_order']
+
+
+class PageRevision(models.Model):
+    page = models.ForeignKey('Page', related_name='revisions')
+    created_at = models.DateTimeField(auto_now_add=True)
+    content_json = models.TextField()

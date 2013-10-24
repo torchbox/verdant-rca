@@ -118,6 +118,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 page.live = False
 
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
+            page.save_revision()
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -148,6 +149,7 @@ def edit(request, page_id):
                 page.live = True
 
             form.save()
+            page.save_revision()
             messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
