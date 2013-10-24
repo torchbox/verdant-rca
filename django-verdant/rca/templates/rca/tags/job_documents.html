@@ -1,0 +1,7 @@
+{% if documents %}
+	{% for document in documents %}
+		<ul>
+			<li><a href="{{ document.url }}">{{ document.title }}</a></li>
+		</ul>
+	{% endfor %}
+{% endif %}

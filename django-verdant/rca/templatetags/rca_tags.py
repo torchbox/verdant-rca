@@ -5,6 +5,7 @@ from datetime import date
 from itertools import chain
 from django.db.models import Min
 from core.models import get_navigation_menu_items
+from verdantdocs.models import Document
 
 register = template.Library()
 
@@ -103,6 +104,9 @@ def research_related(context, programme="", person="", school="", exclude=None):
     return {
         'research_items': research_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'person': person,
+        'programme': programme,
+        'school': school
     }
 
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
@@ -215,6 +219,15 @@ def research_students_list(context, staff_page=None):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+#queries all docs with a tag of 'jobapplication' - these are used for equal opportunites monitoring form etc which appear on every job page
+@register.inclusion_tag('rca/tags/job_documents.html', takes_context=True)
+def job_documents(context):
+    documents = Document.objects.filter(tags__name = "jobapplication")
+    return {
+        'documents': documents,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
 @register.filter
 def content_type(value):
     return value.__class__.__name__.lower()
@@ -230,8 +243,8 @@ def title_split(value):
 
 
 @register.inclusion_tag('rca/tags/explorer_nav.html')
-def menu(current_page=None):
-    nodes = get_navigation_menu_items(depth=4)
+def menu():
+    nodes = get_navigation_menu_items(depth=6)[0][1]  # don't show the homepage
     return {
         'nodes': nodes,
     }

@@ -48,6 +48,7 @@
  * Contact
  * Strapline
  * Pagination
+ * Forms
  */
 
 /**
@@ -990,7 +991,6 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
-    
     .intro {
         margin-top: @spacing-one;
     }
@@ -1092,25 +1092,13 @@
         margin-top: -1em;
     }
     .space {
-        margin-top: @spacing-two;
+        margin-top: @spacing-onepointfive;
     }
 
     .divider {
         border-bottom: 1px solid @color-medium-grey;
         max-width: 100%;
         margin: @spacing-one @grid-gutter-width;
-    }
-
-    .share-wrapper, .contact-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        margin-top: @spacing-one * -1; /* sit flush against divider */
-        border-right: 1px solid @color-medium-grey;
-        min-width: 75px;
-    }
-
-    .share, .add-to-contacts {
-        margin: 0 auto;
     }
 
     .dialogue {
@@ -1199,6 +1187,7 @@
   
     li{
         margin-bottom:1px;
+        padding:0;
     }
 
     label{
@@ -1312,21 +1301,6 @@
     &:first-child {
         padding-top: 4px;
     }
-    .share-wrapper, .download-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        border-top: 1px solid @color-medium-grey;
-        min-width: 75px;
-        margin-bottom: @spacing-one;
-    }
-
-    .download-wrapper {
-        border-right: 1px solid @color-medium-grey;
-    }
-
-    .share, .download {
-        margin: 0 auto;
-    }
 
     .dialogue {
         bottom: @share-link-height + @spacing-one;
@@ -1346,6 +1320,9 @@
     }
     .job-description.module {
         margin-top: 0;
+    }
+    .button-bar {
+        margin: @spacing-one 0 @spacing-onepointfive 0;
     }
 }
 
@@ -1463,4 +1440,106 @@
     &.infinite{
         display:none;
     }
+}
+
+
+/**
+ * Forms
+ */
+
+fieldset{
+    border:0;
+    border-bottom:1px solid @color-light-grey;
+    margin:0 0 @grid-gutter-width*2;
+    padding:0 0 @grid-gutter-width;
+}
+legend{
+    .h5;
+    padding:0 0 @grid-gutter-width;
+}
+
+label{
+    .a1;
+    display:block;
+    margin-bottom:@grid-gutter-width/2;
+}
+input, textarea, select{
+    width:100%;
+    border:0;
+    background-color:@color-pale-grey;
+    padding:@grid-gutter-width;
+    -webkit-appearance: none;
+    outline:none;
+}
+input[type=submit],input[type=reset],input[type=button],input[type=checkbox],input[type=radio]{
+    width:auto;
+}
+input[type=checkbox]{
+    -webkit-appearance: checkbox;
+}
+input[type=radio]{
+    -webkit-appearance: radio;
+}
+input[type=checkbox], input[type=radio]{
+    margin-right:@grid-gutter-width/2;
+}
+select{
+    .border-radius(0px);
+}
+.select:after{
+    .sprite-load(-53px, -1178px, 27px, 15px);
+    display:block;
+    content: ' ';
+    position: relative;
+    float:right;
+    margin:-3em 0 0 0;
+    background-color:@color-pale-grey;
+    border:1em solid @color-pale-grey;
+}
+input[type=submit],input[type=reset],input[type=button], button, .button{
+    .t0;
+    background-color:@color-highlight-blue;
+    color:@color-white;
+    padding:@grid-gutter-width @grid-gutter-width;
+    display:inline-block;
+
+    &:hover{
+        color:@color-white;
+        background-color:@color-pink;
+    }
+}
+form li{
+    padding-bottom:@grid-gutter-width;
+}
+form li.error{
+    input,textarea,select{
+        border:1px solid @color-pink;
+    }
+
+}
+form .help{
+    .a4;
+    margin:@grid-gutter-width/2 0 0 0;
+
+    + input,
+    + label{
+        margin-top:@grid-gutter-width/2;
+    }
+}
+form .divider{
+    margin-top:@grid-gutter-width;
+    padding-top:@grid-gutter-width;
+    border-top:1px solid @color-light-grey;
+}
+form .error-message{
+    color:@color-pink;
+    margin:@grid-gutter-width/2 0 0 0 ;
+}
+form .messages{
+    &.error h2, .errorlist{
+        color:@color-pink;
+    }
+}
+form .heading{
+    .a0;
 }

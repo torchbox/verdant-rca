@@ -8,13 +8,21 @@ ul.listing{
         border-top:1px dashed @color-input-border;
         margin-bottom:2em;
     }
-    table&{
-        width:100%;
+    ul{
+        .unlist();
     }
-
     > li{
         padding:1em 0;
         border-bottom:1px dashed @color-input-border;
+    }
+
+    h3{
+        margin:0;
+        font-size:0.95em;
+    }
+
+    table&{
+        width:100%;
     }
    
     td, th{
@@ -48,21 +56,22 @@ ul.listing{
                 right:0;
             }
         }
+
+        .dropdown{
+            padding:0;
+        }
+        .dropdown-toggle{
+            display:block;
+            padding:1.5em;
+        }
         .dropdown ul{
             .transition(none);            
         }
-        .dropdown-toggle{
-           
-        }
-        .dropdown:hover{
+        .dropdown:hover,
+        .dropdown.open{
             .box-shadow(0px 0px 3px 0 rgba(0,0,0,0.2));
             background-color:white;
-            padding-top:1.5em;
-            padding-bottom:1.5em;
-            margin-top:-1.5em;
-            margin-bottom:-1.5em;
             margin-left:-@grid-gutter-width * 2;
-            padding-left:@grid-gutter-width * 2;
         }
     }
 
@@ -74,7 +83,7 @@ ul.listing{
     }
     
     .bulk{
-        .column(1);
+        .table-column(1);
         padding-right:0;
 
         label{
@@ -94,7 +103,7 @@ ul.listing{
     }
     
     .title{
-        .column(4);
+        .table-column(4);
 
         h2{
             margin:0;
@@ -115,19 +124,10 @@ ul.listing{
     }
 
     .type{
-        .column(2);
+        .table-column(2);
     }
     .status{
-        .column(2);
-    }
-
-    ul{
-        .unlist();
-    }
-
-    h3{
-        margin:0;
-        font-size:0.95em;
+        .table-column(2);
     }
 
     .actions{
@@ -285,7 +285,8 @@ ul.listing{
 }
 
 @media screen and (min-width: @breakpoint-desktop-small){
-    .listing .bulk{
+    table.listing td:first-child,
+    table.listing th:first-child{
         .push-padding(@grid-content-indent);
     }
 }

@@ -22,6 +22,7 @@
  * Five plus
  * Event info
  * Speakers
+ * Events middle column body text
  * Filters
  * Packery
  * Gallery
@@ -162,6 +163,7 @@
     }
 }
 
+
 /**
  * Event info
  */
@@ -203,6 +205,13 @@
     .h8, .bc5 {
         font-size: @font-size-12;
     }
+}
+
+/**
+ * $Events middle column body text
+ */
+.events-middle-column-body-text {
+    margin-left: @spacing-two;
 }
 
 
@@ -259,9 +268,7 @@
         z-index:5;
         width:100%;
     }
-    .options ul{
-        position:relative;
-    }
+   
 
     .filter{
         border-left:1px solid @color-divider;
@@ -269,20 +276,27 @@
         &:first-child{
             border-left:0;
         }
-
-        &.three-cols .options{
-            width:301%;
-            -moz-column-count: 3;
-            -webkit-column-count: 3;
-            -moz-column-gap: 20px;
-            -webkit-column-gap : 20px;
+        .options ul{
+            position:relative;
         }
-        &.four-cols .options{
+
+        &.three-cols .options {
+            width:301%;
+            ul{
+                -moz-column-count: 3;
+                -webkit-column-count: 3;
+                -moz-column-gap: 20px;
+                -webkit-column-gap : 20px;
+            }
+        }
+        &.four-cols .options ul{
             width:401%;
-            -moz-column-count: 4;
-            -webkit-column-count: 4;
-            -moz-column-gap: 20px;
-            -webkit-column-gap : 20px;
+            ul{
+                -moz-column-count: 4;
+                -webkit-column-count: 4;
+                -moz-column-gap: 20px;
+                -webkit-column-gap : 20px;
+            }
         }
     }
 

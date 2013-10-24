@@ -10,7 +10,7 @@
                 {% if students %}
                     {% for student in students %}
                         <a href="{% pageurl student %}">
-                            {{ student.first_name }} {{ student.last_name }}{% if not forloop.last %},{% endif %}{% if staff_page.supervised_student_other %}, {% endif %}
+                            {{ student.first_name }} {{ student.last_name }}{% if not forloop.last %},{% endif %}{% if forloop.last and staff_page.supervised_student_other %}, {% endif %}
                         </a>
                     {% endfor %}
                 {% endif %}

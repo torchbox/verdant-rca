@@ -36,6 +36,8 @@
                         <li class="col first">
                             {% if self.profile_image %}
                                 {% image self.profile_image width-300 %}
+                            {% else %}
+                                <img src="/static/rca/images/staff-default-image.png" width="300">
                             {% endif %}
                         </li>
                         <li class="col">{% comment %} note closed within forloop {% endcomment %}
@@ -68,7 +70,6 @@
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
                             <div class="row">
-                                {% include "rca/includes/modules/contact-button.html" %}
                                 {% include "rca/includes/modules/share-button.html" %}
                             </div>
                         </li>
@@ -149,7 +150,7 @@
                                 <h2 class="a2">Publications, exhibitions and other outcomes</h2>
                             </li>
                             <li class="col col-9 last">
-                                <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                                <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
                             </li>
                         </ul>
                     {% endif %}
@@ -231,6 +232,14 @@
                         {{ self.research_interests|richtext }}
                     </div>
                 {% endif %}
+
+                {% if self.current_recent_research %}
+                    <div class="divider"></div>
+                    <h3 class="h6">Current and recent research</h3>
+                    <div class="body-text-style">
+                        {{ self.current_recent_research|richtext }}
+                    </div>
+                {% endif %}
                 
                  <!-- research -->
                 {% research_related person=self %}
@@ -254,5 +263,4 @@
 <!-- TODOs:
 - possibly refactor to make research tab optional. Because it's impossible to know
 on the template if the tag feeds have any content it would require refactoring the code
-- share and add to contacts
-- default student image on research student feed   -->
+ -->

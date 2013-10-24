@@ -14,9 +14,13 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl staffpage %}">
+                            <div class="image">
                             {% if staffpage.profile_image %}
-                                <div class="image">{% image staffpage.profile_image width-200 %}</div>
+                                {% image staffpage.profile_image width-200 %}
+                            {% else %}
+                                <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                             {% endif %}
+                            </div>
                             <div class="content">
                                 <h3 class="a3">{{ staffpage.title }}</h3>
                                 {% if staffpage.listing_intro %}

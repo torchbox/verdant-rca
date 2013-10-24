@@ -1,10 +1,11 @@
-from django.db import models, connection
+from django.db import models
 from django.db.models import get_model
 from django.http import Http404
 from django.shortcuts import render
 
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
+from cluster.models import ClusterableModel
 
 from core.util import camelcase_to_underscore
 
@@ -97,7 +98,7 @@ class PageBase(models.base.ModelBase):
             LEAF_PAGE_MODEL_CLASSES.append(cls)
 
 
-class Page(MP_Node):
+class Page(MP_Node, ClusterableModel):
     __metaclass__ = PageBase
 
     title = models.CharField(max_length=255, help_text="The page title as you'd like it to be seen by the public")
@@ -350,6 +351,7 @@ def get_navigation_menu_items(depth=2):
 
 class Orderable(models.Model):
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
+    sort_order_field = 'sort_order'
 
     class Meta:
         abstract = True

@@ -44,22 +44,21 @@
     <table class="listing">
         <thead>
             <tr>
-                <th class="bulk"><label for="bulk-select-all"><span>Select all</span><input type="checkbox" id="bulk-select-all"/></label></th>
+                
                 <th class="title"><a href="#" class="icon icon-arrow-down-after">Title</a></th>
-                <th class="type">
-                    <div class="dropdown white match-width">
-                        <a href="#" class="dropdown-toggle">Type</a> 
-                        <form>
-                            <ul role="menu">
-                                <li><label><input type="radio" name="status" /> Published</label></li>
-                                <li><label><input type="radio" name="status" /> Deleted</label></li>
-                                <li><label><input type="radio" name="status" /> Archived</label></li>
-                                <li><label><input type="radio" name="status" /> Draft</label></li>
-                            </ul>
-                        </form>
-                    </div>
+                <th class="type">Type</th>
+                <!--
+                <th class="status dropdown white match-width">
+                    <a href="#" class="dropdown-toggle">Status</a> 
+                    <form>
+                        <ul role="menu">
+                            <li><label><input type="radio" name="status" /> Published</label></li>
+                            <li><label><input type="radio" name="status" /> Unpublished</label></li>
+                            <li><label><input type="radio" name="status" /> Edited since publish</label></li>
+                        </ul>
+                    </form>
                 </th>
-                <th class="status"><a href="#" class="icon orderable-up">Status</a></th>
+                -->
                 <th class="children"></th>
             </tr>
         </thead>
@@ -67,7 +66,7 @@
             {% if pages %}
                 {% for page in pages %}
                     <tr>
-                        <td class="bulk"><label for=""><span>Select this item</span><input type="checkbox" /></label></td>
+                       
                         <td class="title">
                             <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
                             <ul class="actions">
@@ -78,7 +77,7 @@
                             </ul>
                         </td>
                         <td class="type">{{ page.content_type }}</td>
-                        <td class="status"></td>
+                        <!--<td class="status"></td>-->
                         {% if page.is_navigable %}
                             <td class="children">
                                 <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
@@ -91,7 +90,7 @@
                     </tr>
                 {% endfor %}
             {% else %}
-                <tr><td colspan="5" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
+                <tr><td colspan="3" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
             {% endif %}
         </tbody>
     </table>

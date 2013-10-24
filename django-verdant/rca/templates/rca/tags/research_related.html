@@ -11,7 +11,7 @@
                     {% else %}
                         <li>
                     {% endif %}
-                        {% include "rca/includes/modules/research_item.html" %}
+                        {% include "rca/includes/modules/research_item.html" with person=person %}
                     </li>
                 {% endfor %}
                 {% if research_items|length > 6 %} 

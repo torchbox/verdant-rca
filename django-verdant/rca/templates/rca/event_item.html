@@ -77,6 +77,11 @@
 						</ul>
 					</section>
 				{% endif %}
+				{% if self.middle_column_body %}
+	                <div class="body-text middle-column-body-text events-middle-column-body-text">
+	                    {{ self.middle_column_body|richtext }}
+	                </div>
+           	    {% endif %}
 			{% endwith %}
 		</section>
 			
