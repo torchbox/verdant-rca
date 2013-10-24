@@ -994,6 +994,7 @@ class EventItem(Page, SocialFields):
     external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
+    middle_column_body = RichTextField(blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     objects = models.Manager()
@@ -1014,6 +1015,7 @@ EventItem.content_panels = [
         FieldPanel('eventbrite_id'),
         FieldPanel('external_link'),
         FieldPanel('external_link_text'),
+        FieldPanel('middle_column_body')
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
     InlinePanel(EventItem, 'dates_times', label="Dates and times"),
@@ -1146,6 +1148,98 @@ EventIndex.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+]
+
+# == Review page ==
+
+class ReviewPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.ReviewPage', related_name='carousel_items')
+
+class ReviewPageRelatedLink(Orderable):
+    page = ParentalKey('rca.ReviewPage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
+class ReviewPageQuotation(Orderable):
+    page = ParentalKey('rca.ReviewPage', related_name='quotations')
+    quotation = models.TextField()
+    quotee = models.CharField(max_length=255, blank=True)
+    quotee_job_title = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('quotation'),
+        FieldPanel('quotee'),
+        FieldPanel('quotee_job_title')
+    ]
+
+class ReviewPageRelatedDocument(Orderable):
+    page = ParentalKey('rca.ReviewPage', related_name='documents')
+    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document_name = models.CharField(max_length=255)
+
+    panels = [
+        DocumentChooserPanel('document'),
+        FieldPanel('document_name')
+    ] 
+
+class ReviewPageImage(Orderable):
+    page = ParentalKey('rca.ReviewPage', related_name='images')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
+    panels = [
+        ImageChooserPanel('image'),
+    ]
+
+class ReviewPageAd(Orderable):
+    page = ParentalKey('rca.ReviewPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ReviewPage(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
+    show_on_homepage = models.BooleanField()
+
+ReviewPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
+    InlinePanel(ReviewPage, 'related_links', label="Related links"),
+    FieldPanel('middle_column_body', classname="full"),
+    InlinePanel(ReviewPage, 'documents', label="Document"),
+    InlinePanel(ReviewPage, 'quotations', label="Quotation"),
+    InlinePanel(ReviewPage, 'images', label="Middle column image"),
+    InlinePanel(ReviewPage, 'manual_adverts', label="Manual adverts"),
+]
+
+ReviewPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
 ]
 
 # == Standard page ==
