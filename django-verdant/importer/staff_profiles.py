@@ -101,8 +101,6 @@ def import_image(element):
     # Load image file
     try:
         with File(open(IMAGE_PATH + image_filename.encode('utf-8'), 'r')) as f:
-            if image.id:
-                image.delete()
             image.file = f
             image.save()
     except IOError as e:
