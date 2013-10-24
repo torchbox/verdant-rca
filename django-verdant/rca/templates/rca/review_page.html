@@ -12,6 +12,14 @@
     <section class="row">
         {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.body %}
         <section class="four">
+            <div class="meta-data review">
+                <dl>
+                    {% if self.author %}
+                        <dd>Writer</dd>
+                        <dt>{{ self.author }}</dt>
+                    {% endif %}
+                </dl>
+            </div>
             {% if self.middle_column_body %}
                 <div class="body-text middle-column-body-text">
                     {{ self.middle_column_body|richtext }}
