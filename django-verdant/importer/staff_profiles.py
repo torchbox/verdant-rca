@@ -142,7 +142,8 @@ def import_staff_researchpage(staffpage, element):
                 theimage, error = import_image(image)
 
                 # Add to carousel
-                StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
+                if theimage is not None:
+                    StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
 
     else:
         # Get school and programme from staffpage role
@@ -183,7 +184,8 @@ def import_staff_researchpage(staffpage, element):
                 theimage, error = import_image(image)
 
                 # Add to carousel
-                ResearchItemCarouselItem.objects.get_or_create(page=researchitem, image=theimage)
+                if theimage is not None:
+                    ResearchItemCarouselItem.objects.get_or_create(page=researchitem, image=theimage)
 
     return errors
 
@@ -308,7 +310,8 @@ def import_staff(element):
             theimage, error = import_image(image)
 
             # Add to carousel
-            StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
+            if theimage is not None:
+                StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
 
 
 
