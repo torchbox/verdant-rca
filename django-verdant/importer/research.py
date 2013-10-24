@@ -1,20 +1,14 @@
+from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
+from importer.data.staffdata import staff_data
+from importer import constants
+from django.utils.dateparse import parse_date
+from django.core.files import File
+from rca.models import ResearchItem, StaffIndex, CurrentResearchPage, RcaImage
+from core.models import Page
+import os
 import httplib2
 import json
-import markdown
-from rca.models import ResearchItem, ResearchItemCarouselItem, ResearchItemCreator, ResearchItemLink, Page, RcaImage
-from importer.staffdata import staff_data
-from django.utils.dateparse import parse_date
-from django.core.files.base import ContentFile
-from django.core.files import File
-from importer.import_utils import check_length, make_slug, mdclean
-from importer.constants import SCHOOLS
 
-http = httplib2.Http()
-
-STAFF_INDEX_PAGE = Page.objects.get(slug='staff-index-page')
-RESEARCH_INDEX_PAGE = Page.objects.get(slug='current-research')
-STAFF_LIST = staff_data[0:]
-EXPORT_PATH = 'importer/research_export.json'
 
 WORK_TYPES_CHOICES = {
     #('journalarticle', 'Journal Article'),
@@ -40,219 +34,282 @@ WORK_TYPES_CHOICES = {
     #('other', 'Other (enter below)'),
     'other': 'other',
 }
-work_types = set()
-file_types = {}
-weird = []
+
 
 VIDEO_TYPES = [
     'video/mp4',
     'video/ogg',
     'video/quicktime',
-    ]
+]
+
 AUDIO_TYPES = [
     'audio/ogg',
     'audio/mp4',
-    ]
+]
+
 IMAGE_TYPES = [
     'image/png',
     'image/jpeg',
     'image/gif',
     'image/jpg',
-    ]
+]
+
 TEXT_TYPES = [
     'text/plain',
-    ]
+]
+
 PROGRAM_TYPES = [
     'text/x-pl1',
     'text/x-java',
     'text/x-c',
     'text/x-c++',
-    ]
+]
+
 DOC_TYPES = [
     'application/pdf',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/msword',
     'application/x-zip',
     'text/html',
-    ]
+]
+
 UNHANDLED_TYPES = [
     'application/octet-stream',
     'image/tiff',
-    ]
+]
+
+INTERESTING_TYPES = IMAGE_TYPES
 
 
+class ResearchImporter(object):
+    def __init__(self, staff_index, research_index, **kwargs):
+        self.staff_index = staff_index
+        self.research_index = research_index
+        self.cache_directory = kwargs.get("cache_directory", "importer/data/research/")
+        self.save = kwargs.get("save", True)
+        self.research_cache_directory = self.cache_directory + "research/"
+        self.file_cache_directory = self.cache_directory + "files/"
+        self.http = httplib2.Http()
 
-def downloadexport(**kwargs):
-    staff_list = kwargs.get('staff_list', STAFF_LIST)
-    export_path = kwargs.get('export_path', EXPORT_PATH)
-    f = open(export_path, 'w')
-    for entry in staff_list:
-        username = entry['sAMAccountName']
-        url = 'http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=' % {
-            'username': username,
-            }
-        print username
-        status, response = http.request(url)
-        if status['status'] == '200':
+        # Stats
+        self.total_staff = 0
+        self.ignored_staff = 0
+        self.total_researchitems = 0
+        self.total_documents = 0
+        self.total_file_size = 0
+
+        # Create cache directories
+        try:
+            os.makedirs(self.research_cache_directory)
+        except OSError: # Directory alredy exists
+            pass
+
+        try:
+            os.makedirs(self.file_cache_directory)
+        except OSError: # Directory alredy exists
+            pass
+
+    def import_image_from_file(self, docid, thefile):
+        # Get an RcaImage object
+        try:
+            image = RcaImage.objects.get(eprint_docid=docid)
+        except RcaImage.DoesNotExist:
+            image = RcaImage(eprint_docid=docid)
+
+        # Set the file
+        image.file = File(thefile)
+
+        # Save
+        if self.save:
+            image.save()
+
+        return image
+
+    def download_file(self, url, filename):
+        status, response = self.http.request(url)
+        if status["status"] == "200":
+            f = open(filename, "w")
             f.write(response)
-        print len(response)
-    f.close()
-
-
-def doimport(**kwargs):
-    staff_list = kwargs.get('staff_list', STAFF_LIST)
-    staff_index_page = kwargs.get('staff_index_page', STAFF_INDEX_PAGE)
-    research_index_page = kwargs.get('research_index_page', RESEARCH_INDEX_PAGE)
-    start_at = kwargs.get('start_at', 0)
-
-
-    hasitemscount = 0
-    hasdocscount = 0
-    interestingdocscount = 0
-    totalfilescount = 0
-
-    for index, entry in enumerate(staff_list):
-        if index < start_at:
-            continue
-        username = entry['sAMAccountName']
-        url = 'http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=' % {
-            'username': username,
-            }
-        status, response = http.request(url)
-        print '\n#' + str(index) + ' - ' + username + ': ' + status['status']
-        if status['status'] == '200':
-            researchitems = json.loads(response)
-            if len(researchitems) > 0:
-                hasitemscount += 1
-            usererrors = []
-            itemcount = 0
-            savecount = 0
-            docsavecount = 0
-            interestingcount = 0
-            filesavecount = 0
-            for item in researchitems:
-                itemcount += 1
-                itemerrors = {}
-                save = True
-                #save = False
-                eprintid = item['eprintid']
-                title = item['title']
-                try:
-                    ri = ResearchItem.objects.get(eprintid=eprintid)
-                    if ri.title != title:
-                        usererrors.append((eprintid,title,'mismatch'))
-                        save = False
-                except ResearchItem.DoesNotExist:
-                    ri = ResearchItem(eprintid=eprintid)
-                ri.title, itemerrors['title'] = check_length(title, 255)
-                ri.slug = make_slug(ri)
-                date = item.get('date', None)
-                if date:
-                    if isinstance(date, basestring):
-                        try:
-                            ri.year = str(parse_date(date).year)
-                        except AttributeError:
-                            ri.year = date[0:4]
-                    elif isinstance(date, int):
-                        ri.year = str(date)
-                abstract = item.get('abstract', '')
-                ri.description = markdown.markdown(mdclean(abstract))
-                work_type = item['type']
-                work_types.add(work_type)
-                ri.work_type = WORK_TYPES_CHOICES[work_type]
-                department = item.get('department', '')
-                while department:
-                    try:
-                        ri.school = SCHOOLS[department]
-                        break
-                    except KeyError:
-                        # munge the title, as some of them are unicode, and raw_input doesn't like that
-                        simpletitle = str(ri.title.encode('utf-8').decode('ascii', 'ignore'))
-                        department = raw_input(u"Eprint id: %s\nResearch item: %s\nClaimed programme: %s\n\nPlease type the real name of the programme or leave blank:\n" % (eprintid, simpletitle, department))
-                if save:
-                    if ri.id:
-                        ri.save()
-                    else:
-                        research_index_page.add_child(ri)
-                    savecount += 1
-
-                # handle documents
-                if 'documents' not in item.keys():
-                    print 'Research item ' + str(itemcount)
-                    print 'No docs'
-                else:
-                    hasdocscount += 1
-                    print 'Research item ' + str(itemcount)
-                    print str(len(item['documents'])) + ' docs'
-                    for d in item['documents']:
-                        # we're not interested in password-protected files
-                        if d['security'] == 'staffonly':
-                            continue
-                        # equally we're not interested in thumbnails etc.
-                        if 'relation' in d.keys():
-                            if 'isVersionOf' in d['relation'][0]['type']:
-                                continue
-
-                        if 'files' in d.keys():
-                            if len(d['files']) != 1:
-                                weird.append(docid)
-                            for f in d['files']:
-                                uri = f['uri']
-                        # get the file_types
-                        try:
-                            file_type = d['mime_type']
-                        except KeyError:
-                            itemerrors['file'] = 'no mime_type'
-                            continue
-                        current_total = file_types.get(file_type, 0)
-                        file_types[file_type] = current_total + 1
-                        interestingcount += 1
-
-                        docid = str(d['docid'])
-                        if file_type in IMAGE_TYPES:
-                            try:
-                                image = RcaImage.objects.get(eprint_docid = docid)
-                            except RcaImage.DoesNotExist:
-                                image = RcaImage(eprint_docid = docid)
-
-                            print uri
-                            response, content = http.request(uri)
-                            if response['status'] == '200':
-                                with open('importer/temp', 'w') as f:
-                                    f.write(content)
-                                with File(open('importer/temp', 'r')) as f:
-                                    image.file = f
-                                    image.save()
-                                    filesavecount += 1
-
-                                if ResearchItemCarouselItem.objects.filter(page=ri,image=image).count() == 0:
-                                    carousel = ResearchItemCarouselItem(
-                                            page = ri,
-                                            image = image,
-                                            )
-                                    carousel.save()
-                            else:
-                                itemerrors['file'] = 'bad http response'
-                                continue
-                    print str(interestingcount) + ' turned out to be interesting'
-
-                totalfilescount += filesavecount
-                interestingdocscount += interestingcount
-
-        if itemcount:
-            print "%(items)s research items, %(saved)s saved, %(docs)s docs, %(interesting)s interesting, %(files)s files saved" % {
-                    'items': str(itemcount),
-                    'interesting': str(interestingcount),
-                    'saved': str(savecount),
-                    'docs': str(docsavecount),
-                    'files': str(filesavecount),
-                    }
+            f.close()
+            return True
         else:
-            print "No research items"
-    print "Research import finished.\n%(people)s people looked at.\n%(items)s had research items, \n%(docs)s of which had docs; \n%(interesting)s interesting docs\n%(files)s files actually saved" % {
-            'people': str(len(staff_list)),
-            'items': str(hasitemscount),
-            'docs': str(hasdocscount),
-            'interesting': str(interestingdocscount),
-            'files': str(totalfilescount),
-            }
+            return False
+
+    def import_file(self, thefile):
+        self.total_file_size += int(thefile["filesize"])
+
+        # Get file info
+        file_uri = thefile["uri"]
+        file_fileid = thefile["fileid"]
+
+        filename = self.file_cache_directory + str(file_fileid)
+        try:
+            f = open(filename, "r")
+        except IOError:
+            if self.download_file(file_uri, filename):
+                f = open(filename, "r")
+            else:
+                print "Unable to download file " + file_fileid
+                return None
+
+        return f
+
+    def import_document(self, researchitem, document):
+        self.total_documents += 1
+
+        # Ignore password protected files
+        if document["security"] == "staffonly":
+            return
+
+        # Ignore thumbnails
+        if "relation" in document:
+            if "isVersionOf" in document["relation"][0]["type"]:
+                return
+
+        # Get basic info
+        document_docid = document["docid"]
+        document_mime_type = document["mime_type"]
+
+        # Check if document is interesting
+        if document_mime_type in INTERESTING_TYPES:
+            print "Importing file " + str(document_docid)
+            
+            # Import file (theres always one)
+            document_file = self.import_file(document["files"][0])
+
+            # Check that the file imported correctly
+            if document_file is None:
+                return
+
+            # Check if this document is an image
+            if document_mime_type in IMAGE_TYPES:
+                # Import image
+                image = self.import_image_from_file(document_docid, document_file)
+
+                # Attach to research item carousel
+                if self.save:
+                    ResearchItemCarouselItem.objects.get_or_create(page=researchitem, image=image)
+
+
+    def import_researchitem(self, staffpage, researchitem):
+        self.total_researchitems += 1
+
+        # Get basic info
+        researchitem_eprintid = researchitem["eprintid"]
+        researchitem_title = researchitem["title"]
+        researchitem_abstract = researchitem.get("abstract", "")
+        researchitem_type = researchitem["type"]
+        researchitem_department = researchitem.get("department", "")
+
+        # Get year
+        researchitem_year = None
+        if "date" in researchitem:
+            researchitem_date = researchitem["date"]
+            if isinstance(researchitem_date, basestring):
+                try:
+                    researchitem_year = str(parse_date(researchitem_date).year)
+                except AttributeError:
+                    researchitem_year = researchitem_date[0:4]
+            elif isinstance(researchitem_date, int):
+                researchitem_year = str(researchitem_date)
+
+        # Get school
+        researchitem_school = ""
+        if researchitem_department in constants.SCHOOLS:
+            researchitem_school = constants.SCHOOLS[researchitem_department]
+
+        # Create researchitem page
+        try:
+            researchitempage = ResearchItem.objects.get(eprintid=researchitem_eprintid)
+        except ResearchItem.DoesNotExist:
+            researchitempage = ResearchItem(eprintid=researchitem_eprintid)
+
+        # Set values
+        researchitempage.title = researchitem_title
+        researchitempage.year = researchitem_year
+        researchitempage.description = researchitem_abstract
+        researchitempage.work_type = WORK_TYPES_CHOICES[researchitem_type]
+        researchitempage.school = researchitem_school
+        researchitempage.slug = make_slug(researchitempage)
+
+        # Save researchitem
+        if self.save:
+            if researchitempage.id:
+                researchitempage.save()
+            else:
+                self.research_index.add_child(researchitempage)
+
+            # Link to staff page
+            ResearchItemCreator.objects.get_or_create(page=researchitempage, person=staffpage)
+
+        # Documents
+        if "documents" in researchitem:
+            for document in researchitem["documents"]:
+                self.import_document(researchitem, document)
+
+    def download_staff_research(self, username, filename):
+        url = "http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=" % {
+            "username": username,
+        }
+        status, response = self.http.request(url)
+        if status["status"] == "200":
+            f = open(filename, "w")
+            f.write(response)
+            f.close()
+            return True
+        else:
+            return False
+
+    def import_staff_research(self, staff):
+        self.total_staff += 1
+
+        # Get username
+        staff_username = staff["sAMAccountName"]
+        print staff_username
+
+        # Attempt to get research from cache
+        filename = self.research_cache_directory + staff_username + ".json"
+        try:
+            f = open(filename, "r")
+        except IOError:
+            # Not in cache, download instead
+            if self.download_staff_research(staff_username, filename):
+                f = open(filename, "r")
+            else:
+                print "Unable to download research info for " + staff_username
+                return
+
+        # Load file
+        researchitems = json.loads(f.read())
+
+        # Get staff page
+        try:
+            slug = (staff["givenName"] + " " + staff["sn"]).strip(" ").lower().replace(" ", "-")
+            staffpage = self.staff_index.get_children().get(slug=slug).specific
+            self.ignored_staff += 1
+        except Page.DoesNotExist:
+            print "Unable to find staff page for " + staff_username + ". Ignoring..."
+            return
+
+        # Download documents for each researchitem
+        print "    Found " + str(len(researchitems)) + " research items"
+        for researchitem in researchitems:
+            self.import_researchitem(staffpage, researchitem)
+
+    def doimport(self, staff_data):
+        # Iterate through staff list
+        for staff in staff_data:
+            self.import_staff_research(staff)
+
+
+def doimport():
+    # Get indexes
+    staff_index = StaffIndex.objects.get(slug="staff")
+    research_index = CurrentResearchPage.objects.get(slug="current-research")
+
+    # Import
+    importer = ResearchImporter(staff_index, research_index, save=False)
+    importer.doimport(staff_data)
+
+    print importer.total_documents
+    print importer.total_file_size
