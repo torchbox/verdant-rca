@@ -1343,13 +1343,13 @@ class StandardIndexCarouselItem(Orderable, CarouselItemFields):
 class StandardIndexTeaser(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='teasers')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    url = models.URLField(blank=True)
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
         ImageChooserPanel('image'),
-        FieldPanel('url'),
+        PageChooserPanel('link'),
         FieldPanel('title', classname="full title"),
         FieldPanel('text'),
     ]

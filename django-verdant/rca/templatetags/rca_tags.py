@@ -104,6 +104,9 @@ def research_related(context, programme="", person="", school="", exclude=None):
     return {
         'research_items': research_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'person': person,
+        'programme': programme,
+        'school': school
     }
 
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
