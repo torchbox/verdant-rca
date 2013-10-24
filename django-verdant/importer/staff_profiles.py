@@ -99,19 +99,24 @@ def import_image(element):
     image.permission = image_rights
 
     # Load image file
-    try:
-        with File(open(IMAGE_PATH + image_filename.encode('utf-8'), 'r')) as f:
-            image.file = f
-            image.save()
-    except IOError as e:
-        print "I/O error({0}): {1}".format(e.errno, e.strerror)
-        print repr(image_filename)
-    except ValueError:
-        print "Could not convert data to an integer."
-    except:
-        import sys
-        print "Unexpected error:", sys.exc_info()[0]
-        raise
+    if not image.id:
+        try:
+            with File(open(IMAGE_PATH + image_filename.encode('utf-8'), 'r')) as f:
+                image.file = f
+                image.save()
+        except IOError as e:
+            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print repr(image_filename)
+            return None, None
+        except ValueError:
+            print "Could not convert data to an integer."
+            return None, None
+        except:
+            import sys
+            print "Unexpected error:", sys.exc_info()[0]
+            raise
+    else:
+        image.save()
 
     return image, errors
 
