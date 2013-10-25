@@ -99,6 +99,27 @@ $(function() {
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });
+
+    /* Set up behaviour of preview button */
+    $('#action-preview').click(function() {
+        var previewWindow = window.open('', $(this).data('windowname'));
+        $.post(
+            $(this).data('action'),
+            $('#page-edit-form').serialize(),
+            function(data, textStatus, request) {
+                if (request.getResponseHeader('X-Verdant-Preview') == 'ok') {
+                    previewWindow.document.open();
+                    previewWindow.document.write(data);
+                    previewWindow.document.close();
+                } else {
+                    previewWindow.close();
+                    document.open();
+                    document.write(data);
+                    document.close();
+                }
+            }
+        );
+    });
 });
 
 function InlinePanel(opts) {

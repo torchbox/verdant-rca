@@ -207,29 +207,67 @@ def preview_on_edit(request, page_id):
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
-    if request.POST:
-        form = form_class(request.POST, request.FILES, instance=page)
+    form = form_class(request.POST, request.FILES, instance=page)
 
-        if form.is_valid():
-            form.save(commit=False)
+    if form.is_valid():
+        form.save(commit=False)
 
-            # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
-            # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
-            # as a front-end GET request
-            response = page.serve(request)
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
 
-            response['X-Verdant-Preview'] = 'ok'
-            return response
+        response['X-Verdant-Preview'] = 'ok'
+        return response
 
-        else:
-            edit_handler = edit_handler_class(instance=page, form=form)
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
 
-            response = render(request, 'verdantadmin/pages/edit.html', {
-                'page': page,
-                'edit_handler': edit_handler,
-            })
-            response['X-Verdant-Preview'] = 'error'
-            return response
+        response = render(request, 'verdantadmin/pages/edit.html', {
+            'page': page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
+
+def preview_on_create(request, content_type_app_name, content_type_model_name, parent_page_id):
+    # Receive the form submission that would typically be posted to the 'create' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    try:
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
+    except ContentType.DoesNotExist:
+        raise Http404
+
+    page_class = content_type.model_class()
+    page = page_class()
+    edit_handler_class = get_page_edit_handler(page_class)
+    form_class = edit_handler_class.get_form_class(page_class)
+
+    form = form_class(request.POST, request.FILES, instance=page)
+
+    if form.is_valid():
+        form.save(commit=False)
+
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
+
+        response['X-Verdant-Preview'] = 'ok'
+        return response
+
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
+        parent_page = get_object_or_404(Page, id=parent_page_id).specific
+
+        response = render(request, 'verdantadmin/pages/create.html', {
+            'content_type': content_type,
+            'page_class': page_class,
+            'parent_page': parent_page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
 
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)

@@ -10,6 +10,7 @@ urlpatterns = patterns('verdantadmin.views',
     url(r'^pages/new/$', 'pages.select_type', name='verdantadmin_pages_select_type'),
     url(r'^pages/new/(\w+)/(\w+)/$', 'pages.select_location', name='verdantadmin_pages_select_location'),
     url(r'^pages/new/(\w+)/(\w+)/(\d+)/$', 'pages.create', name='verdantadmin_pages_create'),
+    url(r'^pages/new/(\w+)/(\w+)/(\d+)/preview/$', 'pages.preview_on_create', name='verdantadmin_pages_preview_on_create'),
 
     url(r'^pages/(\d+)/edit/$', 'pages.edit', name='verdantadmin_pages_edit'),
     url(r'^pages/(\d+)/edit/preview/$', 'pages.preview_on_edit', name='verdantadmin_pages_preview_on_edit'),
