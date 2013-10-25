@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.fields import FieldDoesNotExist
 from django.utils.encoding import is_protected_type
+from django.core.serializers.json import DjangoJSONEncoder
 
 import json
 
@@ -132,7 +133,7 @@ class ClusterableModel(models.Model):
         return obj
 
     def to_json(self):
-        return json.dumps(self.serializable_data())
+        return json.dumps(self.serializable_data(), cls=DjangoJSONEncoder)
 
     @classmethod
     def from_serializable_data(cls, data):

@@ -22,6 +22,7 @@ class BandMember(models.Model):
 class Album(models.Model):
     band = ParentalKey('Band', related_name='albums')
     name = models.CharField(max_length=255)
+    release_date = models.DateField(null=True, blank=True)
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
 
     sort_order_field = 'sort_order'
