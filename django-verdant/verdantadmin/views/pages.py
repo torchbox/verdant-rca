@@ -200,6 +200,37 @@ def view_draft(request, page_id):
     page = get_object_or_404(Page, id=page_id).get_latest_revision()
     return page.serve(request)
 
+def preview_on_edit(request, page_id):
+    # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    edit_handler_class = get_page_edit_handler(page.__class__)
+    form_class = edit_handler_class.get_form_class(page.__class__)
+
+    if request.POST:
+        form = form_class(request.POST, request.FILES, instance=page)
+
+        if form.is_valid():
+            form.save(commit=False)
+
+            # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+            # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+            # as a front-end GET request
+            response = page.serve(request)
+
+            response['X-Verdant-Preview'] = 'ok'
+            return response
+
+        else:
+            edit_handler = edit_handler_class(instance=page, form=form)
+
+            response = render(request, 'verdantadmin/pages/edit.html', {
+                'page': page,
+                'edit_handler': edit_handler,
+            })
+            response['X-Verdant-Preview'] = 'error'
+            return response
+
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
