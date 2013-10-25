@@ -83,9 +83,7 @@
                             </ul>
                         </td>
                         <td class="type">{{ page.content_type|title }}</td>
-                        <td class="status">
-                            {% if not page.live %}Unpublished{% else %}Published{% endif %}
-                        </td>
+                        <td class="status">{{ page.status_string|capfirst }}</td>
                         {% if page.is_navigable %}
                             <td class="children">
                                 <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>

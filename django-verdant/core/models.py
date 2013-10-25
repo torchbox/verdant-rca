@@ -107,6 +107,7 @@ class Page(MP_Node, ClusterableModel):
     # level rather than db, since there is no explicit parent relation in the db)
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
     live = models.BooleanField(default=True, editable=False)
+    has_unpublished_changes = models.BooleanField(default=False, editable=False)
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -320,6 +321,16 @@ class Page(MP_Node, ClusterableModel):
             Returns the list of pages that this page type can be a subpage of
         """
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
+
+    @property
+    def status_string(self):
+        if not self.live:
+            return "draft"
+        else:
+            if self.has_unpublished_changes:
+                return "live with draft updates"
+            else:
+                return "live"
 
 
 def get_navigation_menu_items(depth=2):

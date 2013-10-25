@@ -114,8 +114,10 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
             if request.POST.get('action-publish'):
                 page.live = True
+                page.has_unpublished_changes = False
             else:
                 page.live = False
+                page.has_unpublished_changes = True
 
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
             page.save_revision()
@@ -149,6 +151,7 @@ def edit(request, page_id):
 
             if is_publishing:
                 page.live = True
+                page.has_unpublished_changes = False
                 form.save()
             else:
                 # not publishing the page
@@ -156,7 +159,9 @@ def edit(request, page_id):
                     # To avoid overwriting the live version, we only save the page
                     # to the revisions table
                     form.save(commit=False)
+                    Page.objects.filter(id=page.id).update(has_unpublished_changes=True)
                 else:
+                    page.has_unpublished_changes = True
                     form.save()
 
             page.save_revision()
