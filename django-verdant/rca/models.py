@@ -2144,7 +2144,7 @@ class ResearchItemLink(Orderable):
     ]
 class ResearchItem(Page, SocialFields):
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
-    ref = models.CharField(max_length=255, blank=True)
+    ref = models.BooleanField(default=False, blank=True)
     year = models.CharField(max_length=4)
     description = RichTextField()
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
