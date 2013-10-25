@@ -728,7 +728,7 @@ class NewsIndex(Page, SocialFields):
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        news = NewsItem.objects.filter(path__startswith=self.path)
+        news = NewsItem.objects.filter(live=True, path__startswith=self.path)
 
         if programme and programme != '':
             news = news.filter(related_programmes__programme=programme)
@@ -1072,10 +1072,10 @@ class EventIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
     def future_events(self):
-        return EventItem.future_objects.filter(path__startswith=self.path)
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
 
     def past_events(self):
-        return EventItem.past_objects.filter(path__startswith=self.path)
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -2060,7 +2060,7 @@ class RcaNowIndex(Page, SocialFields):
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        rca_now_items = RcaNowPage.objects.all()
+        rca_now_items = RcaNowPage.objects.filter(live=True)
 
         if programme and programme != '':
             rca_now_items = rca_now_items.filter(programme=programme)
@@ -2340,7 +2340,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.all()
+        research_items = ResearchItem.objects.filter(live=True)
 
         if research_type and research_type != '':
             research_items = research_items.filter(research_type=research_type)
