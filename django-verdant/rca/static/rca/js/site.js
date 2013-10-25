@@ -143,8 +143,8 @@ $(function(){
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
     showHideDialogue();
-    showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
-    
+    showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
+    showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){

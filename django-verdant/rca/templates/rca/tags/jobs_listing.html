@@ -12,8 +12,8 @@
 	    			{% endif %}
 	    			<div class="content">
 	    				<a href="{% pageurl job %}"><h2 class="h5">{{ job.title }}</h2></a>
-	    				{% if page.school %}
-                    		<h3 class="bc3">{{ job.get_school_display }}}</h3>
+	    				{% if job.school %}
+                    		<h3 class="bc3">{{ job.get_school_display }}</h3>
                     	{% endif %}
 	                    <ul class="details">
 	                    	{% if job.salary %}

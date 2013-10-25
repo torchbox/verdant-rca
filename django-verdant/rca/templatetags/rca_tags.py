@@ -222,7 +222,7 @@ def research_students_list(context, staff_page=None):
 #queries all docs with a tag of 'jobapplication' - these are used for equal opportunites monitoring form etc which appear on every job page
 @register.inclusion_tag('rca/tags/job_documents.html', takes_context=True)
 def job_documents(context):
-    documents = Document.objects.filter(tags__name = "jobapplication")
+    documents = Document.objects.filter(tags__name = "job_application")
     return {
         'documents': documents,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template

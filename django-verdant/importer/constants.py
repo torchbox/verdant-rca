@@ -63,6 +63,16 @@ SCHOOLS = {
     'Department of Goldsmithing, Silversmithing, Metalwork and Jewellery': 'schoolofmaterial',
     'Department of Photography': 'schooloffineart',
     'humanities-research@rca.ac.uk': 'schoolofhumanities',
+
+    # Extras for student page
+    "School of Applied Art": "schoolofmaterial",
+    "School of Applied Arts": "schoolofmaterial",
+    "School of Fashion & Textiles": "schoolofmaterial",
+    #"School of Architecture & Design"
+    #"School of Architecture and Design"
+    #"Department of Architecture & Design"
+    "School of Humanties": "schoolofhumanities",
+    "School of Communications": "schoolofcommunication",
 }
 
 
@@ -114,6 +124,33 @@ PROGRAMMES = {
     "Sculpture ProgrammeResearch Leader": "sculpture",
     "School of Architecturearchitecture-research@rca.ac.uk": "architecture",
     "Critical Writing in Art & Design": "criticalwritinginartdesign",
+
+    # Extras for student page
+    "Department of Ceramics & Glass": "ceramicsglass",
+    "Ceramics and Glass": "ceramicsglass",
+    "Glass & Ceramics": "ceramicsglass",
+    "Programme of Ceramics & Glass": "ceramicsglass",
+    "Department of Critical & Historical Studies": "criticalhistoricalstudies",
+    "Department of Textiles": "textiles",
+    #"Department of Fashion"
+    "Department of Fashion Womenswear": "fashionwomenswear",
+    "Womenswear": "fashionwomenswear",
+    "Department of Printed Textiles": "textiles",
+    "Department of Curating Contemporary Art": "curatingcontemporaryart",
+    "Department of Innovation Design Engineering": "innovationdesignengineering",
+    "Department of Vehicle Design": "vehicledesign",
+    "Department of Design Interactions": "designinteractions",
+    "Department of History of Design": "historyofdesign",
+    #"Research in Art & Design"
+    "Department of Design Products": "designproducts",
+    "Department of Conservation": "conservation",
+    "Department of Animation": "animation",
+    "Department of Architecture": "architecture",
+    "Department of Painting": "painting",
+    "Department of Photography": "photography",
+    "Department of Sculpture": "sculpture",
+    "Critical Writing in Art and Design": "criticalwritinginartdesign",
+    "Department of Critical Writing in Art & Design": "criticalwritinginartdesign",
 }
 
 

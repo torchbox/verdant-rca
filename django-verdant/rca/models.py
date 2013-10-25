@@ -1208,11 +1208,13 @@ class ReviewPage(Page, SocialFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
+    author = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
 
 ReviewPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
+    FieldPanel('author'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
@@ -1934,7 +1936,7 @@ class StudentPage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=ALL_PROGRAMMES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
-    degree_year = models.IntegerField(max_length=255)
+    degree_year = models.CharField(max_length=4)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
@@ -2142,7 +2144,7 @@ class ResearchItemLink(Orderable):
     ]
 class ResearchItem(Page, SocialFields):
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
-    ref = models.CharField(max_length=255, blank=True)
+    ref = models.BooleanField(default=False, blank=True)
     year = models.CharField(max_length=4)
     description = RichTextField()
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
