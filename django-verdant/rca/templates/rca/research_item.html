@@ -13,7 +13,11 @@
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
-    {% research_related programme=self.programme exclude=self %}
+    {% if self.programme %}
+        {% research_related programme=self.programme exclude=self %}
+    {% elif self.school %}
+        {% research_related school=self.school exclude=self %}
+    {% endif %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
