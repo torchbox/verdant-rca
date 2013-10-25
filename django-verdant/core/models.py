@@ -183,7 +183,16 @@ class Page(MP_Node, ClusterableModel):
             revision = self.revisions.order_by('-created_at')[0]
         except IndexError:
             return self.specific
-        return self.specific_class.from_json(revision.content_json)
+
+        result = self.specific_class.from_json(revision.content_json)
+
+        # Override the possibly-outdated tree parameter fields from the revision object
+        # with up-to-date values
+        result.path = self.path
+        result.depth = self.depth
+        result.numchild = self.numchild
+
+        return result
 
     def serve(self, request):
         return render(request, self.template, {
