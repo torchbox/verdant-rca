@@ -1,8 +1,10 @@
 from django.test import TestCase
-from .models import Band, BandMember, Restaurant
+from .models import Band, BandMember, Album, Restaurant
 from cluster.forms import transientmodelformset_factory, childformset_factory, ClusterForm
 from django.forms import Textarea, CharField
 from django.db import IntegrityError
+
+import datetime
 
 
 class ClusterTest(TestCase):
@@ -298,6 +300,20 @@ class SerializeTest(TestCase):
 
         expected = {'pk': None, 'albums': [], 'name': u'The Beatles', 'members': [{'pk': None, 'name': u'John Lennon', 'band': None}, {'pk': None, 'name': u'Paul McCartney', 'band': None}]}
         self.assertEqual(expected, beatles.serializable_data())
+
+    def test_serialize_json_with_dates(self):
+        beatles = Band(name='The Beatles', members=[
+            BandMember(name='John Lennon'),
+            BandMember(name='Paul McCartney'),
+        ], albums=[
+            Album(name='Rubber Soul', release_date=datetime.date(1965, 12, 3))
+        ])
+
+        beatles_json = beatles.to_json()
+        self.assertTrue("John Lennon" in beatles_json)
+        self.assertTrue("1965-12-03" in beatles_json)
+        unpacked_beatles = Band.from_json(beatles_json)
+        self.assertEqual(datetime.date(1965, 12, 3), unpacked_beatles.albums.all()[0].release_date)
 
     def test_deserialize(self):
         beatles = Band.from_serializable_data({
