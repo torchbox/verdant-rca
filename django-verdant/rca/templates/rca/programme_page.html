@@ -21,7 +21,7 @@
                     {% if self.head_of_programme.profile_image %}
                         {% image self.head_of_programme.profile_image width-200 %}
                     {% else %}
-                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                        <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                     {% endif %}
                 </div>
             </a>
@@ -189,10 +189,11 @@
         {% endif %}
     {% endwith %}
     
-    {% include "rca/includes/modules/twitter-feed.html" %}
     {% include "rca/includes/modules/contact.html" %}   
+    {% include "rca/includes/modules/twitter-feed.html" %}
+
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showOpenDays="true" showRelatedLinks="true" %}
 {% endblock %}
