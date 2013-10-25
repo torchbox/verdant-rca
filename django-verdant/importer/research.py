@@ -2,7 +2,7 @@ from importer.import_utils import richtext_from_elem, text_from_elem, make_slug,
 from importer.data.staffdata import staff_data
 from importer import constants
 from django.utils.dateparse import parse_date
-from rca.models import ResearchItem, StaffIndex, CurrentResearchPage
+from rca.models import ResearchItem, ResearchItemCreator, StaffIndex, CurrentResearchPage
 from core.models import Page
 import os
 import httplib2
@@ -44,11 +44,6 @@ class ResearchImporter(object):
         self.research_cache_directory = self.cache_directory + "research/"
         self.http = httplib2.Http()
 
-        # Stats
-        self.total_staff = 0
-        self.ignored_staff = 0
-        self.total_researchitems = 0
-
         # Create cache directories
         try:
             os.makedirs(self.research_cache_directory)
@@ -56,8 +51,6 @@ class ResearchImporter(object):
             pass
 
     def import_researchitem(self, staffpage, researchitem):
-        self.total_researchitems += 1
-
         # Get basic info
         researchitem_eprintid = researchitem["eprintid"]
         researchitem_title = researchitem["title"]
@@ -66,7 +59,7 @@ class ResearchImporter(object):
         researchitem_department = researchitem.get("department", "")
 
         # Get year
-        researchitem_year = None
+        researchitem_year = ""
         if "date" in researchitem:
             researchitem_date = researchitem["date"]
             if isinstance(researchitem_date, basestring):
@@ -106,6 +99,27 @@ class ResearchImporter(object):
             # Link to staff page
             ResearchItemCreator.objects.get_or_create(page=researchitempage, person=staffpage)
 
+    def find_staff_page(self, staff):
+        first_name = staff["givenName"]
+        last_name = staff["sn"]
+
+        # Get list of potential names
+        names = [title + " " + first_name + " " + last_name for title in ["Dr", "Professor", "Sir"]]
+        names.append(first_name + " " + last_name)
+
+        # Slugify them
+        slugs = map(lambda slug: slug.strip(" ").replace("'", "").lower().replace(" ", "-"), names)
+
+        # Search the database
+        for slug in slugs:
+            try:
+                staffpage = self.staff_index.get_children().get(slug=slug).specific
+                return staffpage
+            except:
+                continue
+
+        return None
+
     def download_staff_research(self, username, filename):
         url = "http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=" % {
             "username": username,
@@ -120,40 +134,39 @@ class ResearchImporter(object):
             return False
 
     def import_staff_research(self, staff):
-        self.total_staff += 1
+        # Ignore staff where ref is False
+        if staff["REF"] == "FALSE":
+            return
 
         # Get username
         staff_username = staff["sAMAccountName"]
-        print staff_username
-
-        # Attempt to get research from cache
-        filename = self.research_cache_directory + staff_username + ".json"
-        try:
-            f = open(filename, "r")
-        except IOError:
-            # Not in cache, download instead
-            if self.download_staff_research(staff_username, filename):
-                f = open(filename, "r")
-            else:
-                print "Unable to download research info for " + staff_username
-                return
-
-        # Load file
-        researchitems = json.loads(f.read())
 
         # Get staff page
-        try:
-            slug = (staff["givenName"] + " " + staff["sn"]).strip(" ").lower().replace(" ", "-")
-            staffpage = self.staff_index.get_children().get(slug=slug).specific
-            self.ignored_staff += 1
-        except Page.DoesNotExist:
-            print "Unable to find staff page for " + staff_username + ". Ignoring..."
-            return
+        staffpage = self.find_staff_page(staff)
 
-        # Download documents for each researchitem
-        print "    Found " + str(len(researchitems)) + " research items"
-        for researchitem in researchitems:
-            self.import_researchitem(staffpage, researchitem)
+        if staffpage is not None:
+            # Attempt to get research from cache
+            filename = self.research_cache_directory + staff_username + ".json"
+            try:
+                f = open(filename, "r")
+            except IOError:
+                return
+                # Not in cache, download instead
+                #if self.download_staff_research(staff_username, filename):
+                #    f = open(filename, "r")
+                #else:
+                #    print "Unable to download research info for " + staff_username
+                #    return
+
+            # Load file
+            researchitems = json.loads(f.read())
+
+            # Get researchitems
+            print "Found " + str(len(researchitems)) + " research items for " + staff_username
+            for researchitem in researchitems:
+                self.import_researchitem(staffpage, researchitem)
+        else:
+            print "Could not find staff page for " + staff_username + ". Ignoring"
 
     def doimport(self, staff_data):
         # Iterate through staff list
@@ -167,8 +180,5 @@ def doimport():
     research_index = CurrentResearchPage.objects.get(slug="current-research")
 
     # Import
-    importer = ResearchImporter(staff_index, research_index, save=False)
+    importer = ResearchImporter(staff_index, research_index, save=True)
     importer.doimport(staff_data)
-
-    print importer.total_documents
-    print importer.total_file_size
