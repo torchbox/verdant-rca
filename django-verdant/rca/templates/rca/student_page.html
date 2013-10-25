@@ -11,13 +11,37 @@
 
     <section class="two-tab row module">
         <ul class="tab-nav tabs-2">
-            <li class="active"><a href="#tab1" class="t0">Info</a></li>
-            <li><a href="#tab2" class="t0">Selected work</a></li>
+            <li class="active"><a href="#tab1" class="t0">Show RCA Work</a></li>
+            <li><a href="#tab2" class="t0">Info</a></li>
+
         </ul>
 
+        
+
+
         <div class="tab-content">
+            
+            <h2 class="header"><a href="#tab1" class="a0">Show RCA Work</a></h2>
+            <div class="tab-pane active" id="tab1">
+                <div style='height: 1em;'></div>
+                {% include "rca/includes/modules/carousel.html" %}
+                
+                <section class="row">
+                    <section class="body-text">
+                        {% if self.work_description %}
+                            {{ self.work_description|richtext }}
+                        {% endif %}
+                    </section>
+
+                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
+
+                </section>
+
+            </div>
+
+
             <h2 class="header"><a href="#tab1" class="a0 active">Info</a></h2>
-            <div class="tab-pane active flush" id="tab1">
+            <div class="tab-pane flush" id="tab2">
                 <div class="profile">
                     <ul class="four-cols">
                         <li class="col first">
@@ -153,24 +177,6 @@
                 </div>
             </div>
 
-
-
-            <h2 class="header"><a href="#tab2" class="a0">Work</a></h2>
-            <div class="tab-pane" id="tab2">
-                {% include "rca/includes/modules/carousel.html" %}
-                
-                <section class="row">
-                    <section class="body-text">
-                        {% if self.work_description %}
-                            {{ self.work_description|richtext }}
-                        {% endif %}
-                    </section>
-
-                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
-
-                </section>
-
-            </div>
     </section>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
