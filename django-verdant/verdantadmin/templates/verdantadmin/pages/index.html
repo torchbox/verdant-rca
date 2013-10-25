@@ -69,10 +69,11 @@
                         <td class="title">
                             <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
                             <ul class="actions">
-                                {% if page.live %}
-                                    <li><a href="{{ page.url }}" target="_blank">View</a></li>
-                                {% else %}
+                                {% if page.has_unpublished_changes %}
                                     <li><a href="{% url 'verdantadmin_pages_preview' page.id %}" target="_blank">View draft</a></li>
+                                {% endif %}
+                                {% if page.live %}
+                                    <li><a href="{{ page.url }}" target="_blank">View live</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
