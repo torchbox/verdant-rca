@@ -161,7 +161,10 @@ def edit(request, page_id):
 
             page.save_revision()
 
-            messages.success(request, "Page '%s' updated." % page.title)
+            if is_publishing:
+                messages.success(request, "Page '%s' published." % page.title)
+            else:
+                messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             edit_handler = edit_handler_class(instance=page, form=form)
