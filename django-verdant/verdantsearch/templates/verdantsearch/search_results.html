@@ -14,7 +14,7 @@
   {% if do_search %}
    <ul>
     {% for result in search_results %}
-     <li>{{ result }}</li>
+     <li><a href="{{ result.url }}">{{ result }}</a></li>
     {% endfor %}
    </ul>
   {% endif %}
