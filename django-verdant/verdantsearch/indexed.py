@@ -20,4 +20,15 @@ class Indexed(object):
         else:
             return content_type
 
+    @classmethod
+    def get_toplevel_content_type(cls):
+        # Get parent content type
+        parent_content_type = None
+        for base in cls.__bases__:
+            if issubclass(base, Indexed) and issubclass(base, models.Model):
+                return base.get_content_type()
+
+        # At toplevel, return this content type
+        return  (cls._meta.app_label + "." + cls.__name__).lower()
+
     indexed_fields = ()
