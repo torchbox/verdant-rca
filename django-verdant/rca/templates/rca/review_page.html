@@ -1,0 +1,55 @@
+{% extends "rca/base.html" %}
+{% load rich_text image_tags %}
+
+{% block body_class %}
+    type-standard
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.body %}
+        <section class="four">
+            <div class="meta-data review">
+                <dl>
+                    {% if self.author %}
+                        <dd>Writer</dd>
+                        <dt>{{ self.author }}</dt>
+                    {% endif %}
+                </dl>
+            </div>
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+                    {{ self.middle_column_body|richtext }}
+                </div>
+            {% endif %}
+            {% include "rca/includes/modules/downloads.html" %}
+            {% include "rca/includes/modules/quotation.html" %}
+            {% with self.images.all as images %}
+                {% if images %}
+                    {% for image in images %}
+                        <figure>
+                            <div class="image">{% image image.image width-400 %}</div>
+                            <figcaption class="a4">
+                                {% for line in image.image.caption_lines %}
+                                    {{ line }}
+                                    {% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </figcaption>
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}

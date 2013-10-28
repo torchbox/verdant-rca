@@ -13,9 +13,21 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl rcanow %}">
-                            {% if rcanow.feed_image %}
-                                <div class="image">{% image rcanow.feed_image width-300 %}</div>
-                            {% endif %}
+                            <div class="image">
+                                {% if rcanow.feed_image %}
+                                    {% image rcanow.feed_image width-300 %}
+                                {% else %}
+                                    {% with rcanow.carousel_items.all as carousel_items %}
+                                        {% with carousel_items|first as carousel_item %}
+                                            {% if carousel_item.image %}
+                                                {% image carousel_item.image fill-300x169 %}
+                                            {% else %}
+                                                <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="300">
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endif %}
+                            </div>
                             <div class="content">
                                 <h3 class="h8">{{ rcanow.title }}</h3>
                                 {% if rcanow.author %}

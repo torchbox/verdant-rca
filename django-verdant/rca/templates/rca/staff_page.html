@@ -89,8 +89,8 @@
                             {% with self.biography|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
                                 {% if parts.1 %}
-                                    <a class="t2 showmore">Show more</a>
-                                    <div class="remainder">{{ parts.1|richtext }}</div>
+                                    <div class="remainder biography">{{ parts.1|richtext }}</div>
+                                    <a class="t2 showmore showBiography">Show more</a>
                                 {% endif %}
                             {% endwith %}
                         </li>
@@ -102,7 +102,13 @@
                                 <h2 class="a2">Practice</h2>
                             </li>
                             <li class="col col-9 last body-text-style">
-                                 {{ self.practice|richtext }}
+                                {% with self.practice|paragraph_split:"</p>" as parts %}
+                                    {{ parts.0|richtext }}
+                                    {% if parts.1 %}
+                                        <div class="remainder practice">{{ parts.1|richtext }}</div>
+                                        <a class="t2 showmore showPractice">Show more</a>
+                                    {% endif %}
+                                {% endwith %}
                             </li>
                         </ul>
                     {% endif %}
@@ -150,7 +156,7 @@
                                 <h2 class="a2">Publications, exhibitions and other outcomes</h2>
                             </li>
                             <li class="col col-9 last">
-                                <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                                <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
                             </li>
                         </ul>
                     {% endif %}
@@ -225,14 +231,22 @@
             <!-- links and ids added by javascript -->
             <h2 class="header"><a class="a0">Research</a></h2>
             <div class="tab-pane">
-
                 {% if self.research_interests %}
                     <h3 class="h6">Research interests</h3>
                     <div class="body-text-style">
                         {{ self.research_interests|richtext }}
                     </div>
                 {% endif %}
-                
+
+                {% if self.current_recent_research %}
+                    <div class='module'>
+                        <h3 class="h6">Current and recent research</h3>
+                        <div class="body-text-style">
+                            {{ self.current_recent_research|richtext }}
+                        </div>
+                    </div>
+                {% endif %}
+
                  <!-- research -->
                 {% research_related person=self %}
 

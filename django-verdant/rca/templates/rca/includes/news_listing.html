@@ -3,9 +3,9 @@
 {% if news %}
     <section class="one-plus x-plus module" data-pagination=".pagination">
         <div class="item-container">
-            <ul class="row">
+            <ul class="row">    
                 {% for news_item in news %}
-                    {% comment %}The forloop counter just gives the index for the current set of reseults, and we need to know the overall
+                    {% comment %}The forloop counter just gives the index for the current set of results, and we need to know the overall
                     index of the news item to know when to correctly apply the newrow class. This isn't available from the django
                     paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
                     start_index is 1 based not 0 based) gives the correct calculation. {% endcomment %}
@@ -15,12 +15,25 @@
                         <li>
                     {% endif %}
                         <a href="{% pageurl news_item %}">
-                            {% if news_item.feed_image %}
-                                <div class="image">{% image news_item.feed_image width-600 %}</div>
-                            {% endif %}
+                                <div class="image">
+                                    {% if news_item.feed_image %}
+                                        {% image news_item.feed_image width-600 %}
+                                    {% else %}
+                                        {% with news_item.carousel_items.all as carousel_items %}
+                                            {% with carousel_items|first as carousel_item %}
+                                                {% if carousel_item.image %}
+                                                    {% image carousel_item.image fill-300x169 %}
+                                                {% else %}
+                                                    <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endwith %}
+                                    {% endif %}
+                                </div>
                             <div class="content">
+                                <h3 class='h5'>{{ news_item.title }}</h3>
                                 {% if news_item.listing_intro %}
-                                <h3 class="h5">{{ news_item.listing_intro }}</h3>
+                                <p>{{ news_item.listing_intro }}</p>
                                 {% endif %}
                             </div>
                         </a>

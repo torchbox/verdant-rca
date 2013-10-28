@@ -22,6 +22,7 @@ class BandMember(models.Model):
 class Album(models.Model):
     band = ParentalKey('Band', related_name='albums')
     name = models.CharField(max_length=255)
+    release_date = models.DateField(null=True, blank=True)
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
 
     sort_order_field = 'sort_order'
@@ -31,3 +32,13 @@ class Album(models.Model):
 
     class Meta:
         ordering = ['sort_order']
+
+
+class Place(ClusterableModel):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+class Restaurant(Place):
+    serves_hot_dogs = models.BooleanField()

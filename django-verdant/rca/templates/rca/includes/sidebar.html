@@ -8,13 +8,12 @@
 <!-- adverts -->
 {% if showAdverts %}
     <!-- adverts -->
-    {% comment %} if there are no global adverts start the colour cycle for the adverts and hide the output {% endcomment %}
-    {% if not global_adverts %}
-        <span class="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
-    {% endif %}
+    {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block. Because of the way cycles work initially start it outside any forloop, with display:none {% endcomment %}
+    <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
+
     {% if global_adverts %}
         {% for advert in global_adverts %}
-            <div class="{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}">
+            <div class="{% cycle adcolors %}">
                 {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
                     <h2>{{ advert.text }}</h2>
                     {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
@@ -38,8 +37,8 @@
 
 <!--open days-->
 {% if showOpenDays %}
-    <div class="open-days">
-        <a href="#">
+    <div class="{% cycle adcolors %}">
+        <a href="{{ global_events_index_url }}?audience=openday&programme={{ self.programme }}">
             <h2>Open Days</h2>
         </a>
     </div>
@@ -58,7 +57,19 @@
                 <div class="related-content-item">
                     <a href="{% pageurl news_item %}">
                         <figure>
-                            {% if news_item.feed_image %}{% image news_item.feed_image width-180 %}{% endif %}
+                            {% if news_item.feed_image %}
+                                {% image news_item.feed_image width-180 %}
+                            {% else %}
+                                {% with news_item.carousel_items.all as carousel_items %}
+                                    {% with carousel_items|first as carousel_item %}
+                                        {% if carousel_item.image %}
+                                            {% image carousel_item.image fill-300x169 %}
+                                        {% else %}
+                                            <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="180">
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
                             <figcaption>{{news_item.title }}</figcaption>
                         </figure>
                     </a>
