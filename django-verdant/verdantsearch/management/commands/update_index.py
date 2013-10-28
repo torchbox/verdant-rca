@@ -43,7 +43,6 @@ class Command(NoArgsCommand):
                 else:
                     # Space free, take it
                     object_set[key] = obj
-                
 
         # Add objects to index
         for obj in object_set.values():
