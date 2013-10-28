@@ -15,7 +15,7 @@ def search(request):
         search_results = None
 
     # Get template
-    template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search-results.html")
+    template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search_results.html")
 
     return render(request, template_name, dict(do_search=do_search, query_string=query_string, search_results=search_results))
 
