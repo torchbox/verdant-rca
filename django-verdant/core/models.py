@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
+from verdantsearch import Indexed, Searcher
 
 from core.util import camelcase_to_underscore
 
@@ -98,7 +99,7 @@ class PageBase(models.base.ModelBase):
             LEAF_PAGE_MODEL_CLASSES.append(cls)
 
 
-class Page(MP_Node, ClusterableModel):
+class Page(MP_Node, ClusterableModel, Indexed):
     __metaclass__ = PageBase
 
     title = models.CharField(max_length=255, help_text="The page title as you'd like it to be seen by the public")
@@ -114,6 +115,10 @@ class Page(MP_Node, ClusterableModel):
     show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # End RCA-specific fields
+
+    indexed_fields = ("title", )
+
+    title_search = Searcher(["title"])
 
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
