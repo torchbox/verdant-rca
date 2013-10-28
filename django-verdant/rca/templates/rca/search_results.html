@@ -1,0 +1,31 @@
+{% extends "rca/base.html" %}
+{% load rich_text image_tags %}
+
+{% block body_class %}
+    type-standard
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">Search{% if do_search %} Results{% endif %}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+
+      {% if do_search %}
+        <ul>
+          {% for result in search_results %}
+            <li>{{ result }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      
+      <div class="single borders">
+        {% include "rca/includes/modules/share-button.html" %}
+      </div>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" %}
+{% endblock %}
