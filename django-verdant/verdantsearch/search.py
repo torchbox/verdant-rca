@@ -47,10 +47,6 @@ class Search(object):
         self.es.refresh(self.es_index)
 
     def _build_document(self, obj):
-        # Doc must be a decendant of Indexed and be a django model
-        if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
-            return
-
         # Get content type
         content_type = obj.get_content_type()
 
@@ -64,21 +60,17 @@ class Search(object):
         return doc
 
     def add(self, obj):
-        # Build document
-        doc = self._build_document(obj)
+        # Doc must be a decendant of Indexed and be a django model
+        if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
+            return
 
         # Add to index
-        if doc is not None:
-            self.es.index(self.es_index, "indexed_item", doc)
+        self.es.index(self.es_index, "indexed_item", self._build_document(obj))
 
     def add_bulk(self, obj_list):
         # This is just the same as above except it inserts lists of objects in bulk
         # Build documents
-        docs = []
-        for obj in obj_list:
-            doc = self._build_document(obj)
-            if doc:
-                docs.append(doc)
+        docs = [self._build_document(obj) for obj in obj_list if isinstance(obj, Indexed) and isinstance(obj, models.Model)]
 
         # Add to index
         self.es.bulk_index(self.es_index, "indexed_item", docs)
