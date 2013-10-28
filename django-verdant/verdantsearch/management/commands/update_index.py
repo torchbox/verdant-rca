@@ -18,8 +18,12 @@ class Command(NoArgsCommand):
         
         # Loop through and add all items of each model into the index
         for model in indexed_models:
+            print model._meta.app_label + "." + model.__name__
+            object_count = 0
             for obj in model.objects.all():
+                object_count += 1
                 s.add(obj)
+            print "  " + str(object_count) + " objects"
 
         # Refresh index
         s.refresh_index()
