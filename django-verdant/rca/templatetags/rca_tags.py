@@ -242,22 +242,35 @@ def title_split(value):
     return value.split(' ')
 
 
-def get_navigation_tree(max_depth=2, must_have_children=False):
+def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True):
     """
-    do a thing
+    Return a tree structure of all pages, optionally limiting to those with
+    children and those with 'show_in_menus = True'
+
+    Set max_depth=0 in order not to filter by depth
+
     """
     min_child_count = 1 if must_have_children else 0
+    menu_filter = 'AND show_in_menus = True' if only_in_menu_pages else ''
+    # we add 2 to max_depth, as admin 'root' has depth 1, and site home has
+    # depth 2 thus max_depth=3 will become SQL 'AND depth <= 5', and will
+    # burrow 3 levels down from site home
+    depth_filter = 'AND depth <= %s' % (max_depth + 2) if max_depth else ''
+
     pages = Page.objects.raw("""
         SELECT * FROM core_page
         WHERE depth = 2
-        OR (depth <= %(depth)s
+        OR (
+        live = True
         AND numchild >= %(min_child_count)s
-        AND live = True
-        AND show_in_menus = True)
+        %(depth_filter)s
+        %(menu_filter)s
+        )
         ORDER BY path
     """ % {
-        'depth': str(max_depth),
         'min_child_count': str(min_child_count),
+        'depth_filter': depth_filter,
+        'menu_filter': menu_filter,
         })
 
     # Turn this into a tree structure:
@@ -272,7 +285,7 @@ def get_navigation_tree(max_depth=2, must_have_children=False):
 
     # Make a list of dummy nodes, since at any stage we may not have added the
     # parent to the list (i.e. it's unpublished or not to be shown in menus)
-    depth_list = [(None, [])] * (max_depth + 1)
+    depth_list = [(None, [])] * max([p.depth for p in pages])
 
     for page in pages:
         # create a node for this page
@@ -305,7 +318,7 @@ def get_navigation_tree(max_depth=2, must_have_children=False):
 
 @register.inclusion_tag('rca/tags/explorer_nav.html')
 def menu():
-    nodes = get_navigation_menu_items()[0][1]  # don't show the homepage
+    nodes = get_site_nav(max_depth=0, must_have_children=False, only_in_menu_pages=True)
     return {
         'nodes': nodes,
     }
@@ -320,7 +333,7 @@ def menu_subnav(nodes):
 
 @register.inclusion_tag('rca/tags/footer_nav.html')
 def footer_menu():
-    nodes = get_navigation_tree(max_depth=5, must_have_children=False)
+    nodes = get_site_nav(max_depth=3, must_have_children=False, only_in_menu_pages=True)
     return {
         'nodes': nodes,
     }
