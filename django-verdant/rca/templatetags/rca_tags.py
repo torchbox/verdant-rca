@@ -244,7 +244,7 @@ def title_split(value):
 
 @register.inclusion_tag('rca/tags/explorer_nav.html')
 def menu():
-    nodes = get_navigation_menu_items(depth=6)[0][1]  # don't show the homepage
+    nodes = get_navigation_menu_items()[0][1]  # don't show the homepage
     return {
         'nodes': nodes,
     }
