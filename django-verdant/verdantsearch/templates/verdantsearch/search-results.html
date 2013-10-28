@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Search{% if do_search %} Results{% endif %}</title>
+ </head>
+ <body>
+  <h1>Search{% if do_search %} Results{% endif %}</h1>
+
+  <form action="{% url 'verdantsearch_search' %}" method="get">
+   <input type="text" name="q"{% if query_string %} value="{{ query_string }}"{% endif %}>
+   <input type="submit" value="Search">
+  </form>
+
+  {% if do_search %}
+   <ul>
+    {% for result in search_results %}
+     <li>{{ result }}</li>
+    {% endfor %}
+   </ul>
+  {% endif %}
+ </body>
+</html>
