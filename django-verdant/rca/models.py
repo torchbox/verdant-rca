@@ -431,6 +431,38 @@ class AdvertPlacement(models.Model):
     page = ParentalKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
+# == Snippet: Custom Content Module ==
+
+class CustomContentModuleBlock(Orderable):
+    content_module = ParentalKey('rca.CustomContentModule', related_name='blocks')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    item_title = models.CharField(max_length=255)
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image for the module block")
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('item_title'),
+        ImageChooserPanel('image'),
+        FieldPanel('text')
+    ]
+
+class CustomContentModule(models.Model):
+    title = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.title
+
+CustomContentModule.panels = [
+    FieldPanel('title'),
+    InlinePanel(CustomContentModule, 'blocks', label=""),
+]
+
+register_snippet(CustomContentModule)
+
+class CustomeContentModulePlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='custom_content_module_placements')
+    custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
 
 # == School page ==
 
@@ -1392,6 +1424,14 @@ class StandardIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class StandardIndexCustomContentModules(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='custom_content_modules')
+    custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('custom_content_module', CustomContentModule),
+    ]    
+
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1415,6 +1455,7 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
+    InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
     InlinePanel(StandardIndex, 'related_links', label="Related links"),
     InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
