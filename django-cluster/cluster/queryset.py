@@ -1,6 +1,9 @@
 # Constructor for test functions that determine whether an object passes some boolean condition
-def test_exact(attribute_name, value):
-    return lambda obj: getattr(obj, attribute_name) == value
+def test_exact(model, attribute_name, value):
+    field = model._meta.get_field(attribute_name)
+    # convert value to the correct python type for this field
+    typed_value = field.to_python(value)
+    return lambda obj: getattr(obj, attribute_name) == typed_value
 
 class FakeQuerySet(object):
     def __init__(self, model, results):
@@ -18,7 +21,7 @@ class FakeQuerySet(object):
             if len(key_clauses) != 1:
                 raise NotImplementedError("Complex filters with double-underscore clauses are not implemented yet")
 
-            filters.append(test_exact(key_clauses[0], val))
+            filters.append(test_exact(self.model, key_clauses[0], val))
 
         filtered_results = [
             obj for obj in self.results

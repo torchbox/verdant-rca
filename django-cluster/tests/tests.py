@@ -92,6 +92,14 @@ class ClusterTest(TestCase):
         beatles.save()
         beatles.members.commit()
 
+    def test_queryset_filtering(self):
+        beatles = Band(name='The Beatles', members=[
+            BandMember(id=1, name='John Lennon'),
+            BandMember(id=2, name='Paul McCartney'),
+        ])
+        self.assertEqual('Paul McCartney', beatles.members.get(id=2).name)
+        self.assertEqual('Paul McCartney', beatles.members.get(id='2').name)
+
 class TransientFormsetTest(TestCase):
     BandMembersFormset = transientmodelformset_factory(BandMember, exclude=['band'], extra=3, can_delete=True)
 
