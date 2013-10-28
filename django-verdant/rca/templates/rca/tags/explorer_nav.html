@@ -1,7 +1,7 @@
 {% load rca_tags %}
 
 {% for page, children in nodes %}
-    {% if page.show_in_menus %}
+    {% if page.show_in_menus and page.live %}
         <li class="{% if children %} has-children {% endif %} ">
             <a href="{{ page.url }}">{{ page.title }}</a>
             {% if children %}
