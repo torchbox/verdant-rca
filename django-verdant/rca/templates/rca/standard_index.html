@@ -32,7 +32,9 @@
                                 {% else %}
                                     <li>
                                 {% endif %}
-
+                                {% if block.link %}
+                                    <a href="{{ pageurl block }}">
+                                {% endif %}
                                 {% if block.image %}
                                     <div class="image">{% image block.image width-400 %}</div>
                                 {% endif %}
@@ -44,7 +46,9 @@
                                         <p class="bc5">{{ block.text }}</p>
                                     {% endif %}
                                 </div>
-
+                                {% if block.link %}
+                                    </a>
+                                {% endif %}
                             {% endfor %}
 
                             {% if custom_module.custom_content_module.blocks|length > 6 %}
