@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantdocs',
     'verdantsnippets',
+    'verdantsearch',
 
     'rca',
 )

@@ -10,6 +10,7 @@ from verdantimages import urls as verdantimages_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
+from verdantsearch import urls as verdantsearch_urls
 
 from rca import app_urls
 
@@ -31,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
+    url(r'^search/', include(verdantsearch_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),
 
