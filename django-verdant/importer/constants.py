@@ -73,6 +73,13 @@ SCHOOLS = {
     #"Department of Architecture & Design"
     "School of Humanties": "schoolofhumanities",
     "School of Communications": "schoolofcommunication",
+
+    # Extras for Show 2013
+    "Ceramics &amp; Glass": "schoolofmaterial",
+    "Critical &amp; Historical Studies": "schoolofhumanities",
+    "Critical Writing in Art &amp; Design": "schoolofhumanities",
+    "Goldsmithing, Silversmithing, Metalwork &amp; Jewellery": "schoolofmaterial",
+    "Uncategorized": "",
 }
 
 
@@ -151,6 +158,13 @@ PROGRAMMES = {
     "Department of Sculpture": "sculpture",
     "Critical Writing in Art and Design": "criticalwritinginartdesign",
     "Department of Critical Writing in Art & Design": "criticalwritinginartdesign",
+
+    # Extras for Show 2013
+    "Ceramics &amp; Glass": "ceramicsglass",
+    "Critical &amp; Historical Studies": "criticalhistoricalstudies",
+    "Critical Writing in Art &amp; Design": "criticalwritinginartdesign",
+    "Goldsmithing, Silversmithing, Metalwork &amp; Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Uncategorized": "",
 }
 
 
