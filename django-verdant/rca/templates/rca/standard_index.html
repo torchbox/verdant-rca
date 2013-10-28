@@ -16,6 +16,47 @@
 
 	{% include "rca/includes/modules/intro-large.html" %}
 
+    <!--custom module block-->
+    {% with self.custom_content_modules.all as custom_modules %}
+        {% if custom_modules|length > 0 %}
+            {% for custom_module in custom_modules %}
+                <section class="two-plus x-plus module">
+                    <h2 class="module-title">{{ custom_module.custom_content_module.title }}</h2>
+                    <div class="item-container">
+                        <ul class="row">
+                            {% for block in custom_module.custom_content_module.blocks.all %}
+                                {% if forloop.counter == 6 %}
+                                    <li class="load-more-target">
+                                {% elif forloop.counter0|divisibleby:"3" %}
+                                    <li class="newrow">
+                                {% else %}
+                                    <li>
+                                {% endif %}
+
+                                {% if block.image %}
+                                    <div class="image">{% image block.image width-400 %}</div>
+                                {% endif %}
+                                <div class="content">
+                                    {% if block.item_title %}
+                                        <h3 class="h8">{{ block.item_title }}</h3>
+                                    {% endif %}
+                                    {% if block.text %}
+                                        <p class="bc5">{{ block.text }}</p>
+                                    {% endif %}
+                                </div>
+
+                            {% endfor %}
+
+                            {% if custom_module.custom_content_module.blocks|length > 6 %}
+                                <li class="load-more"><a href="#">+</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </section>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
 	<!--teaser block-->
 	{% with self.teasers.all as teasers %}
         {% if self.teasers.all|length > 0 %}
