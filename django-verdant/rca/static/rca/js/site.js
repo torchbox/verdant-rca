@@ -71,6 +71,20 @@ function showSearchSubmit() {
     });
 }
 
+/* search autocomplete */
+function showSearchAutocomplete() {
+    $("input#search_box").autocomplete({
+        source: function(request, response) {
+            $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+                response(data);
+            })
+        },
+        select: function( event, ui ) { 
+            window.location.href = ui.item.url;
+        }
+    });
+}
+
 /*google maps for contact page */
 function initializeMaps() {
     var mapCanvas = document.getElementById('map_canvas_kensington');
@@ -137,6 +151,7 @@ function post(frame, action, value) {
 
 $(function(){
     showSearchSubmit();
+    showSearchAutocomplete();
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');

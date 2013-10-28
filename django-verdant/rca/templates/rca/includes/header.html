@@ -13,7 +13,7 @@
             </nav>
         </div>
         <form class="search" action="{% url 'verdantsearch_search' %}" method="get">
-            <input type="text" name="q" placeholder="SEARCH"{% if query_string %} value="{{ query_string }}"{% endif %} />
+            <input id="search_box" type="text" name="q" placeholder="SEARCH"{% if query_string %} value="{{ query_string }}"{% endif %} />
             <input type="submit" value="search" />
         </form>
     </div>

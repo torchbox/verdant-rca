@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.shortcuts import render
+from django.http import HttpResponse
 from core import models
+import json
 
 
 def search(request):
@@ -22,3 +24,23 @@ def search(request):
 
 def suggest(request):
     query_string = request.GET.get("q", "")
+
+    # Search
+    if query_string != "":
+        search_results = models.Page.title_search(query_string)[:5]
+
+        # Get list of suggestions
+        suggestions = []
+        for result in search_results:
+            result_specific = result.specific
+
+            suggestions.append({
+                "label": str(result_specific.content_type).title() + ": " + result_specific.title,
+                "title": result_specific.title,
+                "url": result_specific.url,
+                "content_type": str(result_specific.content_type).title(),
+            })
+
+        return HttpResponse(json.dumps(suggestions))
+    else:
+        return HttpResponse("[]")
