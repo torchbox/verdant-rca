@@ -1,0 +1,22 @@
+{% for page, children in nodes %}
+    <li class="main"><a href="{{ page.url }}">{{ page.title }}</a>
+    <div class="submenu-block">
+        <ul>
+            <section>
+                {% for child, grandchildren in children %}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                    {% if grandchildren %}
+                        <ul class="dl-submenu">
+                            {% for grandchild, greatgrandchildren in grandchildren %}
+                            {% if grandchild.show_in_menus %}
+                                <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </section>
+        </ul>
+    </div>
+    <span class="footer-expand"></span>
+{% endfor %}

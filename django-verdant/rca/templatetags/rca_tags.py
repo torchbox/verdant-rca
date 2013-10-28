@@ -242,6 +242,67 @@ def title_split(value):
     return value.split(' ')
 
 
+def get_navigation_tree(max_depth=2, must_have_children=False):
+    """
+    do a thing
+    """
+    min_child_count = 1 if must_have_children else 0
+    pages = Page.objects.raw("""
+        SELECT * FROM core_page
+        WHERE depth = 2
+        OR (depth <= %(depth)s
+        AND numchild >= %(min_child_count)s
+        AND live = True
+        AND show_in_menus = True)
+        ORDER BY path
+    """ % {
+        'depth': str(max_depth),
+        'min_child_count': str(min_child_count),
+        })
+
+    # Turn this into a tree structure:
+    #     tree_node = (page, children)
+    #     where 'children' is a list of tree_nodes.
+    # Algorithm:
+    # Similar to the core.models.get_navigation_menu_items() function, maintain
+    # a list that tells us, for each depth level, the last page we saw at that
+    # depth level.  Since our page list is ordered by path, we know that
+    # whenever we see a page at depth d, its parent, _if_included_, must be the
+    # last page we saw at depth (d-1), and so we can find it in that list.
+
+    # Make a list of dummy nodes, since at any stage we may not have added the
+    # parent to the list (i.e. it's unpublished or not to be shown in menus)
+    depth_list = [(None, [])] * (max_depth + 1)
+
+    for page in pages:
+        # create a node for this page
+        node = (page, [])
+        try:
+            # retrieve the parent from depth_list
+            parent_page, parent_childlist = depth_list[page.depth - 1]
+            if parent_page and page.path[:-4] == parent_page.path:
+                # the page is an immediate descendant of the parent_page, so
+                # insert this new node in the parent's child list
+                parent_childlist.append(node)
+        except IndexError:
+            # we haven't seen any relevant pages at the parent's depth yet, so
+            # don't add this page either
+            pass
+
+        # add the new node to depth_list
+        try:
+            depth_list[page.depth] = node
+        except IndexError:
+            # an exception here means that this node is one level deeper than any we've seen so far
+            depth_list.append(node)
+
+    try:
+        root, root_children = depth_list[2] # start one level down from root, as we're not in the backend
+        return root_children
+    except IndexError:
+        return []
+
+
 @register.inclusion_tag('rca/tags/explorer_nav.html')
 def menu():
     nodes = get_navigation_menu_items()[0][1]  # don't show the homepage
@@ -256,3 +317,10 @@ def menu_subnav(nodes):
         'nodes': nodes,
     }
 
+
+@register.inclusion_tag('rca/tags/footer_nav.html')
+def footer_menu():
+    nodes = get_navigation_tree(max_depth=5, must_have_children=False)
+    return {
+        'nodes': nodes,
+    }
