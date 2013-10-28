@@ -42,7 +42,7 @@ def create_deferring_foreign_related_manager(related, original_manager_cls):
             except (AttributeError, KeyError):
                 return self.get_live_query_set()
 
-            return FakeQuerySet(*results)
+            return FakeQuerySet(related.model, results)
 
         def get_object_list(self):
             """

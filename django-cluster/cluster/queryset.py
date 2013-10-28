@@ -1,16 +1,44 @@
+# Constructor for test functions that determine whether an object passes some boolean condition
+def test_exact(attribute_name, value):
+    return lambda obj: getattr(obj, attribute_name) == value
+
 class FakeQuerySet(object):
-    def __init__(self, *results):
+    def __init__(self, model, results):
+        self.model = model
         self.results = results
 
     def all(self):
         return self
 
     def filter(self, **kwargs):
-        # TODO: when this performs real filtering, we'll need to get tricksy with our
-        # BaseInlineFormSet inheritance in forms.py, to skip over the step where the
-        # queryset gets forcibly filtered down to nothing when the primary key on the
-        # parent model is not populated.
-        return self
+        filters = []  # a list of test functions; objects must pass all tests to be included
+            # in the filtered list
+        for key, val in kwargs.iteritems():
+            key_clauses = key.split('__')
+            if len(key_clauses) != 1:
+                raise NotImplementedError("Complex filters with double-underscore clauses are not implemented yet")
+
+            filters.append(test_exact(key_clauses[0], val))
+
+        filtered_results = [
+            obj for obj in self.results
+            if all([test(obj) for test in filters])
+        ]
+
+        return FakeQuerySet(self.model, filtered_results)
+
+    def get(self, **kwargs):
+        results = self.filter(**kwargs)
+        result_count = results.count()
+
+        if result_count == 0:
+            raise self.model.DoesNotExist("%s matching query does not exist." % self.model._meta.object_name)
+        elif result_count == 1:
+            return results[0]
+        else:
+            raise self.model.MultipleObjectsReturned(
+                "get() returned more than one %s -- it returned %s!" % (self.model._meta.object_name, result_count)
+            )
 
     def count(self):
         return len(self.results)

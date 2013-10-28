@@ -17,7 +17,14 @@ class ClusterTest(TestCase):
             BandMember(name='John Lennon'),
             BandMember(name='Paul McCartney'),
         ]
+
+        # we should be able to query this relation using (some) queryset methods
         self.assertEqual(2, beatles.members.count())
+        self.assertEqual('John Lennon', beatles.members.all()[0].name)
+        self.assertEqual('Paul McCartney', beatles.members.filter(name='Paul McCartney')[0].name)
+        self.assertEqual('Paul McCartney', beatles.members.get(name='Paul McCartney').name)
+        self.assertRaises(BandMember.DoesNotExist, lambda: beatles.members.get(name='Reginald Dwight'))
+        self.assertRaises(BandMember.MultipleObjectsReturned, lambda: beatles.members.get())
 
         # these should not exist in the database yet
         self.assertFalse(Band.objects.filter(name='The Beatles').exists())
@@ -486,6 +493,53 @@ class ClusterFormTest(TestCase):
             'albums-INITIAL_FORMS': 0,
             'albums-MAX_NUM_FORMS': 1000,
         }, instance=beatles)
+        self.assertTrue(form.is_valid())
+        form.save()
+
+        new_beatles = Band.objects.get(id=beatles.id)
+        self.assertEqual('The New Beatles', new_beatles.name)
+        self.assertTrue(BandMember.objects.filter(name='George Harrison').exists())
+        self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_saved_items_with_non_db_relation(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        beatles = Band(name='The Beatles', members=[
+            BandMember(name='John Lennon'),
+            BandMember(name='Paul McCartney'),
+        ])
+        beatles.save()
+        member0, member1 = beatles.members.all()
+
+        # pack and unpack the record so that we're working with a non-db-backed queryset
+        new_beatles = Band.from_json(beatles.to_json())
+
+        form = BandForm({
+            'name': "The New Beatles",
+
+            'members-TOTAL_FORMS': 4,
+            'members-INITIAL_FORMS': 2,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'members-0-name': member0.name,
+            'members-0-DELETE': 'members-0-DELETE',
+            'members-0-id': member0.id,
+
+            'members-1-name': member1.name,
+            'members-1-id': member1.id,
+
+            'members-2-name': 'George Harrison',
+            'members-2-id': '',
+
+            'members-3-name': '',
+            'members-3-id': '',
+
+            'albums-TOTAL_FORMS': 0,
+            'albums-INITIAL_FORMS': 0,
+            'albums-MAX_NUM_FORMS': 1000,
+        }, instance=new_beatles)
         self.assertTrue(form.is_valid())
         form.save()
 

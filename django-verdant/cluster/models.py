@@ -53,7 +53,14 @@ def model_from_serializable_data(model, data):
         else:
             kwargs[field.name] = field.to_python(field_value)
 
-    return model(**kwargs)
+    obj = model(**kwargs)
+
+    if data['pk'] is not None:
+        # Set state to indicate that this object has come from the database, so that
+        # ModelForm validation doesn't try to enforce a uniqueness check on the primary key
+        obj._state.adding = False
+
+    return obj
 
 
 class ClusterableModel(models.Model):
