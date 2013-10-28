@@ -130,10 +130,12 @@ WORK_TYPES_CHOICES = (
 )
 
 WORK_THEME_CHOICES = (
-    ('theme1', 'Theme 1'),
-    ('theme2', 'Theme 2'),
-    ('themen', 'Theme N'),
+    ('culturesofcurating', 'Cultures of Curating'),
+    ('designinnovationandsociety', 'Design, Innovation and Society'),
+    ('dialoguesofformandsurface', 'Dialogues of Form and Surface'),
+    ('imageandlanguage', 'Image and Language')
 )
+
 
 SCHOOL_CHOICES = (
     ('schoolofarchitecture', 'School of Architecture'),
