@@ -7,11 +7,8 @@ from verdantsearch.search import Search
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        # Search object
-        s = Search()
-
-        # Reset the index
-        s.reset_index()
+        # Print info
+        print "Getting object list"
 
         # Get list of indexed models
         indexed_models = [model for model in models.get_models() if issubclass(model, Indexed)]
@@ -44,9 +41,17 @@ class Command(NoArgsCommand):
                     # Space free, take it
                     object_set[key] = obj
 
+        # Search object
+        s = Search()
+
+        # Reset the index
+        print "Reseting index"
+        s.reset_index()
+
         # Add objects to index
-        for obj in object_set.values():
-            s.add(obj)
+        print "Adding objects"
+        s.add_bulk(object_set.values())
 
         # Refresh index
+        print "Refreshing index"
         s.refresh_index()
