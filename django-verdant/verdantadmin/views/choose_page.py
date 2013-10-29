@@ -60,6 +60,33 @@ def browse(request, parent_page_id=None):
         }
     )
 
+def search(request):
+    page_type = request.GET.get('page_type') or 'core.page'
+    content_type_app_name, content_type_model_name = page_type.split('.')
+    try:
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
+    except ContentType.DoesNotExist:
+        raise Http404
+    desired_class = content_type.model_class()
+
+    search_form = SearchForm(request.GET)
+    if search_form.is_valid() and search_form.cleaned_data['q']:
+        pages = desired_class.objects.filter(title__istartswith=search_form.cleaned_data['q'])[:10]
+    else:
+        pages = desired_class.objects.none()
+
+    return render_modal_workflow(request,
+        'verdantadmin/choose_page/search.html', 'verdantadmin/choose_page/search.js',
+        {
+            'allow_external_link': request.GET.get('allow_external_link'),
+            'allow_email_link': request.GET.get('allow_email_link'),
+            'querystring': get_querystring(request),
+            'pages': pages,
+            'search_form': search_form,
+        }
+    )
+
+
 def external_link(request):
     prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
 

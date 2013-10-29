@@ -1,0 +1,23 @@
+<header>
+    <h1>Choose a page</h1>   
+</header>
+
+<div class="nice-padding">
+    {% include 'verdantadmin/choose_page/_link_types.html' with current='internal' %}
+
+    {% include 'verdantadmin/choose_page/_search_form.html' %}
+
+    <table class="listing small chooser">
+        <tbody>
+            {% for page in pages %}
+                <tr>
+                    <td class="title">
+                        <a class="choose-page" href="#{{ page.id }}" data-id="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}">{{ page.title }}</a>
+                    </td>
+                    <td class="type">{{ page.content_type }}</td>
+                    <td class="status"></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

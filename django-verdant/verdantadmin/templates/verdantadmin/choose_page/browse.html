@@ -5,14 +5,7 @@
 <div class="nice-padding">
     {% include 'verdantadmin/choose_page/_link_types.html' with current='internal' %}
 
-    <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
-        <ul class="fields">
-            {% for field in search_form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-            {% endfor %}
-            <li class="submit"><input type="submit" value="Search" /></li>
-        </ul>
-    </form>
+    {% include 'verdantadmin/choose_page/_search_form.html' %}
 
      <p class="breadcrumb">
         {% for page in parent_page.get_ancestors %}
