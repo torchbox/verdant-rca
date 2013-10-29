@@ -71,7 +71,9 @@ def search(request):
 
     search_form = SearchForm(request.GET)
     if search_form.is_valid() and search_form.cleaned_data['q']:
-        pages = desired_class.objects.filter(title__istartswith=search_form.cleaned_data['q'])[:10]
+        pages = desired_class.objects.exclude(
+            depth=1 # never include root
+        ).filter(title__istartswith=search_form.cleaned_data['q'])[:10]
     else:
         pages = desired_class.objects.none()
 
