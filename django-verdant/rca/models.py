@@ -32,7 +32,7 @@ class RcaImage(AbstractImage):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
 
-    search_on_fields = ['title', 'creator', 'photographer']
+    indexed_fields = ('title', 'creator', 'photographer')
 
     @property
     def default_alt_text(self):
@@ -495,6 +495,7 @@ class SchoolPage(Page, SocialFields):
     head_of_research_statement = RichTextField(null=True, blank=True)
     head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
+    indexed_fields = ("title", "get_school_display")
 
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -644,6 +645,8 @@ class ProgrammePage(Page, SocialFields):
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
+    indexed_fields = ("title", "get_programme_display", "get_school_display")
 
     def tabbed_feature_count(self):
         count = 0;
@@ -827,6 +830,8 @@ class NewsItem(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
+    indexed_fields = ("title", "intro", "body")
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area=self.area,
@@ -1003,6 +1008,7 @@ class EventItem(Page, SocialFields):
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
+    indexed_fields = ("title", "body", "get_location_display", "location_other")
 
 EventItem.content_panels = [
     MultiFieldPanel([
@@ -1215,6 +1221,8 @@ class ReviewPage(Page, SocialFields):
     author = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
 
+    indexed_fields = ("title", "body", "stapline", "author")
+
 ReviewPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -1307,6 +1315,8 @@ class StandardPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
+
+    indexed_fields = ("title", "intro", "body")
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1530,6 +1540,8 @@ class JobPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
+    indexed_fields = ("title", "get_programme_display", "get_school_display", "other_department", "get_campus_display", "description")
+
 JobPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('programme'),
@@ -1684,6 +1696,8 @@ class AlumniPage(Page, SocialFields):
     biography = RichTextField()
     show_on_homepage = models.BooleanField()
 
+    indexed_fields = ("title", "get_school_display", "get_programme_display", "intro", "biography")
+
 AlumniPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('profile_image'),
@@ -1788,6 +1802,8 @@ class StaffPage(Page, SocialFields):
     last_name = models.CharField(max_length=255)
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
+
+    indexed_fields = ("title", "get_school_display", "get_staff_type_display", "intro", "biography")
 
     def tabbed_feature_count(self):
         count = 2 #info tab and research tab will always show
@@ -1964,6 +1980,8 @@ class StudentPage(Page, SocialFields):
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
     show_on_homepage = models.BooleanField()
 
+    indexed_fields = ("title", "get_school_display", "get_programme_display", "statement")
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
@@ -2030,6 +2048,8 @@ class RcaNowPage(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     # TODO: tags
+
+    indexed_fields = ("title", "body", "author", "get_programme_display", "get_school_display", "get_area_display")
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
@@ -2171,6 +2191,8 @@ class ResearchItem(Page, SocialFields):
     eprintid = models.CharField(max_length=255, blank=True) # for import
     show_on_homepage = models.BooleanField()
 
+    indexed_fields = ("title", "get_research_type_display", "description", "get_school_display", "get_programme_display", "get_work_type_display", "work_type_other", "get_theme_display")
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area='research',
@@ -2292,6 +2314,8 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+
+    indexed_fields = ("title", "intro")
 
 ResearchInnovationPage.content_panels = [
     FieldPanel('title', classname="full title"),
