@@ -37,11 +37,13 @@ def news_carousel(context, area="", programme="", school="", count=6):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", events_index_url="/events/"):
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", events_index_url="/events/"):
     if school:
         events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
     elif programme:
         events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+    elif area:
+        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -52,6 +54,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         'display_name': display_name,
         'school': school,
         'programme': programme,
+        'area': area,
         'events_index_url': events_index_url,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -242,9 +245,83 @@ def title_split(value):
     return value.split(' ')
 
 
+def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True):
+    """
+    Return a tree structure of all pages, optionally limiting to those with
+    children and those with 'show_in_menus = True'
+
+    Set max_depth=0 in order not to filter by depth
+
+    """
+    min_child_count = 1 if must_have_children else 0
+    menu_filter = 'AND show_in_menus = True' if only_in_menu_pages else ''
+    # we add 2 to max_depth, as admin 'root' has depth 1, and site home has
+    # depth 2 thus max_depth=3 will become SQL 'AND depth <= 5', and will
+    # burrow 3 levels down from site home
+    depth_filter = 'AND depth <= %s' % (max_depth + 2) if max_depth else ''
+
+    pages = Page.objects.raw("""
+        SELECT * FROM core_page
+        WHERE depth = 2
+        OR (
+        live = True
+        AND numchild >= %(min_child_count)s
+        %(depth_filter)s
+        %(menu_filter)s
+        )
+        ORDER BY path
+    """ % {
+        'min_child_count': str(min_child_count),
+        'depth_filter': depth_filter,
+        'menu_filter': menu_filter,
+        })
+
+    # Turn this into a tree structure:
+    #     tree_node = (page, children)
+    #     where 'children' is a list of tree_nodes.
+    # Algorithm:
+    # Similar to the core.models.get_navigation_menu_items() function, maintain
+    # a list that tells us, for each depth level, the last page we saw at that
+    # depth level.  Since our page list is ordered by path, we know that
+    # whenever we see a page at depth d, its parent, _if_included_, must be the
+    # last page we saw at depth (d-1), and so we can find it in that list.
+
+    # Make a list of dummy nodes, since at any stage we may not have added the
+    # parent to the list (i.e. it's unpublished or not to be shown in menus)
+    depth_list = [(None, [])] * max([p.depth for p in pages])
+
+    for page in pages:
+        # create a node for this page
+        node = (page, [])
+        try:
+            # retrieve the parent from depth_list
+            parent_page, parent_childlist = depth_list[page.depth - 1]
+            if parent_page and page.path[:-4] == parent_page.path:
+                # the page is an immediate descendant of the parent_page, so
+                # insert this new node in the parent's child list
+                parent_childlist.append(node)
+        except IndexError:
+            # we haven't seen any relevant pages at the parent's depth yet, so
+            # don't add this page either
+            pass
+
+        # add the new node to depth_list
+        try:
+            depth_list[page.depth] = node
+        except IndexError:
+            # an exception here means that this node is one level deeper than any we've seen so far
+            depth_list.append(node)
+
+    try:
+        root, root_children = depth_list[2] # start one level down from root, as we're not in the backend
+        return root_children
+    except IndexError:
+        return []
+
+
 @register.inclusion_tag('rca/tags/explorer_nav.html')
 def menu():
-    nodes = get_navigation_menu_items(depth=6)[0][1]  # don't show the homepage
+    nodes = get_site_nav(max_depth=0, must_have_children=False, only_in_menu_pages=True)
     return {
         'nodes': nodes,
     }
@@ -256,3 +333,62 @@ def menu_subnav(nodes):
         'nodes': nodes,
     }
 
+
+@register.inclusion_tag('rca/tags/footer_nav.html')
+def footer_menu():
+    nodes = get_site_nav(max_depth=3, must_have_children=False, only_in_menu_pages=True)
+    return {
+        'nodes': nodes,
+    }
+
+
+@register.filter
+def rows_distributed(thelist, n):
+    """
+    Break a list into ``n`` 'rows', distributing columns as evenly as possible
+    across the rows. For example::
+
+        >>> l = range(10)
+
+        >>> rows_distributed(l, 2)
+        [[0, 1, 2, 3, 4], [5, 6, 7, 8, 9]]
+
+        >>> rows_distributed(l, 3)
+        [[0, 1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+        >>> rows_distributed(l, 4)
+        [[0, 1, 2], [3, 4, 5], [6, 7], [8, 9]]
+
+        >>> rows_distributed(l, 5)
+        [[0, 1], [2, 3], [4, 5], [6, 7], [8, 9]]
+
+        >>> rows_distributed(l, 9)
+        [[0, 1], [2], [3], [4], [5], [6], [7], [8], [9]]
+
+        # This filter will always return `n` rows, even if some are empty:
+        >>> rows(range(2), 3)
+        [[0], [1], []]
+
+    Taken from https://djangosnippets.org/snippets/401/
+    """
+    try:
+        n = int(n)
+        thelist = list(thelist)
+    except (ValueError, TypeError):
+        return [thelist]
+    list_len = len(thelist)
+    split = list_len // n
+
+    remainder = list_len % n
+    offset = 0
+    rows = []
+    for i in range(n):
+        if remainder:
+            start, end = (split+1)*i, (split+1)*(i+1)
+        else:
+            start, end = split*i+offset, split*(i+1)+offset
+        rows.append(thelist[start:end])
+        if remainder:
+            remainder -= 1
+            offset += 1
+    return rows

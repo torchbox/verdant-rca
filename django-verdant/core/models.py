@@ -333,7 +333,7 @@ class Page(MP_Node, ClusterableModel):
                 return "live"
 
 
-def get_navigation_menu_items(depth=2):
+def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
     # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
@@ -341,15 +341,15 @@ def get_navigation_menu_items(depth=2):
     if navigable_content_type_ids:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR content_type_id IN %s OR depth = %s
+            WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
             ORDER BY path
-        """, [tuple(navigable_content_type_ids), depth])
+        """, [tuple(navigable_content_type_ids)])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR depth = %s
+            WHERE numchild > 0 OR depth = 2
             ORDER BY path
-        """, [depth])
+        """)
 
     # Turn this into a tree structure:
     #     tree_node = (page, children)

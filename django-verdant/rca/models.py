@@ -431,6 +431,38 @@ class AdvertPlacement(models.Model):
     page = ParentalKey('core.Page', related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
+# == Snippet: Custom Content Module ==
+
+class CustomContentModuleBlock(Orderable):
+    content_module = ParentalKey('rca.CustomContentModule', related_name='blocks')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    item_title = models.CharField(max_length=255)
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image for the module block")
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('item_title'),
+        ImageChooserPanel('image'),
+        FieldPanel('text')
+    ]
+
+class CustomContentModule(models.Model):
+    title = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.title
+
+CustomContentModule.panels = [
+    FieldPanel('title'),
+    InlinePanel(CustomContentModule, 'blocks', label=""),
+]
+
+register_snippet(CustomContentModule)
+
+class CustomeContentModulePlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='custom_content_module_placements')
+    custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
 
 # == School page ==
 
@@ -988,6 +1020,7 @@ class PastEventItemManager(models.Manager):
 class EventItem(Page, SocialFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
@@ -1011,6 +1044,7 @@ EventItem.content_panels = [
     MultiFieldPanel([
         FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
+        FieldPanel('area'),
         FieldPanel('location'),
         FieldPanel('location_other'),
         FieldPanel('specific_directions'),
@@ -1398,6 +1432,14 @@ class StandardIndexAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class StandardIndexCustomContentModules(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='custom_content_modules')
+    custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('custom_content_module', CustomContentModule),
+    ]    
+
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1410,10 +1452,13 @@ class StandardIndex(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    show_events_feed = models.BooleanField(default=False)
+    events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
+    ImageChooserPanel('background_image'),
     MultiFieldPanel([
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
@@ -1421,10 +1466,10 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
+    InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
     InlinePanel(StandardIndex, 'related_links', label="Related links"),
     InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
-    ImageChooserPanel('background_image'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
@@ -1434,6 +1479,10 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
+    MultiFieldPanel([
+        FieldPanel('show_events_feed'),
+        FieldPanel('events_feed_area'),
+        ],'Events feed')
 ]
 
 StandardIndex.promote_panels = [
