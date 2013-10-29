@@ -6,23 +6,23 @@ $(function(){
 		var showAll = !$(this).data("val");
 		var showAllFor = $(this).parent().data("id");
 		$('#listing').load(current_page, $('#filters').serialize(), function(){
+			var $parent = $("#filters").find("li.filter").find("label[for=programme]").parent();
 			if($("#filters").find("li.filter").find("label.active[for=school]").length){
-				$("#filters").find("li.filter").find("label[for=programme]").parent().find("li[data-val]").show();
+				$parent.find("li[data-val]").hide();
 				$.each(related_programmes, function(){
-					$("#filters").find("li.filter").find("label[for=programme]").parent()
-						.find("li[data-val!=" + this + "]").hide();
+					$parent.find("li[data-val=" + this + "]").show();
 				});
 				if(!related_programmes.length){
-					$("#filters").find("li.filter").find("label[for=programme]").parent().find("li[data-val!='']").hide();
+					$parent.find("li[data-val!='']").hide();
 				}
-				$("#filters").find("li.filter").find("label[for=programme]").parent().find("li[data-val='']").show();
+				$parent.find("li[data-val='']").show();
 			}
 
 			if(showAllFor == "programme") if(showAll){
-				$("#filters").find("li.filter").find("label[for=programme]").parent().find("li[data-val]").show();
+				$parent.find("li[data-val]").show();
 			}
 
-			var visibleProgrammes = $("#filters").find("li.filter").find("label[for=programme]").parent().find("li").filter(function(){
+			var visibleProgrammes = $parent.find("li").filter(function(){
 				return $(this).css("display") != "none";
 			}).length;
 			if(visibleProgrammes < 8){

@@ -337,17 +337,17 @@ PROGRAMME_CHOICES = (
 )
 
 SCHOOL_PROGRAMME_MAP = {
-    'schoolofarchitecture': ('architecture', 'interiordesign'),
-    'schoolofcommunication': ('animation', 'informationexperiencedesign', 'visualcommunication'),
-    'schoolofdesign': ('designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'),
-    'schooloffineart': ('painting', 'photography', 'printmaking', 'sculpture'),
-    'schoolofhumanities': ('criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'),
-    'schoolofmaterial': ('ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'),
+    'schoolofarchitecture': ['architecture', 'interiordesign'],
+    'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+    'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+    'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+    'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+    'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
 }
 
 # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
 assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
-assert set(sum(SCHOOL_PROGRAMME_MAP.values(), ())).issubset(dict(PROGRAMME_CHOICES).keys())
+assert set(sum(SCHOOL_PROGRAMME_MAP.values(), [])).issubset(dict(PROGRAMME_CHOICES).keys())
 
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
@@ -786,7 +786,7 @@ class NewsIndex(Page, SocialFields):
 
         news = news.distinct().order_by('-date')
 
-        related_programmes = [str(k) for k in news.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(news, 10)  # Show 10 news items per page
@@ -1155,7 +1155,7 @@ class EventIndex(Page, SocialFields):
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
-        related_programmes = [str(k) for k in events.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
@@ -2179,7 +2179,7 @@ class RcaNowIndex(Page, SocialFields):
         if area:
             rca_now_items = rca_now_items.filter(area=area)
 
-        related_programmes = [str(k) for k in rca_now_items.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         rca_now_items = rca_now_items.order_by('-date')
 
