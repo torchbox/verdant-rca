@@ -3,33 +3,54 @@ from django.db import models
 
 class Indexed(object):
     @classmethod
-    def get_content_type(cls):
-        # Get parent content type
-        parent_content_type = None
+    def indexed_get_parent(cls):
         for base in cls.__bases__:
             if issubclass(base, Indexed) and issubclass(base, models.Model):
-                parent_content_type = base.get_content_type()
-                break
+                return base
 
+    @classmethod
+    def indexed_get_content_type(cls):
         # Work out content type
-        content_type = (cls._meta.app_label + "." + cls.__name__).lower()
+        content_type = (cls._meta.app_label + "_" + cls.__name__).lower()
 
-        # Return content type
-        if parent_content_type is not None:
+        # Get parent content type
+        parent = cls.indexed_get_parent()
+        if parent:
+            parent_content_type = parent.indexed_get_content_type()
             return parent_content_type + "_" + content_type
         else:
             return content_type
 
     @classmethod
-    def get_toplevel_content_type(cls):
+    def indexed_get_toplevel_content_type(cls):
         # Get parent content type
-        parent_content_type = None
-        for base in cls.__bases__:
-            if issubclass(base, Indexed) and issubclass(base, models.Model):
-                return base.get_content_type()
+        parent = cls.indexed_get_parent()
+        if parent:
+            return parent.indexed_get_content_type()
+        else:
+            # At toplevel, return this content type
+            return  (cls._meta.app_label + "_" + cls.__name__).lower()
 
-        # At toplevel, return this content type
-        return  (cls._meta.app_label + "." + cls.__name__).lower()
+    @classmethod
+    def indexed_get_indexed_fields(cls):
+        # Get indexed fields for this class as dictionary
+        indexed_fields = cls.indexed_fields
+        if isinstance(indexed_fields, tuple):
+            indexed_fields = list(indexed_fields)
+        if isinstance(indexed_fields, basestring):
+            indexed_fields = [indexed_fields]
+        if isinstance(indexed_fields, list):
+            indexed_fields = {field: dict(type="string") for field in indexed_fields}
+        if not isinstance(indexed_fields, dict):
+            raise ValueError()
+
+        # Get indexed fields for parent class
+        parent = cls.indexed_get_parent()
+        if parent:
+            # Add parent fields into this list
+            parent_indexed_fields = parent.indexed_get_indexed_fields()
+            indexed_fields = dict(indexed_fields.items() + parent_indexed_fields.items())
+        return indexed_fields
 
     indexed_fields = ()
     indexed = True

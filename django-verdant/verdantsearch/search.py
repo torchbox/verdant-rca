@@ -43,18 +43,41 @@ class Search(object):
 
         self.es.create_index(self.es_index)
 
+    def add_type(self, model):
+        # Get type name
+        content_type = model.indexed_get_content_type()
+
+        # Get indexed fields
+        indexed_fields = model.indexed_get_indexed_fields()
+
+        # Make field list
+        fields = dict({
+            "pk": dict(type="string", index="not_analyzed", store="yes"),
+            "content_type": dict(type="string"),
+        }.items() + indexed_fields.items())
+
+        # Put mapping
+        self.es.put_mapping(self.es_index, content_type, {
+            content_type: {
+                "properties": fields,
+            }
+        })
+
     def refresh_index(self):
         self.es.refresh(self.es_index)
 
     def _build_document(self, obj):
         # Get content type
-        content_type = obj.get_content_type()
+        content_type = obj.indexed_get_content_type()
 
         # Build document
         doc = dict(pk=str(obj.pk), content_type=content_type)
 
+        # Get indexed fields
+        indexed_fields = obj.indexed_get_indexed_fields()
+
         # Add fields to document
-        for field in obj.indexed_fields:
+        for field in indexed_fields.keys():
             doc[field] = getattr(obj, field)
 
             # Check if this field is callable
@@ -70,35 +93,43 @@ class Search(object):
             return
 
         # Add to index
-        self.es.index(self.es_index, "indexed_item", self._build_document(obj))
+        self.es.index(self.es_index, obj.indexed_get_content_type(), self._build_document(obj))
 
     def add_bulk(self, obj_list):
         # This is just the same as above except it inserts lists of objects in bulk
         # Build documents
-        docs = [self._build_document(obj) for obj in obj_list if isinstance(obj, Indexed) and isinstance(obj, models.Model)]
+        #docs = [self._build_document(obj) for obj in obj_list if isinstance(obj, Indexed) and isinstance(obj, models.Model)]
 
         # Add to index
-        self.es.bulk_index(self.es_index, "indexed_item", docs)
+        #self.es.bulk_index(self.es_index, "indexed_item", docs)
+
+        # TEMPORARY: We cannot bulk add a list of items with different types
+        # TODO: Find a way to bulk add many items of different types
+        for obj in obj_list:
+            self.add(obj)
 
     def search(self, query_string, model, fields=None):
         # Model must be a descendant of Indexed and be a djangi model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
             return None
 
-        # If fields are not set, use the models indexed_fields
-        if not fields:
-            fields = list(model.indexed_fields)
-
         # Query
-        query = self.s.query_raw({
+        if fields:
+            query = self.s.query_raw({
                 "query_string": {
                     "query": query_string,
                     "fields": fields,
                 }
             })
+        else:
+            query = self.s.query_raw({
+                "query_string": {
+                    "query": query_string,
+                }
+            })
 
         # Filter results by this content type
-        query = query.filter(content_type__prefix=model.get_content_type())
+        query = query.filter(content_type__prefix=model.indexed_get_content_type())
 
         # Return search results
         return SearchResults(model, query)

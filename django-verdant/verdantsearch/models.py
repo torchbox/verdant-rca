@@ -15,4 +15,4 @@ class SearchTest(models.Model, Indexed):
 class SearchTestChild(SearchTest):
     extra_content = models.TextField()
 
-    indexed_fields = ("title", "content", "extra_content")
+    indexed_fields = "extra_content"

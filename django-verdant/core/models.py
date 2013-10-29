@@ -116,9 +116,14 @@ class Page(MP_Node, ClusterableModel, Indexed):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # End RCA-specific fields
 
-    indexed_fields = ("title", )
+    indexed_fields = {
+        'title': {
+            'type': 'string',
+            'boost': 10,
+        },
+    }
 
-    title_search = Searcher(["title"])
+    title_search = Searcher(['title'])
 
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)

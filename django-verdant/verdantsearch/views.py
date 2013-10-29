@@ -2,6 +2,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
 from core import models
+from verdantsearch import Search
 import json
 
 
@@ -11,7 +12,7 @@ def search(request):
     # Search
     if query_string != "":
         do_search = True
-        search_results = models.Page.title_search(query_string)
+        search_results = Search().search(query_string, model=models.Page)
     else:
         do_search = False
         search_results = None

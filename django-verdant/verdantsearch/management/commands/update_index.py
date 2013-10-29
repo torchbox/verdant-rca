@@ -21,9 +21,8 @@ class Command(NoArgsCommand):
         # Eg, StudentPage inherits from Page and both of these models are indexed
         # If we were to add all objects from both models into the index, all the StudentPages will have two entries
         for model in indexed_models:
-            print model.__name__
             # Get toplevel content type
-            toplevel_content_type = model.get_toplevel_content_type()
+            toplevel_content_type = model.indexed_get_toplevel_content_type()
 
             # Loop through objects
             for obj in model.objects.all():
@@ -35,7 +34,7 @@ class Command(NoArgsCommand):
                     # Conflict, work out who should get this space
                     # The object with the longest content type string gets the space
                     # Eg, "core.Page-rca.StudentPage" kicks out "core.Page"
-                    if len(obj.get_content_type()) > len(object_set[key].get_content_type()):
+                    if len(obj.indexed_get_content_type()) > len(object_set[key].indexed_get_content_type()):
                         # Take the spot
                         object_set[key] = obj
                 else:
@@ -48,6 +47,11 @@ class Command(NoArgsCommand):
         # Reset the index
         print "Reseting index"
         s.reset_index()
+
+        # Add types
+        print "Adding types"
+        for model in indexed_models:
+            s.add_type(model)
 
         # Add objects to index
         print "Adding objects"
