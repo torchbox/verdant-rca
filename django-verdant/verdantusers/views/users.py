@@ -5,7 +5,7 @@ from django.contrib import messages
 from verdantusers.forms import UserCreationForm, UserEditForm
 
 def index(request):
-    users = User.objects.all()
+    users = User.objects.order_by('last_name', 'first_name')
 
     return render(request, 'verdantusers/index.html', {
         'users': users,

@@ -10,6 +10,12 @@ class UserCreationForm(BaseUserCreationForm):
     is_superuser = forms.BooleanField(label=_("Administrator"), required=False,
         help_text=_("If ticked, this user has the ability to manage user accounts.")
     )
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "first_name", "last_name", "is_superuser")
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
@@ -37,6 +43,9 @@ class UserEditForm(forms.ModelForm):
             'invalid': _("This value may contain only letters, numbers and "
                          "@/./+/-/_ characters.")})
 
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
     password1 = forms.CharField(label=_("Password"), required=False,
         widget=forms.PasswordInput, max_length=MAXIMUM_PASSWORD_LENGTH,
         help_text=_("Leave blank if not changing."))
@@ -50,7 +59,7 @@ class UserEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "is_active", "is_superuser")
+        fields = ("username", "first_name", "last_name", "is_active", "is_superuser")
 
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
