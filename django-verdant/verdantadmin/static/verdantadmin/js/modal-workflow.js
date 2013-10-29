@@ -28,7 +28,24 @@ function ModalWorkflow(opts) {
 
     self.postForm = function(url, formData) {
         $.post(url, formData, self.loadResponseText, 'text');
-    }
+    };
+
+    self.ajaxifyForm = function(formSelector) {
+        $(formSelector).each(function() {
+            var action = this.action;
+            if (this.method.toLowerCase() == 'get') {
+                $(this).submit(function() {
+                    self.loadUrl(action, $(this).serialize());
+                    return false;
+                });
+            } else {
+                $(this).submit(function() {
+                    self.postForm(action, $(this).serialize());
+                    return false;
+                });
+            }
+        });
+    };
 
     self.loadResponseText = function(responseText) {
         var response = eval('(' + responseText + ')');
