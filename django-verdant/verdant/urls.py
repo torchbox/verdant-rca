@@ -12,6 +12,7 @@ from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
 
 from rca import app_urls
+from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
@@ -35,6 +36,8 @@ urlpatterns = patterns('',
     url(r'^documents/', include(verdantdocs_urls)),
 
     url(r'^app/', include(app_urls)),
+
+    url(r'^twitter/', include(twitter_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism

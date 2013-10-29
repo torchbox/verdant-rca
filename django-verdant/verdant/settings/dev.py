@@ -4,6 +4,6 @@ DEBUG = True
 INSTALLED_APPS = list(INSTALLED_APPS) + ['devserver']
 
 try:
-	from .local import *
+    from .local import *
 except ImportError:
-	pass
+    pass

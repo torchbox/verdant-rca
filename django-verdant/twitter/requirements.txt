@@ -1,0 +1,6 @@
+django-celery==2.5.5
+celery==2.5.3
+kombu==2.1.8
+tweepy==2.1
+simplejson==3.3.1
+# sudo apt-get install rabbitmq-server

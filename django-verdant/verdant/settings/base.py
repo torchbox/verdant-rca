@@ -152,6 +152,9 @@ INSTALLED_APPS = (
     'django_embedly',
     'cluster',
     'gunicorn',
+    'djcelery',
+    'kombu.transport.django',
+    'twitter',  # the app used to proxy the Twitter REST API
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -227,3 +230,22 @@ LOGGING = {
 
 # Override the Image class used by verdantimages with a custom one
 VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+
+
+
+# CELERY SETTINGS
+
+# Use separate queues on each host if uploads should be processed by celery
+# import socket
+# CELERY_HOSTNAME = socket.gethostname()
+
+# remove this line to use rabbitmq
+BROKER_URL = 'django://'
+
+CELERY_SEND_TASK_ERROR_EMAILS = True
+
+CELERYD_LOG_COLOR = False
+
+# The scheduler used by this app needs to be defined in the settings.
+# It also contains some additional configuration options, some need to be set in the local settings.
+from twitter.settings import *
