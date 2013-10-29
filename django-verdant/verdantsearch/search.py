@@ -57,6 +57,11 @@ class Search(object):
         for field in obj.indexed_fields:
             doc[field] = getattr(obj, field)
 
+            # Check if this field is callable
+            if hasattr(doc[field], "__call__"):
+                # Call it
+                doc[field] = doc[field]()
+
         return doc
 
     def add(self, obj):
