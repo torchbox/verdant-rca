@@ -373,8 +373,8 @@ RESEARCH_TYPES_CHOICES = (
 
 STAFF_TYPES_CHOICES = (
     ('academic', 'Academic'),
-    ('technical','Technical'),
-    ('administrative','Administrative'),
+    ('technical', 'Technical'),
+    ('administrative', 'Administrative'),
 )
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
@@ -393,12 +393,12 @@ class CarouselItemFields(models.Model):
     embedly_url = models.URLField(blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
-    panels=[
-        ImageChooserPanel('image'), 
+    panels = [
+        ImageChooserPanel('image'),
         FieldPanel('overlay_text'),
         FieldPanel('link'),
         FieldPanel('embedly_url'),
-        ImageChooserPanel('poster_image'), 
+        ImageChooserPanel('poster_image'),
     ]
 
     class Meta:
@@ -551,8 +551,8 @@ class ProgrammePageCarouselItem(Orderable):
     url = models.URLField(null=True, blank=True)
 
     panels = [
-        ImageChooserPanel('image'), 
-        FieldPanel('text'), 
+        ImageChooserPanel('image'),
+        FieldPanel('text'),
         FieldPanel('url'),
     ]
 
@@ -589,8 +589,8 @@ class ProgrammePageOurSites(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
     panels = [
-        ImageChooserPanel('image'), 
-        FieldPanel('url'), 
+        ImageChooserPanel('image'),
+        FieldPanel('url'),
         FieldPanel('site_name')
     ]
 
@@ -600,7 +600,7 @@ class ProgrammeDocuments(Orderable):
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
-        DocumentChooserPanel('document'), 
+        DocumentChooserPanel('document'),
         FieldPanel('text')
     ]
 
@@ -675,7 +675,7 @@ ProgrammePage.content_panels = [
         ImageChooserPanel('facilities_image'),
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
-    ], 'Facilities'),        
+    ], 'Facilities'),
     InlinePanel(ProgrammePage, 'documents', label="Documents"),
     InlinePanel(ProgrammePage, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -732,17 +732,19 @@ class NewsIndex(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, path__startswith=self.path)
 
-        if programme and programme != '':
+        if programme:
             news = news.filter(related_programmes__programme=programme)
-        if school and school != '':
+        if school:
             news = news.filter(related_schools__school=school)
-        if area and area != '':
+        if area:
             news = news.filter(area=area)
 
-        news = news.order_by('-date')
+        news = news.distinct().order_by('-date')
+
+        related_programmes = [str(k) for k in news.values_list("related_programmes__programme", flat=True).distinct() if k]
 
         page = request.GET.get('page')
-        paginator = Paginator(news, 10) # Show 10 news items per page
+        paginator = Paginator(news, 10)  # Show 10 news items per page
         try:
             news = paginator.page(page)
         except PageNotAnInteger:
@@ -755,12 +757,13 @@ class NewsIndex(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/news_listing.html", {
                 'self': self,
-                'news': news
+                'news': news,
+                'related_programmes': related_programmes,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'news': news
+                'news': news,
             })
 
 NewsIndex.content_panels = [
@@ -926,12 +929,12 @@ class EventItemSpeaker(Orderable):
     link = models.URLField(blank=True)
 
     panels=[
-        FieldPanel('name'), 
-        FieldPanel('surname'), 
-        ImageChooserPanel('image'), 
+        FieldPanel('name'),
+        FieldPanel('surname'),
+        ImageChooserPanel('image'),
         FieldPanel('link'),
     ]
-    
+
 
 class EventItemCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.EventItem', related_name='carousel_items')
@@ -1037,12 +1040,12 @@ EventItem.promote_panels = [
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
-    
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-   
+
     InlinePanel(EventItem, 'related_schools', label="Related schools"),
     InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
     InlinePanel(EventItem, 'related_areas', label="Related areas"),
@@ -1088,7 +1091,7 @@ class EventIndex(Page, SocialFields):
         audience = request.GET.get('audience')
         period = request.GET.get('period')
 
-        if period=='past':
+        if period == 'past':
             events = self.past_events()
         else:
             events = self.future_events()
@@ -1104,9 +1107,11 @@ class EventIndex(Page, SocialFields):
         if audience and audience != '':
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
-        
+
+        related_programmes = [str(k) for k in events.values_list("related_programmes__programme", flat=True).distinct() if k]
+
         page = request.GET.get('page')
-        paginator = Paginator(events, 10) # Show 10 events per page
+        paginator = Paginator(events, 10)  # Show 10 events per page
         try:
             events = paginator.page(page)
         except PageNotAnInteger:
@@ -1124,7 +1129,8 @@ class EventIndex(Page, SocialFields):
         else:
             return render(request, self.template, {
                 'self': self,
-                'events': events
+                'events': events,
+                'related_programmes': related_programmes,
             })
 
 EventIndex.content_panels = [
@@ -1145,7 +1151,7 @@ EventIndex.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
-    
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
@@ -1187,7 +1193,7 @@ class ReviewPageRelatedDocument(Orderable):
     panels = [
         DocumentChooserPanel('document'),
         FieldPanel('document_name')
-    ] 
+    ]
 
 class ReviewPageImage(Orderable):
     page = ParentalKey('rca.ReviewPage', related_name='images')
@@ -1281,7 +1287,7 @@ class StandardPageRelatedDocument(Orderable):
     panels = [
         DocumentChooserPanel('document'),
         FieldPanel('document_name')
-    ] 
+    ]
 
 class StandardPageImage(Orderable):
     page = ParentalKey('rca.StandardPage', related_name='images')
@@ -1338,7 +1344,7 @@ StandardPage.promote_panels = [
     ], 'Social networks')
 ]
 
-   
+
 # == Standard Index page ==
 
 class StandardIndexCarouselItem(Orderable, CarouselItemFields):
@@ -1562,7 +1568,7 @@ JobPage.promote_panels = [
     ], 'Social networks')
 ]
 
-   
+
 # == Jobs index page ==
 
 class JobsIndexRelatedLink(Orderable):
@@ -1605,7 +1611,7 @@ JobsIndex.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
-    
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
@@ -1656,7 +1662,7 @@ AlumniIndex.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
-    
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
@@ -1873,7 +1879,7 @@ StaffIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
-   
+
 # == Student profile page ==
 
 class StudentPageDegree(Orderable):
@@ -2066,17 +2072,19 @@ class RcaNowIndex(Page, SocialFields):
 
         rca_now_items = RcaNowPage.objects.filter(live=True)
 
-        if programme and programme != '':
+        if programme:
             rca_now_items = rca_now_items.filter(programme=programme)
-        if school and school != '':
+        if school:
             rca_now_items = rca_now_items.filter(school=school)
-        if area and area != '':
+        if area:
             rca_now_items = rca_now_items.filter(area=area)
+
+        related_programmes = [str(k) for k in rca_now_items.values_list("related_programmes__programme", flat=True).distinct() if k]
 
         rca_now_items = rca_now_items.order_by('-date')
 
         page = request.GET.get('page')
-        paginator = Paginator(rca_now_items, 10) # Show 10 rca now items per page
+        paginator = Paginator(rca_now_items, 10)  # Show 10 rca now items per page
         try:
             rca_now_items = paginator.page(page)
         except PageNotAnInteger:
@@ -2089,7 +2097,8 @@ class RcaNowIndex(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/rca_now_listing.html", {
                 'self': self,
-                'rca_now_items': rca_now_items
+                'rca_now_items': rca_now_items,
+                'related_programmes': related_programmes,
             })
         else:
             return render(request, self.template, {
@@ -2113,13 +2122,13 @@ RcaNowIndex.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
-    
+
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
-   
+
 # == Research Item page ==
 
 class ResearchItemCarouselItem(Orderable, CarouselItemFields):
@@ -2300,7 +2309,7 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('contact_address'),
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
-        
+
     ],'Contact'),
     InlinePanel(ResearchInnovationPage, 'contact_phone', label="Contact phone number"),
     InlinePanel(ResearchInnovationPage, 'contact_email', label="Contact email address"),
@@ -2324,7 +2333,7 @@ ResearchInnovationPage.promote_panels = [
     ], 'Social networks')
 ]
 
-   
+
 # == Current research page ==
 class CurrentResearchPageAd(Orderable):
     page = ParentalKey('rca.CurrentResearchPage', related_name='manual_adverts')
@@ -2346,19 +2355,19 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items = ResearchItem.objects.filter(live=True)
 
-        if research_type and research_type != '':
+        if research_type:
             research_items = research_items.filter(research_type=research_type)
-        if school and school != '':
+        if school:
             research_items = research_items.filter(school=school)
-        if theme and theme != '':
+        if theme:
             research_items = research_items.filter(theme=theme)
-        if work_type and work_type != '':
+        if work_type:
             research_items = research_items.filter(work_type=work_type)
 
         research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 8) # Show 8 research items per page
+        paginator = Paginator(research_items, 8)  # Show 8 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
@@ -2402,7 +2411,7 @@ CurrentResearchPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
-   
+
 # == Gallery Page ==
 
 class GalleryPage(Page, SocialFields):
@@ -2430,7 +2439,7 @@ GalleryPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-]   
+]
 
 # == Contact Us page ==
 
@@ -2452,4 +2461,4 @@ ContactUsPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-] 
+]
