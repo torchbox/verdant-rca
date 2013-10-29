@@ -58,8 +58,6 @@ class StudentProfilesImporter(object):
         self.research_index = kwargs.get("research_index", "current-research")
         self.staff_index = kwargs.get("staff_index", "staff")
 
-        self.student_count = 0
-
 
     def import_texts(self, element):
         errors = {}
@@ -208,8 +206,6 @@ class StudentProfilesImporter(object):
         # If name is in ignore list, skip it
         if student_name in IGNORED_NAMES:
             return
-
-        self.student_count += 1
 
         # Emails
         emails_element = element.find("emails")
@@ -362,9 +358,6 @@ class StudentProfilesImporter(object):
         # Departments
         for department in self.root.findall("department"):
             self.import_department(department)
-
-
-        print self.student_count
 
 
 def doimport():
