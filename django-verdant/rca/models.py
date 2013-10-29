@@ -336,6 +336,15 @@ PROGRAMME_CHOICES = (
     ('textiles', 'Textiles'),
 )
 
+SCHOOL_PROGRAMME_MAP = {
+    'schoolofarchitecture': ('architecture', 'interiordesign'),
+    'schoolofcommunication': ('animation', 'informationexperiencedesign', 'visualcommunication'),
+    'schoolofdesign': ('designinteractions','designproducts','globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'),
+    'schooloffineart': ('painting', 'photography', 'printmaking', 'sculpture'),
+    'schoolofhumanities': ('criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'),
+    'schoolofmaterial': ('ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'),
+}
+
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
     ('architecture', 'Architecture'),
