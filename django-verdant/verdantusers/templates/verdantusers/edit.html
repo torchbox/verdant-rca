@@ -10,9 +10,10 @@
         <form action="{% url 'verdantusers_edit' user.id %}" method="POST">
             {% csrf_token %}
             <ul class="fields">
-                {% for field in form %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=form.password2 %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=form.is_superuser %}
                 <li><input type="submit" value="Save" /></li>
             </ul>
         </form>

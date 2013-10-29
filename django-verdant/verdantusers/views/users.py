@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
-from verdantusers.forms import UserEditForm
+from verdantusers.forms import UserCreationForm, UserEditForm
 
 def index(request):
     users = User.objects.all()

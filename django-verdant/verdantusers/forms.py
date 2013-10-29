@@ -1,7 +1,25 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
 from django.contrib.auth.hashers import MAXIMUM_PASSWORD_LENGTH
 from django.utils.translation import ugettext_lazy as _
+
+
+# extend Django's UserCreationForm with an 'is_superuser' field
+class UserCreationForm(BaseUserCreationForm):
+    is_superuser = forms.BooleanField(label=_("Administrator"), required=False,
+        help_text=_("If ticked, this user has the ability to manage user accounts.")
+    )
+
+    def save(self, commit=True):
+        user = super(UserCreationForm, self).save(commit=False)
+
+        # users can access django-admin iff they are a superuser
+        user.is_staff = user.is_superuser
+
+        if commit:
+            user.save()
+        return user
 
 
 # Largely the same as django.contrib.auth.forms.UserCreationForm, but with enough subtle changes
@@ -26,9 +44,13 @@ class UserEditForm(forms.ModelForm):
         widget=forms.PasswordInput, max_length=MAXIMUM_PASSWORD_LENGTH,
         help_text=_("Enter the same password as above, for verification."))
 
+    is_superuser = forms.BooleanField(label=_("Administrator"), required=False,
+        help_text=_("If ticked, this user has the ability to manage user accounts.")
+    )
+
     class Meta:
         model = User
-        fields = ("username",)
+        fields = ("username", "is_superuser")
 
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
@@ -50,6 +72,9 @@ class UserEditForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super(UserEditForm, self).save(commit=False)
+
+        # users can access django-admin iff they are a superuser
+        user.is_staff = user.is_superuser
 
         if self.cleaned_data["password1"]:
             user.set_password(self.cleaned_data["password1"])
