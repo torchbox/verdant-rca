@@ -175,8 +175,8 @@ class ResearchImporter(object):
 
     def import_research(self, user):
         # Ignore users with REF=FALSE
-        #if user["REF"] == "FALSE":
-        #    return
+        if user["REF"] == "FALSE":
+            return
 
         # Get username
         username = user["sAMAccountName"]

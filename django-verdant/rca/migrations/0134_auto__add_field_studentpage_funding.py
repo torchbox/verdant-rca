@@ -8,15 +8,15 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'StaffPage.school'
-        db.add_column(u'rca_staffpage', 'school',
-                      self.gf('django.db.models.fields.CharField')(default='School of Design', max_length=255),
+        # Adding field 'StudentPage.funding'
+        db.add_column(u'rca_studentpage', 'funding',
+                      self.gf('django.db.models.fields.CharField')(default='', max_length=255, blank=True),
                       keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting field 'StaffPage.school'
-        db.delete_column(u'rca_staffpage', 'school')
+        # Deleting field 'StudentPage.funding'
+        db.delete_column(u'rca_studentpage', 'funding')
 
 
     models = {
@@ -1000,6 +1000,7 @@ class Migration(SchemaMigration):
             'degree_subject': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'degree_year': ('django.db.models.fields.CharField', [], {'max_length': '4'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'funding': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),

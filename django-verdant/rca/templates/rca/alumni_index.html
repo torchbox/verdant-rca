@@ -40,15 +40,6 @@
 						{% endfor %}
 	                </select>
 	            </li>
-	            <li class="filter">
-	                <label for="area">Area</label>
-	                <select id="area" name="area">
-	                    <option value="">All staff</option>
-	                    {% for key, value in global_areas %}
-	                    	<option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
-						{% endfor %}
-	                </select>
-	            </li>
 				<input type="submit" />
 			</ul>
 		</form>
