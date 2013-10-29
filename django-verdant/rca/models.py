@@ -364,6 +364,7 @@ QUALIFICATION_CHOICES = (
     ('ma', 'MA'),
     ('mphil', 'MPhil'),
     ('phd', 'PhD'),
+    ('researchstudent', 'Research Student'),
 )
 
 RESEARCH_TYPES_CHOICES = (
@@ -2039,6 +2040,7 @@ class StudentPage(Page, SocialFields):
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True)
+    funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
@@ -2074,6 +2076,7 @@ StudentPage.content_panels = [
     FieldPanel('work_description', classname="full"),
     FieldPanel('work_type'),
     FieldPanel('work_location'),
+    FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
     FieldPanel('work_awards'),
