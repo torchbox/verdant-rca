@@ -17,7 +17,7 @@
             {% if dates %}
             	{% for date in dates %}
                 	<h3 class="h5">
-						{{ date.date_from }}{% if date.date_to %} to {{ date.date_to }}{% endif %}
+						{{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
 						{% if date.time_from %} &#124;
 							<span>{{ date.time_from }}{% if date.time_to %} - {{ date.time_to }}{% endif %}</span>
 						{% endif %}
@@ -26,7 +26,7 @@
 			{% endif %}
         {% endwith %}
 
-		<p class="bc3">{{ self.location }}{% if self.location_other %} and {{ self.location_other }}{% endif %}{% if self.specific_directions_link and self.specific_directions %} &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>{% endif %}</p>
+		<p class="bc3">{{ self.get_location_display }}{% if self.location_other %} and {{ self.location_other }}{% endif %}{% if self.specific_directions_link and self.specific_directions %} &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>{% endif %}</p>
 		{% if self.cost %}{{ self.cost|richtext }}{% endif %}
 		
 		{% if self.external_link and self.external_link_text %}
@@ -45,7 +45,7 @@
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
 	
-		{% include "rca/includes/modules/body-text.html" %}
+		{% include "rca/includes/modules/body-text.html" with body=self.body %}
 
 		<section class="four">
 			{% with self.speakers.all as speakers %}
@@ -59,7 +59,7 @@
 										<a href="{{ speaker.link }}">
 									{% endif %}
 										{% if speaker.image %}
-											<div class="image">{% image speaker.image width-400 %}</div>
+											<div class="image">{% image speaker.image width-200 %}</div>
 										{% endif %}
 										<div class="content">
 											<p class="a3">
@@ -77,6 +77,11 @@
 						</ul>
 					</section>
 				{% endif %}
+				{% if self.middle_column_body %}
+	                <div class="body-text middle-column-body-text events-middle-column-body-text">
+	                    {{ self.middle_column_body|richtext }}
+	                </div>
+           	    {% endif %}
 			{% endwith %}
 		</section>
 			
@@ -88,3 +93,8 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showRelatedLinks="true" %}
 {% endblock %}
+
+<!-- TODOs
+	- add to calendar
+	- book now icon when confirmed
+-->

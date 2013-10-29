@@ -65,7 +65,9 @@
     }
 
     /* === CSS BELOW THIS POINT IS CUSTOM TO RCA === */
-    h2,h3,h4,h5,h6{
+    /* TODO: find extensible way for developers to style rich text to suit their implementation, without making changes to anything within verdantadmin */
+
+    h1,h2,h3,h4,h5,h6{
         font-family:inherit;
     }
     h1{} /* shouldn't be used */
@@ -73,6 +75,8 @@
     h2 {
         font-size: 2em;
         line-height: 1.2em;
+        padding-top:0.5em;
+        border-top:1px solid #CCC;
     }
     h3 {
         font-size: 1.7em;

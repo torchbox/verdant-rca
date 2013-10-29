@@ -25,9 +25,16 @@ function(modal) {
         return false;
     }
     function setPage(page) {
+
+        if($('#id_q').val().length){
+            dataObj = {q: $('#id_q').val(), p: page};
+        }else{
+            dataObj = {p: page};
+        }
+
         $.ajax({
             url: searchUrl,
-            data: {q: $('#id_q').val(), p: page},
+            data: dataObj,
             success: function(data, status) {
                 $('#image-results').html(data);
                 ajaxifyLinks($('#image-results'));
@@ -60,7 +67,7 @@ function(modal) {
 
     $('#id_q').on('input', function() {
         clearTimeout($.data(this, 'timer'));
-        var wait = setTimeout(search, 50);
+        var wait = setTimeout(search, 200);
         $(this).data('timer', wait);
     });
     $('a.suggested-tag').click(function() {

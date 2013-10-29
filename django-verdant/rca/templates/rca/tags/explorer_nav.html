@@ -1,0 +1,13 @@
+{% load rca_tags %}
+
+{% for page, children in nodes %}
+    <li class="{% if children %} has-children {% endif %} ">
+        <a href="{{ page.url }}">{{ page.title }}</a>
+        {% if children %}
+            <div class="children">+</div>
+            <ul class="dl-submenu">
+                {% menu_subnav children %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

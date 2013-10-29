@@ -66,16 +66,9 @@
 				{% endif %}
 
 				<div class="row">
-					{% if self.download_info %}
-						<div class="download-wrapper">
-							<a href="{{ self.download_info.url }}">
-								<div class="download">
-									Download
-								</div>
-							</a>
-						</div>
-					{% endif %}
-					{% include "rca/includes/modules/share-button.html" %}
+					<div class="single borders">
+		                {% include "rca/includes/modules/share-button.html" %}
+		            </div>
 				</div>
 
 			</section>
@@ -84,24 +77,37 @@
 			<section class="job-details">
 				<section class="module job-description">
 					<ul class="row">
-						<li class="col-8 body-text-style">
+						<li class="col-8">
 							<h2 class="module-title">Job Description</h2>
-							{{ self.description|richtext }}
+							<div class="body-text-style">
+								{{ self.description|richtext }}
+							</div>
+							{% if self.download_info %}
+								<ul class="button-bar">
+					            	<li><a href="{{ self.download_info.url }}" class="button icon icon-download">Download information pack</a></li>
+					        	</ul>
+							{% endif %}
 						</li>
 					</ul>
 				</section>
 
 				<section class="module">
 					<ul class="row">
-						<li class="col-8 body-text-style">
+						<li class="col-8">
 							<h2 class="module-title">Application and equal opportunities monitoring form</h2>
-							<p>Please click to download the Application Form (<a href="">Word version</a> or <a href="">PDF version</a>) and <a href="">Equal Opportunities Monitoring Form</a> (Word version).</p>
-							
-							<p>Please note it is vital that all sections of the application form are completed. CVs cannot be accepted as a substitute for any section.</p>
+							<div class="body-text-style">
+								<p>Please use the links below to download the Application Form and Equal Opportunities Monitoring Form.</p>
+								
+								<p>Please note it is vital that all sections of the application form are completed. CVs cannot be accepted as a substitute for any section.</p>
 
-							<p>The ‘Additional Information’ section is particularly important to the selection process; you should use this to outline the skills, knowledge and experience that you have that relates specifically to the job description and person specification for the post. You may continue sections on separate sheets if necessary.</p>
+								<p>The ‘Additional Information’ section is particularly important to the selection process; you should use this to outline the skills, knowledge and experience that you have that relates specifically to the job description and person specification for the post. You may continue sections on separate sheets if necessary.</p>
 
-							<p>If you are disabled and require help completing your application form, or if you will require help or special facilities should you be short-listed for interview, please telephone the Personnel Assistant on +44 (0)20 7590 4148 or email <a href="mailto:personnel@rca.ac.uk">personnel@rca.ac.uk</a>.</p>
+								<p>If you are disabled and require help completing your application form, or if you will require help or special facilities should you be short-listed for interview, please telephone the Personnel Assistant on +44 (0)20 7590 4148 or email <a href="mailto:personnel@rca.ac.uk">personnel@rca.ac.uk</a>.</p>
+
+								{% job_documents %}
+								
+							</div>
+
 						</li>
 					</ul>
 				</section>
@@ -125,7 +131,6 @@
 						</li>
 					</ul>
 				</section>
-				{% include "rca/includes/modules/contact.html" %}
 			</section>
 		</li>
 	</ul>
@@ -137,5 +142,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showJobs="true" %}
 {% endblock %}
-
-<!-- To dos: confirmation re download links from Chris required -->

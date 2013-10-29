@@ -1,0 +1,80 @@
+{% extends "rca/base.html" %}
+{% load rca_tags rich_text pageurl %}
+
+
+{% block body_class %}
+    type-news-index
+{% endblock %}
+
+{% block content %}
+
+	{% include "rca/includes/modules/h1-major.html" %}
+
+	<section class="filters three-filters row">
+	    <form id="filters" action="{% pageurl self %}" method="GET">
+	        <ul>
+	        	<li class="filter">
+	                <label for="school">School</label>
+	                <select id="school" name="school">
+	                    <option value="">All schools</option>
+	                    {% for key, value in global_schools %}
+	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+				<li class="filter three-cols">
+	                <label for="programme">Programme</label>
+	                <select id="programme" name="programme">
+	                    <option value="">All programmes</option>
+	                    {% for key, value in global_programmes %}
+	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <li class="filter">
+	                <label for="area">Area</label>
+	                <select id="area" name="area">
+	                    <option value="">All areas</option>
+	                    {% for key, value in global_areas %}
+	                    	<option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
+						{% endfor %}
+	                </select>
+	            </li>
+	            <!-- <li class="filter">
+	                <label for="tags">Tags</label>
+	                <select id="tags" name="tags">
+	                    <option value="">All tags</option>
+	                </select>
+	            </li> -->
+				<input type="submit" />
+			</ul>
+		</form>
+	</section>
+
+	{% if self.intro %}
+		<div class="content bc3">{{ self.intro|richtext }}</div>
+	{% endif %}
+
+    <div id="listing">
+    	{% include "rca/includes/rca_now_listing.html" %}
+	</div>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showTags="true" %}
+{% endblock %}
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for rca_now_index set here so that it can be used by the script being called
+		var current_page = "{{ global_rca_now_index_url }}";
+	</script>
+	<script src="/static/rca/js/filters.js"></script>
+{% endblock %}
+
+<!-- TODOs
+	- filter of programme by school (or other filtering to be discussed)
+	- Tags
+-->

@@ -1,0 +1,14 @@
+{% load pageurl image_tags %}
+
+{% if programmes %}
+
+    <section class="six-menu-block row module">
+		<h2 class="module-title">Programmes</h2>
+		<ul>
+		    {% for programme in programmes %}
+		    	<li><a href="{% pageurl programme %}">{{ programme.title }}</a>
+		    	</li>
+		    {% endfor %}
+		</ul>
+    </section>
+{% endif %}

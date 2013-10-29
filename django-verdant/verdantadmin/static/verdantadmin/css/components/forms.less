@@ -35,7 +35,7 @@ legend{
 }
 
 label{
-    font-weight:300;
+    font-weight:normal;
     display:block;
     padding:0 0 0.5em 0;
     line-height:1em;
@@ -98,12 +98,12 @@ input[type=radio]:before{
     cursor:pointer;
     display:block;
     content:"K";
-    width:20px;
-    height:20px;
-    line-height:20px;
-    background-color:white;
-    border:1px solid lighten(@color-grey, 50%);
-    color:#EEE;
+    width: 1em;
+    line-height: 1.1em;
+    padding: 4px;
+    background-color: white;
+    color:@color-grey-lighter;
+    border: 1px solid @color-grey-lighter;
 }
 input[type=radio]:checked:before{
     content:"K";
@@ -149,6 +149,8 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     font-size:0.95em;
     white-space: nowrap;
     position:relative;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
     
     &:hover{
         background-color: @color-button-hover;
@@ -161,13 +163,22 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
             background-color: @color-button-yes-hover;
         }
     }
-    &.no{
+    &.no, &.serious{
         background-color: @color-button-no;
         &:hover{
             background-color: @color-button-no-hover;
         }
     }
+
+    + input[type=submit], 
+    + input[type=reset], 
+    + input[type=button], 
+    + .button, 
+    + button{
+        margin-left:1em;
+    }
 }
+
 
 input[type=submit].button-small, input[type=reset].button-small, input[type=button].button-small, .button.button-small, button.button-small{
     font-size:0.85em;
@@ -182,7 +193,7 @@ a.button{
 /* Other text */
 .help, .error-message{
     font-size:0.85em;
-    font-weight:300;
+    font-weight:normal;
     margin:0 0 0.5em 0;
 }
 .help{
@@ -221,9 +232,9 @@ li.focused > .help{
     color:@color-red;
     clear:both;
 }
-.error input, .error textarea, .error select, .error .tagit{
+.error input[type=text], input[type=email], input[type=tel], .error textarea, .error select, .error .tagit{
     border-color:@color-red;
-    background-color:lighten(@color-red, 45%);
+    background-color:@color-input-error-bg;
 }
 
 /* field sizing */
@@ -326,29 +337,32 @@ ul.inline li:first-child, li.inline:first-child{
             content:"b";
         }
         .title{
+            z-index:0;
             float: left;
             margin-left: -146px;
             width: 126px;
             max-height: 40px;
             overflow: hidden;
             font-size: 0.7em;
-            padding: 30px 10px 0 10px;
+            padding: 30px 10px 0px 10px;
             display: block;
             top: 0px;
             position: absolute;
             line-height: 1.4em;
             text-align: center;
             color: black;
-
-           
-            &:hover{
-                width:130px;
-                padding:0;
-                top: 0;
-                height: 200px;
-                max-height:100%;
-                background-color: white;
-            }
+            white-space:nowrap;
+            text-overflow:ellipsis;
+        }
+        &:hover .title{
+            text-align:left;
+            white-space:normal;
+            width:126px;
+            padding:10px;
+            top: 0;
+            height: 80px;
+            max-height:100%;
+            background-color: white;
         }
     }
 }
@@ -483,7 +497,7 @@ ul.tagit li.tagit-choice-editable{
         right:0;
         top:0;
         input{
-            padding:1.35em 2em;
+            padding:1.55em 2em;
         }
     }
     .popular-tags{

@@ -1,4 +1,4 @@
-{% load rca_tags image_tags %}
+{% load rca_tags image_tags pageurl %}
 
 <!-- Events -->
 {% if showToday %}
@@ -8,18 +8,37 @@
 <!-- adverts -->
 {% if showAdverts %}
     <!-- adverts -->
-    <div class="apply">
-        <a href="#">
-            <h2>Apply to Study</h2>
-            <p>at the Royal College of Art</p>
-        </a>
-    </div>
+    {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block. Because of the way cycles work initially start it outside any forloop, with display:none {% endcomment %}
+    <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
+
+    {% if global_adverts %}
+        {% for advert in global_adverts %}
+            <div class="{% cycle adcolors %}">
+                {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
+                    <h2>{{ advert.text }}</h2>
+                    {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
+                {% if advert.url or advert.page %}</a>{% endif %}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% with self.manual_adverts.all as adverts %}
+        {% if adverts %}
+            {% for advert in adverts %}
+                <div class="{% cycle adcolors %}">
+                    {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
+                    <h2>{{ advert.ad.text }}</h2>
+                    {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
+                {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 {% endif %}
 
 <!--open days-->
 {% if showOpenDays %}
-    <div class="open-days">
-        <a href="#">
+    <div class="{% cycle adcolors %}">
+        <a href="{{ global_events_index_url }}?audience=openday&programme={{ self.programme }}">
             <h2>Open Days</h2>
         </a>
     </div>
@@ -27,35 +46,7 @@
 
 <!-- Related links -->
 {% if showRelatedLinks %}
-    {% load pageurl %}
-    {% if self.get_other_siblings|length > 0 or self.related_links.all|length > 0 %}
-    <div class="related expanded">
-        <h2>In this section</h2>
-        <div class="wrapper">
-            <!-- <h3 class="dark">In this section</h3> -->
-            {% if self.get_siblings %}
-                <ul>
-                    {% for page in self.get_other_siblings %}
-                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-            
-            {% with self.related_links.all as related_links %}
-                {% if related_links %}
-                    <h3>See also</h3>
-                    <ul class="extra-links">
-                    {% for link in related_links %}
-                        {% if link.link and link.link_text %}
-                            <li><a href="{% pageurl link.link %}">{{ link.link_text }}</a></li>
-                        {% endif %}
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-        </div>
-    </div>
-    {% endif %}
+    {% sidebar_links calling_page=self %}
 {% endif %}
 
 <!-- related content -->
@@ -66,7 +57,19 @@
                 <div class="related-content-item">
                     <a href="{% pageurl news_item %}">
                         <figure>
-                            {% if news_item.feed_image %}{% image news_item.feed_image width-400 %}{% endif %}
+                            {% if news_item.feed_image %}
+                                {% image news_item.feed_image width-180 %}
+                            {% else %}
+                                {% with news_item.carousel_items.all as carousel_items %}
+                                    {% with carousel_items|first as carousel_item %}
+                                        {% if carousel_item.image %}
+                                            {% image carousel_item.image fill-300x169 %}
+                                        {% else %}
+                                            <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="180">
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
                             <figcaption>{{news_item.title }}</figcaption>
                         </figure>
                     </a>
@@ -77,7 +80,11 @@
 {% endif %}
 
 {% if showRelatedStudents %}
-    {% students_related programme=self.programme exclude=self %}
+    {% students_related programme=self.programme year=self.degree_year exclude=self %}
+{% endif %}
+
+{% if showRelatedStudentsWork %}
+    {% students_related_work year=self.degree_year exclude=self %}
 {% endif %}
 
 {% if showRandomStaff %}
@@ -95,7 +102,7 @@
 
 <!-- tags -->
 {% if showTags %}
-    <div class="related expanded">
+    <!--<div class="related expanded">
         <h2>Tags</h2>
         <div class="wrapper">
             <ul>
@@ -107,5 +114,5 @@
                 <li><a href="">illustration (1)</a></li>
             </ul>
         </div>
-    </div>
+    </div>-->
 {% endif %}

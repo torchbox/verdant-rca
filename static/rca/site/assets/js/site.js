@@ -145,7 +145,6 @@ $(function(){
     showHideDialogue();
     showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
     
-
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -246,6 +245,8 @@ $(function(){
     Harvey.attach(breakpoints.desktopSmall, {
         setup: function(){}, 
         on: function(){
+            /* Duplicate anything added to this function, into the ".lt-ie9" section below */
+
             /* Packery */
             $('.packery').imagesLoaded( function() {
                 var packery = $('.packery').packery({
@@ -258,6 +259,17 @@ $(function(){
             $('.packery').destroy();
         }
     });
+
+    /* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
+    $('.lt-ie9').each(function(){
+        /* Packery */
+        $('.packery').imagesLoaded( function() {
+            var packery = $('.packery').packery({
+                itemSelector: '.item',
+                stamp: ".stamp"
+            });
+        });
+    })
 
     /* x-plus functionality */
 
@@ -317,7 +329,7 @@ $(function(){
 
                 // get next set of results
                 var nextPage = $('<html></html>').load(nextLinkUrl, function(){
-                    newItems = $('.x-plus li:not(.load-more)', nextPage);
+                    newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
                     

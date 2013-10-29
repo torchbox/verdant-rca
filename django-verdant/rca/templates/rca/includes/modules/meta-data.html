@@ -120,7 +120,7 @@
                 {% endif %}
 
                 <dd>Date</dd>
-                <dt>Not currently in model - to be confirmed by Chris</dt>
+                <dt>{{ self.date|date:"j F Y" }}</dt>
 
                 <dd>Programme</dd>
                 <dt>{{ self.get_programme_display }}</dt>

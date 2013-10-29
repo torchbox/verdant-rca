@@ -3,11 +3,7 @@
 </header>
 
 <div class="nice-padding">
-    <p class="link-types">
-        <a href="{% url 'verdantadmin_choose_page' %}?{{ querystring }}">Internal link</a>
-        | <b>External link</b>
-        {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
-    </p>
+    {% include 'verdantadmin/choose_page/_link_types.html' with current='external' %}
 
     <form action="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}" method="post">
         {% csrf_token %}

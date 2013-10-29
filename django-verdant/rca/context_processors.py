@@ -14,4 +14,6 @@ def global_vars(request):
 		'global_events_index_url': '/events/',
 		'global_news_index_url': '/news/',
 		'global_current_research_url': '/current-research/',
+		'global_rca_now_index_url': '/showcase/rca-now/',
+		'global_staff_index_url': '/staff/',
 	}

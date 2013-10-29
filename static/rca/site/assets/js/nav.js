@@ -1,35 +1,63 @@
 $(function(){
-	Harvey.attach('screen and (max-width:767px)', {
-		setup: function(){}, // called when the query becomes valid for the first time
+
+	/* configure left slideout menu toggle */
+	$(".mobile-menu-button").toggleClick(function(){
+		$("body").addClass("show-mobile-menu");
+	},function(){
+		$("body").removeClass("show-mobile-menu");
+	});
+
+
+	// copy the sidebar so that we can show it on the left in the mobile version
+	if(!$(".mobile-menu-wrapper > aside").length){
+		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	}
+
+	Harvey.attach(breakpoints.mobile, {
+		setup: function(){},
 		on: function(){
 			$('nav').addClass('dl-menuwrapper').dlmenu({
-				animationClasses : { 
-					classin : 'dl-animate-in-2', 
-					classout : 'dl-animate-out-2' 
+				animationClasses : {
+					classin : 'dl-animate-in-2',
+					classout : 'dl-animate-out-2'
 				}
 			});
-		}, // called each time the query is activated
+		},
 		off: function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
 			$('nav *').removeClass('dl-subview dl-subviewopen');
 			$('nav .dl-back').remove();
 
-		} // called each time the query is deactivated
+			// remove width from page content which is needed to keep it constant when showing the mobile menu
+			$("body").removeClass("show-mobile-menu");
+			$("body, .mobile-content-wrapper").removeAttr("style");
+
+		}
 	});
-	Harvey.attach('screen and (min-width:768px)', {
-		setup: function(){}, // called when the query becomes valid for the first time
+	Harvey.attach(breakpoints.desktopSmall, {
+		setup: function(){},
 		on: function(){
+			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
+
+			//enable desktop dropdown nav
 			desktopNav.apply()
-		}, // called each time the query is activated
+		},
 		off: function(){
+			//kill desktop dropdown nav
 			desktopNav.revoke()
-		} // called each time the query is deactivated
+		}
 	});
+
+	/* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
+    $('.lt-ie9').each(function(){
+        desktopNav.apply()
+    })
 
 });
 
 var desktopNav = {
 	apply: function(){
+		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
@@ -41,16 +69,15 @@ var desktopNav = {
 			$self.find('ul').each(function(){
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
-			
+
 			/* create breadcrumb menu from selected items */
 			selected.find('ul').remove();
 			menu.before($('<ul class="breadcrumb"></ul>').append(selected));
 
 			$self.data('maxHeight', maxHeight + 70);
-			
-			// set menu as ready
-			$self.addClass('ready');			
 
+			// set menu as ready
+			$self.addClass('ready');
 
 			function openMenu(){
 				$self.addClass('changing');
@@ -75,13 +102,19 @@ var desktopNav = {
 
 			function closeMenu(){
 				$self.addClass('changing').removeClass('hovered');
-				
+
+				// reset or submenu
+				setTimeout(function(){
+					$('ul', menu).stop().removeAttr('style');
+				}, 600)
+
+
 				menu.stop().hide()
 
 				$self.stop().animate({
 					height: 34
 				}, 200, function(){
-					$self.find('.selected > ul').stop().show()
+					// $self.find('.selected > ul').stop().show()
 					$self.removeClass('changing').removeClass('open');
 				});
 
@@ -94,18 +127,7 @@ var desktopNav = {
 				})
 			}
 
-			// toggle.hoverIntent({
-			// 	over: function(){
-			// 		openMenu();
-			// 	},
-			// 	out: function(e){
-			// 		var relTarg = e.relatedTarget || e.toElement;
-			// 		if($(relTarg).get(0) != $self.get(0) && $(relTarg).closest('nav').get(0) != $self.get(0)){
-			// 			closeMenu();
-			// 		}
-			// 	},
-			// 	timeout:500
-			// })
+			// open/close menu based on toggle click
 			toggle.click(function(){
 				if($self.hasClass('open')){
 					closeMenu();
@@ -114,41 +136,26 @@ var desktopNav = {
 				}
 			});
 
+			// close menu on all clicks outside the toggle
 			$(document).on('click', function(e){
 				if($(e.target).get(0) != toggle.get(0)){
 					closeMenu();
 				}
 			});
 
-			menu.hoverIntent({				
-				over: function(){
-					openMenu();
-				}, 
-				out: function(){
-					closeMenu();
-				},
-				timeout:500
-			})	
-
 			$('li', menu).hoverIntent({
-				over: function(){
-					$('li', menu).removeClass('open');
+				over: function(e){
 					$self.addClass('hovered');
-					$(this).addClass('open');
-					$(this).siblings().find(' > ul').stop().hide()
-					$(this).find(' > ul').fadeIn(200);
+
+					$('.open', $(this).parent()).removeClass('open');
+					$(this).addClass('open').parents('li').addClass('open');
+
+					$(this).siblings().find(' > ul').stop().hide();
+					$(this).find(' > ul').stop().fadeIn(200);
 				},
-				out: function(){
-					$(this).removeClass('open');
-					if(!$('nav').hasClass('changing')){
-						$(this).find('> ul').stop().hide();
-					}
-				},
-				timeout: 600
+				out: function(){},
+				timeout: 200
 			});
-			$('li' ,$self).bind('mouseout', function(){
-				
-			})
 		});
 	},
 

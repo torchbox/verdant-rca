@@ -45,7 +45,6 @@
 	    </form>
 	</section>
 
-
 	<div id="listing">
 	    {% include "rca/includes/news_listing.html" %}
 	</div>
@@ -55,19 +54,17 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}
 
 {% block extra_js %}
 	<script type="text/javascript">
-		//global var for news_index set here so that it can be used by the script being called
-		var news_index = "{{ global_news_index }}";
+		//global var for current_page set here so that it can be used by the script being called
+		var current_page = "{{ global_news_index }}";
 	</script>
-	<script src="/static/rca/js/news-listing.js"></script>
+	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
 
-<!-- To dos:
-- ads
-- infinite scroll
-- filter of programmes when school is selected (or other filtering to be discussed)
+<!-- TODOs:
+	- filter of programme by school (or other filtering to be discussed)
  -->

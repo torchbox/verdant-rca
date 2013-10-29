@@ -1,0 +1,14 @@
+{% load pageurl image_tags %}
+{% if students %}
+
+    {% for student in students %}
+        <div class="related-content-item">
+            <a href="{% pageurl student %}">
+                <figure class="staff">
+                    <div class="image">{% image student.feed_image width-180 %}</div>
+                    <figcaption>{{ student.first_name }}<span>{{ student.last_name }}</span></figcaption>
+                </figure>
+            </a>
+        </div>
+    {% endfor %}
+{% endif %}

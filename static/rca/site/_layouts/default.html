@@ -35,11 +35,18 @@
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
 
-        <div class="header-wrapper" data-spy="affix" data-offset-top="151">
-            {% include header.html %}
+        <div class="mobile-menu-wrapper">
         </div>
 
-        <div class="slider">
+        <div class="mobile-content-wrapper">
+
+            <div class="mobile-menu-button">Today</div>
+
+            <div class="header-wrapper" data-spy="affix" data-offset-top="151">
+                {% include header.html %}
+            </div>
+
+
             <div class="page-wrapper" data-spy="affix" data-offset-top="151">
                 <div class="page-content">
                     <div class="inner">
@@ -50,9 +57,10 @@
                     {% include sidebar.html %}
                 </aside>
             </div>
-        </div>
 
-        {% include footer.html %}
+
+            {% include footer.html %}
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>

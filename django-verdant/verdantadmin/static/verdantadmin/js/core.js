@@ -14,7 +14,7 @@ $(function(){
 
     // Resize nav to fit height of window. This is an unimportant bell/whistle to make it look nice
     var fitNav = function(){
-        $('.nav-wrapper').css('min-height',$(window).height());
+        $('.nav-wrapper').css('min-height',$(window).height())
     }
     fitNav();
     $(window).resize(function(){
@@ -49,6 +49,14 @@ $(function(){
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
     });
+
+    /* close all dropdowns on body clicks */
+    $(document).on('click', function(e){
+        var relTarg = e.relatedTarget || e.toElement;
+        if(!$(relTarg).hasClass('dropdown-toggle')){
+            $('.dropdown').removeClass('open');
+        }
+    })
 
     /* Bulk-selection */
     $(document).on('click', 'thead .bulk', function(){

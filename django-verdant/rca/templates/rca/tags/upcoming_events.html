@@ -9,7 +9,7 @@
                         <h3>{{ event.start_date|date:"j F" }}</h3>
                         <p>{{ event.title }}</p>
                     </a>
-                    {% if event.audience %}<span>{{ event.audience }}</span>{% endif %}
+                    {% if event.audience %}<span>{{ event.get_audience_display }}</span>{% endif %}
                 </li>
             {% endfor %}
         </ul>

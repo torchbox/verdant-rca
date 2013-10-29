@@ -2,29 +2,25 @@
     Javascript declarations to be included on the 'create page' and 'edit page' views
 {% endcomment %}
 
+<script src="{{ STATIC_URL }}verdantadmin/js/vendor/rangy-core.js"></script>
+<script src="{{ STATIC_URL }}verdantadmin/js/vendor/hallo.js"></script>
+<script src="{{ STATIC_URL }}verdantadmin/js/vendor/tag-it.js"></script>
 <script src="{{ STATIC_URL }}verdantadmin/js/expanding_formset.js"></script>
-<script src="{{ STATIC_URL }}verdantadmin/js/rangy-core.js"></script>
-<script src="{{ STATIC_URL }}verdantadmin/js/hallo.js"></script>
 <script src="{{ STATIC_URL }}verdantadmin/js/modal-workflow.js"></script>
-<script src="{{ STATIC_URL }}verdantadmin/js/hallo-verdant-toolbar.js"></script>
-<script type="text/coffeescript" src="{{ STATIC_URL }}verdantadmin/js/hallo-verdantlink.coffee"></script>
-<script type="text/coffeescript" src="{{ STATIC_URL }}verdantadmin/js/hallo-hr.coffee"></script>
-
-<script type="text/coffeescript" src="{{ STATIC_URL }}verdantimages/js/hallo-verdantimage.coffee"></script>
-<script type="text/coffeescript" src="{{ STATIC_URL }}verdantdocs/js/hallo-verdantdoclink.coffee"></script>
-<script src="{{ STATIC_URL }}verdantadmin/js/verdant-admin.js"></script>
+<script src="{{ STATIC_URL }}verdantadmin/js/hallo-plugins/hallo-verdant-toolbar.js"></script>
+<script type="text/coffeescript" src="{{ STATIC_URL }}verdantadmin/js/hallo-plugins/hallo-verdantlink.coffee"></script>
+<script type="text/coffeescript" src="{{ STATIC_URL }}verdantadmin/js/hallo-plugins/hallo-hr.coffee"></script>
+<script type="text/coffeescript" src="{{ STATIC_URL }}verdantimages/js/hallo-plugins/hallo-verdantimage.coffee"></script>
+<script type="text/coffeescript" src="{{ STATIC_URL }}verdantdocs/js/hallo-plugins/hallo-verdantdoclink.coffee"></script>
+<script src="{{ STATIC_URL }}verdantadmin/js/page-editor.js"></script>
 
 {% comment %}
-    TODO: have a mechanism to specify this include (and hallo-verdantimage.js)
+    TODO: have a mechanism to specify this include (and hallo-verdantimage.coffee)
     within the verdantimages app -
     ideally verdantadmin shouldn't have to know anything at all about verdantimages
+	TODO: a method of injecting these sorts of things on demand when the modal is spawned.
 {% endcomment %}
 <script src="{{ STATIC_URL }}verdantimages/js/image-chooser.js"></script>
-
-{# we'll want tag-it included, for the benefit of any modals that use it, like images. #}
-{# TODO: a method of injecting these sorts of things on demand when the modal is spawned #}
-<script src="{{ STATIC_URL }}verdantadmin/js/vendor/tag-it.js"></script>
-
 <script src="{{ STATIC_URL }}verdantdocs/js/document-chooser.js"></script>
 <script src="{{ STATIC_URL }}verdantsnippets/js/snippet-chooser.js"></script>
 

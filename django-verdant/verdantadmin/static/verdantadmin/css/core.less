@@ -13,6 +13,8 @@ html{
 }
 
 body{
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased; /* Do not remove! */
     font-family:Open Sans,Arial,sans-serif;
     font-size:80%;
     line-height:1.5em;
@@ -153,6 +155,7 @@ img{
             padding: 1em 0.8em;
             position:relative;
             font-size:1em;
+            font-weight:600;
            
             &:hover{
                 opacity:1;
@@ -278,6 +281,7 @@ footer,
 a{
     .transition(opacity 0.2s ease);
 }
+
 
 @media screen and (min-width: @breakpoint-mobile){
     .col1{

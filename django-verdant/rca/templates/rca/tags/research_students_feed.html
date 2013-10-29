@@ -1,0 +1,37 @@
+{% load pageurl image_tags %}
+{% if students %}
+
+    <section class="four-plus x-plus row module">
+        <h2 class="module-title">Research students</h2>
+        <div class="item-container">
+            <ul class="row">
+                {% for student in students %}
+                    {% if forloop.counter0|divisibleby:"5" %}
+                        <li class="newrow">
+                    {% elif forloop.counter == 5 %}
+                        <li class="load-more-target">
+                    {% else %}
+                        <li>
+                    {% endif %}
+                            <a href="{% pageurl student %}">
+                                <div class="image">
+                                    {% if student.profile_image %}
+                                        {% image student.profile_image width-200 %}
+                                    {% else %}
+                                        <img src="/static/rca/images/medium-grey-placeholder.png" width="200">
+                                    {% endif %}
+                                </div>
+                                <div class="content">
+                                    <p class="a3">{{ student.first_name }}<span>{{ student.last_name }}</span></p>
+                                </div>
+                            </a>
+                        </li>
+                {% endfor %}
+                {% if students|length > 4 %} 
+                    <li class="load-more"><a href="#">+</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </section>
+
+{% endif %}

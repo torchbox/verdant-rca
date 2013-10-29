@@ -7,20 +7,23 @@
         <h1>Editing: <span>{{ page.title }}</span></h1>
     </header>
 
-    <form action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
+    <form id="page-edit-form" action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
-        {{ edit_handler.render_as_object }}
-        {{ edit_handler.render_missing_fields }}
+        {{ edit_handler.render_form_content }}
     
         <footer>
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <input type="submit" value="Save" class="button" />
+                        <input type="submit" value="Save as draft" class="button" />
                         <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
-                            <li><a href="{{ page.url }}" class="shortcut">View</a></li>
+                            <li><input type="button" id="action-preview" data-action="{% url 'verdantadmin_pages_preview_on_edit' page.id %}" data-windowname="verdant_preview_{{ page.id }}" value="Preview" class="button" /></li>
+                            {% if page.live %}
+                                <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                            {% endif %}
                             <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
+                            <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
                         </ul>
                     </div>
                 </li>

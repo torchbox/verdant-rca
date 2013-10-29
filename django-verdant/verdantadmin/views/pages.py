@@ -108,16 +108,24 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+
+            if request.POST.get('action-publish'):
+                page.live = True
+                page.has_unpublished_changes = False
+            else:
+                page.live = False
+                page.has_unpublished_changes = True
+
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            edit_handler.post_save()  # perform the steps we couldn't save without a db model (e.g. saving inline relations)
+            page.save_revision()
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
+        else:
+            edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
@@ -131,20 +139,40 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 
 def edit(request, page_id):
-    page = get_object_or_404(Page, id=page_id).specific
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=page, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
-            form.save()
-            edit_handler.post_save()
-            messages.success(request, "Page '%s' updated." % page.title)
+        if form.is_valid():
+            is_publishing = request.POST.get('action-publish')
+
+            if is_publishing:
+                page.live = True
+                page.has_unpublished_changes = False
+                form.save()
+            else:
+                # not publishing the page
+                if page.live:
+                    # To avoid overwriting the live version, we only save the page
+                    # to the revisions table
+                    form.save(commit=False)
+                    Page.objects.filter(id=page.id).update(has_unpublished_changes=True)
+                else:
+                    page.has_unpublished_changes = True
+                    form.save()
+
+            page.save_revision()
+
+            if is_publishing:
+                messages.success(request, "Page '%s' published." % page.title)
+            else:
+                messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
+        else:
+            edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
@@ -166,6 +194,93 @@ def delete(request, page_id):
     return render(request, 'verdantadmin/pages/confirm_delete.html', {
         'page': page,
         'descendant_count': page.get_descendant_count()
+    })
+
+def view_draft(request, page_id):
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    return page.serve(request)
+
+def preview_on_edit(request, page_id):
+    # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    edit_handler_class = get_page_edit_handler(page.__class__)
+    form_class = edit_handler_class.get_form_class(page.__class__)
+
+    form = form_class(request.POST, request.FILES, instance=page)
+
+    if form.is_valid():
+        form.save(commit=False)
+
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
+
+        response['X-Verdant-Preview'] = 'ok'
+        return response
+
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
+
+        response = render(request, 'verdantadmin/pages/edit.html', {
+            'page': page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
+
+def preview_on_create(request, content_type_app_name, content_type_model_name, parent_page_id):
+    # Receive the form submission that would typically be posted to the 'create' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    try:
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
+    except ContentType.DoesNotExist:
+        raise Http404
+
+    page_class = content_type.model_class()
+    page = page_class()
+    edit_handler_class = get_page_edit_handler(page_class)
+    form_class = edit_handler_class.get_form_class(page_class)
+
+    form = form_class(request.POST, request.FILES, instance=page)
+
+    if form.is_valid():
+        form.save(commit=False)
+
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
+
+        response['X-Verdant-Preview'] = 'ok'
+        return response
+
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
+        parent_page = get_object_or_404(Page, id=parent_page_id).specific
+
+        response = render(request, 'verdantadmin/pages/create.html', {
+            'content_type': content_type,
+            'page_class': page_class,
+            'parent_page': parent_page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
+
+def unpublish(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.POST:
+        parent_id = page.get_parent().id
+        page.live = False
+        page.save()
+        messages.success(request, "Page '%s' unpublished." % page.title)
+        return redirect('verdantadmin_explore', parent_id)
+
+    return render(request, 'verdantadmin/pages/confirm_unpublish.html', {
+        'page': page,
     })
 
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
