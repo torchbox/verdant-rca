@@ -10,7 +10,7 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	<section class="filters three-filters row">
+	<section class="filters four-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>
 	        	<li class="filter">
@@ -35,7 +35,7 @@
 	                <label for="staff_type">Staff type</label>
 	                <select id="staff_type" name="staff_type">
 	                    <option value="">All staff</option>
-	                    {% for key, value in global_staff_type %}
+	                    {% for key, value in global_staff_types %}
 	                    	<option value="{{ key }}" {% if request.GET.staff_type == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
 	                </select>
