@@ -723,6 +723,8 @@ class NewsIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     subpage_types = ['NewsItem']
 
+    indexed = False
+
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
@@ -1071,6 +1073,8 @@ class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed = False
+
     def future_events(self):
         return EventItem.future_objects.filter(path__startswith=self.path)
 
@@ -1403,6 +1407,8 @@ class StandardIndex(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
+    indexed = False
+
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -1585,6 +1591,8 @@ class JobsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed = False
+
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -1635,6 +1643,8 @@ class AlumniIndexAd(Orderable):
 class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
 
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1848,6 +1858,8 @@ class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed = False
+
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -2056,6 +2068,8 @@ RcaNowPage.promote_panels = [
 class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
 
     def serve(self, request):
         programme = request.GET.get('programme')

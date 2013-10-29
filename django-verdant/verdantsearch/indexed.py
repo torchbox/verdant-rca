@@ -32,3 +32,4 @@ class Indexed(object):
         return  (cls._meta.app_label + "." + cls.__name__).lower()
 
     indexed_fields = ()
+    indexed = True

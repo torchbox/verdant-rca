@@ -11,7 +11,7 @@ class Command(NoArgsCommand):
         print "Getting object list"
 
         # Get list of indexed models
-        indexed_models = [model for model in models.get_models() if issubclass(model, Indexed)]
+        indexed_models = [model for model in models.get_models() if issubclass(model, Indexed) and model.indexed]
 
         # Object set
         object_set = {}
@@ -21,6 +21,7 @@ class Command(NoArgsCommand):
         # Eg, StudentPage inherits from Page and both of these models are indexed
         # If we were to add all objects from both models into the index, all the StudentPages will have two entries
         for model in indexed_models:
+            print model.__name__
             # Get toplevel content type
             toplevel_content_type = model.get_toplevel_content_type()
 
