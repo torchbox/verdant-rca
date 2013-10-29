@@ -5,7 +5,7 @@ from django.utils.http import urlencode
 
 from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
-from verdantadmin.forms import ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
+from verdantadmin.forms import SearchForm, ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
 
 def get_querystring(request):
     return urlencode({
@@ -46,6 +46,8 @@ def browse(request, parent_page_id=None):
                 'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
             })
 
+    search_form = SearchForm()
+
     return render_modal_workflow(request,
         'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',
         {
@@ -54,6 +56,7 @@ def browse(request, parent_page_id=None):
             'querystring': get_querystring(request),
             'parent_page': parent_page,
             'pages': shown_pages,
+            'search_form': search_form,
         }
     )
 

@@ -1,22 +1,24 @@
 <header>
     <h1>Choose a page</h1>   
 </header>
-<form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
-    <ul class="fields">
-        {% for field in form %}
-            {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-        {% endfor %}
-        <li class="submit"><input type="submit" value="Search" /></li>
-    </ul>
-</form>
+
 <div class="nice-padding">
     {% if allow_external_link or allow_email_link %}
-        <p class="link-types">
-            <b>Internal link</b>
-            {% if allow_external_link %}| <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a>{% endif %}
-            {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
-        </p>
+    <p class="link-types">
+        <b>Internal link</b>
+        {% if allow_external_link %}| <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a>{% endif %}
+        {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
+    </p>
     {% endif %}    
+
+    <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
+        <ul class="fields">
+            {% for field in search_form %}
+                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+            {% endfor %}
+            <li class="submit"><input type="submit" value="Search" /></li>
+        </ul>
+    </form>
 
      <p class="breadcrumb">
         {% for page in parent_page.get_ancestors %}
