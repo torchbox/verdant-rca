@@ -26,6 +26,12 @@ IGNORED_NAMES = [
 ]
 
 
+STUDENT_PROGRAMMES = {
+    "Yeseung Lee": "Fashion Womenswear",
+    "Nick Clements": "Fashion Menswear",
+}
+
+
 def cleanup_html(html):
     # Remove "\n"s
     html = html.replace("\\n", "")
@@ -252,22 +258,14 @@ class StudentProfilesImporter(object):
         if student_school and student_school[-2:] == "\\n":
             student_school = student_school[:-2]
 
+        # If student is in STUDENT_PROGRAMMES list, then use the programme set there
+        if student_name in STUDENT_PROGRAMMES:
+            student_programme = STUDENT_PROGRAMMES[student_name]
+
         # Slugs
         student_programme_slug = constants.PROGRAMMES.get(student_programme, "")
         student_school_slug = constants.SCHOOLS.get(student_school, "")
-
-        if student_programme_slug:
-            from rca.models import SUBJECT_CHOICES
-            found_subject = False
-            for subject in SUBJECT_CHOICES:
-                if subject[0] == student_programme_slug:
-                    found_subject = True
-                    break
-
-            if not found_subject:
-                print "Could not find degree subject"
-                print "Subject: " + student_programme_slug
-                print "Student: " + student_name
+        degree_subject_slug = constants.DEGREE_SUBJECTS.get(student_programme, "")
 
 
         # Create page for student
@@ -280,7 +278,7 @@ class StudentProfilesImporter(object):
         studentpage.school = student_school_slug
         studentpage.programme = student_programme_slug
         studentpage.degree_qualification = "researchstudent"
-        studentpage.degree_subject = student_programme_slug
+        studentpage.degree_subject = degree_subject_slug
         studentpage.degree_year = ""
         studentpage.statement = student_biography
         studentpage.funding = student_title
