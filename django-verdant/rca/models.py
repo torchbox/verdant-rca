@@ -1938,10 +1938,12 @@ class StaffIndex(Page, SocialFields):
 
         staff_pages = staff_pages.distinct()
 
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 11) # Show 8 research items per page
+        paginator = Paginator(staff_pages, 11)  # Show 8 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -1954,7 +1956,8 @@ class StaffIndex(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/staff_pages_listing.html", {
                 'self': self,
-                'staff_pages': staff_pages
+                'staff_pages': staff_pages,
+                'related_programmes': related_programmes,
             })
         else:
             return render(request, self.template, {
