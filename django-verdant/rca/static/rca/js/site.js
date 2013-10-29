@@ -226,11 +226,11 @@ $(function(){
     });
 
     /* Tweets */
-    $(".twitter-feed").tweet({
+    $(".twitter-feed-items").tweet({
         join_text: "auto",
         username: "torchbox",
         avatar_size: 32,
-        auto_join_text_default: "Torchbox said",
+        auto_join_text_default: "from @torchbox",
         loading_text: "Checking for new tweets...",
         count: 3
     });

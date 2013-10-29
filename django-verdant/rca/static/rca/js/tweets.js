@@ -115,12 +115,12 @@ $("#tweets").tweet({
             }
         }
         function format_relative_time(time_ago) {
-            if (time_ago.days > 2) return "about " + time_ago.days + " days ago";
-            if (time_ago.hours > 24) return "about a day ago";
-            if (time_ago.hours > 2) return "about " + time_ago.hours + " hours ago";
-            if (time_ago.minutes > 45) return "about an hour ago";
-            if (time_ago.minutes > 2) return "about " + time_ago.minutes + " minutes ago";
-            if (time_ago.seconds > 1) return "about " + time_ago.seconds + " seconds ago";
+            if (time_ago.days > 2) return "" + time_ago.days + " days ago";
+            if (time_ago.hours > 24) return "a day ago";
+            if (time_ago.hours > 2) return "" + time_ago.hours + " hours ago";
+            if (time_ago.minutes > 45) return "an hour ago";
+            if (time_ago.minutes > 2) return time_ago.minutes + " minutes ago";
+            if (time_ago.seconds > 1) return time_ago.seconds + " seconds ago";
             return "just now"
         }
         function build_auto_join_text(text) {
