@@ -48,7 +48,7 @@ def suggest(request):
 
             suggestions.append({
                 "label": str(result_specific.content_type).title() + ": " + result_specific.title,
-                "title": result_specific.title,
+                "value": result_specific.title,
                 "url": result_specific.url,
                 "content_type": str(result_specific.content_type).title(),
             })
