@@ -33,7 +33,7 @@
                                     <li>
                                 {% endif %}
                                 {% if block.link %}
-                                    <a href="{{ pageurl block }}">
+                                    <a href="{% pageurl block.link %}">
                                 {% endif %}
                                 {% if block.image %}
                                     <div class="image">{% image block.image width-400 %}</div>
@@ -111,6 +111,10 @@
 
     {% if self.news_carousel_area %}
     	{% news_carousel area=self.news_carousel_area %}
+    {% endif %}
+
+    {% if self.show_events_feed %}
+        {% upcoming_events_related area=self.events_feed_area display_name=self.get_events_feed_area_display %}
     {% endif %}
 
     {% include "rca/includes/modules/contact.html" %}

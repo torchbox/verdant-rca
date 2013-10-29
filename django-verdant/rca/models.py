@@ -1017,6 +1017,7 @@ class PastEventItemManager(models.Manager):
 class EventItem(Page, SocialFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
@@ -1040,6 +1041,7 @@ EventItem.content_panels = [
     MultiFieldPanel([
         FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
+        FieldPanel('area'),
         FieldPanel('location'),
         FieldPanel('location_other'),
         FieldPanel('specific_directions'),
@@ -1444,10 +1446,13 @@ class StandardIndex(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    show_events_feed = models.BooleanField(default=False)
+    events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
+    ImageChooserPanel('background_image'),
     MultiFieldPanel([
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
@@ -1459,7 +1464,6 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'related_links', label="Related links"),
     InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
-    ImageChooserPanel('background_image'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
@@ -1469,6 +1473,10 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
+    MultiFieldPanel([
+        FieldPanel('show_events_feed'),
+        FieldPanel('events_feed_area'),
+        ],'Events feed')
 ]
 
 StandardIndex.promote_panels = [
