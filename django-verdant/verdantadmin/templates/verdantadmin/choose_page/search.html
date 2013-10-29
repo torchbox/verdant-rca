@@ -7,17 +7,7 @@
 
     {% include 'verdantadmin/choose_page/_search_form.html' %}
 
-    <table class="listing small chooser">
-        <tbody>
-            {% for page in pages %}
-                <tr>
-                    <td class="title">
-                        <a class="choose-page" href="#{{ page.id }}" data-id="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}">{{ page.title }}</a>
-                    </td>
-                    <td class="type">{{ page.content_type }}</td>
-                    <td class="status"></td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="page-results">{# content in here will be replaced by live search results #}
+        {% include 'verdantadmin/choose_page/_search_results.html' %}
+    </div>
 </div>

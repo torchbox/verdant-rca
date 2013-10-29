@@ -4,13 +4,6 @@ function(modal) {
         return false;
     });
 
-    modal.ajaxifyForm($('.search-bar', modal.body));
-
-    $('a.choose-page', modal.body).click(function() {
-        var pageData = $(this).data();
-        modal.respond('pageChosen', $(this).data());
-        modal.close();
-
-        return false;
-    });
+    {% include 'verdantadmin/choose_page/_search_behaviour.js' %}
+    ajaxifySearchResults();
 }

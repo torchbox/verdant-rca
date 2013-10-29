@@ -4,7 +4,7 @@ function(modal) {
         return false;
     });
 
-    modal.ajaxifyForm($('.search-bar', modal.body));
+    {% include 'verdantadmin/choose_page/_search_behaviour.js' %}
 
     $('a.choose-page', modal.body).click(function() {
         var pageData = $(this).data();

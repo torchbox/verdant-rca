@@ -1,5 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.http import Http404
 from django.utils.http import urlencode
 
@@ -75,16 +75,21 @@ def search(request):
     else:
         pages = desired_class.objects.none()
 
-    return render_modal_workflow(request,
-        'verdantadmin/choose_page/search.html', 'verdantadmin/choose_page/search.js',
-        {
-            'allow_external_link': request.GET.get('allow_external_link'),
-            'allow_email_link': request.GET.get('allow_email_link'),
-            'querystring': get_querystring(request),
+    if request.GET.get('results_only'):
+        return render(request, 'verdantadmin/choose_page/_search_results.html', {
             'pages': pages,
-            'search_form': search_form,
-        }
-    )
+        })
+    else:
+        return render_modal_workflow(request,
+            'verdantadmin/choose_page/search.html', 'verdantadmin/choose_page/search.js',
+            {
+                'allow_external_link': request.GET.get('allow_external_link'),
+                'allow_email_link': request.GET.get('allow_email_link'),
+                'querystring': get_querystring(request),
+                'pages': pages,
+                'search_form': search_form,
+            }
+        )
 
 
 def external_link(request):
