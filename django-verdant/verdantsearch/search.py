@@ -41,7 +41,51 @@ class Search(object):
         except ElasticHttpNotFoundError:
             pass
 
-        self.es.create_index(self.es_index)
+        INDEX_SETTINGS = {
+            "settings": {
+                "analysis": {
+                    "analyzer": {
+                        "ngram_analyzer": {
+                            "type": "custom",
+                            "tokenizer": "lowercase",
+                            "filter": ["ngram"]
+                        },
+                        "edgengram_analyzer": {
+                            "type": "custom",
+                            "tokenizer": "lowercase",
+                            "filter": ["edgengram"]
+                        }
+                    },
+                    "tokenizer": {
+                        "ngram_tokenizer": {
+                            "type": "nGram",
+                            "min_gram": 3,
+                            "max_gram": 15,
+                        },
+                        "edgengram_tokenizer": {
+                            "type": "edgeNGram",
+                            "min_gram": 2,
+                            "max_gram": 15,
+                            "side": "front"
+                        }
+                    },
+                    "filter": {
+                        "ngram": {
+                            "type": "nGram",
+                            "min_gram": 3,
+                            "max_gram": 15
+                        },
+                        "edgengram": {
+                            "type": "edgeNGram",
+                            "min_gram": 1,
+                            "max_gram": 15
+                        }
+                    }
+                }
+            }
+        }
+
+        self.es.create_index(self.es_index, INDEX_SETTINGS)
 
     def add_type(self, model):
         # Get type name

@@ -119,6 +119,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     indexed_fields = {
         'title': {
             'type': 'string',
+            'analyzer': 'edgengram_analyzer',
             'boost': 10,
         },
     }
