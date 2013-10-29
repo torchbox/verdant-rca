@@ -1905,6 +1905,44 @@ class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        staff_type = request.GET.get('staff_type')
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        staff_pages = StaffPage.objects.filter(live=True)
+
+        if staff_type and staff_type != '':
+            staff_pages = staff_pages.filter(staff_type=staff_type)
+        if school and school != '':
+            staff_pages = staff_pages.filter(school=school)
+        if programme and programme != '':
+            staff_pages = staff_pages.filter(programme=programme)
+
+        # research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(staff_pages, 11) # Show 8 research items per page
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/staff_pages_listing.html", {
+                'self': self,
+                'staff_pages': staff_pages
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'staff_pages': staff_pages
+            })
+
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
