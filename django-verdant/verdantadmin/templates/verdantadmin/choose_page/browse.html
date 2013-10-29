@@ -3,13 +3,7 @@
 </header>
 
 <div class="nice-padding">
-    {% if allow_external_link or allow_email_link %}
-    <p class="link-types">
-        <b>Internal link</b>
-        {% if allow_external_link %}| <a href="{% url 'verdantadmin_choose_page_external_link' %}?{{ querystring }}">External link</a>{% endif %}
-        {% if allow_email_link %}| <a href="{% url 'verdantadmin_choose_page_email_link' %}?{{ querystring }}">Email link</a>{% endif %}
-    </p>
-    {% endif %}    
+    {% include 'verdantadmin/choose_page/_link_types.html' with current='internal' %}
 
     <form class="search-bar" action="{% url 'verdantimages_search_image' %}" method="get">
         <ul class="fields">
