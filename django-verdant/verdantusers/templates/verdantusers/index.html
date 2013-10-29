@@ -11,13 +11,26 @@
             </div>
         </div>
     </header>
-    <div class="nice-padding">
-        <ul class="listing">
+    <table class="listing">
+        <thead>
+            <tr>
+                <th class="name">Name</a></th>
+                <th class="username">Username</th>
+                <th class="level">Level</th>
+                <th class="status">Status</th>
+            </tr>
+        </thead>
+        <tbody>
             {% for user in users %}
-                <li>
-                    <a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name }}</a>
+                <tr>
+                    <td class="name">
+                        <a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name }}</a>
+                    </td>
+                    <td class="username">{{ user.username }}</td>
+                    <td class="level">{% if user.is_superuser %}Adminstrator{% else %}User{% endif %}</td>
+                    <td class="status">{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
                 </li>
             {% endfor %}
-        </ul>
-    </div>
+        </tbody>
+    </table>
 {% endblock %}
