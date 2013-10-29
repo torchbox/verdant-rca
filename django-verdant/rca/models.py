@@ -336,6 +336,19 @@ PROGRAMME_CHOICES = (
     ('textiles', 'Textiles'),
 )
 
+SCHOOL_PROGRAMME_MAP = {
+    'schoolofarchitecture': ['architecture', 'interiordesign'],
+    'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+    'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+    'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+    'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+    'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+}
+
+# Make sure values used in SCHOOL_PROGRAMME_MAP are valid
+assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
+assert set(sum(SCHOOL_PROGRAMME_MAP.values(), [])).issubset(dict(PROGRAMME_CHOICES).keys())
+
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
     ('architecture', 'Architecture'),
@@ -364,6 +377,7 @@ QUALIFICATION_CHOICES = (
     ('ma', 'MA'),
     ('mphil', 'MPhil'),
     ('phd', 'PhD'),
+    ('researchstudent', 'Research Student'),
 )
 
 RESEARCH_TYPES_CHOICES = (
@@ -773,7 +787,7 @@ class NewsIndex(Page, SocialFields):
 
         news = news.distinct().order_by('-date')
 
-        related_programmes = [str(k) for k in news.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(news, 10)  # Show 10 news items per page
@@ -1142,7 +1156,7 @@ class EventIndex(Page, SocialFields):
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
-        related_programmes = [str(k) for k in events.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
@@ -1438,7 +1452,7 @@ class StandardIndexCustomContentModules(Orderable):
 
     panels = [
         SnippetChooserPanel('custom_content_module', CustomContentModule),
-    ]    
+    ]
 
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
@@ -1905,6 +1919,44 @@ class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        staff_type = request.GET.get('staff_type')
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        staff_pages = StaffPage.objects.filter(live=True)
+
+        if staff_type and staff_type != '':
+            staff_pages = staff_pages.filter(staff_type=staff_type)
+        if school and school != '':
+            staff_pages = staff_pages.filter(school=school)
+        if programme and programme != '':
+            staff_pages = staff_pages.filter(programme=programme)
+
+        # research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(staff_pages, 11) # Show 8 research items per page
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/staff_pages_listing.html", {
+                'self': self,
+                'staff_pages': staff_pages
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'staff_pages': staff_pages
+            })
+
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -2001,6 +2053,7 @@ class StudentPage(Page, SocialFields):
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True)
+    funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
@@ -2036,6 +2089,7 @@ StudentPage.content_panels = [
     FieldPanel('work_description', classname="full"),
     FieldPanel('work_type'),
     FieldPanel('work_location'),
+    FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
     FieldPanel('work_awards'),
@@ -2128,7 +2182,7 @@ class RcaNowIndex(Page, SocialFields):
         if area:
             rca_now_items = rca_now_items.filter(area=area)
 
-        related_programmes = [str(k) for k in rca_now_items.values_list("related_programmes__programme", flat=True).distinct() if k]
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         rca_now_items = rca_now_items.order_by('-date')
 
