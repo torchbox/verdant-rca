@@ -339,11 +339,15 @@ PROGRAMME_CHOICES = (
 SCHOOL_PROGRAMME_MAP = {
     'schoolofarchitecture': ('architecture', 'interiordesign'),
     'schoolofcommunication': ('animation', 'informationexperiencedesign', 'visualcommunication'),
-    'schoolofdesign': ('designinteractions','designproducts','globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'),
+    'schoolofdesign': ('designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'),
     'schooloffineart': ('painting', 'photography', 'printmaking', 'sculpture'),
     'schoolofhumanities': ('criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'),
     'schoolofmaterial': ('ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'),
 }
+
+# Make sure values used in SCHOOL_PROGRAMME_MAP are valid
+assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
+assert set(sum(SCHOOL_PROGRAMME_MAP.values(), ())).issubset(dict(PROGRAMME_CHOICES).keys())
 
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
@@ -1447,7 +1451,7 @@ class StandardIndexCustomContentModules(Orderable):
 
     panels = [
         SnippetChooserPanel('custom_content_module', CustomContentModule),
-    ]    
+    ]
 
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
