@@ -15,7 +15,7 @@
         <ul class="listing">
             {% for user in users %}
                 <li>
-                    <a href="#">{{ user }}</a>
+                    <a href="{% url 'verdantusers_edit' user.id %}">{{ user }}</a>
                 </li>
             {% endfor %}
         </ul>
