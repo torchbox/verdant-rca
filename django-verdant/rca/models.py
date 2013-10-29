@@ -497,6 +497,8 @@ class SchoolPage(Page, SocialFields):
 
     indexed_fields = ('get_school_display', )
 
+    search_name = 'School'
+
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
@@ -647,6 +649,8 @@ class ProgrammePage(Page, SocialFields):
     facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
     indexed_fields = ('get_programme_display', 'get_school_display')
+
+    search_name = 'Programme'
 
     def tabbed_feature_count(self):
         count = 0;
@@ -832,6 +836,8 @@ class NewsItem(Page, SocialFields):
 
     indexed_fields = ('intro', 'body')
 
+    search_name = 'News'
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area=self.area,
@@ -1009,6 +1015,8 @@ class EventItem(Page, SocialFields):
     past_objects = PastEventItemManager()
 
     indexed_fields = ('body', 'get_location_display', 'location_other')
+
+    search_name = 'Event'
 
 EventItem.content_panels = [
     MultiFieldPanel([
@@ -1223,6 +1231,8 @@ class ReviewPage(Page, SocialFields):
 
     indexed_fields = ('body', 'stapline', 'author')
 
+    search_name = 'Review'
+
 ReviewPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -1317,6 +1327,8 @@ class StandardPage(Page, SocialFields):
     show_on_homepage = models.BooleanField()
 
     indexed_fields = ('intro', 'body')
+
+    search_name = None
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1542,6 +1554,8 @@ class JobPage(Page, SocialFields):
 
     indexed_fields = ('get_programme_display', 'get_school_display', 'other_department', 'get_campus_display', 'description')
 
+    search_name = 'Job'
+
 JobPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('programme'),
@@ -1698,6 +1712,8 @@ class AlumniPage(Page, SocialFields):
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'intro', 'biography')
 
+    search_name = 'Alumni'
+
 AlumniPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('profile_image'),
@@ -1804,6 +1820,8 @@ class StaffPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
+
+    search_name = 'Staff'
 
     def tabbed_feature_count(self):
         count = 2 #info tab and research tab will always show
@@ -1982,6 +2000,8 @@ class StudentPage(Page, SocialFields):
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
+    search_name = 'Student'
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
@@ -2050,6 +2070,8 @@ class RcaNowPage(Page, SocialFields):
     # TODO: tags
 
     indexed_fields = ('body', 'author', 'get_programme_display', 'get_school_display', 'get_area_display')
+
+    search_name = 'RCA Now'
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
@@ -2193,6 +2215,8 @@ class ResearchItem(Page, SocialFields):
 
     indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
+    search_name = 'Research'
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area='research',
@@ -2315,7 +2339,7 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
-    indexed_fields = 'intro'
+    indexed = False
 
 ResearchInnovationPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2373,6 +2397,8 @@ class CurrentResearchPageAd(Orderable):
 class CurrentResearchPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
 
     def serve(self, request):
         research_type = request.GET.get('research_type')

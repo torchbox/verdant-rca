@@ -45,12 +45,18 @@ def suggest(request):
         suggestions = []
         for result in search_results:
             result_specific = result.specific
+            if hasattr(result_specific.__class__, "search_name"):
+                if result_specific.__class__.search_name is None:
+                    content_type = ""
+                else:
+                    content_type = result_specific.__class__.search_name + ": "
+            else:
+                content_type = result_specific.__class__.__name__ + ": "
 
             suggestions.append({
-                "label": str(result_specific.content_type).title() + ": " + result_specific.title,
+                "label": content_type + result_specific.title,
                 "value": result_specific.title,
                 "url": result_specific.url,
-                "content_type": str(result_specific.content_type).title(),
             })
 
         return HttpResponse(json.dumps(suggestions))
