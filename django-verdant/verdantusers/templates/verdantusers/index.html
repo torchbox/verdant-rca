@@ -1,0 +1,16 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>User management</h1>
+    </header>
+    <div class="nice-padding">
+        <ul class="listing">
+            {% for user in users %}
+                <li>
+                    <a href="#">{{ user }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
