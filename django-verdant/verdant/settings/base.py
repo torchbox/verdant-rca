@@ -165,6 +165,7 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantdocs',
     'verdantsnippets',
+    'verdantusers',
 
     'rca',
 )

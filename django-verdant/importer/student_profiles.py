@@ -26,6 +26,12 @@ IGNORED_NAMES = [
 ]
 
 
+STUDENT_PROGRAMMES = {
+    "Yeseung Lee": "Fashion Womenswear",
+    "Nick Clements": "Fashion Menswear",
+}
+
+
 def cleanup_html(html):
     # Remove "\n"s
     html = html.replace("\\n", "")
@@ -51,8 +57,6 @@ class StudentProfilesImporter(object):
         self.student_index = kwargs.get("student_index", "students")
         self.research_index = kwargs.get("research_index", "current-research")
         self.staff_index = kwargs.get("staff_index", "staff")
-
-        self.student_count = 0
 
 
     def import_texts(self, element):
@@ -203,8 +207,6 @@ class StudentProfilesImporter(object):
         if student_name in IGNORED_NAMES:
             return
 
-        self.student_count += 1
-
         # Emails
         emails_element = element.find("emails")
         if emails_element is not None:
@@ -252,22 +254,14 @@ class StudentProfilesImporter(object):
         if student_school and student_school[-2:] == "\\n":
             student_school = student_school[:-2]
 
+        # If student is in STUDENT_PROGRAMMES list, then use the programme set there
+        if student_name in STUDENT_PROGRAMMES:
+            student_programme = STUDENT_PROGRAMMES[student_name]
+
         # Slugs
         student_programme_slug = constants.PROGRAMMES.get(student_programme, "")
         student_school_slug = constants.SCHOOLS.get(student_school, "")
-
-        if student_programme_slug:
-            from rca.models import SUBJECT_CHOICES
-            found_subject = False
-            for subject in SUBJECT_CHOICES:
-                if subject[0] == student_programme_slug:
-                    found_subject = True
-                    break
-
-            if not found_subject:
-                print "Could not find degree subject"
-                print "Subject: " + student_programme_slug
-                print "Student: " + student_name
+        degree_subject_slug = constants.DEGREE_SUBJECTS.get(student_programme, "")
 
 
         # Create page for student
@@ -280,7 +274,7 @@ class StudentProfilesImporter(object):
         studentpage.school = student_school_slug
         studentpage.programme = student_programme_slug
         studentpage.degree_qualification = "researchstudent"
-        studentpage.degree_subject = student_programme_slug
+        studentpage.degree_subject = degree_subject_slug
         studentpage.degree_year = ""
         studentpage.statement = student_biography
         studentpage.funding = student_title
@@ -364,9 +358,6 @@ class StudentProfilesImporter(object):
         # Departments
         for department in self.root.findall("department"):
             self.import_department(department)
-
-
-        print self.student_count
 
 
 def doimport():

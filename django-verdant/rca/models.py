@@ -1923,15 +1923,20 @@ class StaffIndex(Page, SocialFields):
         staff_type = request.GET.get('staff_type')
         school = request.GET.get('school')
         programme = request.GET.get('programme')
+        area = request.GET.get('area')
 
         staff_pages = StaffPage.objects.filter(live=True)
 
         if staff_type and staff_type != '':
             staff_pages = staff_pages.filter(staff_type=staff_type)
         if school and school != '':
-            staff_pages = staff_pages.filter(school=school)
+            staff_pages = staff_pages.filter(roles__school=school)
         if programme and programme != '':
-            staff_pages = staff_pages.filter(programme=programme)
+            staff_pages = staff_pages.filter(roles__programme=programme)
+        if area and area != '':
+            staff_pages = staff_pages.filter(roles__area=area)
+
+        staff_pages = staff_pages.distinct()
 
         # research_items.order_by('-year')
 

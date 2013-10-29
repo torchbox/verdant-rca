@@ -321,7 +321,7 @@ def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True)
 
 @register.inclusion_tag('rca/tags/explorer_nav.html')
 def menu():
-    nodes = get_site_nav(max_depth=0, must_have_children=False, only_in_menu_pages=True)
+    nodes = get_site_nav(max_depth=4, must_have_children=False, only_in_menu_pages=True)
     return {
         'nodes': nodes,
     }

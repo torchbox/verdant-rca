@@ -206,6 +206,34 @@ DEGREE_SUBJECTS = {
     u'Conservation': 'conservation',
     u'RCA/V&A Conservation': 'conservation',
     u'Communication Art & Design': 'communicationartdesign',
+
+    # Extras for students
+    "Department of Ceramics & Glass": "ceramicsglass",
+    "Ceramics and Glass": "ceramicsglass",
+    "Glass & Ceramics": "ceramicsglass",
+    "Programme of Ceramics & Glass": "ceramicsglass",
+    "Department of Critical & Historical Studies": "criticalhistoricalstudies",
+    "Department of Textiles": "textiles",
+    #"Department of Fashion"
+    "Department of Fashion Womenswear": "fashionwomenswear",
+    "Womenswear": "fashionwomenswear",
+    "Department of Printed Textiles": "textiles",
+    "Department of Curating Contemporary Art": "curatingcontemporaryart",
+    "Department of Innovation Design Engineering": "innovationdesignengineering",
+    "Department of Vehicle Design": "vehicledesign",
+    "Department of Design Interactions": "designinteractions",
+    "Department of History of Design": "historyofdesign",
+    "Department of Design Products": "designproducts",
+    "Department of Goldsmithing, Silversmithing, Metalwork & Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Department of Conservation": "conservation",
+    "Department of Animation": "animation",
+    "Department of Architecture": "architecture",
+    "Department of Painting": "painting",
+    "Department of Photography": "photography",
+    "Department of Sculpture": "sculpture",
+    "Critical Writing in Art & Design": "criticalwritinginartdesign",
+    "Critical Writing in Art and Design": "criticalwritinginartdesign",
+    "Department of Critical Writing in Art & Design": "criticalwritinginartdesign",
 }
 
 PROGRAMME_SPECIALISMS = {
