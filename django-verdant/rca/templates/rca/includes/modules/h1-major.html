@@ -2,6 +2,6 @@
 
 <h1 class="h1 major">
 	{% for word in self.title|title_split %}
-    	<span class="{% cycle 'dark-grey' 'light-grey' 'charcoal' 'medium-grey' 'black' %}">{{ word }}</span>
+    	<span class="{% cycle 'dark-grey' 'medium-grey' 'charcoal' 'medium-grey' 'light-grey' %}">{{ word }}</span>
 	{% endfor %}
 </h1>
