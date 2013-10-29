@@ -13,9 +13,11 @@ class SearchResults(object):
     def __getitem__(self, key):
         # Get list of primary keys
         if isinstance(key, slice):
-            # Return a query set
+            # Get primary keys
             pk_list = [result._source["pk"] for result in self.query[key]]
-            return self.model.objects.filter(pk__in=pk_list)
+
+            # Build a list of objects
+            return [self.model.objects.get(pk=pk) for pk in pk_list]
         else:
             # Return a single item
             pk = self.query[key]._source["pk"]
