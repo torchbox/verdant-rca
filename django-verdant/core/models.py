@@ -142,6 +142,12 @@ class Page(MP_Node, ClusterableModel, Indexed):
 
     is_abstract = True  # don't offer Page in the list of page types a superuser can create
 
+    def object_indexed(self):
+        # Exclude root node from index
+        if self.depth == 1:
+            return False
+        return True
+
     @property
     def specific(self):
         """
