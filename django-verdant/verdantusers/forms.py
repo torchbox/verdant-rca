@@ -50,7 +50,7 @@ class UserEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "is_superuser")
+        fields = ("username", "is_active", "is_superuser")
 
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
