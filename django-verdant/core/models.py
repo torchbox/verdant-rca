@@ -124,9 +124,19 @@ class Page(MP_Node, ClusterableModel, Indexed):
             'analyzer': 'edgengram_analyzer',
             'boost': 10,
         },
+        'live': {
+            'type': 'boolean',
+            'analyzer': 'simple',
+        },
     }
 
-    title_search = Searcher(['title'])
+    search_backend = Searcher(None)
+    search_frontend = Searcher(None, filters=dict(live=True))
+    default_searcher = search_frontend
+
+    title_search_backend = Searcher(['title'])
+    title_search_frontend = Searcher(['title'], filters=dict(live=True))
+    default_title_searcher = title_search_frontend
 
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
