@@ -164,6 +164,7 @@ INSTALLED_APPS = (
     'verdantsnippets',
     'verdantusers',
 
+    'donations',
     'rca',
 )
 
