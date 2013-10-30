@@ -1963,9 +1963,8 @@ class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-<<<<<<< HEAD
     indexed = False
-=======
+
     def serve(self, request):
         staff_type = request.GET.get('staff_type')
         school = request.GET.get('school')
@@ -2011,7 +2010,6 @@ class StaffIndex(Page, SocialFields):
                 'self': self,
                 'staff_pages': staff_pages
             })
->>>>>>> develop
 
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),

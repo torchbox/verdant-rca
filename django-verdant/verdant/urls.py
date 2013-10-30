@@ -10,11 +10,8 @@ from verdantimages import urls as verdantimages_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
-<<<<<<< HEAD
 from verdantsearch import urls as verdantsearch_urls
-=======
 from verdantusers import urls as verdantusers_urls
->>>>>>> develop
 
 from rca import app_urls
 
