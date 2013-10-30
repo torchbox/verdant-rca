@@ -49,12 +49,12 @@ def suggest(request):
                 if result_specific.__class__.search_name is None:
                     content_type = ""
                 else:
-                    content_type = result_specific.__class__.search_name + ": "
+                    content_type = " | " + result_specific.__class__.search_name
             else:
-                content_type = result_specific.__class__.__name__ + ": "
+                content_type = " | " + result_specific.__class__.__name__
 
             suggestions.append({
-                "label": content_type + result_specific.title,
+                "label": result_specific.title + content_type,
                 "value": result_specific.title,
                 "url": result_specific.url,
             })
