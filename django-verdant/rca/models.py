@@ -1013,6 +1013,13 @@ class EventItemDatesTimes(Orderable):
     time_from_new = models.TimeField("Start time", null=True, blank=True)
     time_to_new = models.TimeField("End time", null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        if self.time_from_new is not None:
+            self.time_from = self.time_from_new.strftime('%I.%M%p').lower()
+        if self.time_to_new is not None:
+            self.time_to = self.time_to_new.strftime('%I.%M%p').lower()
+        super(EventItemDatesTimes, self).save(*args, **kwargs)
+
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
