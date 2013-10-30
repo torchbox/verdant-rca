@@ -1707,6 +1707,43 @@ class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        alumni_pages = AlumniPage.objects.filter(live=True)
+
+        if school and school != '':
+            alumni_pages = alumni_pages.filter(school=school)
+        if programme and programme != '':
+            alumni_pages = alumni_pages.filter(programme=programme)
+
+        alumni_pages = alumni_pages.distinct()
+
+        # research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(alumni_pages, 11) # Show 8 research items per page
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/alumni_pages_listing.html", {
+                'self': self,
+                'alumni_pages': alumni_pages
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'alumni_pages': alumni_pages
+            })
+
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
