@@ -226,13 +226,16 @@ $(function(){
     });
 
     /* Tweets */
-    $(".twitter-feed-items").tweet({
-        join_text: "auto",
-        username: "torchbox",
-        avatar_size: 32,
-        auto_join_text_default: "from @torchbox",
-        loading_text: "Checking for new tweets...",
-        count: 3
+    $(".twitter-feed-items").each(function(){
+        var username = $(this).data("twitter-feed");
+        $(this).tweet({
+            join_text: "auto",
+            username: username,
+            avatar_size: 32,
+            auto_join_text_default: "from @" + username,
+            loading_text: "Checking for new tweets...",
+            count: 3
+        });
     });
 
     /* mobile rejigging */

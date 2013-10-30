@@ -4,6 +4,6 @@
 {% endcomment %}
 
 <section class="twitter-feed module">
-	<h2><a href="#">@RCAevents twitter</a></h2>
-	<div class="twitter-feed-items"></div>
+	<h2><a href="http://twitter.com/{{ self.twitter_feed }}">@{{ self.twitter_feed }} twitter</a></h2>
+	<div class="twitter-feed-items" data-twitter-feed="{{ self.twitter_feed }}"></div>
 </section>
