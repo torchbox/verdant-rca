@@ -3,7 +3,7 @@
 {% if news %}
     <section class="one-plus x-plus module" data-pagination=".pagination">
         <div class="item-container">
-            <ul class="row">    
+            <ul class="row">
                 {% for news_item in news %}
                     {% comment %}The forloop counter just gives the index for the current set of results, and we need to know the overall
                     index of the news item to know when to correctly apply the newrow class. This isn't available from the django
@@ -18,10 +18,6 @@
                                 <div class="image">
                                     {% if news_item.feed_image %}
                                         {% image news_item.feed_image width-600 %}
-<<<<<<< HEAD
-                                    {% else %}    
-                                        <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
-=======
                                     {% else %}
                                         {% with news_item.carousel_items.all as carousel_items %}
                                             {% with carousel_items|first as carousel_item %}
@@ -32,7 +28,6 @@
                                                 {% endif %}
                                             {% endwith %}
                                         {% endwith %}
->>>>>>> develop
                                     {% endif %}
                                 </div>
                             <div class="content">
