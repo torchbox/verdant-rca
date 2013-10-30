@@ -3,14 +3,14 @@
 
 
 {% block body_class %}
-    type-jobs-index
+    type-news-index
 {% endblock %}
 
 {% block content %}
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	<section class="filters four-filters row">
+	<section class="filters three-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>
 	        	<li class="filter">
@@ -40,12 +40,12 @@
 						{% endfor %}
 	                </select>
 	            </li>
-	            <li class="filter">
+	            <!-- <li class="filter">
 	                <label for="tags">Tags</label>
 	                <select id="tags" name="tags">
 	                    <option value="">All tags</option>
 	                </select>
-	            </li>
+	            </li> -->
 				<input type="submit" />
 			</ul>
 		</form>

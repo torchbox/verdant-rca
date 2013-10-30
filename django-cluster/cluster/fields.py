@@ -12,13 +12,16 @@ except ImportError:
 from cluster.queryset import FakeQuerySet
 
 
-def create_deferring_foreign_related_manager(relation_name, original_manager_cls, related_model):
+def create_deferring_foreign_related_manager(related, original_manager_cls):
     """
     Create a DeferringRelatedManager class that wraps an ordinary RelatedManager
     with 'deferring' behaviour: any updates to the object set (via e.g. add() or clear())
     are written to a holding area rather than committed to the database immediately.
     Writing to the database is deferred until the model is saved.
     """
+
+    relation_name = related.get_accessor_name()
+
     class DeferringRelatedManager(models.Manager):
         def __init__(self, instance):
             self.instance = instance
@@ -39,7 +42,7 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
             except (AttributeError, KeyError):
                 return self.get_live_query_set()
 
-            return FakeQuerySet(*results)
+            return FakeQuerySet(related.model, results)
 
         def get_object_list(self):
             """
@@ -92,6 +95,9 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
                 if not item_matched:
                     items.append(target)
 
+                # update the foreign key on the added item to point back to the parent instance
+                setattr(target, related.field.name, self.instance)
+
         def remove(self, *items_to_remove):
             """
             Remove the passed items from the stored object set, but do not commit the change
@@ -112,7 +118,7 @@ def create_deferring_foreign_related_manager(relation_name, original_manager_cls
 
         def create(self, **kwargs):
             items = self.get_object_list()
-            new_item = related_model(**kwargs)
+            new_item = related.model(**kwargs)
             items.append(new_item)
             return new_item
 
@@ -176,11 +182,7 @@ class ChildObjectsDescriptor(ForeignRelatedObjectsDescriptor):
 
     @cached_property
     def child_object_manager_cls(self):
-        return create_deferring_foreign_related_manager(
-            self.related.get_accessor_name(),
-            self.related_manager_cls,
-            self.related.model,
-        )
+        return create_deferring_foreign_related_manager(self.related, self.related_manager_cls)
 
 
 class ParentalKey(ForeignKey):

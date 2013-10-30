@@ -1,0 +1,20 @@
+{% extends "verdantadmin/base.html" %}
+{% load image_tags %}
+
+{% block content %}
+    <header>
+        <h1>Add user</h1>
+    </header>
+
+    <div class="nice-padding">
+        <form action="{% url 'verdantusers_create' %}" method="POST">
+            {% csrf_token %}
+            <ul class="fields">
+                {% for field in form %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% endfor %}
+                <li><input type="submit" value="Add user" /></li>
+            </ul>
+        </form>
+    </div>
+{% endblock %}

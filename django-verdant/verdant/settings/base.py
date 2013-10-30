@@ -162,7 +162,11 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantdocs',
     'verdantsnippets',
+<<<<<<< HEAD
     'verdantsearch',
+=======
+    'verdantusers',
+>>>>>>> develop
 
     'rca',
 )

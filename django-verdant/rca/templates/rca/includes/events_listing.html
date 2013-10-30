@@ -24,7 +24,7 @@
 		                            {% if event.listing_intro %}
 		                            	<p>{{ event.listing_intro }}</p>
 		                            {% endif %}
-		                            
+
 		                        </li>
 		                        <li class="second">
 		                            <h3 class="bc4 caps">{{ event.start_date|date:"j F" }} <span class="location">{% if event.location_other %}{{ event.location_other }}{% elif event.location %}{{ event.get_location_display }}{% endif %}</span></h3>
@@ -54,3 +54,11 @@
 	</ul>
 
 {% endif %}
+
+<script type="text/javascript">
+    {% if related_programmes %}
+        var related_programmes = {{related_programmes|safe}};
+    {% else %}
+        var related_programmes = [];
+    {% endif %}
+</script>

@@ -107,6 +107,8 @@ class Page(MP_Node, ClusterableModel, Indexed):
     # TODO: enforce uniqueness on slug field per parent (will have to be done at the Django
     # level rather than db, since there is no explicit parent relation in the db)
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
+    live = models.BooleanField(default=True, editable=False)
+    has_unpublished_changes = models.BooleanField(default=False, editable=False)
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -156,7 +158,11 @@ class Page(MP_Node, ClusterableModel, Indexed):
         # the ContentType.objects manager keeps a cache, so this should potentially
         # avoid a database lookup over doing self.content_type. I think.
         content_type = ContentType.objects.get_for_id(self.content_type_id)
-        return content_type.get_object_for_this_type(id=self.id)
+        if isinstance(self, content_type.model_class()):
+            # self is already the an instance of the most specific class
+            return self
+        else:
+            return content_type.get_object_for_this_type(id=self.id)
 
     @property
     def specific_class(self):
@@ -182,7 +188,29 @@ class Page(MP_Node, ClusterableModel, Indexed):
 
         else:
             # request is for this very page
-            return self.serve(request)
+            if self.live:
+                return self.serve(request)
+            else:
+                raise Http404
+
+    def save_revision(self):
+        self.revisions.create(content_json=self.to_json())
+
+    def get_latest_revision(self):
+        try:
+            revision = self.revisions.order_by('-created_at')[0]
+        except IndexError:
+            return self.specific
+
+        result = self.specific_class.from_json(revision.content_json)
+
+        # Override the possibly-outdated tree parameter fields from the revision object
+        # with up-to-date values
+        result.path = self.path
+        result.depth = self.depth
+        result.numchild = self.numchild
+
+        return result
 
     def serve(self, request):
         return render(request, self.template, {
@@ -311,8 +339,18 @@ class Page(MP_Node, ClusterableModel, Indexed):
         """
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
 
+    @property
+    def status_string(self):
+        if not self.live:
+            return "draft"
+        else:
+            if self.has_unpublished_changes:
+                return "live with draft updates"
+            else:
+                return "live"
 
-def get_navigation_menu_items(depth=2):
+
+def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
     # or are at the top-level (this rule required so that an empty site out-of-the-box has a working menu)
@@ -320,15 +358,15 @@ def get_navigation_menu_items(depth=2):
     if navigable_content_type_ids:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR content_type_id IN %s OR depth = %s
+            WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
             ORDER BY path
-        """, [tuple(navigable_content_type_ids), depth])
+        """, [tuple(navigable_content_type_ids)])
     else:
         pages = Page.objects.raw("""
             SELECT * FROM core_page
-            WHERE numchild > 0 OR depth = %s
+            WHERE numchild > 0 OR depth = 2
             ORDER BY path
-        """, [depth])
+        """)
 
     # Turn this into a tree structure:
     #     tree_node = (page, children)
@@ -373,3 +411,9 @@ class Orderable(models.Model):
     class Meta:
         abstract = True
         ordering = ['sort_order']
+
+
+class PageRevision(models.Model):
+    page = models.ForeignKey('Page', related_name='revisions')
+    created_at = models.DateTimeField(auto_now_add=True)
+    content_json = models.TextField()

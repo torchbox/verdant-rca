@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from lxml import etree as ET
-from rca.models import StudentPage, StudentPageCarouselItem, RcaImage, ResearchItem, ResearchItemCarouselItem, ResearchItemCreator, ResearchInnovationPageCurrentResearch
+from rca.models import StudentPage, StudentPageCarouselItem, StudentPageContactsEmail, StudentPageContactsWebsite, RcaImage, ResearchItem, ResearchItemCarouselItem, ResearchItemCreator, ResearchInnovationPageCurrentResearch
 from core.models import Page
 from django.utils.dateparse import parse_date
 from django.core.files import File
@@ -26,7 +26,20 @@ IGNORED_NAMES = [
 ]
 
 
+STUDENT_PROGRAMMES = {
+    "Yeseung Lee": "Fashion Womenswear",
+    "Nick Clements": "Fashion Menswear",
+}
+
+
 def cleanup_html(html):
+    # Remove "\n"s
+    html = html.replace("\\n", "")
+
+    # Remove all backslashes
+    html = html.replace("\\", "")
+
+    # Load into BeautifulSoup    
     soup = BeautifulSoup(html, "html.parser")
 
     # Remove HR tags
@@ -73,7 +86,7 @@ class StudentProfilesImporter(object):
         image_caption, errors['caption'] = text_from_elem(element, 'caption', length=255)
 
         image_metadata = element.find('imagemetadata')
-        image_title, errors['title'] = text_from_elem(image_metadata, 'title', length=255, textify=True)
+        image_title, errors['title'] = text_from_elem(image_metadata, 'title', length=255)
         image_creator, errors['creator'] = text_from_elem(image_metadata, 'creator', length=255, textify=True)
         image_media, errors['media'] = text_from_elem(image_metadata, 'media', length=255, textify=True)
         image_photographer, errors['photographer'] = text_from_elem(image_metadata, 'photographer', length=255, textify=True)
@@ -194,6 +207,20 @@ class StudentProfilesImporter(object):
         if student_name in IGNORED_NAMES:
             return
 
+        # Emails
+        emails_element = element.find("emails")
+        if emails_element is not None:
+            student_emails = [email.text for email in emails_element.findall("email")]
+        else:
+            student_emails = None
+
+        # URLs
+        urls_element = element.find("urls")
+        if urls_element is not None:
+            student_urls = [url.text for url in urls_element.findall("url")]
+        else:
+            student_urls = None
+
         # Supervisor
         student_supervisor = None
         supervisedstudents_element = element.find("supervisedstudents")
@@ -227,10 +254,14 @@ class StudentProfilesImporter(object):
         if student_school and student_school[-2:] == "\\n":
             student_school = student_school[:-2]
 
+        # If student is in STUDENT_PROGRAMMES list, then use the programme set there
+        if student_name in STUDENT_PROGRAMMES:
+            student_programme = STUDENT_PROGRAMMES[student_name]
+
         # Slugs
         student_programme_slug = constants.PROGRAMMES.get(student_programme, "")
         student_school_slug = constants.SCHOOLS.get(student_school, "")
-
+        degree_subject_slug = constants.DEGREE_SUBJECTS.get(student_programme, "")
 
 
         # Create page for student
@@ -242,10 +273,11 @@ class StudentProfilesImporter(object):
         studentpage.title = student_name
         studentpage.school = student_school_slug
         studentpage.programme = student_programme_slug
-        studentpage.degree_qualification = ""
-        studentpage.degree_subject = ""
+        studentpage.degree_qualification = "researchstudent"
+        studentpage.degree_subject = degree_subject_slug
         studentpage.degree_year = ""
         studentpage.statement = student_biography
+        studentpage.funding = student_title
         studentpage.show_on_homepage = False
         studentpage.show_on_programme_page = False
         studentpage.first_name = student_firstname
@@ -258,6 +290,17 @@ class StudentProfilesImporter(object):
             else:
                 self.student_index_page.add_child(studentpage)
 
+
+
+        # Emails
+        if student_emails is not None:
+            for email in student_emails:
+                StudentPageContactsEmail.objects.get_or_create(page=studentpage, email=email)
+
+        # URLS
+        if student_urls is not None:
+            for url in student_urls:
+                StudentPageContactsWebsite.objects.get_or_create(page=studentpage, website=url)
 
 
         # Images
