@@ -126,7 +126,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 page.has_unpublished_changes = True
 
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            page.save_revision()
+            page.save_revision(user=request.user)
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -171,7 +171,7 @@ def edit(request, page_id):
                     page.has_unpublished_changes = True
                     form.save()
 
-            page.save_revision()
+            page.save_revision(user=request.user)
 
             if is_publishing:
                 messages.success(request, "Page '%s' published." % page.title)
