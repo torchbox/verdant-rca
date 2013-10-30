@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.db.models import Min
 
 from datetime import date
+import datetime
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -1066,30 +1067,59 @@ class EventItem(Page, SocialFields):
 
     def serve(self, request):
         if "format" in request.GET:
-            if request.GET['format'] == 'ics':
+            if request.GET['format'] == 'ical':
                 # Begin event
                 # VEVENT format: http://www.kanzaki.com/docs/ical/vevent.html
                 ical_components = [
-                    'BEGIN:VCALENDER',
+                    'BEGIN:VCALENDAR',
                     'VERSION:2.0',
-                    'PRODID:verdant',
+                    'PRODID:-//Torchbox//verdant//EN',
                 ]
 
-                for eventdate in self.eventitemdatestimes_set:
-                    ical_components.extend([
-                        'BEGIN:VEVENT',
-                        'UID:' + self.url,
-                        'DTSTAMP:',
-                        'SUMMARY:',
-                        'DESCRIPTION:',
-                        'DTSTART:',
-                        'DTEND:'
-                        'END:VEVENT',
-                    ])
+                for eventdate in self.dates_times.all():
+                    # Work out number of days the event lasts
+                    if eventdate.date_to is not None:
+                        days = (eventdate.date_to - eventdate.date_from).days + 1
+                    else:
+                        days = 1
+
+                    for day in range(days):
+                        # Get times
+                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from_new)
+                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to_new)
+
+                        # Get location
+                        if self.location == "other":
+                            location = self.location_other
+                        else:
+                            location = self.get_location_display()
+
+                        def add_slashes(string):
+                            string.replace('"', '\\"')
+                            string.replace('\\', '\\\\')
+                            string.replace(',', '\\,')
+                            string.replace(':', '\\:')
+                            string.replace(';', '\\;')
+                            string.replace('\n', '\\n')
+                            return string
+
+                        # Make event
+                        ical_components.extend([
+                            'BEGIN:VEVENT',
+                            'UID:' + add_slashes(self.url) + str(day + 1),
+                            'URL:' + add_slashes(self.url),
+                            'DTSTAMP:' + start_time.strftime('%Y%m%dT%H%M%S'),
+                            'SUMMARY:' + add_slashes(self.title),
+                            'DESCRIPTION:' + add_slashes(self.body),
+                            'LOCATION:' + add_slashes(location),
+                            'DTSTART;TZID=Europe/London:' + start_time.strftime('%Y%m%dT%H%M%S'),
+                            'DTEND;TZID=Europe/London:' + end_time.strftime('%Y%m%dT%H%M%S'),
+                            'END:VEVENT',
+                        ])
 
                 # Finish event
                 ical_components.extend([
-                    'END:VCALENDER'
+                    'END:VCALENDAR'
                 ])
 
                 # Send response
