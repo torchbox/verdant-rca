@@ -1,8 +1,12 @@
 <table class="listing">
     <thead>
         <tr>
-            
-            <th class="title"><a href="#" class="icon icon-arrow-down-after">Title</a></th>
+            <th class="title">
+                {% if sort_by_title %}
+                    <a href="#" class="icon icon-arrow-down-after">Title</a></th>
+                {% else %}
+                    Title
+                {% endif %}
             <th class="type">Type</th>
             {% if show_parent %}
                 {% comment %}
@@ -19,7 +23,6 @@
         {% if pages %}
             {% for page in pages %}
                 <tr {% if not page.live %}class="inactive"{% endif %}>
-                   
                     <td class="title">
                         <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
                         <ul class="actions">
