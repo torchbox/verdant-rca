@@ -20,6 +20,8 @@ urlpatterns = patterns('verdantadmin.views',
     url(r'^pages/(\d+)/delete/$', 'pages.delete', name='verdantadmin_pages_delete'),
     url(r'^pages/(\d+)/unpublish/$', 'pages.unpublish', name='verdantadmin_pages_unpublish'),
 
+     url(r'^pages/search/$', 'pages.search', name='verdantadmin_pages_search'),
+
     url(r'^pages/(\d+)/move/$', 'pages.move_choose_destination', name='verdantadmin_pages_move'),
     url(r'^pages/(\d+)/move/(\d+)/$', 'pages.move_choose_destination', name='verdantadmin_pages_move_choose_destination'),
     url(r'^pages/(\d+)/move/(\d+)/confirm/$', 'pages.move_confirm', name='verdantadmin_pages_move_confirm'),

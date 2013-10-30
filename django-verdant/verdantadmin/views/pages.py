@@ -8,6 +8,9 @@ from treebeard.exceptions import InvalidMoveToDescendant
 
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
+from verdantadmin.forms import SearchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def index(request, parent_page_id=None):
 
@@ -342,3 +345,43 @@ def get_page_edit_handler(page_class):
         ])
 
     return PAGE_EDIT_HANDLERS[page_class]
+
+
+def search(request):
+    pages = []
+    q = None
+    is_searching = False
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+            # page number
+            p = request.GET.get("p", 1)
+            is_searching = True
+            pages = Page.title_search(q)
+
+            # Pagination
+            paginator = Paginator(pages, 20)
+            try:
+                pages =  paginator.page(p)
+            except PageNotAnInteger:
+                pages =  paginator.page(1)
+            except EmptyPage:
+                pages =  paginator.page(paginator.num_pages)
+    else:
+        form = SearchForm()
+
+    if request.is_ajax():
+        return render(request, "verdantadmin/pages/search_results.html", {
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
+    else:
+        return render(request, "verdantadmin/pages/search.html", {
+            'form': form,
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
