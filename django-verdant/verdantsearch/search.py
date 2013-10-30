@@ -155,7 +155,7 @@ class Search(object):
         for obj in obj_list:
             self.add(obj)
 
-    def search(self, query_string, model, fields=None):
+    def search(self, query_string, model, fields=None, filters={}):
         # Model must be a descendant of Indexed and be a djangi model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
             return None
@@ -177,6 +177,10 @@ class Search(object):
 
         # Filter results by this content type
         query = query.filter(content_type__prefix=model.indexed_get_content_type())
+
+        # Extra filters
+        if filters:
+            query = query.filter(**filters)
 
         # Return search results
         return SearchResults(model, query)
