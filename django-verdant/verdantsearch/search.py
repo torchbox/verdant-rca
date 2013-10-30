@@ -9,6 +9,7 @@ class SearchResults(object):
     def __init__(self, model, query):
         self.model = model
         self.query = query
+        self.count = query.count()
 
     def __getitem__(self, key):
         # Get list of primary keys
@@ -24,7 +25,7 @@ class SearchResults(object):
             return self.model.objects.get(pk=pk)
 
     def __len__(self):
-        return len(self.query)
+        return self.count
 
 
 class Search(object):
