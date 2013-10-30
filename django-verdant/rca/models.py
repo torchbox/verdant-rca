@@ -2026,7 +2026,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 11)  # Show 8 research items per page
+        paginator = Paginator(staff_pages, 5)  # Show 11 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:

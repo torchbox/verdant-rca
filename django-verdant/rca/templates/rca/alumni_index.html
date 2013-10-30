@@ -48,7 +48,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" %}
+    {% include "rca/includes/sidebar.html" with showAdverts="true" showToday="true" %}
 {% endblock %}
 
 {% block extra_js %}
@@ -60,6 +60,5 @@
 {% endblock %}
 
 <!-- TODOs
-	- filter of programme by school (or other filtering to be discussed)
 	- Tags
 -->
