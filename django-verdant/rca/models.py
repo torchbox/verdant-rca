@@ -1722,8 +1722,10 @@ class AlumniIndex(Page, SocialFields):
 
         # research_items.order_by('-year')
 
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
         page = request.GET.get('page')
-        paginator = Paginator(alumni_pages, 11) # Show 8 research items per page
+        paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -1736,7 +1738,8 @@ class AlumniIndex(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/alumni_pages_listing.html", {
                 'self': self,
-                'alumni_pages': alumni_pages
+                'alumni_pages': alumni_pages,
+                'related_programmes': related_programmes,
             })
         else:
             return render(request, self.template, {
