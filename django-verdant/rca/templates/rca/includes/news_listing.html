@@ -18,8 +18,21 @@
                                 <div class="image">
                                     {% if news_item.feed_image %}
                                         {% image news_item.feed_image width-600 %}
+<<<<<<< HEAD
                                     {% else %}    
                                         <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
+=======
+                                    {% else %}
+                                        {% with news_item.carousel_items.all as carousel_items %}
+                                            {% with carousel_items|first as carousel_item %}
+                                                {% if carousel_item.image %}
+                                                    {% image carousel_item.image fill-300x169 %}
+                                                {% else %}
+                                                    <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endwith %}
+>>>>>>> develop
                                     {% endif %}
                                 </div>
                             <div class="content">
@@ -29,7 +42,7 @@
                                 {% endif %}
                             </div>
                         </a>
-                    </li>   
+                    </li>
                 {% endfor %}
                 {% if news.paginator.count > 10 %}
                     <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
@@ -51,3 +64,13 @@
     </ul>
 
 {% endif %}
+
+
+<script type="text/javascript">
+    {% if related_programmes %}
+        var related_programmes = {{related_programmes|safe}};
+    {% else %}
+        var related_programmes = [];
+    {% endif %}
+</script>
+

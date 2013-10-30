@@ -57,7 +57,19 @@
                 <div class="related-content-item">
                     <a href="{% pageurl news_item %}">
                         <figure>
-                            {% if news_item.feed_image %}{% image news_item.feed_image width-180 %}{% endif %}
+                            {% if news_item.feed_image %}
+                                {% image news_item.feed_image width-180 %}
+                            {% else %}
+                                {% with news_item.carousel_items.all as carousel_items %}
+                                    {% with carousel_items|first as carousel_item %}
+                                        {% if carousel_item.image %}
+                                            {% image carousel_item.image fill-300x169 %}
+                                        {% else %}
+                                            <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="180">
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
                             <figcaption>{{news_item.title }}</figcaption>
                         </figure>
                     </a>
