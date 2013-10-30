@@ -1016,8 +1016,8 @@ class EventItemDatesTimes(Orderable):
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
-        FieldPanel('time_from'),
-        FieldPanel('time_to'),
+        FieldPanel('time_from_new'),
+        FieldPanel('time_to_new'),
     ]
 
 class FutureEventItemManager(models.Manager):
