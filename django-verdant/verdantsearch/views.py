@@ -14,7 +14,7 @@ def search(request):
     # Search
     if query_string != "":
         do_search = True
-        search_results = Search().search(query_string, model=models.Page)
+        search_results = models.Page.default_searcher(query_string)
 
         # Pagination
         paginator = Paginator(search_results, 20)
@@ -39,7 +39,7 @@ def suggest(request):
 
     # Search
     if query_string != "":
-        search_results = models.Page.title_search(query_string)[:5]
+        search_results = models.Page.default_title_searcher(query_string)[:5]
 
         # Get list of suggestions
         suggestions = []
