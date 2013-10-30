@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from verdantdocs.models import Document
 from verdantdocs.forms import DocumentForm
 from verdantadmin.forms import SearchForm
 
 
+@login_required
 def index(request):
     documents = Document.objects.order_by('-created_at')[:12]
     form = SearchForm()
@@ -18,6 +20,7 @@ def index(request):
     })
 
 
+@login_required
 def add(request):
     if request.POST:
         form = DocumentForm(request.POST, request.FILES)
@@ -34,6 +37,7 @@ def add(request):
     })
 
 
+@login_required
 def edit(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
     if request.POST:
@@ -58,6 +62,7 @@ def edit(request, document_id):
     })
 
 
+@login_required
 def delete(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
 
@@ -71,6 +76,7 @@ def delete(request, document_id):
     })
 
 
+@login_required
 def search(request):
     documents = []
     if 'q' in request.GET:

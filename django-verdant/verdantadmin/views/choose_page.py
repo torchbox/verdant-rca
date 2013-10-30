@@ -2,6 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404
 from django.utils.http import urlencode
+from django.contrib.auth.decorators import login_required
 
 from core.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
@@ -15,6 +16,7 @@ def get_querystring(request):
         'prompt_for_link_text': request.GET.get('prompt_for_link_text', ''),
     })
 
+@login_required
 def browse(request, parent_page_id=None):
 
     page_type = request.GET.get('page_type') or 'core.page'
@@ -60,6 +62,7 @@ def browse(request, parent_page_id=None):
         }
     )
 
+@login_required
 def search(request):
     page_type = request.GET.get('page_type') or 'core.page'
     content_type_app_name, content_type_model_name = page_type.split('.')
@@ -94,6 +97,7 @@ def search(request):
         )
 
 
+@login_required
 def external_link(request):
     prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
 
@@ -124,6 +128,7 @@ def external_link(request):
         }
     )
 
+@login_required
 def email_link(request):
     prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
 

@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
 
 import json
 
 from verdantadmin.modal_workflow import render_modal_workflow
 from verdantsnippets.views.snippets import get_content_type_from_url_params, get_snippet_type_name
 
+@login_required
 def choose(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -21,6 +23,7 @@ def choose(request, content_type_app_name, content_type_model_name):
         }
     )
 
+@login_required
 def chosen(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()

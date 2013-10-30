@@ -3,12 +3,14 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.decorators import login_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 
+@login_required
 def index(request, parent_page_id=None):
 
     if parent_page_id:
@@ -23,6 +25,7 @@ def index(request, parent_page_id=None):
     })
 
 
+@login_required
 def select_type(request):
     # Get the list of page types that can be created within the pages that currently exist
     existing_page_types = ContentType.objects.raw("""
@@ -42,6 +45,7 @@ def select_type(request):
     })
 
 
+@login_required
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
 
@@ -54,6 +58,7 @@ def add_subpage(request, parent_page_id):
         'all_page_types': all_page_types,
     })
 
+@login_required
 def select_location(request, content_type_app_name, content_type_model_name):
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
@@ -84,6 +89,7 @@ def select_location(request, content_type_app_name, content_type_model_name):
         })
 
 
+@login_required
 def create(request, content_type_app_name, content_type_model_name, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
 
@@ -138,6 +144,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     })
 
 
+@login_required
 def edit(request, page_id):
     page = get_object_or_404(Page, id=page_id).get_latest_revision()
     edit_handler_class = get_page_edit_handler(page.__class__)
@@ -182,6 +189,7 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
     })
 
+@login_required
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -196,10 +204,12 @@ def delete(request, page_id):
         'descendant_count': page.get_descendant_count()
     })
 
+@login_required
 def view_draft(request, page_id):
     page = get_object_or_404(Page, id=page_id).get_latest_revision()
     return page.serve(request)
 
+@login_required
 def preview_on_edit(request, page_id):
     # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
     # return the rendered page; if not, re-render the edit form
@@ -230,6 +240,7 @@ def preview_on_edit(request, page_id):
         response['X-Verdant-Preview'] = 'error'
         return response
 
+@login_required
 def preview_on_create(request, content_type_app_name, content_type_model_name, parent_page_id):
     # Receive the form submission that would typically be posted to the 'create' view. If submission is valid,
     # return the rendered page; if not, re-render the edit form
@@ -269,6 +280,7 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
+@login_required
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -283,6 +295,7 @@ def unpublish(request, page_id):
         'page': page,
     })
 
+@login_required
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
 
@@ -308,6 +321,7 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
         'child_pages': child_pages,
     })
 
+@login_required
 def move_confirm(request, page_to_move_id, destination_id):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
     destination = get_object_or_404(Page, id=destination_id)

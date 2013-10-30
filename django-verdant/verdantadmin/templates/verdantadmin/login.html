@@ -8,6 +8,7 @@
 {% block furniture %}
 <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
     {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
     <h1>Sign in to <span>V</span>erdant</h1>
 
     {% if form.errors %}
