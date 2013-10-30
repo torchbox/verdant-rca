@@ -10,7 +10,7 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	<section class="filters three-filters row">
+	<section class="filters two-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>
 	        	<li class="filter">
@@ -31,15 +31,6 @@
 						{% endfor %}
 	                </select>
 	            </li>
-	            <li class="filter">
-	                <label for="staff_type">Staff type</label>
-	                <select id="staff_type" name="staff_type">
-	                    <option value="">All staff</option>
-	                    {% for key, value in global_staff_type %}
-	                    	<option value="{{ key }}" {% if request.GET.staff_type == key %}selected="selected"{% endif %}>{{ value }}</option>
-						{% endfor %}
-	                </select>
-	            </li>
 				<input type="submit" />
 			</ul>
 		</form>
@@ -50,7 +41,7 @@
 	{% endif %}
 
     <div id="listing">
-    	{% include "rca/includes/staff_pages_listing.html" %}
+    	{% include "rca/includes/alumni_pages_listing.html" %}
 	</div>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
@@ -63,7 +54,7 @@
 {% block extra_js %}
 	<script type="text/javascript">
 		//global var for rca_now_index set here so that it can be used by the script being called
-		var current_page = "{{ global_staff_index_url }}";
+		var current_page = "{{ global_alumni_index_url }}";
 	</script>
 	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
