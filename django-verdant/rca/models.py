@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Min
 
@@ -1053,6 +1054,46 @@ class EventItem(Page, SocialFields):
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
+
+    def serve(self, request):
+        if "format" in request.GET:
+            if request.GET['format'] == 'ics':
+                # Begin event
+                # VEVENT format: http://www.kanzaki.com/docs/ical/vevent.html
+                ical_components = [
+                    'BEGIN:VCALENDER',
+                    'VERSION:2.0',
+                    'PRODID:verdant',
+                ]
+
+                for eventdate in self.eventitemdatestimes_set:
+                    ical_components.extend([
+                        'BEGIN:VEVENT',
+                        'UID:' + self.url,
+                        'DTSTAMP:',
+                        'SUMMARY:',
+                        'DESCRIPTION:',
+                        'DTSTART:',
+                        'DTEND:'
+                        'END:VEVENT',
+                    ])
+
+                # Finish event
+                ical_components.extend([
+                    'END:VCALENDER'
+                ])
+
+                # Send response
+                response = HttpResponse("\r".join(ical_components), content_type='text/calendar')
+                response['Content-Disposition'] = 'attachment; filename=' + self.slug + '.ics'
+                return response
+            else:
+                # Unrecognised format error
+                message = 'Could not export event\n\nUnrecognised format: ' + request.GET['format']
+                return HttpResponse(message, content_type='text/plain')
+        else:
+            # Display event page as usual
+            return super(EventItem, self).serve(request)
 
 EventItem.content_panels = [
     MultiFieldPanel([
