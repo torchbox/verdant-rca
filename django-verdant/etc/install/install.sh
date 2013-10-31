@@ -69,6 +69,14 @@ fi
 
 # ---
 
+# ElasticSearch
+if ! command -v elasticsearch; then
+    echo "Downloading ElasticSearch..."
+    wget -q https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.5.deb
+    dpkg -i elasticsearch-0.90.5.deb
+    service elasticsearch start
+fi
+
 # postgresql setup for project
 createdb -Upostgres $DB_NAME
 
