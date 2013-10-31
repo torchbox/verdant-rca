@@ -17,8 +17,17 @@ class SearchResults(object):
             # Get primary keys
             pk_list = [result._source["pk"] for result in self.query[key]]
 
-            # Build a list of objects
-            return [self.model.objects.get(pk=pk) for pk in pk_list]
+            # Get results
+            results = self.model.objects.filter(pk__in=pk_list).prefetch_related("content_type")
+
+            # Put results into a dictionary (using primary key as the key)
+            results_dict = {str(result.pk): result for result in results}
+
+            # Build new list with items in the correct order
+            results_sorted = [results_dict[str(pk)] for pk in pk_list]
+
+            # Return the list
+            return results_sorted
         else:
             # Return a single item
             pk = self.query[key]._source["pk"]
