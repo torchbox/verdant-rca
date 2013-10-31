@@ -127,16 +127,38 @@ VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', 
 # the nice form fields defined in FORM_FIELD_OVERRIDES.
 
 
-def get_form_for_model(model, **kwargs):
+def get_form_for_model(model, fields=None, exclude=None, formsets=None, exclude_formsets=None,
+    widgets=None):
+
     # django's modelform_factory with a bit of custom behaviour
     # (dealing with Treebeard's tree-related fields that really should have
     # been editable=False)
+    attrs = {'model': model}
+
+    if fields is not None:
+        attrs['fields'] = fields
+
+    if exclude is not None:
+        attrs['exclude'] = exclude
     if issubclass(model, Page):
-        kwargs['exclude'] = kwargs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
+        attrs['exclude'] = attrs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
 
-    kwargs['form'] = VerdantAdminModelForm
+    if widgets is not None:
+        attrs['widgets'] = widgets
 
-    return modelform_factory(model, **kwargs)
+    if formsets is not None:
+        attrs['formsets'] = formsets
+
+    if exclude_formsets is not None:
+        attrs['exclude_formsets'] = exclude_formsets
+
+    # Give this new form class a reasonable name.
+    class_name = model.__name__ + str('Form')
+    form_class_attrs = {
+        'Meta': type('Meta', (object,), attrs)
+    }
+
+    return VerdantAdminModelFormMetaclass(class_name, (VerdantAdminModelForm,), form_class_attrs)
 
 
 def extract_panel_definitions_from_model_class(model, exclude=None):
@@ -177,13 +199,20 @@ class EditHandler(object):
     def widget_overrides(cls):
         return {}
 
+    # return list of formset names that this EditHandler requires to be present
+    # as children of the ClusterForm
+    @classmethod
+    def required_formsets(cls):
+        return []
+
     # the top-level edit handler is responsible for providing a form class that can produce forms
     # acceptable to the edit handler
     _form_class = None
     @classmethod
     def get_form_class(cls, model):
         if cls._form_class is None:
-            cls._form_class = get_form_for_model(model, widgets=cls.widget_overrides())
+            cls._form_class = get_form_for_model(model,
+                formsets=cls.required_formsets(), widgets=cls.widget_overrides())
         return cls._form_class
 
     def __init__(self, instance=None, form=None):
@@ -288,6 +317,17 @@ class BaseCompositeEditHandler(EditHandler):
             cls._widget_overrides = widgets
 
         return cls._widget_overrides
+
+    _required_formsets = None
+    @classmethod
+    def required_formsets(cls):
+        if cls._required_formsets is None:
+            formsets = []
+            for handler_class in cls.children:
+                formsets.extend(handler_class.required_formsets())
+            cls._required_formsets = formsets
+
+        return cls._required_formsets
 
     def __init__(self, instance=None, form=None):
         super(BaseCompositeEditHandler, self).__init__(instance=instance, form=form)
@@ -517,6 +557,10 @@ class BaseInlinePanel(EditHandler):
             cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
 
         return cls._child_edit_handler_class
+
+    @classmethod
+    def required_formsets(cls):
+        return [cls.relation_name]
 
     @classmethod
     def widget_overrides(cls):
