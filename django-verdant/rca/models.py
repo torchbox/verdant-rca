@@ -1013,6 +1013,7 @@ class EventItemDatesTimes(Orderable):
     time_to = models.CharField("End time",max_length=255, blank=True, editable=False)
     time_from_new = models.TimeField("Start time", null=True, blank=True)
     time_to_new = models.TimeField("End time", null=True, blank=True)
+    time_other = models.CharField("Time other", max_length=255, blank=True, help_text='Use this field to give additional information about start and end times')
 
     def save(self, *args, **kwargs):
         def time_display(time):
@@ -1058,6 +1059,7 @@ class EventItemDatesTimes(Orderable):
         FieldPanel('date_to'),
         FieldPanel('time_from_new'),
         FieldPanel('time_to_new'),
+        FieldPanel('')
     ]
 
 class FutureEventItemManager(models.Manager):
