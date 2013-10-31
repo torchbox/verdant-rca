@@ -1059,7 +1059,7 @@ class EventItemDatesTimes(Orderable):
         FieldPanel('date_to'),
         FieldPanel('time_from_new'),
         FieldPanel('time_to_new'),
-        FieldPanel('')
+        FieldPanel('time_other'),
     ]
 
 class FutureEventItemManager(models.Manager):
