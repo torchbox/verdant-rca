@@ -376,6 +376,7 @@ class ClusterFormTest(TestCase):
         form = BandForm(instance=beatles)
 
         self.assertEqual(5, len(form.formsets['members'].forms))
+        self.assertTrue('albums' in form.as_p())
 
     def test_empty_cluster_form(self):
         class BandForm(ClusterForm):
@@ -432,6 +433,32 @@ class ClusterFormTest(TestCase):
         # this should create database entries
         self.assertTrue(Band.objects.filter(name='The Beatles').exists())
         self.assertTrue(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_explicit_formset_list(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+                formsets = ('members',)
+
+        form = BandForm()
+        self.assertTrue(form.formsets.get('members'))
+        self.assertFalse(form.formsets.get('albums'))
+
+        self.assertTrue('members' in form.as_p())
+        self.assertFalse('albums' in form.as_p())
+
+    def test_excluded_formset_list(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+                exclude_formsets = ('albums',)
+
+        form = BandForm()
+        self.assertTrue(form.formsets.get('members'))
+        self.assertFalse(form.formsets.get('albums'))
+
+        self.assertTrue('members' in form.as_p())
+        self.assertFalse('albums' in form.as_p())
 
     def test_widget_overrides(self):
         class BandForm(ClusterForm):

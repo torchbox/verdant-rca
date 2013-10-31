@@ -1,4 +1,7 @@
-from django.forms.models import BaseModelFormSet, modelformset_factory, ModelForm, _get_foreign_key, ModelFormMetaclass
+from django.forms.models import (
+    BaseModelFormSet, modelformset_factory,
+    ModelForm, _get_foreign_key, ModelFormMetaclass, ModelFormOptions
+)
 from django.db.models.fields.related import RelatedObject
 
 
@@ -138,6 +141,12 @@ def childformset_factory(parent_model, model, form=ModelForm,
     return FormSet
 
 
+class ClusterFormOptions(ModelFormOptions):
+    def __init__(self, options=None):
+        super(ClusterFormOptions, self).__init__(options=options)
+        self.formsets = getattr(options, 'formsets', None)
+        self.exclude_formsets = getattr(options, 'exclude_formsets', None)
+
 class ClusterFormMetaclass(ModelFormMetaclass):
     extra_form_count = 3
 
@@ -157,7 +166,9 @@ class ClusterFormMetaclass(ModelFormMetaclass):
         if not parents:
             return new_class
 
-        opts = new_class._meta
+        # ModelFormMetaclass will have set up new_class._meta as a ModelFormOptions instance;
+        # replace that with ClusterFormOptions so that we can access _meta.formsets
+        opts = new_class._meta = ClusterFormOptions(getattr(new_class, 'Meta', None))
         if opts.model:
             try:
                 child_relations = opts.model._meta.child_relations
@@ -175,6 +186,13 @@ class ClusterFormMetaclass(ModelFormMetaclass):
                 # and it would make sense for childformset_factory to support that as well)
 
                 rel_name = rel.get_accessor_name()
+
+                # apply 'formsets' and 'exclude_formsets' rules from meta
+                if opts.formsets and rel_name not in opts.formsets:
+                    continue
+                if opts.exclude_formsets and rel_name in opts.exclude_formsets:
+                    continue
+
                 try:
                     subform_widgets = opts.widgets.get(rel_name)
                 except AttributeError:  # thrown if opts.widgets is None
