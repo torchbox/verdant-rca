@@ -1,10 +1,10 @@
 {% load pageurl image_tags %}
 
-{% if staff_pages %}
+{% if alumni_pages %}
     <section class="five-plus x-plus row module" data-pagination=".pagination">
         <div class="item-container">
             <ul class="row">
-                {% for staffpage in staff_pages %}
+                {% for alumnipage in alumni_pages %}
                     {% comment %}The forloop counter just gives the index for the current set of reseults, and we need to know the overall
                     index of the rcanow item to know when to correctly apply the newrow class. This isn't available from the django
                     paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
@@ -14,25 +14,25 @@
                     {% else %}
                         <li>
                     {% endif %}
-                        <a href="{% pageurl staffpage %}">
+                        <a href="{% pageurl alumnipage %}">
                             <div class="image">
-                                {% if staffpage.profile_image %}
-                                    {% image staffpage.profile_image width-200 %}
+                                {% if alumnipage.profile_image %}
+                                    {% image alumnipage.profile_image width-200 %}
                                 {% else %}
                                     <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                                 {% endif %}
                             </div>
                             <div class="content">
-                                <h3 class="a3">{{ staffpage.title }}</h3>
-                                {% if staffpage.listing_intro %}
-                                    <p class="a4">{{ staffpage.listing_intro }}</p>
+                                <h3 class="a3">{{ alumnipage.title }}</h3>
+                                {% if alumnipage.listing_intro %}
+                                    <p class="a4">{{ alumnipage.listing_intro }}</p>
                                 {% endif %}
                             </div>
                         </a>
                     </li>
 
                 {% endfor %}
-                {% if staff_pages.paginator.count > 6 %}
+                {% if alumni_pages.paginator.count > 11 %}
                     <li class="load-more{% if staff_pages|length|divisibleby:'6' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
@@ -46,12 +46,13 @@
         {% endif %}
         -->
 
-        {% if staff_pages.has_next %}
-            <li class="next"><a href="?page={{ staff_pages.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
+        {% if alumni_pages.has_next %}
+            <li class="next"><a href="?page={{ alumni_pages.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
         {% endif %}
     </ul>
 
 {% endif %}
+
 
 <script type="text/javascript">
     {% if related_programmes %}
@@ -60,3 +61,4 @@
         var related_programmes = [];
     {% endif %}
 </script>
+
