@@ -1533,6 +1533,7 @@ class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
+    body = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -1552,6 +1553,7 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
+    FieldPanel('body'),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),

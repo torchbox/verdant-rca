@@ -15,7 +15,9 @@
 	{% include "rca/includes/modules/carousel.html" %}
 
 	{% include "rca/includes/modules/intro-large.html" %}
-
+    <section class='row'>
+    {% include "rca/includes/modules/body-text.html" with body=self.body %}
+    </section>
     <!--custom module block-->
     {% with self.custom_content_modules.all as custom_modules %}
         {% if custom_modules|length > 0 %}
