@@ -1015,45 +1015,6 @@ class EventItemDatesTimes(Orderable):
     time_to_new = models.TimeField("End time", null=True, blank=True)
     time_other = models.CharField("Time other", max_length=255, blank=True, help_text='Use this field to give additional information about start and end times')
 
-    def save(self, *args, **kwargs):
-        def time_display(time):
-            # Get hour and minute from time object
-            hour = time.hour
-            minute = time.minute
-
-            # Convert to 12 hour format
-            if hour >= 12:
-                pm = True
-                hour -=12
-            else:
-                pm = False
-            if hour == 0:
-                hour = 12
-
-            # Hour string
-            hour_string = str(hour)
-
-            # Minute string
-            if minute != 0:
-                minute_string = "." + str(minute)
-            else:
-                minute_string = ""
-
-            # PM string
-            if pm:
-                pm_string = "pm"
-            else:
-                pm_string = "am"
-
-            # Join and return
-            return "".join([hour_string, minute_string, pm_string])
-
-        if self.time_from_new is not None:
-            self.time_from = time_display(self.time_from_new)
-        if self.time_to_new is not None:
-            self.time_to = time_display(self.time_to_new)
-        super(EventItemDatesTimes, self).save(*args, **kwargs)
-
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
