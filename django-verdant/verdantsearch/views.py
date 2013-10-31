@@ -44,19 +44,19 @@ def suggest(request):
         # Get list of suggestions
         suggestions = []
         for result in search_results:
-            result_specific = result.specific
-            if hasattr(result_specific.__class__, "search_name"):
-                if result_specific.__class__.search_name is None:
+            model = result.content_type.model_class()
+            if hasattr(model, "search_name"):
+                if model.search_name is None:
                     content_type = ""
                 else:
-                    content_type = " | " + result_specific.__class__.search_name
+                    content_type = " | " + model.search_name
             else:
-                content_type = " | " + result_specific.__class__.__name__
+                content_type = " | " + model.__name__
 
             suggestions.append({
-                "label": result_specific.title + content_type,
-                "value": result_specific.title,
-                "url": result_specific.url,
+                "label": result.title + content_type,
+                "value": result.title,
+                "url": result.url,
             })
 
         return HttpResponse(json.dumps(suggestions))
