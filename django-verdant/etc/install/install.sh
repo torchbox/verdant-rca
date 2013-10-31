@@ -71,6 +71,7 @@ fi
 
 # ElasticSearch
 if ! command -v elasticsearch; then
+    apt-get install openjdk-6-jdk
     echo "Downloading ElasticSearch..."
     wget -q https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.5.deb
     dpkg -i elasticsearch-0.90.5.deb
