@@ -1,10 +1,12 @@
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.db.models import Min
 
 from datetime import date
+import datetime
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -1007,14 +1009,23 @@ class EventItemDatesTimes(Orderable):
     page = ParentalKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
     date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
-    time_from = models.CharField("Start time", max_length=255, blank=True)
-    time_to = models.CharField("End time",max_length=255, blank=True)
+    time_from = models.CharField("Start time", max_length=255, blank=True, editable=False)
+    time_to = models.CharField("End time",max_length=255, blank=True, editable=False)
+    time_from_new = models.TimeField("Start time", null=True, blank=True)
+    time_to_new = models.TimeField("End time", null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.time_from_new is not None:
+            self.time_from = self.time_from_new.strftime('%I.%M%p').lower()
+        if self.time_to_new is not None:
+            self.time_to = self.time_to_new.strftime('%I.%M%p').lower()
+        super(EventItemDatesTimes, self).save(*args, **kwargs)
 
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
-        FieldPanel('time_from'),
-        FieldPanel('time_to'),
+        FieldPanel('time_from_new'),
+        FieldPanel('time_to_new'),
     ]
 
 class FutureEventItemManager(models.Manager):
@@ -1053,6 +1064,75 @@ class EventItem(Page, SocialFields):
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
 
+
+    def serve(self, request):
+        if "format" in request.GET:
+            if request.GET['format'] == 'ical':
+                # Begin event
+                # VEVENT format: http://www.kanzaki.com/docs/ical/vevent.html
+                ical_components = [
+                    'BEGIN:VCALENDAR',
+                    'VERSION:2.0',
+                    'PRODID:-//Torchbox//verdant//EN',
+                ]
+
+                for eventdate in self.dates_times.all():
+                    # Work out number of days the event lasts
+                    if eventdate.date_to is not None:
+                        days = (eventdate.date_to - eventdate.date_from).days + 1
+                    else:
+                        days = 1
+
+                    for day in range(days):
+                        # Get times
+                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from_new)
+                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to_new)
+
+                        # Get location
+                        if self.location == "other":
+                            location = self.location_other
+                        else:
+                            location = self.get_location_display()
+
+                        def add_slashes(string):
+                            string.replace('"', '\\"')
+                            string.replace('\\', '\\\\')
+                            string.replace(',', '\\,')
+                            string.replace(':', '\\:')
+                            string.replace(';', '\\;')
+                            string.replace('\n', '\\n')
+                            return string
+
+                        # Make event
+                        ical_components.extend([
+                            'BEGIN:VEVENT',
+                            'UID:' + add_slashes(self.url) + str(day + 1),
+                            'URL:' + add_slashes(self.url),
+                            'DTSTAMP:' + start_time.strftime('%Y%m%dT%H%M%S'),
+                            'SUMMARY:' + add_slashes(self.title),
+                            'DESCRIPTION:' + add_slashes(self.body),
+                            'LOCATION:' + add_slashes(location),
+                            'DTSTART;TZID=Europe/London:' + start_time.strftime('%Y%m%dT%H%M%S'),
+                            'DTEND;TZID=Europe/London:' + end_time.strftime('%Y%m%dT%H%M%S'),
+                            'END:VEVENT',
+                        ])
+
+                # Finish event
+                ical_components.extend([
+                    'END:VCALENDAR'
+                ])
+
+                # Send response
+                response = HttpResponse("\r".join(ical_components), content_type='text/calendar')
+                response['Content-Disposition'] = 'attachment; filename=' + self.slug + '.ics'
+                return response
+            else:
+                # Unrecognised format error
+                message = 'Could not export event\n\nUnrecognised format: ' + request.GET['format']
+                return HttpResponse(message, content_type='text/plain')
+        else:
+            # Display event page as usual
+            return super(EventItem, self).serve(request)
 
 EventItem.content_panels = [
     MultiFieldPanel([
@@ -1707,6 +1787,46 @@ class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        alumni_pages = AlumniPage.objects.filter(live=True)
+
+        if school and school != '':
+            alumni_pages = alumni_pages.filter(school=school)
+        if programme and programme != '':
+            alumni_pages = alumni_pages.filter(programme=programme)
+
+        alumni_pages = alumni_pages.distinct()
+
+        # research_items.order_by('-year')
+
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
+        page = request.GET.get('page')
+        paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/alumni_pages_listing.html", {
+                'self': self,
+                'alumni_pages': alumni_pages,
+                'related_programmes': related_programmes,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'alumni_pages': alumni_pages
+            })
+
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -1943,7 +2063,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 11)  # Show 8 research items per page
+        paginator = Paginator(staff_pages, 5)  # Show 11 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -1973,6 +2093,44 @@ StaffIndex.content_panels = [
 ]
 
 StaffIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+# == Research student index ==
+
+class ResearchStudentIndexAd(Orderable):
+    page = ParentalKey('rca.ResearchStudentIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ResearchStudentIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+ResearchStudentIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ResearchStudentIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('seo_title'),
         FieldPanel('slug'),

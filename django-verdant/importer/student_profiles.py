@@ -54,7 +54,7 @@ class StudentProfilesImporter(object):
         self.save = kwargs.get("save", False)
         self.path = kwargs.get("path", "importer/data/export_student_profiles.xml")
         self.image_path = kwargs.get("image_path", "importer/data/export_student_images/")
-        self.student_index = kwargs.get("student_index", "students")
+        self.student_index = kwargs.get("student_index", "research-students")
         self.research_index = kwargs.get("research_index", "current-research")
         self.staff_index = kwargs.get("staff_index", "staff")
 

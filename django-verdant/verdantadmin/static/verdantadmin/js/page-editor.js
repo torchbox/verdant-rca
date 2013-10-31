@@ -94,6 +94,17 @@ function initDateChooser(id) {
     });
 }
 
+function initTimeChoosers(context) {
+    $('input.friendly_time', context).timepicker({
+        timeFormat: 'g.ia'
+    });
+}
+function initTimeChooser(id) {
+    $('#' + id).timepicker({
+        timeFormat: 'g.ia'
+    });
+}
+
 $(function() {
     initDateChoosers();
     $('.richtext [contenteditable="false"]').each(function() {

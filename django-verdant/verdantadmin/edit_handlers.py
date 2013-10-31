@@ -4,7 +4,7 @@ from django import forms
 from django.db import models
 from django.forms.models import fields_for_model, modelform_factory
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured, ValidationError
 
 import copy
 
@@ -12,6 +12,9 @@ from core.models import Page
 from core.util import camelcase_to_underscore
 from core.fields import RichTextArea
 from cluster.forms import ClusterForm, ClusterFormMetaclass
+
+import re
+import datetime
 
 
 class FriendlyDateInput(forms.DateInput):
@@ -26,14 +29,63 @@ class FriendlyDateInput(forms.DateInput):
 
         super(FriendlyDateInput, self).__init__(attrs=default_attrs, format='%d %b %Y')
 
+
+class FriendlyTimeInput(forms.TimeInput):
+    """
+    A custom TimeInput widget that formats dates as "5.30pm"
+    and adds class="friendly_time" to be picked up by jquery timepicker.
+    """
+    def __init__(self, attrs=None):
+        default_attrs = {'class': 'friendly_time'}
+        if attrs:
+            default_attrs.update(attrs)
+
+        super(FriendlyTimeInput, self).__init__(attrs=default_attrs, format='%I.%M%p')
+
+
+class FriendlyTimeField(forms.CharField):
+    def to_python(self, time_string):
+        # Check if the string is blank
+        if not time_string:
+            return None
+
+        # Look for time in the string
+        expr = re.compile("^(?P<hour>\d+)(?:(?:.|:)(?P<minute>\d+))?(?P<am_pm>am|pm)")
+        match = expr.match(time_string.lower())
+        if match:
+            # Pull out values from string
+            hour_string, minute_string, am_pm = match.groups()
+
+            # Convert hours and minutes to integers
+            hour = int(hour_string)
+            if minute_string:
+                minute = int(minute_string)
+            else:
+                minute = 0
+
+            # Create python time
+            if am_pm == "pm" and hour < 12:
+                hour += 12
+
+            if am_pm == "am" and hour >= 12:
+                hour -= 12
+
+            return datetime.time(hour=hour, minute=minute)
+        else:
+            raise ValidationError("Please type a valid time")
+
+
 FORM_FIELD_OVERRIDES = {
     models.DateField: {'widget': FriendlyDateInput},
+    models.TimeField: {'widget': FriendlyTimeInput, 'form_class': FriendlyTimeField},
 }
 
 WIDGET_JS = {
     FriendlyDateInput: (lambda id: "initDateChooser(fixPrefix('%s'));" % id),
+    FriendlyTimeInput: (lambda id: "initTimeChooser(fixPrefix('%s'));" % id),
     RichTextArea: (lambda id: "makeRichTextEditable(fixPrefix('%s'));" % id),
 }
+
 
 # Callback to allow us to override the default form fields provided for each model field.
 def formfield_for_dbfield(db_field, **kwargs):
@@ -48,6 +100,7 @@ def formfield_for_dbfield(db_field, **kwargs):
 
     # For any other type of field, just call its formfield() method.
     return db_field.formfield(**kwargs)
+
 
 class VerdantAdminModelFormMetaclass(ClusterFormMetaclass):
     # Override the behaviour of the regular ModelForm metaclass -

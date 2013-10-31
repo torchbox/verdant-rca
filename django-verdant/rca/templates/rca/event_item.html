@@ -34,7 +34,7 @@
 		{% endif %}
 	</div>
 	<div class="col-2">
-		{% include "rca/includes/modules/calendar-button.html" %}
+		{% include "rca/includes/modules/calendar-button.html" with url=self.url %}
 		{% include "rca/includes/modules/share-button.html" %}
 		{% if self.eventbrite_id %}
 			<a href="http://www.eventbrite.com/event/{{ self.eventbrite_id }}" class="button icon icon-link-away">Book now</a>
