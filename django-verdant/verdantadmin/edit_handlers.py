@@ -139,17 +139,19 @@ def get_form_for_model(model, **kwargs):
     return modelform_factory(model, **kwargs)
 
 
-def extract_panel_definitions_from_model_class(model):
+def extract_panel_definitions_from_model_class(model, exclude=None):
     if hasattr(model, 'panels'):
         return model.panels
 
     panels = []
 
-    exclude = []
+    _exclude = []
+    if exclude:
+        _exclude.extend(exclude)
     if issubclass(model, Page):
-        exclude = ['content_type', 'path', 'depth', 'numchild']
+        _exclude = ['content_type', 'path', 'depth', 'numchild']
 
-    fields = fields_for_model(model, exclude=exclude, formfield_callback=formfield_for_dbfield)
+    fields = fields_for_model(model, exclude=_exclude, formfield_callback=formfield_for_dbfield)
 
     for field_name, field in fields.items():
         try:
@@ -505,7 +507,7 @@ class BaseInlinePanel(EditHandler):
             return cls.panels
         # Failing that, get it from the model
         else:
-            return extract_panel_definitions_from_model_class(cls.related_model)
+            return extract_panel_definitions_from_model_class(cls.related.model, exclude=[cls.related.field.name])
 
     _child_edit_handler_class = None
     @classmethod
@@ -569,7 +571,7 @@ def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
     rel = getattr(base_model, relation_name).related
     return type('_InlinePanel', (BaseInlinePanel,), {
         'relation_name': relation_name,
-        'related_model': rel.model,
+        'related': rel,
         'panels': panels,
         'heading': label,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
