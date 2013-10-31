@@ -86,12 +86,14 @@ def rendition_delete(sender, instance, **kwargs):
 
 
 AREA_CHOICES = (
-    ('helenhamlyn', 'Helen Hamlyn'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('innovationrca', 'InnovationRCA'),
     ('research', 'Research'),
     ('knowledgeexchange', 'Knowledge Exchange'),
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
+    ('sustainrca', 'SustainRCA'),
+    ('support', 'Support'),
 )
 
 EVENT_AUDIENCE_CHOICES = (
