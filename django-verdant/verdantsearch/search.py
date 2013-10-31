@@ -152,17 +152,19 @@ class Search(object):
         self.es.index(self.es_index, obj.indexed_get_content_type(), self._build_document(obj))
 
     def add_bulk(self, obj_list):
-        # This is just the same as above except it inserts lists of objects in bulk
-        # Build documents
-        #docs = [self._build_document(obj) for obj in obj_list if isinstance(obj, Indexed) and isinstance(obj, models.Model)]
-
-        # Add to index
-        #self.es.bulk_index(self.es_index, "indexed_item", docs)
-
-        # TEMPORARY: We cannot bulk add a list of items with different types
-        # TODO: Find a way to bulk add many items of different types
+        # Group all objects by their type
+        type_set = {}
         for obj in obj_list:
-            self.add(obj)
+            obj_type = obj.indexed_get_content_type()
+            if obj_type not in type_set:
+                type_set[obj_type] = []
+
+            type_set[obj_type].append(self._build_document(obj))
+
+        # Loop through each type and bulk add them
+        for type_name, type_objects in type_set.items():
+            print type_name, len(type_objects)
+            self.es.bulk_index(self.es_index, type_name, type_objects)
 
     def search(self, query_string, model, fields=None, filters={}):
         # Model must be a descendant of Indexed and be a djangi model
