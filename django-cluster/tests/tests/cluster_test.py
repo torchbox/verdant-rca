@@ -95,3 +95,19 @@ class ClusterTest(TestCase):
         ])
         self.assertEqual('Paul McCartney', beatles.members.get(id=2).name)
         self.assertEqual('Paul McCartney', beatles.members.get(id='2').name)
+        self.assertEqual(1, beatles.members.filter(name='Paul McCartney').count())
+
+        # also need to be able to filter on foreign fields that return a model instance
+        # rather than a simple python value
+        self.assertEqual(2, beatles.members.filter(band=beatles).count())
+        # and ensure that the comparison is not treating all unsaved instances as identical
+        rutles = Band(name='The Rutles')
+        self.assertEqual(0, beatles.members.filter(band=rutles).count())
+
+        # and the comparison must be on the model instance's ID where available,
+        # not by reference
+        beatles.save()
+        beatles.members.add(BandMember(id=3, name='George Harrison'))  # modify the relation so that we're not to a plain database-backed queryset
+
+        also_beatles = Band.objects.get(id=beatles.id)
+        self.assertEqual(3, beatles.members.filter(band=also_beatles).count())

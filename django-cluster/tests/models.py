@@ -1,6 +1,6 @@
 from django.db import models
 
-from taggit.managers import TaggableManager
+from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from cluster.fields import ParentalKey
@@ -42,7 +42,7 @@ class TaggedPlace(TaggedItemBase):
 
 class Place(ClusterableModel):
     name = models.CharField(max_length=255)
-    tags = TaggableManager(through=TaggedPlace)
+    tags = ClusterTaggableManager(through=TaggedPlace)
 
     def __unicode__(self):
         return self.name
