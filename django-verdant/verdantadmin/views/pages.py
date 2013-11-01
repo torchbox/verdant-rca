@@ -193,6 +193,36 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
     })
 
+def reorder(request, parent_page_id=None):
+    if parent_page_id:
+        parent_page = get_object_or_404(Page, id=parent_page_id)
+    else:
+        parent_page = Page.get_first_root_node()
+
+    pages = parent_page.get_children()
+
+    if request.POST:
+        try:
+            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
+        except:
+            # Invalid
+            messages.error(request, "Could not reorder (invalid request)")
+            return redirect('verdantadmin_pages_reorder', parent_page_id)
+
+        # Reorder
+        for page in pages_ordered:
+            page.move(parent_page, pos='last-child')
+
+        # Success message
+        messages.success(request, "Pages reordered successfully")
+
+        return redirect('verdantadmin_explore', parent_page_id)
+    else:
+        return render(request, 'verdantadmin/pages/reorder.html', {
+            'parent_page': parent_page,
+            'pages': pages,
+        })
+
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 

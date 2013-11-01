@@ -31,6 +31,7 @@
                                     <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank" class="shortcut">View draft</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_reorder' parent_page.id %}" class="shortcut">Reorder</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
                                 {% if parent_page.live %}
                                     <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>
