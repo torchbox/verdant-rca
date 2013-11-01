@@ -10,11 +10,11 @@
                                 {% if carousel_item.image %}        
                                     {% if carousel_item.image.is_landscape %}
                         <li class="item landscape">
-                            <a href="pageurl galleryitem">
+                            <a href="{% pageurl galleryitem %}">
                                 <div class="image landscape">
                                     {% else %}
                         <li class="item portrait">
-                            <a href="pageurl galleryitem">
+                            <a href="{% pageurl galleryitem %}">
                                 <div class="image portrait">
                                     {% endif %}
                                     {% image carousel_item.image width-600 %}
