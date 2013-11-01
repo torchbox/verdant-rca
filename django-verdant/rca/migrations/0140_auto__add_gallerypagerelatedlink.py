@@ -1,70 +1,28 @@
 # -*- coding: utf-8 -*-
 import datetime
-import re
-import json
-from django.core.serializers.json import DjangoJSONEncoder
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Build expression
-        expr = re.compile("^(?P<hour>\d+)(?:.(?P<minute>\d+))?(?P<am_pm>am|pm)")
-
-        # Conversion function
-        def convert_time(time_string):
-            # Check if the string is blank
-            if not time_string:
-                return None
-
-            # Look for time in the string
-            match = expr.match(time_string)
-            if match:
-                # Pull out values from string
-                hour_string, minute_string, am_pm = match.groups()
-
-                # Convert hours and minutes to integers
-                hour = int(hour_string)
-                if minute_string:
-                    minute = int(minute_string)
-                else:
-                    minute = 0
-
-                # Create python time
-                if am_pm == "pm":
-                    hour += 12
-
-                return datetime.time(hour=hour, minute=minute)
-            else:
-                print "WARNING: Failed to understand time: " + time_string
-                return None
-
-        # Loop through event time objects and convert times
-        for time in orm['rca.EventItemDatesTimes'].objects.all():
-            time.time_from_new = convert_time(time.time_from)
-            time.time_to_new = convert_time(time.time_to)
-            time.save()
-
-        # Loop through event items and update all revisions to use new time fields
-        for eventitem in orm['rca.EventItem'].objects.all():
-            for revision in eventitem.revisions.all():
-                # Decode json
-                revision_data = json.loads(revision.content_json)
-
-                # Update time fields
-                for date_time in revision_data["dates_times"]:
-                    date_time["time_from_new"] = convert_time(date_time["time_from"])
-                    date_time["time_to_new"] = convert_time(date_time["time_to"])
-
-                # Encore json and save
-                revision.content_json = json.dumps(revision_data, cls=DjangoJSONEncoder)
-                revision.save()
+        # Adding model 'GalleryPageRelatedLink'
+        db.create_table(u'rca_gallerypagerelatedlink', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('sort_order', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('page', self.gf('cluster.fields.ParentalKey')(related_name='related_links', to=orm['rca.GalleryPage'])),
+            ('link', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['core.Page'])),
+            ('link_text', self.gf('django.db.models.fields.CharField')(max_length=255)),
+        ))
+        db.send_create_signal(u'rca', ['GalleryPageRelatedLink'])
 
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Deleting model 'GalleryPageRelatedLink'
+        db.delete_table(u'rca_gallerypagerelatedlink')
+
 
     models = {
         u'contenttypes.contenttype': {
@@ -88,13 +46,6 @@ class Migration(DataMigration):
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
-        },
-        u'core.pagerevision': {
-            'Meta': {'object_name': 'PageRevision'},
-            'content_json': ('django.db.models.fields.TextField', [], {}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['core.Page']"})
         },
         u'rca.advert': {
             'Meta': {'object_name': 'Advert'},
@@ -254,6 +205,7 @@ class Migration(DataMigration):
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'time_from': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'time_from_new': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+            'time_other': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'time_to': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'time_to_new': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'})
         },
@@ -292,6 +244,14 @@ class Migration(DataMigration):
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+        },
+        u'rca.gallerypagerelatedlink': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'GalleryPageRelatedLink'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.GalleryPage']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         u'rca.homepage': {
             'Meta': {'object_name': 'HomePage', '_ormbases': [u'core.Page']},
@@ -698,6 +658,21 @@ class Migration(DataMigration):
             'page': ('cluster.fields.ParentalKey', [], {'related_name': "'links'", 'to': u"orm['rca.ResearchItem']"}),
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
+        u'rca.researchstudentindex': {
+            'Meta': {'object_name': 'ResearchStudentIndex', '_ormbases': [u'core.Page']},
+            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
+            'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+        },
+        u'rca.researchstudentindexad': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'ResearchStudentIndexAd'},
+            'ad': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['rca.Advert']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'manual_adverts'", 'to': u"orm['rca.ResearchStudentIndex']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
         u'rca.reviewpage': {
             'Meta': {'object_name': 'ReviewPage', '_ormbases': [u'core.Page']},
             'author': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -916,6 +891,7 @@ class Migration(DataMigration):
         u'rca.standardindex': {
             'Meta': {'object_name': 'StandardIndex', '_ormbases': [u'core.Page']},
             'background_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
+            'body': ('core.fields.RichTextField', [], {'blank': 'True'}),
             'contact_address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'contact_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'contact_link_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -1178,4 +1154,3 @@ class Migration(DataMigration):
     }
 
     complete_apps = ['rca']
-    symmetrical = True

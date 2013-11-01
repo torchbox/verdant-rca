@@ -64,8 +64,11 @@ class FriendlyTimeField(forms.CharField):
                 minute = 0
 
             # Create python time
-            if am_pm == "pm":
+            if am_pm == "pm" and hour < 12:
                 hour += 12
+
+            if am_pm == "am" and hour >= 12:
+                hour -= 12
 
             return datetime.time(hour=hour, minute=minute)
         else:
