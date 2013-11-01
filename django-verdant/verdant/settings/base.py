@@ -162,6 +162,7 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantdocs',
     'verdantsnippets',
+    'verdantsearch',
     'verdantusers',
 
     'rca',
@@ -228,3 +229,6 @@ LOGGING = {
 
 # Override the Image class used by verdantimages with a custom one
 VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+
+# Override the search results template for verdantsearch
+VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"

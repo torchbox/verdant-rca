@@ -1,0 +1,67 @@
+<table class="listing">
+    <thead>
+        <tr>
+            <th class="title">
+                {% if sort_by_title %}
+                    <a href="#" class="icon icon-arrow-down-after">Title</a></th>
+                {% else %}
+                    Title
+                {% endif %}
+            <th class="type">Type</th>
+            {% if show_parent %}
+                {% comment %}
+                    I'm using the "type" class here as the "parent" class
+                    does not have "display: inline" or "float: left"
+                {% endcomment %}
+                <th class="type">Parent</th>
+            {% endif %}
+            <th class="status">Status</th>
+            <th class="children"></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if pages %}
+            {% for page in pages %}
+                <tr {% if not page.live %}class="inactive"{% endif %}>
+                    <td class="title">
+                        <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
+                        <ul class="actions">
+                            {% if page.has_unpublished_changes %}
+                                <li><a href="{% url 'verdantadmin_pages_view_draft' page.id %}" target="_blank">View draft</a></li>
+                            {% endif %}
+                            {% if page.live %}
+                                <li><a href="{{ page.url }}" target="_blank">View live</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
+                            <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
+                            {% if page.live %}
+                                <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
+                        </ul>
+                    </td>
+                    <td class="type">{{ page.content_type|title }}</td>
+                    {% if show_parent %}
+                        {% comment %}
+                            I'm using the "type" class here as the "parent" class
+                            does not have "display: inline" or "float: left"
+                        {% endcomment %}
+                        <td class="type">{{ page.get_parent.title }}</td>
+                    {% endif %}
+                    <td class="status">{{ page.status_string|capfirst }}</td>
+                    {% if page.is_navigable %}
+                        <td class="children">
+                            <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                        </td>
+                    {% else %}
+                        <td class="no-children">
+                            <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3" class="no-results-message"><p>No pages have been created here.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
+        {% endif %}
+    </tbody>
+</table>
