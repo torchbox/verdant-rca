@@ -18,16 +18,17 @@ def index(request, parent_page_id=None):
     else:
         parent_page = Page.get_first_root_node()
 
+    pages = parent_page.get_children()
+
     # Get page ordering
     if 'ordering' in request.GET:
         ordering = request.GET['ordering']
 
-        if ordering not in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
-            ordering = 'title'
+        if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
+            pages = pages.order_by(ordering)
     else:
-        ordering = 'title'
+        ordering = None
 
-    pages = parent_page.get_children().order_by(ordering)
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
         'ordering': ordering,

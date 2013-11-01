@@ -6,9 +6,9 @@
                     {% if ordering == "title" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-title" class="icon icon-arrow-down-after teal"></a>
                     {% elif ordering == "-title" %}
-                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-arrow-up-after teal"></a>
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=title" class="icon icon-arrow-up-after teal"></a>
                     {% else %}
-                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-arrow-down-after"></a>
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=title" class="icon icon-arrow-down-after"></a>
                     {% endif %}
                 {% endif %}
             </th>
