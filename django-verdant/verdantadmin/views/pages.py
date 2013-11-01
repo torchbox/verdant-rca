@@ -13,18 +13,26 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 def index(request, parent_page_id=None):
-
     if parent_page_id:
         parent_page = get_object_or_404(Page, id=parent_page_id)
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children().order_by('title')
+    # Get page ordering
+    if 'ordering' in request.GET:
+        ordering = request.GET['ordering']
+
+        if ordering not in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
+            ordering = 'title'
+    else:
+        ordering = 'title'
+
+    pages = parent_page.get_children().order_by(ordering)
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
+        'ordering': ordering,
         'pages': pages,
     })
-
 
 def select_type(request):
     # Get the list of page types that can be created within the pages that currently exist
