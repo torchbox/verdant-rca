@@ -86,12 +86,14 @@ def rendition_delete(sender, instance, **kwargs):
 
 
 AREA_CHOICES = (
-    ('helenhamlyn', 'Helen Hamlyn'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('innovationrca', 'InnovationRCA'),
     ('research', 'Research'),
     ('knowledgeexchange', 'Knowledge Exchange'),
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
+    ('sustainrca', 'SustainRCA'),
+    ('support', 'Support'),
 )
 
 EVENT_AUDIENCE_CHOICES = (
@@ -1026,19 +1028,14 @@ class EventItemDatesTimes(Orderable):
     time_to = models.CharField("End time",max_length=255, blank=True, editable=False)
     time_from_new = models.TimeField("Start time", null=True, blank=True)
     time_to_new = models.TimeField("End time", null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.time_from_new is not None:
-            self.time_from = self.time_from_new.strftime('%I.%M%p').lower()
-        if self.time_to_new is not None:
-            self.time_to = self.time_to_new.strftime('%I.%M%p').lower()
-        super(EventItemDatesTimes, self).save(*args, **kwargs)
+    time_other = models.CharField("Time other", max_length=255, blank=True, help_text='Use this field to give additional information about start and end times')
 
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
         FieldPanel('time_from_new'),
         FieldPanel('time_to_new'),
+        FieldPanel('time_other'),
     ]
 
 class FutureEventItemManager(models.Manager):
@@ -1564,6 +1561,7 @@ class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
+    body = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
@@ -1585,6 +1583,7 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
+    FieldPanel('body'),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
@@ -2157,6 +2156,44 @@ StaffIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
+# == Research student index ==
+
+class ResearchStudentIndexAd(Orderable):
+    page = ParentalKey('rca.ResearchStudentIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ResearchStudentIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+ResearchStudentIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ResearchStudentIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
 # == Student profile page ==
 
 class StudentPageDegree(Orderable):
@@ -2711,14 +2748,64 @@ CurrentResearchPage.promote_panels = [
 
 # == Gallery Page ==
 
+class GalleryPageRelatedLink(Orderable):
+    page = ParentalKey('rca.GalleryPage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    def serve(self, request):
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        year = request.GET.get('degree_year')
+
+        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        if programme:
+            gallery_items = gallery_items.filter(programme=programme)
+        if school:
+            gallery_items = gallery_items.filter(school=school)
+        if year:
+            gallery_items = gallery_items.filter(degree_year=year)
+
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
+
+        page = request.GET.get('page')
+        paginator = Paginator(gallery_items, 10)  # Show 10 gallery items per page
+        try:
+            gallery_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            gallery_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            gallery_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/gallery_listing.html", {
+                'self': self,
+                'gallery_items': gallery_items,
+                'related_programmes': related_programmes,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'gallery_items': gallery_items
+            })
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('twitter_feed'),
+    InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
 
 GalleryPage.promote_panels = [
