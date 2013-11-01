@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django import forms
 from django.db import models
-from django.forms.models import fields_for_model, modelform_factory
+from django.forms.models import fields_for_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured, ValidationError
 
