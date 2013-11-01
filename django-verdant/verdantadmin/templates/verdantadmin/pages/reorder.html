@@ -1,0 +1,18 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block bodyclass %}page-reorder{% endblock %}
+
+{% block content %}
+    <header class="merged">
+        <h1>Reordering: <span>{{ parent_page.title }}</span></h1>
+    </header>
+
+    Reorder page here
+{% endblock %}
+
+{% block extra_css %}
+    {% include "verdantadmin/pages/_css.html" %}
+{% endblock %}
+{% block extra_js %}
+    {% include "verdantadmin/pages/_js.html" %}
+{% endblock %}

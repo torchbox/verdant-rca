@@ -193,6 +193,18 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
     })
 
+def reorder(request, parent_page_id=None):
+    if parent_page_id:
+        parent_page = get_object_or_404(Page, id=parent_page_id)
+    else:
+        parent_page = Page.get_first_root_node()
+
+    pages = parent_page.get_children()
+    return render(request, 'verdantadmin/pages/reorder.html', {
+        'parent_page': parent_page,
+        'pages': pages,
+    })
+
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
