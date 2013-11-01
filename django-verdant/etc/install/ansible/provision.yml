@@ -16,6 +16,14 @@
 
   - name: Show SSH public key
     command: /bin/cat /home/${project_name}/.ssh/id_rsa.pub
+
+  - name: Install the required system packages
+    apt: pkg=${item} state=installed update-cache=yes
+    with_items: ${system_packages}
+
+  - name: Install global python packages
+    pip: name=${item} state=present use_mirrors=no
+    with_items: ${python_packages}
  
   - name: Copy the nginx vhost 
     template: src=files/templates/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
