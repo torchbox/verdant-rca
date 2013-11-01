@@ -107,6 +107,7 @@ function initTimeChooser(id) {
 
 $(function() {
     initDateChoosers();
+    initTimeChoosers();
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });
