@@ -8,13 +8,14 @@
     </header>
 
 
-    <form id="page-edit-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+    <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
         {% csrf_token %}
+        <input type='hidden' name='order' id='order'>
 
         <div class="nice-padding">
-            <ul class="sortable">
+            <ul id="sortable">
              {% for page in pages %}
-                <li><h2>{{ page }}</h2></li>
+                <li id="page_{{ page.id }}"><h2>{{ page }}</h2></li>
              {% endfor %}
             </ul>
         </div>
@@ -35,4 +36,14 @@
 {% endblock %}
 {% block extra_js %}
     {% include "verdantadmin/pages/_js.html" %}
+
+    <script type="text/javascript">
+        $(function() {
+            $('#sortable').sortable();
+            $('#page-reorder-form').submit(function() {
+                $('#order').val($('#sortable').sortable('toArray'));
+                return true;
+            }); 
+        })
+    </script>
 {% endblock %}
