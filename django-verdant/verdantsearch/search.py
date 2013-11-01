@@ -12,7 +12,6 @@ class SearchResults(object):
         self.count = query.count()
 
     def __getitem__(self, key):
-        # Get list of primary keys
         if isinstance(key, slice):
             # Get primary keys
             pk_list = [result._source["pk"] for result in self.query[key]]
@@ -122,37 +121,13 @@ class Search(object):
     def refresh_index(self):
         self.es.refresh(self.es_index)
 
-    def _build_document(self, obj):
-        # Get content type
-        content_type = obj.indexed_get_content_type()
-
-        # Build document
-        doc = dict(pk=str(obj.pk), content_type=content_type)
-
-        # Get indexed fields
-        indexed_fields = obj.indexed_get_indexed_fields()
-
-        # Add fields to document
-        for field in indexed_fields.keys():
-            doc[field] = getattr(obj, field)
-
-            # Check if this field is callable
-            if hasattr(doc[field], "__call__"):
-                # Call it
-                doc[field] = doc[field]()
-
-        # Calculate ID
-        doc["id"] = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
-
-        return doc
-
     def add(self, obj):
         # Doc must be a decendant of Indexed and be a django model
         if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
             return
 
         # Build document
-        doc = self._build_document(obj)
+        doc = obj.indexed_build_document()
 
         # Add to index
         self.es.index(self.es_index, obj.indexed_get_content_type(), doc, id=doc["id"])
@@ -165,7 +140,7 @@ class Search(object):
             if obj_type not in type_set:
                 type_set[obj_type] = []
 
-            type_set[obj_type].append(self._build_document(obj))
+            type_set[obj_type].append(obj.indexed_build_document())
 
         # Loop through each type and bulk add them
         for type_name, type_objects in type_set.items():
@@ -181,7 +156,10 @@ class Search(object):
         doc_id = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
 
         # Delete document
-        self.es.unindex(doc_id)
+        try:
+            self.es.delete(self.es_index, obj.indexed_get_content_type(), doc_id)
+        except ElasticHttpNotFoundError:
+            pass # Doesn't exist ignore this error
 
     def search(self, query_string, model, fields=None, filters={}):
         # Model must be a descendant of Indexed and be a djangi model
