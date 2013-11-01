@@ -7,7 +7,6 @@
         <h1>Reordering: <span>{{ parent_page.title }}</span></h1>
     </header>
 
-
     <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
         {% csrf_token %}
         <input type='hidden' name='order' id='order'>
@@ -25,7 +24,6 @@
                 <li class="actions">
                     <input type="submit" value="Save Changes" class="button" />
                 </li>
-                <li>Something</li>
             </ul>
         </footer>
     </form>
@@ -33,17 +31,30 @@
 
 {% block extra_css %}
     {% include "verdantadmin/pages/_css.html" %}
+
+    <style type="text/css">
+        #sortable li {
+            padding: 10px;
+            background-color: #FFF;
+            border: 1px solid #777;
+            margin: 5px;
+            cursor: pointer;
+            max-width: 300px;
+        }
+    </style>
 {% endblock %}
 {% block extra_js %}
     {% include "verdantadmin/pages/_js.html" %}
 
     <script type="text/javascript">
         $(function() {
-            $('#sortable').sortable();
+            $('#sortable').sortable({cursor: 'move'});
+            $('#sortable').disableSelection();
+
             $('#page-reorder-form').submit(function() {
                 $('#order').val($('#sortable').sortable('toArray'));
                 return true;
-            }); 
+            });
         })
     </script>
 {% endblock %}
