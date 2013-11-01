@@ -19,7 +19,7 @@ from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 from verdantsnippets.models import register_snippet
 
-from taggit.managers import TaggableManager
+from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -2300,7 +2300,7 @@ class RcaNowPage(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    tags = TaggableManager(through=RcaNowPageTag)
+    tags = ClusterTaggableManager(through=RcaNowPageTag)
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
