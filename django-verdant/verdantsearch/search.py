@@ -24,7 +24,7 @@ class SearchResults(object):
             results_dict = {str(result.pk): result for result in results}
 
             # Build new list with items in the correct order
-            results_sorted = [results_dict[str(pk)] for pk in pk_list]
+            results_sorted = [results_dict[str(pk)] for pk in pk_list if str(pk) in results_dict]
 
             # Return the list
             return results_sorted
