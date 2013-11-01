@@ -1,13 +1,28 @@
 <table class="listing">
     <thead>
         <tr>
-            <th class="title">
-                {% if sort_by_title %}
-                    <a href="#" class="icon icon-arrow-down-after">Title</a></th>
-                {% else %}
-                    Title
+            <th class="title">Title
+                {% if sortable %}
+                    {% if ordering == "title" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-title" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-title" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
                 {% endif %}
-            <th class="type">Type</th>
+            </th>
+            <th class="type">Type
+                {% if sortable %}
+                    {% if ordering == "content_type" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-content_type" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-content_type" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=content_type" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=content_type" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
+                {% endif %}
+            </th>
             {% if show_parent %}
                 {% comment %}
                     I'm using the "type" class here as the "parent" class
@@ -15,7 +30,17 @@
                 {% endcomment %}
                 <th class="type">Parent</th>
             {% endif %}
-            <th class="status">Status</th>
+            <th class="status">Status
+                {% if sortable %}
+                    {% if ordering == "live" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-live" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-live" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=live" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=live" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
+                {% endif %}
+            </th>
             <th class="children"></th>
         </tr>
     </thead>
