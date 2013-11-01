@@ -105,9 +105,14 @@ function initTimeChooser(id) {
     });
 }
 
+function initSortables(context) {
+    $('ul.sortable', context).sortable();
+}
+
 $(function() {
     initDateChoosers();
     initTimeChoosers();
+    initSortables();
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });

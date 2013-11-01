@@ -7,7 +7,27 @@
         <h1>Reordering: <span>{{ parent_page.title }}</span></h1>
     </header>
 
-    Reorder page here
+
+    <form id="page-edit-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+        {% csrf_token %}
+
+        <div class="nice-padding">
+            <ul class="sortable">
+             {% for page in pages %}
+                <li><h2>{{ page }}</h2></li>
+             {% endfor %}
+            </ul>
+        </div>
+    
+        <footer>
+            <ul>
+                <li class="actions">
+                    <input type="submit" value="Save Changes" class="button" />
+                </li>
+                <li>Something</li>
+            </ul>
+        </footer>
+    </form>
 {% endblock %}
 
 {% block extra_css %}
