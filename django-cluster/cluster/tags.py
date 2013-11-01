@@ -52,6 +52,19 @@ class _ClusterTaggableManager(_TaggableManager):
                 tagged_item = self.through(tag=tag)
                 tagged_item_manager.add(tagged_item)
 
+    @require_instance_manager
+    def remove(self, *tags):
+        tagged_item_manager = self.get_tagged_item_manager()
+        tagged_items = [
+            tagged_item for tagged_item in tagged_item_manager.all()
+            if tagged_item.tag.name in tags
+        ]
+        tagged_item_manager.remove(*tagged_items)
+
+    @require_instance_manager
+    def clear(self):
+        self.get_tagged_item_manager().clear()
+
 class ClusterTaggableManager(TaggableManager):
     def __get__(self, instance, model):
         # override TaggableManager's requirement for instance to have a primary key

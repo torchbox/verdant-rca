@@ -15,3 +15,17 @@ class TagTest(TestCase):
 
         mission_burrito.save()
         self.assertEqual(2, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
+
+        mission_burrito.tags.remove('burrito')
+        self.assertEqual(1, mission_burrito.tags.count())
+        # should not affect database until we save
+        self.assertEqual(2, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
+        mission_burrito.save()
+        self.assertEqual(1, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
+
+        mission_burrito.tags.clear()
+        self.assertEqual(0, mission_burrito.tags.count())
+        # should not affect database until we save
+        self.assertEqual(1, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
+        mission_burrito.save()
+        self.assertEqual(0, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
