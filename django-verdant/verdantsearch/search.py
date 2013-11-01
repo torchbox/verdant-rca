@@ -39,19 +39,21 @@ class SearchResults(object):
 class Search(object):
     def __init__(self, **kwargs):
         # Get settings
-        self.es_urls = kwargs.get("es_urls", getattr(settings, "VERDANTSEARCH_ES_URLS", ["http://localhost:9200"]))
-        self.es_index = kwargs.get("es_index", getattr(settings, "VERDANTSEARCH_ES_INDEX", "verdant"))
+        self.es_urls = getattr(settings, "VERDANTSEARCH_ES_URLS", ["http://localhost:9200"])
+        self.es_index = getattr(settings, "VERDANTSEARCH_ES_INDEX", "verdant")
 
         # Get ElasticSearch interface
         self.es = get_es(urls=self.es_urls)
         self.s = S().es(urls=self.es_urls).indexes(self.es_index)
 
     def reset_index(self):
+        # Delete old index
         try:
             self.es.delete_index(self.es_index)
         except ElasticHttpNotFoundError:
             pass
 
+        # Settings
         INDEX_SETTINGS = {
             "settings": {
                 "analysis": {
@@ -96,6 +98,7 @@ class Search(object):
             }
         }
 
+        # Create new index
         self.es.create_index(self.es_index, INDEX_SETTINGS)
 
     def add_type(self, model):
@@ -122,7 +125,7 @@ class Search(object):
         self.es.refresh(self.es_index)
 
     def add(self, obj):
-        # Doc must be a decendant of Indexed and be a django model
+        # Object must be a decendant of Indexed and be a django model
         if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
             return
 
@@ -136,10 +139,18 @@ class Search(object):
         # Group all objects by their type
         type_set = {}
         for obj in obj_list:
+            # Object must be a decendant of Indexed and be a django model
+            if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
+                continue
+
+            # Get object type
             obj_type = obj.indexed_get_content_type()
+
+            # If type is currently not in set, add it
             if obj_type not in type_set:
                 type_set[obj_type] = []
 
+            # Add object to set
             type_set[obj_type].append(obj.indexed_build_document())
 
         # Loop through each type and bulk add them
@@ -148,21 +159,21 @@ class Search(object):
             self.es.bulk_index(self.es_index, type_name, type_objects)
 
     def delete(self, obj):
-        # Doc must be a decendant of Indexed and be a django model
+        # Object must be a decendant of Indexed and be a django model
         if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
             return
 
-        # Work out ID for document
+        # Get ID for document
         doc_id = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
 
         # Delete document
         try:
             self.es.delete(self.es_index, obj.indexed_get_content_type(), doc_id)
         except ElasticHttpNotFoundError:
-            pass # Doesn't exist ignore this error
+            pass # Document doesn't exist, ignore this exception
 
     def search(self, query_string, model, fields=None, filters={}):
-        # Model must be a descendant of Indexed and be a djangi model
+        # Model must be a descendant of Indexed and be a django model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
             return None
 

@@ -4,6 +4,7 @@ from django.db import models
 from search import Search
 from indexed import Indexed
 
+
 def post_save_signal_handler(instance, **kwargs):
 	Search().add(instance)
 
