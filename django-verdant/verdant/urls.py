@@ -17,6 +17,9 @@ from rca import app_urls
 
 admin.autodiscover()
 
+from verdantsearch import register_signal_handlers
+register_signal_handlers()
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'verdant.views.home', name='home'),
