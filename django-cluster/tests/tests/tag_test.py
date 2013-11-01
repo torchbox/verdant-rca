@@ -1,5 +1,6 @@
 from django.test import TestCase
 from taggit.models import Tag
+from django.forms.models import ModelForm
 
 from tests.models import Place, TaggedPlace
 
@@ -29,3 +30,15 @@ class TagTest(TestCase):
         self.assertEqual(1, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
         mission_burrito.save()
         self.assertEqual(0, TaggedPlace.objects.filter(content_object_id=mission_burrito.id).count())
+
+    def test_tag_form_field(self):
+        class PlaceForm(ModelForm):
+            class Meta:
+                model = Place
+
+        mission_burrito = Place(name='Mission Burrito')
+        mission_burrito.tags.add('mexican', 'burrito')
+
+        form = PlaceForm(instance=mission_burrito)
+        self.assertEqual(2, len(form['tags'].value()))
+        self.assertEqual(TaggedPlace, form['tags'].value()[0].__class__)

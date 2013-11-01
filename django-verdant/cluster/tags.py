@@ -73,3 +73,10 @@ class ClusterTaggableManager(TaggableManager):
             through=self.through, model=model, instance=instance
         )
         return manager
+
+    def value_from_object(self, instance):
+        # retrieve the queryset via the related manager on the content object,
+        # to accommodate the possibility of this having uncommitted changes relative to
+        # the live database
+        rel_name = self.through._meta.get_field('content_object').related.get_accessor_name()
+        return getattr(instance, rel_name).all()
