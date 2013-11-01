@@ -1,5 +1,8 @@
 from django.db import models
 
+from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
+
 from cluster.fields import ParentalKey
 from cluster.models import ClusterableModel
 
@@ -34,8 +37,12 @@ class Album(models.Model):
         ordering = ['sort_order']
 
 
+class TaggedPlace(TaggedItemBase):
+    content_object = ParentalKey('Place', related_name='tagged_items')
+
 class Place(ClusterableModel):
     name = models.CharField(max_length=255)
+    tags = TaggableManager(through=TaggedPlace)
 
     def __unicode__(self):
         return self.name
