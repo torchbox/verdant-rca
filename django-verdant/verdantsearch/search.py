@@ -141,6 +141,9 @@ class Search(object):
                 # Call it
                 doc[field] = doc[field]()
 
+        # Calculate ID
+        doc["id"] = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
+
         return doc
 
     def add(self, obj):
@@ -148,8 +151,11 @@ class Search(object):
         if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
             return
 
+        # Build document
+        doc = self._build_document(obj)
+
         # Add to index
-        self.es.index(self.es_index, obj.indexed_get_content_type(), self._build_document(obj))
+        self.es.index(self.es_index, c, doc, id=doc["id"])
 
     def add_bulk(self, obj_list):
         # Group all objects by their type
