@@ -2682,14 +2682,64 @@ CurrentResearchPage.promote_panels = [
 
 # == Gallery Page ==
 
+class GalleryPageRelatedLink(Orderable):
+    page = ParentalKey('rca.GalleryPage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    def serve(self, request):
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        year = request.GET.get('degree_year')
+
+        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        if programme:
+            gallery_items = gallery_items.filter(programme=programme)
+        if school:
+            gallery_items = gallery_items.filter(school=school)
+        if year:
+            gallery_items = gallery_items.filter(degree_year=year)
+
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
+
+        page = request.GET.get('page')
+        paginator = Paginator(gallery_items, 10)  # Show 10 gallery items per page
+        try:
+            gallery_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            gallery_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            gallery_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/gallery_listing.html", {
+                'self': self,
+                'gallery_items': gallery_items,
+                'related_programmes': related_programmes,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'gallery_items': gallery_items
+            })
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('twitter_feed'),
+    InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
 
 GalleryPage.promote_panels = [
