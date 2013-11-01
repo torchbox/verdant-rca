@@ -1,4 +1,0 @@
-[production]
-
-[staging]
-django-staging.torchbox.com user=root nickname=staging
