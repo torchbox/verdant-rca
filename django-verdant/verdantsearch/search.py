@@ -155,7 +155,7 @@ class Search(object):
         doc = self._build_document(obj)
 
         # Add to index
-        self.es.index(self.es_index, c, doc, id=doc["id"])
+        self.es.index(self.es_index, obj.indexed_get_content_type(), doc, id=doc["id"])
 
     def add_bulk(self, obj_list):
         # Group all objects by their type
@@ -171,6 +171,17 @@ class Search(object):
         for type_name, type_objects in type_set.items():
             print type_name, len(type_objects)
             self.es.bulk_index(self.es_index, type_name, type_objects)
+
+    def delete(self, obj):
+        # Doc must be a decendant of Indexed and be a django model
+        if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
+            return
+
+        # Work out ID for document
+        doc_id = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
+
+        # Delete document
+        self.es.unindex(doc_id)
 
     def search(self, query_string, model, fields=None, filters={}):
         # Model must be a descendant of Indexed and be a djangi model
