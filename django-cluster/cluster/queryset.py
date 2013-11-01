@@ -64,6 +64,10 @@ class FakeQuerySet(object):
     def count(self):
         return len(self.results)
 
+    def select_related(self, *args):
+        # has no meaningful effect on non-db querysets
+        return self
+
     def __getitem__(self, k):
         return self.results[k]
 

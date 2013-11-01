@@ -15,6 +15,9 @@ class _ClusterTaggableManager(_TaggableManager):
         return getattr(self.instance, rel_name)
 
     def get_query_set(self):
+        # FIXME: we ought to have some way of querying the tagged item manager about whether
+        # it has uncommitted changes, and return a real queryset (using the original taggit logic)
+        # if not
         return FakeQuerySet(
             self.through.tag_model(),
             [tagged_item.tag for tagged_item in self.get_tagged_item_manager().all()]
