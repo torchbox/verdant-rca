@@ -1,10 +1,12 @@
 from django.template.loader import render_to_string
+from django.template.defaultfilters import addslashes
 from django.utils.safestring import mark_safe
 from django import forms
 from django.db import models
 from django.forms.models import fields_for_model
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured, ValidationError
+from django.core.urlresolvers import reverse
 
 import copy
 
@@ -12,6 +14,7 @@ from core.models import Page
 from core.util import camelcase_to_underscore
 from core.fields import RichTextArea
 from cluster.forms import ClusterForm, ClusterFormMetaclass
+from taggit.forms import TagWidget
 
 import re
 import datetime
@@ -84,6 +87,11 @@ WIDGET_JS = {
     FriendlyDateInput: (lambda id: "initDateChooser(fixPrefix('%s'));" % id),
     FriendlyTimeInput: (lambda id: "initTimeChooser(fixPrefix('%s'));" % id),
     RichTextArea: (lambda id: "makeRichTextEditable(fixPrefix('%s'));" % id),
+    TagWidget: (
+        lambda id: "initTagField(fixPrefix('%s'), '%s');" % (
+            id, addslashes(reverse('verdantadmin_tag_autocomplete'))
+        )
+    ),
 }
 
 

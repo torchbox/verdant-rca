@@ -105,6 +105,12 @@ function initTimeChooser(id) {
     });
 }
 
+function initTagField(id, autocompleteUrl) {
+    $('#' + id).tagit({
+        autocomplete: {source: autocompleteUrl}
+    });
+}
+
 $(function() {
     initDateChoosers();
     $('.richtext [contenteditable="false"]').each(function() {
