@@ -8,5 +8,7 @@ class Searcher(object):
 
     def __get__(self, instance, cls):
         def dosearch(query_string, **kwargs):
-            return Search(**kwargs).search(query_string, model=cls, fields=self.fields, filters=self.filters)
+            search_kwargs = dict(model=cls, fields=self.fields, filters=self.filters)
+            search_kwargs.update(kwargs)
+            return Search().search(query_string, **search_kwargs)
         return dosearch
