@@ -7,13 +7,25 @@ from verdantsearch.search import Search
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
-        # Print info
-        print "Getting object list"
-
         # Get list of indexed models
         indexed_models = [model for model in models.get_models() if issubclass(model, Indexed) and model.indexed]
 
+        # Verify models
+        print "Verifying models"
+        has_error = False
+        for model in indexed_models:
+            error = model.indexed_verify()
+            if error is not None:
+                print "Verificaiton error: " + error
+                has_error = True
+
+        if has_error == True:
+            print "Errors found while verifying models. Please fix the errors and rerun this command"
+            return
+
+
         # Object set
+        print "Getting object list"
         object_set = {}
 
         # Add all objects to object set and detect any duplicates
