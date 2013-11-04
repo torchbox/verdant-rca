@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
+from verdantsearch import Indexed, Searcher
 
 from core.util import camelcase_to_underscore
 
@@ -98,7 +99,7 @@ class PageBase(models.base.ModelBase):
             LEAF_PAGE_MODEL_CLASSES.append(cls)
 
 
-class Page(MP_Node, ClusterableModel):
+class Page(MP_Node, ClusterableModel, Indexed):
     __metaclass__ = PageBase
 
     title = models.CharField(max_length=255, help_text="The page title as you'd like it to be seen by the public")
@@ -117,6 +118,24 @@ class Page(MP_Node, ClusterableModel):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # End RCA-specific fields
 
+    indexed_fields = {
+        'title': {
+            'type': 'string',
+            'analyzer': 'edgengram_analyzer',
+            'boost': 10,
+        },
+        'live': {
+            'type': 'boolean',
+            'analyzer': 'simple',
+        },
+    }
+
+    search_backend = Searcher(None)
+    search_frontend = Searcher(None, filters=dict(live=True))
+
+    title_search_backend = Searcher(['title'])
+    title_search_frontend = Searcher(['title'], filters=dict(live=True))
+
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
         if not self.id and not self.content_type_id:
@@ -132,6 +151,12 @@ class Page(MP_Node, ClusterableModel):
     subpage_types = []
 
     is_abstract = True  # don't offer Page in the list of page types a superuser can create
+
+    def object_indexed(self):
+        # Exclude root node from index
+        if self.depth == 1:
+            return False
+        return True
 
     @property
     def specific(self):

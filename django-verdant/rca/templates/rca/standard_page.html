@@ -10,7 +10,7 @@
     {% include "rca/includes/modules/strapline.html" %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-        {% include "rca/includes/modules/body-text.html" with body=self.body %}
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.body %}
         <section class="four">
             {% if self.middle_column_body %}
                 <div class="body-text middle-column-body-text">

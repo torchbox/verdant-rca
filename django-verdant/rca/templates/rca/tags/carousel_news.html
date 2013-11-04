@@ -3,9 +3,9 @@
 {% if news_items %}
     <section class="carousel-news row module">
         {% comment %}
-        TODO: add link to news index
+        TODO: add link to news index - needs fixing
         {% endcomment %}
-        <h2 class="module-title"><a href="#">News</a></h2>
+        <h2 class="module-title"><a href="{{ global_news_index_url }}">News</a></h2>
         <ul class="carousel-content">
             {% for news_item in news_items %}
                 <li class="{% if forloop.counter == 1 %}active{% endif %}{% if forloop.last %} last{% endif %}">
