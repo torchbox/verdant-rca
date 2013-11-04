@@ -169,11 +169,6 @@ $(function(){
         }
     });
 
-    /* start any bxslider carousels not found within a tab  */
-    $('.carousel:not(.tab-pane .carousel)').each(function(){
-        applyCarousel($(this));
-    })
-
     /* tabs */
     //apply active class in correct place and add tab links
     $('.tab-nav li:first-child').addClass('active');
@@ -188,6 +183,21 @@ $(function(){
     $('.tab-content .header a').each(function(index){
         $(this).attr('href', "#tab" + (index+1));
     });
+
+    /* start any bxslider carousels not found within a tab  */
+    $('.carousel:not(.tab-pane .carousel)').each(function(){
+        applyCarousel($(this));
+    })
+
+    /* check if there's a carousel in the first tab and start it if so */
+    $('.tab-content #tab1 .carousel').each(function(){
+        applyCarousel($(this));
+    })
+
+    //if there is a carousel in the first tab set the data carousel=true so it only executes once
+    $('.tab-nav a[href="#tab1"]').each(function(){
+        $(this).data('carousel', true);
+    })
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()
