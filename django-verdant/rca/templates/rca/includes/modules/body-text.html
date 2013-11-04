@@ -9,4 +9,14 @@
     {% endif %}
     
     {{ body|richtext }}
+
+    {% if showReusableText %}
+        {% with self.reusable_text_snippets.all as text_snippets %}
+        	{% if text_snippets %}
+        		{% for text_snippet in text_snippets %}
+        			{{ text_snippet.reusable_text_snippet.text|richtext }}
+        		{% endfor %}
+        	{% endif %}
+        {% endwith %}
+    {% endif %}
 </section>

@@ -482,6 +482,24 @@ class CustomeContentModulePlacement(models.Model):
     page = ParentalKey('core.Page', related_name='custom_content_module_placements')
     custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
 
+# == Snippet: Reusable rich text field ==
+class ReusableTextSnippet(models.Model):
+    name = models.CharField(max_length=255)
+    text = RichTextField()
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('text', classname="full")
+    ]
+
+    def __unicode__(self):
+        return self.name
+
+register_snippet(ReusableTextSnippet)
+
+class ReusableTextSnippetPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='reusable_text_snippet_placements')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
 # == School page ==
 
 class SchoolPageCarouselItem(Orderable, CarouselItemFields):
@@ -1020,6 +1038,22 @@ class EventItemRelatedArea(models.Model):
 
     panels = [FieldPanel('area')]
 
+class EventItemContactPhone(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class EventItemContactEmail(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
 class EventItemDatesTimes(Orderable):
     page = ParentalKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
@@ -1066,6 +1100,10 @@ class EventItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     middle_column_body = RichTextField(blank=True)
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     objects = models.Manager()
@@ -1165,6 +1203,14 @@ EventItem.content_panels = [
     InlinePanel(EventItem, 'dates_times', label="Dates and times"),
     InlinePanel(EventItem, 'speakers', label="Speaker"),
     InlinePanel(EventItem, 'carousel_items', label="Carousel content"),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+    ],'Contact'),
+    InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
+    InlinePanel(EventItem, 'contact_email', label="Contact email address"),
 ]
 
 EventItem.promote_panels = [
@@ -1450,6 +1496,14 @@ class StandardPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class StandardPageReusableTextSnippet(Orderable):
+    page = ParentalKey('rca.StandardPage', related_name='reusable_text_snippets')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+    ]
+
 class StandardPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
@@ -1469,6 +1523,7 @@ StandardPage.content_panels = [
     InlinePanel(StandardPage, 'carousel_items', label="Carousel content"),
     InlinePanel(StandardPage, 'related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
+    InlinePanel(StandardPage, 'reusable_text_snippets', label="Reusable text snippet"),
     InlinePanel(StandardPage, 'documents', label="Document"),
     InlinePanel(StandardPage, 'quotations', label="Quotation"),
     InlinePanel(StandardPage, 'images', label="Middle column image"),
