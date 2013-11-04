@@ -64,12 +64,13 @@ class Indexed(object):
         # Build document
         doc = dict(pk=str(self.pk), content_type=content_type, id=doc_id)
         for field in indexed_fields.keys():
-            doc[field] = getattr(self, field)
+            if hasattr(self, field):
+                doc[field] = getattr(self, field)
 
-            # Check if this field is callable
-            if hasattr(doc[field], "__call__"):
-                # Call it
-                doc[field] = doc[field]()
+                # Check if this field is callable
+                if hasattr(doc[field], "__call__"):
+                    # Call it
+                    doc[field] = doc[field]()
 
         return doc
 
