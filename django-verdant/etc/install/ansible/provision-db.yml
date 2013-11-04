@@ -1,13 +1,27 @@
 ---
-- hosts: staging
+- hosts: production
   user: ${user} 
+  vars: 
+    node_version: "0.10.12"
+    node_prefix: "node-v${node_version}"
+    node_tarball: "${node_prefix}.tar.gz"
+    node_path: "/usr/local" 
   vars_files:
     - vars.yml
+
   gather_facts: false
-  #sudo: true
+  sudo: false
 
   tasks:
+  
+  - name: Create the djangoapps group
+    group: name=djangoapps state=present
+  
+  - name: Create user
+    user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
 
+  - name: Create the django directory
+    file: state=directory path=${django_root} mode=2775 owner=root group=djangoapps
   - name: Create user
     user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
 
@@ -24,6 +38,10 @@
   - name: Install global python packages
     pip: name=${item} state=present use_mirrors=no
     with_items: ${python_packages}
+
+  - include: nodejs.yml
+
+
  
   - name: Copy the nginx vhost 
     template: src=files/templates/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
