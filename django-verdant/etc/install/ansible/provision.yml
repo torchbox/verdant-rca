@@ -1,0 +1,27 @@
+---
+- hosts: staging
+  user: ${user} 
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  #sudo: true
+
+  tasks:
+
+  - name: Create user
+    user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
+
+  - name: Generate SSH keys for the deployment user
+    user: name=${project_name} generate_ssh_key=yes ssh_key_bits=2048
+
+  - name: Show SSH public key
+    command: /bin/cat /home/${project_name}/.ssh/id_rsa.pub
+ 
+  - name: Copy the nginx vhost 
+    template: src=files/templates/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
+    notify:
+    - restart nginx
+
+  - name: Copy my public key for SSH as the deployment user
+    authorized_key: user=${project_name} key="{{ lookup('file', '/home/stewart/.ssh/id_rsa.pub') }}" manage_dir=no
+
