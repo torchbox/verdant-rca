@@ -1,4 +1,6 @@
 # https://github.com/bryanchow/django-creditcard-fields
+# The clean methods are commented out since we're using a token instead of actual credit card data.
+# The validation happens with stripe.js when creating the token, so we shouldn't duplicate it on the server.
 
 import re
 from datetime import date
@@ -13,23 +15,30 @@ MONTH_FORMAT = getattr(settings, 'MONTH_FORMAT', '%b')
 VERIFICATION_VALUE_RE = r'^([0-9]{3,4})$'
 
 
+class EmptyValueAttrWidget(forms.widgets.HiddenInput):
+    def render(self, name, value, attrs=None):
+        return super(EmptyValueAttrWidget, self).render(name, "", attrs)
+
+
 class CreditCardField(forms.CharField):
     """
     Form field that validates credit card numbers.
     """
+
+    widget = forms.TextInput(attrs={'data-stripe': 'number'})
 
     default_error_messages = {
         'required': _(u'Please enter a credit card number.'),
         'invalid': _(u'The credit card number you entered is invalid.'),
     }
 
-    def clean(self, value):
-        value = value.replace(' ', '').replace('-', '')
-        if self.required and not value:
-            raise forms.util.ValidationError(self.error_messages['required'])
-        if value and not re.match(CREDIT_CARD_RE, value):
-            raise forms.util.ValidationError(self.error_messages['invalid'])
-        return value
+    # def clean(self, value):
+    #     value = value.replace(' ', '').replace('-', '')
+    #     if self.required and not value:
+    #         raise forms.util.ValidationError(self.error_messages['required'])
+    #     if value and not re.match(CREDIT_CARD_RE, value):
+    #         raise forms.util.ValidationError(self.error_messages['invalid'])
+    #     return value
 
 
 class ExpiryDateWidget(forms.MultiWidget):
@@ -63,20 +72,22 @@ class ExpiryDateField(forms.MultiValueField):
         if 'initial' not in kwargs:
             # Set default expiry date based on current month and year
             kwargs['initial'] = today
-        months = [(x, '%02d' % x) for x in xrange(1, 13)]
-        years = [(x, x) for x in xrange(today.year, today.year + 15)]
+        months = [("", "---")] + [(x, '%02d' % x) for x in xrange(1, 13)]
+        years = [("", "------")] + [(x, x) for x in xrange(today.year, today.year + 15)]
         fields = (
             forms.ChoiceField(choices=months, error_messages={'invalid': error_messages['invalid_month']}),
             forms.ChoiceField(choices=years, error_messages={'invalid': error_messages['invalid_year']}),
         )
         super(ExpiryDateField, self).__init__(fields, *args, **kwargs)
+        fields[0].widget.attrs['data-stripe'] = 'exp-month'
+        fields[1].widget.attrs['data-stripe'] = 'exp-year'
         self.widget = ExpiryDateWidget(widgets=[fields[0].widget, fields[1].widget])
 
-    def clean(self, value):
-        expiry_date = super(ExpiryDateField, self).clean(value)
-        if date.today() > expiry_date:
-            raise forms.ValidationError(self.error_messages['date_passed'])
-        return expiry_date
+    # def clean(self, value):
+    #     expiry_date = super(ExpiryDateField, self).clean(value)
+    #     if date.today() > expiry_date:
+    #         raise forms.ValidationError(self.error_messages['date_passed'])
+    #     return expiry_date
 
     def compress(self, data_list):
         if data_list:
@@ -104,16 +115,16 @@ class VerificationValueField(forms.CharField):
     See http://en.wikipedia.org/wiki/Card_Security_Code
     """
 
-    widget = forms.TextInput(attrs={'maxlength': 4})
+    widget = forms.TextInput(attrs={'maxlength': 4, 'data-stripe': 'cvc'})
     default_error_messages = {
         'required': _(u'Please enter the three- or four-digit verification code for your credit card.'),
         'invalid': _(u'The verification value you entered is invalid.'),
     }
 
-    def clean(self, value):
-        value = value.replace(' ', '')
-        if not value and self.required:
-            raise forms.util.ValidationError(self.error_messages['required'])
-        if value and not re.match(VERIFICATION_VALUE_RE, value):
-            raise forms.util.ValidationError(self.error_messages['invalid'])
-        return value
+    # def clean(self, value):
+    #     value = value.replace(' ', '')
+    #     if not value and self.required:
+    #         raise forms.util.ValidationError(self.error_messages['required'])
+    #     if value and not re.match(VERIFICATION_VALUE_RE, value):
+    #         raise forms.util.ValidationError(self.error_messages['invalid'])
+    #     return value
