@@ -17,7 +17,7 @@ class SearchResults(object):
             pk_list = [result._source["pk"] for result in self.query[key]]
 
             # Get results
-            results = self.model.objects.filter(pk__in=pk_list).prefetch_related("content_type")
+            results = self.model.objects.filter(pk__in=pk_list)
 
             # Put results into a dictionary (using primary key as the key)
             results_dict = {str(result.pk): result for result in results}
