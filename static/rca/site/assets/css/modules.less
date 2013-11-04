@@ -32,6 +32,7 @@
  * Five block
  * five plus/six-plus block
  * Speakers
+ * Events middle column body text
  * Tabbed content
  * Stats block
  * Button bar
@@ -60,7 +61,7 @@
 @carousel-image-height: 500px;
 
 .bx-wrapper .bx-viewport {
-    background-color:darken(@color-pale-grey, 10%);
+    /*background-color:darken(@color-pale-grey, 10%);*/
 }
 .bx-wrapper {
     overflow: hidden;
@@ -186,6 +187,11 @@
             display: block;
         }
     }
+}
+
+/* Hide pager for carousels with only one item */
+.single-carousel .bx-wrapper .bx-pager {
+    display: none;
 }
 
 /**
@@ -496,6 +502,10 @@
             font-size:0.8em;
         }
 
+        p {
+            display:inline;
+        }
+
         &.flushleft {
             padding-left: 0;
         }
@@ -748,6 +758,18 @@
 }
 
 /**
+ *$events middle column body text
+ */
+
+.events-middle-column-body-text {
+    margin-left: 0;
+    margin-top: @spacing-half;
+    .column(11);
+    padding-left:0;
+    padding-right:0;
+}
+
+/**
  * $Styles used to prepare a group of items for appearance with the + button
  */
 .x-plus{
@@ -885,6 +907,15 @@
     .col {
         .column(12, @grid-gutter-width, 12);
     }
+    li {
+        -ms-word-break: break-all;
+        word-break: break-all;
+        /* Non standard for webkit */
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+    }
 }
 
 
@@ -983,6 +1014,11 @@
             margin-bottom: 0;
         }
     }
+
+}
+/* Alternative for author field on review page */
+.meta-data.review {
+    border:0;
 }
 
 /**

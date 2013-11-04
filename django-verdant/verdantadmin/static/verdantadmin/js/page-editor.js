@@ -113,6 +113,7 @@ function initTagField(id, autocompleteUrl) {
 
 $(function() {
     initDateChoosers();
+    initTimeChoosers();
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });
