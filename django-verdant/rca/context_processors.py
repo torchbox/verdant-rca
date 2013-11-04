@@ -18,4 +18,5 @@ def global_vars(request):
 		'global_rca_now_index_url': '/showcase/rca-now/',
 		'global_staff_index_url': '/staff/',
 		'global_alumni_index_url': '/alumni/',
+		'global_gallery_url': '/gallery/',
 	}

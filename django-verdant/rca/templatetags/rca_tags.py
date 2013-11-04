@@ -34,10 +34,11 @@ def news_carousel(context, area="", programme="", school="", count=6):
     return {
         'news_items': news_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'news_index_url': context['global_news_index_url'],
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", events_index_url="/events/"):
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area=""):
     if school:
         events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
     elif programme:
@@ -55,7 +56,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         'school': school,
         'programme': programme,
         'area': area,
-        'events_index_url': events_index_url,
+        'events_index_url': context['global_events_index_url'],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -392,3 +393,37 @@ def rows_distributed(thelist, n):
             remainder -= 1
             offset += 1
     return rows
+
+
+@register.filter
+def time_display(time):
+    # Get hour and minute from time object
+    hour = time.hour
+    minute = time.minute
+
+    # Convert to 12 hour format
+    if hour >= 12:
+        pm = True
+        hour -=12
+    else:
+        pm = False
+    if hour == 0:
+        hour = 12
+
+    # Hour string
+    hour_string = str(hour)
+
+    # Minute string
+    if minute != 0:
+        minute_string = "." + str(minute)
+    else:
+        minute_string = ""
+
+    # PM string
+    if pm:
+        pm_string = "pm"
+    else:
+        pm_string = "am"
+
+    # Join and return
+    return "".join([hour_string, minute_string, pm_string])
