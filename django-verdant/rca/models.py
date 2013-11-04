@@ -482,6 +482,24 @@ class CustomeContentModulePlacement(models.Model):
     page = ParentalKey('core.Page', related_name='custom_content_module_placements')
     custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
 
+# == Snippet: Reusable rich text field ==
+class ReusableTextSnippet(models.Model):
+    name = models.CharField(max_length=255)
+    text = RichTextField()
+    panels = [
+        FieldPanel('name'),
+        FieldPanel('text', classname="full")
+    ]
+
+    def __unicode__(self):
+        return self.name
+
+register_snippet(ReusableTextSnippet)
+
+class ReusableTextSnippetPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='reusable_text_snippet_placements')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
 # == School page ==
 
 class SchoolPageCarouselItem(Orderable, CarouselItemFields):
@@ -1450,6 +1468,14 @@ class StandardPageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class StandardPageReusableTextSnippet(Orderable):
+    page = ParentalKey('rca.StandardPage', related_name='reusable_text_snippets')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+    ]
+
 class StandardPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
@@ -1469,6 +1495,7 @@ StandardPage.content_panels = [
     InlinePanel(StandardPage, 'carousel_items', label="Carousel content"),
     InlinePanel(StandardPage, 'related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
+    InlinePanel(StandardPage, 'reusable_text_snippets', label="Reusable text snippet"),
     InlinePanel(StandardPage, 'documents', label="Document"),
     InlinePanel(StandardPage, 'quotations', label="Quotation"),
     InlinePanel(StandardPage, 'images', label="Middle column image"),
