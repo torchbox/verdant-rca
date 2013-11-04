@@ -1378,7 +1378,7 @@ class ReviewPage(Page, SocialFields):
     author = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
 
-    indexed_fields = ('body', 'stapline', 'author')
+    indexed_fields = ('body', 'strapline', 'author')
 
     search_name = 'Review'
 
