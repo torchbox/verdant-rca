@@ -1038,6 +1038,22 @@ class EventItemRelatedArea(models.Model):
 
     panels = [FieldPanel('area')]
 
+class EventItemContactPhone(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class EventItemContactEmail(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
 class EventItemDatesTimes(Orderable):
     page = ParentalKey('rca.EventItem', related_name='dates_times')
     date_from = models.DateField("Start date")
@@ -1084,6 +1100,10 @@ class EventItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     middle_column_body = RichTextField(blank=True)
+    contact_title = models.CharField(max_length=255, blank=True)
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     objects = models.Manager()
@@ -1183,6 +1203,14 @@ EventItem.content_panels = [
     InlinePanel(EventItem, 'dates_times', label="Dates and times"),
     InlinePanel(EventItem, 'speakers', label="Speaker"),
     InlinePanel(EventItem, 'carousel_items', label="Carousel content"),
+    MultiFieldPanel([
+        FieldPanel('contact_title'),
+        FieldPanel('contact_address'),
+        FieldPanel('contact_link'),
+        FieldPanel('contact_link_text'),
+    ],'Contact'),
+    InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
+    InlinePanel(EventItem, 'contact_email', label="Contact email address"),
 ]
 
 EventItem.promote_panels = [
