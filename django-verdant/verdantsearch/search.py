@@ -37,7 +37,7 @@ class SearchResults(object):
 
 
 class Search(object):
-    def __init__(self, **kwargs):
+    def __init__(self):
         # Get settings
         self.es_urls = getattr(settings, "VERDANTSEARCH_ES_URLS", ["http://localhost:9200"])
         self.es_index = getattr(settings, "VERDANTSEARCH_ES_INDEX", "verdant")
