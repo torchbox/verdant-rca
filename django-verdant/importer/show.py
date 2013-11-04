@@ -26,6 +26,7 @@ from django.utils.text import slugify
 from django.core.files import File
 import datetime
 import urllib2
+from unicodedata import normalize
 from importer.import_utils import (
         richtext_from_elem,
         text_from_elem,
@@ -36,8 +37,8 @@ from importer.import_utils import (
 from importer.constants import DEGREE_SUBJECTS, SCHOOLS, PROGRAMMES, PROGRAMME_SPECIALISMS
 from bs4 import BeautifulSoup
 
-PATH = 'importer/export_2012_2_pretty.xml'
-IMAGE_PATH = 'importer/show_images/'
+PATH = 'importer/data/export_2013.xml'
+IMAGE_PATH = 'importer/data/show_images/'
 try:
     SHOW_INDEX = StandardIndex.objects.get(slug='show-rca')
 except StandardIndex.DoesNotExist:
@@ -194,34 +195,34 @@ def doimport(**kwargs):
             try:
                 profile_image = RcaImage.objects.get(rca_content_id=sp_contentid + 'profile_image')
             except RcaImage.DoesNotExist:
-                profile_image = RcaImage(rca_content_id=sp_contentid)
+                profile_image = RcaImage(rca_content_id=sp_contentid + 'profile_image')
             profile_filename = slugify(unicode(sp.title)).replace('-','_')
-            profile_image_path = "importer/show_2013_profiles/2400_" + sp.programme + "/"
+            profile_image_path = image_path + "show_2013_profiles/2400_" + sp.programme + "/"
             profile_image.title = sp.title + ' profile image'
-            try:
-                with File(open(profile_image_path + profile_filename + '.jpg', 'r')) as f:
-                    if profile_image.id:
-                        profile_image.delete()
-                    profile_image.file = f
-                    if save:
-                        profile_image.save()
-            except IOError as e:
+            if not profile_image.id:
                 try:
-                    with File(open(profile_image_path + profile_filename + '.png', 'r')) as f:
-                        if profile_image.id:
-                            profile_image.delete()
+                    with File(open(normalize("NFKD", profile_image_path + profile_filename + '.jpg'), 'rb')) as f:
                         profile_image.file = f
                         if save:
                             profile_image.save()
                 except IOError as e:
-                    print "I/O error({0}): {1}".format(e.errno, e.strerror) + " " + profile_image_path + profile_filename
-                    sp_errs['image_not_found'] = profile_image_path + profile_filename
-            except ValueError:
-                print "Could not convert data to an integer."
-            except:
-                import sys
-                print "Unexpected error:", sys.exc_info()[0]
-                raise
+                    try:
+                        with File(open(normalize("NFKD", profile_image_path + profile_filename + '.png'), 'rb')) as f:
+                            profile_image.file = f
+                            if save:
+                                profile_image.save()
+                    except IOError as e:
+                        print "I/O error({0}): {1}".format(e.errno, e.strerror) + " " + profile_image_path + profile_filename
+                        sp_errs['image_not_found'] = profile_image_path + profile_filename
+                except ValueError:
+                    print "Could not convert data to an integer."
+                except:
+                    import sys
+                    print "Unexpected error:", sys.exc_info()[0]
+                    raise
+            else:
+                if save:
+                    profile_image.save()
             sp.profile_image = profile_image
 
             # save the studentpage for foreignkey purposes
@@ -271,44 +272,21 @@ def doimport(**kwargs):
                 for emailaddress in s.find('emails').getchildren():
                     emailtext = emailaddress.text.strip()
                     if save:
-                        emailpage = StudentPageContactsEmail.objects.get_or_create(
-                            page=sp,
-                            email=emailtext,
-                            )
-                        try:
-                            emailpage.save()
-                        except Exception, e:
-                            sp_errs['email ' + emailaddress.text.strip()] = e.message
+                        StudentPageContactsEmail.objects.get_or_create(page=sp, email=emailtext)
 
             if s.find('phonenumbers') is not None:
                 for num in s.find('phonenumbers').getchildren():
                     if num.text:
                         phonenumber = num.text.strip()
                         if save:
-                            phonepage = StudentPageContactsPhone.objects.get_or_create(
-                                    page=sp,
-                                    phone=phonenumber,
-                                    )
-                            try:
-                                if save:
-                                    phonepage.save()
-                            except Exception, e:
-                                sp_errs['phone ' + num.text.strip()] = e.message
+                            StudentPageContactsPhone.objects.get_or_create(page=sp, phone=phonenumber)
 
             if s.find('urls') is not None:
                 for url in s.find('urls').getchildren():
                     if url.text:
                         urltext = url.text.strip()
                         if save:
-                            websitepage = StudentPageContactsWebsite.objects.get_or_create(
-                                    page=sp,
-                                    website=urltext,
-                                    )
-                            try:
-                                if save:
-                                    websitepage.save()
-                            except Exception, e:
-                                sp_errs['website ' + url.text.strip()] = e.message
+                            StudentPageContactsWebsite.objects.get_or_create(page=sp, website=urltext)
 
             # handle images tag
             images = s.find('images')
@@ -341,44 +319,39 @@ def doimport(**kwargs):
                     #theimage.width, imageerrors['width'] = text_from_elem(metadata, 'width', length=255)
                     #theimage.height, imageerrors['height'] = text_from_elem(metadata, 'height', length=255)
 
-                    filename = urllib2.unquote(image.find('filename').text.strip())
+                    filename = unicode(urllib2.unquote(image.find('filename').text.strip()))
                     image_success = False
-                    full_image_path = image_path + '/2400_' + sp.programme + "/"
-                    try:
-                        with File(open(full_image_path + filename, 'r')) as f:
-                            if theimage.id:
-                                theimage.delete()
-                            theimage.file = f
-                            if save:
-                                theimage.save()
-                                image_success = True
-                    except IOError as e:
+                    full_image_path = image_path + '2400_' + sp.programme + "/"
+                    if not theimage.id:
                         try:
-                            with File(open(full_image_path + filename[:-4] + '.png', 'r')) as f:
-                                if theimage.id:
-                                    theimage.delete()
+                            with File(open(normalize("NFKD", full_image_path + filename), 'rb')) as f:
                                 theimage.file = f
                                 if save:
                                     theimage.save()
                                     image_success = True
                         except IOError as e:
-                            print "I/O error({0}): {1}".format(e.errno, e.strerror)
-                            print full_image_path + filename
-                            imageerrors['image_not_found'] = full_image_path + filename
-                    except ValueError:
-                        print "Could not convert data to an integer."
-                    except:
-                        import sys
-                        print "Unexpected error:", sys.exc_info()[0]
-                        raise
-
+                            try:
+                                with File(open(normalize("NFKD", full_image_path + filename[:-4] + '.png'), 'rb')) as f:
+                                    theimage.file = f
+                                    if save:
+                                        theimage.save()
+                                        image_success = True
+                            except IOError as e:
+                                print "I/O error({0}): {1}".format(e.errno, e.strerror)
+                                print full_image_path + filename
+                                imageerrors['image_not_found'] = full_image_path + filename
+                        except ValueError:
+                            print "Could not convert data to an integer."
+                        except:
+                            import sys
+                            print "Unexpected error:", sys.exc_info()[0]
+                            raise
+                    else:
+                        if save:
+                            theimage.save()
+                            image_success = True
                     if save and image_success:
-                        carousel, created = StudentPageCarouselItem.objects.get_or_create(
-                                page=sp,
-                                image=theimage
-                                )
-                        if created:
-                            carousel.save()
+                        StudentPageCarouselItem.objects.get_or_create(page=sp, image=theimage)
 
                     newimageerrordict = dict((k, v) for k, v in imageerrors.iteritems() if v)
                     if newimageerrordict:
