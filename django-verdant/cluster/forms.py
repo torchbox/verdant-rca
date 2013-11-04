@@ -240,6 +240,13 @@ class ClusterForm(ModelForm):
 
     def save(self, commit=True):
         instance = super(ClusterForm, self).save(commit=commit)
+
+        # ensure save_m2m is called even if commit = false. We don't fully support m2m fields yet,
+        # but if they perform save_form_data in a way that happens to play well with ClusterableModel
+        # (as taggit's manager does), we want that to take effect immediately, not just on db save
+        if not commit:
+            self.save_m2m()
+
         for formset in self.formsets.values():
             formset.instance = instance
             formset.save(commit=commit)
