@@ -2,6 +2,7 @@ import datetime
 import csv
 import simplejson
 import stripe
+from decimal import Decimal
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -97,29 +98,47 @@ def export(request):
     # http://docs.python.org/2/library/stdtypes.html#dict.items
     all_charges = [dict(zip(ch.keys(), ch.values())) for ch in all_charges]
 
+    # make sure we collect all the possible field names used in all charge objects
+    fieldnames = set()
+
     # normalise data
     for charge in all_charges:
+
         # move metadata and card properties to charge objects, so that they can be separate columns
         for field in ['metadata', 'card']:
             if field in charge:
                 for key, value in charge[field].items():
                     if not key.startswith("exp_"):  # skipping some credit card details
                         charge['%s__%s' % (field, key)] = value
+
         # remove unused fields
         for field in ['metadata', 'previous_metadata', 'description', 'card']:
             if field in charge:
                 del charge[field]
 
-    fieldnames = all_charges[0].keys() if len(all_charges) else []
-    fieldnames = sorted(fieldnames)
+        # convert amount from cents
+        charge['amount'] = int(charge['amount']) / Decimal(100)
 
+        # add 20% giftaid field, with two decimal places:
+        # http://docs.python.org/2/library/decimal.html#decimal-faq
+        charge['amount_gift_aid'] = (charge['amount'] * Decimal(0.2)).quantize(Decimal(10) ** -2)
+
+        fieldnames |= set(charge.keys())
+
+    fieldnames = sorted(list(fieldnames))
+
+    # create response
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="rca-donations-%s-%s.csv"' % (date_from.strftime("%s"), date_to.strftime("%s"))
+    filename = 'rca-donations-%s--%s.csv' % (date_from.strftime("%Y-%m-%d-%H:%M"), date_to.strftime("%Y-%m-%d-%H:%M"))
+    response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+
+    # write header
     writer = UnicodeWriter(response, delimiter=delimiter, quotechar='"', quoting=csv.QUOTE_MINIMAL)
     writer.writerow(fieldnames)
 
+    # write data rows
     for charge in all_charges:
-        data = [(charge[f] if f in charge else '') for f in fieldnames]
-        writer.writerow(map(unicode, data))
+        data = [unicode(charge[f] if f in charge else '') for f in fieldnames]
+        writer.writerow(data)
 
     return response
