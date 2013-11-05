@@ -45,6 +45,7 @@ DIVISION_SCHOOL_MAPPING = {
     "s4": "schoolofmaterial",
     "s5": "schooloffineart",
     "s6": "schoolofhumanities",
+    "rc1": "helenhamlyn",
 }
 
 
