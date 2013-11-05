@@ -19,6 +19,9 @@ from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 from verdantsnippets.models import register_snippet
 
+from cluster.tags import ClusterTaggableManager
+from taggit.models import TaggedItemBase
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -148,6 +151,7 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
 )
 
 HISTORICAL_PROGRAMMES = {
@@ -347,6 +351,7 @@ SCHOOL_PROGRAMME_MAP = {
     'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
     'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
     'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    'helenhamlyn': [],
 }
 
 # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
@@ -2389,6 +2394,9 @@ StudentPage.promote_panels = [
 class RcaNowPagePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.RcaNowPage', related_name='carousel_items')
 
+class RcaNowPageTag(TaggedItemBase):
+    content_object = ParentalKey('rca.RcaNowPage', related_name='tagged_items')
+
 class RcaNowPage(Page, SocialFields):
     body = RichTextField()
     author = models.CharField(max_length=255, blank=True)
@@ -2398,7 +2406,8 @@ class RcaNowPage(Page, SocialFields):
     area = models.CharField(max_length=255, choices=AREA_CHOICES)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
-    # TODO: tags
+
+    tags = ClusterTaggableManager(through=RcaNowPageTag)
 
     indexed_fields = ('body', 'author', 'get_programme_display', 'get_school_display', 'get_area_display')
 
@@ -2432,6 +2441,8 @@ RcaNowPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+    # InlinePanel(RcaNowPage, 'tagged_items', label='tag'),
+    FieldPanel('tags'),
 ]
 
 

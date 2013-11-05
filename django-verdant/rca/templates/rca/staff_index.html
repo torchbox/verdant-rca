@@ -32,9 +32,9 @@
 	                </select>
 	            </li>
 	            <li class="filter">
-	                <label for="staff_type">Staff type</label>
+	                <label for="staff_type">Role</label>
 	                <select id="staff_type" name="staff_type">
-	                    <option value="">All staff</option>
+	                    <option value="">All roles</option>
 	                    {% for key, value in global_staff_types %}
 	                    	<option value="{{ key }}" {% if request.GET.staff_type == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}

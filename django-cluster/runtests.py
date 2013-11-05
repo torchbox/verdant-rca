@@ -15,6 +15,10 @@ if not settings.configured:
         },
         INSTALLED_APPS=[
             'cluster',
+
+            'django.contrib.contenttypes',
+            'taggit',
+
             'tests',
         ]
     )
