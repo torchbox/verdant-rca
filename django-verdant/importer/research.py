@@ -1,5 +1,4 @@
 from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
-from importer.data.staffdata import staff_data
 from importer import constants
 from django.utils.dateparse import parse_date
 from rca.models import ResearchItem, ResearchItemCreator, StaffIndex, CurrentResearchPage
@@ -7,6 +6,9 @@ from core.models import Page
 import os
 import httplib2
 import json
+from collections import namedtuple
+import csv
+import re
 
 
 WORK_TYPES_CHOICES = {
@@ -42,6 +44,7 @@ DIVISION_SCHOOL_MAPPING = {
     "s4": "schoolofmaterial",
     "s5": "schooloffineart",
     "s6": "schoolofhumanities",
+    "rc1": "helenhamlyn",
 }
 
 
@@ -55,20 +58,19 @@ def text_to_html(text):
 
 class ResearchImporter(object):
     def __init__(self, **kwargs):
-        self.save = kwargs.get("save", True)
+        self.save = kwargs.get("save", False)
+        self.research_csv_filename = kwargs.get("research_csv_filename", "importer/data/research.csv")
         self.cache_directory = kwargs.get("cache_directory", "importer/data/research/")
-        self.research_cache_directory = self.cache_directory + "research/"
-        self.student_index = kwargs.get("student_index", "students")
+        self.student_index = kwargs.get("student_index", "research-students")
         self.research_index = kwargs.get("research_index", "current-research")
         self.staff_index = kwargs.get("staff_index", "staff")
         self.http = httplib2.Http()
 
         # Create cache directories
         try:
-            os.makedirs(self.research_cache_directory)
+            os.makedirs(self.cache_directory)
         except OSError: # Directory alredy exists
             pass
-
 
     def find_person_page(self, person_name):
         # Get list of potential names
@@ -94,16 +96,16 @@ class ResearchImporter(object):
 
         return None
 
-
     def add_researchitemcreator(self, researchitem, creator_name):
         # Find creator page
         creator_page = self.find_person_page(creator_name)
 
         # Add research item creator
-        if creator_page is not None:
-            ResearchItemCreator.objects.get_or_create(page=researchitem, person=creator_page)
-        else:
-            ResearchItemCreator.objects.get_or_create(page=researchitem, manual_person_name=creator_name)
+        if self.save:
+            if creator_page is not None:
+                ResearchItemCreator.objects.get_or_create(page=researchitem, person=creator_page)
+            else:
+                ResearchItemCreator.objects.get_or_create(page=researchitem, manual_person_name=creator_name)
 
     def import_researchitem(self, researchitem):
         # Get basic info
@@ -126,10 +128,11 @@ class ResearchImporter(object):
             researchitem_year = ""
 
         # Get school
-        # TODO: Use division instead
         researchitem_school = ""
-        if researchitem_department in constants.SCHOOLS:
-            researchitem_school = constants.SCHOOLS[researchitem_department]
+        for division in researchitem_divisions:
+            if division in DIVISION_SCHOOL_MAPPING:
+                researchitem_school = DIVISION_SCHOOL_MAPPING[division]
+                break
 
         # Convert description to HTML
         researchitem_abstract = text_to_html(researchitem_abstract)
@@ -143,6 +146,7 @@ class ResearchImporter(object):
         # Set values
         researchitempage.title = researchitem_title
         researchitempage.ref = True
+        researchitempage.research_type = "staff"
         researchitempage.year = researchitem_year
         researchitempage.description = researchitem_abstract
         researchitempage.work_type = WORK_TYPES_CHOICES[researchitem_type]
@@ -160,59 +164,73 @@ class ResearchImporter(object):
             creator_name = creator["name"]["given"] + " " + creator["name"]["family"]
             self.add_researchitemcreator(researchitempage, creator_name)
 
-    def download_research(self, username, filename):
-        url = "http://researchonline.rca.ac.uk/cgi/search/archive/simple/export_rca_JSON.js?screen=Search&dataset=archive&_action_export=1&output=JSON&exp=0%%7C1%%7C%%7Carchive%%7C-%%7Cq%%3A%%3AALL%%3AIN%%3A%(username)s%%7C-%%7C&n=&cache=" % {
-            "username": username,
+    def get_research_file(self, eprintid):
+        # Attempt to load from cache
+        filename = self.cache_directory + eprintid + ".json"
+        try:
+            return open(filename, "r")
+        except IOError:
+            pass
+
+        # Download instaed
+        url = "http://researchonline.rca.ac.uk/cgi/export/eprint/%(eprintid)s/JSON/rca-eprint-%(eprintid)s.js" % {
+            "eprintid": eprintid,
         }
         status, response = self.http.request(url)
         if status["status"] == "200":
+            # Save file to disk
             f = open(filename, "w")
             f.write(response)
             f.close()
-            return True
+
+            # Return new handle to file
+            return open(filename, "r")
         else:
-            return False
+            return None
 
-    def import_research(self, user):
-        # Ignore users with REF=FALSE
-        if user["REF"] == "FALSE":
-            return
-
-        # Get username
-        username = user["sAMAccountName"]
-
-        # Attempt to get research from cache
-        filename = self.research_cache_directory + username + ".json"
-        try:
-            f = open(filename, "r")
-        except IOError:
-            # Not in cache, download instead
-            if self.download_research(username, filename):
-                f = open(filename, "r")
-            else:
-                print "Unable to download research info for " + username
+    def import_researchitem_from_eprintid(self, eprintid):
+        # Load file
+        with self.get_research_file(eprintid) as f:
+            # Check file
+            if f is None:
+                print "Cannot get file for " + eprintid
                 return
 
-        # Load file
-        researchitems = json.loads(f.read())
+            # Load contents
+            researchitem = json.loads(f.read())
 
-        # Get researchitems
-        print "Found " + str(len(researchitems)) + " research items for " + username
-        for researchitem in researchitems:
+            # Import it
             self.import_researchitem(researchitem)
 
-    def doimport(self, staff_data):
+    def doimport(self):
         # Get index pages
         self.student_index_page = Page.objects.get(slug=self.student_index).specific
         self.research_index_page = Page.objects.get(slug=self.research_index).specific
         self.staff_index_page = Page.objects.get(slug=self.staff_index).specific
 
-        # Iterate through staff list
-        for staff in staff_data:
-            self.import_research(staff)
+        # Load research
+        ResearchRecord = namedtuple("ResearchRecord", "author, output_type, title, ref_url")
+        research_csv = csv.reader(open(self.research_csv_filename, "rb"))
+
+        # Expression for finding eprintids in ref urls
+        eprint_expr = re.compile(r"^(?:http|https)://researchonline.rca.ac.uk/(\d+)/")
+
+        # Iterate through research
+        for research_line in research_csv:
+            # Load research item into named tuple
+            research = ResearchRecord._make(research_line)
+
+            # Work out the eprintid
+            match = eprint_expr.match(research.ref_url)
+            if match:
+                eprintid = match.group(1)
+                self.import_researchitem_from_eprintid(eprintid)
+            else:
+                print "Cannot find eprintid in " + research.ref_url
+                continue
 
 
 def doimport():
     # Import
     importer = ResearchImporter(save=True)
-    importer.doimport(staff_data)
+    importer.doimport()

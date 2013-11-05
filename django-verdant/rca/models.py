@@ -151,6 +151,7 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
 )
 
 HISTORICAL_PROGRAMMES = {
@@ -350,6 +351,7 @@ SCHOOL_PROGRAMME_MAP = {
     'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
     'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
     'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    'helenhamlyn': [],
 }
 
 # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
