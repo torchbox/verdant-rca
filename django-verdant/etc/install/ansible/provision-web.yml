@@ -1,8 +1,9 @@
 ---
-- hosts: production
+- hosts: production-web
   user: ${user} 
   vars_files:
     - vars.yml
+    - local_vars.yml
 
   gather_facts: false
   sudo: false
@@ -17,8 +18,6 @@
 
   - name: Create the django directory
     file: state=directory path=${django_root} mode=2775 owner=root group=djangoapps
-  - name: Create user
-    user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
 
   - name: Generate SSH keys for the deployment user
     user: name=${project_name} generate_ssh_key=yes ssh_key_bits=2048
@@ -37,11 +36,13 @@
   - include: nodejs.yml
  
   - name: Copy the nginx vhost 
-    template: src=files/templates/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
+    template: src=files/nginx/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
     notify:
     - restart nginx
 
   - name: Copy my public key for SSH as the deployment user
     authorized_key: user=${project_name} key="{{ lookup('file', '/home/stewart/.ssh/id_rsa.pub') }}" manage_dir=no
-
+  
+  - name: Copy the git known_hosts keys to globally
+    copy: src=files/keys/known_hosts dest=/etc/ssh/ssh_known_hosts owner=root group=root mode=0644 backup=yes
 

@@ -1,53 +1,53 @@
 ---
-- hosts: production
+- hosts: production-db
   user: ${user} 
-  vars: 
-    node_version: "0.10.12"
-    node_prefix: "node-v${node_version}"
-    node_tarball: "${node_prefix}.tar.gz"
-    node_path: "/usr/local" 
   vars_files:
     - vars.yml
+    - local_vars.yml
 
   gather_facts: false
-  sudo: false
+  sudo: true
 
   tasks:
   
-  - name: Create the djangoapps group
-    group: name=djangoapps state=present
-  
-  - name: Create user
-    user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
-
-  - name: Create the django directory
-    file: state=directory path=${django_root} mode=2775 owner=root group=djangoapps
-  - name: Create user
-    user: name=${project_name} group=djangoapps shell="/bin/bash" state=present
-
-  - name: Generate SSH keys for the deployment user
-    user: name=${project_name} generate_ssh_key=yes ssh_key_bits=2048
-
-  - name: Show SSH public key
-    command: /bin/cat /home/${project_name}/.ssh/id_rsa.pub
-
   - name: Install the required system packages
     apt: pkg=${item} state=installed update-cache=yes
-    with_items: ${system_packages}
+    with_items: ${database_packages}
 
-  - name: Install global python packages
-    pip: name=${item} state=present use_mirrors=no
-    with_items: ${python_packages}
+  - name: set up locales
+    shell: /usr/sbin/locale-gen en_GB.UTF-8
 
-  - include: nodejs.yml
+  - name: set default language
+    shell: '/bin/echo -e "LANGUAGE=en_GB:UTF-8\nLANG=en_GB:UTF-8" > /etc/default/locale'
 
+  - name: Reconfigure locales package
+    shell: /usr/sbin/dpkg-reconfigure -f noninteractive locales
 
+  - name: ensure database is created
+    sudo_user: postgres
+    action: postgresql_db db=$dbname
+                 encoding='UTF-8'
+                 lc_collate='en_GB.UTF-8'
+                 lc_ctype='en_GB.UTF-8'
+                 template='template0' 
+
+  - name: ensure user has access to database
+    sudo_user: postgres
+    action: postgresql_user db=$dbname user=$dbuser password=$dbpassword priv=ALL
  
-  - name: Copy the nginx vhost 
-    template: src=files/templates/nginx-vhost.conf.j2 dest=/etc/nginx/sites-enabled/${project_name}.conf
-    notify:
-    - restart nginx
+  - name: ensure user does not have unnecessary privilege
+    sudo_user: postgres
+    action: postgresql_user user=$dbuser role_attr_flags=NOSUPERUSER,NOCREATEDB
 
-  - name: Copy my public key for SSH as the deployment user
-    authorized_key: user=${project_name} key="{{ lookup('file', '/home/stewart/.ssh/id_rsa.pub') }}" manage_dir=no
+  - name: add rules
+    template: src=files/postgres/pg_hba.conf.j2 dest=/etc/postgresql/9.1/main/pg_hba.conf
+
+  - name: have postgres listen on external interface
+    lineinfile: regex="^#listen_addresses = 127.0.0.1"
+         line=listen_addresses = '*'
+         state=present
+
+  - service: name=postgresql state=reloaded
+
+
 

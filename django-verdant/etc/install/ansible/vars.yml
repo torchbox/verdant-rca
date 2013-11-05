@@ -1,9 +1,4 @@
 ---
-project_name: verdant-rca
-project_repo: git@github.com:torchbox/${project_name}.git
-project_url: ${project_name}-${nickname}.torchboxapps.com
-gunicorn_port: 8011
-
 django_root: /usr/local/django
 project_root: ${django_root}/${project_name}
 
@@ -25,9 +20,13 @@ web_packages:
     - libfreetype6-dev
     - zlib1g-dev
     - liblcms1-dev
+    - libxslt1-dev
+    - libxml2-dev
+    - virtualenvwrapper
 python_packages:
     - pip 
     - virtualenv
-    - virtualenvwrapper
 database_packages:
     - postgresql
+    - libpq-dev
+    - python-psycopg2
