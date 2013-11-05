@@ -418,7 +418,7 @@ class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
-    embedly_url = models.URLField(blank=True)
+    embedly_url = models.URLField('Vimeo URL', blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
 
     panels = [

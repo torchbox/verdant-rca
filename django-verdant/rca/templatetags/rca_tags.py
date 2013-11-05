@@ -20,7 +20,7 @@ def upcoming_events(context, exclude=None, count=3):
     }
 
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
-def news_carousel(context, area="", programme="", school="", count=6):
+def news_carousel(context, area="", programme="", school="", count=5):
     if area:
         news_items = NewsItem.objects.filter(live=True, area=area)[:count]
     elif programme:
@@ -201,6 +201,10 @@ def homepage_packery(context, news_count=5, staff_count=5, student_count=5, twee
 def sidebar_links(context, calling_page=None):
     if calling_page:
         pages = calling_page.get_children().filter(live=True, show_in_menus=True)
+
+        # If no children, get siblings instead
+        if len(pages) == 0:
+            pages = calling_page.get_siblings().filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag

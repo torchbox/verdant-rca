@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from pyelasticsearch.exceptions import ElasticHttpNotFoundError
 from elasticutils import get_es, S
+import string
 
 
 class SearchResults(object):
@@ -176,6 +177,9 @@ class Search(object):
         # Model must be a descendant of Indexed and be a django model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
             return None
+
+        # Clean up query string
+        query_string = "".join([c for c in query_string if c not in string.punctuation])
 
         # Query
         if fields:
