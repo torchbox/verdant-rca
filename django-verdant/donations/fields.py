@@ -69,9 +69,9 @@ class ExpiryDateField(forms.MultiValueField):
         error_messages = self.default_error_messages.copy()
         if 'error_messages' in kwargs:
             error_messages.update(kwargs['error_messages'])
-        if 'initial' not in kwargs:
-            # Set default expiry date based on current month and year
-            kwargs['initial'] = today
+        # if 'initial' not in kwargs:
+        #     # Set default expiry date based on current month and year
+        #     kwargs['initial'] = today
         months = [("", "---")] + [(x, '%02d' % x) for x in xrange(1, 13)]
         years = [("", "------")] + [(x, x) for x in xrange(today.year, today.year + 15)]
         fields = (

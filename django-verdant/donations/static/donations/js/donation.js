@@ -14,13 +14,25 @@ $.fn.serializeObject = function(){
     return o;
 };
 
+function fieldError(field, msg){
+  $(field).closest("li")
+    .addClass("error")
+    .append($("<li/>").addClass("error-message").text(msg));
+}
+
+function scrollUp(){
+  $(document.body).animate({
+    scrollTop: $(".messages").show().offset().top - $(".nav-wrapper").height() - 5
+  }, 500);
+}
 
 function stripeResponseHandler(status, response) {
   var $form = $('#payment-form');
 
   if (response.error) {
     // Show the errors on the form
-    $form.find('.payment-errors').text(response.error.message);
+    $(".errorlist").append($("<li/>").addClass("error-message").text(response.error.message));
+    scrollUp();
     $form.find('button').prop('disabled', false);
   } else {
     // token contains id, last4, and card type
@@ -56,6 +68,9 @@ jQuery(function($) {
   $('#payment-form').submit(function(e) {
     var $form = $(this);
 
+    $(".error-message", $form).remove();
+    $(".error", $form).removeClass("error");
+
     var error = false;
 
     var ccNum = $('[data-stripe="number"]').val(),
@@ -63,22 +78,25 @@ jQuery(function($) {
         expMonth = $('[data-stripe="exp-month"]').val(),
         expYear = $('[data-stripe="exp-year"]').val();
 
-    if (!Stripe.validateCardNumber(ccNum)) {
-        error = true;
-        $form.find('.payment-errors').text('The credit card number appears to be invalid.');
-    }
     if (!Stripe.validateCVC(cvcNum)) {
         error = true;
-        $form.find('.payment-errors').text('The CVC number appears to be invalid.');
+        fieldError('[data-stripe="cvc"]', 'The CVC number appears to be invalid.');
     }
     if (!Stripe.validateExpiry(expMonth, expYear)) {
         error = true;
-        $form.find('.payment-errors').text('The expiration date appears to be invalid.');
+        fieldError('[data-stripe="exp-month"], [data-stripe="exp-year"]', 'The expiration date appears to be invalid.');
+    }
+    if (!Stripe.validateCardNumber(ccNum)) {
+        error = true;
+        fieldError('[data-stripe="number"]', 'The credit card number appears to be invalid.');
     }
     if(error){
-        return false;
+        scrollUp();
+        // return false;
     }
 
+    $(".error-message", $form).remove();
+    $(".error", $form).removeClass("error");
 
 
     // Disable the submit button to prevent repeated clicks

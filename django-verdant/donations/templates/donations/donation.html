@@ -16,9 +16,12 @@
   </style>
 
   <form action="" method="POST" id="payment-form">
-    <span class="payment-errors"></span>
-
-      {{ form }}
+    <div class="messages error">
+      <ul class="errorlist"></ul>
+    </div>
+      <ul>
+        {{ form.as_ul }}
+      </ul>
       {% csrf_token %}
 
     <button type="submit">Submit Payment</button>
