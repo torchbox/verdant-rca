@@ -1,12 +1,15 @@
+import datetime
+import csv
 import simplejson
 import stripe
-import datetime
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .forms import DonationForm
-from .settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
+from donations.forms import DonationForm
+from donations.settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
+from donations.csv_unicode import UnicodeWriter
+
 
 stripe.api_key = STRIPE_SECRET_KEY
 
@@ -66,8 +69,9 @@ def donation(request):
 def export(request):
     # TODO: parse dates from query params
     offset = request.POST.get("offset", 0)
+    delimiter = request.POST.get("delimiter", ",")
     count = request.POST.get("count", 100)
-    date_from = request.POST.get("date_from", datetime.datetime.now() - datetime.timedelta(days=31))
+    date_from = request.POST.get("date_from", datetime.datetime.now() - datetime.timedelta(days=1))
     date_to = request.POST.get("date_to", datetime.datetime.now())
     created = {
         "gte": date_from.strftime("%s"),
@@ -93,5 +97,29 @@ def export(request):
     # http://docs.python.org/2/library/stdtypes.html#dict.items
     all_charges = [dict(zip(ch.keys(), ch.values())) for ch in all_charges]
 
-    # TODO: flatten json and convert to csv
-    return HttpResponse(simplejson.dumps(all_charges))
+    # normalise data
+    for charge in all_charges:
+        # move metadata and card properties to charge objects, so that they can be separate columns
+        for field in ['metadata', 'card']:
+            if field in charge:
+                for key, value in charge[field].items():
+                    if not key.startswith("exp_"):  # skipping some credit card details
+                        charge['%s__%s' % (field, key)] = value
+        # remove unused fields
+        for field in ['metadata', 'previous_metadata', 'description', 'card']:
+            if field in charge:
+                del charge[field]
+
+    fieldnames = all_charges[0].keys() if len(all_charges) else []
+    fieldnames = sorted(fieldnames)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="rca-donations-%s-%s.csv"' % (date_from.strftime("%s"), date_to.strftime("%s"))
+    writer = UnicodeWriter(response, delimiter=delimiter, quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    writer.writerow(fieldnames)
+
+    for charge in all_charges:
+        data = [(charge[f] if f in charge else '') for f in fieldnames]
+        writer.writerow(map(unicode, data))
+
+    return response

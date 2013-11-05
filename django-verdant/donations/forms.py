@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.core import validators
 from django import forms
-from .fields import CreditCardField, ExpiryDateField, VerificationValueField, EmptyValueAttrWidget
+from donations.fields import CreditCardField, ExpiryDateField, VerificationValueField, EmptyValueAttrWidget
 
 
 class DonationForm(forms.Form):
