@@ -1,5 +1,4 @@
 from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length
-from importer.data.staffdata import staff_data
 from importer import constants
 from django.utils.dateparse import parse_date
 from rca.models import ResearchItem, ResearchItemCreator, StaffIndex, CurrentResearchPage
