@@ -151,6 +151,7 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('helenhamlyn'), 'The Helen Hamlyn Centre for Design'),
 )
 
 HISTORICAL_PROGRAMMES = {
