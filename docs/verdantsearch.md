@@ -21,9 +21,9 @@ This is the name of the index that verdantsearch will use for indexing/searching
 If you want to use a frontend search results page then override this value with the name of the template that you want to use for search results.
 
 The following variables will be passed through to the template
-* do_search - This is set to true when a search is taking place, otherwise it will return False
+* do_search - This is set to true when a search is taking place
 * query_string - This is the text that the user typed in to the search box
-* search_results - This is a paginator containing a list of core.Page objects in order of relevance
+* search_results - This is a paginator for a list of core.Page objects in order of relevance
 
 ## Commands
 
@@ -31,14 +31,13 @@ The following variables will be passed through to the template
 
     python manage.py update_index
 
-This command rebuilds the index from scratch. It is currently the only place where mappings are updated so you must run this command every time any changes are made to any indexed fields. You should also run this command after adding/updating/deleting any objects without using the UI (as these changes don't get automatically picked up).
+This command rebuilds the index from scratch. It is currently the only place where mappings are updated so you must run this command every time any changes are made to any indexed fields. You should also run this command after adding/updating/deleting any objects without using the UI (such as an import script).
 
 ## Indexing
 
 ### Adding a model to the index
 
-To make verdantsearch index a model, simply inherit the "Indexed" class
-Don't forget to run the "update_index" command once you've done this!
+To make verdantsearch index a model, simply inherit the "Indexed" class.
 
     from django.db import models
     from verdantsearch import Indexed
@@ -87,6 +86,8 @@ If you want index some objects but not others, just add a new method to the mode
 
 If some fields are more important than others, you can boost them by adding a boost value to the field in the "indexed_fields" dictionary.
 
+You must run the "update_index" after adding this.
+
     class MyModel(models.Model, Indexed):
         title = models.TextField(max_length=255)
         content = models.TextField()
@@ -104,7 +105,9 @@ If some fields are more important than others, you can boost them by adding a bo
 
 ### Partial term matching
 
-If you want to be able to find objects by only typing part of a word (eg. search for "Hel" and get "Hello" in the results), you need to enable ngrams on the field. You can do this by setting "analyzer" to "edgengram_analyzer" in the fields configuration.
+If you want to find objects by only typing part of a word (eg. search for "Hel" instead of "Hello"), you need to enable ngrams on the field. You can do this by setting "analyzer" to "edgengram_analyzer" in the fields configuration.
+
+Like boosting fields, you must run the "update_index" after adding this.
 
     class MyModel(models.Model, Indexed):
         title = models.TextField(max_length=255)
@@ -120,21 +123,37 @@ If you want to be able to find objects by only typing part of a word (eg. search
 
 ### A simple search
 
+To search, firstly make an instance of the Search class (this sets up a connection to ElasticSearch)
+
+You can then run the search method on this class. Don't forget to specify the model you are searching.
+
     from verdantsearch import Search
     from core.models import Page
-    Search().search(query_string, model=Page)
+
+
+    results = Search().search(query_string, model=Page)
 
 ### Searching on specific fields
 
-    Search().search(query_string, model=Page, fields=["title"])
+    results = Search().search(query_string, model=Page, fields=["title"])
 
 ### Filters
 
-    Search().search(query_string, model=Page, filters=dict(live=True))
+https://elasticutils.readthedocs.org/en/latest/searching.html#filters-filter
+
+    results = Search().search(query_string, model=Page, filters=dict(live=True))
 
 ## Searchers
 
+Searchers allow you to add search methods into the class. This makes searching much easier as to search you only have to call a class method in order to search.
+
 ### A simple searcher
+
+Creating searchers is very similar to just adding an extra field to the model.
+The first arguement is a list of fields this searcher will search. Set this to None to search all fields.
+
+	from verdantsearch import searcher
+
 
     class MyModel(models.Model, Indexed):
         title = models.TextField(max_length=255)
@@ -148,13 +167,18 @@ If you want to be able to find objects by only typing part of a word (eg. search
 
         search = Searcher(None)
 
-    MyModel.search("Hello")
+To search this model, simply do:
+
+    results = MyModel.search("Hello")
 
 ### Searching on specific fields
 
+To search specific fields, set the first arguement to a list of fields
+
 	title_search = Searcher(["title"])
 
-
 ### Filters
+
+Like the search method above, you can add filters by just setting the filters arguement to a dictionary of filters.
 
 	search_live = Searcher(None, filters=dict(live=True))
