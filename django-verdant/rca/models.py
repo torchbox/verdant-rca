@@ -351,6 +351,7 @@ SCHOOL_PROGRAMME_MAP = {
     'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
     'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
     'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    'helenhamlyn': [],
 }
 
 # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
