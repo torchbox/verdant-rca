@@ -64,7 +64,7 @@ Dictionaries must be used to provide any extra information to the ElasticSearch 
 
 ### Preventing child models from being indexed
 
-By default, when a model is indexed all of its child models are automatically indexed as well. You can override this behaviour by adding "indexed = False" into the child model.
+When a model is indexed, all of its child models are automatically indexed as well. You can override this behaviour by adding "indexed = False" into the child model.
 
     class DontIndex(IndexedModel):
         indexed = False
@@ -104,9 +104,7 @@ If some fields are more important than others, you can boost them by adding a bo
 
 ### Partial term matching
 
-If you want to be able to find objects by only typing part of a word (eg. search for "Hel" and get "Hello" in the results). This is very useful for predictive search.
-
-This needs to be switched on in the indexed_fields dictionary. To enable it, simply set the "analyser" to "edgengram_analyser"
+If you want to be able to find objects by only typing part of a word (eg. search for "Hel" and get "Hello" in the results), you need to enable ngrams on the field. You can do this by setting "analyzer" to "edgengram_analyzer" in the fields configuration.
 
     class MyModel(models.Model, Indexed):
         title = models.TextField(max_length=255)
@@ -122,17 +120,17 @@ This needs to be switched on in the indexed_fields dictionary. To enable it, sim
 
 ### A simple search
 
-	from verdantsearch import Search
-	from core.models import Page
-	Search().search(query_string, model=Page)
+    from verdantsearch import Search
+    from core.models import Page
+    Search().search(query_string, model=Page)
 
 ### Searching on specific fields
 
-	Search().search(query_string, model=Page, fields=["title"])
+    Search().search(query_string, model=Page, fields=["title"])
 
 ### Filters
 
-	Search().search(query_string, model=Page, filters=dict(live=True))
+    Search().search(query_string, model=Page, filters=dict(live=True))
 
 ## Searchers
 
@@ -152,7 +150,7 @@ This needs to be switched on in the indexed_fields dictionary. To enable it, sim
 
     MyModel.search("Hello")
 
-### Searcing on specific fields
+### Searching on specific fields
 
 	title_search = Searcher(["title"])
 
