@@ -8,10 +8,8 @@
 
 {% block extra_js %}
     <script type="text/javascript">
-        // loading stripe API with javascript because it's an external url and can't be compressed
-        jQuery.getScript("https://js.stripe.com/v2/", function(){
-            Stripe.setPublishableKey('{{ STRIPE_PUBLISHABLE_KEY }}');
-        });
+        // Stripe.js is includded in base.html
+        Stripe.setPublishableKey('{{ STRIPE_PUBLISHABLE_KEY }}');
     </script>
     <script type="text/javascript" src="/static/donations/js/jquery.payment.js"></script>
     <script type="text/javascript" src="/static/donations/js/donation.js"></script>
