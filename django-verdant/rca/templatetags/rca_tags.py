@@ -20,7 +20,7 @@ def upcoming_events(context, exclude=None, count=3):
     }
 
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
-def news_carousel(context, area="", programme="", school="", count=6):
+def news_carousel(context, area="", programme="", school="", count=5):
     if area:
         news_items = NewsItem.objects.filter(live=True, area=area)[:count]
     elif programme:
