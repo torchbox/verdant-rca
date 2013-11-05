@@ -24,7 +24,7 @@
                     {% endif %}
                 </div>
             </a>
-            <div class="content bc1{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_school.title }}</strong>
                 {{ self.head_of_school_statement|richtext }}
                 {% if self.head_of_school_link %}
@@ -53,7 +53,7 @@
                 </div>
             </a>
 
-            <div class="content bc1{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_research.title }}</strong>
                 {{ self.head_of_research_statement|richtext }}
                 {% if self.head_of_research_link %}

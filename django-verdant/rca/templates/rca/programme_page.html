@@ -26,7 +26,7 @@
                 </div>
             </a>
                     
-            <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_programme.title }}</strong>
                 {{ self.head_of_programme_statement|richtext }}
                 {% if self.head_of_programme_link %}
