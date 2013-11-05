@@ -1,9 +1,12 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
+from django.contrib import messages
 from django.db import models
+from django.db.models import Min
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.db.models import Min
 
 from datetime import date
 import datetime
@@ -22,7 +25,9 @@ from verdantsnippets.models import register_snippet
 from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from donations.forms import DonationForm
+import simplejson
+import stripe
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -2909,4 +2914,91 @@ ContactUsPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+]
+
+
+# == Donation page ==
+
+
+class DonationPage(Page, SocialFields):
+    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+
+    # fields copied from StandrdPage
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
+    show_on_homepage = models.BooleanField()
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
+
+    def serve(self, request):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        if request.method == "GET":
+            form = DonationForm()
+        if request.method == "POST":
+            form = DonationForm(request.POST)
+            if form.is_valid():
+                try:
+                    # When exporting the payments from the dashboard
+                    # the metadata field is not exported but the description is,
+                    # so we duplicate the metadata there as well.
+                    charge = stripe.Charge.create(
+                        card=form.cleaned_data.get('stripe_token'),
+                        amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
+                        currency="gbp",
+                        description=simplejson.dumps(form.cleaned_data.get('metadata', {})),
+                        metadata=form.cleaned_data.get('metadata', {}),
+                    )
+                    return HttpResponseRedirect(self.redirect_to_when_done.url)
+                except stripe.CardError, e:
+                    # CardErrors are displayed to the user
+                    messages.error(request, e['message'])
+                # TODO: for other exceptions we should send emails to admins and display a user freindly error message
+                # InvalidRequestError (if token is used more than once) , AuthenticationError, APIError
+                # except Exception, e:
+                #     mail_admins()
+                #     messages.error(request, "")
+
+        return render(request, self.template, {
+            'self': self,
+            'form': form,
+            'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
+        })
+
+DonationPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    FieldPanel('middle_column_body', classname="full"),
+    PageChooserPanel('redirect_to_when_done'),
+    # InlinePanel(DonationPage, 'carousel_items', label="Carousel content"),
+    # InlinePanel(DonationPage, 'related_links', label="Related links"),
+    # InlinePanel(DonationPage, 'reusable_text_snippets', label="Reusable text snippet"),
+    # InlinePanel(DonationPage, 'documents', label="Document"),
+    # InlinePanel(DonationPage, 'quotations', label="Quotation"),
+    # InlinePanel(DonationPage, 'images', label="Middle column image"),
+    # InlinePanel(DonationPage, 'manual_adverts', label="Manual adverts"),
+]
+
+DonationPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
 ]

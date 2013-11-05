@@ -20,7 +20,11 @@ class DonationForm(forms.Form):
     number = CreditCardField(label="Card number", required=False)
     expiration = ExpiryDateField(required=False)
     cvc = VerificationValueField(required=False)
-    is_gift_aid = forms.BooleanField(label="Gift Aid", required=False)
+    is_gift_aid = forms.BooleanField(label="Gift Aid", required=False, help_text="""
+        I am eligible as a UK taxpayer and consent to the Royal College of Art
+        claiming Gift Aid on my behalf on all qualifying donations
+        from the date of this declaration until I notify you otherwise.
+    """)
     email = forms.EmailField(required=False)
     title           = forms.CharField(required=False, max_length=255)
     first_name      = forms.CharField(required=False, max_length=255)

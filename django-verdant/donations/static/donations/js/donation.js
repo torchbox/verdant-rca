@@ -1,55 +1,56 @@
-$.fn.serializeObject = function(){
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};
-
-function fieldError(field, msg){
-  $(field).closest("li")
-    .addClass("error")
-    .append($("<li/>").addClass("error-message").text(msg));
-}
-
-function scrollUp(){
-  $(document.body).animate({
-    scrollTop: $(".messages").show().offset().top - $(".nav-wrapper").height() - 5
-  }, 500);
-}
-
-function stripeResponseHandler(status, response) {
-  var $form = $('#payment-form');
-
-  if (response.error) {
-    // Show the errors on the form
-    $(".errorlist").append($("<li/>").addClass("error-message").text(response.error.message));
-    scrollUp();
-    $form.find('button').prop('disabled', false);
-  } else {
-    // token contains id, last4, and card type
-    var token = response.id;
-    // Set the token so it gets submitted to the server
-    $form.find('[name="stripe_token"]').val(token);
-
-    // let's not submit credit card details to our server because we don't need them
-    $form.find('[data-stripe="number"], [data-stripe="cvc"], [data-stripe="exp-month"], [data-stripe="exp-year"]').val("");
-
-    // and re-submit without javascript
-    // TODO: currently this doesn't trigger the jquery submit event but it might in the future
-    $form.get(0).submit();
-  }
-}
-
 jQuery(function($) {
+
+    $.fn.serializeObject = function(){
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name] !== undefined) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    function fieldError(field, msg){
+      $(field).closest("li")
+        .addClass("error")
+        .append($("<li/>").addClass("error-message").text(msg));
+    }
+
+    function scrollUp(){
+      $(document.body).animate({
+        scrollTop: $(".messages").show().offset().top - $(".nav-wrapper").height() - 5
+      }, 500);
+    }
+
+    function stripeResponseHandler(status, response) {
+      var $form = $('#payment-form');
+
+      if (response.error) {
+        // Show the errors on the form
+        $(".errorlist").append($("<li/>").addClass("error-message").text(response.error.message));
+        scrollUp();
+        $form.find('button').prop('disabled', false);
+      } else {
+        // token contains id, last4, and card type
+        var token = response.id;
+        // Set the token so it gets submitted to the server
+        $form.find('[name="stripe_token"]').val(token);
+
+        // let's not submit credit card details to our server because we don't need them
+        $form.find('[data-stripe="number"], [data-stripe="cvc"], [data-stripe="exp-month"], [data-stripe="exp-year"]').val("");
+
+        // and re-submit without javascript
+        // TODO: currently this doesn't trigger the jquery submit event but it might in the future
+        $form.get(0).submit();
+      }
+    }
+
   $('[data-stripe="number"]').payment('formatCardNumber');
   $('[data-stripe="cvc"]').payment('formatCardCVC');
   $('[name="amount"]').keypress(function(eve) {

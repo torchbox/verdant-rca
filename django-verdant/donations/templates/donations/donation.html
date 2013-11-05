@@ -2,7 +2,7 @@
 
 {% block content %}
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <!--script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
   <script type="text/javascript">
     Stripe.setPublishableKey('{{ STRIPE_PUBLISHABLE_KEY }}');
@@ -17,15 +17,7 @@
       padding: 16px 12px;
     }
     select[data-stripe="exp-year"]{
-      text-indent: 3px;
-    }
-    label[for="id_is_gift_aid"]{
-      display: inline-block;
-    }
-    input[name="is_gift_aid"]{
-      position: relative;
-      top: 3px;
-      left: 8px;
+      text-indent: 1px;
     }
   </style>
 
@@ -39,6 +31,6 @@
       {% csrf_token %}
 
     <input type="submit" value="Submit Payment" />
-  </form>
+  </form-->
 
 {% endblock %}
