@@ -2958,7 +2958,7 @@ class DonationPage(Page, SocialFields):
                     # CardErrors are displayed to the user
                     messages.error(request, e['message'])
                 # TODO: for other exceptions we should send emails to admins and display a user freindly error message
-                # InvalidRequestError (if token is used more than once) , AuthenticationError, APIError
+                # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
                 # except Exception, e:
                 #     mail_admins()
                 #     messages.error(request, "")
