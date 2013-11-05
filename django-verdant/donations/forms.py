@@ -20,7 +20,7 @@ class DonationForm(forms.Form):
     number = CreditCardField(label="Card number", required=False)
     expiration = ExpiryDateField(required=False)
     cvc = VerificationValueField(required=False)
-    is_gift_aid = forms.BooleanField(required=False)
+    is_gift_aid = forms.BooleanField(label="Gift Aid", required=False)
     email = forms.EmailField(required=False)
     title           = forms.CharField(required=False, max_length=255)
     first_name      = forms.CharField(required=False, max_length=255)

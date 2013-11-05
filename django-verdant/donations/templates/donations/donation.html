@@ -13,6 +13,20 @@
     .expirydatefield select, #id_cvc{
       width: 75px;
     }
+    select[data-stripe="exp-month"]{
+      padding: 16px 12px;
+    }
+    select[data-stripe="exp-year"]{
+      text-indent: 3px;
+    }
+    label[for="id_is_gift_aid"]{
+      display: inline-block;
+    }
+    input[name="is_gift_aid"]{
+      position: relative;
+      top: 3px;
+      left: 8px;
+    }
   </style>
 
   <form action="" method="POST" id="payment-form">

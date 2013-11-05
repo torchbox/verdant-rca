@@ -92,7 +92,7 @@ jQuery(function($) {
     }
     if(error){
         scrollUp();
-        // return false;
+        return false;
     }
 
     $(".error-message", $form).remove();
