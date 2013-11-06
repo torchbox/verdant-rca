@@ -1,21 +1,19 @@
 {% load rca_tags %}
 
 {% if search_results %}
-  <div class="search-results">
-    <ul class="row">
-      {% for result in search_results %}
-        {% with result.specific as result_specific %}
-          <li><h3><a href="{{ result_specific.url }}">{{ result_specific }}</a></h3><span>{{ result_specific|search_content_type }}</span></li>
-        {% endwith %}
-      {% endfor %}
-    </ul>
+  <ul class="row">
+    {% for result in search_results %}
+      {% with result.specific as result_specific %}
+        <li><h3><a href="{{ result_specific.url }}">{{ result_specific }}</a></h3><span>{{ result_specific|search_content_type }}</span></li>
+      {% endwith %}
+    {% endfor %}
+  </ul>
 
-    {% if search_results.has_previous %}
-      <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a>
-    {% endif %}
+  {% if search_results.has_previous %}
+    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a>
+  {% endif %}
 
-    {% if search_results.has_next %}
-      <a class="next-page" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next Page</a>
-    {% endif %}
-  </div>
+  {% if search_results.has_next %}
+    <a class="next-page" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next Page</a>
+  {% endif %}
 {% endif %}
