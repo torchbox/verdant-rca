@@ -13,25 +13,28 @@ def search(request):
 
     # Search
     if query_string != "":
-        do_search = True
         search_results = models.Page.search_frontend(query_string)
 
         # Pagination
-        paginator = Paginator(search_results, 20)
-        try:
-            search_results =  paginator.page(page)
-        except PageNotAnInteger:
-            search_results =  paginator.page(1)
-        except EmptyPage:
-            search_results =  paginator.page(paginator.num_pages)
+        paginator = Paginator(search_results, 10)
+        if paginator is not None:
+            try:
+                search_results = paginator.page(page)
+            except PageNotAnInteger:
+                search_results = paginator.page(1)
+            except EmptyPage:
+                search_results = paginator.page(paginator.num_pages)
+        else:
+            search_results = None
     else:
-        do_search = False
         search_results = None
 
-    # Get template
-    template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search_results.html")
-
-    return render(request, template_name, dict(do_search=do_search, query_string=query_string, search_results=search_results))
+    # Render
+    if request.is_ajax():
+        template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE_AJAX", "verdantsearch/search_results.html")
+    else:
+        template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search_results.html")
+    return render(request, template_name, dict(query_string=query_string, search_results=search_results, is_ajax=request.is_ajax()))
 
 
 def suggest(request):
