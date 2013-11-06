@@ -23,7 +23,7 @@ jQuery(function($) {
     }
 
     function scrollUp(){
-      $(document.body).animate({
+      $("html, body").animate({  // need to use "html,body" because of IE10
         scrollTop: $(".messages").show().offset().top - $(".nav-wrapper").height() - 5
       }, 500);
     }
