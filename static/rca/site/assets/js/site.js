@@ -187,17 +187,16 @@ $(function(){
     /* start any bxslider carousels not found within a tab  */
     $('.carousel:not(.tab-pane .carousel)').each(function(){
         applyCarousel($(this));
-    })
+    });
 
     /* check if there's a carousel in the first tab and start it if so */
+    /* also find the associated nav element and set carousel=true so it only executes once */
     $('.tab-content #tab1 .carousel').each(function(){
         applyCarousel($(this));
-    })
-
-    //if there is a carousel in the first tab set the data carousel=true so it only executes once
-    $('.tab-nav a[href="#tab1"]').each(function(){
-        $(this).data('carousel', true);
-    })
+        $(this).closest('.tab-content').siblings('.tab-nav').find('a[href="#tab1"]').each(function(){
+            $(this).data('carousel', true);
+        });
+    });
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()

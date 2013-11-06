@@ -13,6 +13,7 @@ from verdantsnippets import urls as verdantsnippets_urls
 from verdantsearch import urls as verdantsearch_urls
 from verdantusers import urls as verdantusers_urls
 
+from donations import urls as donations_urls
 from rca import app_urls
 
 admin.autodiscover()
@@ -40,6 +41,8 @@ urlpatterns = patterns('',
     url(r'^search/', include(verdantsearch_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),
+
+    url(r'^donations/', include(donations_urls)),
 
     url(r'^app/', include(app_urls)),
 
