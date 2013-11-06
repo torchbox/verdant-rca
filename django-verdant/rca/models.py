@@ -1836,6 +1836,7 @@ class JobsIndexAd(Orderable):
 
 class JobsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
     indexed = False
@@ -1843,6 +1844,7 @@ class JobsIndex(Page, SocialFields):
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(JobsIndex, 'related_links', label="Related links"),
     InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
