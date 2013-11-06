@@ -22,13 +22,12 @@ class TagSearchable(Indexed):
     @classmethod
     def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
         # Run search query
-        results = Search().search(q, cls)
+        if prefetch_tags:
+            results = Search().search(q, cls, prefetch_related=['tagged_items__tag'])
+        else:
+            results = Search().search(q, cls)
 
-        # TODO: Work out how to get this to work
-        #if prefetch_tags:
-            #results = results.prefetch_related('tagged_items__tag')
-
-        # if results_per_page is set, return a paginator
+        # If results_per_page is set, return a paginator
         if results_per_page is not None:
             paginator = Paginator(results, results_per_page)
             try:

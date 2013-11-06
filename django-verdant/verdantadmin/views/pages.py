@@ -398,7 +398,7 @@ def search(request):
             # page number
             p = request.GET.get("p", 1)
             is_searching = True
-            pages = Page.title_search_backend(q)
+            pages = Page.title_search_backend(q, prefetch_related=['content_type'])
 
             # Pagination
             paginator = Paginator(pages, 20)
