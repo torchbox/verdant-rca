@@ -247,6 +247,12 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });

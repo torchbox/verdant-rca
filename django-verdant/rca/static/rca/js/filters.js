@@ -18,8 +18,13 @@ $(function(){
 				$parent.find("li[data-val='']").show();
 			}
 
-			if(showAllFor == "programme") if(showAll){
-				$parent.find("li[data-val]").show();
+			if(showAll){
+				if(showAllFor == "programme"){
+					$parent.find("li[data-val]").show();
+				}
+				if(showAllFor == "school"){
+					$parent.find("li[data-val]").show();
+				}
 			}
 
 			var visibleProgrammes = $parent.find("li").filter(function(){

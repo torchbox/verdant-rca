@@ -8,7 +8,7 @@
                 {% with research_item.carousel_items.all as carousel_items %}
                     {% with carousel_items|first as carousel_item %}
                         {% if carousel_item.image %}
-                            {% image carousel_item.image width-300 %}
+                            {% image carousel_item.image fill-300x169 %}
                         {% else %}
                             {% if person %}
                                 <img src="/static/rca/images/16x9-medium-grey-placeholder.png" width="200">

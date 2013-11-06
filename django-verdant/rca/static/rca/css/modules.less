@@ -222,6 +222,13 @@
 .videoembed{
     overflow:hidden;
 
+    &:hover {
+        cursor: pointer;
+        .playpause:after {
+            .sprite-load(-1278px, -1645px, 22px, 33px);
+        }
+    }
+
     .playpause, .poster{
         position:absolute;
         top:0;
@@ -1504,7 +1511,6 @@
  */
 
 form{
-    clear: both;
     .spinner{
         display: none;
     }
