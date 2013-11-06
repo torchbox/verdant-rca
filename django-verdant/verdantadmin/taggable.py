@@ -11,12 +11,18 @@ class TagSearchable(Indexed):
     for models that provide those things.
     """
 
-    indexed_fields = ('title', )
+    indexed_fields = {
+        'title': {
+            'type': 'string',
+            'analyzer': 'edgengram_analyzer',
+            'boost': 10,
+        },
+    }
 
     @classmethod
     def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
-        s = Search()
-        results = s.search(q, cls)
+        # Run search query
+        results = Search().search(q, cls)
 
         # TODO: Work out how to get this to work
         #if prefetch_tags:

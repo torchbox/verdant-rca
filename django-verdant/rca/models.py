@@ -42,19 +42,7 @@ class RcaImage(AbstractImage):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
 
-    indexed_fields = {
-        'title': {
-            'type': 'string',
-            'analyzer': 'edgengram_analyzer',
-            'boost': 10,
-        },
-        'creator': {
-            'type': 'string',
-        },
-        'photographer': {
-            'type': 'string',
-        },
-    }
+    indexed_fields = ('creator', 'photographer')
 
     @property
     def default_alt_text(self):
