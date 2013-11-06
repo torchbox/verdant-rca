@@ -1,0 +1,5 @@
+[production]
+#prod-server.domain user=root nickname=production
+
+[staging]
+#staging-server.domain user=root nickname=staging

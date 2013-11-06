@@ -60,9 +60,11 @@
 
 @carousel-image-height: 500px;
 
-.bx-wrapper .bx-viewport {
-    background-color:darken(@color-pale-grey, 10%);
+/* carousels in tabs have a background colour, others are transparent */
+.tab-content .bx-wrapper .bx-viewport {
+    background-color: #F4F4F4;
 }
+
 .bx-wrapper {
     overflow: hidden;
     margin-bottom:0;
@@ -187,6 +189,11 @@
             display: block;
         }
     }
+}
+
+/* Hide pager for carousels with only one item */
+.single-carousel .bx-wrapper .bx-pager {
+    display: none;
 }
 
 /**
@@ -339,7 +346,7 @@
         }
     &.borders {
         .share-wrapper {
-            border-top: 1px solid @color-medium-grey;
+            border-top: 1px solid @color-middle-column-lines;
             padding: @spacing-one 0;
             margin-bottom: @spacing-one;
         }
@@ -504,6 +511,10 @@
 
         .bc4{
             font-size:0.8em;
+        }
+
+        p {
+            display:inline;
         }
 
         &.flushleft {
@@ -1085,6 +1096,7 @@
         padding-top: @spacing-one;
         border-top: 1px solid @color-dark-grey;
         margin-top: @spacing-two;
+        clear: both;
     }
 
     h3 {
@@ -1100,6 +1112,23 @@
         line-height: @line-height-3;
         text-transform: none;
         font-weight: normal;
+    }
+
+    hr {
+        border-bottom: 1px solid @color-dark-grey;
+        border-top: none;
+        border-left: none;
+    }
+
+    /* different colour lines for middle-column body text */
+    &.middle-column-body-text {
+        hr {
+            border-bottom-color: @color-middle-column-lines;
+        }
+
+        h2 {
+            border-top-color: @color-middle-column-lines;
+        }
     }
 
 }
@@ -1367,11 +1396,11 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-two;
+    margin-top: 3px; /* close as possible to match line-height space above p */
     figcaption {
         display: block;
         width: 100%;
-        text-align: right;
+        text-align: left;
         margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
@@ -1385,7 +1414,7 @@
  */
 
 .quotation {
-    border-top: 1px solid @color-medium-grey;
+    border-top: 1px solid @color-middle-column-lines;
     padding-top: @spacing-one;
     margin: 0;
     padding-right: @spacing-three;
@@ -1483,6 +1512,34 @@
  * Forms
  */
 
+form{
+    clear: both;
+    .spinner{
+        display: none;
+    }
+}
+form.loading{
+    position: relative;
+    .spinner{
+        display: block;
+        position: absolute;
+        bottom: 10px;
+        left: 190px;
+        background: url(/static/rca/images/bx_loader.gif) no-repeat;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.body-text ul, .body-text-style ul {
+    padding: 0;
+    margin: 0;
+}
+.body-text form ul li:before, .body-text-style form ul li:before {
+    content: none;
+    margin-left: 0;
+}
+
 fieldset{
     border:0;
     border-bottom:1px solid @color-light-grey;
@@ -1532,6 +1589,16 @@ select{
     background-color:@color-pale-grey;
     border:1em solid @color-pale-grey;
 }
+    .expirydatefield select, #id_cvc{
+        width: 75px;
+    }
+    select[data-stripe="exp-month"]{
+        padding: 16px 12px;
+    }
+    select[data-stripe="exp-year"]{
+        text-indent: 1px;
+    }
+
 input[type=submit],input[type=reset],input[type=button], button, .button{
     .t0;
     background-color:@color-highlight-blue;
@@ -1571,8 +1638,8 @@ form .error-message{
     color:@color-pink;
     margin:@grid-gutter-width/2 0 0 0 ;
 }
-form .messages{
-    &.error h2, .errorlist{
+form {
+    .messages.error h2, .errorlist, .errorlist li, .error{
         color:@color-pink;
     }
 }

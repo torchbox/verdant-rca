@@ -1,5 +1,5 @@
 from django.core.files import File
-from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
@@ -27,7 +27,12 @@ class AbstractImage(models.Model, TagSearchable):
             filename = prefix[:-1] + dot + extension
         return os.path.join(folder_name, filename)
 
-    file = models.ImageField(upload_to=get_upload_to, width_field='width', height_field='height')
+    def file_extension_validator(ffile):
+        extension = ffile.name.split(".")[-1].lower()
+        if extension not in ["gif", "jpg", "jpeg", "png"]:
+            raise ValidationError("Not a valid image format. Please use a gif, jpeg or png file instead.")
+
+    file = models.ImageField(upload_to=get_upload_to, width_field='width', height_field='height', validators=[file_extension_validator])
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,31 @@
+---
+- hosts: staging
+  user: ${project_name} 
+  vars_files:
+    - vars.yml
+  gather_facts: false
+  #sudo: true
+
+  tasks:
+
+  - name: Check out the project git repo
+    git: repo=${project_repo} dest=${project_root}
+ 
+  - name: Set the ownership of the project root to the deployment user
+    file: path=${project_root} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
+
+  - name: Create the virtualenvs directory
+    file: path=${django_root}/virtualenvs state=directory owner=root group=djangoapps mode=2775
+
+  - name: Create the virtualenv for the project
+    command: /usr/bin/virtualenv ${django_root}/virtualenvs/${project_name}
+
+  - name: Fix permissions on the virtualenv for the project
+    file: path=${django_root}/virtualenvs/${project_name} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
+
+  - name: pip install requirements within the virtualenv
+    pip: requirements=${project_root}/requirements.txt virtualenv=${django_path}/virtualenvs/${project_name}
+
+  - name: Set up workon path for the deployment user
+    lineinfile: dest=/home/${project_name}/.bashrc regexp="^export WORKON_HOME" line="export WORKON_HOME=${django_root}/virtualenvs"
+

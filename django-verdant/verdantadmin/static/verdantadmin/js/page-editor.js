@@ -94,8 +94,26 @@ function initDateChooser(id) {
     });
 }
 
+function initTimeChoosers(context) {
+    $('input.friendly_time', context).timepicker({
+        timeFormat: 'g.ia'
+    });
+}
+function initTimeChooser(id) {
+    $('#' + id).timepicker({
+        timeFormat: 'g.ia'
+    });
+}
+
+function initTagField(id, autocompleteUrl) {
+    $('#' + id).tagit({
+        autocomplete: {source: autocompleteUrl}
+    });
+}
+
 $(function() {
     initDateChoosers();
+    initTimeChoosers();
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });
