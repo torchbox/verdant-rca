@@ -1505,6 +1505,21 @@
 
 form{
     clear: both;
+    .spinner{
+        display: none;
+    }
+}
+form.loading{
+    position: relative;
+    .spinner{
+        display: block;
+        position: absolute;
+        bottom: 10px;
+        left: 190px;
+        background: url(/static/rca/images/bx_loader.gif) no-repeat;
+        width: 32px;
+        height: 32px;
+    }
 }
 
 .body-text ul, .body-text-style ul {
@@ -1614,8 +1629,8 @@ form .error-message{
     color:@color-pink;
     margin:@grid-gutter-width/2 0 0 0 ;
 }
-form .messages{
-    &.error h2, .errorlist, .error{
+form {
+    .messages.error h2, .errorlist, .errorlist li, .error{
         color:@color-pink;
     }
 }
