@@ -26,7 +26,6 @@ from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from donations.forms import DonationForm
-import simplejson
 import stripe
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -2921,7 +2920,8 @@ ContactUsPage.promote_panels = [
 
 
 class DonationPage(Page, SocialFields):
-    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, related_name='+')
+    payment_description = models.CharField(help_text="The value of payment description field for donations made on this page.", max_length=255, blank=True)
 
     # fields copied from StandrdPage
     intro = RichTextField(blank=True)
@@ -2950,7 +2950,7 @@ class DonationPage(Page, SocialFields):
                         card=form.cleaned_data.get('stripe_token'),
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
                         currency="gbp",
-                        description=simplejson.dumps(form.cleaned_data.get('metadata', {})),
+                        description=self.payment_description,
                         metadata=form.cleaned_data.get('metadata', {}),
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
@@ -2975,7 +2975,10 @@ DonationPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     FieldPanel('middle_column_body', classname="full"),
-    PageChooserPanel('redirect_to_when_done'),
+    MultiFieldPanel([
+        FieldPanel('payment_description', classname="full"),
+        PageChooserPanel('redirect_to_when_done'),
+    ], "Donation details")
     # InlinePanel(DonationPage, 'carousel_items', label="Carousel content"),
     # InlinePanel(DonationPage, 'related_links', label="Related links"),
     # InlinePanel(DonationPage, 'reusable_text_snippets', label="Reusable text snippet"),
