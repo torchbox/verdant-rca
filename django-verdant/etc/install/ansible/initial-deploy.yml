@@ -1,5 +1,5 @@
 ---
-- hosts: production-web
+- hosts: web
   user: ${user} 
   vars_files:
     - vars.yml
@@ -9,32 +9,37 @@
 
   tasks:
 
-  - name: Check out the project repository
-    sudo_user: ${project_name}
-    git: repo=${project_repo} dest=${project_root}
- 
-  - name: Make the deployment user the owner of the project root
-    file: path=${project_root} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
-
-  - name: Create the virtualenvs directory
-    file: path=${django_root}/virtualenvs state=directory owner=root group=djangoapps mode=2775
-
-  - name: Create a virtualenv for the project
-    command: virtualenv ${django_root}/virtualenvs/${project_name}
-  
-  - name: Set permissions on the virtualenv
-    file: path=${django_root}/virtualenvs/${project_name} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
-
-  - name: Use pip to install the project requirements 
-    sudo_user: ${project_name}
-    pip: requirements=${project_root}/django-verdant/requirements.txt virtualenv=${django_root}/virtualenvs/${project_name} virtualenv_site_packages=no
-    ## Note that unusually this project root is within the django-verdant subdirectory
-
+#  - name: Check out the project repository
+#    sudo_user: ${project_name}
+#    git: repo=${project_repo} dest=${project_root}
+# 
+#  - name: Make the deployment user the owner of the project root
+#    file: path=${project_root} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
+#
+#  - name: Create the virtualenvs directory
+#    file: path=${django_root}/virtualenvs state=directory owner=root group=djangoapps mode=2775
+#
+#  - name: Create a virtualenv for the project
+#    command: virtualenv ${django_root}/virtualenvs/${project_name}
+#  
+#  - name: Set permissions on the virtualenv
+#    file: path=${django_root}/virtualenvs/${project_name} state=directory recurse=yes owner=${project_name} group=djangoapps mode=2775
+#
+#  - name: Use pip to install the project requirements 
+#    sudo_user: ${project_name}
+#    pip: requirements=${project_root}/django-verdant/requirements.txt virtualenv=${django_root}/virtualenvs/${project_name} virtualenv_site_packages=no
+#    ## Note that unusually this project root is within the django-verdant subdirectory
+#
   - name: Set up workon path for the deployment user
+    sudo_user: ${project_name}
     lineinfile: dest=/home/${project_name}/.bashrc regexp="^export WORKON_HOME" line="export WORKON_HOME=${django_root}/virtualenvs"
-    ## Note that workon is now installed as a bash extension in Debian 7
+#    ## Note that workon is now installed as a bash extension in Debian 7
+
+  - name: Create local settings file from template
+    template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/django-verdant/verdant/settings/local.py owner=${project_name} group=djangoapps
 
   - name: Create the django database
+    sudo_user: ${project_name}
     django_manage: 
       command=syncdb
       app_path=${django_root}/${project_name}/django-verdant
