@@ -32,8 +32,8 @@
                 {% endfor %}
 
 
-                {% if gallery_items.paginator.count > 10 %}
-                    <li class="load-more{% if gallery_items|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% if gallery_items.paginator.count > 5 %}
+                    <li class="load-more{% if gallery_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
         </div>
