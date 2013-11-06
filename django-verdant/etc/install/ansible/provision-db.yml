@@ -1,0 +1,55 @@
+---
+- hosts: db
+  user: ${user} 
+  vars_files:
+    - vars.yml
+    - local_vars.yml
+
+  gather_facts: false
+  sudo: true
+
+  tasks:
+  
+  # Install packages
+  - name: Install the required system packages
+    apt: pkg=${item} state=installed update-cache=yes
+    with_items: ${database_packages}
+
+  # Configure system locales to use  
+  - name: set up locales
+    shell: /usr/sbin/locale-gen en_GB.UTF-8
+
+  - name: set default language
+    shell: '/bin/echo LANGUAGE=${locale} > /etc/default/locale && /bin/echo LANG=${locale} >> /etc/default/locale'
+
+  - name: Reconfigure locales package
+    shell: /usr/sbin/dpkg-reconfigure -f noninteractive locales
+
+#  - name: ensure database is created
+#    sudo_user: postgres
+#    action: postgresql_db db=$dbname
+#                 encoding=${encoding}
+#                 lc_collate=${locale}
+#                 lc_ctype=${locale}
+#                 template='template0' 
+#
+#  - name: ensure user has access to database
+#    sudo_user: postgres
+#    action: postgresql_user db=$dbname user=$dbuser password=$dbpassword priv=ALL
+# 
+#  - name: ensure user does not have unnecessary privilege
+#    sudo_user: postgres
+#    action: postgresql_user user=$dbuser role_attr_flags=NOSUPERUSER,NOCREATEDB
+#
+#  - name: add rules
+#    template: src=files/postgres/pg_hba.conf.j2 dest=/etc/postgresql/9.1/main/pg_hba.conf
+#
+#  - name: have postgres listen on external interface
+#    lineinfile: regex="^#listen_addresses = 127.0.0.1"
+#         line=listen_addresses = '*'
+#         state=present
+#
+#  - service: name=postgresql state=reloaded
+
+
+
