@@ -30,10 +30,11 @@
 #    pip: requirements=${project_root}/django-verdant/requirements.txt virtualenv=${django_root}/virtualenvs/${project_name} virtualenv_site_packages=no
 #    ## Note that unusually this project root is within the django-verdant subdirectory
 #
+
+#    ## Note that workon is now installed as a bash extension in Debian 7
   - name: Set up workon path for the deployment user
     sudo_user: ${project_name}
     lineinfile: dest=/home/${project_name}/.bashrc regexp="^export WORKON_HOME" line="export WORKON_HOME=${django_root}/virtualenvs"
-#    ## Note that workon is now installed as a bash extension in Debian 7
 
   - name: Create local settings file from template
     template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/django-verdant/verdant/settings/local.py owner=${project_name} group=djangoapps
@@ -47,4 +48,12 @@
       pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
       virtualenv=${django_root}/virtualenvs/${project_name}
 
+  - name: Run mirgrations
+    sudo_user: ${project_name}
+    django_manage: 
+      command=migrate
+      app_path=${django_root}/${project_name}/django-verdant
+      settings='verdant.settings.production'
+      pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
+      virtualenv=${django_root}/virtualenvs/${project_name}
 
