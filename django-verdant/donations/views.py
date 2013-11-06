@@ -11,9 +11,7 @@ from donations.forms import DonationForm
 from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
 
-
-stripe.api_key = settings.STRIPE_SECRET_KEY
-
+# stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # def donation(request):
 #     if request.method == "GET":
@@ -49,6 +47,8 @@ stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def export(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
     def unique(seq, idfun=None):
         # order preserving
         if idfun is None:
