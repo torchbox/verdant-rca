@@ -1241,5 +1241,30 @@ footer {
     }
 }
 
+.search-results {
+    ul {
+        background-color: @color-white; /* fallback for ie8 */
+        background-color: fade(@color-white, 75%);
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        margin: 0;
+        border-bottom: 1px solid @color-medium-grey;
+        padding: @spacing-one 0;
+        margin: 0 10px;
+        &:last-child {
+            border: none;
+        }
+        h3 {
+            .bc4;
+            margin: 0;
+        }
+        span {
+            .a2;
+        }
+    }
+}
+
 @import "modules.less";
 @import "dlmenu.less";
