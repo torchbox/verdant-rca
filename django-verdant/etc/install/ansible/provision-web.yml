@@ -1,5 +1,5 @@
 ---
-- hosts: production-web
+- hosts: web
   user: ${user} 
   vars_files:
     - vars.yml
@@ -23,8 +23,9 @@
     user: name=${project_name} generate_ssh_key=yes ssh_key_bits=2048
 
   - name: Show SSH public key
-    command: /bin/cat /home/${project_name}/.ssh/id_rsa.pub
+    shell: /bin/cat /home/${project_name}/.ssh/id_rsa.pub
 
+  # Install dependencies from apt and pip
   - name: Install the required system packages
     apt: pkg=${item} state=installed update-cache=yes
     with_items: ${web_packages}
@@ -33,6 +34,7 @@
     pip: name=${item} state=present use_mirrors=no
     with_items: ${python_packages}
 
+  # Install npm from nodejs source
   - include: nodejs.yml
  
   - name: Copy the nginx vhost 
@@ -40,9 +42,6 @@
     notify:
     - restart nginx
 
-  - name: Copy my public key for SSH as the deployment user
-    authorized_key: user=${project_name} key="{{ lookup('file', '/home/stewart/.ssh/id_rsa.pub') }}" manage_dir=no
-  
   - name: Copy the git known_hosts keys to globally
     copy: src=files/keys/known_hosts dest=/etc/ssh/ssh_known_hosts owner=root group=root mode=0644 backup=yes
 
