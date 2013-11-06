@@ -244,8 +244,7 @@ VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 # import socket
 # CELERY_HOSTNAME = socket.gethostname()
 
-# remove this line to use rabbitmq
-BROKER_URL = 'django://'
+BROKER_URL = 'redis://'
 
 CELERY_SEND_TASK_ERROR_EMAILS = True
 

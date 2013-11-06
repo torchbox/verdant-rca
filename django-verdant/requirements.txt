@@ -18,6 +18,7 @@ html2text==3.200.3
 django-debug-toolbar-template-timings==0.5.1
 django-celery==2.5.5
 celery==2.5.3
+celery-with-redis==2.5
 kombu==2.1.8
 tweepy==2.1
 simplejson==3.3.1
