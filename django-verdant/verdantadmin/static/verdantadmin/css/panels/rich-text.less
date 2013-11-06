@@ -77,6 +77,7 @@
         line-height: 1.2em;
         padding-top:0.5em;
         border-top:1px solid #CCC;
+	clear:both
     }
     h3 {
         font-size: 1.7em;
@@ -92,6 +93,12 @@
         line-height: 1.278em;
     }
 
+    hr {
+        border-bottom: 1px solid #ccc;
+        border-top: none;
+	border-left: none;
+    }
+
     /*
     These styles correspond to the image formats defined in verdantimages/formats.py,
     so that images displayed in the rich text field receive more or less the same
@@ -102,14 +109,14 @@
     */
 
     .bodytext-image {
-        margin-top: 16px;
+        margin-top: 3px; /* close as possible to match line-height space above p */
         img {
             width:100%;
         }
         figcaption {
             display: block;
             width: 100%;
-            text-align: right;
+            text-align: left;
             margin-top: 16px;
             margin-bottom: 16px;
         }

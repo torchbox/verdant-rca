@@ -71,6 +71,20 @@ function showSearchSubmit() {
     });
 }
 
+/* search autocomplete */
+function showSearchAutocomplete() {
+    $("input#search_box").autocomplete({
+        source: function(request, response) {
+            $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+                response(data);
+            })
+        },
+        select: function( event, ui ) { 
+            window.location.href = ui.item.url;
+        }
+    });
+}
+
 /*google maps for contact page */
 function initializeMaps() {
     var mapCanvas = document.getElementById('map_canvas_kensington');
@@ -137,14 +151,15 @@ function post(frame, action, value) {
 
 $(function(){
     showSearchSubmit();
+    showSearchAutocomplete();
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
     showHideDialogue();
-    showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
-    
+    showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
+    showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -153,11 +168,6 @@ $(function(){
             $(this).html('hide');
         }
     });
-
-    /* start any bxslider carousels not found within a tab  */
-    $('.carousel:not(.tab-pane .carousel)').each(function(){
-        applyCarousel($(this));
-    })
 
     /* tabs */
     //apply active class in correct place and add tab links
@@ -173,6 +183,21 @@ $(function(){
     $('.tab-content .header a').each(function(index){
         $(this).attr('href', "#tab" + (index+1));
     });
+
+    /* start any bxslider carousels not found within a tab  */
+    $('.carousel:not(.tab-pane .carousel)').each(function(){
+        applyCarousel($(this));
+    })
+
+    /* check if there's a carousel in the first tab and start it if so */
+    $('.tab-content #tab1 .carousel').each(function(){
+        applyCarousel($(this));
+    })
+
+    //if there is a carousel in the first tab set the data carousel=true so it only executes once
+    $('.tab-nav a[href="#tab1"]').each(function(){
+        $(this).data('carousel', true);
+    })
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault()

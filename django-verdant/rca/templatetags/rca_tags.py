@@ -20,7 +20,7 @@ def upcoming_events(context, exclude=None, count=3):
     }
 
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
-def news_carousel(context, area="", programme="", school="", count=6):
+def news_carousel(context, area="", programme="", school="", count=5):
     if area:
         news_items = NewsItem.objects.filter(live=True, area=area)[:count]
     elif programme:
@@ -34,16 +34,18 @@ def news_carousel(context, area="", programme="", school="", count=6):
     return {
         'news_items': news_items,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'news_index_url': context['global_news_index_url'],
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", events_index_url="/events/"):
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area=""):
+    events = EventItem.future_objects.all()
     if school:
-        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
+        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     elif area:
-        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
+        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -55,7 +57,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         'school': school,
         'programme': programme,
         'area': area,
-        'events_index_url': events_index_url,
+        'events_index_url': context['global_events_index_url'],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -199,6 +201,10 @@ def homepage_packery(context, news_count=5, staff_count=5, student_count=5, twee
 def sidebar_links(context, calling_page=None):
     if calling_page:
         pages = calling_page.get_children().filter(live=True, show_in_menus=True)
+
+        # If no children, get siblings instead
+        if len(pages) == 0:
+            pages = calling_page.get_siblings().filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag

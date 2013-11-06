@@ -48,6 +48,9 @@ $(function(){
 
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
+
+        // Stop event propagating so the "close all dropdowns on body clicks" code (below) doesn't immediately close the dropdown
+        return false;
     });
 
     /* close all dropdowns on body clicks */

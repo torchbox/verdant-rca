@@ -24,7 +24,7 @@
                     {% endif %}
                 </div>
             </a>
-            <div class="content bc1{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_school.title }}</strong>
                 {{ self.head_of_school_statement|richtext }}
                 {% if self.head_of_school_link %}
@@ -53,7 +53,7 @@
                 </div>
             </a>
 
-            <div class="content bc1{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_research.title }}</strong>
                 {{ self.head_of_research_statement|richtext }}
                 {% if self.head_of_research_link %}
@@ -70,7 +70,7 @@
     {% news_carousel school=self.school %}
 
     <!-- events -->
-    {% upcoming_events_related school=self.school display_name=self.get_school_display events_index_url=global_events_index_url %}
+    {% upcoming_events_related school=self.school display_name=self.get_school_display %}
 
 	{% include "rca/includes/modules/contact.html" %}	
     
