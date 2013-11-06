@@ -1,3 +1,6 @@
+/* mini plugin to allow reversing an array see http://stackoverflow.com/questions/1394020/jquery-each-backwards */
+jQuery.fn.reverse = [].reverse;
+
 var breakpoints = {
     mobile: "screen and (max-width:768px)",
     desktopSmall: "screen and (min-width:768px)",
@@ -67,7 +70,24 @@ function showSearchSubmit() {
        $('form.search input[type="submit"]').show(); 
     });
     $('form.search input[type="text"]').focusout(function() {
-       $('form.search input[type="submit"]').hide(); 
+       // I've commented out this code as it makes the button disappear
+       // when you click it causing the search form to not be submitted!
+
+       //$('form.search input[type="submit"]').hide();
+    });
+}
+
+/* search autocomplete */
+function showSearchAutocomplete() {
+    $("input#search_box").autocomplete({
+        source: function(request, response) {
+            $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+                response(data);
+            })
+        },
+        select: function( event, ui ) { 
+            window.location.href = ui.item.url;
+        }
     });
 }
 
@@ -137,6 +157,7 @@ function post(frame, action, value) {
 
 $(function(){
     showSearchSubmit();
+    showSearchAutocomplete();
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
@@ -154,11 +175,6 @@ $(function(){
         }
     });
 
-    /* start any bxslider carousels not found within a tab  */
-    $('.carousel:not(.tab-pane .carousel)').each(function(){
-        applyCarousel($(this));
-    })
-
     /* tabs */
     //apply active class in correct place and add tab links
     $('.tab-nav li:first-child').addClass('active');
@@ -172,6 +188,20 @@ $(function(){
     });
     $('.tab-content .header a').each(function(index){
         $(this).attr('href', "#tab" + (index+1));
+    });
+
+    /* start any bxslider carousels not found within a tab  */
+    $('.carousel:not(.tab-pane .carousel)').each(function(){
+        applyCarousel($(this));
+    });
+
+    /* check if there's a carousel in the first tab and start it if so */
+    /* also find the associated nav element and set carousel=true so it only executes once */
+    $('.tab-content #tab1 .carousel').each(function(){
+        applyCarousel($(this));
+        $(this).closest('.tab-content').siblings('.tab-nav').find('a[href="#tab1"]').each(function(){
+            $(this).data('carousel', true);
+        });
     });
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
@@ -220,6 +250,12 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });
@@ -283,6 +319,7 @@ $(function(){
         var items = $('> li', ul);
         var step = 100
         var hiddenClasses = 'hidden fade-in-before';
+        var contractedHeight = items.first().height();
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
@@ -313,8 +350,20 @@ $(function(){
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
-            itemContainer.removeAttr('style');
-            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+            itemContainer.animate({height:contractedHeight}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+                newItems.addClass('hidden');
+            });
+
+            // Fade out each item one by one
+            var time = 0;
+            newItems.reverse().each(function(index){
+                var $item = $(this);
+                setTimeout( function(){ 
+                    $item.removeClass('fade-in-after').addClass('fade-in-before');
+                }, time);
+                time += step;
+            });
         }
 
         // prepare the items already in the page (if non-inifinite-scroll)

@@ -32,6 +32,7 @@
  * Five block
  * five plus/six-plus block
  * Speakers
+ * Events middle column body text
  * Tabbed content
  * Stats block
  * Button bar
@@ -59,9 +60,11 @@
 
 @carousel-image-height: 500px;
 
-.bx-wrapper .bx-viewport {
-    background-color:darken(@color-pale-grey, 10%);
+/* carousels in tabs have a background colour, others are transparent */
+.tab-content .bx-wrapper .bx-viewport {
+    background-color: #F4F4F4;
 }
+
 .bx-wrapper {
     overflow: hidden;
     margin-bottom:0;
@@ -186,6 +189,11 @@
             display: block;
         }
     }
+}
+
+/* Hide pager for carousels with only one item */
+.single-carousel .bx-wrapper .bx-pager {
+    display: none;
 }
 
 /**
@@ -329,7 +337,7 @@
         }
     &.borders {
         .share-wrapper {
-            border-top: 1px solid @color-medium-grey;
+            border-top: 1px solid @color-middle-column-lines;
             padding: @spacing-one 0;
             margin-bottom: @spacing-one;
         }
@@ -494,6 +502,10 @@
 
         .bc4{
             font-size:0.8em;
+        }
+
+        p {
+            display:inline;
         }
 
         &.flushleft {
@@ -748,6 +760,18 @@
 }
 
 /**
+ *$events middle column body text
+ */
+
+.events-middle-column-body-text {
+    margin-left: 0;
+    margin-top: @spacing-half;
+    .column(11);
+    padding-left:0;
+    padding-right:0;
+}
+
+/**
  * $Styles used to prepare a group of items for appearance with the + button
  */
 .x-plus{
@@ -885,6 +909,15 @@
     .col {
         .column(12, @grid-gutter-width, 12);
     }
+    li {
+        -ms-word-break: break-all;
+        word-break: break-all;
+        /* Non standard for webkit */
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+    }
 }
 
 
@@ -983,6 +1016,11 @@
             margin-bottom: 0;
         }
     }
+
+}
+/* Alternative for author field on review page */
+.meta-data.review {
+    border:0;
 }
 
 /**
@@ -1049,6 +1087,7 @@
         padding-top: @spacing-one;
         border-top: 1px solid @color-dark-grey;
         margin-top: @spacing-two;
+        clear: both;
     }
 
     h3 {
@@ -1064,6 +1103,23 @@
         line-height: @line-height-3;
         text-transform: none;
         font-weight: normal;
+    }
+
+    hr {
+        border-bottom: 1px solid @color-dark-grey;
+        border-top: none;
+        border-left: none;
+    }
+
+    /* different colour lines for middle-column body text */
+    &.middle-column-body-text {
+        hr {
+            border-bottom-color: @color-middle-column-lines;
+        }
+
+        h2 {
+            border-top-color: @color-middle-column-lines;
+        }
     }
 
 }
@@ -1331,11 +1387,11 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-two;
+    margin-top: 3px; /* close as possible to match line-height space above p */
     figcaption {
         display: block;
         width: 100%;
-        text-align: right;
+        text-align: left;
         margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
@@ -1349,7 +1405,7 @@
  */
 
 .quotation {
-    border-top: 1px solid @color-medium-grey;
+    border-top: 1px solid @color-middle-column-lines;
     padding-top: @spacing-one;
     margin: 0;
     padding-right: @spacing-three;

@@ -1,6 +1,6 @@
-
 {% extends "rca/base.html" %}
 {% load rich_text image_tags %}
+{% load rca_tags %}
 
 {% block body_class %}
     type-event
@@ -19,7 +19,7 @@
                 	<h3 class="h5">
 						{{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
 						{% if date.time_from %} &#124;
-							<span>{{ date.time_from }}{% if date.time_to %} - {{ date.time_to }}{% endif %}</span>
+							<span>{{ date.time_from|time_display }}{% if date.time_to %} - {{ date.time_to|time_display }}{% endif %}</span>
 						{% endif %}
 					</h3>
 				{% endfor %}
@@ -86,7 +86,8 @@
 		</section>
 			
 	</section>
-
+	
+	{% include "rca/includes/modules/contact.html" %}
 	{% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 

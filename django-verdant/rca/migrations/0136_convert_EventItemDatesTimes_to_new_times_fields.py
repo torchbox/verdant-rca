@@ -38,7 +38,8 @@ class Migration(DataMigration):
 
                 return datetime.time(hour=hour, minute=minute)
             else:
-                raise RuntimeError("Failed to understand time: " + time_string)
+                print "WARNING: Failed to understand time: " + time_string
+                return None
 
         # Loop through event time objects and convert times
         for time in orm['rca.EventItemDatesTimes'].objects.all():

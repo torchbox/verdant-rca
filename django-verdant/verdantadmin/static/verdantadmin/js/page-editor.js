@@ -105,8 +105,15 @@ function initTimeChooser(id) {
     });
 }
 
+function initTagField(id, autocompleteUrl) {
+    $('#' + id).tagit({
+        autocomplete: {source: autocompleteUrl}
+    });
+}
+
 $(function() {
     initDateChoosers();
+    initTimeChoosers();
     $('.richtext [contenteditable="false"]').each(function() {
         insertRichTextDeleteControl(this);
     });

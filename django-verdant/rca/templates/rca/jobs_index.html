@@ -10,9 +10,9 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	{% if self.intro %}
-		<div class="content bc3">{{ self.intro|richtext }}</div>
-	{% endif %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.body %}
+    </section>
 
     {% jobs_listing %}
 

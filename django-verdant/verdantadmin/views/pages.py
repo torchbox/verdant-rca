@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -9,18 +10,30 @@ from treebeard.exceptions import InvalidMoveToDescendant
 
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
+from verdantadmin.forms import SearchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required
 def index(request, parent_page_id=None):
-
     if parent_page_id:
         parent_page = get_object_or_404(Page, id=parent_page_id)
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children().order_by('title')
+    pages = parent_page.get_children()
+
+    # Get page ordering
+    if 'ordering' in request.GET:
+        ordering = request.GET['ordering']
+
+        if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
+            pages = pages.order_by(ordering)
+    else:
+        ordering = None
+
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
+        'ordering': ordering,
         'pages': pages,
     })
 
@@ -115,6 +128,14 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
 
+        # Stick an extra validator into the form to make sure that the slug is not already in use
+        def clean_slug(slug):
+            # Make sure the slug isn't already in use
+            if parent_page.get_children().filter(slug=slug).count() > 0:
+                raise ValidationError("This slug is already in use")
+            return slug
+        form.fields['slug'].clean = clean_slug
+
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
@@ -188,6 +209,37 @@ def edit(request, page_id):
         'page': page,
         'edit_handler': edit_handler,
     })
+
+@login_required
+def reorder(request, parent_page_id=None):
+    if parent_page_id:
+        parent_page = get_object_or_404(Page, id=parent_page_id)
+    else:
+        parent_page = Page.get_first_root_node()
+
+    pages = parent_page.get_children()
+
+    if request.POST:
+        try:
+            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
+        except:
+            # Invalid
+            messages.error(request, "Could not reorder (invalid request)")
+            return redirect('verdantadmin_pages_reorder', parent_page_id)
+
+        # Reorder
+        for page in pages_ordered:
+            page.move(parent_page, pos='last-child')
+
+        # Success message
+        messages.success(request, "Pages reordered successfully")
+
+        return redirect('verdantadmin_explore', parent_page_id)
+    else:
+        return render(request, 'verdantadmin/pages/reorder.html', {
+            'parent_page': parent_page,
+            'pages': pages,
+        })
 
 @login_required
 def delete(request, page_id):
@@ -356,3 +408,44 @@ def get_page_edit_handler(page_class):
         ])
 
     return PAGE_EDIT_HANDLERS[page_class]
+
+
+@login_required
+def search(request):
+    pages = []
+    q = None
+    is_searching = False
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+            # page number
+            p = request.GET.get("p", 1)
+            is_searching = True
+            pages = Page.title_search_backend(q, prefetch_related=['content_type'])
+
+            # Pagination
+            paginator = Paginator(pages, 20)
+            try:
+                pages =  paginator.page(p)
+            except PageNotAnInteger:
+                pages =  paginator.page(1)
+            except EmptyPage:
+                pages =  paginator.page(paginator.num_pages)
+    else:
+        form = SearchForm()
+
+    if request.is_ajax():
+        return render(request, "verdantadmin/pages/search_results.html", {
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
+    else:
+        return render(request, "verdantadmin/pages/search.html", {
+            'form': form,
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })

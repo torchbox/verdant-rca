@@ -1,0 +1,32 @@
+
+
+/*
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/redmond/jquery-ui.css" type="text/css" media="all" />
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+*/
+
+
+.date-range {
+  font-size: 1.1em;
+  line-height: 2.4;
+  margin-right: 8px;
+}
+
+#dateRange {
+  background: #F7F7F7;
+  border: 1px solid #E4E5E4;
+  color: #444;
+  border-radius: 5px;
+  height: 15px;
+  padding: 8px 6px;
+  font-size: 12px;
+  width: 172px;
+  margin-bottom: 15px;
+  transition: background-color 0.5s ease;
+}
+
+#dateRange:hover {
+  background: #FDFDFD;
+  border: 1px solid #E2E2E2;
+  cursor: pointer;
+}

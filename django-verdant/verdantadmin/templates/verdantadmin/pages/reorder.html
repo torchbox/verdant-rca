@@ -1,0 +1,60 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block bodyclass %}page-reorder{% endblock %}
+
+{% block content %}
+    <header class="merged">
+        <h1>Reordering: <span>{{ parent_page.title }}</span></h1>
+    </header>
+
+    <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+        {% csrf_token %}
+        <input type='hidden' name='order' id='order'>
+
+        <div class="nice-padding">
+            <ul id="sortable">
+             {% for page in pages %}
+                <li id="page_{{ page.id }}"><h2>{{ page }}</h2></li>
+             {% endfor %}
+            </ul>
+        </div>
+    
+        <footer>
+            <ul>
+                <li class="actions">
+                    <input type="submit" value="Save Changes" class="button" />
+                </li>
+            </ul>
+        </footer>
+    </form>
+{% endblock %}
+
+{% block extra_css %}
+    {% include "verdantadmin/pages/_css.html" %}
+
+    <style type="text/css">
+        #sortable li {
+            padding: 10px;
+            background-color: #FFF;
+            border: 1px solid #777;
+            margin: 5px;
+            cursor: pointer;
+            max-width: 300px;
+        }
+    </style>
+{% endblock %}
+{% block extra_js %}
+    {% include "verdantadmin/pages/_js.html" %}
+
+    <script type="text/javascript">
+        $(function() {
+            $('#sortable').sortable({cursor: 'move'});
+            $('#sortable').disableSelection();
+
+            $('#page-reorder-form').submit(function() {
+                $('#order').val($('#sortable').sortable('toArray'));
+                return true;
+            });
+        })
+    </script>
+{% endblock %}
