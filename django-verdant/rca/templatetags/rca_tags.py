@@ -432,3 +432,15 @@ def time_display(time):
 
     # Join and return
     return "".join([hour_string, minute_string, pm_string])
+
+
+@register.filter
+def search_content_type(result):
+    model = result.content_type.model_class()
+    if hasattr(model, "search_name"):
+        if model.search_name is None:
+            return ""
+        else:
+            return model.search_name
+    else:
+        return model.__name__

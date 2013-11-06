@@ -1,29 +1,25 @@
 {% extends "rca/base.html" %}
-{% load rich_text image_tags %}
 
 {% block body_class %}
     type-standard
 {% endblock %}
 
 {% block content %}
-    <h1 class="h1">Search{% if do_search %} Results{% endif %}</h1>
-    {% include "rca/includes/modules/strapline.html" %}
-    {% include "rca/includes/modules/carousel.html" %}
-    <section class="row">
+  <h1 class="h1">Search</h1>
+  <div class="search-results">
+    {% if search_results %}
+      <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }}.</h2>
+      <h4>Showing results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
 
-      {% if do_search %}
-        <ul>
-          {% for result in search_results %}
-            <li><a href="{{ result.specific.url }}">{{ result.specific }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-
-      <div class="single borders">
-        {% include "rca/includes/modules/share-button.html" %}
+      <div id="listing">
+          {% include "rca/includes/search_listing.html" %}
       </div>
-    </section>
-    {% include "rca/includes/modules/twitter-feed.html" %}
+    {% else %}
+      <h2>No results found.</h2>
+    {% endif %}
+  </div>
+  
+  {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 
 {% block sidebar %}

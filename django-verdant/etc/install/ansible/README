@@ -1,0 +1,10 @@
+# Deployment
+
+## Create a production hosts file
+## Run the deployment scripts in order
+
+ansible-playbook -i production provison-web.yml
+ansible-playbook -i production provison-db.yml
+ansible-playbook -i production initial-deploy.yml
+
+
