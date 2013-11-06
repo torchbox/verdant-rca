@@ -7,10 +7,11 @@ import string
 
 
 class SearchResults(object):
-    def __init__(self, model, query):
+    def __init__(self, model, query, prefetch_related=[]):
         self.model = model
         self.query = query
         self.count = query.count()
+        self.prefetch_related = prefetch_related
 
     def __getitem__(self, key):
         if isinstance(key, slice):
@@ -19,6 +20,10 @@ class SearchResults(object):
 
             # Get results
             results = self.model.objects.filter(pk__in=pk_list)
+
+            # Prefetch related
+            for prefetch in self.prefetch_related:
+                results = results.prefetch_related(prefetch)
 
             # Put results into a dictionary (using primary key as the key)
             results_dict = {str(result.pk): result for result in results}
@@ -173,7 +178,7 @@ class Search(object):
         except ElasticHttpNotFoundError:
             pass # Document doesn't exist, ignore this exception
 
-    def search(self, query_string, model, fields=None, filters={}):
+    def search(self, query_string, model, fields=None, filters={}, prefetch_related=[]):
         # Model must be a descendant of Indexed and be a django model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
             return None
@@ -204,4 +209,4 @@ class Search(object):
             query = query.filter(**filters)
 
         # Return search results
-        return SearchResults(model, query)
+        return SearchResults(model, query, prefetch_related=prefetch_related)

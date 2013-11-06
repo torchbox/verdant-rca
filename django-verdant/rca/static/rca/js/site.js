@@ -1,3 +1,6 @@
+/* mini plugin to allow reversing an array see http://stackoverflow.com/questions/1394020/jquery-each-backwards */
+jQuery.fn.reverse = [].reverse;
+
 var breakpoints = {
     mobile: "screen and (max-width:768px)",
     desktopSmall: "screen and (min-width:768px)",
@@ -307,6 +310,7 @@ $(function(){
         var items = $('> li', ul);
         var step = 100
         var hiddenClasses = 'hidden fade-in-before';
+        var contractedHeight = items.first().height();
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
@@ -337,8 +341,20 @@ $(function(){
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
-            itemContainer.removeAttr('style');
-            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+            itemContainer.animate({height:contractedHeight}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+                newItems.addClass('hidden');
+            });
+
+            // Fade out each item one by one
+            var time = 0;
+            newItems.reverse().each(function(index){
+                var $item = $(this);
+                setTimeout( function(){ 
+                    $item.removeClass('fade-in-after').addClass('fade-in-before');
+                }, time);
+                time += step;
+            });
         }
 
         // prepare the items already in the page (if non-inifinite-scroll)
