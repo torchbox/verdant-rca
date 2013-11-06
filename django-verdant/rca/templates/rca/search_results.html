@@ -7,7 +7,7 @@
 {% block content %}
   <h1 class="h1">Search</h1>
   {% if search_results %}
-    <h2>Found {{ search_results.paginator.count }} results.</h2>
+    <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }}.</h2>
 
     <div id="listing">
         {% include "rca/includes/search_listing.html" %}
