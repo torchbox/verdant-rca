@@ -49,7 +49,7 @@ class Indexed(object):
         if parent:
             # Add parent fields into this list
             parent_indexed_fields = parent.indexed_get_indexed_fields()
-            indexed_fields = dict(indexed_fields.items() + parent_indexed_fields.items())
+            indexed_fields = dict(parent_indexed_fields.items() + indexed_fields.items())
         return indexed_fields
 
     def indexed_get_document_id(self):
