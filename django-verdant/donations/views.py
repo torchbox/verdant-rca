@@ -8,11 +8,11 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from donations.forms import DonationForm
-from donations.settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
+from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
 
 
-stripe.api_key = STRIPE_SECRET_KEY
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 # def donation(request):
@@ -44,7 +44,7 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 #     return render(request, 'donations/donation.html', {
 #         'form': form,
-#         'STRIPE_PUBLISHABLE_KEY': STRIPE_PUBLISHABLE_KEY,
+#         'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
 #     })
 
 
@@ -111,7 +111,7 @@ def export(request):
                         charge['%s__%s' % (field, key)] = value
 
         # remove unused fields
-        for field in ['metadata', 'previous_metadata', 'description', 'card']:
+        for field in ['metadata', 'previous_metadata', 'card']:
             if field in charge:
                 del charge[field]
 
