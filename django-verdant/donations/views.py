@@ -1,8 +1,8 @@
-import datetime
+from decimal import Decimal
+from datetime import date, datetime, timedelta
 import csv
 import simplejson
 import stripe
-from decimal import Decimal
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -67,15 +67,20 @@ def export(request):
             result.append(item)
         return result
 
-    # TODO: parse dates from query params
-    offset = request.POST.get("offset", 0)
-    delimiter = request.POST.get("delimiter", ",")
-    count = request.POST.get("count", 100)
-    date_from = request.POST.get("date_from", datetime.datetime.now() - datetime.timedelta(days=1))
-    date_to = request.POST.get("date_to", datetime.datetime.now())
+    offset = request.REQUEST.get("offset", 0)
+    delimiter = request.REQUEST.get("delimiter", ",")
+    count = request.REQUEST.get("count", 100)
+    date_from = request.REQUEST.get("date_from")
+    date_to = request.REQUEST.get("date_to")
+
+    # parse dates or use the current day by default
+    date_from = date.today() if not date_from else datetime.strptime(date_from, '%Y-%m-%d').date()
+    date_to = date.today() if not date_to else datetime.strptime(date_to, '%Y-%m-%d').date()
+
+    # and add one day to date_to so that it covers the whole day when converted to seconds
     created = {
         "gte": date_from.strftime("%s"),
-        "lte": date_to.strftime("%s"),
+        "lte": (date_to + timedelta(days=1)).strftime("%s"),
     }
 
     all_charges = []
