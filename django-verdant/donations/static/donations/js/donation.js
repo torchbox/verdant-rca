@@ -23,7 +23,7 @@ jQuery(function($) {
     }
 
     function scrollUp(){
-      $(document.body).animate({
+      $("html, body").animate({  // need to use "html,body" because of IE10
         scrollTop: $(".messages").show().offset().top - $(".nav-wrapper").height() - 5
       }, 500);
     }
@@ -35,7 +35,7 @@ jQuery(function($) {
         // Show the errors on the form
         $(".errorlist").append($("<li/>").addClass("error-message").text(response.error.message));
         scrollUp();
-        $form.find('button').prop('disabled', false);
+        $form.removeClass("loading").find('button').prop('disabled', false);
       } else {
         // token contains id, last4, and card type
         var token = response.id;
@@ -69,19 +69,28 @@ jQuery(function($) {
   $('#payment-form').submit(function(e) {
     var $form = $(this);
 
+    var scroll = window.scrollY;
+    $(".error-message", $form).map(function(){
+        scroll -= $(this).outerHeight();
+        scroll -= 2;
+    });
     $(".error-message", $form).remove();
     $(".error", $form).removeClass("error");
+    $(window).scrollTop(scroll);
 
     var error = false;
 
-    var ccNum = $('[data-stripe="number"]').val(),
+    var amount = $('[name="amount"]').val(),
+        ccNum = $('[data-stripe="number"]').val(),
         cvcNum = $('[data-stripe="cvc"]').val(),
         expMonth = $('[data-stripe="exp-month"]').val(),
         expYear = $('[data-stripe="exp-year"]').val();
 
+    $('[name="amount"]').val(amount.replace(/\.$/, ""));
+
     if (!Stripe.validateCVC(cvcNum)) {
         error = true;
-        fieldError('[data-stripe="cvc"]', 'The CVC number appears to be invalid.');
+        fieldError('[data-stripe="cvc"]', cvcNum ? 'The CVC number appears to be invalid.' : 'This field is required.');
     }
     if (!Stripe.validateExpiry(expMonth, expYear)) {
         error = true;
@@ -89,7 +98,11 @@ jQuery(function($) {
     }
     if (!Stripe.validateCardNumber(ccNum)) {
         error = true;
-        fieldError('[data-stripe="number"]', 'The credit card number appears to be invalid.');
+        fieldError('[data-stripe="number"]', ccNum ? 'The credit card number appears to be invalid.' : 'This field is required.');
+    }
+    if (!/\d+(\.\d+)?/.test(amount)) {
+        error = true;
+        fieldError('[name="amount"]', amount ? 'The amount specified appears to be invalid.'  : 'This field is required.');
     }
     if(error){
         scrollUp();
@@ -101,7 +114,7 @@ jQuery(function($) {
 
 
     // Disable the submit button to prevent repeated clicks
-    $form.find('button').prop('disabled', true);
+    $form.addClass("loading").find('button').prop('disabled', true);
     var name = "";
     var title = $form.find("[name=title]").val();
     var first_name = $form.find("[name=first_name]").val();
