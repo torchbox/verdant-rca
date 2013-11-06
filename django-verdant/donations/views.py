@@ -133,7 +133,7 @@ def export(request):
 
     # create response
     response = HttpResponse(content_type='text/csv')
-    filename = 'rca-donations-%s--%s.csv' % (date_from.strftime("%Y-%m-%d-%H:%M"), date_to.strftime("%Y-%m-%d-%H:%M"))
+    filename = 'rca-donations-%s--%s.csv' % (date_from.strftime("%Y-%m-%d"), date_to.strftime("%Y-%m-%d"))
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     # write header
