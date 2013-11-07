@@ -4,7 +4,7 @@ function(modal) {
         return false;
     });
 
-    {% include 'verdantadmin/choose_page/_search_behaviour.js' %}
+    {% include 'verdantadmin/chooser/_search_behaviour.js' %}
 
     $('a.choose-page', modal.body).click(function() {
         var pageData = $(this).data();

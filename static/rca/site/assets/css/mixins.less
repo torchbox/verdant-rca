@@ -26,6 +26,14 @@
     transition: @transition;
 }
 
+.filter(@filter){
+    -webkit-filter: @filter;
+    filter: @filter;
+    -moz-filter: @filter;
+    -o-filter: @filter;
+    -ms-filter: @filter;
+}
+
 .visuallyhidden() {
     border: 0;
     clip: rect(0 0 0 0);
@@ -178,34 +186,12 @@
     .image{
         margin-bottom:@grid-gutter-width/2;
         position:relative;
-        overflow:hidden;
-        &:after {
-            background: @color-black;
-            content: "";
-            display: block;
-            height: 100%;
-            left: 0;
-            opacity: 0;
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; /* this needs to work cross browser so the images don't go completely black on hover in ie */
-            position: absolute;
-            top: 0;
-            width: 100%;
-        }
-        &:hover:after {
-            opacity: 0.3;
-            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)"; /* this needs to work cross browser so the images don't go completely black on hover in ie */
-            .transition(opacity 0.5s ease);
-        }
         img{
             display:block;
-            /*&:hover {
-                -webkit-filter: brightness(0.7); // slightly nicer way to do the hover effect on images but doesn't work in ff
-                filter: brightness(0.7);
-                -moz-filter: brightness(0.7);
-                -o-filter: brightness(0.7);
-                -ms-filter: brightness(0.7);
+            &:hover {
+                .filter(brightness(0.7)); //nb doesn't work in firefox
                 .transition(all 0.5s ease);
-            }*/
+            }
         }
     }
 
