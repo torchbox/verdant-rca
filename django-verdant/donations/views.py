@@ -1,19 +1,17 @@
-import datetime
+from decimal import Decimal
+from datetime import date, datetime, timedelta
 import csv
 import simplejson
 import stripe
-from decimal import Decimal
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from donations.forms import DonationForm
-from donations.settings import STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY
+from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
 
-
-stripe.api_key = STRIPE_SECRET_KEY
-
+# stripe.api_key = settings.STRIPE_SECRET_KEY
 
 # def donation(request):
 #     if request.method == "GET":
@@ -44,11 +42,13 @@ stripe.api_key = STRIPE_SECRET_KEY
 
 #     return render(request, 'donations/donation.html', {
 #         'form': form,
-#         'STRIPE_PUBLISHABLE_KEY': STRIPE_PUBLISHABLE_KEY,
+#         'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
 #     })
 
 
 def export(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+
     def unique(seq, idfun=None):
         # order preserving
         if idfun is None:
@@ -67,15 +67,20 @@ def export(request):
             result.append(item)
         return result
 
-    # TODO: parse dates from query params
-    offset = request.POST.get("offset", 0)
-    delimiter = request.POST.get("delimiter", ",")
-    count = request.POST.get("count", 100)
-    date_from = request.POST.get("date_from", datetime.datetime.now() - datetime.timedelta(days=1))
-    date_to = request.POST.get("date_to", datetime.datetime.now())
+    offset = request.REQUEST.get("offset", 0)
+    delimiter = request.REQUEST.get("delimiter", ",")
+    count = request.REQUEST.get("count", 100)
+    date_from = request.REQUEST.get("date_from")
+    date_to = request.REQUEST.get("date_to")
+
+    # parse dates or use the current day by default
+    date_from = date.today() if not date_from else datetime.strptime(date_from, '%Y-%m-%d').date()
+    date_to = date.today() if not date_to else datetime.strptime(date_to, '%Y-%m-%d').date()
+
+    # and add one day to date_to so that it covers the whole day when converted to seconds
     created = {
         "gte": date_from.strftime("%s"),
-        "lte": date_to.strftime("%s"),
+        "lte": (date_to + timedelta(days=1)).strftime("%s"),
     }
 
     all_charges = []
@@ -111,7 +116,7 @@ def export(request):
                         charge['%s__%s' % (field, key)] = value
 
         # remove unused fields
-        for field in ['metadata', 'previous_metadata', 'description', 'card']:
+        for field in ['metadata', 'previous_metadata', 'card']:
             if field in charge:
                 del charge[field]
 
@@ -128,7 +133,7 @@ def export(request):
 
     # create response
     response = HttpResponse(content_type='text/csv')
-    filename = 'rca-donations-%s--%s.csv' % (date_from.strftime("%Y-%m-%d-%H:%M"), date_to.strftime("%Y-%m-%d-%H:%M"))
+    filename = 'rca-donations-%s--%s.csv' % (date_from.strftime("%Y-%m-%d"), date_to.strftime("%Y-%m-%d"))
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
 
     # write header

@@ -160,7 +160,9 @@ class Filter(models.Model):
 
         # generate new filename derived from old one, inserting the filter spec string before the extension
         input_filename_parts = os.path.basename(input_file.name).split('.')
-        output_filename_parts = input_filename_parts[:-1] + [self.spec] + input_filename_parts[-1:]
+        filename_without_extension = '.'.join(input_filename_parts[:-1])
+        filename_without_extension = filename_without_extension[:60]  # trim filename base so that we're well under 100 chars
+        output_filename_parts = [filename_without_extension, self.spec] + input_filename_parts[-1:]
         output_filename = '.'.join(output_filename_parts)
 
         output_file = File(output, name=output_filename)

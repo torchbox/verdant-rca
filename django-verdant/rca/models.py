@@ -26,7 +26,6 @@ from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from donations.forms import DonationForm
-import simplejson
 import stripe
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -42,7 +41,7 @@ class RcaImage(AbstractImage):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
 
-    indexed_fields = ('title', 'creator', 'photographer')
+    indexed_fields = ('creator', 'photographer')
 
     @property
     def default_alt_text(self):
@@ -1146,8 +1145,8 @@ class EventItem(Page, SocialFields):
 
                     for day in range(days):
                         # Get times
-                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from_new)
-                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to_new)
+                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from)
+                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to)
 
                         # Get location
                         if self.location == "other":
@@ -1357,6 +1356,76 @@ EventIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
+# == Reviews index ==
+
+
+class ReviewsIndexAd(Orderable):
+    page = ParentalKey('rca.ReviewsIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ReviewsIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
+
+    def serve(self, request):
+        reviews = ReviewPage.objects.filter(live=True)
+
+        reviews = reviews.distinct()
+
+        page = request.GET.get('page')
+
+        paginator = Paginator(reviews, 10)  # Show 10 news items per page
+        try:
+            reviews = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            reviews = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            reviews = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/news_listing.html", {
+                'self': self,
+                'reviews': reviews
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'reviews': reviews,
+            })
+
+ReviewsIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ReviewsIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 # == Review page ==
 
 class ReviewPageCarouselItem(Orderable, CarouselItemFields):
@@ -1416,6 +1485,7 @@ class ReviewPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     author = models.CharField(max_length=255, blank=True)
+    listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
     indexed_fields = ('body', 'strapline', 'author')
@@ -1447,6 +1517,7 @@ ReviewPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('listing_intro'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1750,6 +1821,14 @@ HomePage.promote_panels = [
 
 # == Job page ==
 
+class JobPageReusableTextSnippet(Orderable):
+    page = ParentalKey('rca.JobPage', related_name='reusable_text_snippets')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+    ]
+
 class JobPage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, null=True, blank=True)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True)
@@ -1786,6 +1865,7 @@ JobPage.content_panels = [
     FieldPanel('grade'),
     FieldPanel('description', classname="full"),
     DocumentChooserPanel('download_info'),
+    InlinePanel(StandardPage, 'reusable_text_snippets', label="Application and equal opportunities monitoring form text"),
 ]
 
 JobPage.promote_panels = [
@@ -1830,6 +1910,7 @@ class JobsIndexAd(Orderable):
 
 class JobsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed = False
@@ -1837,6 +1918,7 @@ class JobsIndex(Page, SocialFields):
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(JobsIndex, 'related_links', label="Related links"),
     InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2175,7 +2257,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 5)  # Show 11 research items per page
+        paginator = Paginator(staff_pages, 17)  # Show 11 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2852,7 +2934,7 @@ class GalleryPage(Page, SocialFields):
 
 
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 10)  # Show 10 gallery items per page
+        paginator = Paginator(gallery_items, 5)  # Show 10 gallery items per page
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:
@@ -2925,7 +3007,8 @@ ContactUsPage.promote_panels = [
 
 
 class DonationPage(Page, SocialFields):
-    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, related_name='+')
+    payment_description = models.CharField(help_text="The value of payment description field for donations made on this page.", max_length=255, blank=True)
 
     # fields copied from StandrdPage
     intro = RichTextField(blank=True)
@@ -2954,7 +3037,7 @@ class DonationPage(Page, SocialFields):
                         card=form.cleaned_data.get('stripe_token'),
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
                         currency="gbp",
-                        description=simplejson.dumps(form.cleaned_data.get('metadata', {})),
+                        description=self.payment_description,
                         metadata=form.cleaned_data.get('metadata', {}),
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
@@ -2979,7 +3062,10 @@ DonationPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     FieldPanel('middle_column_body', classname="full"),
-    PageChooserPanel('redirect_to_when_done'),
+    MultiFieldPanel([
+        FieldPanel('payment_description', classname="full"),
+        PageChooserPanel('redirect_to_when_done'),
+    ], "Donation details")
     # InlinePanel(DonationPage, 'carousel_items', label="Carousel content"),
     # InlinePanel(DonationPage, 'related_links', label="Related links"),
     # InlinePanel(DonationPage, 'reusable_text_snippets', label="Reusable text snippet"),

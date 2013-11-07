@@ -1,7 +1,7 @@
 {% load pageurl image_tags %}
 
 {% if gallery_items %}
-    <section class="gallery module" data-pagination=".pagination">
+    <section class="gallery module x-plus" data-pagination=".pagination">
         <div class='item-container row'>
             <ul class='row'>
                 {% for galleryitem in gallery_items %}
@@ -32,8 +32,8 @@
                 {% endfor %}
 
 
-                {% if gallery_items.paginator.count > 10 %}
-                    <li class="load-more{% if gallery_items|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% if gallery_items.paginator.count > 5 %}
+                    <li class="load-more{% if gallery_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
         </div>

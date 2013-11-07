@@ -32,7 +32,7 @@
                     </li>
 
                 {% endfor %}
-                {% if staff_pages.paginator.count > 6 %}
+                {% if staff_pages.paginator.count > 17 %}
                     <li class="load-more{% if staff_pages|length|divisibleby:'6' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>

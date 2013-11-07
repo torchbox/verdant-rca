@@ -237,6 +237,8 @@ VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 # Override the search results template for verdantsearch
 VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 
+VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
+
 
 # CELERY SETTINGS
 

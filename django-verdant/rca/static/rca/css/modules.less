@@ -222,6 +222,13 @@
 .videoembed{
     overflow:hidden;
 
+    &:hover {
+        cursor: pointer;
+        .playpause:after {
+            .sprite-load(-1278px, -1645px, 22px, 33px);
+        }
+    }
+
     .playpause, .poster{
         position:absolute;
         top:0;
@@ -1513,7 +1520,6 @@
  */
 
 form{
-    clear: both;
     .spinner{
         display: none;
     }
@@ -1578,6 +1584,11 @@ input[type=checkbox], input[type=radio]{
 }
 select{
     .border-radius(0px);
+    z-index: 2;
+}
+.select{
+    background-color:@color-pale-grey;
+    padding-top: 4px;
 }
 .select:after{
     .sprite-load(-53px, -1178px, 27px, 15px);
@@ -1585,11 +1596,18 @@ select{
     content: ' ';
     position: relative;
     float:right;
-    margin:-3em 0 0 0;
+    margin: 0;
     background-color:@color-pale-grey;
     border:1em solid @color-pale-grey;
+    z-index: 1;
 }
-    .expirydatefield select, #id_cvc{
+.selectInner{
+    padding: 12px 17px;
+}
+    .expirydatefield select{
+        width: 50px;
+    }
+    #id_cvc{
         width: 75px;
     }
     select[data-stripe="exp-month"]{

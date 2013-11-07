@@ -1,3 +1,6 @@
+/* mini plugin to allow reversing an array see http://stackoverflow.com/questions/1394020/jquery-each-backwards */
+jQuery.fn.reverse = [].reverse;
+
 var breakpoints = {
     mobile: "screen and (max-width:768px)",
     desktopSmall: "screen and (min-width:768px)",
@@ -67,7 +70,17 @@ function showSearchSubmit() {
        $('form.search input[type="submit"]').show();
     });
     $('form.search input[type="text"]').focusout(function() {
-       $('form.search input[type="submit"]').hide();
+       // I've commented out this code as it makes the button disappear
+       // when you click it causing the search form to not be submitted!
+       // HC - not sure who added above comment - but have implemented alternative below.
+
+       //$('form.search input[type="submit"]').hide();
+    });
+    $(document).click(function() {
+        $('form.search input[type="submit"]').hide();
+    });
+    $('form.search input[type="text"]').click(function(e){
+        e.stopPropagation();
     });
 }
 
@@ -245,6 +258,12 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });
@@ -321,6 +340,7 @@ $(function(){
         var items = $('> li', ul);
         var step = 100;
         var hiddenClasses = 'hidden fade-in-before';
+        var contractedHeight = items.first().height();
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
@@ -351,9 +371,21 @@ $(function(){
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
-            itemContainer.removeAttr('style');
-            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
-        };
+            itemContainer.animate({height:contractedHeight}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+                newItems.addClass('hidden');
+            });
+
+            // Fade out each item one by one
+            var time = 0;
+            newItems.reverse().each(function(index){
+                var $item = $(this);
+                setTimeout( function(){
+                    $item.removeClass('fade-in-after').addClass('fade-in-before');
+                }, time);
+                time += step;
+            });
+        }
 
         // prepare the items already in the page (if non-inifinite-scroll)
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
@@ -492,4 +524,9 @@ $(function(){
 
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
+
+    /* Apply custom styles to selects */
+    $('select:not(.filters select)').customSelect({
+        customClass: "select"
+    });
 });

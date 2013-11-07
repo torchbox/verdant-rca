@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -120,6 +121,14 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
+
+        # Stick an extra validator into the form to make sure that the slug is not already in use
+        def clean_slug(slug):
+            # Make sure the slug isn't already in use
+            if parent_page.get_children().filter(slug=slug).count() > 0:
+                raise ValidationError("This slug is already in use")
+            return slug
+        form.fields['slug'].clean = clean_slug
 
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
@@ -398,7 +407,7 @@ def search(request):
             # page number
             p = request.GET.get("p", 1)
             is_searching = True
-            pages = Page.title_search_backend(q)
+            pages = Page.title_search_backend(q, prefetch_related=['content_type'])
 
             # Pagination
             paginator = Paginator(pages, 20)

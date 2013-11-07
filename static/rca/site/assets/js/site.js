@@ -1,3 +1,6 @@
+/* mini plugin to allow reversing an array see http://stackoverflow.com/questions/1394020/jquery-each-backwards */
+jQuery.fn.reverse = [].reverse;
+
 var breakpoints = {
     mobile: "screen and (max-width:768px)",
     desktopSmall: "screen and (min-width:768px)",
@@ -64,10 +67,21 @@ on typing text */
 function showSearchSubmit() {
     $('form.search input[type="submit"]').hide();
     $('form.search input[type="text"]').focus(function() {
-       $('form.search input[type="submit"]').show(); 
+       $('form.search input[type="submit"]').show();
     });
     $('form.search input[type="text"]').focusout(function() {
-       $('form.search input[type="submit"]').hide(); 
+       // I've commented out this code as it makes the button disappear
+       // when you click it causing the search form to not be submitted!
+
+       // HC - not sure who added above comment - but have implemented alternative below.
+
+       //$('form.search input[type="submit"]').hide();
+    });
+    $(document).click(function() {
+        $('form.search input[type="submit"]').hide();
+    });
+    $('form.search input[type="text"]').click(function(e){
+        e.stopPropagation();
     });
 }
 
@@ -79,7 +93,7 @@ function showSearchAutocomplete() {
                 response(data);
             })
         },
-        select: function( event, ui ) { 
+        select: function( event, ui ) {
             window.location.href = ui.item.url;
         }
     });
@@ -130,7 +144,7 @@ function applyCarousel(carouselSelector){
             // find vimeos in old slide and stop them if playing
             post($('.videoembed.vimeo iframe'), 'pause');
         }
-    }); 
+    });
 
     return carousel;
 }
@@ -140,11 +154,11 @@ function post(frame, action, value) {
     $(frame).each(function(){
         var url = $(this).attr('src').split('?')[0];
         var data = { method: action };
-        
+
         if (value) {
             data.value = value;
         }
-        
+
         $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
     })
 }
@@ -207,7 +221,7 @@ $(function(){
             applyCarousel($('.carousel', $($(this).attr('href'))));
             $(this).data('carousel', true);
         }
-    });   
+    });
 
     /* Vimeo player API */
     $('.videoembed.vimeo').each(function(){
@@ -225,17 +239,17 @@ $(function(){
         // Handle messages received from the player
         function onMessageReceived(e) {
             var data = JSON.parse(e.data);
-            
+
             switch (data.event) {
                 case 'ready':
                     post(f, 'addEventListener', 'pause');
                     post(f, 'addEventListener', 'finish');
                     break;
-                                       
+
                 case 'pause':
                     //nothing
                     break;
-                   
+
                 case 'finish':
                     //nothing
                     break;
@@ -244,6 +258,12 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });
@@ -254,11 +274,11 @@ $(function(){
         setup: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+        },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+        },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
@@ -267,7 +287,7 @@ $(function(){
 
     // Things definitely only for desktop
     Harvey.attach(breakpoints.desktopSmall, {
-        setup: function(){}, 
+        setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
@@ -278,7 +298,7 @@ $(function(){
                     stamp: ".stamp"
                 });
             });
-        }, 
+        },
         off: function(){
             $('.packery').destroy();
         }
@@ -307,6 +327,7 @@ $(function(){
         var items = $('> li', ul);
         var step = 100
         var hiddenClasses = 'hidden fade-in-before';
+        var contractedHeight = items.first().height();
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
@@ -328,7 +349,7 @@ $(function(){
             var time = 0;
             newItems.each(function(index){
                 var $item = $(this);
-                setTimeout( function(){ 
+                setTimeout( function(){
                     $item.addClass('fade-in-after');
                 }, time);
                 time += step;
@@ -337,8 +358,20 @@ $(function(){
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
-            itemContainer.removeAttr('style');
-            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+            itemContainer.animate({height:contractedHeight}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+                newItems.addClass('hidden');
+            });
+
+            // Fade out each item one by one
+            var time = 0;
+            newItems.reverse().each(function(index){
+                var $item = $(this);
+                setTimeout( function(){
+                    $item.removeClass('fade-in-after').addClass('fade-in-before');
+                }, time);
+                time += step;
+            });
         }
 
         // prepare the items already in the page (if non-inifinite-scroll)
@@ -346,7 +379,7 @@ $(function(){
 
         loadmore.click(function(e){
             e.preventDefault();
-            
+
             if(paginationContainer && $(paginationContainer).length){
                 var nextLink = $('.next a', $(paginationContainer));
                 var nextLinkUrl = nextLink.attr('href');
@@ -356,7 +389,7 @@ $(function(){
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
-                    
+
                     // get next pagination link
                     if($(paginationContainer + ' .next a', nextPage).length){
                         nextLink.attr('href', $(paginationContainer + ' .next a', nextPage).attr('href'));
@@ -365,7 +398,7 @@ $(function(){
                     }
 
                     showNewItems();
-                });                
+                });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
                 $this.addClass('expanded');
@@ -376,7 +409,7 @@ $(function(){
             return false;
         });
     });
-    
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
     $('.gallery').each(function(){
         var maxWidth = $(this).width();
@@ -390,7 +423,7 @@ $(function(){
             if(typeof rowArray[rowCounter] == "undefined"){
                 rowArray[rowCounter] = new Array();
             }
-            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */   
+            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
         }
 
         items.each(function(){
@@ -403,7 +436,7 @@ $(function(){
                 addToArray($(this));
             }
         });
-        
+
         // Change items parent container to a div, to maintain validity
         if(items.parent().prop('tagName') == 'UL'){
             items.parent().replaceWith(function(){
@@ -473,9 +506,14 @@ $(function(){
             if(!$(e.target).parent().hasClass('filter')){
                 $('label', $self).parent().removeClass('expanded');
             }
-        })
+        });
     });
- 
+
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
+
+    /* Apply custom styles to selects */
+    $('select:not(.filters select)').customSelect({
+        customClass: "select"
+    });
 });
