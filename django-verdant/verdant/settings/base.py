@@ -12,7 +12,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Matthew Westcott', 'matthew@torchbox.com'),
+    ('Verdant RCA errors', 'verdant-rca-errors@torchbox.com'),
 )
 
 MANAGERS = ADMINS
