@@ -25,6 +25,11 @@
                                 {% csrf_token %}
                                 <input type="submit" class="button" value="Approve">
                             </form>
+
+                            <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" class="button" value="Reject">
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
