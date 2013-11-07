@@ -16,21 +16,34 @@ def get_querystring(request):
     })
 
 def browse(request, parent_page_id=None):
-
     page_type = request.GET.get('page_type') or 'core.page'
     content_type_app_name, content_type_model_name = page_type.split('.')
+
+    q = None
+    is_searching = False
+
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
     except ContentType.DoesNotExist:
         raise Http404
     desired_class = content_type.model_class()
 
-    if parent_page_id:
-        parent_page = get_object_or_404(Page, id=parent_page_id)
-    else:
-        parent_page = Page.get_first_root_node()
+    if 'q' in request.GET:
+        search_form = SearchForm(request.GET)
+        if search_form.is_valid() and search_form.cleaned_data['q']:
+            pages = desired_class.objects.exclude(
+                depth=1 # never include root
+            ).filter(title__istartswith=search_form.cleaned_data['q'])[:10]
+            is_searching = True
+    
+    if not is_searching:
+        if parent_page_id:
+            parent_page = get_object_or_404(Page, id=parent_page_id)
+        else:
+            parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children().order_by('title')
+        search_form = SearchForm()
+        pages = parent_page.get_children().order_by('title')
 
     # restrict the page listing to just those pages that:
     # - are of the given content type (taking into account class inheritance)
@@ -46,53 +59,24 @@ def browse(request, parent_page_id=None):
                 'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
             })
 
-    search_form = SearchForm()
-
-    return render_modal_workflow(request,
-        'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',
-        {
-            'allow_external_link': request.GET.get('allow_external_link'),
-            'allow_email_link': request.GET.get('allow_email_link'),
-            'querystring': get_querystring(request),
-            'parent_page': parent_page,
-            'pages': shown_pages,
-            'search_form': search_form,
-        }
-    )
-
-def search(request):
-    page_type = request.GET.get('page_type') or 'core.page'
-    content_type_app_name, content_type_model_name = page_type.split('.')
-    try:
-        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
-    except ContentType.DoesNotExist:
-        raise Http404
-    desired_class = content_type.model_class()
-
-    search_form = SearchForm(request.GET)
-    if search_form.is_valid() and search_form.cleaned_data['q']:
-        pages = desired_class.objects.exclude(
-            depth=1 # never include root
-        ).filter(title__istartswith=search_form.cleaned_data['q'])[:10]
-    else:
-        pages = desired_class.objects.none()
-
-    if request.GET.get('results_only'):
+    if is_searching:
         return render(request, 'verdantadmin/choose_page/_search_results.html', {
-            'pages': pages,
+            'querystring': get_querystring(request),
+            'search_form': search_form,
+            'pages': shown_pages,
+            'is_searching': is_searching
         })
-    else:
-        return render_modal_workflow(request,
-            'verdantadmin/choose_page/search.html', 'verdantadmin/choose_page/search.js',
-            {
-                'allow_external_link': request.GET.get('allow_external_link'),
-                'allow_email_link': request.GET.get('allow_email_link'),
-                'querystring': get_querystring(request),
-                'pages': pages,
-                'search_form': search_form,
-            }
-        )
 
+        
+    return render_modal_workflow(request, 'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',{
+        'allow_external_link': request.GET.get('allow_external_link'),
+        'allow_email_link': request.GET.get('allow_email_link'),
+        'querystring': get_querystring(request),
+        'parent_page': parent_page,
+        'pages': shown_pages,
+        'search_form': search_form,
+        'is_searching': False
+    })
 
 def external_link(request):
     prompt_for_link_text = bool(request.GET.get('prompt_for_link_text'))
