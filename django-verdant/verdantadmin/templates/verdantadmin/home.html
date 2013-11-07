@@ -4,4 +4,22 @@
     <header>
         <h1>Homepage</h1>
     </header>
+
+    {% if page_revisions_for_moderation %}
+        <div class="nice-padding">
+            <h2>Pages awaiting moderation:</h2>
+            <table class="listing">
+                <tr>
+                    <th>Title</th>
+                    <th>Submitted</th>
+                </tr>
+                {% for revision in page_revisions_for_moderation %}
+                    <tr>
+                        <td>{{ revision.page.title }}</td>
+                        <td>{{ revision.created_at|date:"d M Y" }}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endif %}
 {% endblock %}

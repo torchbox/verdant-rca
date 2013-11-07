@@ -421,12 +421,19 @@ class Orderable(models.Model):
         ordering = ['sort_order']
 
 
+class SubmittedRevisionsManager(models.Manager):
+    def get_query_set(self):
+        return super(SubmittedRevisionsManager, self).get_query_set().filter(submitted_for_moderation=True)
+
 class PageRevision(models.Model):
     page = models.ForeignKey('Page', related_name='revisions')
     submitted_for_moderation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True, blank=True)
     content_json = models.TextField()
+
+    objects = models.Manager()
+    submitted_revisions = SubmittedRevisionsManager()
 
     def save(self, *args, **kwargs):
         super(PageRevision, self).save(*args, **kwargs)
