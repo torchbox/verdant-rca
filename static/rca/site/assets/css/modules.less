@@ -151,12 +151,12 @@
         box-shadow: none;
         left: 0;
     }
-   
+
     .bx-loading {
         background: url(../images/bx_loader.gif) center center no-repeat #fff;
     }
 
-    .content, 
+    .content,
     .hover-content{
         color:@color-white;
         position:absolute;
@@ -208,7 +208,7 @@
     img {
         width: auto;
         display: block;
-        margin: auto; 
+        margin: auto;
     }
     &.standalone {
         background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
@@ -221,6 +221,13 @@
 
 .videoembed{
     overflow:hidden;
+
+    &:hover {
+        cursor: pointer;
+        .playpause:after {
+            .sprite-load(-1278px, -1645px, 22px, 33px);
+        }
+    }
 
     .playpause, .poster{
         position:absolute;
@@ -281,7 +288,7 @@
     h2 {
         .h7;
         margin: 0;
-       
+
         a {
             color: @color-highlight-blue;
         }
@@ -314,7 +321,7 @@
             .bc4;
             margin: 0;
         }
-   
+
 }
 
 /**
@@ -466,7 +473,7 @@
         }
     }
 
-    .image{  
+    .image{
         border-left:1px solid black;
         overflow:hidden;
         background-color:black;
@@ -521,7 +528,7 @@
 .load-more{
     a{
         .transition(background-color 0.2s ease);
-        text-indent:-2000px;            
+        text-indent:-2000px;
         display:block;
         background-color:@color-pale-grey;
         position:relative;
@@ -582,7 +589,7 @@
         .column(7, @grid-gutter-width);
         min-height:120px;
         border-left:1px solid fade(@color-divider, 50%);
-        
+
         &:before{
             content:"" !important;
             display:inline-block;
@@ -612,7 +619,7 @@
             width:132px;
         }
     }
-    
+
     .h7, .a2, .bc4 {
         margin:0;
     }
@@ -670,7 +677,7 @@
         border-top:1px solid @color-divider;
         padding-top:@grid-gutter-width/2;
     }
-    
+
     .load-more {
         border:0;
 
@@ -793,7 +800,7 @@
     .clearfix();
     background-color:darken(@color-pale-grey, 10%);
     position: relative;
-    
+
     .header{
         margin:0;
         border-bottom:1px solid white;
@@ -873,7 +880,7 @@
     div.bc3 p {
         display: inline;
     }
-    
+
 
     /* alternate version with bigger images */
     &.two-cols-image-big {
@@ -975,7 +982,7 @@
  */
 
 .button-bar{
-    .clearfix();  
+    .clearfix();
     li {
         position:relative;
     }
@@ -1142,7 +1149,7 @@
     .body-text-style p:first-child {
         margin-top: 0;
     }
-    
+
     h2 {
         font-weight: normal;
         margin-top: -1em;
@@ -1240,7 +1247,7 @@
 .filters{
     font-family:@font-family-benton;
     .row();
-  
+
     li{
         margin-bottom:1px;
         padding:0;
@@ -1291,7 +1298,7 @@
     .expanded label{
         background-color:@color-pink;
         color:white;
-    }      
+    }
 
     select.enhanced{
         /* this class added once select has been replicated as a list of text */
@@ -1335,7 +1342,7 @@
             .visuallyhidden();
         }
     }*/
-    
+
     input[type="submit"] {
         display:none;
     }
@@ -1503,6 +1510,33 @@
  * Forms
  */
 
+form{
+    .spinner{
+        display: none;
+    }
+}
+form.loading{
+    position: relative;
+    .spinner{
+        display: block;
+        position: absolute;
+        bottom: 10px;
+        left: 190px;
+        background: url(/static/rca/images/bx_loader.gif) no-repeat;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.body-text ul, .body-text-style ul {
+    padding: 0;
+    margin: 0;
+}
+.body-text form ul li:before, .body-text-style form ul li:before {
+    content: none;
+    margin-left: 0;
+}
+
 fieldset{
     border:0;
     border-bottom:1px solid @color-light-grey;
@@ -1552,6 +1586,16 @@ select{
     background-color:@color-pale-grey;
     border:1em solid @color-pale-grey;
 }
+    .expirydatefield select, #id_cvc{
+        width: 75px;
+    }
+    select[data-stripe="exp-month"]{
+        padding: 16px 12px;
+    }
+    select[data-stripe="exp-year"]{
+        text-indent: 1px;
+    }
+
 input[type=submit],input[type=reset],input[type=button], button, .button{
     .t0;
     background-color:@color-highlight-blue;
@@ -1591,8 +1635,8 @@ form .error-message{
     color:@color-pink;
     margin:@grid-gutter-width/2 0 0 0 ;
 }
-form .messages{
-    &.error h2, .errorlist{
+form {
+    .messages.error h2, .errorlist, .errorlist li, .error{
         color:@color-pink;
     }
 }
