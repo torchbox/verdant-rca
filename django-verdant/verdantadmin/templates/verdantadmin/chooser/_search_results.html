@@ -10,7 +10,15 @@
     <h2>{{ pages.count }} search match{{ pages.count|pluralize:"es" }}</h2>
 {% endif %}
 
-<table class="listing small chooser">
+<table class="listing chooser">
+    <thead>
+        <tr>
+            <th class="title">Title</th>
+            {% if is_searching %}<th class="parent">Parent</th>{% endif %}
+            <th class="type">Type</th>
+            <th></th>
+        </tr>
+    </thead>
     <tbody>
         {% for page in pages %}
             <tr>
@@ -21,8 +29,9 @@
                         {{ page.page.title }}
                     {% endif %}
                 </td>
-                <td class="type">{{ page.page.content_type }}</td>
                 {% if is_searching %}<td class="parent">{{ page.page.get_parent.title }}</td>{% endif %}
+                <td class="type">{{ page.page.content_type }}</td>
+                
                 <td class="{% if page.can_descend %}children{% else %}no-children{% endif %}">
                     {% if page.can_descend %}
                         <a href="{% url 'verdantadmin_choose_page_child' page.page.id %}?{{ querystring }}" class="icon text-replace icon-arrow-right navigate-pages" title="Explorer subpages of '{{ page.page.title }}'">Explore</a>
