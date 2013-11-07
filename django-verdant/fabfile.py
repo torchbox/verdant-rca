@@ -17,3 +17,5 @@ def deploy_staging():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index")
 
         sudo("supervisorctl restart verdant-rca")
+        sudo("supervisorctl restart rca-celeryd")
+        sudo("supervisorctl restart rca-celerybeat")
