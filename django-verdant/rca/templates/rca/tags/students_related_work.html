@@ -5,7 +5,24 @@
         <div class="related-content-item">
             <a href="{% pageurl student %}">
                 <figure class="staff">
-                    <div class="image">{% image student.feed_image width-180 %}</div>
+                    <div class="image">
+                        {% if student.feed_image %}
+                            {% image student.feed_image width-180 %}
+                        {% elif student.carousel_items %}
+                            {% with student.carousel_items.all as carousel_items %}
+                                {% with carousel_items|first as carousel_item %}
+                                    {% if carousel_item.image %}
+                                        {% image carousel_item.image fill-300x300 %}
+                                    {% else %}
+                                        <img src="/static/rca/images/medium-grey-placeholder.png" width="width-180">
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+                        {% else %}
+                            <img src="/static/rca/images/medium-grey-placeholder.png" width="200">
+                        {% endif %}
+
+                        </div>
                     <figcaption>{{ student.first_name }}<span>{{ student.last_name }}</span></figcaption>
                 </figure>
             </a>

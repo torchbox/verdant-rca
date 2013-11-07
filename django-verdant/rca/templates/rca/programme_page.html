@@ -21,12 +21,12 @@
                     {% if self.head_of_programme.profile_image %}
                         {% image self.head_of_programme.profile_image width-200 %}
                     {% else %}
-                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                        <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                     {% endif %}
                 </div>
             </a>
                     
-            <div class="content bc1{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
+            <div class="content bc2{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
                 <strong>{{ self.head_of_programme.title }}</strong>
                 {{ self.head_of_programme_statement|richtext }}
                 {% if self.head_of_programme_link %}
@@ -41,14 +41,14 @@
     {% news_carousel programme=self.programme %}
 
     <!-- events -->
-    {% upcoming_events_related programme=self.programme display_name=self.get_programme_display events_index_url=global_events_index_url %}
+    {% upcoming_events_related programme=self.programme display_name=self.get_programme_display %}
 
     <!-- staff -->
     {% staff_by_programme programme=self.programme %}
 
 
     <!-- open days -->
-    {% upcoming_events_related opendays=1 programme=self.programme events_index_url=global_events_index_url %}
+    {% upcoming_events_related opendays=1 programme=self.programme %}
 
     <!-- tabs -->
     
@@ -189,8 +189,9 @@
         {% endif %}
     {% endwith %}
     
-    {% include "rca/includes/modules/twitter-feed.html" %}
     {% include "rca/includes/modules/contact.html" %}   
+    {% include "rca/includes/modules/twitter-feed.html" %}
+
 {% endblock %}
 
 {% block sidebar %}

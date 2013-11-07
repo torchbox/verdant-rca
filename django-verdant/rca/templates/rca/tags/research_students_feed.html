@@ -16,9 +16,9 @@
                             <a href="{% pageurl student %}">
                                 <div class="image">
                                     {% if student.profile_image %}
-                                        {% image student.profile_image width-200 %}
+                                        {% image student.profile_image fill-200x200 %}
                                     {% else %}
-                                        <img src="/static/rca/images/student-default-image.png" width="200">
+                                        <img src="/static/rca/images/medium-grey-placeholder.png" width="200">
                                     {% endif %}
                                 </div>
                                 <div class="content">

@@ -63,6 +63,23 @@ SCHOOLS = {
     'Department of Goldsmithing, Silversmithing, Metalwork and Jewellery': 'schoolofmaterial',
     'Department of Photography': 'schooloffineart',
     'humanities-research@rca.ac.uk': 'schoolofhumanities',
+
+    # Extras for student page
+    "School of Applied Art": "schoolofmaterial",
+    "School of Applied Arts": "schoolofmaterial",
+    "School of Fashion & Textiles": "schoolofmaterial",
+    #"School of Architecture & Design"
+    #"School of Architecture and Design"
+    #"Department of Architecture & Design"
+    "School of Humanties": "schoolofhumanities",
+    "School of Communications": "schoolofcommunication",
+
+    # Extras for Show 2013
+    "Ceramics &amp; Glass": "schoolofmaterial",
+    "Critical &amp; Historical Studies": "schoolofhumanities",
+    "Critical Writing in Art &amp; Design": "schoolofhumanities",
+    "Goldsmithing, Silversmithing, Metalwork &amp; Jewellery": "schoolofmaterial",
+    "Uncategorized": "",
 }
 
 
@@ -114,6 +131,40 @@ PROGRAMMES = {
     "Sculpture ProgrammeResearch Leader": "sculpture",
     "School of Architecturearchitecture-research@rca.ac.uk": "architecture",
     "Critical Writing in Art & Design": "criticalwritinginartdesign",
+
+    # Extras for student page
+    "Department of Ceramics & Glass": "ceramicsglass",
+    "Ceramics and Glass": "ceramicsglass",
+    "Glass & Ceramics": "ceramicsglass",
+    "Programme of Ceramics & Glass": "ceramicsglass",
+    "Department of Critical & Historical Studies": "criticalhistoricalstudies",
+    "Department of Textiles": "textiles",
+    #"Department of Fashion"
+    "Department of Fashion Womenswear": "fashionwomenswear",
+    "Womenswear": "fashionwomenswear",
+    "Department of Printed Textiles": "textiles",
+    "Department of Curating Contemporary Art": "curatingcontemporaryart",
+    "Department of Innovation Design Engineering": "innovationdesignengineering",
+    "Department of Vehicle Design": "vehicledesign",
+    "Department of Design Interactions": "designinteractions",
+    "Department of History of Design": "historyofdesign",
+    #"Research in Art & Design"
+    "Department of Design Products": "designproducts",
+    "Department of Conservation": "conservation",
+    "Department of Animation": "animation",
+    "Department of Architecture": "architecture",
+    "Department of Painting": "painting",
+    "Department of Photography": "photography",
+    "Department of Sculpture": "sculpture",
+    "Critical Writing in Art and Design": "criticalwritinginartdesign",
+    "Department of Critical Writing in Art & Design": "criticalwritinginartdesign",
+
+    # Extras for Show 2013
+    "Ceramics &amp; Glass": "ceramicsglass",
+    "Critical &amp; Historical Studies": "criticalhistoricalstudies",
+    "Critical Writing in Art &amp; Design": "criticalwritinginartdesign",
+    "Goldsmithing, Silversmithing, Metalwork &amp; Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Uncategorized": "",
 }
 
 
@@ -121,13 +172,17 @@ DEGREE_SUBJECTS = {
     'Animation': 'animation',
     'Architecture': 'architecture',
     'Ceramics & Glass': 'ceramicsglass',
+    'Ceramics &amp; Glass': 'ceramicsglass',
     'Curating Contemporary Art (College-based)': 'curatingcontemporaryart',
     'Curating Contemporary Art': 'curatingcontemporaryart',
     u'Curating Contemporary Art (Work\u2013based)': 'curatingcontemporaryart',
     'Curating Contemporary Art (Work-based)': 'curatingcontemporaryart',
     'Critical & Historical Studies': 'criticalhistoricalstudies',
+    'Critical &amp; Historical Studies': 'criticalhistoricalstudies',
     u'Critical and Historical Studies': 'criticalhistoricalstudies',
     'Critical Writing In Art & Design': 'criticalwritinginartdesign',
+    'Critical Writing In Art &amp; Design': 'criticalwritinginartdesign',
+    'Critical Writing in Art &amp; Design': 'criticalwritinginartdesign',
     'Design Interactions': 'designinteractions',
     'Design Products': 'designproducts',
     'Fashion Menswear': 'fashionmenswear',
@@ -144,6 +199,7 @@ DEGREE_SUBJECTS = {
     'Printmaking': 'printmaking',
     'Sculpture': 'sculpture',
     'Goldsmithing, Silversmithing, Metalwork & Jewellery': 'goldsmithingsilversmithingmetalworkjewellery',
+    'Goldsmithing, Silversmithing, Metalwork &amp; Jewellery': 'goldsmithingsilversmithingmetalworkjewellery',
     'Textiles': 'textiles',
     'Printed Textiles': 'textiles',
     'Constructed Textiles': 'textiles',
@@ -155,6 +211,34 @@ DEGREE_SUBJECTS = {
     u'Conservation': 'conservation',
     u'RCA/V&A Conservation': 'conservation',
     u'Communication Art & Design': 'communicationartdesign',
+    u'Communication Art &amp; Design': 'communicationartdesign',
+    # Extras for students
+    "Department of Ceramics & Glass": "ceramicsglass",
+    "Ceramics and Glass": "ceramicsglass",
+    "Glass & Ceramics": "ceramicsglass",
+    "Programme of Ceramics & Glass": "ceramicsglass",
+    "Department of Critical & Historical Studies": "criticalhistoricalstudies",
+    "Department of Textiles": "textiles",
+    #"Department of Fashion"
+    "Department of Fashion Womenswear": "fashionwomenswear",
+    "Womenswear": "fashionwomenswear",
+    "Department of Printed Textiles": "textiles",
+    "Department of Curating Contemporary Art": "curatingcontemporaryart",
+    "Department of Innovation Design Engineering": "innovationdesignengineering",
+    "Department of Vehicle Design": "vehicledesign",
+    "Department of Design Interactions": "designinteractions",
+    "Department of History of Design": "historyofdesign",
+    "Department of Design Products": "designproducts",
+    "Department of Goldsmithing, Silversmithing, Metalwork & Jewellery": "goldsmithingsilversmithingmetalworkjewellery",
+    "Department of Conservation": "conservation",
+    "Department of Animation": "animation",
+    "Department of Architecture": "architecture",
+    "Department of Painting": "painting",
+    "Department of Photography": "photography",
+    "Department of Sculpture": "sculpture",
+    "Critical Writing in Art & Design": "criticalwritinginartdesign",
+    "Critical Writing in Art and Design": "criticalwritinginartdesign",
+    "Department of Critical Writing in Art & Design": "criticalwritinginartdesign",
 }
 
 PROGRAMME_SPECIALISMS = {

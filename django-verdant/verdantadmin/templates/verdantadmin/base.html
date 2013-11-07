@@ -1,5 +1,6 @@
 {% extends "verdantadmin/skeleton.html" %}
 {% load explorer_nav %}
+
 {% block furniture %}
     <div id="nav-toggle" data-afteropen="Collapse" class="icon icon-verdant text-replace">Menu</div>
     <div class="nav-wrapper">
@@ -8,12 +9,14 @@
             <nav class="nav-main">
                 <ul>
                     <li><a href="#" class="icon icon-doc-empty-inverse dl-trigger">Explorer</a></li>
+                     <li><a href="{% url 'verdantadmin_pages_search' %}" class="icon icon-search">Search</a></li>
                     <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
                     <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
                     <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
+                    <li><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
                     {% comment %}
                         Removed until functionality exists/works as expected
-                        <li><a href="" class="icon icon-user">Users</a></li>
+                       
                         <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
                     {% endcomment %}
                 </ul>

@@ -1,0 +1,90 @@
+{% extends "rca/base.html" %}
+{% load rich_text image_tags %}
+
+{% block body_class %}
+    type-standard
+{% endblock %}
+
+
+{% block extra_js %}
+    <script type="text/javascript">
+        // Stripe.js is includded in base.html
+        Stripe.setPublishableKey('{{ STRIPE_PUBLISHABLE_KEY }}');
+    </script>
+    <script type="text/javascript" src="/static/donations/js/jquery.payment.js"></script>
+    <script type="text/javascript" src="/static/donations/js/donation.js"></script>
+{% endblock extra_js %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+
+    <section class="row">
+
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" showReusableText="true" body=self.body %}
+
+        <section class="body-text">
+            <form action="" method="POST" id="payment-form">
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                            {{ message }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="messages error">
+                    <ul class="errorlist"></ul>
+                </div>
+
+                <ul>
+                    {{ form.as_ul }}
+                </ul>
+
+                {% csrf_token %}
+
+                <input type="submit" value="Submit Payment" />
+
+                <div class="spinner">&nbsp;</div>
+            </form>
+        </section>
+
+
+        <section class="four">
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+                    {{ self.middle_column_body|richtext }}
+                </div>
+            {% endif %}
+            {% include "rca/includes/modules/downloads.html" %}
+            {% include "rca/includes/modules/quotation.html" %}
+            {% with self.images.all as images %}
+                {% if images %}
+                    {% for image in images %}
+                        <figure>
+                            <div class="image">{% image image.image width-400 %}</div>
+                            <figcaption class="a4">
+                                {% for line in image.image.caption_lines %}
+                                    {{ line }}
+                                    {% if not forloop.last %}<br />{% endif %}
+                                {% endfor %}
+                            </figcaption>
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}

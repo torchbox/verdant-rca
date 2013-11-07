@@ -140,7 +140,7 @@ input[type=checkbox]:checked:before{
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 2em;
+    padding:1.3em 2.4em;
     border:none;
     background-color: @color-button;
     color:white;
@@ -149,6 +149,8 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     font-size:0.95em;
     white-space: nowrap;
     position:relative;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
     
     &:hover{
         background-color: @color-button-hover;
@@ -161,13 +163,22 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
             background-color: @color-button-yes-hover;
         }
     }
-    &.no{
+    &.no, &.serious{
         background-color: @color-button-no;
         &:hover{
             background-color: @color-button-no-hover;
         }
     }
+
+    + input[type=submit], 
+    + input[type=reset], 
+    + input[type=button], 
+    + .button, 
+    + button{
+        margin-left:1em;
+    }
 }
+
 
 input[type=submit].button-small, input[type=reset].button-small, input[type=button].button-small, .button.button-small, button.button-small{
     font-size:0.85em;

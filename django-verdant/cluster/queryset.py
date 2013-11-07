@@ -1,19 +1,72 @@
+from django.db.models import Model
+
+# Constructor for test functions that determine whether an object passes some boolean condition
+def test_exact(model, attribute_name, value):
+    field = model._meta.get_field(attribute_name)
+    # convert value to the correct python type for this field
+    typed_value = field.to_python(value)
+    if isinstance(typed_value, Model):
+        if typed_value.pk is None:
+            # comparing against an unsaved model, so objects need to match by reference
+            return lambda obj: getattr(obj, attribute_name) is typed_value
+        else:
+            # comparing against a saved model; objects need to match by type and ID.
+            # Additionally, where model inheritance is involved, we need to treat it as a
+            # positive match if one is a subclass of the other
+            def _test(obj):
+                other_value = getattr(obj, attribute_name)
+                if not (isinstance(typed_value, other_value.__class__) or isinstance(other_value, typed_value.__class__)):
+                    return False
+                return typed_value.pk == other_value.pk
+            return _test
+    else:
+        # just a plain Python value = do a normal equality check
+        return lambda obj: getattr(obj, attribute_name) == typed_value
+
 class FakeQuerySet(object):
-    def __init__(self, *results):
+    def __init__(self, model, results):
+        self.model = model
         self.results = results
 
     def all(self):
         return self
 
     def filter(self, **kwargs):
-        # TODO: when this performs real filtering, we'll need to get tricksy with our
-        # BaseInlineFormSet inheritance in forms.py, to skip over the step where the
-        # queryset gets forcibly filtered down to nothing when the primary key on the
-        # parent model is not populated.
-        return self
+        filters = []  # a list of test functions; objects must pass all tests to be included
+            # in the filtered list
+        for key, val in kwargs.iteritems():
+            key_clauses = key.split('__')
+            if len(key_clauses) != 1:
+                raise NotImplementedError("Complex filters with double-underscore clauses are not implemented yet")
+
+            filters.append(test_exact(self.model, key_clauses[0], val))
+
+        filtered_results = [
+            obj for obj in self.results
+            if all([test(obj) for test in filters])
+        ]
+
+        return FakeQuerySet(self.model, filtered_results)
+
+    def get(self, **kwargs):
+        results = self.filter(**kwargs)
+        result_count = results.count()
+
+        if result_count == 0:
+            raise self.model.DoesNotExist("%s matching query does not exist." % self.model._meta.object_name)
+        elif result_count == 1:
+            return results[0]
+        else:
+            raise self.model.MultipleObjectsReturned(
+                "get() returned more than one %s -- it returned %s!" % (self.model._meta.object_name, result_count)
+            )
 
     def count(self):
         return len(self.results)
+
+    def select_related(self, *args):
+        # has no meaningful effect on non-db querysets
+        return self
 
     def __getitem__(self, k):
         return self.results[k]

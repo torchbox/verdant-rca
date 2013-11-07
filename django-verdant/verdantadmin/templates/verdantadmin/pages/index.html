@@ -25,15 +25,26 @@
                             <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
                             <ul role="menu">
                                 <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                {% if parent_page.live %}
+                                    <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank" class="shortcut">View draft</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
+                                <li><a href="{% url 'verdantadmin_pages_reorder' parent_page.id %}" class="shortcut">Reorder</a></li>
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
+                                {% if parent_page.live %}
+                                    <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>
+                                {% endif %}
                             </ul>
                         </div>
                     {% endif %}
 
                     {{ parent_page.title }}
                 </h2>
+                {% if not parent_page.live %}
+                    <p>This page is currently unpublished.</p>
+                {% endif %}
             </div>
             <div class="right col3">
                 <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add page here</a>
@@ -41,58 +52,6 @@
         </div>
     </header>
 
-    <table class="listing">
-        <thead>
-            <tr>
-                
-                <th class="title"><a href="#" class="icon icon-arrow-down-after">Title</a></th>
-                <th class="type">Type</th>
-                <!--
-                <th class="status dropdown white match-width">
-                    <a href="#" class="dropdown-toggle">Status</a> 
-                    <form>
-                        <ul role="menu">
-                            <li><label><input type="radio" name="status" /> Published</label></li>
-                            <li><label><input type="radio" name="status" /> Unpublished</label></li>
-                            <li><label><input type="radio" name="status" /> Edited since publish</label></li>
-                        </ul>
-                    </form>
-                </th>
-                -->
-                <th class="children"></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if pages %}
-                {% for page in pages %}
-                    <tr>
-                       
-                        <td class="title">
-                            <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
-                            <ul class="actions">
-                                <li><a href="{{ page.url }}" target="_blank">View</a></li>
-                                <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
-                                <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
-                                <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
-                            </ul>
-                        </td>
-                        <td class="type">{{ page.content_type }}</td>
-                        <!--<td class="status"></td>-->
-                        {% if page.is_navigable %}
-                            <td class="children">
-                                <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
-                            </td>
-                        {% else %}
-                            <td class="no-children">
-                                <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            {% else %}
-                <tr><td colspan="3" class="no-results-message"><p>No pages have been created here. Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?</td></tr>
-            {% endif %}
-        </tbody>
-    </table>
+    {% include "verdantadmin/pages/list.html" with sortable="true" %}
    
 {% endblock %}

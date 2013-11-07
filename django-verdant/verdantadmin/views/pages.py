@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.exceptions import ValidationError
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -8,20 +9,32 @@ from treebeard.exceptions import InvalidMoveToDescendant
 
 from core.models import Page, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
+from verdantadmin.forms import SearchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 def index(request, parent_page_id=None):
-
     if parent_page_id:
         parent_page = get_object_or_404(Page, id=parent_page_id)
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children().order_by('title')
+    pages = parent_page.get_children()
+
+    # Get page ordering
+    if 'ordering' in request.GET:
+        ordering = request.GET['ordering']
+
+        if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
+            pages = pages.order_by(ordering)
+    else:
+        ordering = None
+
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
+        'ordering': ordering,
         'pages': pages,
     })
-
 
 def select_type(request):
     # Get the list of page types that can be created within the pages that currently exist
@@ -109,9 +122,26 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
 
+        # Stick an extra validator into the form to make sure that the slug is not already in use
+        def clean_slug(slug):
+            # Make sure the slug isn't already in use
+            if parent_page.get_children().filter(slug=slug).count() > 0:
+                raise ValidationError("This slug is already in use")
+            return slug
+        form.fields['slug'].clean = clean_slug
+
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
+
+            if request.POST.get('action-publish'):
+                page.live = True
+                page.has_unpublished_changes = False
+            else:
+                page.live = False
+                page.has_unpublished_changes = True
+
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
+            page.save_revision()
 
             messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -130,7 +160,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 
 def edit(request, page_id):
-    page = get_object_or_404(Page, id=page_id).specific
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
@@ -138,8 +168,29 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "Page '%s' updated." % page.title)
+            is_publishing = request.POST.get('action-publish')
+
+            if is_publishing:
+                page.live = True
+                page.has_unpublished_changes = False
+                form.save()
+            else:
+                # not publishing the page
+                if page.live:
+                    # To avoid overwriting the live version, we only save the page
+                    # to the revisions table
+                    form.save(commit=False)
+                    Page.objects.filter(id=page.id).update(has_unpublished_changes=True)
+                else:
+                    page.has_unpublished_changes = True
+                    form.save()
+
+            page.save_revision()
+
+            if is_publishing:
+                messages.success(request, "Page '%s' published." % page.title)
+            else:
+                messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             edit_handler = edit_handler_class(instance=page, form=form)
@@ -151,6 +202,36 @@ def edit(request, page_id):
         'page': page,
         'edit_handler': edit_handler,
     })
+
+def reorder(request, parent_page_id=None):
+    if parent_page_id:
+        parent_page = get_object_or_404(Page, id=parent_page_id)
+    else:
+        parent_page = Page.get_first_root_node()
+
+    pages = parent_page.get_children()
+
+    if request.POST:
+        try:
+            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
+        except:
+            # Invalid
+            messages.error(request, "Could not reorder (invalid request)")
+            return redirect('verdantadmin_pages_reorder', parent_page_id)
+
+        # Reorder
+        for page in pages_ordered:
+            page.move(parent_page, pos='last-child')
+
+        # Success message
+        messages.success(request, "Pages reordered successfully")
+
+        return redirect('verdantadmin_explore', parent_page_id)
+    else:
+        return render(request, 'verdantadmin/pages/reorder.html', {
+            'parent_page': parent_page,
+            'pages': pages,
+        })
 
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
@@ -164,6 +245,93 @@ def delete(request, page_id):
     return render(request, 'verdantadmin/pages/confirm_delete.html', {
         'page': page,
         'descendant_count': page.get_descendant_count()
+    })
+
+def view_draft(request, page_id):
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    return page.serve(request)
+
+def preview_on_edit(request, page_id):
+    # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    edit_handler_class = get_page_edit_handler(page.__class__)
+    form_class = edit_handler_class.get_form_class(page.__class__)
+
+    form = form_class(request.POST, request.FILES, instance=page)
+
+    if form.is_valid():
+        form.save(commit=False)
+
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
+
+        response['X-Verdant-Preview'] = 'ok'
+        return response
+
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
+
+        response = render(request, 'verdantadmin/pages/edit.html', {
+            'page': page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
+
+def preview_on_create(request, content_type_app_name, content_type_model_name, parent_page_id):
+    # Receive the form submission that would typically be posted to the 'create' view. If submission is valid,
+    # return the rendered page; if not, re-render the edit form
+    try:
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
+    except ContentType.DoesNotExist:
+        raise Http404
+
+    page_class = content_type.model_class()
+    page = page_class()
+    edit_handler_class = get_page_edit_handler(page_class)
+    form_class = edit_handler_class.get_form_class(page_class)
+
+    form = form_class(request.POST, request.FILES, instance=page)
+
+    if form.is_valid():
+        form.save(commit=False)
+
+        # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
+        # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
+        # as a front-end GET request
+        response = page.serve(request)
+
+        response['X-Verdant-Preview'] = 'ok'
+        return response
+
+    else:
+        edit_handler = edit_handler_class(instance=page, form=form)
+        parent_page = get_object_or_404(Page, id=parent_page_id).specific
+
+        response = render(request, 'verdantadmin/pages/create.html', {
+            'content_type': content_type,
+            'page_class': page_class,
+            'parent_page': parent_page,
+            'edit_handler': edit_handler,
+        })
+        response['X-Verdant-Preview'] = 'error'
+        return response
+
+def unpublish(request, page_id):
+    page = get_object_or_404(Page, id=page_id)
+
+    if request.POST:
+        parent_id = page.get_parent().id
+        page.live = False
+        page.save()
+        messages.success(request, "Page '%s' unpublished." % page.title)
+        return redirect('verdantadmin_explore', parent_id)
+
+    return render(request, 'verdantadmin/pages/confirm_unpublish.html', {
+        'page': page,
     })
 
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
@@ -225,3 +393,43 @@ def get_page_edit_handler(page_class):
         ])
 
     return PAGE_EDIT_HANDLERS[page_class]
+
+
+def search(request):
+    pages = []
+    q = None
+    is_searching = False
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+            # page number
+            p = request.GET.get("p", 1)
+            is_searching = True
+            pages = Page.title_search_backend(q, prefetch_related=['content_type'])
+
+            # Pagination
+            paginator = Paginator(pages, 20)
+            try:
+                pages =  paginator.page(p)
+            except PageNotAnInteger:
+                pages =  paginator.page(1)
+            except EmptyPage:
+                pages =  paginator.page(paginator.num_pages)
+    else:
+        form = SearchForm()
+
+    if request.is_ajax():
+        return render(request, "verdantadmin/pages/search_results.html", {
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
+    else:
+        return render(request, "verdantadmin/pages/search.html", {
+            'form': form,
+            'pages': pages,
+            'is_searching': is_searching,
+            'search_query': q,
+        })

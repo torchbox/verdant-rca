@@ -90,27 +90,25 @@
 						</li>
 					</ul>
 				</section>
+				{% if self.reusable_text_snippets %}
+					{% with self.reusable_text_snippets.all as text_snippets %}
+							{% if text_snippets %}
+							    {% for text_snippet in text_snippets %}
+					<section class="module">
+						<ul class="row">
+							<li class="col-8">
+								<h2 class="module-title">{{ text_snippet.reusable_text_snippet.name }}</h2>
+									<div class='body-text-style'>
+					        			{{ text_snippet.reusable_text_snippet.text|richtext }}
+							    	</div>
+								</li>
+							</ul>
+						</section>
+				        		{% endfor %}
+				        	{% endif %}
+						{% endwith %}
+					{% endif %}
 
-				<section class="module">
-					<ul class="row">
-						<li class="col-8">
-							<h2 class="module-title">Application and equal opportunities monitoring form</h2>
-							<div class="body-text-style">
-								<p>Please use the links below to download the Application Form and Equal Opportunities Monitoring Form.</p>
-								
-								<p>Please note it is vital that all sections of the application form are completed. CVs cannot be accepted as a substitute for any section.</p>
-
-								<p>The ‘Additional Information’ section is particularly important to the selection process; you should use this to outline the skills, knowledge and experience that you have that relates specifically to the job description and person specification for the post. You may continue sections on separate sheets if necessary.</p>
-
-								<p>If you are disabled and require help completing your application form, or if you will require help or special facilities should you be short-listed for interview, please telephone the Personnel Assistant on +44 (0)20 7590 4148 or email <a href="mailto:personnel@rca.ac.uk">personnel@rca.ac.uk</a>.</p>
-
-								{% job_documents %}
-								
-							</div>
-
-						</li>
-					</ul>
-				</section>
 
 				<section class="module contact">
 					<h2 class="module-title">Personnel contact</h2>

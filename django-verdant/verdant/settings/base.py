@@ -12,7 +12,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Matthew Westcott', 'matthew@torchbox.com'),
 )
 
 MANAGERS = ADMINS
@@ -162,7 +162,10 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantdocs',
     'verdantsnippets',
+    'verdantsearch',
+    'verdantusers',
 
+    'donations',
     'rca',
 )
 
@@ -227,3 +230,7 @@ LOGGING = {
 
 # Override the Image class used by verdantimages with a custom one
 VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+
+# Override the search results template for verdantsearch
+VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
+VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"

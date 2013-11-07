@@ -2,20 +2,27 @@
 
 {% if news_items %}
     <section class="carousel-news row module">
-        {% comment %}
-        TODO: add link to news index
-        {% endcomment %}
-        <h2 class="module-title"><a href="#">News</a></h2>
+        <h2 class="module-title"><a href="{{ news_index_url }}">News</a></h2>
         <ul class="carousel-content">
             {% for news_item in news_items %}
                 <li class="{% if forloop.counter == 1 %}active{% endif %}{% if forloop.last %} last{% endif %}">
                     <a href="{% pageurl news_item %}">
                         {% with news_item.feed_image as feed_image %}
-                            {% if feed_image %}
-                                <div class="image">{% image feed_image width-700 %}</div>
-                            {% else%}
-                                {% comment %}Default image to appear here{% endcomment %}
-                            {% endif %}
+                            <div class="image">
+                                {% if feed_image %}
+                                    {% image feed_image width-700 %}
+                                {% else %}
+                                    {% with news_item.carousel_items.all as carousel_items %}
+                                        {% with carousel_items|first as carousel_item %}
+                                            {% if carousel_item.image %}
+                                                {% image carousel_item.image fill-300x169 %}
+                                            {% else %}
+                                                <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="300">
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endwith %}
+                                {% endif %}
+                            </div>
                         {% endwith %}
                         <div class="caption">
                             <h3 class="h6">{{ news_item.title }}</h3>

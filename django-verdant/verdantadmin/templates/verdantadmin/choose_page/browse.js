@@ -4,6 +4,8 @@ function(modal) {
         return false;
     });
 
+    {% include 'verdantadmin/choose_page/_search_behaviour.js' %}
+
     $('a.choose-page', modal.body).click(function() {
         var pageData = $(this).data();
         pageData.parentId = {{ parent_page.id }};

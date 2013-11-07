@@ -1,9 +1,25 @@
 {% load pageurl image_tags %}
 
 <a href="{% pageurl research_item %}">
-    {% if research_item.feed_image %}
-        <div class="image">{% image research_item.feed_image width-300 %}</div>
-    {% endif %}
+        <div class="image">
+            {% if research_item.feed_image %}
+                {% image research_item.feed_image width-300 %}
+            {% else %}
+                {% with research_item.carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% image carousel_item.image fill-300x169 %}
+                        {% else %}
+                            {% if person %}
+                                <img src="/static/rca/images/16x9-medium-grey-placeholder.png" width="200">
+                            {% else %}
+                                <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="200">
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                {% endwith %}
+            {% endif %}
+        </div>
     <div class="content">
         <h3 class="h8">{{ research_item.title }}</h3>
         {% with research_item.creator.all as creators %}

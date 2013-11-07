@@ -26,6 +26,14 @@
     transition: @transition;
 }
 
+.filter(@filter){
+    -webkit-filter: @filter;
+    filter: @filter;
+    -moz-filter: @filter;
+    -o-filter: @filter;
+    -ms-filter: @filter;
+}
+
 .visuallyhidden() {
     border: 0;
     clip: rect(0 0 0 0);
@@ -177,8 +185,13 @@
 
     .image{
         margin-bottom:@grid-gutter-width/2;
+        position:relative;
         img{
             display:block;
+            &:hover {
+                .filter(brightness(0.7)); //nb doesn't work in firefox
+                .transition(all 0.5s ease);
+            }
         }
     }
 
