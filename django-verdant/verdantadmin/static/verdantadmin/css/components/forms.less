@@ -89,7 +89,7 @@ input[type=radio]{
 
 input[type=radio]:before{
     .border-radius(100%);
-    font-family: verdant; 
+    font-family: verdant;
     font-style: normal;
     text-align:center;
     position:absolute;
@@ -118,7 +118,7 @@ input[type=checkbox]{
 }
 
 input[type=checkbox]:before{
-    font-family: verdant; 
+    font-family: verdant;
     font-style: normal;
     text-align:center;
     position:absolute;
@@ -134,7 +134,7 @@ input[type=checkbox]:before{
     color:#EEE;
 }
 input[type=checkbox]:checked:before{
-    color:@color-teal; 
+    color:@color-teal;
 }
 
 input[type=submit], input[type=reset], input[type=button], .button, button{
@@ -151,7 +151,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     position:relative;
     -webkit-font-smoothing: antialiased;
     vertical-align: middle;
-    
+
     &:hover{
         background-color: @color-button-hover;
         color:white;
@@ -170,10 +170,10 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
         }
     }
 
-    + input[type=submit], 
-    + input[type=reset], 
-    + input[type=button], 
-    + .button, 
+    + input[type=submit],
+    + input[type=reset],
+    + input[type=button],
+    + .button,
     + button{
         margin-left:1em;
     }
@@ -198,7 +198,7 @@ a.button{
 }
 .help{
     /* TODO: This transitionmakes the browser go nuts and the left menu jerk around. Find way to solve */
-    .transition(opacity 0.2s ease); 
+    .transition(opacity 0.2s ease);
     color:@color-grey;
     opacity:0;
 }
@@ -238,7 +238,7 @@ li.focused > .help{
 }
 
 /* field sizing */
-.field{ 
+.field{
     &.col1,
     &.col2,
     &.col3,
@@ -265,7 +265,7 @@ li.inline .field{
     &.col9,
     &.col10,
     &.col11,
-    &.col12{clear:none;} 
+    &.col12{clear:none;}
 }
 
 /* solve gutter issues of inline fields */
@@ -278,18 +278,18 @@ ul.inline li:first-child, li.inline:first-child{
 
 .chooser {
     /* We show the 'chosen' state...*/
-    
+
     .chosen {
         display: block;
     }
     .unchosen, .chosen{
         position:relative;
-        padding-left:@thumbnail-width+15; 
+        padding-left:@thumbnail-width+15;
 
         &:before{
             .transition(opacity 0.3s ease);
             font-family:verdant;
-            content:"";           
+            content:"";
             position:absolute;
             top:0;
             left:0;
@@ -302,10 +302,10 @@ ul.inline li:first-child, li.inline:first-child{
         }
         &:hover:before{
             opacity:0.2;
-        }    
+        }
     }
     .unchosen {
-        display: none;      
+        display: none;
     }
 
     /* ...unless the .page-chooser has the 'blank' class set */
@@ -355,14 +355,6 @@ ul.inline li:first-child, li.inline:first-child{
             text-overflow:ellipsis;
         }
         &:hover .title{
-            text-align:left;
-            white-space:normal;
-            width:126px;
-            padding:10px;
-            top: 0;
-            height: 80px;
-            max-height:100%;
-            background-color: white;
         }
     }
 }
@@ -370,7 +362,7 @@ ul.inline li:first-child, li.inline:first-child{
 .snippet-chooser {
     .unchosen:before,
     .chosen:before{
-        content:"D"; 
+        content:"D";
     }
 }
 
@@ -393,7 +385,7 @@ ul.inline li:first-child, li.inline:first-child{
         height:95px;
 
         &:before{
-            content:"o"; 
+            content:"o";
             font-size:120px;
             line-height:97px;
         }
@@ -475,7 +467,7 @@ ul.tagit li.tagit-choice-editable{
 
     .fields{
         position:relative;
-    
+
         .field label{
             display:none;
         }
