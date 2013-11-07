@@ -1,7 +1,8 @@
 <table class="listing {% if full_width %}full-width{% endif %}">
     <thead>
         <tr>
-            <th class="title">Title
+            <th class="title">
+                Title
                 {% if sortable %}
                     {% if ordering == "title" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-title" class="icon icon-arrow-down-after teal"></a>
@@ -15,7 +16,8 @@
             {% if show_parent %}
                 <th class="parent">Parent</th>
             {% endif %}
-            <th class="type">Type
+            <th class="type">
+                Type
                 {% if sortable %}
                     {% if ordering == "content_type" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-content_type" class="icon icon-arrow-down-after teal"></a>
@@ -26,7 +28,8 @@
                     {% endif %}
                 {% endif %}
             </th>
-            <th class="status">Status
+            <th class="status">
+                Status
                 {% if sortable %}
                     {% if ordering == "live" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-live" class="icon icon-arrow-down-after teal"></a>
