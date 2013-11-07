@@ -60,7 +60,7 @@ def browse(request, parent_page_id=None):
             })
 
     if is_searching:
-        return render(request, 'verdantadmin/choose_page/_search_results.html', {
+        return render(request, 'verdantadmin/chooser/_search_results.html', {
             'querystring': get_querystring(request),
             'search_form': search_form,
             'pages': shown_pages,
@@ -68,7 +68,7 @@ def browse(request, parent_page_id=None):
         })
 
         
-    return render_modal_workflow(request, 'verdantadmin/choose_page/browse.html', 'verdantadmin/choose_page/browse.js',{
+    return render_modal_workflow(request, 'verdantadmin/chooser/browse.html', 'verdantadmin/chooser/browse.js',{
         'allow_external_link': request.GET.get('allow_external_link'),
         'allow_email_link': request.GET.get('allow_email_link'),
         'querystring': get_querystring(request),
@@ -90,7 +90,7 @@ def external_link(request):
         form = form_class(request.POST)
         if form.is_valid():
             return render_modal_workflow(request,
-                None, 'verdantadmin/choose_page/external_link_chosen.js',
+                None, 'verdantadmin/chooser/external_link_chosen.js',
                 {
                     'url': form.cleaned_data['url'],
                     'link_text': form.cleaned_data['link_text'] if prompt_for_link_text else form.cleaned_data['url']
@@ -100,7 +100,7 @@ def external_link(request):
         form = form_class()
 
     return render_modal_workflow(request,
-        'verdantadmin/choose_page/external_link.html', 'verdantadmin/choose_page/external_link.js',
+        'verdantadmin/chooser/external_link.html', 'verdantadmin/chooser/external_link.js',
         {
             'querystring': get_querystring(request),
             'allow_email_link': request.GET.get('allow_email_link'),
@@ -120,7 +120,7 @@ def email_link(request):
         form = form_class(request.POST)
         if form.is_valid():
             return render_modal_workflow(request,
-                None, 'verdantadmin/choose_page/external_link_chosen.js',
+                None, 'verdantadmin/chooser/external_link_chosen.js',
                 {
                     'url': 'mailto:' + form.cleaned_data['email_address'],
                     'link_text': form.cleaned_data['link_text'] if (prompt_for_link_text and form.cleaned_data['link_text']) else form.cleaned_data['email_address']
@@ -130,7 +130,7 @@ def email_link(request):
         form = form_class()
 
     return render_modal_workflow(request,
-        'verdantadmin/choose_page/email_link.html', 'verdantadmin/choose_page/email_link.js',
+        'verdantadmin/chooser/email_link.html', 'verdantadmin/chooser/email_link.js',
         {
             'querystring': get_querystring(request),
             'allow_external_link': request.GET.get('allow_external_link'),
