@@ -108,7 +108,8 @@ AREA_CHOICES = (
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
-    ('openday', 'Open Day')
+    ('openday', 'Open Day'),
+    ('talkrca', 'TalkRCA'),
 )
 
 EVENT_LOCATION_CHOICES = (
@@ -1355,6 +1356,77 @@ EventIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+# == Talks index ==
+
+
+class TalksIndexAd(Orderable):
+    page = ParentalKey('rca.TalksIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class TalksIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
+
+    def serve(self, request):
+        talks = EventItem.past_objects.filter(live=True, audience='talkrca').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+
+        talks = previousTalks.distinct()
+
+        page = request.GET.get('page')
+
+        paginator = Paginator(talks, 6)  # Show 10 talks items per page
+        try:
+            talks = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            talks = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            talks = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/talks_listing.html", {
+                'self': self,
+                'talks': talks
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'talks': talks,
+            })
+
+TalksIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+TalksIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 
 # == Reviews index ==
 
