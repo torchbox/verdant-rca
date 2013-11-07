@@ -3088,7 +3088,7 @@ ContactUsPage.promote_panels = [
 
 class DonationPage(Page, SocialFields):
     redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, related_name='+')
-    payment_description = models.CharField(help_text="The value of payment description field for donations made on this page.", max_length=255, blank=True)
+    payment_description = models.CharField(max_length=255, blank=True, help_text="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages.")
 
     # fields copied from StandrdPage
     intro = RichTextField(blank=True)
