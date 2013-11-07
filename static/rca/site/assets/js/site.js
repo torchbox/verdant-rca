@@ -67,10 +67,13 @@ on typing text */
 function showSearchSubmit() {
     $('form.search input[type="submit"]').hide();
     $('form.search input[type="text"]').focus(function() {
-       $('form.search input[type="submit"]').show(); 
+       $('form.search input[type="submit"]').show();
     });
     $('form.search input[type="text"]').focusout(function() {
-       $('form.search input[type="submit"]').hide(); 
+       // I've commented out this code as it makes the button disappear
+       // when you click it causing the search form to not be submitted!
+
+       //$('form.search input[type="submit"]').hide();
     });
 }
 
@@ -82,7 +85,7 @@ function showSearchAutocomplete() {
                 response(data);
             })
         },
-        select: function( event, ui ) { 
+        select: function( event, ui ) {
             window.location.href = ui.item.url;
         }
     });
@@ -133,7 +136,7 @@ function applyCarousel(carouselSelector){
             // find vimeos in old slide and stop them if playing
             post($('.videoembed.vimeo iframe'), 'pause');
         }
-    }); 
+    });
 
     return carousel;
 }
@@ -143,11 +146,11 @@ function post(frame, action, value) {
     $(frame).each(function(){
         var url = $(this).attr('src').split('?')[0];
         var data = { method: action };
-        
+
         if (value) {
             data.value = value;
         }
-        
+
         $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
     })
 }
@@ -210,7 +213,7 @@ $(function(){
             applyCarousel($('.carousel', $($(this).attr('href'))));
             $(this).data('carousel', true);
         }
-    });   
+    });
 
     /* Vimeo player API */
     $('.videoembed.vimeo').each(function(){
@@ -228,17 +231,17 @@ $(function(){
         // Handle messages received from the player
         function onMessageReceived(e) {
             var data = JSON.parse(e.data);
-            
+
             switch (data.event) {
                 case 'ready':
                     post(f, 'addEventListener', 'pause');
                     post(f, 'addEventListener', 'finish');
                     break;
-                                       
+
                 case 'pause':
                     //nothing
                     break;
-                   
+
                 case 'finish':
                     //nothing
                     break;
@@ -247,6 +250,12 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });
@@ -257,11 +266,11 @@ $(function(){
         setup: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+        },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+        },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
@@ -270,7 +279,7 @@ $(function(){
 
     // Things definitely only for desktop
     Harvey.attach(breakpoints.desktopSmall, {
-        setup: function(){}, 
+        setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
@@ -281,7 +290,7 @@ $(function(){
                     stamp: ".stamp"
                 });
             });
-        }, 
+        },
         off: function(){
             $('.packery').destroy();
         }
@@ -332,7 +341,7 @@ $(function(){
             var time = 0;
             newItems.each(function(index){
                 var $item = $(this);
-                setTimeout( function(){ 
+                setTimeout( function(){
                     $item.addClass('fade-in-after');
                 }, time);
                 time += step;
@@ -350,7 +359,7 @@ $(function(){
             var time = 0;
             newItems.reverse().each(function(index){
                 var $item = $(this);
-                setTimeout( function(){ 
+                setTimeout( function(){
                     $item.removeClass('fade-in-after').addClass('fade-in-before');
                 }, time);
                 time += step;
@@ -362,7 +371,7 @@ $(function(){
 
         loadmore.click(function(e){
             e.preventDefault();
-            
+
             if(paginationContainer && $(paginationContainer).length){
                 var nextLink = $('.next a', $(paginationContainer));
                 var nextLinkUrl = nextLink.attr('href');
@@ -372,7 +381,7 @@ $(function(){
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
-                    
+
                     // get next pagination link
                     if($(paginationContainer + ' .next a', nextPage).length){
                         nextLink.attr('href', $(paginationContainer + ' .next a', nextPage).attr('href'));
@@ -381,7 +390,7 @@ $(function(){
                     }
 
                     showNewItems();
-                });                
+                });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
                 $this.addClass('expanded');
@@ -392,7 +401,7 @@ $(function(){
             return false;
         });
     });
-    
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
     $('.gallery').each(function(){
         var maxWidth = $(this).width();
@@ -406,7 +415,7 @@ $(function(){
             if(typeof rowArray[rowCounter] == "undefined"){
                 rowArray[rowCounter] = new Array();
             }
-            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */   
+            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
         }
 
         items.each(function(){
@@ -419,7 +428,7 @@ $(function(){
                 addToArray($(this));
             }
         });
-        
+
         // Change items parent container to a div, to maintain validity
         if(items.parent().prop('tagName') == 'UL'){
             items.parent().replaceWith(function(){
@@ -489,9 +498,10 @@ $(function(){
             if(!$(e.target).parent().hasClass('filter')){
                 $('label', $self).parent().removeClass('expanded');
             }
-        })
+        });
     });
- 
+
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
+
 });
