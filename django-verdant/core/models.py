@@ -201,8 +201,8 @@ class Page(MP_Node, ClusterableModel, Indexed):
             else:
                 raise Http404
 
-    def save_revision(self, user=None):
-        self.revisions.create(content_json=self.to_json(), user=user)
+    def save_revision(self, user=None, submitted_for_moderation=False):
+        self.revisions.create(content_json=self.to_json(), user=user, submitted_for_moderation=submitted_for_moderation)
 
     def get_latest_revision(self):
         try:
@@ -423,6 +423,13 @@ class Orderable(models.Model):
 
 class PageRevision(models.Model):
     page = models.ForeignKey('Page', related_name='revisions')
+    submitted_for_moderation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True, blank=True)
     content_json = models.TextField()
+
+    def save(self, *args, **kwargs):
+        super(PageRevision, self).save(*args, **kwargs)
+        if self.submitted_for_moderation:
+            # ensure that all other revisions of this page have the 'submitted for moderation' flag unset
+            self.page.revisions.exclude(id=self.id).update(submitted_for_moderation=False)

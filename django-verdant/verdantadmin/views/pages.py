@@ -139,7 +139,10 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            if request.POST.get('action-publish'):
+            is_publishing = bool(request.POST.get('action-publish'))
+            is_submitting = bool(request.POST.get('action-submit'))
+
+            if is_publishing:
                 page.live = True
                 page.has_unpublished_changes = False
             else:
@@ -147,9 +150,14 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 page.has_unpublished_changes = True
 
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            page.save_revision(user=request.user)
+            page.save_revision(user=request.user, submitted_for_moderation=is_submitting)
 
-            messages.success(request, "Page '%s' created." % page.title)
+            if is_publishing:
+                messages.success(request, "Page '%s' published." % page.title)
+            elif is_submitting:
+                messages.success(request, "Page '%s' submitted for moderation." % page.title)
+            else:
+                messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             edit_handler = edit_handler_class(instance=page, form=form)
@@ -175,7 +183,8 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = request.POST.get('action-publish')
+            is_publishing = bool(request.POST.get('action-publish'))
+            is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
                 page.live = True
@@ -192,10 +201,12 @@ def edit(request, page_id):
                     page.has_unpublished_changes = True
                     form.save()
 
-            page.save_revision(user=request.user)
+            page.save_revision(user=request.user, submitted_for_moderation=is_submitting)
 
             if is_publishing:
                 messages.success(request, "Page '%s' published." % page.title)
+            elif is_submitting:
+                messages.success(request, "Page '%s' submitted for moderation." % page.title)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
