@@ -4,6 +4,7 @@ ul.listing{
 }
 
 .listing{
+    margin-bottom:2em;
     ul&{
         border-top:1px dashed @color-input-border;
         margin-bottom:2em;
@@ -36,7 +37,7 @@ ul.listing{
     }
 
     thead{
-        background-color:@color-thead-bg;
+        
         color: @color-grey;
         text-transform:uppercase;
         border-bottom:1px solid @color-input-border;
@@ -79,6 +80,9 @@ ul.listing{
             margin-left:-@grid-gutter-width * 2;
         }
     }
+    &.full-width thead{
+        background-color:@color-thead-bg;
+    }
 
     tbody tr{
         border-bottom:1px dashed @color-input-border;
@@ -91,6 +95,10 @@ ul.listing{
         font-size:1em;
     }
     
+    tbody td{
+        .table-column(1);
+    }
+
     .bulk{
         .table-column(1);
         padding-right:0;
@@ -132,6 +140,9 @@ ul.listing{
         }
     }
 
+    .parent{
+        .table-column(2);
+    }
     .type{
         .table-column(1);
     }
@@ -205,37 +216,6 @@ ul.listing{
         .push-padding(@grid-content-indent);
     }
 
-
-    /* column widths */
-    .title{
-        .column(4);
-
-        h2{
-            margin:0;
-            font-size:1.2em;
-            font-weight:700;
-            color:darken(@color-grey, 10%);
-            line-height:1.5em;
-        
-            a{
-                color:inherit;
-                text-decoration:none;
-
-                &:hover{
-                    color:@color-link;
-                }
-            }
-        }
-    }
-    &.chooser .title{
-        .column(7)
-    }
-    .type{
-        .column(2);
-    }
-    .status{
-        .column(2);
-    }
     .children{
         width:8%;
         padding:0;
@@ -335,8 +315,8 @@ ul.listing{
 }
 
 @media screen and (min-width: @breakpoint-desktop-small){
-    table.listing td:first-child,
-    table.listing th:first-child{
+    table.listing.full-width td:first-child,
+    table.listing.full-width th:first-child{
         .push-padding(@grid-content-indent);
     }
 }

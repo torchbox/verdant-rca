@@ -4,6 +4,6 @@ function(modal) {
         return false;
     });
 
-    {% include 'verdantadmin/choose_page/_search_behaviour.js' %}
+    {% include 'verdantadmin/chooser/_search_behaviour.js' %}
     ajaxifySearchResults();
 }

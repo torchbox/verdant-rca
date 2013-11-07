@@ -2,24 +2,36 @@
 
 {% if talks %}
     <section class="one-plus x-plus module" data-pagination=".pagination">
+        <h2 class="module-title">Previous Talks</h2>
         <div class="item-container">
             <ul class="row">
-                {% for review in reviews %}
+                {% for talk in talks %}
                     {% comment %}The forloop counter just gives the index for the current set of results, and we need to know the overall
                     index of the news item to know when to correctly apply the newrow class. This isn't available from the django
                     paginator, but the index of the first item on the page is. Adding this to the forloop counter, and then adding -1 (because
                     start_index is 1 based not 0 based) gives the correct calculation. {% endcomment %}
-                    {% if forloop.counter0|add:reviews.start_index|add:"-1"|divisibleby:"2" %}
+                    {% if forloop.counter0|add:talks.start_index|add:"-1"|divisibleby:"2" %}
                         <li class="newrow">
                     {% else %}
                         <li>
                     {% endif %}
-                        <a href="{% pageurl review %}">
+                        <a href="{% pageurl talk %}">
                                 <div class="image">
-                                    {% if review.feed_image %}
-                                        {% image review.feed_image width-600 %}
+                                    {% if talk.feed_image %}
+                                        {% image talk.feed_image width-600 %}
                                     {% else %}
-                                        {% with review.carousel_items.all as carousel_items %}
+                                        {% with talk.carousel_items.all as carousel_items %} 
+                                            {% with carousel_items|first as carousel_item %}
+                                                {% if carousel_item.image %}        
+                                                    {% image carousel_item.image fill-600x337%}
+                                                {% elif carousel_item.poster_image %}
+                                                    {% image carousel_item.poster_image fill-600x337 %}
+                                                {% else %}
+                                                    <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endwith %}
+                                        <!-- {% with talk.carousel_items.all as carousel_items %}
                                             {% with carousel_items|first as carousel_item %}
                                                 {% if carousel_item.image %}
                                                     {% image carousel_item.image fill-300x169 %}
@@ -27,19 +39,17 @@
                                                     <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
                                                 {% endif %}
                                             {% endwith %}
-                                        {% endwith %}
+                                        {% endwith %} -->
                                     {% endif %}
                                 </div>
                             <div class="content">
-                                <h3 class='h5'>{{ review.title }}</h3>
-                                {% if review.listing_intro %}
-                                <p>{{ review.listing_intro }}</p>
-                                {% endif %}
+                                <h3 class='h5'>{{ talk.title }}</h3>
+                                <h3 class="bc4 caps">{{ talk.start_date|date:"j F Y" }}</h3>
                             </div>
                         </a>
                     </li>
                 {% endfor %}
-                {% if reviews.paginator.count > 10 %}
+                {% if talks.paginator.count > 10 %}
                     <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
@@ -53,8 +63,8 @@
         {% endif %}
         -->
 
-        {% if reviews.has_next %}
-            <li class="next"><a href="?page={{ reviews.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
+        {% if talks.has_next %}
+            <li class="next"><a href="?page={{ talks.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
         {% endif %}
     </ul>
 

@@ -1,0 +1,34 @@
+{% if not is_searching %}
+    <h2>Explorer</h2>
+    <p class="breadcrumb">
+        {% for page in parent_page.get_ancestors %}
+            <a class="navigate-pages" href="{% url 'verdantadmin_choose_page_child' page.id %}?{{ querystring }}">{{ page.title }}</a> /
+        {% endfor %}
+        <b>{{ parent_page.title }}</b>
+    </p>
+{% else %}
+    <h2>{{ pages.count }} search match{{ pages.count|pluralize:"es" }}</h2>
+{% endif %}
+
+<table class="listing small chooser">
+    <tbody>
+        {% for page in pages %}
+            <tr>
+                <td class="title">
+                    {% if page.can_choose %}
+                        <a class="choose-page" href="#{{ page.page.id }}" data-id="{{ page.page.id }}" data-title="{{ page.page.title }}" data-url="{{ page.page.url }}">{{ page.page.title }}</a>
+                    {% else %}
+                        {{ page.page.title }}
+                    {% endif %}
+                </td>
+                <td class="type">{{ page.page.content_type }}</td>
+                {% if is_searching %}<td class="parent">{{ page.page.get_parent.title }}</td>{% endif %}
+                <td class="{% if page.can_descend %}children{% else %}no-children{% endif %}">
+                    {% if page.can_descend %}
+                        <a href="{% url 'verdantadmin_choose_page_child' page.page.id %}?{{ querystring }}" class="icon text-replace icon-arrow-right navigate-pages" title="Explorer subpages of '{{ page.page.title }}'">Explore</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

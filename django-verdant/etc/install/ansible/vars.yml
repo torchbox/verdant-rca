@@ -23,6 +23,7 @@ web_packages:
     - libxslt1-dev
     - libxml2-dev
     - virtualenvwrapper
+    - redis-server
 python_packages:
     - pip 
     - virtualenv

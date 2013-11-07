@@ -402,6 +402,9 @@ $(function(){
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
+                    if(loadmore.hasClass('gallery-load-more')){
+                        alignGallery();
+                    }
 
                     // get next pagination link
                     if($(paginationContainer + ' .next a', nextPage).length){
@@ -411,9 +414,6 @@ $(function(){
                     }
 
                     showNewItems();
-                    //setTimeout(function(){
-                        alignGallery();
-                    //}, 500);
                 });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
@@ -424,16 +424,11 @@ $(function(){
 
             return false;
         });
-
-        $('.gallery-load-more').click(function(e){
-
-        });
     });
 
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
 
     var alignGallery = function(){
-        console.log('bar');
         $('.gallery').each(function(){
             var maxWidth = $(this).width();
             var totalWidth = 0;
@@ -464,7 +459,7 @@ $(function(){
             // Change items parent container to a div, to maintain validity
             if(items.parent().prop('tagName') == 'UL'){
                 items.parent().replaceWith(function(){
-                    return $("<div />").append($(this).contents());
+                    return $("").append($(this).contents());
                 });
             }
 
