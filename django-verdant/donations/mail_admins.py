@@ -21,7 +21,7 @@ class email_errors(object):
             pass
     """
 
-    default_error_blacklist = [SoftTimeLimitExceeded, ]
+    # default_error_blacklist = [SoftTimeLimitExceeded, ]
 
     def __init__(self, error_blacklist=[]):
         self.error_blacklist = error_blacklist
