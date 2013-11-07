@@ -159,6 +159,8 @@ SCHOOL_CHOICES = (
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
+    ('rectorate', 'Rectorate'),
+
 )
 
 HISTORICAL_PROGRAMMES = {
@@ -319,6 +321,7 @@ HISTORICAL_PROGRAMMES = {
         ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
         ('textiles', 'Textiles'),
         ('globalinnovationdesign', 'Global Innovation Design'),
+        ('drawingstudio', 'Drawing Studio'),
     ),
 }
 
@@ -349,6 +352,7 @@ PROGRAMME_CHOICES = (
     ('fashionmenswear', 'Fashion Menswear'),
     ('fashionwomenswear', 'Fashion Womenswear'),
     ('textiles', 'Textiles'),
+    ('drawingstudio', 'Drawing Studio'),
 )
 
 SCHOOL_PROGRAMME_MAP = {
@@ -359,6 +363,7 @@ SCHOOL_PROGRAMME_MAP = {
     'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
     'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     'helenhamlyn': [],
+    'rectorate': [],
 }
 
 # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
@@ -375,6 +380,7 @@ SUBJECT_CHOICES = (
     ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
     ('designinteractions', 'Design Interactions'),
     ('designproducts', 'Design Products'),
+    ('drawingstudio', 'Drawing Studio'),
     ('fashionmenswear', 'Fashion Menswear'),
     ('fashionwomenswear', 'Fashion Womenswear'),
     ('innovationdesignengineering', 'Innovation Design Engineering'),
@@ -1379,7 +1385,7 @@ class TalksIndex(Page, SocialFields):
     def serve(self, request):
         talks = EventItem.past_objects.filter(live=True, audience='talkrca').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
-        talks = previousTalks.distinct()
+        talks = talks.distinct()
 
         page = request.GET.get('page')
 
