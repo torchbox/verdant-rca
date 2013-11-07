@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
-from core.models import Page, get_page_types
+from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -460,3 +460,17 @@ def search(request):
             'is_searching': is_searching,
             'search_query': q,
         })
+
+
+@login_required
+def approve_moderation(request, revision_id):
+    revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.submitted_for_moderation:
+        messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
+        return redirect('verdantadmin_home')
+
+    if request.POST:
+        revision.publish()
+        messages.success(request, "Page '%s' published." % revision.page.title)
+
+    return redirect('verdantadmin_home')

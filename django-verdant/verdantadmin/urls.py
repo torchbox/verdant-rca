@@ -32,6 +32,8 @@ urlpatterns += patterns('verdantadmin.views',
     url(r'^pages/(\d+)/move/(\d+)/$', 'pages.move_choose_destination', name='verdantadmin_pages_move_choose_destination'),
     url(r'^pages/(\d+)/move/(\d+)/confirm/$', 'pages.move_confirm', name='verdantadmin_pages_move_confirm'),
 
+    url(r'^pages/moderation/(\d+)/approve/$', 'pages.approve_moderation', name='verdantadmin_pages_approve_moderation'),
+
     url(r'^choose-page/$', 'choose_page.browse', name='verdantadmin_choose_page'),
     url(r'^choose-page/(\d+)/$', 'choose_page.browse', name='verdantadmin_choose_page_child'),
     url(r'^choose-page/search/$', 'choose_page.search', name='verdantadmin_choose_page_search'),

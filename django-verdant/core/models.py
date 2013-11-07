@@ -210,15 +210,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
         except IndexError:
             return self.specific
 
-        result = self.specific_class.from_json(revision.content_json)
-
-        # Override the possibly-outdated tree parameter fields from the revision object
-        # with up-to-date values
-        result.path = self.path
-        result.depth = self.depth
-        result.numchild = self.numchild
-
-        return result
+        return revision.as_page_object()
 
     def serve(self, request):
         return render(request, self.template, {
@@ -440,3 +432,21 @@ class PageRevision(models.Model):
         if self.submitted_for_moderation:
             # ensure that all other revisions of this page have the 'submitted for moderation' flag unset
             self.page.revisions.exclude(id=self.id).update(submitted_for_moderation=False)
+
+    def as_page_object(self):
+        obj = self.page.specific_class.from_json(self.content_json)
+
+        # Override the possibly-outdated tree parameter fields from this revision object
+        # with up-to-date values
+        obj.path = self.page.path
+        obj.depth = self.page.depth
+        obj.numchild = self.page.numchild
+
+        return obj
+
+    def publish(self):
+        page = self.as_page_object()
+        page.live = True
+        page.save()
+        self.submitted_for_moderation = False
+        self.save(update_fields=['submitted_for_moderation'])
