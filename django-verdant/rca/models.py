@@ -1354,6 +1354,76 @@ EventIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
+# == Reviews index ==
+
+
+class ReviewsIndexAd(Orderable):
+    page = ParentalKey('rca.ReviewsIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ReviewsIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
+
+    def serve(self, request):
+        reviews = ReviewPage.objects.filter(live=True)
+
+        reviews = reviews.distinct()
+
+        page = request.GET.get('page')
+
+        paginator = Paginator(reviews, 10)  # Show 10 news items per page
+        try:
+            reviews = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            reviews = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            reviews = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/news_listing.html", {
+                'self': self,
+                'reviews': reviews
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'reviews': reviews,
+            })
+
+ReviewsIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ReviewsIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 # == Review page ==
 
 class ReviewPageCarouselItem(Orderable, CarouselItemFields):
@@ -1413,6 +1483,7 @@ class ReviewPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     author = models.CharField(max_length=255, blank=True)
+    listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
     indexed_fields = ('body', 'strapline', 'author')
@@ -1444,6 +1515,7 @@ ReviewPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('listing_intro'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2183,7 +2255,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 5)  # Show 11 research items per page
+        paginator = Paginator(staff_pages, 17)  # Show 11 research items per page
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2858,7 +2930,7 @@ class GalleryPage(Page, SocialFields):
 
 
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 10)  # Show 10 gallery items per page
+        paginator = Paginator(gallery_items, 5)  # Show 10 gallery items per page
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:
