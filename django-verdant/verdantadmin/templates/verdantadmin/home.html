@@ -11,11 +11,13 @@
             <table class="listing">
                 <tr>
                     <th>Title</th>
-                    <th>Submitted</th>
+                    <th>Submitted by</th>
+                    <th>Submission date</th>
                 </tr>
                 {% for revision in page_revisions_for_moderation %}
                     <tr>
                         <td>{{ revision.page.title }}</td>
+                        <td>{{ revision.user.get_full_name }}</td>
                         <td>{{ revision.created_at|date:"d M Y" }}
                     </tr>
                 {% endfor %}
