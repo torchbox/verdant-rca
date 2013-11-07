@@ -1,3 +1,7 @@
+from datetime import date
+import datetime
+import logging
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
@@ -7,9 +11,6 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-
-from datetime import date
-import datetime
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -26,6 +27,7 @@ from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from donations.forms import DonationForm
+from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -3040,11 +3042,12 @@ class DonationPage(Page, SocialFields):
                 except stripe.CardError, e:
                     # CardErrors are displayed to the user
                     messages.error(request, e['message'])
-                # TODO: for other exceptions we should send emails to admins and display a user freindly error message
-                # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
-                # except Exception, e:
-                #     mail_admins()
-                #     messages.error(request, "")
+                except Exception, e:
+                    # for other exceptions we send emails to admins and display a user freindly error message
+                    # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
+                    mail_exception(e, prefix=" [stripe] ")
+                    logging.error("[stripe] ", exc_info=full_exc_info())
+                    messages.error(request, "There was a problem processing your payment. Please try again later.")
 
         return render(request, self.template, {
             'self': self,
