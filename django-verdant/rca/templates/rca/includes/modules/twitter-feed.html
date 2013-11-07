@@ -1,27 +1,9 @@
 {% comment %}
-	static for now
+	Populated via javascript.
+	TODO: set username dynamically
 {% endcomment %}
 
 <section class="twitter-feed module">
-	<h2><a href="#">@RCAevents twitter</a></h2>
-	<ul class="row">
-		<li>
-			<a href="#">
-				<h3>15 mins ago from @RCAVisualcomm twitter</h3>
-				<p>#FF our brilliant hunter gatherers @ jrpielichaty @SerenaKatt @beckyallenart @Rachel_e_taylor aka Rachy T, all amazing</p>
-			</a>
-		</li>
-		<li>
-			<a href="#">
-				<h3>30 mins ago from @foobar</h3>
-				<p>Curating students final event with @acmestudios artists, Sun 26 May, with performances, 3-6pm. Free.</p>
-			</a>
-		</li>
-		<li>
-			<a href="#">
-				<h3>2 days ago from @infodesignuk</h3>
-				<p>RT @mark_barratt: Call for papers for Symposium on Communicatiing Complex information. N Carolina in February: http:// workshop.design4complexity.com/home.php</p>
-			</a>
-		</li>
-	</ul>
+	<h2><a href="http://twitter.com/{{ self.twitter_feed|default:global_default_twitter_handle}}">@{{ self.twitter_feed|default:global_default_twitter_handle }} twitter</a></h2>
+	<div class="twitter-feed-items" data-twitter-feed="{{ self.twitter_feed|default:global_default_twitter_handle }}"></div>
 </section>

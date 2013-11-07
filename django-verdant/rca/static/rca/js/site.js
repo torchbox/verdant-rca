@@ -6,7 +6,7 @@ var breakpoints = {
     desktopSmall: "screen and (min-width:768px)",
     desktopRegular: "screen and (min-width:1024px)",
     desktopLarge: "screen and (min-width:1280px)"
-}
+};
 
 var expansionAnimationSpeed = 300;
 
@@ -105,7 +105,7 @@ function initializeMaps() {
         center: new google.maps.LatLng(51.501144, -0.179285),
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    };
     var map = new google.maps.Map(mapCanvas, mapOptions);
 
     var mapCanvas2 = document.getElementById('map_canvas_battersea');
@@ -113,7 +113,7 @@ function initializeMaps() {
         center: new google.maps.LatLng(51.479167, -0.170076),
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    };
     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
 }
 
@@ -129,11 +129,11 @@ function applyCarousel(carouselSelector){
         $this.parent().css('max-height', calcHeight());
         $('li', $this).css('max-height', calcHeight());
         $('.portrait img', $this).css('max-height', calcHeight());
-    })
+    });
 
     var carousel = $this.bxSlider({
         adaptiveHeight: true,
-        pager: function(){return $(this).hasClass('paginated')},
+        pager: function(){ return $(this).hasClass('paginated'); },
         onSliderLoad: function(){
             $this.parent().css('max-height', calcHeight());
             $('li', $this).css('max-height', calcHeight());
@@ -159,7 +159,7 @@ function post(frame, action, value) {
         }
 
         $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
-    })
+    });
 }
 
 $(function(){
@@ -181,6 +181,7 @@ $(function(){
             $(this).html('hide');
         }
     });
+
 
     /* tabs */
     //apply active class in correct place and add tab links
@@ -212,7 +213,7 @@ $(function(){
     });
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
-        e.preventDefault()
+        e.preventDefault();
         $(this).tab('show');
 
         /* ensure carousels within tabs only execute once, on first viewing */
@@ -268,6 +269,19 @@ $(function(){
         });
     });
 
+    /* Tweets */
+    $(".twitter-feed-items").each(function(){
+        var username = $(this).data("twitter-feed");
+        $(this).tweet({
+            join_text: "auto",
+            username: username,
+            avatar_size: 32,
+            auto_join_text_default: "from @" + username,
+            loading_text: "Checking for new tweets...",
+            count: 3
+        });
+    });
+
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
         setup: function(){
@@ -312,7 +326,7 @@ $(function(){
                 stamp: ".stamp"
             });
         });
-    })
+    });
 
     /* x-plus functionality */
 
@@ -324,7 +338,7 @@ $(function(){
         var itemContainer = $('.item-container', $this);
         var ul = $('> ul', itemContainer);
         var items = $('> li', ul);
-        var step = 100
+        var step = 100;
         var hiddenClasses = 'hidden fade-in-before';
         var contractedHeight = items.first().height();
 
@@ -335,7 +349,7 @@ $(function(){
 
         var prepareNewItems = function(items){
             items.addClass(hiddenClasses);
-        }
+        };
 
         var showNewItems = function(){
             itemContainer.css('height', itemContainer.height());
@@ -353,7 +367,7 @@ $(function(){
                 }, time);
                 time += step;
             });
-        }
+        };
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
@@ -388,6 +402,9 @@ $(function(){
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
+                    if(loadmore.hasClass('gallery-load-more')){
+                        alignGallery();
+                    }
 
                     // get next pagination link
                     if($(paginationContainer + ' .next a', nextPage).length){
@@ -410,43 +427,48 @@ $(function(){
     });
 
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
-    $('.gallery').each(function(){
-        var maxWidth = $(this).width();
-        var totalWidth = 0;
-        var rowCounter = 0;
-        var rowArray = [];
-        var items = $('.item', $(this));
 
-        function addToArray(elem){
-            totalWidth += elem.width();
-            if(typeof rowArray[rowCounter] == "undefined"){
-                rowArray[rowCounter] = new Array();
+    var alignGallery = function(){
+        $('.gallery').each(function(){
+            var maxWidth = $(this).width();
+            var totalWidth = 0;
+            var rowCounter = 0;
+            var rowArray = [];
+            var items = $('.item', $(this));
+
+            function addToArray(elem){
+                totalWidth += elem.width();
+                if(typeof rowArray[rowCounter] == "undefined"){
+                    rowArray[rowCounter] = new Array();
+                }
+                rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             }
-            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
-        }
 
-        items.each(function(){
-            if(totalWidth + $(this).width() >= maxWidth){
-                rowCounter ++;
-                totalWidth = 0;
+            items.each(function(){
+                if(totalWidth + $(this).width() >= maxWidth){
+                    rowCounter ++;
+                    totalWidth = 0;
 
-                addToArray($(this));
-            }else{
-                addToArray($(this));
+                    addToArray($(this));
+                }else{
+                    addToArray($(this));
+                }
+            });
+
+
+            // Change items parent container to a div, to maintain validity
+            if(items.parent().prop('tagName') == 'UL'){
+                items.parent().replaceWith(function(){
+                    return $("").append($(this).contents());
+                });
+            }
+
+            for(i = 0; i < rowArray.length; i++){
+                $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
             }
         });
-
-        // Change items parent container to a div, to maintain validity
-        if(items.parent().prop('tagName') == 'UL'){
-            items.parent().replaceWith(function(){
-                return $("<div />").append($(this).contents());
-            });
-        }
-
-        for(i = 0; i < rowArray.length; i++){
-            $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
-        }
-    })
+    };
+    alignGallery();
 
     /* Search filters */
     $('.filters').each(function(){
@@ -473,7 +495,7 @@ $(function(){
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
             options.each(function(){
                 newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ ($(this).prop('selected') ? "selected":"") +'">' + $(this).html() + '</li>';
-            })
+            });
 
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
