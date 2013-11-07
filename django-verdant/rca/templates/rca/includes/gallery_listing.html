@@ -5,35 +5,19 @@
         <div class='item-container row'>
             <ul class='row'>
                 {% for galleryitem in gallery_items %}
-                {% with galleryitem.carousel_items.all as carousel_items %} 
-                            {% with carousel_items|first as carousel_item %}
-                                {% if carousel_item.image %}        
-                                    {% if carousel_item.image.is_landscape %}
-                        <li class="item landscape">
-                            <a href="{% pageurl galleryitem %}">
-                                <div class="image landscape">
-                                    {% else %}
-                        <li class="item portrait">
-                            <a href="{% pageurl galleryitem %}">
-                                <div class="image portrait">
-                                    {% endif %}
-                                    {% image carousel_item.image width-600 %}
-                                </div>
-                                <div class="content">
-                                    <h2 class="h6">{{ carousel_item.image.title }}</h2>
-                                    <p>{{ galleryitem.title }}</p>
-                                    <p class="meta a2">{{ galleryitem.get_programme_display }}</p>
-                                </div>
-                            </a>
-                        </li>   
-                        {% endif %}
+                    {% with galleryitem.carousel_items.all as carousel_items %} 
+                        {% with carousel_items|first as carousel_item %}
+                            {% if carousel_item.image %}        
+                                {% include "rca/includes/gallery_snippet.html" with gallery_image=carousel_item.image %}
+                            {% elif carousel_item.poster_image %}
+                                {% include "rca/includes/gallery_snippet.html" with gallery_image=carousel_item.poster_image %}
+                            {% endif %}
                         {% endwith %}
-                        {% endwith %}
+                    {% endwith %}
                 {% endfor %}
 
-
                 {% if gallery_items.paginator.count > 5 %}
-                    <li class="load-more{% if gallery_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
+                    <li class="load-more newrow gallery-load-more"><a href="#">+</a></li>
                 {% endif %}
             </ul>
         </div>
@@ -41,8 +25,8 @@
 
     <ul class="pagination infinite">
         <!--
-        {% if rca_now_items.has_previous %}
-            <li class="previous"><a href="?page={{ rca_now_items.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
+        {% if gallery_items.has_previous %}
+            <li class="previous"><a href="?page={{ gallery_items.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
         {% endif %}
         -->
 

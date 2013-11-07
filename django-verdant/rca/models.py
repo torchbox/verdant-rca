@@ -1,3 +1,7 @@
+from datetime import date
+import datetime
+import logging
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
@@ -7,9 +11,6 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-
-from datetime import date
-import datetime
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -26,6 +27,7 @@ from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from donations.forms import DonationForm
+from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -106,7 +108,8 @@ AREA_CHOICES = (
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
-    ('openday', 'Open Day')
+    ('openday', 'Open Day'),
+    ('talkrca', 'TalkRCA'),
 )
 
 EVENT_LOCATION_CHOICES = (
@@ -1355,6 +1358,77 @@ EventIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+# == Talks index ==
+
+
+class TalksIndexAd(Orderable):
+    page = ParentalKey('rca.TalksIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class TalksIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+
+    indexed = False
+
+    def serve(self, request):
+        talks = EventItem.past_objects.filter(live=True, audience='talkrca').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+
+        talks = previousTalks.distinct()
+
+        page = request.GET.get('page')
+
+        paginator = Paginator(talks, 6)  # Show 10 talks items per page
+        try:
+            talks = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            talks = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            talks = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/talks_listing.html", {
+                'self': self,
+                'talks': talks
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'talks': talks,
+            })
+
+TalksIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+TalksIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 
 # == Reviews index ==
 
@@ -2934,7 +3008,7 @@ class GalleryPage(Page, SocialFields):
 
 
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 5)  # Show 10 gallery items per page
+        paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:
@@ -3044,11 +3118,12 @@ class DonationPage(Page, SocialFields):
                 except stripe.CardError, e:
                     # CardErrors are displayed to the user
                     messages.error(request, e['message'])
-                # TODO: for other exceptions we should send emails to admins and display a user freindly error message
-                # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
-                # except Exception, e:
-                #     mail_admins()
-                #     messages.error(request, "")
+                except Exception, e:
+                    # for other exceptions we send emails to admins and display a user freindly error message
+                    # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
+                    # mail_exception(e, prefix=" [stripe] ")
+                    logging.error("[stripe] ", exc_info=full_exc_info())
+                    messages.error(request, "There was a problem processing your payment. Please try again later.")
 
         return render(request, self.template, {
             'self': self,
