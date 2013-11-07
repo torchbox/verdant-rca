@@ -32,6 +32,8 @@ apt-get install -y libjpeg62-dev zlib1g-dev libfreetype6-dev liblcms1-dev
 # Git (we'd rather avoid people keeping credentials for git commits in the repo, but sometimes we need it for pip requirements that aren't in PyPI)
 apt-get install -y git
 
+apt-get install -y redis-server
+
 # Postgresql
 if ! command -v psql; then
     apt-get install -y postgresql-$PGSQL_VERSION libpq-dev

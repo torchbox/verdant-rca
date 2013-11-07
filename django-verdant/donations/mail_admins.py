@@ -4,8 +4,8 @@ from django.core.mail import mail_admins
 from django.utils.functional import wraps
 from django.utils.text import truncate_words
 from django.template.defaultfilters import slugify
-# from celery.exceptions import SoftTimeLimitExceeded
-# from celery import task as _task
+from celery.exceptions import SoftTimeLimitExceeded
+from celery import task as _task
 
 
 class email_errors(object):
@@ -21,7 +21,7 @@ class email_errors(object):
             pass
     """
 
-    # default_error_blacklist = [SoftTimeLimitExceeded, ]
+    default_error_blacklist = [SoftTimeLimitExceeded, ]
 
     def __init__(self, error_blacklist=[]):
         self.error_blacklist = error_blacklist
@@ -79,7 +79,8 @@ class FauxTb(object):
 
 
 def current_stack(skip=0):
-    try: 1 / 0
+    try:
+        1 / 0
     except ZeroDivisionError:
         f = sys.exc_info()[2].tb_frame
     for i in xrange(skip + 2):

@@ -288,6 +288,7 @@
     h2 {
         .h7;
         margin: 0;
+        min-height: 25px;
 
         a {
             color: @color-highlight-blue;
@@ -312,14 +313,22 @@
         .column(12);
         margin-bottom:@spacing-one;
         overflow:hidden;
+        padding-left: 0;
+        padding-right: 10px;
     }
-        h3 {
+        h3, .tweet-time, .tweet-join {
             .a2;
             margin: 0;
         }
         p {
             .bc4;
             margin: 0;
+        }
+        .tweet-text{
+            display: block;
+        }
+        .tweet-avatar{
+            display: none;
         }
 
 }
