@@ -2932,7 +2932,7 @@ class GalleryPage(Page, SocialFields):
 
 
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
+        paginator = Paginator(gallery_items, 2)  # Show 5 gallery items per page
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:

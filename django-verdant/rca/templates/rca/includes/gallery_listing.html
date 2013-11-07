@@ -16,8 +16,8 @@
                     {% endwith %}
                 {% endfor %}
 
-                {% if gallery_items.paginator.count > 5 %}
-                    <li class="load-more newrow gallery-load-more"><a href="#">+</a></li>
+                {% if gallery_items.paginator.count > 2 %}
+                    <ul class="newrow"><li class="load-more gallery-load-more newrow"><a href="#">+</a></li></ul>
                 {% endif %}
             </ul>
         </div>
