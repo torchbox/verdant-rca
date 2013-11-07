@@ -15,7 +15,10 @@ class UserCreationForm(BaseUserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "is_superuser")
+        fields = ("username", "first_name", "last_name", "is_superuser", "groups")
+        widgets = {
+            'groups': forms.CheckboxSelectMultiple
+        }
 
     def save(self, commit=True):
         user = super(UserCreationForm, self).save(commit=False)
@@ -25,6 +28,7 @@ class UserCreationForm(BaseUserCreationForm):
 
         if commit:
             user.save()
+            self.save_m2m()
         return user
 
 
@@ -59,7 +63,10 @@ class UserEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "is_active", "is_superuser")
+        fields = ("username", "first_name", "last_name", "is_active", "is_superuser", "groups")
+        widgets = {
+            'groups': forms.CheckboxSelectMultiple
+        }
 
     def clean_username(self):
         # Since User.username is unique, this check is redundant,
@@ -89,4 +96,5 @@ class UserEditForm(forms.ModelForm):
             user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
+            self.save_m2m()
         return user
