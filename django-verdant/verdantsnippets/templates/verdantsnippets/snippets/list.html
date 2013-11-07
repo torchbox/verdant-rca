@@ -13,6 +13,7 @@
         </div>
     </header>
     <div class="nice-padding">
+        {% if items %}
         <ul class="listing">
             {% for item in items %}
                 <li>
@@ -22,5 +23,8 @@
                 </li>
             {% endfor %}
         </ul>
+        {% else %}
+            <p class="no-results-message">No {{ snippet_type_name_plural }} have been created. Why not <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}">add one</a></p>
+        {% endif %}
     </div>
 {% endblock %}
