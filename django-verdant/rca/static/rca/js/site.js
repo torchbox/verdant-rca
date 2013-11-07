@@ -504,4 +504,8 @@ $(function(){
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 
+    /* Apply custom styles to selects */
+    $('select:not(.filters select)').customSelect({
+        customClass: "select"
+    });
 });

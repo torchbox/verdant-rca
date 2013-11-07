@@ -57,7 +57,19 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
-		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
+		// highlight the path to the current page in the menu based on the url
+		// it might not contain all the levels leading to it
+		var path = document.location.pathname;
+		while(path.split("/").length > 2){
+			var $menuItem = $(".menu a[href$='" + path + "']");
+			if($menuItem.length){
+				$menuItem.parents("li").addClass("selected");
+				break;
+			}else{
+				path = path.split("/").slice(0, -2).join("/") + "/";
+			}
+		}
+
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
