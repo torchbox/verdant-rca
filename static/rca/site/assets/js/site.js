@@ -72,7 +72,6 @@ function showSearchSubmit() {
     $('form.search input[type="text"]').focusout(function() {
        // I've commented out this code as it makes the button disappear
        // when you click it causing the search form to not be submitted!
-
        // HC - not sure who added above comment - but have implemented alternative below.
 
        //$('form.search input[type="submit"]').hide();
@@ -354,6 +353,7 @@ $(function(){
                 }, time);
                 time += step;
             });
+
         }
 
         var hideNewItems = function(){
@@ -398,6 +398,9 @@ $(function(){
                     }
 
                     showNewItems();
+                    //setTimeout(function(){
+                        alignGallery();
+                    //}, 500);
                 });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
@@ -408,46 +411,54 @@ $(function(){
 
             return false;
         });
+
+        $('.gallery-load-more').click(function(e){
+            
+        });
     });
 
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
-    $('.gallery').each(function(){
-        var maxWidth = $(this).width();
-        var totalWidth = 0;
-        var rowCounter = 0;
-        var rowArray = [];
-        var items = $('.item', $(this));
+    var alignGallery = function(){
+        console.log('bar');
+        $('.gallery').each(function(){
+            var maxWidth = $(this).width();
+            var totalWidth = 0;
+            var rowCounter = 0;
+            var rowArray = [];
+            var items = $('.item', $(this));
 
-        function addToArray(elem){
-            totalWidth += elem.width();
-            if(typeof rowArray[rowCounter] == "undefined"){
-                rowArray[rowCounter] = new Array();
+            function addToArray(elem){
+                totalWidth += elem.width();
+                if(typeof rowArray[rowCounter] == "undefined"){
+                    rowArray[rowCounter] = new Array();
+                }
+                rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             }
-            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
-        }
 
-        items.each(function(){
-            if(totalWidth + $(this).width() >= maxWidth){
-                rowCounter ++;
-                totalWidth = 0;
+            items.each(function(){
+                if(totalWidth + $(this).width() >= maxWidth){
+                    rowCounter ++;
+                    totalWidth = 0;
 
-                addToArray($(this));
-            }else{
-                addToArray($(this));
-            }
-        });
-
-        // Change items parent container to a div, to maintain validity
-        if(items.parent().prop('tagName') == 'UL'){
-            items.parent().replaceWith(function(){
-                return $("<div />").append($(this).contents());
+                    addToArray($(this));
+                }else{
+                    addToArray($(this));
+                }
             });
-        }
 
-        for(i = 0; i < rowArray.length; i++){
-            $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
-        }
-    })
+            // Change items parent container to a div, to maintain validity
+            if(items.parent().prop('tagName') == 'UL'){
+                items.parent().replaceWith(function(){
+                    return $("<div />").append($(this).contents());
+                });
+            }
+
+            for(i = 0; i < rowArray.length; i++){
+                $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
+            }
+        })
+    }
+    alignGallery();
 
     /* Search filters */
     $('.filters').each(function(){
