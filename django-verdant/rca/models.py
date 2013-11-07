@@ -109,7 +109,7 @@ EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
     ('openday', 'Open Day'),
-    ('talkrca', 'TalkRCA'),
+    ('rcatalks', 'RCA talks'),
 )
 
 EVENT_LOCATION_CHOICES = (
@@ -1383,7 +1383,7 @@ class TalksIndex(Page, SocialFields):
     indexed = False
 
     def serve(self, request):
-        talks = EventItem.past_objects.filter(live=True, audience='talkrca').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
         talks = talks.distinct()
 
@@ -1757,6 +1757,18 @@ class StandardIndexContactEmail(Orderable):
         FieldPanel('email_address')
     ]
 
+class StandardIndexOurSites(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='our_sites')
+    url = models.URLField()
+    site_name = models.CharField(max_length=255)
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('url'),
+        FieldPanel('site_name')
+    ]
+
 class StandardIndexAd(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='manual_adverts')
     ad = models.ForeignKey('rca.Advert', related_name='+')
@@ -1790,7 +1802,7 @@ class StandardIndex(Page, SocialFields):
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
     indexed = False
-
+    
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -1804,6 +1816,7 @@ StandardIndex.content_panels = [
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
+    InlinePanel(StandardIndex, 'our_sites', label="Our sites"),
     InlinePanel(StandardIndex, 'related_links', label="Related links"),
     InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -3009,7 +3022,7 @@ class GalleryPage(Page, SocialFields):
             gallery_items = gallery_items.filter(school=school)
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
-
+        
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
 

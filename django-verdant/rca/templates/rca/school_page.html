@@ -66,13 +66,18 @@
     <!-- research -->
     {% research_related school=self.school %}
 
+        <!-- events -->
+    {% upcoming_events_related school=self.school display_name=self.get_school_display %}
+
     <!-- news carousel -->
     {% news_carousel school=self.school %}
 
-    <!-- events -->
-    {% upcoming_events_related school=self.school display_name=self.get_school_display %}
+    <!-- open days -->
+    {% upcoming_events_related opendays=1 school=self.school %}
 
-	{% include "rca/includes/modules/contact.html" %}	
+	{% include "rca/includes/modules/contact.html" %}
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
     
 {% endblock %}
 

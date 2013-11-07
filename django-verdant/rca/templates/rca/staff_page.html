@@ -41,14 +41,14 @@
                             {% endif %}
                         </li>
                         <li class="col">{% comment %} note closed within forloop {% endcomment %}
-                            <h3 class="a2">School</h3>
+                            <h3 class="a2">School or Centre</h3>
                             <p class="h7">{{ self.get_school_display }}</p>
 
                             {% with self.roles.all as roles %}
                                 {% if roles %}
                                     {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}
                                         {% if forloop.counter == 1 %}
-                                            <h3 class="a2 space">Job</h3>
+                                            <h3 class="a2 space">Role</h3>
                                         {% else %}
                                             <li class="col">
                                         {% endif %}
@@ -157,6 +157,18 @@
                             </li>
                             <li class="col col-9 last">
                                 <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
+                            </li>
+                        </ul>
+                    {% endif %}
+                    
+                    {% if self.awards_and_grants %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="a2">Publications, exhibitions and other outcomes</h2>
+                            </li>
+                            <li class="col col-9 last">
+                                <div class="body-text-style">{{ self.awards_and_grants|richtext }}</div>
                             </li>
                         </ul>
                     {% endif %}
