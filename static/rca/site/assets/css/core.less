@@ -596,6 +596,7 @@ header {
         border: 0;
         position: relative;
         top: 2px;
+        padding: 0;
     }
  }
 
@@ -1238,6 +1239,34 @@ footer {
         width: 100%;
         height: 300px;
         background-color: #ccc;
+    }
+}
+
+.search-results {
+    h4 {
+        color: @color-dark-grey;
+    }
+    ul {
+        background-color: @color-white; /* fallback for ie8 */
+        background-color: fade(@color-white, 75%);
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        margin: 0;
+        border-bottom: 1px solid @color-medium-grey;
+        padding: @spacing-one 0;
+        margin: 0 10px;
+        &:last-child {
+            border: none;
+        }
+        h3 {
+            .bc3;
+            margin: 0;
+        }
+        span {
+            .a2;
+        }
     }
 }
 

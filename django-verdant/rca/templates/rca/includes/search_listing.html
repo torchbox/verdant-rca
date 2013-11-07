@@ -10,7 +10,7 @@
   </ul>
 
   {% if search_results.has_previous %}
-    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a>
+    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a> |
   {% endif %}
 
   {% if search_results.has_next %}
