@@ -4,8 +4,8 @@ from django.core.mail import mail_admins
 from django.utils.functional import wraps
 from django.utils.text import truncate_words
 from django.template.defaultfilters import slugify
-from celery.exceptions import SoftTimeLimitExceeded
-from celery import task as _task
+# from celery.exceptions import SoftTimeLimitExceeded
+# from celery import task as _task
 
 
 class email_errors(object):
@@ -51,7 +51,6 @@ def get_stacktrace(error):
 def mail_exception(error, prefix=None):
     """ Mails an exception w/ stacktrace to ADMINS, can pass a prefix like '[celery]' """
     try:
-        import pdb; pdb.set_trace()
         stacktrace = get_stacktrace(error)
         print stacktrace
         for subject in _error_subjects(error):
@@ -72,16 +71,15 @@ def _error_subjects(error):
     return [truncate_words(error_str, 5), slugify(truncate_words(error_str, 5)), "mail_exception error"]
 
 
-import sys
-
 class FauxTb(object):
     def __init__(self, tb_frame, tb_lineno, tb_next):
         self.tb_frame = tb_frame
         self.tb_lineno = tb_lineno
         self.tb_next = tb_next
 
+
 def current_stack(skip=0):
-    try: 1/0
+    try: 1 / 0
     except ZeroDivisionError:
         f = sys.exc_info()[2].tb_frame
     for i in xrange(skip + 2):
@@ -92,12 +90,14 @@ def current_stack(skip=0):
         f = f.f_back
     return lst
 
+
 def extend_traceback(tb, stack):
     """Extend traceback with stack info."""
     head = tb
     for tb_frame, tb_lineno in stack:
         head = FauxTb(tb_frame, tb_lineno, head)
     return head
+
 
 def full_exc_info():
     """Like sys.exc_info, but includes the full traceback."""
