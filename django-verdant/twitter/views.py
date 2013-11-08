@@ -14,7 +14,7 @@ def statuses_user_timeline(request):
     cache_key = "tweets_from_%s_last_%s" % (slugify(screen_name), count)
     result = cache.get(cache_key)
 
-    tweets_for_screen_name = Tweet.objects.filter(user_screen_name=screen_name).order_by('-created_at')
+    tweets_for_screen_name = Tweet.objects.filter(user_screen_name__iexact=screen_name).order_by('-created_at')
     tweets_for_screen_name_exist = tweets_for_screen_name.exists()
 
     if not tweets_for_screen_name_exist:
