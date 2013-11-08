@@ -647,6 +647,16 @@ class ProgrammePageCarouselItem(Orderable):
         FieldPanel('url'),
     ]
 
+class ProgrammePageManualStaffFeed(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
+    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    staff_role = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('staff', 'rca.StaffPage'),
+        FieldPanel('staff_role'),
+    ]
+
 class ProgrammePageRelatedLink(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -760,6 +770,7 @@ ProgrammePage.content_panels = [
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     FieldPanel('head_of_programme_statement'),
     PageChooserPanel('head_of_programme_link'),
+    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
@@ -1153,9 +1164,22 @@ class EventItem(Page, SocialFields):
                         days = 1
 
                     for day in range(days):
+                        # Get date
+                        date = eventdate.date_from + datetime.timedelta(days=day)
+
                         # Get times
-                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from)
-                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to)
+                        if eventdate.time_from is not None:
+                            start_time = eventdate.time_from
+                        else:
+                            start_time = datetime.time.min
+                        if eventdate.time_to is not None:
+                            end_time = eventdate.time_to
+                        else:
+                            end_time = datetime.time.max
+
+                        # Combine dates and times
+                        start_datetime = datetime.datetime.combine(date, start_time)
+                        end_datetime = datetime.datetime.combine(date, end_time)
 
                         # Get location
                         if self.location == "other":
@@ -1181,8 +1205,8 @@ class EventItem(Page, SocialFields):
                             'SUMMARY:' + add_slashes(self.title),
                             'DESCRIPTION:' + add_slashes(self.body),
                             'LOCATION:' + add_slashes(location),
-                            'DTSTART;TZID=Europe/London:' + start_time.strftime('%Y%m%dT%H%M%S'),
-                            'DTEND;TZID=Europe/London:' + end_time.strftime('%Y%m%dT%H%M%S'),
+                            'DTSTART;TZID=Europe/London:' + start_datetime.strftime('%Y%m%dT%H%M%S'),
+                            'DTEND;TZID=Europe/London:' + end_datetime.strftime('%Y%m%dT%H%M%S'),
                             'END:VEVENT',
                         ])
 

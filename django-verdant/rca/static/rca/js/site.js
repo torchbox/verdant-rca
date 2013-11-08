@@ -69,13 +69,6 @@ function showSearchSubmit() {
     $('form.search input[type="text"]').focus(function() {
        $('form.search input[type="submit"]').show();
     });
-    $('form.search input[type="text"]').focusout(function() {
-       // I've commented out this code as it makes the button disappear
-       // when you click it causing the search form to not be submitted!
-       // HC - not sure who added above comment - but have implemented alternative below.
-
-       //$('form.search input[type="submit"]').hide();
-    });
     $(document).click(function() {
         $('form.search input[type="submit"]').hide();
     });
@@ -418,8 +411,8 @@ $(function(){
                     }else{
                         loadmore.remove();
                     }
-
                     showNewItems();
+                    
                 });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
@@ -462,16 +455,16 @@ $(function(){
             });
 
 
-            // This used to change parent items to a div, but now that
-            // the gallery code is being called on clicking the load more button, it simply removes
-            // any parent uls before rewrapping in the new one - prevents endless nested divs which
-            // messed up the animation to slide down.
-            if(items.parent().prop('tagName') == 'UL'){
-                items.parent().replaceWith(function(){
-                    return $("").append($(this).contents());
-                });
-            }
-
+            // Remove any existing ul.newrow elements before rewrapping
+            // Means we don't get lots of nested uls when clicking the load more button
+            items.parent().each(function(){
+                if($(this).prop('tagName') == 'UL' && $(this).hasClass('newrow')){
+                    $(this).replaceWith(function(){
+                        return $(this).contents();
+                    });
+                }
+            });
+        
             for(i = 0; i < rowArray.length; i++){
                 $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
             }
