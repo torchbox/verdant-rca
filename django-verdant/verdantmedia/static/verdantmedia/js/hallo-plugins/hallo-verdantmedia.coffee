@@ -27,6 +27,15 @@
                 ModalWorkflow
                     url: '/admin/media/chooser/' # TODO: don't hard-code this, as it may be changed in urls.py
                     responses:
-                        mediaChosen: (url) ->
-                            alert 'hey'
+                        mediaChosen: (mediaData) ->
+                            elem = $(mediaData).get(0)
+                            if insertionPoint.length
+                                # we were inside an element, so insert before it
+                                insertionPoint.before(elem)
+                            else
+                                lastSelection.insertNode(elem)
+
+                            if elem.getAttribute('contenteditable') == 'false'
+                                insertRichTextDeleteControl(elem)
+                            widget.options.editable.element.trigger('change')
 )(jQuery)

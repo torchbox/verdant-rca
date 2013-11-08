@@ -6,7 +6,7 @@
 
 <div class="tab-content">
     <section id="form" class="active nice-padding">
-        <form class="media-form">
+        <form class="media-form" action="{% url 'verdantmedia_chooser_upload' %}" method="POST">
             {% csrf_token %}
             <ul class="fields">
                 {% for field in form %}

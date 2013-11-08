@@ -1,9 +1,18 @@
 function(modal) {
     $('form.media-form', modal.body).submit(function() {
-        var url = $('#id_url').val();
+        var formdata = new FormData(this);
 
-        modal.respond('mediaChosen', url);
-        modal.close();
+        $.ajax({
+            url: this.action,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            dataType: 'text',
+            success: function(response){
+                modal.loadResponseText(response);
+            }
+        });
 
         return false;
     });
