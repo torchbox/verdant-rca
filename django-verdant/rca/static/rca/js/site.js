@@ -69,13 +69,6 @@ function showSearchSubmit() {
     $('form.search input[type="text"]').focus(function() {
        $('form.search input[type="submit"]').show();
     });
-    $('form.search input[type="text"]').focusout(function() {
-       // I've commented out this code as it makes the button disappear
-       // when you click it causing the search form to not be submitted!
-       // HC - not sure who added above comment - but have implemented alternative below.
-
-       //$('form.search input[type="submit"]').hide();
-    });
     $(document).click(function() {
         $('form.search input[type="submit"]').hide();
     });
@@ -287,14 +280,20 @@ $(function(){
         setup: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
+            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
+            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
         },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
+            $('aside').insertAfter('.page-content'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertBefore('aside .related'); //events and ads moving to top of sidebar for desktop
         }
     });
 
