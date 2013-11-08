@@ -3039,7 +3039,7 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent").order_by('?')
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:

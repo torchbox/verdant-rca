@@ -1257,15 +1257,55 @@ footer {
         border-bottom: 1px solid @color-medium-grey;
         padding: @spacing-one 0;
         margin: 0 10px;
+        position: relative;
+        min-height: 110px;
+
         &:last-child {
             border: none;
         }
-        h3 {
-            .bc3;
+        h3, p {
             margin: 0;
         }
+        h3 {
+            .bc3;
+        }
         span {
+            display: block;
             .a2;
+        }
+        img {
+            width: 140px;
+            height: 100px;
+        }
+        p {
+            .bc4;
+        }
+
+        @media screen and (min-width: 500px) {
+            h3, p {
+                margin-left: 150px;
+            }
+            img {
+                position: absolute;
+                left: 5px;
+                top: 5px;
+            }
+        }
+    }
+
+    .page-nav {
+        text-align: center;
+
+        .page-nav-current-page {
+            .bc3;
+        }
+        .page-nav-previous {
+            .h6;
+            float: left;
+        }
+        .page-nav-next {
+            .h6;
+            float: right;
         }
     }
 }
