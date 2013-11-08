@@ -288,6 +288,7 @@
     h2 {
         .h7;
         margin: 0;
+        min-height: 25px;
 
         a {
             color: @color-highlight-blue;
@@ -312,14 +313,22 @@
         .column(12);
         margin-bottom:@spacing-one;
         overflow:hidden;
+        padding-left: 0;
+        padding-right: 10px;
     }
-        h3 {
+        h3, .tweet-time, .tweet-join {
             .a2;
             margin: 0;
         }
         p {
             .bc4;
             margin: 0;
+        }
+        .tweet-text{
+            display: block;
+        }
+        .tweet-avatar{
+            display: none;
         }
 
 }
@@ -714,7 +723,10 @@
 /**
  *$One plus block
  */
-.one-plus {
+
+/* current research has 4 items on a line but only one at mobile and shouldn't scroll
+- so doubling up with a three-plus-no-scroll class here */
+.one-plus, .three-plus-no-scroll {
     ul{
         li {
             margin-bottom: @spacing-one;
@@ -749,7 +761,7 @@
  *$Five plus block + $Three plus block (on homepage)
  */
 
-.five-plus, .col9 .three-plus{
+.five-plus, .col9 .three-plus {
     li{
         .column(4);
         display:inline-block;
