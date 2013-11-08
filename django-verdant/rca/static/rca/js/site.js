@@ -456,7 +456,10 @@ $(function(){
             });
 
 
-            // Change items parent container to a div, to maintain validity
+            // This used to change parent items to a div, but now that
+            // the gallery code is being called on clicking the load more button, it simply removes
+            // any parent uls before rewrapping in the new one - prevents endless nested divs which
+            // messed up the animation to slide down.
             if(items.parent().prop('tagName') == 'UL'){
                 items.parent().replaceWith(function(){
                     return $("").append($(this).contents());
