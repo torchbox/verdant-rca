@@ -6,11 +6,11 @@ def editor_attibutes(url):
 
 
 def media_to_html(url, extra_attributes):
-    embedly_html = embedly(url)
+    embedly_html = embedly(url, arg=600)
     if embedly_html != "":
-    	return '<div %s class="full-width">%s</div>' % (extra_attributes, embedly_html)
+    	return '<div %s>%s</div>' % (extra_attributes, embedly_html)
     else:
-    	return ""
+    	return ''
 
 
 def media_to_editor_html(url):
