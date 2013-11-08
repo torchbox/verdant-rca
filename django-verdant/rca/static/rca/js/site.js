@@ -297,7 +297,7 @@ $(function(){
     $(window.packerytweets).on('loaded', function(){
         var arr = jQuery.makeArray($('li', window.packerytweets));
         $('.packery .tweet .inner .content').each(function(){
-            $(this).html($(arr.pop()).html());
+            $(this).html($(arr.shift()).html());
         });
     })
 
