@@ -44,7 +44,10 @@
     {% upcoming_events_related programme=self.programme display_name=self.get_programme_display %}
 
     <!-- staff -->
-    {% staff_by_programme programme=self.programme %}
+    <!-- {% staff_by_programme programme=self.programme %} -->
+
+    <!-- staff manual -->
+        {% include "rca/includes/manual_staff_feed.html" %}   
 
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programme %}

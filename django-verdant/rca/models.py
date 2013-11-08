@@ -647,6 +647,16 @@ class ProgrammePageCarouselItem(Orderable):
         FieldPanel('url'),
     ]
 
+class ProgrammePageManualStaffEntry(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
+    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    staff_role = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('staff', 'rca.StaffPage'),
+        FieldPanel('staff_role'),
+    ]
+
 class ProgrammePageRelatedLink(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -760,6 +770,7 @@ ProgrammePage.content_panels = [
     PageChooserPanel('head_of_programme', 'rca.StaffPage'),
     FieldPanel('head_of_programme_statement'),
     PageChooserPanel('head_of_programme_link'),
+    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
@@ -2228,6 +2239,7 @@ class StaffPagePublicationExhibition(Orderable):
         FieldPanel('link'),
         ImageChooserPanel('image'),
     ]
+
 
 class StaffPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
