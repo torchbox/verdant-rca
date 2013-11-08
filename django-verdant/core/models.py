@@ -349,6 +349,14 @@ class Page(MP_Node, ClusterableModel, Indexed):
             else:
                 return "live"
 
+    def has_unpublished_subtree(self):
+        """
+        An awkwardly-defined flag used in determining whether unprivileged editors have
+        permission to delete this article. Returns true if and only if this page is non-live,
+        and it has no live children.
+        """
+        return (not self.live) and (not self.get_descendants().filter(live=True).exists())
+
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,

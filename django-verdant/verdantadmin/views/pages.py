@@ -6,7 +6,7 @@ from django.template import RequestContext
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
@@ -141,7 +141,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            is_publishing = bool(request.POST.get('action-publish'))
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -185,7 +185,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = bool(request.POST.get('action-publish'))
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -257,6 +257,18 @@ def reorder(request, parent_page_id=None):
 @login_required
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
+
+    if not request.user.has_perm('core.can_unpublish_page'):
+        # they should only be able to delete this page if this page is unpublished, AND it has no
+        # published children
+        if page.live:
+            parent_id = page.get_parent().id
+            messages.error(request, "You do not have permission to delete this page, because it is live on the site.")
+            return redirect('verdantadmin_explore', parent_id)
+        elif page.get_descendants().filter(live=True).exists():
+            parent_id = page.get_parent().id
+            messages.error(request, "You do not have permission to delete this page, because it has subpages that are live on the site.")
+            return redirect('verdantadmin_explore', parent_id)
 
     if request.POST:
         parent_id = page.get_parent().id
@@ -345,7 +357,7 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
-@login_required
+@permission_required('core.can_unpublish_page')
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -464,7 +476,7 @@ def search(request):
         })
 
 
-@login_required
+@permission_required('core.can_publish_page')
 def approve_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:
@@ -477,7 +489,7 @@ def approve_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@login_required
+@permission_required('core.can_publish_page')
 def reject_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:
@@ -491,7 +503,7 @@ def reject_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@login_required
+@permission_required('core.can_publish_page')
 def preview_for_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:

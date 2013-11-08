@@ -5,7 +5,11 @@ from core.models import PageRevision
 
 @login_required
 def home(request):
-    page_revisions_for_moderation = PageRevision.submitted_revisions.select_related('page', 'user').order_by('-created_at')
+    if request.user.has_perm('core.can_publish_page'):
+        page_revisions_for_moderation = PageRevision.submitted_revisions.select_related('page', 'user').order_by('-created_at')
+    else:
+        page_revisions_for_moderation = PageRevision.objects.none()
+
     return render(request, "verdantadmin/home.html", {
         'page_revisions_for_moderation': page_revisions_for_moderation
     })
