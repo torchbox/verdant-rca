@@ -852,7 +852,7 @@ class NewsIndex(Page, SocialFields):
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
         page = request.GET.get('page')
-        paginator = Paginator(news, 2)  # Show 10 news items per page
+        paginator = Paginator(news, 10)  # Show 10 news items per page
         try:
             news = paginator.page(page)
         except PageNotAnInteger:
@@ -2973,7 +2973,7 @@ class CurrentResearchPage(Page, SocialFields):
         research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 2)  # Show 8 research items per page
+        paginator = Paginator(research_items, 8)  # Show 8 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
