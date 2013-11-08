@@ -1257,6 +1257,9 @@ footer {
         border-bottom: 1px solid @color-medium-grey;
         padding: @spacing-one 0;
         margin: 0 10px;
+        position: relative;
+        min-height: 110px;
+
         &:last-child {
             border: none;
         }
@@ -1265,7 +1268,27 @@ footer {
             margin: 0;
         }
         span {
+            display: block;
             .a2;
+        }
+        img {
+            width: 140px;
+            height: 100px;
+        }
+        p {
+            .bc4;
+        }
+
+        @media screen and (min-width: 500px) {
+            h3 {
+                margin-left: 150px;
+                float: left;
+            }
+            img {
+                position: absolute;
+                left: 5px;
+                top: 5px;
+            }
         }
     }
 }

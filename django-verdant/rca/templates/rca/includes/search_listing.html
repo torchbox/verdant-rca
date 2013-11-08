@@ -1,10 +1,23 @@
-{% load rca_tags %}
+{% load rca_tags image_tags %}
 
 {% if search_results %}
   <ul class="row">
     {% for result in search_results %}
       {% with result.specific as result_specific %}
-        <li><h3><a href="{{ result_specific.url }}">{{ result_specific }}</a></h3><span>{{ result_specific|search_content_type }}</span></li>
+        <li>
+          <h3>
+            <a href="{{ result_specific.url }}">{{ result_specific }}</a>
+            <span>{{ result_specific|search_content_type }}</span>
+          </h3>
+
+          {% if result_specific.feed_image %}
+            {% image result_specific.feed_image width-200 %}
+          {% else %}
+            <img src="/static/rca/images/light-grey-placeholder.png">
+          {% endif %}
+
+          <p><!-- Description will go here --></p>
+        </li>
       {% endwith %}
     {% endfor %}
   </ul>
