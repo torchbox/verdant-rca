@@ -29,11 +29,19 @@
     {% endfor %}
   </ul>
 
-  {% if search_results.has_previous %}
-    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a> |
-  {% endif %}
+  {% if search_results.has_previous or search_results.has_next %}
+    <div class="page-nav">
+      {% if search_results.has_previous %}
+        <a class="page-nav-previous" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">&laquo; Previous</a>
+      {% endif %}
+   
+      {% if search_results.has_next %}
+        <a class="page-nav-next" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next &raquo;</a>
+      {% endif %}
 
-  {% if search_results.has_next %}
-    <a class="next-page" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next Page</a>
+      <div class="page-nav-current-page">
+        Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}.
+      </div>
+    </div>
   {% endif %}
 {% endif %}
