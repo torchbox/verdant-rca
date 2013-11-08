@@ -13,9 +13,16 @@
           {% if result_specific.feed_image %}
             {% image result_specific.feed_image width-200 %}
           {% else %}
-            <img src="/static/rca/images/light-grey-placeholder.png">
+            {% with result_specific.carousel_items.all as carousel_items %}
+              {% with carousel_items|first as carousel_item %}
+                {% if carousel_item.image %}
+                  {% image carousel_item.image width-200 %}
+                {% else %}
+                  <img src="/static/rca/images/light-grey-placeholder.png">
+                {% endif %}
+              {% endwith %}
+            {% endwith %}
           {% endif %}
-
           <p><!-- Description will go here --></p>
         </li>
       {% endwith %}
