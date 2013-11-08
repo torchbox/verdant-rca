@@ -1,0 +1,28 @@
+{% extends "rca/base.html" %}
+{% load pageurl image_tags embed_filters rich_text rca_tags %}
+
+{% block body_class %}
+    type-programme
+{% endblock %}
+
+{% block content %}
+    
+    {% include "rca/includes/modules/background-image.html" %}
+    {% include "rca/includes/modules/h1-major.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+    {% include "rca/includes/modules/intro-large.html" %}
+
+    <!-- news carousel -->
+
+    {% news_carousel area='research' %}
+
+    <!-- our sites -->
+    
+    {% include "rca/includes/modules/contact.html" %}   
+    {% include "rca/includes/modules/twitter-feed.html" %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showOpenDays="true" showRelatedLinks="true" %}
+{% endblock %}

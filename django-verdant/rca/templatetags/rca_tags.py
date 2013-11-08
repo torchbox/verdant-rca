@@ -182,20 +182,21 @@ def staff_random(context, exclude=None, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5, research_count=5, alumni_count=5):
+def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-    standard = StandardPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     tweets = [[],[],[],[],[]]
 
-    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], standard[:standard_count], research[:research_count], alumni[:alumni_count], tweets[:tweets_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count]))
     random.shuffle(packeryItems)
 
     return {
+        'calling_page': calling_page,
         'packery': packeryItems,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -207,7 +208,7 @@ def sidebar_links(context, calling_page=None):
 
         # If no children, get siblings instead
         if len(pages) == 0:
-            pages = calling_page.get_siblings().filter(live=True, show_in_menus=True)
+            pages = calling_page.get_other_siblings().filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag

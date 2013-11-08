@@ -1,5 +1,5 @@
 {% if research_items %}
-    <section class="three-plus x-plus row module" data-pagination=".pagination">
+    <section class="three-plus-no-scroll x-plus row module" data-pagination=".pagination">
         <h2 class="module-title">Research</h2>
         <div class="item-container">
             <ul class="row">
@@ -16,7 +16,7 @@
                             {% include "rca/includes/modules/research_item.html" %}
                         </li>
                 {% endfor %}
-                {% if research_items.paginator.count > 2 %}
+                {% if research_items.paginator.count > 8 %}
                     <li class="load-more{% if research_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
