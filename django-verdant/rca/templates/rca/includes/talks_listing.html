@@ -1,7 +1,7 @@
 {% load pageurl image_tags %}
 
 {% if talks %}
-    <section class="one-plus x-plus module" data-pagination=".pagination">
+    <section class="one-plus x-plus index-listing module" data-pagination=".pagination">
         <h2 class="module-title">Previous Talks</h2>
         <div class="item-container">
             <ul class="row">
@@ -57,11 +57,6 @@
     </section>
 
     <ul class="pagination infinite">
-        <!--
-        {% if news.has_previous %}
-            <li class="previous"><a href="?page={{ news.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a></li>
-        {% endif %}
-        -->
 
         {% if talks.has_next %}
             <li class="next"><a href="?page={{ talks.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
