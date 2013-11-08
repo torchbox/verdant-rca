@@ -8,14 +8,14 @@
   <h1 class="h1">Search</h1>
   <div class="search-results">
     {% if search_results %}
-      <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }}.</h2>
+      <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
       <h4>Showing results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
 
       <div id="listing">
           {% include "rca/includes/search_listing.html" %}
       </div>
     {% else %}
-      <h2>No results found.</h2>
+      <h2>No results found</h2>
     {% endif %}
   </div>
   

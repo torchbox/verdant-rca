@@ -9,9 +9,10 @@ $(function(){
 
 
 	// copy the sidebar so that we can show it on the left in the mobile version
-	if(!$(".mobile-menu-wrapper > aside").length){
-		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
-	}
+	// HC: please note this functionality has now been moved to Harvey in site.js, where the sidebar is moved for mobile rather than cloned
+	//if(!$(".mobile-menu-wrapper > aside").length){
+		//$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	//}
 
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},

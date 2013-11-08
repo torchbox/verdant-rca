@@ -16,6 +16,7 @@ from verdantusers import urls as verdantusers_urls
 
 from donations import urls as donations_urls
 from rca import app_urls
+from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
@@ -47,6 +48,8 @@ urlpatterns = patterns('',
     url(r'^donations/', include(donations_urls)),
 
     url(r'^app/', include(app_urls)),
+
+    url(r'^twitter/', include(twitter_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism

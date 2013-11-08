@@ -1,19 +1,47 @@
-{% load rca_tags %}
+{% load rca_tags image_tags %}
 
 {% if search_results %}
   <ul class="row">
     {% for result in search_results %}
       {% with result.specific as result_specific %}
-        <li><h3><a href="{{ result_specific.url }}">{{ result_specific }}</a></h3><span>{{ result_specific|search_content_type }}</span></li>
+        <li>
+          <h3>
+            <a href="{{ result_specific.url }}">{{ result_specific }}</a>
+            <span>{{ result_specific|search_content_type }}</span>
+          </h3>
+
+          {% if result_specific.feed_image %}
+            {% image result_specific.feed_image width-200 %}
+          {% else %}
+            {% with result_specific.carousel_items.all as carousel_items %}
+              {% with carousel_items|first as carousel_item %}
+                {% if carousel_item.image %}
+                  {% image carousel_item.image width-200 %}
+                {% else %}
+                  <img src="/static/rca/images/light-grey-placeholder.png">
+                {% endif %}
+              {% endwith %}
+            {% endwith %}
+          {% endif %}
+          <p><!-- Description will go here --></p>
+        </li>
       {% endwith %}
     {% endfor %}
   </ul>
 
-  {% if search_results.has_previous %}
-    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a>
-  {% endif %}
+  {% if search_results.has_previous or search_results.has_next %}
+    <div class="page-nav">
+      {% if search_results.has_previous %}
+        <a class="page-nav-previous" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">&laquo; Previous</a>
+      {% endif %}
+   
+      {% if search_results.has_next %}
+        <a class="page-nav-next" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next &raquo;</a>
+      {% endif %}
 
-  {% if search_results.has_next %}
-    <a class="next-page" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next Page</a>
+      <div class="page-nav-current-page">
+        Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}
+      </div>
+    </div>
   {% endif %}
 {% endif %}

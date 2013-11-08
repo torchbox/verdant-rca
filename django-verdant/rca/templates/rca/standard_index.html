@@ -123,6 +123,10 @@
         {% upcoming_events_related area=self.events_feed_area display_name=self.get_events_feed_area_display %}
     {% endif %}
 
+    {% if self.our_sites %}
+        {% include "rca/includes/our_sites.html" %}
+    {% endif %}
+
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}
 

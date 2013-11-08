@@ -1,5 +1,8 @@
 {% load rca_tags image_tags pageurl %}
 
+
+<div class="events-ads-wrapper">
+
 <!-- Events -->
 {% if showToday %}
     {% upcoming_events exclude=self %}
@@ -9,40 +12,44 @@
 {% if showAdverts %}
     <!-- adverts -->
     {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block. Because of the way cycles work initially start it outside any forloop, with display:none {% endcomment %}
-    <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
+    <div class="adverts">
+        <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
 
-    {% if global_adverts %}
-        {% for advert in global_adverts %}
-            <div class="{% cycle adcolors %}">
-                {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
-                    <h2>{{ advert.text }}</h2>
-                    {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
-                {% if advert.url or advert.page %}</a>{% endif %}
-            </div>
-        {% endfor %}
-    {% endif %}
-    {% with self.manual_adverts.all as adverts %}
-        {% if adverts %}
-            {% for advert in adverts %}
+        {% if global_adverts %}
+            {% for advert in global_adverts %}
                 <div class="{% cycle adcolors %}">
-                    {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
-                    <h2>{{ advert.ad.text }}</h2>
-                    {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
-                {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
+                    {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
+                        <h2>{{ advert.text }}</h2>
+                        {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
+                    {% if advert.url or advert.page %}</a>{% endif %}
                 </div>
             {% endfor %}
         {% endif %}
-    {% endwith %}
+        {% with self.manual_adverts.all as adverts %}
+            {% if adverts %}
+                {% for advert in adverts %}
+                    <div class="{% cycle adcolors %}">
+                        {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
+                        <h2>{{ advert.ad.text }}</h2>
+                        {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
+                    {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
 {% endif %}
 
 <!--open days-->
 {% if showOpenDays %}
-    <div class="{% cycle adcolors %}">
+    <div class="{% cycle adcolors %} open-days">
         <a href="{{ global_events_index_url }}?audience=openday&programme={{ self.programme }}">
             <h2>Open Days</h2>
         </a>
     </div>
 {% endif %}
+
+</div>
 
 <!-- Related links -->
 {% if showRelatedLinks %}

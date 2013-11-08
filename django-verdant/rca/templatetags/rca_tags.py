@@ -38,7 +38,7 @@ def news_carousel(context, area="", programme="", school="", count=5):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area=""):
+def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", audience=""):
     events = EventItem.future_objects.all()
     if school:
         events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
@@ -46,6 +46,8 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
     elif area:
         events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
+    elif audience:
+        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(audience=audience).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -57,6 +59,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         'school': school,
         'programme': programme,
         'area': area,
+        'audience': audience,
         'events_index_url': context['global_events_index_url'],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -179,17 +182,17 @@ def staff_random(context, exclude=None, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, standard_count=5, research_count=5, alumni_count=5):
+def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-    standard = StandardPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     tweets = [[],[],[],[],[]]
 
-    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], standard[:standard_count], research[:research_count], alumni[:alumni_count], tweets[:tweets_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count]))
     random.shuffle(packeryItems)
 
     return {
@@ -204,7 +207,7 @@ def sidebar_links(context, calling_page=None):
 
         # If no children, get siblings instead
         if len(pages) == 0:
-            pages = calling_page.get_siblings().filter(live=True, show_in_menus=True)
+            pages = calling_page.get_other_siblings().filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag
