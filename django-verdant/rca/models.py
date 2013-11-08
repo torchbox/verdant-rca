@@ -1153,9 +1153,22 @@ class EventItem(Page, SocialFields):
                         days = 1
 
                     for day in range(days):
+                        # Get date
+                        date = eventdate.date_from + datetime.timedelta(days=day)
+
                         # Get times
-                        start_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_from)
-                        end_time = datetime.datetime.combine(eventdate.date_from + datetime.timedelta(days=day), eventdate.time_to)
+                        if eventdate.time_from is not None:
+                            start_time = eventdate.time_from
+                        else:
+                            start_time = datetime.time.min
+                        if eventdate.time_to is not None:
+                            end_time = eventdate.time_to
+                        else:
+                            end_time = datetime.time.max
+
+                        # Combine dates and times
+                        start_datetime = datetime.datetime.combine(date, start_time)
+                        end_datetime = datetime.datetime.combine(date, end_time)
 
                         # Get location
                         if self.location == "other":
@@ -1181,8 +1194,8 @@ class EventItem(Page, SocialFields):
                             'SUMMARY:' + add_slashes(self.title),
                             'DESCRIPTION:' + add_slashes(self.body),
                             'LOCATION:' + add_slashes(location),
-                            'DTSTART;TZID=Europe/London:' + start_time.strftime('%Y%m%dT%H%M%S'),
-                            'DTEND;TZID=Europe/London:' + end_time.strftime('%Y%m%dT%H%M%S'),
+                            'DTSTART;TZID=Europe/London:' + start_datetime.strftime('%Y%m%dT%H%M%S'),
+                            'DTEND;TZID=Europe/London:' + end_datetime.strftime('%Y%m%dT%H%M%S'),
                             'END:VEVENT',
                         ])
 
