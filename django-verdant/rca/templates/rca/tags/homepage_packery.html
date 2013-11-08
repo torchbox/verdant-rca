@@ -121,12 +121,15 @@
                 {% else %}
                     <!-- tweets-->
                     <li class="item double tweet" data-twitter-feed="{{ calling_page.twitter_feed }}" data-twitter-count="{{ calling_page.packery_tweets }}">
-                        <div class="inner"></div>
+                        <div class="inner">
+                            <h3 class="h7 highlight-blue">@{{ calling_page.twitter_feed }}</h3>
+                            <div class="content"></div>
+                        </div>
                     </li>
                 {% endif %}
             {% endfor %}
 
-            <li class="stamp load-more"><a href="#">+</a></li>
+            <!--TODO: make work! <li class="stamp load-more"><a href="#">+</a></li>-->
         </ul>
     </section>
 {% endif %}
