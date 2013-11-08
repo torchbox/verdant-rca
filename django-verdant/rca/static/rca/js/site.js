@@ -69,13 +69,6 @@ function showSearchSubmit() {
     $('form.search input[type="text"]').focus(function() {
        $('form.search input[type="submit"]').show();
     });
-    $('form.search input[type="text"]').focusout(function() {
-       // I've commented out this code as it makes the button disappear
-       // when you click it causing the search form to not be submitted!
-       // HC - not sure who added above comment - but have implemented alternative below.
-
-       //$('form.search input[type="submit"]').hide();
-    });
     $(document).click(function() {
         $('form.search input[type="submit"]').hide();
     });
