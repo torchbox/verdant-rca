@@ -279,6 +279,8 @@ $(function(){
     $('.packery .tweet').each(function(){
         if(!window.packerytweets){
             var username = $(this).data('twitter-feed');
+            var count = $(this).data('twitter-count');
+
             var tmp = $('<div></div>');
             tmp.tweet({
                 join_text: 'auto',
@@ -286,11 +288,17 @@ $(function(){
                 avatar_size: 32,
                 auto_join_text_default: 'from @' + username,
                 loading_text: 'Checking for new tweets...',
-                count: 3
-            });
+                count: count
+            })
+
             window.packerytweets = tmp;
         }
-        console.log($('li', window.packerytweets.get(0)))
+    });
+    $(window.packerytweets).on('loaded', function(){
+        var arr = jQuery.makeArray($('li', window.packerytweets));
+        $('.packery .tweet .inner').each(function(){
+            $(this).html($(arr.pop()).html());
+        });
     })
 
     /* mobile rejigging */
