@@ -1900,6 +1900,7 @@ class HomePage(Page, SocialFields):
     packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_standard = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1908,12 +1909,13 @@ HomePage.content_panels = [
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
     MultiFieldPanel([
-    FieldPanel('packery_news'),
-    FieldPanel('packery_staff'),
-    FieldPanel('packery_student_work'),
-    FieldPanel('packery_tweets'),
-    FieldPanel('packery_rcanow'),
-    FieldPanel('packery_standard'),
+        FieldPanel('packery_news'),
+        FieldPanel('packery_staff'),
+        FieldPanel('packery_student_work'),
+        FieldPanel('packery_tweets'),
+        FieldPanel('twitter_feed'),
+        FieldPanel('packery_rcanow'),
+        FieldPanel('packery_standard'),
     ], 'Packery content'),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
 ]
