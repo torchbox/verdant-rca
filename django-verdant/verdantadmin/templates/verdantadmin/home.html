@@ -22,6 +22,7 @@
                         <td>{{ revision.created_at|date:"d M Y" }}</td>
                         <td>
                             <a href="{% url 'verdantadmin_pages_edit' revision.page.id %}">Edit</a>
+                            <a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a>
                             <form action="{% url 'verdantadmin_pages_approve_moderation' revision.id %}" method="POST">
                                 {% csrf_token %}
                                 <input type="submit" class="button" value="Approve">

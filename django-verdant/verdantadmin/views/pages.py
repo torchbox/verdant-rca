@@ -488,3 +488,13 @@ def reject_moderation(request, revision_id):
         messages.success(request, "Page '%s' rejected for publication." % revision.page.title)
 
     return redirect('verdantadmin_home')
+
+@login_required
+def preview_for_moderation(request, revision_id):
+    revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.submitted_for_moderation:
+        messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
+        return redirect('verdantadmin_home')
+
+    page = revision.as_page_object()
+    return page.serve(request)
