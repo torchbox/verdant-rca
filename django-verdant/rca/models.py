@@ -2587,7 +2587,7 @@ class RcaNowPage(Page, SocialFields):
     date = models.DateField("Creation date")
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    area = models.CharField(max_length=255, choices=AREA_CHOICES)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
