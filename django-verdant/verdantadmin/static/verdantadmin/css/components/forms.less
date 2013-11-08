@@ -382,7 +382,8 @@ ul.inline li:first-child, li.inline:first-child{
 
 .image-chooser {
     .unchosen, .chosen{
-        height:95px;
+        .clearfix;
+        min-height:95px;
 
         &:before{
             content:"o";
@@ -390,7 +391,7 @@ ul.inline li:first-child, li.inline:first-child{
             line-height:97px;
         }
     }
-    .chosen{
+    .chosen{        
         &:before{
             content:"";
         }
