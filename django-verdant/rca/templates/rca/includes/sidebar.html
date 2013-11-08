@@ -1,5 +1,6 @@
 {% load rca_tags image_tags pageurl %}
 
+
 <div class="events-ads-wrapper">
 
 <!-- Events -->
@@ -36,12 +37,12 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-    {% endif %}
-</div>
+    </div>
+{% endif %}
 
 <!--open days-->
 {% if showOpenDays %}
-    <div class="{% cycle adcolors %} opendays">
+    <div class="{% cycle adcolors %} open-days">
         <a href="{{ global_events_index_url }}?audience=openday&programme={{ self.programme }}">
             <h2>Open Days</h2>
         </a>
