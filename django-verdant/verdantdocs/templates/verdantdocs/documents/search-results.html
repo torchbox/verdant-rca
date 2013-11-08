@@ -2,7 +2,7 @@
 <ul class="listing">
     {% for doc in documents %}
         <li>
-            <a class="document-choice" href="{% url 'verdantdocs_index' %}">
+            <a class="document-choice" href="{% url 'verdantdocs_edit_document' doc.id %}">
                 <h3>{{ doc.title }}</h3>
             </a>
             {% comment %}
