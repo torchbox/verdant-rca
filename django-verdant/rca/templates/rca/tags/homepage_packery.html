@@ -1,6 +1,5 @@
 {% load pageurl image_tags rca_tags %}
 
-
 {% if packery %}
     <section class="packery module row">
         <ul>
@@ -121,21 +120,16 @@
                     </li>
                 {% else %}
                     <!-- tweets-->
-                    <li class="item double">
+                    <li class="item double tweet" data-twitter-feed="{{ calling_page.twitter_feed }}" data-twitter-count="{{ calling_page.packery_tweets }}">
                         <div class="inner">
-                            <a href="#">
-                               <div class="content">
-                                    <h3 class="h7 highlight-blue">@RCAevents</h3>
-                                    <p class="bc4">This will be the tweet that appears on the page, pulled from Twitter API periodically </p>
-                                    <p class="a2">15 mins ago from @rcavisualcomm</p>
-                                </div>
-                            </a>
+                            <h3 class="h7 highlight-blue">@{{ calling_page.twitter_feed }}</h3>
+                            <div class="content"></div>
                         </div>
                     </li>
                 {% endif %}
             {% endfor %}
 
-            <li class="stamp load-more"><a href="#">+</a></li>
+            <!--TODO: make work! <li class="stamp load-more"><a href="#">+</a></li>-->
         </ul>
     </section>
 {% endif %}
