@@ -22,4 +22,5 @@ def global_vars(request):
         'global_gallery_url': '/gallery/',
         'global_gallery_url': '/reviews/',
         'global_default_twitter_handle': "RCAevents",
+        'global_research_student_index_url': '/research_students/'
     }

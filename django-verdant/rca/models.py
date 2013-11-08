@@ -520,6 +520,51 @@ class ReusableTextSnippetPlacement(models.Model):
     page = ParentalKey('core.Page', related_name='reusable_text_snippet_placements')
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
 
+# == Snippet: Contacts ==
+
+class ContactSnippetPhone(Orderable):
+    page = ParentalKey('rca.ContactSnippet', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class ContactSnippetEmail(Orderable):
+    page = ParentalKey('rca.ContactSnippet', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
+class ContactSnippet(models.Model):
+    title = models.CharField(max_length=255, help_text='This is the reference name for the contact. This is not displayed on the frontend.')
+    contact_title = models.CharField(max_length=255, blank=True, help_text="This is the optional title, displayed on the frontend")
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.title
+
+ContactSnippet.panels = [
+    FieldPanel('title'),
+    FieldPanel('contact_title'),
+    FieldPanel('contact_address'),
+    FieldPanel('contact_link'),
+    FieldPanel('contact_link_text'),
+    InlinePanel(ContactSnippet, 'contact_email', label="Contact phone numbers/emails"),
+    InlinePanel(ContactSnippet, 'contact_phone', label="Contact phone number"),
+]
+
+
+register_snippet(ContactSnippet)
+
+class ContactSnippetPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='contact_snippet_placements')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+')
+
 # == School page ==
 
 class SchoolPageCarouselItem(Orderable, CarouselItemFields):
@@ -1809,6 +1854,14 @@ class StandardIndexCustomContentModules(Orderable):
         SnippetChooserPanel('custom_content_module', CustomContentModule),
     ]
 
+class StandardIndexContactSnippet(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='contact_snippets')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('contact_snippet', ContactSnippet),
+    ]
+
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1850,6 +1903,7 @@ StandardIndex.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
+    InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
@@ -2436,6 +2490,47 @@ class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
+
+        if school and school != '':
+            research_students = research_students.filter(roles__school=school)
+        if programme and programme != '':
+            research_students = research_students.filter(roles__programme=programme)
+
+        research_students = research_students.distinct()
+
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
+        # research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(research_students, 17)  # Show 17 research students per page
+        try:
+            research_students = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_students = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_students = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_students_listing.html", {
+                'self': self,
+                'research_students': research_students,
+                'related_programmes': related_programmes,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_students': research_students
+            })
+
+
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -2459,6 +2554,9 @@ ResearchStudentIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+    
+
 
 # == Student profile page ==
 
