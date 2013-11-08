@@ -1,6 +1,8 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from django.template import RequestContext
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
@@ -497,4 +499,12 @@ def preview_for_moderation(request, revision_id):
         return redirect('verdantadmin_home')
 
     page = revision.as_page_object()
+    if not hasattr(request, 'userbar'):
+        request.userbar = []
+    request.userbar.append(
+        render_to_string('verdantadmin/pages/_moderator_user_bar.html', {
+            'revision': revision,
+        }, context_instance=RequestContext(request))
+    )
+
     return page.serve(request)

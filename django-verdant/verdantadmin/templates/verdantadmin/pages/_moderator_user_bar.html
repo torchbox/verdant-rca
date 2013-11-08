@@ -1,0 +1,14 @@
+<div class="moderator-controls">
+    <p>Previewing '{{ revision.page.title }}', submitted by {{ revision.user.get_full_name }} on {{ revision.created_at|date:"d M Y" }}.</p>
+
+    <a href="{% url 'verdantadmin_pages_edit' revision.page.id %}">Edit</a>
+    <form action="{% url 'verdantadmin_pages_approve_moderation' revision.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="button" value="Approve">
+    </form>
+
+    <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="button" value="Reject">
+    </form>
+</div>
