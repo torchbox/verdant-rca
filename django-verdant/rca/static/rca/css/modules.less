@@ -723,7 +723,10 @@
 /**
  *$One plus block
  */
-.one-plus {
+
+/* current research has 4 items on a line but only one at mobile and shouldn't scroll
+- so doubling up with a three-plus-no-scroll class here */
+.one-plus, .three-plus-no-scroll {
     ul{
         li {
             margin-bottom: @spacing-one;
@@ -758,7 +761,7 @@
  *$Five plus block + $Three plus block (on homepage)
  */
 
-.five-plus, .col9 .three-plus{
+.five-plus, .col9 .three-plus {
     li{
         .column(4);
         display:inline-block;
