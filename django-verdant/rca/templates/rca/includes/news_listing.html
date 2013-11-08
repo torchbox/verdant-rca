@@ -39,7 +39,7 @@
                         </a>
                     </li>
                 {% endfor %}
-                {% if news.paginator.count > 10 %}
+                {% if news.paginator.count > 2 %}
                     <li class="load-more{% if news|length|divisibleby:'2' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
