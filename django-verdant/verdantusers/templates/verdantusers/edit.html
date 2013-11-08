@@ -11,10 +11,8 @@
             {% csrf_token %}
             <ul class="fields">
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
-
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.first_name %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.last_name %}
-
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.password2 %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=form.is_active %}

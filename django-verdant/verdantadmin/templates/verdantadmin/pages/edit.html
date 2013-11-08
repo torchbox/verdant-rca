@@ -15,16 +15,17 @@
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <input type="submit" value="Save as draft" class="button" />
+                        <input type="submit" value="Save draft" class="button" />
                         <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
-                            <li><input type="button" id="action-preview" data-action="{% url 'verdantadmin_pages_preview_on_edit' page.id %}" data-windowname="verdant_preview_{{ page.id }}" value="Preview" class="button" /></li>
                             {% if page.live %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                            {% else %}
+                                <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
                             {% endif %}
-                            <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
                             <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
                             <li><input type="submit" name="action-submit" value="Submit for moderation" class="button" /></li>
+                            <li><input type="button" id="action-preview" data-action="{% url 'verdantadmin_pages_preview_on_edit' page.id %}" data-windowname="verdant_preview_{{ page.id }}" value="Preview" class="button" /></li>
                         </ul>
                     </div>
                 </li>

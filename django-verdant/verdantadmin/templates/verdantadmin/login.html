@@ -31,13 +31,19 @@
                 {{ form.password.label_tag }}
                 {{ form.password }}
             </div>
-            <p class="help"><a href="#">Forgotten it?</a></p>
+            {% comment %}
+                Removed until functionality exists
+                <p class="help"><a href="#">Forgotten it?</a></p>
+            {% endcomment %}
         </li>
-        <li class="checkbox">
-            <div class="field">
-                <label><input type="checkbox" /> Remember me</label>
-            </div>
-        </li>
+        {% comment %}
+            Removed until functionality exists
+            <li class="checkbox">
+                <div class="field">
+                    <label><input type="checkbox" /> Remember me</label>
+                </div>
+            </li>
+        {% endcomment %}
         <li>
             <input type="submit" value="Sign in"/>
         </li>
