@@ -1883,6 +1883,7 @@ class StandardPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', 'body')
 
@@ -1901,7 +1902,8 @@ StandardPage.content_panels = [
     InlinePanel(StandardPage, 'quotations', label="Quotation"),
     InlinePanel(StandardPage, 'images', label="Middle column image"),
     InlinePanel(StandardPage, 'manual_adverts', label="Manual adverts"),
-]
+    FieldPanel('twitter_feed'),
+    ]
 
 StandardPage.promote_panels = [
     MultiFieldPanel([
@@ -2016,6 +2018,7 @@ class StandardIndex(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     show_events_feed = models.BooleanField(default=False)
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
@@ -2047,6 +2050,7 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
+    FieldPanel('staff_feed_source'),
     FieldPanel('news_carousel_area'),
     MultiFieldPanel([
         FieldPanel('show_events_feed'),

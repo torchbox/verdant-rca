@@ -81,6 +81,17 @@ def staff_by_programme(context, programme):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/related_staff.html', takes_context=True)
+def related_staff(context, programme="", school=""):
+    if school:
+        staff = StaffPage.objects.filter(live=True, roles__school=school)
+    if programme:
+        staff = StaffPage.objects.filter(live=True, roles__programme=programme)  
+    return {
+        'staff': staff,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
 @register.inclusion_tag('rca/tags/alumni_by_programme.html', takes_context=True)
 def alumni_by_programme(context, programme):
     alumni = AlumniPage.objects.filter(live=True, programme=programme)
