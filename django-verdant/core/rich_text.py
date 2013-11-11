@@ -88,7 +88,7 @@ class MediaEmbedHandler(object):
         if for_editor:
             return format.media_to_editor_html(attrs['url'])
         else:
-            return format.media_to_html(attrs['url'], '')
+            return format.media_to_frontend_html(attrs['url'])
 
 
 class PageLinkHandler(object):
