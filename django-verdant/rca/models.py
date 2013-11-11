@@ -1458,7 +1458,7 @@ class TalksIndex(Page, SocialFields):
 
         page = request.GET.get('page')
 
-        paginator = Paginator(talks, 6)  # Show 10 talks items per page
+        paginator = Paginator(talks, 6)  # Show 6 talks items per page
         try:
             talks = paginator.page(page)
         except PageNotAnInteger:
@@ -2154,7 +2154,8 @@ class AlumniIndex(Page, SocialFields):
         if programme and programme != '':
             alumni_pages = alumni_pages.filter(programme=programme)
 
-        alumni_pages = alumni_pages.distinct()
+        #alumni_pages = alumni_pages.distinct()
+        alumni_pages = alumni_pages.order_by('?');
 
         # research_items.order_by('-year')
 
@@ -2423,7 +2424,8 @@ class StaffIndex(Page, SocialFields):
         if area and area != '':
             staff_pages = staff_pages.filter(roles__area=area)
 
-        staff_pages = staff_pages.distinct()
+        # staff_pages = staff_pages.distinct()
+        staff_pages = staff_pages.order_by('?')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
@@ -3146,6 +3148,8 @@ class GalleryPage(Page, SocialFields):
             gallery_items = gallery_items.filter(school=school)
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
+
+        gallery_items = gallery_items.order_by('?');
         
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
