@@ -383,6 +383,24 @@ a{
     }
 }
 
+/* Makes embedly embeds responsive
+   From: http://embed.ly/docs/tutorials/responsive */
+
+.responsive-object {
+    position: relative;
+    padding-bottom: 67.5%;
+    height: 0;
+    margin: 10px 0;
+    overflow: hidden;
+    iframe, object, embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+}
+
 /* bits and pieces */
 
 @import "components/icons.less";

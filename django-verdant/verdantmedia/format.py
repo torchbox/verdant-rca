@@ -1,4 +1,5 @@
-from django_embedly.templatetags.embed_filters import embedly
+from __future__ import division # Use true division
+from django_embedly.templatetags.embed_filters import embedly_get_dict
 
 
 def editor_attibutes(url):
@@ -6,9 +7,13 @@ def editor_attibutes(url):
 
 
 def media_to_html(url, extra_attributes):
-    embedly_html = embedly(url, arg=600)
-    if embedly_html != "":
-    	return '<div style="width: 600px;" %s>%s</div>' % (extra_attributes, embedly_html)
+    embed = embedly_get_dict(url)
+    if embed is not None:
+    	# Work out ratio
+    	ratio = str(embed['height'] / embed['width'] * 100) + "%"
+
+    	# Build html
+    	return '<div class="responsive-object" style="padding-bottom: %s;" %s>%s</div>' % (ratio, extra_attributes, embed['html'])
     else:
     	return ''
 
