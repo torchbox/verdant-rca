@@ -18,37 +18,46 @@ USER_AGENT = 'Mozilla/5.0 (compatible; django-embedly/0.2; ' \
 
 @register.filter
 def embedly(html, arg=None):
-    return mark_safe(EMBED_REGEX.sub(lambda x: embed_replace(x, maxwidth=arg), html))
+    return mark_safe(EMBED_REGEX.sub(lambda x: embed_replace(x.group(1), maxwidth=arg), html))
 
 
-def embed_replace(match, maxwidth=None):
-    url = match.group(1)
+def embed_replace(url, maxwidth=None):
+    embedly = embedly_get_dict(url, maxwidth)
+    if embedly is not None:
+        return embedly['html']
+    else:
+        return ''
 
-    key = make_cache_key(url, maxwidth)
-    cached_html = cache.get(key)
 
-    if cached_html:
-        return cached_html
+def embedly_get_dict(url, maxwidth=None):
+    # Check database
+    try:
+        saved_embed = SavedEmbed.objects.get(url=url, maxwidth=maxwidth)
+        return {
+            'url': url,
+            'maxwidth': maxwidth,
+            'type': saved_embed.type,
+            'html': saved_embed.html,
+            'width': saved_embed.width,
+            'height': saved_embed.height,
+        }
+    except SavedEmbed.DoesNotExist:
+        pass
 
-    # call embedly API
+    # Call embedly API
     client = Embedly(key=settings.EMBEDLY_KEY, user_agent=USER_AGENT)
     if maxwidth:
         oembed = client.oembed(url, maxwidth=maxwidth)
     else:
         oembed = client.oembed(url)
 
-    # check database
+    # Check for error
     if oembed.error:
-        try:
-            html = SavedEmbed.objects.get(url=url, maxwidth=maxwidth).html
-            cache.set(key, html)
-            return html
-        except SavedEmbed.DoesNotExist:
-            return 'Error embedding %s' % url
+        return None
 
-    # save result to database
+    # Save result to database
     row, created = SavedEmbed.objects.get_or_create(url=url, maxwidth=maxwidth,
-                defaults={'type': oembed.type})
+                defaults={'type': oembed.type, 'width': oembed.width, 'height': oembed.height})
 
     if oembed.type == 'photo':
         html = '<img src="%s" width="%s" height="%s" />' % (oembed.url,
@@ -61,11 +70,12 @@ def embed_replace(match, maxwidth=None):
         row.last_updated = datetime.now()
         row.save()
 
-    # set cache
-    cache.set(key, html, 86400)
-    return html
-
-
-def make_cache_key(url, maxwidth=None):
-    md5_hash = md5(url).hexdigest()
-    return "embeds.%s.%s" % (maxwidth if maxwidth else 'default', md5_hash)
+    # Return new dictionary
+    return {
+        'url': url,
+        'maxwidth': maxwidth,
+        'type': oembed.type,
+        'html': html,
+        'width': oembed.width,
+        'height': oembed.height,
+    }
