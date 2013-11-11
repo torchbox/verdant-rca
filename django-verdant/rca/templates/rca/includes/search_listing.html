@@ -8,12 +8,12 @@
                     <a href="{{ result_specific.url }}">
                         <div class="image">
                             {% if result_specific.feed_image %}
-                                {% image result_specific.feed_image width-224 %}
+                                {% image result_specific.feed_image fill-90x80 %}
                             {% else %}
                                 {% with result_specific.carousel_items.all as carousel_items %}
                                     {% with carousel_items|first as carousel_item %}
                                         {% if carousel_item.image %}
-                                            {% image carousel_item.image width-224 %}
+                                            {% image carousel_item.image fill-90x80 %}
                                         {% else %}
                                             &nbsp;
                                         {% endif %}
