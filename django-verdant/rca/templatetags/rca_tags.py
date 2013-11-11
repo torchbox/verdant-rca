@@ -110,7 +110,7 @@ def research_related(context, programme="", person="", school="", exclude=None):
     if exclude:
         research_items = research_items.exclude(id=exclude.id)
     return {
-        'research_items': research_items,
+        'research_items': research_items.order_by('?'),
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
         'person': person,
         'programme': programme,
