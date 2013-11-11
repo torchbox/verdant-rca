@@ -12,8 +12,8 @@ class SavedEmbed(models.Model):
     maxwidth = models.SmallIntegerField(null=True, blank=True)
     type = models.CharField(max_length=10, choices=OEMBED_TYPES)
     html = models.TextField(blank=True)
-    width = models.IntegerField()
-    height = models.IntegerField()
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
