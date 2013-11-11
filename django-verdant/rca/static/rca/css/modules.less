@@ -1559,6 +1559,33 @@
     &.infinite{
         display:none;
     }
+
+    .next,.prev{
+        float:left;
+    }
+    .next{
+        float:right;
+    }
+    a{
+        line-height:27px;
+        display:block;
+    }
+    a:after,
+    .prev a:before{
+        margin-bottom:-0.5em;
+        margin-left:0.5em;
+        display:inline-block;
+        content:"";
+        opacity:0.4;
+        .sprite-load(-95px, -1178px, 15px, 27px);
+    }
+    .prev a:after{
+        display:none;
+    }
+    .prev a:before{
+        margin-right:0.5em;
+        background-position:-131px -1178px;
+    }
 }
 
 

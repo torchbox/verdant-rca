@@ -1,47 +1,41 @@
 {% load rca_tags image_tags %}
 
 {% if search_results %}
-  <ul class="row">
-    {% for result in search_results %}
-      {% with result.specific as result_specific %}
-        <li>
-          <h3>
-            <a href="{{ result_specific.url }}">{{ result_specific }}</a>
-            <span>{{ result_specific|search_content_type }}</span>
-          </h3>
-
-          {% if result_specific.feed_image %}
-            {% image result_specific.feed_image width-200 %}
-          {% else %}
-            {% with result_specific.carousel_items.all as carousel_items %}
-              {% with carousel_items|first as carousel_item %}
-                {% if carousel_item.image %}
-                  {% image carousel_item.image width-200 %}
-                {% else %}
-                  <img src="/static/rca/images/light-grey-placeholder.png">
-                {% endif %}
-              {% endwith %}
+    <ul>
+        {% for result in search_results %}
+            {% with result.specific as result_specific %}
+                <li class="row">
+                    <a href="{{ result_specific.url }}">
+                        <div class="image">
+                            {% if result_specific.feed_image %}
+                                {% image result_specific.feed_image width-224 %}
+                            {% else %}
+                                {% with result_specific.carousel_items.all as carousel_items %}
+                                    {% with carousel_items|first as carousel_item %}
+                                        {% if carousel_item.image %}
+                                            {% image carousel_item.image width-224 %}
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                        <div class="content">
+                            <h4 class="h6">{{ result_specific }}</h4>
+                            <!-- Description will go here -->
+                            <div class="a2">{{ result_specific|search_content_type }}</div>
+                        </div>
+                    </a>
+                </li>
             {% endwith %}
-          {% endif %}
-          <p><!-- Description will go here --></p>
-        </li>
-      {% endwith %}
-    {% endfor %}
-  </ul>
+        {% endfor %}
+    </ul>
 
-  {% if search_results.has_previous or search_results.has_next %}
-    <div class="page-nav">
-      {% if search_results.has_previous %}
-        <a class="page-nav-previous" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">&laquo; Previous</a>
-      {% endif %}
-   
-      {% if search_results.has_next %}
-        <a class="page-nav-next" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next &raquo;</a>
-      {% endif %}
-
-      <div class="page-nav-current-page">
-        Page {{ search_results.number }} of {{ search_results.paginator.num_pages }}
-      </div>
-    </div>
-  {% endif %}
+    {% comment %}{% if search_results.has_previous or search_results.has_next %}{% endcomment %}
+        <ul class="row pagination">
+            <li class="prev"><a href="?q={{ query_string }}&amp;p={% comment %}{{ search_results.previous_page_number }}{% endcomment %}">Previous</a></li>
+            <li class="next"><a href="?q={{ query_string }}&amp;p={% comment %}{{ search_results.next_page_number }}{% endcomment %}">Next</a></li>
+        </ul>
+    {% comment %}{% endif %}{% endcomment %}
 {% endif %}

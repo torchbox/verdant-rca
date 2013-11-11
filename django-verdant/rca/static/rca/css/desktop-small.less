@@ -24,6 +24,7 @@
  * Structure..................structure and layout
  * Footer styles..............footer and bottom nav
  * Template specific styles
+ * Search results
  */
 
 /**
@@ -356,6 +357,13 @@ form.search {
     }
 }
 
+/**
+ * Search field autocomplete
+ */
+.ui-autocomplete{
+    width: 180px;
+}
+
 .page-content {
     float: left;
     width: 100%;
@@ -518,6 +526,20 @@ footer {
     .index-intro .content {
         width: 100%;
         padding-right:0;
+    }
+}
+
+/**
+ * Search results
+ */
+
+.search-results {
+    .image{
+        .column(2);
+        padding-left:0;
+    }
+    .content{
+        .column(10);
     }
 }
 
