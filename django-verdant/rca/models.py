@@ -11,6 +11,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -72,6 +74,19 @@ class RcaImage(AbstractImage):
             lines.append(' | '.join(bottom_line_items))
 
         return lines
+
+    def caption_html(self):
+        # use caption_lines, but replace top line with a version that italicises the title
+        lines = self.caption_lines()
+
+        if self.creator:
+            lines[0] = mark_safe(u"<i>%s</i> by %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
+        else:
+            lines[0] = mark_safe(u"<i>%s</i>" % conditional_escape(self.title))
+
+        escaped_lines = [conditional_escape(line) for line in lines]
+        return mark_safe('<br />'.join(escaped_lines))
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaImage)
@@ -1073,6 +1088,84 @@ NewsItem.promote_panels = [
     FieldPanel('area'),
     InlinePanel(NewsItem, 'related_schools', label="Related schools"),
     InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
+]
+
+
+# == Press release Item ==
+
+class PressReleaseCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.PressRelease', related_name='carousel_items')
+
+class PressReleaseLink(Orderable):
+    page = ParentalKey('rca.PressRelease', related_name='related_links')
+    link = models.URLField()
+    link_text = models.CharField(max_length=255)
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class PressReleaseRelatedSchool(models.Model):
+    page = ParentalKey('rca.PressRelease', related_name='related_schools')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+
+    panels = [
+        FieldPanel('school')
+    ]
+
+class PressReleaseRelatedProgramme(models.Model):
+    page = ParentalKey('rca.PressRelease', related_name='related_programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+
+    panels = [FieldPanel('programme')]
+
+class PressRelease(Page, SocialFields):
+    author = models.CharField(max_length=255)
+    date = models.DateField()
+    intro = RichTextField()
+    body = RichTextField()
+    show_on_homepage = models.BooleanField()
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = 'PressRelease'
+
+
+PressRelease.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('author'),
+    FieldPanel('date'),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(PressRelease, 'related_links', label="Links"),
+    InlinePanel(PressRelease, 'carousel_items', label="Carousel content"),
+]
+
+PressRelease.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+
+    FieldPanel('area'),
+    InlinePanel(PressRelease, 'related_schools', label="Related schools"),
+    InlinePanel(PressRelease, 'related_programmes', label="Related programmes"),
 ]
 
 

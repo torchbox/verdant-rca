@@ -1,0 +1,49 @@
+
+{% if self.contact_snippets %}
+
+	{% with self.contact_snippets.all as contacts %}
+		{% for contact in contacts %}
+			{% if forloop.first %}
+			<section class="module contact">
+				<h2 class="module-title">Contact</h2>
+			{% else %}
+			<section class="module contact">
+			{% endif %}
+				<ul class="row">
+					<li class="col col-1">
+						<p>
+							{% if contact.contact_snippet.contact_title %}
+								<strong>{{ contact.contact_snippet.contact_title }}</strong><br />
+							{% endif %}
+							{% if contact.contact_snippet.contact_address %}
+								{{ contact.contact_snippet.contact_address|linebreaks }}
+							{% endif %}
+							{% if contact.contact_snippet.contact_link and contact.contact_snippets.contact_link_text %}
+								<a href="{{ contact.contact_link }}" class="chevron">{{ contact.contact_snippet.contact_link_text }}</a>
+							{% endif %}
+						</p>
+					</li>
+					<li class="col col-2">
+						<p>
+							{% with contact.contact_snippet.contact_phone.all as phone_nos %}
+								{% if phone_nos %}
+									{% for phone_no in phone_nos %}
+										{{ phone_no.phone_number }}<br />
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+							{% with contact.contact_snippet.contact_email.all as emails %}
+								{% if emails %}
+									{% for email in emails %}
+										<a href="mailto:{{ email.email_address }}">{{ email.email_address }}</a><br />
+									{% endfor %}
+								{% endif %}
+							{% endwith %}
+						</p>
+					</li>
+				</ul>
+			</section>
+		{% endfor %}
+	{% endwith %}
+
+{% endif %}
