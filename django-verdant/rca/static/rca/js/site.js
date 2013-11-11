@@ -331,14 +331,14 @@ $(function(){
 
             /* Packery */
             $('.packery').imagesLoaded( function() {
-                var packery = $('.packery').packery({
+                window.packery = $('.packery').packery({
                     itemSelector: '.item',
                     stamp: ".stamp"
                 });
             });
         },
         off: function(){
-            $('.packery').destroy();
+             $('.packery').packery('destroy');
         }
     });
 

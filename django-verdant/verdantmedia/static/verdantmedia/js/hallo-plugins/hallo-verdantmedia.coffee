@@ -1,7 +1,7 @@
-# plugin for hallo.js to allow inserting images from the Verdant image library
+# plugin for hallo.js to allow inserting media
 
 (($) ->
-    $.widget "IKS.halloverdantimage",
+    $.widget "IKS.halloverdantmedia",
         options:
             uuid: ''
             editable: null
@@ -14,8 +14,8 @@
             button.hallobutton
                 uuid: @options.uuid
                 editable: @options.editable
-                label: 'Images'
-                icon: 'icon-picture'
+                label: 'Media'
+                icon: 'icon-media'
                 command: null
 
             # Append the button to toolbar
@@ -25,15 +25,12 @@
                 lastSelection = widget.options.editable.getSelection()
                 insertionPoint = $(lastSelection.endContainer).parentsUntil('.richtext').last()
                 ModalWorkflow
-                    url: '/admin/images/chooser/?select_format=true' # TODO: don't hard-code this, as it may be changed in urls.py
+                    url: '/admin/media/chooser/' # TODO: don't hard-code this, as it may be changed in urls.py
                     responses:
-                        imageChosen: (imageData) ->
-                            elem = $(imageData.html).get(0)
-
+                        mediaChosen: (mediaData) ->
+                            elem = $(mediaData).get(0)
                             lastSelection.insertNode(elem)
-
                             if elem.getAttribute('contenteditable') == 'false'
                                 insertRichTextDeleteControl(elem)
                             widget.options.editable.element.trigger('change')
-
 )(jQuery)
