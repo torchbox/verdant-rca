@@ -1458,7 +1458,7 @@ class TalksIndex(Page, SocialFields):
 
         page = request.GET.get('page')
 
-        paginator = Paginator(talks, 6)  # Show 10 talks items per page
+        paginator = Paginator(talks, 6)  # Show 6 talks items per page
         try:
             talks = paginator.page(page)
         except PageNotAnInteger:
