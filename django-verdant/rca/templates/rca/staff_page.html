@@ -8,28 +8,10 @@
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
-    <section class="four-tab row module">
-
-        {% comment %}
-        tab headers. Selected work and publications and exhibitions are optional.
-        Links are added by javascript
-        {% endcomment %}
-        <ul class="tab-nav tabs-{{ self.tabbed_feature_count }}">
-            <li class="active"><a class="t0">Info</a></li>
-            {% if self.carousel_items.all|length > 0 %}
-                <li><a class="t0">Selected work</a></li>
-            {% endif %}
-            {% if self.publications_exhibitions.all|length > 0 %}
-                <li><a class="t0">Publications &amp; exhibitions</a></li>
-            {% endif %}
-            <li><a class="t0">Research</a></li>
-        </ul>
-
-        <div class="tab-content">
-
+    {% tabdeck %}
+        {% tab "Info" %}
             <!--INFO TAB-->
             <!-- links and ids added by javascript -->
-            <h2 class="header"><a class="a0 active">Info</a></h2>
             <div class="tab-pane active flush">
                 <div class="profile">
                     <ul class="four-cols">
@@ -178,23 +160,23 @@
                 </div>
             </div>
             <!-- end info tab -->
+        {% endtab %}
 
-
-            <!-- SELECTED WORK TAB-->
-            <!-- links and ids added by javascript -->
-            {% if self.carousel_items.all|length > 0 %}
-                <h2 class="header"><a class="a0">Selected work</a></h2>
+        <!-- SELECTED WORK TAB-->
+        <!-- links and ids added by javascript -->
+        {% if self.carousel_items.all|length > 0 %}
+            {% tab "Selected work" %}
                 <div class="tab-pane">
                     {% include "rca/includes/modules/carousel.html" %}
                 </div>
-            {% endif %}
-            <!-- end selected work tab-->
+            {% endtab %}
+        {% endif %}
+        <!-- end selected work tab-->
 
-
-            <!-- PUBLICATIONS AND EXHIBITIONS TAB-->
-            <!-- links and ids added by javascript -->
-            {% if self.publications_exhibitions.all|length > 0 %}
-                <h2 class="header"><a class="a0">Publications &amp; exhibitions</a></h2>
+        <!-- PUBLICATIONS AND EXHIBITIONS TAB-->
+        <!-- links and ids added by javascript -->
+        {% if self.publications_exhibitions.all|length > 0 %}
+            {% tab "Publications & exhibitions" %}
                 <div class="tab-pane x-plus">
                     <div class="item-container">
                         <ul class="two-cols two-cols-image-big">
@@ -234,14 +216,14 @@
                             {% endwith %}
                         </ul>
                     </div>
-                </div>
-            {% endif %}
-            <!-- end publications and exhibitions tab-->
+                {% endtab %}
+            </div>
+        {% endif %}
+        <!-- end publications and exhibitions tab-->
 
-
-            <!-- RESEARCH TAB -->
-            <!-- links and ids added by javascript -->
-            <h2 class="header"><a class="a0">Research</a></h2>
+        <!-- RESEARCH TAB -->
+        <!-- links and ids added by javascript -->
+        {% tab "Research" %}
             <div class="tab-pane">
                 {% if self.research_interests %}
                     <h3 class="h6">Research interests</h3>
@@ -266,10 +248,8 @@
                 {% research_students_feed staff_page=self %}
 
             </div>
-            <!-- end research tab-->
-        </div>
-    </section>
-    
+        {% endtab %}<!-- end research tab-->
+    {% endtabdeck %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}

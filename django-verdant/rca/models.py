@@ -1090,6 +1090,54 @@ NewsItem.promote_panels = [
     InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
 ]
 
+# == Press Release Index ==
+
+class PressReleaseIndexAd(Orderable):
+    page = ParentalKey('rca.PressReleaseIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class PressReleaseIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    indexed = False
+
+    def serve(self, request):
+        press_releases = PressRelease.objects.filter(live=True)
+        return render(request, self.template, {
+            'self': self,
+            'press_releases': press_releases,
+        })
+
+
+PressReleaseIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+PressReleaseIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
 
 # == Press release Item ==
 
@@ -1835,6 +1883,7 @@ class StandardPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', 'body')
 
@@ -1853,7 +1902,8 @@ StandardPage.content_panels = [
     InlinePanel(StandardPage, 'quotations', label="Quotation"),
     InlinePanel(StandardPage, 'images', label="Middle column image"),
     InlinePanel(StandardPage, 'manual_adverts', label="Manual adverts"),
-]
+    FieldPanel('twitter_feed'),
+    ]
 
 StandardPage.promote_panels = [
     MultiFieldPanel([
@@ -1968,6 +2018,7 @@ class StandardIndex(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     show_events_feed = models.BooleanField(default=False)
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
@@ -1999,6 +2050,7 @@ StandardIndex.content_panels = [
     InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
+    FieldPanel('staff_feed_source'),
     FieldPanel('news_carousel_area'),
     MultiFieldPanel([
         FieldPanel('show_events_feed'),
@@ -3154,7 +3206,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter(live=True)
+        research_items = ResearchItem.objects.filter(live=True).order_by('?')
 
         if research_type:
             research_items = research_items.filter(research_type=research_type)

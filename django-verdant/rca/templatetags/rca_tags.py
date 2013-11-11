@@ -1,5 +1,6 @@
 import random
 from django import template
+from django.utils.html import conditional_escape
 from rca.models import *
 from datetime import date
 from itertools import chain
@@ -75,6 +76,17 @@ def programme_by_school(context, school):
 @register.inclusion_tag('rca/tags/staff_by_programme.html', takes_context=True)
 def staff_by_programme(context, programme):
     staff = StaffPage.objects.filter(live=True, roles__programme=programme)
+    return {
+        'staff': staff,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/related_staff.html', takes_context=True)
+def related_staff(context, programme="", school=""):
+    if school:
+        staff = StaffPage.objects.filter(live=True, roles__school=school)
+    if programme:
+        staff = StaffPage.objects.filter(live=True, roles__programme=programme)  
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -448,3 +460,53 @@ def search_content_type(result):
             return model.search_name
     else:
         return model.__name__
+
+
+@register.tag
+def tabdeck(parser, token):
+    nodelist = parser.parse(('endtabdeck',))
+    parser.delete_first_token()  # discard the 'endtabdeck' tag
+    return TabDeckNode(nodelist)
+
+class TabDeckNode(template.Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        context['tabdeck'] = {'tab_headings': [], 'index': 0}
+        output = self.nodelist.render(context)  # run the contents of the tab; any {% tab %} tags within it will populate tabdeck.tab_headings
+        headings = context['tabdeck']['tab_headings']
+
+        tab_headers = [
+            """<li%s><a class="t0">%s</a></li>""" % ((' class="active"' if i == 0 else ''), conditional_escape(heading))
+            for i, heading in enumerate(headings)
+        ]
+        tab_header_html = """<ul class="tab-nav tabs-%d">%s</ul>""" % (len(headings), ''.join(tab_headers))
+        return '<section class="four-tab row module">' + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+
+
+@register.tag
+def tab(parser, token):
+    try:
+        tag_name, heading_expr = token.split_contents()
+    except ValueError:
+         raise template.TemplateSyntaxError("tab tag requires a single argument")
+    nodelist = parser.parse(('endtab',))
+    parser.delete_first_token()  # discard the 'endtab' tag
+    return TabNode(nodelist, heading_expr)
+
+class TabNode(template.Node):
+    def __init__(self, nodelist, heading_expr):
+        self.nodelist = nodelist
+        self.heading_expr = heading_expr
+
+    def render(self, context):
+        heading = template.Variable(self.heading_expr).resolve(context)
+        context['tabdeck']['tab_headings'].append(heading)
+        context['tabdeck']['index'] += 1
+
+        header_html = """<h2 class="header"><a class="a0%s">%s</a></h2>""" % (
+            (' active' if context['tabdeck']['index'] == 1 else ''),
+            conditional_escape(heading)
+        )
+        return header_html + self.nodelist.render(context)
