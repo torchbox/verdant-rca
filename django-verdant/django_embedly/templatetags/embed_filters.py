@@ -38,6 +38,7 @@ def embedly_get_dict(url, maxwidth=None):
             'maxwidth': maxwidth,
             'type': saved_embed.type,
             'title': saved_embed.title,
+            'thumbnail_url': saved_embed.thumbnail_url,
             'html': saved_embed.html,
             'width': saved_embed.width,
             'height': saved_embed.height,
@@ -58,7 +59,7 @@ def embedly_get_dict(url, maxwidth=None):
 
     # Save result to database
     row, created = SavedEmbed.objects.get_or_create(url=url, maxwidth=maxwidth,
-                defaults={'type': oembed.type, 'title': oembed.title, 'width': oembed.width, 'height': oembed.height})
+                defaults={'type': oembed.type, 'title': oembed.title, 'thumbnail_url': oembed.thumbnail_url, 'width': oembed.width, 'height': oembed.height})
 
     if oembed.type == 'photo':
         html = '<img src="%s" width="%s" height="%s" />' % (oembed.url,
@@ -76,6 +77,7 @@ def embedly_get_dict(url, maxwidth=None):
         'url': url,
         'maxwidth': maxwidth,
         'title': oembed.title,
+        'thumbnail_url': oembed.thumbnail_url,
         'type': oembed.type,
         'html': html,
         'width': oembed.width,
