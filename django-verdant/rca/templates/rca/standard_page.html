@@ -25,12 +25,7 @@
                     {% for image in images %}
                         <figure>
                             <div class="image">{% image image.image width-400 %}</div>
-                            <figcaption class="a4">
-                                {% for line in image.image.caption_lines %}
-                                    {{ line }}
-                                    {% if not forloop.last %}<br />{% endif %}
-                                {% endfor %}
-                            </figcaption>
+                            <figcaption class="a4">{{ image.image.caption_html }}</figcaption>
                         </figure>
                     {% endfor %}
                 {% endif %}

@@ -11,6 +11,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -72,6 +74,19 @@ class RcaImage(AbstractImage):
             lines.append(' | '.join(bottom_line_items))
 
         return lines
+
+    def caption_html(self):
+        # use caption_lines, but replace top line with a version that italicises the title
+        lines = self.caption_lines()
+
+        if self.creator:
+            lines[0] = mark_safe(u"<i>%s</i> by %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
+        else:
+            lines[0] = mark_safe(u"<i>%s</i>" % conditional_escape(self.title))
+
+        escaped_lines = [conditional_escape(line) for line in lines]
+        return mark_safe('<br />'.join(escaped_lines))
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaImage)
@@ -519,6 +534,51 @@ register_snippet(ReusableTextSnippet)
 class ReusableTextSnippetPlacement(models.Model):
     page = ParentalKey('core.Page', related_name='reusable_text_snippet_placements')
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
+
+# == Snippet: Contacts ==
+
+class ContactSnippetPhone(Orderable):
+    page = ParentalKey('rca.ContactSnippet', related_name='contact_phone')
+    phone_number = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('phone_number')
+    ]
+
+class ContactSnippetEmail(Orderable):
+    page = ParentalKey('rca.ContactSnippet', related_name='contact_email')
+    email_address = models.CharField(max_length=255)
+
+    panels = [
+        FieldPanel('email_address')
+    ]
+
+class ContactSnippet(models.Model):
+    title = models.CharField(max_length=255, help_text='This is the reference name for the contact. This is not displayed on the frontend.')
+    contact_title = models.CharField(max_length=255, blank=True, help_text="This is the optional title, displayed on the frontend")
+    contact_address = models.TextField(blank=True)
+    contact_link = models.URLField(blank=True)
+    contact_link_text = models.CharField(max_length=255, blank=True)
+
+    def __unicode__(self):
+        return self.title
+
+ContactSnippet.panels = [
+    FieldPanel('title'),
+    FieldPanel('contact_title'),
+    FieldPanel('contact_address'),
+    FieldPanel('contact_link'),
+    FieldPanel('contact_link_text'),
+    InlinePanel(ContactSnippet, 'contact_email', label="Contact phone numbers/emails"),
+    InlinePanel(ContactSnippet, 'contact_phone', label="Contact phone number"),
+]
+
+
+register_snippet(ContactSnippet)
+
+class ContactSnippetPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='contact_snippet_placements')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+')
 
 # == School page ==
 
@@ -1031,6 +1091,84 @@ NewsItem.promote_panels = [
 ]
 
 
+# == Press release Item ==
+
+class PressReleaseCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.PressRelease', related_name='carousel_items')
+
+class PressReleaseLink(Orderable):
+    page = ParentalKey('rca.PressRelease', related_name='related_links')
+    link = models.URLField()
+    link_text = models.CharField(max_length=255)
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class PressReleaseRelatedSchool(models.Model):
+    page = ParentalKey('rca.PressRelease', related_name='related_schools')
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+
+    panels = [
+        FieldPanel('school')
+    ]
+
+class PressReleaseRelatedProgramme(models.Model):
+    page = ParentalKey('rca.PressRelease', related_name='related_programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+
+    panels = [FieldPanel('programme')]
+
+class PressRelease(Page, SocialFields):
+    author = models.CharField(max_length=255)
+    date = models.DateField()
+    intro = RichTextField()
+    body = RichTextField()
+    show_on_homepage = models.BooleanField()
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = 'PressRelease'
+
+
+PressRelease.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('author'),
+    FieldPanel('date'),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(PressRelease, 'related_links', label="Links"),
+    InlinePanel(PressRelease, 'carousel_items', label="Carousel content"),
+]
+
+PressRelease.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+
+    FieldPanel('area'),
+    InlinePanel(PressRelease, 'related_schools', label="Related schools"),
+    InlinePanel(PressRelease, 'related_programmes', label="Related programmes"),
+]
+
+
 # == Event Item ==
 
 class EventItemSpeaker(Orderable):
@@ -1413,7 +1551,7 @@ class TalksIndex(Page, SocialFields):
 
         page = request.GET.get('page')
 
-        paginator = Paginator(talks, 6)  # Show 10 talks items per page
+        paginator = Paginator(talks, 6)  # Show 6 talks items per page
         try:
             talks = paginator.page(page)
         except PageNotAnInteger:
@@ -1809,6 +1947,14 @@ class StandardIndexCustomContentModules(Orderable):
         SnippetChooserPanel('custom_content_module', CustomContentModule),
     ]
 
+class StandardIndexContactSnippet(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='contact_snippets')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('contact_snippet', ContactSnippet),
+    ]
+
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1850,6 +1996,7 @@ StandardIndex.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
+    InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
     InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
     InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
@@ -1900,6 +2047,7 @@ class HomePage(Page, SocialFields):
     packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_standard = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1908,12 +2056,13 @@ HomePage.content_panels = [
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
     MultiFieldPanel([
-    FieldPanel('packery_news'),
-    FieldPanel('packery_staff'),
-    FieldPanel('packery_student_work'),
-    FieldPanel('packery_tweets'),
-    FieldPanel('packery_rcanow'),
-    FieldPanel('packery_standard'),
+        FieldPanel('packery_news'),
+        FieldPanel('packery_staff'),
+        FieldPanel('packery_student_work'),
+        FieldPanel('packery_tweets'),
+        FieldPanel('twitter_feed'),
+        FieldPanel('packery_rcanow'),
+        FieldPanel('packery_standard'),
     ], 'Packery content'),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
 ]
@@ -2098,7 +2247,8 @@ class AlumniIndex(Page, SocialFields):
         if programme and programme != '':
             alumni_pages = alumni_pages.filter(programme=programme)
 
-        alumni_pages = alumni_pages.distinct()
+        #alumni_pages = alumni_pages.distinct()
+        alumni_pages = alumni_pages.order_by('?');
 
         # research_items.order_by('-year')
 
@@ -2367,7 +2517,8 @@ class StaffIndex(Page, SocialFields):
         if area and area != '':
             staff_pages = staff_pages.filter(roles__area=area)
 
-        staff_pages = staff_pages.distinct()
+        # staff_pages = staff_pages.distinct()
+        staff_pages = staff_pages.order_by('?')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
@@ -2434,6 +2585,47 @@ class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    def serve(self, request):
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
+
+        if school and school != '':
+            research_students = research_students.filter(roles__school=school)
+        if programme and programme != '':
+            research_students = research_students.filter(roles__programme=programme)
+
+        research_students = research_students.distinct()
+
+        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+
+        # research_items.order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(research_students, 17)  # Show 17 research students per page
+        try:
+            research_students = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_students = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_students = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_students_listing.html", {
+                'self': self,
+                'research_students': research_students,
+                'related_programmes': related_programmes,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_students': research_students
+            })
+
+
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -2457,6 +2649,9 @@ ResearchStudentIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+    
+
 
 # == Student profile page ==
 
@@ -3046,6 +3241,8 @@ class GalleryPage(Page, SocialFields):
             gallery_items = gallery_items.filter(school=school)
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
+
+        gallery_items = gallery_items.order_by('?');
         
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 

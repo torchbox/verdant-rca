@@ -109,6 +109,19 @@
     }*/
 }
 
+.sprite-load-medium2 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/sprites-medium2.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+
+    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        background-size:1075/1.5px auto;
+        background-position: @retinaPositionX @retinaPositionY;
+    }
+}
+
 /* sidebar advert */
 .mixin-sidebar-advert(@color, @fade:0, @text-color:black) {
     .transition(background-color 0.3s ease);

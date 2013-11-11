@@ -378,6 +378,7 @@
     bottom: @share-link-height + 15px;
     width: 100%;
     display: none;
+    z-index: 4001; //show above header
 }
 
 /**
@@ -695,6 +696,22 @@
             height: 96px;
         }
     }
+    .tweet{
+       .tweet-time, .tweet-join {
+            .a2;
+            margin: 0;
+        }
+        p {
+            .bc4;
+            margin: 0;
+        }
+    }
+    .tweet-avatar{
+        display:none;
+    }
+    .tweet-text{
+        display:block;
+    }
 }
 
 
@@ -739,7 +756,6 @@
         }
     }
     .load-more{
-        display:none;
         a{
             height:126px;
             width:126px;
@@ -748,6 +764,12 @@
     h3, p{
         margin:0;
     }
+}
+.one-plus .load-more {
+    display: none;
+}
+.three-plus-no-scroll .load-more, .index-listing .load-more {
+    display:inline;
 }
 
 /**
@@ -816,6 +838,8 @@
     .header{
         margin:0;
         border-bottom:1px solid white;
+        position: relative;
+        z-index: 4;
 
         a{
             padding:@grid-gutter-width;
@@ -1547,7 +1571,7 @@ form.loading{
     }
 }
 
-.body-text ul, .body-text-style ul {
+.body-text form ul, .body-text-style form ul {
     padding: 0;
     margin: 0;
 }

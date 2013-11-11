@@ -110,7 +110,7 @@ def research_related(context, programme="", person="", school="", exclude=None):
     if exclude:
         research_items = research_items.exclude(id=exclude.id)
     return {
-        'research_items': research_items,
+        'research_items': research_items.order_by('?'),
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
         'person': person,
         'programme': programme,
@@ -182,7 +182,7 @@ def staff_random(context, exclude=None, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
+def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -196,6 +196,7 @@ def homepage_packery(context, news_count=5, staff_count=5, student_count=5, twee
     random.shuffle(packeryItems)
 
     return {
+        'calling_page': calling_page,
         'packery': packeryItems,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }

@@ -262,18 +262,44 @@ $(function(){
         });
     });
 
-    /* Tweets */
-    $(".twitter-feed-items").each(function(){
-        var username = $(this).data("twitter-feed");
+    /* Tweet blocks */
+    $('.twitter-feed-items').each(function(){
+        var username = $(this).data('twitter-feed');
         $(this).tweet({
-            join_text: "auto",
+            join_text: 'auto',
             username: username,
             avatar_size: 32,
-            auto_join_text_default: "from @" + username,
-            loading_text: "Checking for new tweets...",
+            auto_join_text_default: 'from @' + username,
+            loading_text: 'Checking for new tweets...',
             count: 3
         });
     });
+
+    /* Packery tweet blocks (behaves as several individual blocks) */
+    $('.packery .tweet').each(function(){
+        if(!window.packerytweets){
+            var username = $(this).data('twitter-feed');
+            var count = $(this).data('twitter-count');
+
+            var tmp = $('<div></div>');
+            tmp.tweet({
+                join_text: 'auto',
+                username: username,
+                avatar_size: 32,
+                auto_join_text_default: 'from @' + username,
+                loading_text: 'Checking for new tweets...',
+                count: count
+            })
+
+            window.packerytweets = tmp;
+        }
+    });
+    $(window.packerytweets).on('loaded', function(){
+        var arr = jQuery.makeArray($('li', window.packerytweets));
+        $('.packery .tweet .inner .content').each(function(){
+            $(this).html($(arr.shift()).html());
+        });
+    })
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
