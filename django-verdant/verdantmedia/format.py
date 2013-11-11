@@ -22,4 +22,4 @@ def media_to_editor_html(url):
     embed = embedly_get_dict(url)
     if embed is None:
         return ''
-    return '<div class="media-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p></div>' % (url, embed['title'], url)
+    return '<div class="media-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, embed['title'], url, embed['thumbnail_url'])
