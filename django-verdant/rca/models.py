@@ -11,6 +11,8 @@ from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.html import conditional_escape
+from django.utils.safestring import mark_safe
 
 from core.models import Page, Orderable
 from core.fields import RichTextField
@@ -72,6 +74,19 @@ class RcaImage(AbstractImage):
             lines.append(' | '.join(bottom_line_items))
 
         return lines
+
+    def caption_html(self):
+        # use caption_lines, but replace top line with a version that italicises the title
+        lines = self.caption_lines()
+
+        if self.creator:
+            lines[0] = mark_safe(u"<i>%s</i> by %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
+        else:
+            lines[0] = mark_safe(u"<i>%s</i>" % conditional_escape(self.title))
+
+        escaped_lines = [conditional_escape(line) for line in lines]
+        return mark_safe('<br />'.join(escaped_lines))
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaImage)
