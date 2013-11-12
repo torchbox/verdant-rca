@@ -177,10 +177,9 @@ SCHOOL_CHOICES = (
     ('schoolofarchitecturedesign', 'School of Architecture & Design'),
     ('schoolofcommunications', 'School of Communcations'),
     ('schooloffashiontextiles', 'School of Fashion & Textiles'),
-    ('schoolofdesignforproduction', 'School of Design for Production')
+    ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
-
 )
 
 HISTORICAL_PROGRAMMES = {
@@ -320,10 +319,11 @@ HISTORICAL_PROGRAMMES = {
         ('architecture', 'Architecture'),
         ('interiordesign', 'Interior Design'),
         ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
         ('informationexperiencedesign', 'Information Experience Design'),
+        ('visualcommunication', 'Visual Communication'),
         ('designinteractions', 'Design Interactions'),
         ('designproducts', 'Design Products'),
+        ('globalinnovationdesign', 'Global Innovation Design'),
         ('innovationdesignengineering', 'Innovation Design Engineering'),
         ('servicedesign', 'Service Design'),
         ('vehicledesign', 'Vehicle Design'),
@@ -336,47 +336,21 @@ HISTORICAL_PROGRAMMES = {
         ('curatingcontemporaryart', 'Curating Contemporary Art'),
         ('historyofdesign', 'History of Design'),
         ('ceramicsglass', 'Ceramics & Glass'),
+        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
         ('fashionmenswear', 'Fashion Menswear'),
         ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
         ('textiles', 'Textiles'),
-        ('globalinnovationdesign', 'Global Innovation Design'),
         ('drawingstudio', 'Drawing Studio'),
     ),
 }
 
 ALL_PROGRAMMES = list(set([x for year_tuple in HISTORICAL_PROGRAMMES.values() for x in year_tuple]))
 
-PROGRAMME_CHOICES = (
-    ('architecture', 'Architecture'),
-    ('interiordesign', 'Interior Design'),
-    ('animation', 'Animation'),
-    ('informationexperiencedesign', 'Information Experience Design'),
-    ('visualcommunication', 'Visual Communication'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('globalinnovationdesign', 'Global Innovation Design'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('servicedesign', 'Service Design'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-    ('curatingcontemporaryart', 'Curating Contemporary Art'),
-    ('historyofdesign', 'History of Design'),
-    ('ceramicsglass', 'Ceramics & Glass'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('textiles', 'Textiles'),
-    ('drawingstudio', 'Drawing Studio'),
-)
+# PROGRAMME_CHOICES is the last/current year from HISTORICAL_PROGRAMMES
+PROGRAMME_CHOICES = HISTORICAL_PROGRAMMES[sorted(HISTORICAL_PROGRAMMES.keys())[-1]]
 
 SCHOOL_PROGRAMME_MAP = {
-    '2014':{
+    '2014': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
@@ -385,8 +359,8 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
         'helenhamlyn': [],
         'rectorate': [],
-    }
-    '2013':{
+    },
+    '2013': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
@@ -396,7 +370,7 @@ SCHOOL_PROGRAMME_MAP = {
         'helenhamlyn': [],
         'rectorate': [],
         },
-    '2012':{
+    '2012': {
         'schoolofarchitecture': ['architecture', 'animation'],
         'schoolofcommunication': ['animation', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
@@ -404,7 +378,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
-    '2011':{
+    '2011': {
         'schoolofarchitecture': ['architecture', 'animation'],
         'schoolofcommunication': ['animation', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
@@ -412,7 +386,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
-    '2010':{
+    '2010': {
         'schoolofarchitecture': ['architecture', 'animation'],
         'schoolofcommunication': ['animation', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
@@ -420,7 +394,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
-    '2009':{
+    '2009': {
         'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
         'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
@@ -429,7 +403,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
-    '2008':{
+    '2008': {
         'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
         'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
@@ -438,7 +412,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
-    '2007':{
+    '2007': {
         'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
         'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts', 'industrialdesignengineering', 'vehicledesign'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
@@ -2090,7 +2064,7 @@ class StandardIndex(Page, SocialFields):
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
     indexed = False
-    
+
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -2769,7 +2743,7 @@ ResearchStudentIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
-    
+
 
 
 # == Student profile page ==
@@ -3362,7 +3336,7 @@ class GalleryPage(Page, SocialFields):
             gallery_items = gallery_items.filter(degree_year=year)
 
         gallery_items = gallery_items.order_by('?');
-        
+
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
 
