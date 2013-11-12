@@ -362,7 +362,7 @@ TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alter
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
-    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     social_text = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -370,11 +370,11 @@ class SocialFields(models.Model):
 
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
-    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -418,9 +418,9 @@ class AdvertPlacement(models.Model):
 
 class CustomContentModuleBlock(Orderable):
     content_module = ParentalKey('rca.CustomContentModule', related_name='blocks')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     item_title = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image for the module block")
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image for the module block")
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
@@ -562,18 +562,18 @@ class SchoolPageAd(Orderable):
 
 class SchoolPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_school_statement = RichTextField(null=True, blank=True)
-    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
-    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_research_statement = RichTextField(null=True, blank=True)
-    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_school_display', )
 
@@ -677,7 +677,7 @@ class ProgrammePageOurSites(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
     url = models.URLField()
     site_name = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -699,8 +699,8 @@ class ProgrammePageStudentStory(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='student_stories')
     name = models.CharField(max_length=255)
     text = RichTextField()
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         FieldPanel('name'),
@@ -720,12 +720,12 @@ class ProgrammePageAd(Orderable):
 class ProgrammePage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text="This is my help text")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="This is my help text")
     head_of_programme_statement = RichTextField(null=True, blank=True, help_text="This is my content this is my content this is my content")
-    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
-    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
@@ -735,8 +735,8 @@ class ProgrammePage(Page, SocialFields):
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_programme_display', 'get_school_display')
 
@@ -1151,7 +1151,7 @@ PressRelease.promote_panels = [
 
 class EventItemSpeaker(Orderable):
     page = ParentalKey('rca.EventItem', related_name='speakers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     link = models.URLField(blank=True)
@@ -1861,8 +1861,8 @@ class StandardIndexCarouselItem(Orderable, CarouselItemFields):
 
 class StandardIndexTeaser(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='teasers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
 
@@ -1903,7 +1903,7 @@ class StandardIndexOurSites(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='our_sites')
     url = models.URLField()
     site_name = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -1937,12 +1937,12 @@ class StandardIndexContactSnippet(Orderable):
 
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
     body = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
@@ -2020,9 +2020,9 @@ class HomePageAd(Orderable):
     ]
 
 class HomePage(Page, SocialFields):
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('core.Page', null=True, related_name='+')
-    news_item_2 = models.ForeignKey('core.Page', null=True, related_name='+')
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
@@ -2090,7 +2090,7 @@ class JobPage(Page, SocialFields):
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)
     description = RichTextField()
-    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
@@ -2289,7 +2289,7 @@ AlumniIndex.promote_panels = [
 # == Alumni profile page ==
 
 class AlumniPage(Page, SocialFields):
-    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     year = models.CharField(max_length=4, blank=True)
@@ -2373,7 +2373,7 @@ class StaffPagePublicationExhibition(Orderable):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     rca_content_id = models.CharField(max_length=255, blank=True) # for import
 
     panels = [
@@ -2387,7 +2387,7 @@ class StaffPagePublicationExhibition(Orderable):
 
 class StaffPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     intro = RichTextField()
@@ -2701,7 +2701,7 @@ class StudentPage(Page, SocialFields):
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.CharField(max_length=4)
     specialism = models.CharField(max_length=255, blank=True)
-    profile_image = models.ForeignKey('rca.RcaImage', related_name='+', null=True, blank=True)
+    profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
@@ -2713,7 +2713,7 @@ class StudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     show_on_homepage = models.BooleanField()
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
@@ -2999,7 +2999,7 @@ class ResearchInnovationPageCarouselItem(Orderable, CarouselItemFields):
 
 class ResearchInnovationPageTeaser(Orderable):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='teasers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     url = models.URLField(blank=True)
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
@@ -3059,10 +3059,10 @@ class ResearchInnovationPageAd(Orderable):
 
 class ResearchInnovationPage(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
@@ -3320,7 +3320,7 @@ ContactUsPage.promote_panels = [
 
 
 class DonationPage(Page, SocialFields):
-    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, related_name='+')
+    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, on_delete=models.PROTECT, related_name='+')
     payment_description = models.CharField(max_length=255, blank=True, help_text="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages.")
 
     # fields copied from StandrdPage
