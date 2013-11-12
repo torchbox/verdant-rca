@@ -76,6 +76,7 @@ class MediaEmbedHandler(object):
         """
         return {
             'url': tag['data-url'],
+            'poster_image_id': tag['data-poster-image-id'],
         }
 
     @staticmethod
@@ -86,9 +87,9 @@ class MediaEmbedHandler(object):
         """
         from verdantmedia import format
         if for_editor:
-            return format.media_to_editor_html(attrs['url'])
+            return format.media_to_editor_html(attrs['url'], attrs.get('poster_image_id', None))
         else:
-            return format.media_to_frontend_html(attrs['url'])
+            return format.media_to_frontend_html(attrs['url'], attrs.get('poster_image_id', None))
 
 
 class PageLinkHandler(object):

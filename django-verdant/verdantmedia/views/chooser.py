@@ -17,7 +17,7 @@ def chooser_upload(request):
         form = MediaForm(request.POST, request.FILES)
 
         if form.is_valid():
-            media_html = media_to_editor_html(form.cleaned_data['url'])
+            media_html = media_to_editor_html(form.cleaned_data['url'], form.cleaned_data['poster_image_id'])
             if media_html != "":
                 return render_modal_workflow(
                     request, None, 'verdantmedia/chooser/media_chosen.js',
