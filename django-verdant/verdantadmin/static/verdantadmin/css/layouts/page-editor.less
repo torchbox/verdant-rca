@@ -1,5 +1,6 @@
-.page-editor header.merged{
-    border:0;
+.page-editor .tab-nav li{
+    .column(6);
+    padding:0;
 }
 
 .objects{
@@ -191,3 +192,13 @@
         }
     }
 }
+
+@media screen and (min-width: @breakpoint-mobile){
+    .page-editor .tab-nav li{
+        .column(2);
+        padding:0;
+        min-width:110px;
+    }
+}
+
+

@@ -2,24 +2,38 @@
 {% load image_tags %}
 
 {% block content %}
-    <header>
+    <header class="merged tab-merged">
         <h1>Editing user: <span>{{ user.username }}</span></h1>
     </header>
 
-    <div class="nice-padding">
-        <form action="{% url 'verdantusers_edit' user.id %}" method="POST">
+    <ul class="tab-nav merged">
+        <li><a href="#account" class="active">Account</a></li>
+        <li><a href="#roles">Roles</a></li>
+    </ul>   
+
+    <form action="{% url 'verdantusers_edit' user.id %}" method="POST">
+        <div class="tab-content">
             {% csrf_token %}
-            <ul class="fields">
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.first_name %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.last_name %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.password2 %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.is_active %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.is_superuser %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=form.groups %}
-                <li><input type="submit" value="Save" /></li>
-            </ul>
-        </form>
-    </div>
+
+            <section id="account" class="active nice-padding">
+                <ul class="fields">
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.first_name %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.last_name %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.password2 %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.is_active %}
+                    
+                    <li><input type="submit" value="Save" /></li>
+                </ul>
+            </section>
+            <section id="roles" class="nice-padding">
+                <ul class="fields">
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.is_superuser %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.groups %}
+                    <li><input type="submit" value="Save" /></li>
+                </ul>
+            </section>
+        </div>
+    </form>
 {% endblock %}
