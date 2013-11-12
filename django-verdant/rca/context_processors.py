@@ -15,12 +15,5 @@ def global_vars(request):
         'global_staff_types': STAFF_TYPES_CHOICES,
         'global_events_index_url': '/events/',
         'global_news_index_url': '/news/',
-        'global_current_research_url': '/current-research/',
-        'global_rca_now_index_url': '/showcase/rca-now/',
-        'global_staff_index_url': '/staff/',
-        'global_alumni_index_url': '/alumni/',
-        'global_gallery_url': '/gallery/',
-        'global_gallery_url': '/reviews/',
         'global_default_twitter_handle': "RCAevents",
-        'global_research_student_index_url': '/research_students/'
     }
