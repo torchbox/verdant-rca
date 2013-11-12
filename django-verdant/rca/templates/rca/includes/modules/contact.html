@@ -4,20 +4,20 @@
 		<h2 class="module-title">Contact</h2>
 		<ul class="row">
 			<li class="col col-1">
-				<p>
+				<p class="bc3">
 					{% if self.contact_title %}
 						<strong>{{ self.contact_title }}</strong><br />
 					{% endif %}
 					{% if self.contact_address %}
-						{{ self.contact_address|linebreaks }}
-					{% endif %}
-					{% if self.contact_link and self.contact_link_text %}
-						<a href="{{ self.contact_link }}" class="chevron">{{ self.contact_link_text }}</a>
+						{{ self.contact_address|linebreaksbr }}
 					{% endif %}
 				</p>
+				{% if self.contact_link and self.contact_link_text %}
+					<p><a href="{{ self.contact_link }}" class="chevron">{{ self.contact_link_text }}</a></p>
+				{% endif %}
 			</li>
 			<li class="col col-2">
-				<p>
+				<p class="bc3">
 					{% with self.contact_phone.all as phone_nos %}
 						{% if phone_nos %}
 							{% for phone_no in phone_nos %}
