@@ -42,6 +42,10 @@ $(function(){
         e.preventDefault()
         $(this).tab('show');
     });   
+    $(document).on('click', '.tab-toggle', function(e){
+        e.preventDefault()
+        $('.tab-nav a[href="'+ $(this).attr('href') +'"]').click();
+    })
 
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
