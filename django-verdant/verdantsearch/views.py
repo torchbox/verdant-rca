@@ -52,13 +52,13 @@ def suggest(request):
                 if model.search_name is None:
                     content_type = ""
                 else:
-                    content_type = " | " + model.search_name
+                    content_type = model.search_name
             else:
-                content_type = " | " + model.__name__
+                content_type = model.__name__
 
             suggestions.append({
-                "label": result.title + content_type,
-                "value": result.title,
+                "label": result.title,
+                "type": content_type,
                 "url": result.url,
             })
 

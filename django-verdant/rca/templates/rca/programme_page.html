@@ -44,8 +44,10 @@
     {% upcoming_events_related programme=self.programme display_name=self.get_programme_display %}
 
     <!-- staff -->
-    {% staff_by_programme programme=self.programme %}
+    <!-- {% staff_by_programme programme=self.programme %} -->
 
+    <!-- Manual staff feed -->
+    {% include "rca/includes/modules/manual_staff_feed.html" %}
 
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programme %}
@@ -115,7 +117,6 @@
                     <h2 class="header"><a class="a0">Facilities</a></h2>
                     <div class="tab-pane flush">
                         {% if self.facilities_image %}
-                            image
                             <div class="image">{% image self.facilities_image width-1000 %}</div>
                         {% endif %}
                         {% if self.facilities_text %}
@@ -156,38 +157,7 @@
     
 
     <!-- our sites -->
-    {% with self.our_sites.all as our_sites %}
-        {% if our_sites %}
-            <section class="two-plus x-plus module">
-                <h2 class="module-title">Our sites</h2>
-                <div class="item-container">
-                    <ul class="row">
-                        {% for site in our_sites %}
-                            {% if forloop.counter == 3 %}
-                                <li class="load-more-target">
-                            {% elif forloop.counter0|divisibleby:"3" %}
-                                <li class="newrow">
-                            {% else %}
-                                <li>
-                            {% endif %}
-                            <a href="{{ site.url }}">
-                                {% if site.image %}
-                                    <div class="image">{% image site.image width-400 %}</div>
-                                {% endif %}
-                                <div class="content">
-                                    <h3 class="h8">{{ site.site_name }}</h3>
-                                </div>
-                            </a>
-                        </li>
-                        {% endfor %}
-                        {% if our_sites|length > 3 %}
-                            <li class="load-more"><a href="#">+</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
-            </section>
-        {% endif %}
-    {% endwith %}
+    {% include "rca/includes/modules/our_sites.html" %}   
     
     {% include "rca/includes/modules/contact.html" %}   
     {% include "rca/includes/modules/twitter-feed.html" %}

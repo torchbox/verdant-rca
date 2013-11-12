@@ -23,12 +23,7 @@
                                             {% endif %}
                                         </h3>
                                     {% endif %}
-                                    <p class="caption a4{% if not carousel_item.overlay_text %} showmobile{% endif %}">
-                                        {% for line in carousel_item.image.caption_lines %}
-                                            {{ line }}
-                                            {% if not forloop.last %}<br />{% endif %}
-                                        {% endfor %}
-                                    </p>
+                                    <p class="caption a4{% if not carousel_item.overlay_text %} showmobile{% endif %}">{{ carousel_item.image.caption_html }}</p>
                                 </div>
                             {% endif %}
                         </li>

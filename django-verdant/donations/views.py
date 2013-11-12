@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from donations.forms import DonationForm
+from donations.mail_admins import mail_exception
 from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
 

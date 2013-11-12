@@ -29,11 +29,8 @@
                     responses:
                         imageChosen: (imageData) ->
                             elem = $(imageData.html).get(0)
-                            if insertionPoint.length
-                                # we were inside an element, so insert before it
-                                insertionPoint.before(elem)
-                            else
-                                lastSelection.insertNode(elem)
+
+                            lastSelection.insertNode(elem)
 
                             if elem.getAttribute('contenteditable') == 'false'
                                 insertRichTextDeleteControl(elem)

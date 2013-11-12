@@ -26,6 +26,14 @@
     transition: @transition;
 }
 
+.filter(@filter){
+    -webkit-filter: @filter;
+    filter: @filter;
+    -moz-filter: @filter;
+    -o-filter: @filter;
+    -ms-filter: @filter;
+}
+
 .visuallyhidden() {
     border: 0;
     clip: rect(0 0 0 0);
@@ -94,11 +102,19 @@
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
+}
 
-    /*@media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        background-image: url(/assets/images/sprites-retina.png);
-        background-size:1184px 2459px;
-    }*/
+.sprite-load-medium2 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/sprites-medium2.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+
+    //@media only screen and (max-width: 768px) { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        //background-position: @retinaPositionX @retinaPositionY;
+        //background-size:2000/2px 730/2px;  
+    //}
 }
 
 /* sidebar advert */
@@ -177,8 +193,13 @@
 
     .image{
         margin-bottom:@grid-gutter-width/2;
+        position:relative;
         img{
             display:block;
+            &:hover {
+                .filter(brightness(0.7)); //nb doesn't work in firefox
+                .transition(all 0.5s ease);
+            }
         }
     }
 

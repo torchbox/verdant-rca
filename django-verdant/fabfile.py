@@ -14,6 +14,10 @@ def deploy_staging():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index")
 
         sudo("supervisorctl restart verdant-rca")
+        sudo("supervisorctl restart rca-celeryd")
+        sudo("supervisorctl restart rca-celerybeat")
+
+        with settings(sudo_user='verdant-rca'):
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index")

@@ -25,7 +25,11 @@ class CreditCardField(forms.CharField):
     Form field that validates credit card numbers.
     """
 
-    widget = forms.TextInput(attrs={'data-stripe': 'number'})
+    widget = forms.TextInput(attrs={
+        'data-stripe': 'number',
+        'autocompletetype': 'cc-number',
+        'x-autocompletetype': 'cc-number',
+    })
 
     default_error_messages = {
         'required': _(u'Please enter a credit card number.'),
@@ -80,7 +84,11 @@ class ExpiryDateField(forms.MultiValueField):
         )
         super(ExpiryDateField, self).__init__(fields, *args, **kwargs)
         fields[0].widget.attrs['data-stripe'] = 'exp-month'
+        fields[0].widget.attrs['autocompletetype'] = 'cc-exp-month'
+        fields[0].widget.attrs['x-autocompletetype'] = 'cc-exp-month'
         fields[1].widget.attrs['data-stripe'] = 'exp-year'
+        fields[1].widget.attrs['autocompletetype'] = 'cc-exp-year'
+        fields[1].widget.attrs['x-autocompletetype'] = 'cc-exp-year'
         self.widget = ExpiryDateWidget(widgets=[fields[0].widget, fields[1].widget])
 
     # def clean(self, value):
@@ -115,7 +123,12 @@ class VerificationValueField(forms.CharField):
     See http://en.wikipedia.org/wiki/Card_Security_Code
     """
 
-    widget = forms.TextInput(attrs={'maxlength': 4, 'data-stripe': 'cvc'})
+    widget = forms.TextInput(attrs={
+        'maxlength': 4,
+        'data-stripe': 'cvc',
+        'autocompletetype': 'cc-csc',
+        'x-autocompletetype': 'cc-csc',
+    })
     default_error_messages = {
         'required': _(u'Please enter the three- or four-digit verification code for your credit card.'),
         'invalid': _(u'The verification value you entered is invalid.'),

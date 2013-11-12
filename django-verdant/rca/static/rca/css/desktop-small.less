@@ -24,6 +24,7 @@
  * Structure..................structure and layout
  * Footer styles..............footer and bottom nav
  * Template specific styles
+ * Search results
  */
 
 /**
@@ -159,15 +160,15 @@ nav {
         position:absolute;
         top:0px;
         z-index:1;
-        right:0;
+        left:0;
         cursor:pointer;
-        margin:0 0 0 @grid-gutter-width;
+        margin:0 @grid-gutter-width 0 0;
         font-size: 12px;
         text-transform:uppercase;
         float:right;
         padding:8px 45px 8px @grid-gutter-width;
         line-height:1.6em;
-        border-left:1px solid fade(@color-medium-grey, 40%);
+        border-right:1px solid fade(@color-medium-grey, 40%);
         &:after {
             .sprite-load(-53px, -1178px, 27px, 15px);
             content: ' ';
@@ -294,7 +295,7 @@ nav {
         position:relative;
         top:0;
         left:0;
-        padding-right:100px;
+        padding-left:100px;
         text-overflow:ellipsis;
         white-space: nowrap;
         overflow:hidden;
@@ -354,6 +355,13 @@ form.search {
     input[type="submit"] {
         .sprite-load(-95px, -1178px, 15px, 27px);
     }
+}
+
+/**
+ * Search field autocomplete
+ */
+.ui-autocomplete{
+    width: 180px;
 }
 
 .page-content {
@@ -518,6 +526,20 @@ footer {
     .index-intro .content {
         width: 100%;
         padding-right:0;
+    }
+}
+
+/**
+ * Search results
+ */
+
+.search-results {
+    .image{
+        .column(2);
+        padding-left:0;
+    }
+    .content{
+        .column(10);
     }
 }
 

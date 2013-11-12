@@ -1,0 +1,8 @@
+<form class="search-bar" action="{% url 'verdantadmin_choose_page' %}?{{ querystring }}" method="get">
+    <ul class="fields">
+        {% for field in search_form %}
+            {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+        {% endfor %}
+        <li class="submit"><input type="submit" value="Search" /></li>
+    </ul>
+</form>

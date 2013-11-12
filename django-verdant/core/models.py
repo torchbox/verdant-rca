@@ -122,7 +122,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
         'title': {
             'type': 'string',
             'analyzer': 'edgengram_analyzer',
-            'boost': 10,
+            'boost': 100,
         },
         'live': {
             'type': 'boolean',

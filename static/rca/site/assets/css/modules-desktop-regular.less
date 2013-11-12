@@ -22,6 +22,7 @@
  * Five plus
  * Event info
  * Speakers
+ * Events middle column body text
  * Filters
  * Packery
  * Gallery
@@ -112,7 +113,9 @@
 /**
  *$Three plus
  */
-.three-plus{
+
+/* at desktop size three-plus-no-scroll (used by current resarch) is the same as three-plus */
+.three-plus, .three-plus-no-scroll{
     li{
         .column(3); 
     }
@@ -162,6 +165,7 @@
     }
 }
 
+
 /**
  * Event info
  */
@@ -203,6 +207,13 @@
     .h8, .bc5 {
         font-size: @font-size-12;
     }
+}
+
+/**
+ * $Events middle column body text
+ */
+.events-middle-column-body-text {
+    margin-left: @spacing-two;
 }
 
 
@@ -335,6 +346,9 @@
     .double{
         .column(4);
     }
+    .half{
+        .column(6);
+    }
     .three-quarters{
         .column(8);
     }
@@ -355,6 +369,9 @@
         &.landscape{
             .column(6);
         }
+    }
+    .load-more{
+        display:inline;
     }
 }
 
