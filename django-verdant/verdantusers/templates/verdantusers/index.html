@@ -24,7 +24,7 @@
             {% for user in users %}
                 <tr>
                     <td class="name">
-                        <a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name }}</a>
+                        <a href="{% url 'verdantusers_edit' user.id %}">{% if user.get_full_name %}{{ user.get_full_name }}{% else %}<em>[no name defined]</em>{% endif %}</a>
                     </td>
                     <td class="username">{{ user.username }}</td>
                     <td class="level">{% if user.is_superuser %}Adminstrator{% else %}User{% endif %}</td>
