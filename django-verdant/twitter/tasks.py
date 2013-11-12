@@ -61,3 +61,8 @@ class get_tweets_for_all(PeriodicTask):
             remaining = dict(api.last_response.getheaders()).get("x-rate-limit-remaining")
             if remaining is not None and int(remaining) < 1:
                 break
+
+
+@task
+def test_error_email():
+    raise Exception("test")
