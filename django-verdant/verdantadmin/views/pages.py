@@ -514,7 +514,7 @@ def preview_for_moderation(request, revision_id):
     if not hasattr(request, 'userbar'):
         request.userbar = []
     request.userbar.append(
-        render_to_string('verdantadmin/pages/_moderator_user_bar.html', {
+        render_to_string('verdantadmin/pages/_moderator_userbar.html', {
             'revision': revision,
         }, context_instance=RequestContext(request))
     )

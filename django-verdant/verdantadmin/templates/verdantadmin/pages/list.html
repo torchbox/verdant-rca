@@ -50,7 +50,7 @@
             {% for page in pages %}
                 <tr {% if not page.live %}class="inactive"{% endif %}>
                     <td class="title">
-                        <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}">{{ page.title }}</a></h2>
+                        <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a></h2>
                         <ul class="actions">
                             {% if page.has_unpublished_changes %}
                                 <li><a href="{% url 'verdantadmin_pages_view_draft' page.id %}" target="_blank">View draft</a></li>

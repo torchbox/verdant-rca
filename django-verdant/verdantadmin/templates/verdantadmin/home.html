@@ -1,18 +1,20 @@
 {% extends "verdantadmin/base.html" %}
 
+{% block bodyclass %}homepage{% endblock %}
+
 {% block content %}
     <header>
-        <h1>Homepage</h1>
+        <h1>Welcome to the Verdant CMS for {{ site_name }}</h1>
     </header>
 
     {% if page_revisions_for_moderation %}
         <div class="nice-padding">
-            <h2>Pages awaiting moderation:</h2>
+            <h2>Pages awaiting moderation</h2>
             <table class="listing">
-                <col width="33%" />
-                <col width="10%"/>
-                <col width="10%"/>
                 <col />
+                <col width="15%"/>
+                <col width="15%"/>
+                <col width="30%"/>
                 <thead>
                     <tr>
                         <th class="title">Title</th>
@@ -25,7 +27,7 @@
                     {% for revision in page_revisions_for_moderation %}
                         <tr>
                             <td class="title">
-                                <h2><a href="{% url 'verdantadmin_pages_edit' revision.page.id %}">{{ revision.page.title }}</a></h2>
+                                <h2><a href="{% url 'verdantadmin_pages_edit' revision.page.id %}" title="Edit this page">{{ revision.page.title }}</a></h2>
                                 <ul class="actions">
                                     <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>
                                 </ul>

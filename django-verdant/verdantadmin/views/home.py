@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from core.models import PageRevision
 
@@ -11,5 +12,6 @@ def home(request):
         page_revisions_for_moderation = PageRevision.objects.none()
 
     return render(request, "verdantadmin/home.html", {
+    	'site_name': settings.VERDANT_SITE_NAME,
         'page_revisions_for_moderation': page_revisions_for_moderation
     })
