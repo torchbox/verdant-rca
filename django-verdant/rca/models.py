@@ -422,9 +422,13 @@ SCHOOL_PROGRAMME_MAP = {
     },
 }
 
-# # Make sure values used in SCHOOL_PROGRAMME_MAP are valid
-# assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
-# assert set(sum(SCHOOL_PROGRAMME_MAP.values(), [])).issubset(dict(PROGRAMME_CHOICES).keys())
+# Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
+# 1. check schools
+assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(SCHOOL_CHOICES)))
+# 2. check programmes
+assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(ALL_PROGRAMMES)))
 
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
