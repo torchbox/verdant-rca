@@ -315,9 +315,6 @@ assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.va
 
 YEARS = SCHOOL_PROGRAMME_MAP.keys()
 
-# TODO: remove this line, needed temporarily until the year filters are done
-SCHOOL_PROGRAMME_MAP = SCHOOL_PROGRAMME_MAP[sorted(SCHOOL_PROGRAMME_MAP.keys())[-1]]
-
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
     ('architecture', 'Architecture'),
@@ -842,7 +839,7 @@ class NewsIndex(Page, SocialFields):
 
         news = news.distinct().order_by('-date')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(news, 10)  # Show 10 news items per page
@@ -1458,7 +1455,7 @@ class EventIndex(Page, SocialFields):
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
@@ -2237,7 +2234,7 @@ class AlumniIndex(Page, SocialFields):
 
         # research_items.order_by('-year')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
@@ -2505,7 +2502,7 @@ class StaffIndex(Page, SocialFields):
         # staff_pages = staff_pages.distinct()
         staff_pages = staff_pages.order_by('?')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         # research_items.order_by('-year')
 
@@ -2583,7 +2580,7 @@ class ResearchStudentIndex(Page, SocialFields):
 
         research_students = research_students.distinct()
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         # research_items.order_by('-year')
 
@@ -2857,7 +2854,7 @@ class RcaNowIndex(Page, SocialFields):
         if area:
             rca_now_items = rca_now_items.filter(area=area)
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)][school] if school else []
 
         rca_now_items = rca_now_items.order_by('-date')
 
@@ -3229,7 +3226,8 @@ class GalleryPage(Page, SocialFields):
 
         gallery_items = gallery_items.order_by('?');
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        # TODO
+        # related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
 
         page = request.GET.get('page')
