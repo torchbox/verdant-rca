@@ -182,172 +182,37 @@ SCHOOL_CHOICES = (
     ('rectorate', 'Rectorate'),
 )
 
-HISTORICAL_PROGRAMMES = {
-    '2007': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('industrialdesignengineering', 'Industrial Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2008': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2009': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2010': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2011': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2012': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2013': (
-        ('architecture', 'Architecture'),
-        ('interiordesign', 'Interior Design'),
-        ('animation', 'Animation'),
-        ('informationexperiencedesign', 'Information Experience Design'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('globalinnovationdesign', 'Global Innovation Design'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('servicedesign', 'Service Design'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('drawingstudio', 'Drawing Studio'),
-    ),
-}
+ALL_PROGRAMMES = (
+    ('fashionwomenswear', 'Fashion Womenswear'),
+    ('textiles', 'Textiles'),
+    ('ceramicsglass', 'Ceramics & Glass'),
+    ('sculpture', 'Sculpture'),
+    ('designproducts', 'Design Products'),
+    ('industrialdesignengineering', 'Industrial Design Engineering'),
+    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('visualcommunication', 'Visual Communication'),
+    ('designinteractions', 'Design Interactions'),
+    ('innovationdesignengineering', 'Innovation Design Engineering'),
+    ('historyofdesign', 'History of Design'),
+    ('fashionmenswear', 'Fashion Menswear'),
+    ('printmaking', 'Printmaking'),
+    ('globalinnovationdesign', 'Global Innovation Design'),
+    ('architecture', 'Architecture'),
+    ('interiordesign', 'Interior Design'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
+    ('painting', 'Painting'),
+    ('photography', 'Photography'),
+    ('servicedesign', 'Service Design'),
+    ('animation', 'Animation'),
+    ('informationexperiencedesign', 'Information Experience Design'),
+    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
+    ('curatingcontemporaryart', 'Curating Contemporary Art'),
+    ('conservation', 'Conservation'),
+    ('vehicledesign', 'Vehicle Design'),
+    ('communicationartdesign', 'Communication Art & Design'),
+)
 
-ALL_PROGRAMMES = list(set([x for year_tuple in HISTORICAL_PROGRAMMES.values() for x in year_tuple]))
-
-# PROGRAMME_CHOICES is the last/current year from HISTORICAL_PROGRAMMES
-PROGRAMME_CHOICES = HISTORICAL_PROGRAMMES[sorted(HISTORICAL_PROGRAMMES.keys())[-1]]
 
 SCHOOL_PROGRAMME_MAP = {
     '2014': {
@@ -422,6 +287,24 @@ SCHOOL_PROGRAMME_MAP = {
     },
 }
 
+# generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP
+PROGRAMME_CHOICES = sorted([
+    (year,
+    tuple([
+            (programme, dict(ALL_PROGRAMMES)[programme])
+            for programme
+            in sorted(set(sum([
+                programmes
+                for school, programmes
+                in mapping.items()
+            ], [])))
+        ])
+    )
+    for year, mapping
+    in SCHOOL_PROGRAMME_MAP.items()
+])
+
+
 # Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
 # 1. check schools
 assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
@@ -429,6 +312,8 @@ assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []
 # 2. check programmes
 assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
         .issubset(set(dict(ALL_PROGRAMMES)))
+
+YEARS = SCHOOL_PROGRAMME_MAP.keys()
 
 # TODO: remove this line, needed temporarily until the year filters are done
 SCHOOL_PROGRAMME_MAP = SCHOOL_PROGRAMME_MAP[sorted(SCHOOL_PROGRAMME_MAP.keys())[-1]]
@@ -2814,7 +2699,7 @@ class StudentPageWorkSponsor(Orderable):
 
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    programme = models.CharField(max_length=255, choices=ALL_PROGRAMMES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.CharField(max_length=4)
