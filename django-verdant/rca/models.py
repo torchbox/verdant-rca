@@ -289,16 +289,12 @@ SCHOOL_PROGRAMME_MAP = {
 
 # generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP
 PROGRAMME_CHOICES = sorted([
-    (year,
-    tuple([
-            (programme, dict(ALL_PROGRAMMES)[programme])
-            for programme
-            in sorted(set(sum([
-                programmes
-                for school, programmes
-                in mapping.items()
-            ], [])))
-        ])
+    (
+        year,   tuple([
+                    (programme, dict(ALL_PROGRAMMES)[programme])
+                    for programme
+                    in sorted(set(sum(mapping.values(), [])))
+                ])
     )
     for year, mapping
     in SCHOOL_PROGRAMME_MAP.items()
