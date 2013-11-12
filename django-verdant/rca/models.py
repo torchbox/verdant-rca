@@ -430,6 +430,9 @@ assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []
 assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
         .issubset(set(dict(ALL_PROGRAMMES)))
 
+# TODO: remove this line, needed temporarily until the year filters are done
+SCHOOL_PROGRAMME_MAP = SCHOOL_PROGRAMME_MAP[sorted(SCHOOL_PROGRAMME_MAP.keys())[-1]]
+
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
     ('architecture', 'Architecture'),
