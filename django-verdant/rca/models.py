@@ -175,7 +175,7 @@ SCHOOL_CHOICES = (
     ('schoolofmaterial', 'School of Material'),
     ('schoolofappliedart', 'School of Applied Art'),
     ('schoolofarchitecturedesign', 'School of Architecture & Design'),
-    ('schoolofcommunications', 'School of Communcations'),
+    ('schoolofcommunications', 'School of Communications'),
     ('schooloffashiontextiles', 'School of Fashion & Textiles'),
     ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
