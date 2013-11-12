@@ -1,11 +1,13 @@
-from rca.models import Advert, SCHOOL_CHOICES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES
+from rca.models import Advert, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES
+from datetime import date
 
 
 def global_vars(request):
     return {
         'global_adverts': Advert.objects.filter(show_globally=True),
         'global_schools': SCHOOL_CHOICES,
-        'global_programmes': PROGRAMME_CHOICES,
+        'global_all_programmes': ALL_PROGRAMMES,
+        'global_programmes': dict(PROGRAMME_CHOICES)[str(date.today().year)],
         'global_locations': EVENT_LOCATION_CHOICES,
         'global_areas': AREA_CHOICES,
         'global_audiences': EVENT_AUDIENCE_CHOICES,
