@@ -53,7 +53,7 @@ class RcaImage(AbstractImage):
 
     def caption_lines(self):
         if self.creator:
-            first_line = u"%s by %s" % (self.title, self.creator)
+            first_line = u"%s, %s" % (self.title, self.creator)
         else:
             first_line = self.title
 
@@ -80,7 +80,7 @@ class RcaImage(AbstractImage):
         lines = self.caption_lines()
 
         if self.creator:
-            lines[0] = mark_safe(u"<i>%s</i> by %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
+            lines[0] = mark_safe(u"<i>%s</i>, %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
         else:
             lines[0] = mark_safe(u"<i>%s</i>" % conditional_escape(self.title))
 
