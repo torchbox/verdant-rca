@@ -11,6 +11,7 @@ def deploy_staging():
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate django_embedly 0001 --fake --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --noinput")
