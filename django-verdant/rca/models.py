@@ -173,9 +173,13 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('schoolofappliedart', 'School of Applied Art'),
+    ('schoolofarchitecturedesign', 'School of Architecture & Design'),
+    ('schoolofcommunications', 'School of Communcations'),
+    ('schooloffashiontextiles', 'School of Fashion & Textiles'),
+    ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
-
 )
 
 HISTORICAL_PROGRAMMES = {
@@ -315,10 +319,11 @@ HISTORICAL_PROGRAMMES = {
         ('architecture', 'Architecture'),
         ('interiordesign', 'Interior Design'),
         ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
         ('informationexperiencedesign', 'Information Experience Design'),
+        ('visualcommunication', 'Visual Communication'),
         ('designinteractions', 'Design Interactions'),
         ('designproducts', 'Design Products'),
+        ('globalinnovationdesign', 'Global Innovation Design'),
         ('innovationdesignengineering', 'Innovation Design Engineering'),
         ('servicedesign', 'Service Design'),
         ('vehicledesign', 'Vehicle Design'),
@@ -331,59 +336,102 @@ HISTORICAL_PROGRAMMES = {
         ('curatingcontemporaryart', 'Curating Contemporary Art'),
         ('historyofdesign', 'History of Design'),
         ('ceramicsglass', 'Ceramics & Glass'),
+        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
         ('fashionmenswear', 'Fashion Menswear'),
         ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
         ('textiles', 'Textiles'),
-        ('globalinnovationdesign', 'Global Innovation Design'),
         ('drawingstudio', 'Drawing Studio'),
     ),
 }
 
 ALL_PROGRAMMES = list(set([x for year_tuple in HISTORICAL_PROGRAMMES.values() for x in year_tuple]))
 
-PROGRAMME_CHOICES = (
-    ('architecture', 'Architecture'),
-    ('interiordesign', 'Interior Design'),
-    ('animation', 'Animation'),
-    ('informationexperiencedesign', 'Information Experience Design'),
-    ('visualcommunication', 'Visual Communication'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('globalinnovationdesign', 'Global Innovation Design'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('servicedesign', 'Service Design'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-    ('curatingcontemporaryart', 'Curating Contemporary Art'),
-    ('historyofdesign', 'History of Design'),
-    ('ceramicsglass', 'Ceramics & Glass'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('textiles', 'Textiles'),
-    ('drawingstudio', 'Drawing Studio'),
-)
+# PROGRAMME_CHOICES is the last/current year from HISTORICAL_PROGRAMMES
+PROGRAMME_CHOICES = HISTORICAL_PROGRAMMES[sorted(HISTORICAL_PROGRAMMES.keys())[-1]]
 
 SCHOOL_PROGRAMME_MAP = {
-    'schoolofarchitecture': ['architecture', 'interiordesign'],
-    'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
-    'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-    'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-    'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-    'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    'helenhamlyn': [],
-    'rectorate': [],
+    '2014': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'helenhamlyn': [],
+        'rectorate': [],
+    },
+    '2013': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'helenhamlyn': [],
+        'rectorate': [],
+        },
+    '2012': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2011': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2010': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2009': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
+    '2008': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
+    '2007': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts', 'industrialdesignengineering', 'vehicledesign'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
 }
 
-# Make sure values used in SCHOOL_PROGRAMME_MAP are valid
-assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
-assert set(sum(SCHOOL_PROGRAMME_MAP.values(), [])).issubset(dict(PROGRAMME_CHOICES).keys())
+# Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
+# 1. check schools
+assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(SCHOOL_CHOICES)))
+# 2. check programmes
+assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(ALL_PROGRAMMES)))
+
+# TODO: remove this line, needed temporarily until the year filters are done
+SCHOOL_PROGRAMME_MAP = SCHOOL_PROGRAMME_MAP[sorted(SCHOOL_PROGRAMME_MAP.keys())[-1]]
 
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
@@ -2023,7 +2071,7 @@ class StandardIndex(Page, SocialFields):
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
     indexed = False
-    
+
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -2702,7 +2750,7 @@ ResearchStudentIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
-    
+
 
 
 # == Student profile page ==
@@ -3295,7 +3343,7 @@ class GalleryPage(Page, SocialFields):
             gallery_items = gallery_items.filter(degree_year=year)
 
         gallery_items = gallery_items.order_by('?');
-        
+
         related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
 
 
