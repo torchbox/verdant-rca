@@ -102,11 +102,6 @@
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
-
-    /*@media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        background-image: url(/assets/images/sprites-retina.png);
-        background-size:1184px 2459px;
-    }*/
 }
 
 .sprite-load-medium2 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
@@ -116,10 +111,10 @@
     width: @width;
     height: @height;
 
-    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        background-size:1075/1.5px auto;
-        background-position: @retinaPositionX @retinaPositionY;
-    }
+    //@media only screen and (max-width: 768px) { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        //background-position: @retinaPositionX @retinaPositionY;
+        //background-size:2000/2px 730/2px;  
+    //}
 }
 
 /* sidebar advert */
