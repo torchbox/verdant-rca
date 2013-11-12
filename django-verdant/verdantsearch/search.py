@@ -108,6 +108,10 @@ class Search(object):
         self.es.create_index(self.es_index, INDEX_SETTINGS)
 
     def add_type(self, model):
+        # Make sure that the model is indexed
+        if not model.indexed:
+            return
+
         # Get type name
         content_type = model.indexed_get_content_type()
 
@@ -130,9 +134,24 @@ class Search(object):
     def refresh_index(self):
         self.es.refresh(self.es_index)
 
-    def add(self, obj):
+    def can_be_indexed(self, obj):
         # Object must be a decendant of Indexed and be a django model
         if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
+            return False
+
+        # Check if this objects model has opted out of indexing
+        if not obj.__class__.indexed:
+            return False
+
+        # Check if this object has an "object_indexed" function
+        if hasattr(obj, "object_indexed"):
+            if obj.object_indexed() == False:
+                return False
+        return True
+
+    def add(self, obj):
+        # Make sure the object can be indexed
+        if not self.can_be_indexed(obj):
             return
 
         # Build document
@@ -146,7 +165,7 @@ class Search(object):
         type_set = {}
         for obj in obj_list:
             # Object must be a decendant of Indexed and be a django model
-            if not isinstance(obj, Indexed) or not isinstance(obj, models.Model):
+            if not self.can_be_indexed(obj):
                 continue
 
             # Get object type
