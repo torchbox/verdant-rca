@@ -9,32 +9,43 @@
         <div class="nice-padding">
             <h2>Pages awaiting moderation:</h2>
             <table class="listing">
-                <tr>
-                    <th>Title</th>
-                    <th>Submitted by</th>
-                    <th>Submission date</th>
-                    <th>Actions</th>
-                </tr>
-                {% for revision in page_revisions_for_moderation %}
+                <col width="33%" />
+                <col width="10%"/>
+                <col width="10%"/>
+                <col />
+                <thead>
                     <tr>
-                        <td>{{ revision.page.title }}</td>
-                        <td>{{ revision.user.get_full_name }}</td>
-                        <td>{{ revision.created_at|date:"d M Y" }}</td>
-                        <td>
-                            <a href="{% url 'verdantadmin_pages_edit' revision.page.id %}">Edit</a>
-                            <a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a>
-                            <form action="{% url 'verdantadmin_pages_approve_moderation' revision.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" class="button" value="Approve">
-                            </form>
-
-                            <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
-                                {% csrf_token %}
-                                <input type="submit" class="button" value="Reject">
-                            </form>
-                        </td>
+                        <th class="title">Title</th>
+                        <th>Submitted by</th>
+                        <th>Submission date</th>
+                        <th>Actions</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                <tbody>
+                    {% for revision in page_revisions_for_moderation %}
+                        <tr>
+                            <td class="title">
+                                <h2><a href="{% url 'verdantadmin_pages_edit' revision.page.id %}">{{ revision.page.title }}</a></h2>
+                                <ul class="actions">
+                                    <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>
+                                </ul>
+                            </td>
+                            <td>{{ revision.user.get_full_name }}</td>
+                            <td>{{ revision.created_at|date:"d M Y H:i" }}</td>
+                            <td class="moderate-actions">                
+                                <form action="{% url 'verdantadmin_pages_approve_moderation' revision.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" class="button button-small" value="Approve">
+                                </form>
+
+                                <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="submit" class="button button-small no" value="Reject">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
     {% endif %}
