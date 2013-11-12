@@ -3263,6 +3263,7 @@ class GalleryPage(Page, SocialFields):
                 'self': self,
                 'gallery_items': gallery_items,
                 'related_programmes': related_programmes,
+                'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
             })
 
 GalleryPage.content_panels = [
