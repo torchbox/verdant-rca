@@ -83,9 +83,19 @@
 	line-height:1.2em;
 	text-decoration:none;
 }
+#verdant-userbar .button:hover{
+	background-color:#555;
+}
 #verdant-userbar .button.yes{
 	background-color:#5cc1c0;
+}
+#verdant-userbar .button.yes:hover{
+	background-color:#43b1b0;
 }
 #verdant-userbar .button.no{
 	background-color:#f7474e;
 }
+#verdant-userbar .button.no:hover{
+	background-color:#f52028;
+}
+
