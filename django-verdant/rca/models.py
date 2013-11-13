@@ -3296,6 +3296,10 @@ class GalleryPage(Page, SocialFields):
                 'gallery_items': gallery_items,
                 'related_programmes': related_programmes,
                 'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
+                # on first page load the current year needs to appear in the url for the next page
+                # but we can't change the value on the request.GET dictionary, which is used to render that url
+                # so it's just append it to that url if the year filter wasn't defined already
+                'default_year': ('&year=%d' % date.today().year) if not year else '',
             })
 
 GalleryPage.content_panels = [

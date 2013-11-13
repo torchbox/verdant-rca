@@ -412,12 +412,12 @@ $(function(){
                 }, time);
                 time += step;
             });
-        }
+        };
 
         // prepare the items already in the page (if non-inifinite-scroll)
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
-        loadmore.click(function(e){
+        $(document.body).on("click", loadmore, function(e){
             e.preventDefault();
 
             if(paginationContainer && $(paginationContainer).length){
@@ -440,7 +440,7 @@ $(function(){
                         loadmore.remove();
                     }
                     showNewItems();
-                    
+
                 });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
@@ -492,7 +492,7 @@ $(function(){
                     });
                 }
             });
-        
+
             for(i = 0; i < rowArray.length; i++){
                 $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
             }
