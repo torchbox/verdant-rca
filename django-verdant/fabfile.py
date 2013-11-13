@@ -2,8 +2,8 @@ from __future__ import with_statement
 from fabric.api import *
 
 env.roledefs = {
-    'staging': ['django-staging.torchbox.com']
-    'production': ['rca2.dh.bytemark.co.uk']
+    'staging': ['django-staging.torchbox.com'],
+    'production': ['rca2.dh.bytemark.co.uk'],
 }
 
 @roles('staging')
