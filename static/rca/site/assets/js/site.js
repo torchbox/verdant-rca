@@ -22,9 +22,9 @@ function showHide(clickElement, classElement){
 
 /* show hide the footer - needs its own function because of being idiosyncratic */
 function showHideFooter() {
-    $('.footer-expand').click(function(eventObject){
-        $(this).parent().toggleClass('expanded');
-        $(this).prev().slideToggle(expansionAnimationSpeed);
+    $('footer .menu .main').click(function(eventObject){
+        $(this).toggleClass('expanded');
+        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -69,13 +69,6 @@ function showSearchSubmit() {
     $('form.search input[type="text"]').focus(function() {
        $('form.search input[type="submit"]').show();
     });
-    $('form.search input[type="text"]').focusout(function() {
-       // I've commented out this code as it makes the button disappear
-       // when you click it causing the search form to not be submitted!
-       // HC - not sure who added above comment - but have implemented alternative below.
-
-       //$('form.search input[type="submit"]').hide();
-    });
     $(document).click(function() {
         $('form.search input[type="submit"]').hide();
     });
@@ -85,18 +78,20 @@ function showSearchSubmit() {
 }
 
 /* search autocomplete */
-function showSearchAutocomplete() {
-    $("input#search_box").autocomplete({
-        source: function(request, response) {
-            $.getJSON("/search/suggest/?q=" + request.term, function(data) {
-                response(data);
-            })
-        },
-        select: function( event, ui ) {
-            window.location.href = ui.item.url;
-        }
-    });
-}
+// function showSearchAutocomplete() {
+//     $("input#search_box").autocomplete({
+//         source: function(request, response) {
+//             $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+//                 response(data);
+//             })
+//         },
+//         select: function( event, ui ) {
+//             window.location.href = ui.item.url;
+//         }
+//     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+//         return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a><span>" + item.type + "</span> " + item.label + "</a>" ).appendTo( ul );
+//     };
+// }
 
 /*google maps for contact page */
 function initializeMaps() {
@@ -164,7 +159,7 @@ function post(frame, action, value) {
 
 $(function(){
     showSearchSubmit();
-    showSearchAutocomplete();
+    // showSearchAutocomplete();
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
@@ -269,18 +264,44 @@ $(function(){
         });
     });
 
-    /* Tweets */
-    $(".twitter-feed-items").each(function(){
-        var username = $(this).data("twitter-feed");
+    /* Tweet blocks */
+    $('.twitter-feed-items').each(function(){
+        var username = $(this).data('twitter-feed');
         $(this).tweet({
-            join_text: "auto",
+            join_text: 'auto',
             username: username,
             avatar_size: 32,
-            auto_join_text_default: "from @" + username,
-            loading_text: "Checking for new tweets...",
+            auto_join_text_default: 'from @' + username,
+            loading_text: 'Checking for new tweets...',
             count: 3
         });
     });
+
+    /* Packery tweet blocks (behaves as several individual blocks) */
+    $('.packery .tweet').each(function(){
+        if(!window.packerytweets){
+            var username = $(this).data('twitter-feed');
+            var count = $(this).data('twitter-count');
+
+            var tmp = $('<div></div>');
+            tmp.tweet({
+                join_text: 'auto',
+                username: username,
+                avatar_size: 32,
+                auto_join_text_default: 'from @' + username,
+                loading_text: 'Checking for new tweets...',
+                count: count
+            })
+
+            window.packerytweets = tmp;
+        }
+    });
+    $(window.packerytweets).on('loaded', function(){
+        var arr = jQuery.makeArray($('li', window.packerytweets));
+        $('.packery .tweet .inner .content').each(function(){
+            $(this).html($(arr.shift()).html());
+        });
+    })
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
@@ -312,14 +333,14 @@ $(function(){
 
             /* Packery */
             $('.packery').imagesLoaded( function() {
-                var packery = $('.packery').packery({
+                window.packery = $('.packery').packery({
                     itemSelector: '.item',
                     stamp: ".stamp"
                 });
             });
         },
         off: function(){
-            $('.packery').destroy();
+             $('.packery').packery('destroy');
         }
     });
 
@@ -542,8 +563,8 @@ $(function(){
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 
-    /* Apply custom styles to selects */
-    $('select:not(.filters select)').customSelect({
-        customClass: "select"
-    });
+    // /* Apply custom styles to selects */
+    // $('select:not(.filters select)').customSelect({
+    //     customClass: "select"
+    // });
 });
