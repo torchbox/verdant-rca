@@ -64,7 +64,9 @@
     {% endif %}
 
     <!-- research -->
-    {% research_related school=self.school %}
+    <div id="listing">
+        {% include "rca/includes/research_listing.html" %}
+    </div>
 
         <!-- events -->
     {% upcoming_events_related school=self.school display_name=self.get_school_display %}

@@ -24,7 +24,7 @@
 
     {% compress css %}
         {% comment %}
-            Per-page CSS is compressed separately so that the global stuff doesn't get re-downloaded each time 
+            Per-page CSS is compressed separately so that the global stuff doesn't get re-downloaded each time
         {% endcomment %}
         {% block extra_css %}{% endblock %}
     {% endcompress %}
@@ -55,8 +55,9 @@
 
     {% compress js %}
         {% comment %}
-            Per-page JS is compressed separately so that the global stuff doesn't get re-downloaded each time 
+            Per-page JS is compressed separately so that the global stuff doesn't get re-downloaded each time
         {% endcomment %}
+        {% block extra_js_base %}{% endblock %}
         {% block extra_js %}{% endblock %}
     {% endcompress %}
 </body>
