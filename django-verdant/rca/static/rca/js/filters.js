@@ -36,6 +36,28 @@ $(function(){
 			$("#filters div[data-id=programme]").css("width", "301%")
 			.closest("li.filter").addClass("three-cols");
 		}
+		if(school_or_year == "degree_year"){
+			filterSchools();
+		}
+	}
+
+	function filterSchools(){
+		var year = $("#degree_year").val();
+		if(year){
+			var schools = Object.keys(SCHOOL_PROGRAMME_MAP[year]);
+		}
+		$("#filters li.filter [data-id=school] li[data-val]").each(function(){
+			var $this = $(this);
+			if($this.data("val")){
+				$this.hide();
+			}
+			if(year && schools.indexOf($this.data("val")) != -1){
+				$this.show();
+			}
+			if(!year){
+				$this.show();
+			}
+		});
 	}
 
 	$('#filters .options li').click(function() {
