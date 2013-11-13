@@ -18,8 +18,7 @@
         <meta name="twitter:title" content="{{ self.title }}">
         <meta name="twitter:description" content="{{ self.social_text }}">
         {% image self.social_image width-320 as social_img %}
-        <!--<meta name="twitter:image" content="http://2c148cd1.ngrok.com{{ social_img.url }}">-->
-        <meta name="twitter:image" content="http://{{ request.site.hostname }}{{ social_img.url }}">
+        <meta name="twitter:image:src" content="http://{{ request.site.hostname }}{{ social_img.url }}">
 
         <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
         <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
