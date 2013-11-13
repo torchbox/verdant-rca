@@ -2036,6 +2036,16 @@ class HomePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class HomePageRelatedLink(Orderable):
+    page = ParentalKey('rca.HomePage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
@@ -2063,6 +2073,7 @@ HomePage.content_panels = [
         FieldPanel('packery_rcanow'),
         FieldPanel('packery_standard'),
     ], 'Packery content'),
+    InlinePanel(HomePage, 'related_links', label="Related links"),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
 ]
 
