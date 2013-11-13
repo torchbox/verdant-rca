@@ -576,10 +576,15 @@ class SchoolPage(Page, SocialFields):
     search_name = 'School'
 
     def serve(self, request):
-        research_items = ResearchItem.objects.filter(live=True).order_by('-year')
+        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('-year')
+
+        # Get 4 results on page and 8 results for each ajax request
+        if request.is_ajax():
+            paginator = Paginator(research_items, 8)
+        else:
+            paginator = Paginator(research_items, 4)
 
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 8)  # Show 6 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
