@@ -22,6 +22,11 @@ class ClusterTest(TestCase):
         self.assertRaises(BandMember.DoesNotExist, lambda: beatles.members.get(name='Reginald Dwight'))
         self.assertRaises(BandMember.MultipleObjectsReturned, lambda: beatles.members.get())
 
+        self.assertEqual([('Paul McCartney',)], beatles.members.filter(name='Paul McCartney').values_list('name'))
+        self.assertEqual(['Paul McCartney'], beatles.members.filter(name='Paul McCartney').values_list('name', flat=True))
+        # quick-and-dirty check that we can invoke values_list with empty args list
+        beatles.members.filter(name='Paul McCartney').values_list()
+
         # these should not exist in the database yet
         self.assertFalse(Band.objects.filter(name='The Beatles').exists())
         self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())

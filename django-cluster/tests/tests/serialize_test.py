@@ -1,7 +1,7 @@
 from django.test import TestCase
 import datetime
 
-from tests.models import Band, BandMember, Album, Restaurant
+from tests.models import Band, BandMember, Album, Restaurant, Dish, MenuItem, Chef, Wine
 
 class SerializeTest(TestCase):
     def test_serialize(self):
@@ -56,3 +56,32 @@ class SerializeTest(TestCase):
         data = fatduck.serializable_data()
         self.assertEqual(42, data['pk'])
         self.assertEqual("The Fat Duck", data['name'])
+
+    def test_dangling_foreign_keys(self):
+        heston_blumenthal = Chef.objects.create(name="Heston Blumenthal")
+        snail_ice_cream = Dish.objects.create(name="Snail ice cream")
+        chateauneuf = Wine.objects.create(name="Chateauneuf-du-Pape 1979")
+        fat_duck = Restaurant(name="The Fat Duck", proprietor=heston_blumenthal, menu_items=[
+            MenuItem(dish=snail_ice_cream, price=20.00, recommended_wine=chateauneuf)
+        ])
+        fat_duck_json = fat_duck.to_json()
+
+        fat_duck = Restaurant.from_json(fat_duck_json)
+        self.assertEqual("Heston Blumenthal", fat_duck.proprietor.name)
+        self.assertEqual("Chateauneuf-du-Pape 1979", fat_duck.menu_items.all()[0].recommended_wine.name)
+
+        heston_blumenthal.delete()
+        fat_duck = Restaurant.from_json(fat_duck_json)
+        # the deserialised record should recognise that the heston_blumenthal record is now missing
+        self.assertEqual(None, fat_duck.proprietor)
+        self.assertEqual("Chateauneuf-du-Pape 1979", fat_duck.menu_items.all()[0].recommended_wine.name)
+
+        chateauneuf.delete()  # oh dear, looks like we just drank the last bottle
+        fat_duck = Restaurant.from_json(fat_duck_json)
+        # the deserialised record should now have a null recommended_wine field
+        self.assertEqual(None, fat_duck.menu_items.all()[0].recommended_wine)
+
+        snail_ice_cream.delete()  # NOM NOM NOM
+        fat_duck = Restaurant.from_json(fat_duck_json)
+        # the menu item should now be dropped entirely (because the foreign key to Dish has on_delete=CASCADE)
+        self.assertEqual(0, fat_duck.menu_items.count())

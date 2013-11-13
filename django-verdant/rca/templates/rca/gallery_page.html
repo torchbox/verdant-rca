@@ -17,7 +17,7 @@
 	                <label for="school">School</label>
 	                <select id="school" name="school">
 	                    <option value="">All schools</option>
-	                    {% for key, value in global_schools %}
+	                    {% for key, value in global_all_schools %}
 	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
 	                </select>
@@ -26,17 +26,17 @@
 	                <label for="programme">Programme</label>
 	                <select id="programme" name="programme">
 	                    <option value="">All programmes</option>
-	                    {% for key, value in global_programmes %}
+	                    {% for key, value in global_all_programmes %}
 	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
 	                </select>
 	            </li>
 	            <li class="filter">
-	                <label for="area">Year</label>
-	                <select id="area" name="area">
+	                <label for="degree_year">Year</label>
+	                <select id="degree_year" name="degree_year">
 	                    <option value="">All years</option>
-	                    {% for key, value in global_areas %}
-	                    	<option value="{{ key }}" {% if request.GET.year == key %}selected="selected"{% endif %}>{{ value }}</option>
+	                    {% for year in global_years reversed %}
+	                    	<option value="{{ year }}" {% if request.GET.year == year %}selected="selected"{% endif %}>{{ year }}</option>
 						{% endfor %}
 	                </select>
 	            </li>
@@ -55,7 +55,9 @@
 		<div class="content bc3">{{ self.intro|richtext }}</div>
 	{% endif %}
 
+	<div id="listing">
     	{% include "rca/includes/gallery_listing.html" %}
+    </div>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
@@ -68,11 +70,15 @@
 	<script type="text/javascript">
 		//global var for rca_now_index set here so that it can be used by the script being called
 		var current_page = window.location.pathname;
+
+        var related_programmes = {{related_programmes|safe}};
+
+        var SCHOOL_PROGRAMME_MAP = {{SCHOOL_PROGRAMME_MAP|safe}}
 	</script>
+	<script src="/static/rca/js/utils.js"></script>
 	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
 
 <!-- TODOs
-	- filter of programme by school (or other filtering to be discussed)
 	- Tags
 -->

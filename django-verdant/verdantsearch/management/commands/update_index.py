@@ -11,7 +11,7 @@ class Command(NoArgsCommand):
         print "Getting object list"
 
         # Get list of indexed models
-        indexed_models = [model for model in models.get_models() if issubclass(model, Indexed) and model.indexed]
+        indexed_models = [model for model in models.get_models() if issubclass(model, Indexed)]
 
         # Object set
         object_set = {}
