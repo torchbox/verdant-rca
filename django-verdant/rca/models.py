@@ -175,7 +175,7 @@ SCHOOL_CHOICES = (
     ('schoolofmaterial', 'School of Material'),
     ('schoolofappliedart', 'School of Applied Art'),
     ('schoolofarchitecturedesign', 'School of Architecture & Design'),
-    ('schoolofcommunications', 'School of Communcations'),
+    ('schoolofcommunications', 'School of Communications'),
     ('schooloffashiontextiles', 'School of Fashion & Textiles'),
     ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
@@ -921,7 +921,7 @@ class NewsItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     indexed_fields = ('intro', 'body')
@@ -2370,7 +2370,7 @@ class StaffPagePublicationExhibition(Orderable):
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
 
     panels = [
         FieldPanel('title'),
@@ -2401,7 +2401,7 @@ class StaffPage(Page, SocialFields):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
@@ -2706,7 +2706,7 @@ class StudentPage(Page, SocialFields):
     funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    rca_content_id = models.CharField(max_length=255, blank=True)  # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
@@ -2935,7 +2935,7 @@ class ResearchItem(Page, SocialFields):
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
     show_on_homepage = models.BooleanField()
 
