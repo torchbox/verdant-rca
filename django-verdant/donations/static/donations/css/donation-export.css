@@ -13,19 +13,31 @@
  }
 
 .ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content{
-  width:  180px;
+  width: 210px;
   float: left;
   margin: 0;
   border: none;
-  padding-left: 28px;
+  padding: 0;
 }
+
+.ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content li{
+  border: none;
+  padding: 0;
+}
+.ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content li > a{
+  display: block;
+  padding: 3px;
+}
+
 
 .ranges.ui-widget-header{
   float: left;
 }
 
 .ui-icon-triangle-1-e{
-  display: none;
+  float: right;
+  margin-top: 4px;
+  cursor: pointer;
 }
 
 .ui-daterangepickercontain ul{
