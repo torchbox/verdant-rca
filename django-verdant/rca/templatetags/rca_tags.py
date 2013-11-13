@@ -4,7 +4,7 @@ from django.utils.html import conditional_escape
 from rca.models import *
 from datetime import date
 from itertools import chain
-from django.db.models import Min
+from django.db.models import Min, Max
 from core.models import get_navigation_menu_items
 from verdantdocs.models import Document
 
@@ -12,7 +12,7 @@ register = template.Library()
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+    events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
