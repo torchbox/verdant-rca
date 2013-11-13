@@ -177,7 +177,9 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 @login_required
 def edit(request, page_id):
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    latest_revision = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
+
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
@@ -213,10 +215,16 @@ def edit(request, page_id):
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
+            messages.error(request, "The page could not be saved due to validation errors")
             edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
+
+
+    # Check for revisions still undergoing moderation and warn
+    if latest_revision and latest_revision.submitted_for_moderation:
+        messages.warning(request, "This page is currently awaiting moderation")
 
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
@@ -283,14 +291,14 @@ def delete(request, page_id):
 
 @login_required
 def view_draft(request, page_id):
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
     return page.serve(request)
 
 @login_required
 def preview_on_edit(request, page_id):
     # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
     # return the rendered page; if not, re-render the edit form
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 

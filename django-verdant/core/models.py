@@ -208,6 +208,14 @@ class Page(MP_Node, ClusterableModel, Indexed):
         try:
             revision = self.revisions.order_by('-created_at')[0]
         except IndexError:
+            return False
+
+        return revision
+
+    def get_latest_revision_as_page(self):
+        try:
+            revision = self.revisions.order_by('-created_at')[0]
+        except IndexError:
             return self.specific
 
         return revision.as_page_object()

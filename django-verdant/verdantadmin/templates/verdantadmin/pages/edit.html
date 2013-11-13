@@ -31,6 +31,14 @@
                         </ul>
                     </div>
                 </li>
+                <li class="notices">
+
+                <li>
+                <li class="meta">
+                    {% if page.get_latest_revision %}
+                        <span>Last modified:</span> {{ page.get_latest_revision.created_at }} by {{ page.get_latest_revision.user.get_full_name }}
+                    {% endif %}
+                </li>
             </ul>
         </footer>
     </form>
