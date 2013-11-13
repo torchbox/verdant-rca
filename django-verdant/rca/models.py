@@ -2039,7 +2039,7 @@ class HomePageAd(Orderable):
 class HomePageRelatedLink(Orderable):
     page = ParentalKey('rca.HomePage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
