@@ -578,11 +578,7 @@ class SchoolPage(Page, SocialFields):
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
 
-        # Get 4 results on page and 8 results for each ajax request
-        if request.is_ajax():
-            paginator = Paginator(research_items, 8)
-        else:
-            paginator = Paginator(research_items, 4)
+        paginator = Paginator(research_items, 4)
 
         page = request.GET.get('page')
         try:
@@ -762,11 +758,7 @@ class ProgrammePage(Page, SocialFields):
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
 
-        # Get 4 results on page and 8 results for each ajax request
-        if request.is_ajax():
-            paginator = Paginator(research_items, 8)
-        else:
-            paginator = Paginator(research_items, 4)
+        paginator = Paginator(research_items, 4)
 
         page = request.GET.get('page')
         try:
