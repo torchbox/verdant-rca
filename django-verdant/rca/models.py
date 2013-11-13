@@ -651,17 +651,8 @@ SchoolPage.promote_panels = [
 
 # == Programme page ==
 
-class ProgrammePageCarouselItem(Orderable):
+class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
-    url = models.URLField(null=True, blank=True)
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('text'),
-        FieldPanel('url'),
-    ]
 
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
