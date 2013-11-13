@@ -576,13 +576,9 @@ class SchoolPage(Page, SocialFields):
     search_name = 'School'
 
     def serve(self, request):
-        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('-year')
+        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
 
-        # Get 4 results on page and 8 results for each ajax request
-        if request.is_ajax():
-            paginator = Paginator(research_items, 8)
-        else:
-            paginator = Paginator(research_items, 4)
+        paginator = Paginator(research_items, 4)
 
         page = request.GET.get('page')
         try:
@@ -758,6 +754,32 @@ class ProgrammePage(Page, SocialFields):
     indexed_fields = ('get_programme_display', 'get_school_display')
 
     search_name = 'Programme'
+
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
     def tabbed_feature_count(self):
         count = 0;
@@ -2970,6 +2992,7 @@ class ResearchItem(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
