@@ -13,16 +13,27 @@
                     <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
                     <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
                     <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
-                    <li><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
+                    {% if perms.auth %}
+                        <li><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
+                    {% endif %}
                     {% comment %}
                         Removed until functionality exists/works as expected
-                       
+
                         <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
                     {% endcomment %}
+                    <li>
+                        <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
+                    </li>
+                    <li class="verdantadmin-tab-more"><a href="#" class="icon icon-arrow-down">More</a></li>
+
+                    {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
+                    {% for name, title in verdantadmin_tab_urls %}
+                        <li><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
+                    {% endfor %}
                 </ul>
             </nav>
         </div>
-            
+
         <nav class="explorer">
             <ul class="dl-menu">
                 {% explorer_nav %}
@@ -45,4 +56,20 @@
             {% block content %}{% endblock %}
         </div>
     </div>
+{% endblock %}
+
+{% block extra_js_base %}
+    <script type="text/javascript">
+        $(".verdantadmin-tab-more")
+            .nextAll().hide().end()
+            .find("a").click(function(){
+                $(this)
+                    .toggleClass('icon-arrow-down icon-arrow-up')
+                    .parent()
+                    .nextAll()
+                    .stop()
+                    .toggle('fast');
+                return false;
+            });
+    </script>
 {% endblock %}

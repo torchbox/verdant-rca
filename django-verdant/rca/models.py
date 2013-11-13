@@ -575,6 +575,36 @@ class SchoolPage(Page, SocialFields):
 
     search_name = 'School'
 
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('-year')
+
+        # Get 4 results on page and 8 results for each ajax request
+        if request.is_ajax():
+            paginator = Paginator(research_items, 8)
+        else:
+            paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
+
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
@@ -621,17 +651,8 @@ SchoolPage.promote_panels = [
 
 # == Programme page ==
 
-class ProgrammePageCarouselItem(Orderable):
+class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
-    url = models.URLField(null=True, blank=True)
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('text'),
-        FieldPanel('url'),
-    ]
 
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
@@ -3157,7 +3178,7 @@ class CurrentResearchPage(Page, SocialFields):
             research_items = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/current_research_listing.html", {
+            return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
             })

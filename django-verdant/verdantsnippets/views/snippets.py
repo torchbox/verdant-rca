@@ -4,6 +4,7 @@ from django.utils.encoding import force_text
 from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from verdantsnippets.models import get_snippet_content_types
 from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
@@ -46,6 +47,7 @@ def get_snippet_edit_handler(model):
 
 # == Views ==
 
+@login_required
 def index(request):
     snippet_types = [
         (
@@ -59,6 +61,7 @@ def index(request):
     })
 
 
+@login_required
 def list(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -74,6 +77,7 @@ def list(request, content_type_app_name, content_type_model_name):
     })
 
 
+@login_required
 def create(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -106,6 +110,7 @@ def create(request, content_type_app_name, content_type_model_name):
         'edit_handler': edit_handler,
     })
 
+@login_required
 def edit(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -140,6 +145,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
     })
 
 
+@login_required
 def delete(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
