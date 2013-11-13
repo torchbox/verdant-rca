@@ -32,4 +32,6 @@ Vagrant::Config.run do |config|
 	
 	# Enable provisioning with a shell script.
 	config.vm.provision :shell, :path => "etc/install/install.sh", :args => "verdant"
+
+	config.ssh.forward_agent = true
 end
