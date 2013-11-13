@@ -2434,6 +2434,7 @@ class StaffPage(Page, SocialFields):
     last_name = models.CharField(max_length=255)
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
@@ -2527,8 +2528,7 @@ class StaffIndex(Page, SocialFields):
         if area and area != '':
             staff_pages = staff_pages.filter(roles__area=area)
 
-        # staff_pages = staff_pages.distinct()
-        staff_pages = staff_pages.order_by('?')
+        staff_pages = staff_pages.order_by('-random_order')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
