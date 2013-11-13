@@ -1,4 +1,4 @@
-/* 
+/*
 min z-index: 1;
 max z-index: 5;
 */
@@ -85,7 +85,7 @@ img{
     float: left;
     height:100%;
     min-height:800px;
-}  
+}
     .logo{
         display:block;
         margin:2em auto;
@@ -95,9 +95,9 @@ img{
         opacity:0.4;
 
         em{
-            font-family: verdant; 
+            font-family: verdant;
             font-style: normal;
-            font-size:7.7em; 
+            font-size:7.7em;
             line-height:1em;
         }
         span{
@@ -121,7 +121,7 @@ img{
             font-size:30px;
             color:white;
             line-height:40px;
-        }       
+        }
     }
 
     .nav-main{
@@ -139,13 +139,13 @@ img{
 
         li{
             border-bottom:1px solid rgba(200,200,200,0.1);
-        
+
             &.selected{
                 background-color:@color-grey-dark;
             }
         }
 
-        a {    
+        a {
             text-decoration:none;
             text-transform:uppercase;
             display: block;
@@ -155,7 +155,7 @@ img{
             position:relative;
             font-size:1em;
             font-weight:600;
-           
+
             &:hover{
                 opacity:1;
             }
@@ -163,6 +163,10 @@ img{
 
         .icon-plus-inverse{
             font-weight:600;
+        }
+
+        .hide-next-all + li, .hide-next-all ~ li{
+            display: none;
         }
     }
 
@@ -224,7 +228,7 @@ header{
 
     /* For case where content below header should merge with it */
     &.merged{
-        margin-bottom:0;  
+        margin-bottom:0;
     }
 }
 
@@ -252,7 +256,7 @@ footer{
 
     .actions{
         width:250px;
-    }   
+    }
 }
 
 /* Z-indexes */
@@ -317,7 +321,7 @@ a{
     .col12{
         .column(12);
     }
-    
+
     body{
         margin-left:@menu-width;
     }
@@ -334,7 +338,7 @@ a{
         height:100%;
         width:@menu-width;
         margin-left:-@menu-width;
-    } 
+    }
 
     .inner{ /* inner only serves a purpose to position content */
         height:100%;
@@ -357,9 +361,9 @@ a{
     .dl-menu {
         position: absolute;
     }
-    
+
     /* UN-set the transformations used on mobile */
-    body.nav-open .nav-wrapper, 
+    body.nav-open .nav-wrapper,
     body.nav-open .content-wrapper{
         transform: none;
         -webkit-transform: none;
