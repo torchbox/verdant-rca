@@ -31,13 +31,13 @@
                 {{ form.password.label_tag }}
                 {{ form.password }}
             </div>
-            <p class="help"><a href="#">Forgotten it?</a></p>
+            {# <p class="help"><a href="#">Forgotten it?</a></p> #}
         </li>
-        <li class="checkbox">
+        {% comment %} <li class="checkbox">
             <div class="field">
                 <label><input type="checkbox" /> Remember me</label>
             </div>
-        </li>
+        </li> {% endcomment %}
         <li>
             <input type="submit" value="Sign in"/>
         </li>
