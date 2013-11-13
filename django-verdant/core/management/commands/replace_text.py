@@ -8,7 +8,7 @@ def replace_in_model(model, from_text, to_text):
     updated_fields = []
     for field in text_field_names:
         field_value = getattr(model, field)
-        if from_text in field_value:
+        if field_value and (from_text in field_value):
             updated_fields.append(field)
             setattr(model, field, field_value.replace(from_text, to_text))
 
