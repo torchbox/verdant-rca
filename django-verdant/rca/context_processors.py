@@ -22,7 +22,7 @@ def global_vars(request):
         'global_work_themes': WORK_THEME_CHOICES,
         'global_work_types': WORK_TYPES_CHOICES,
         'global_staff_types': STAFF_TYPES_CHOICES,
-        'global_events_index_url': '/events/',
-        'global_news_index_url': '/news/',
+        'global_events_index_url': '/news-and-events/events/',
+        'global_news_index_url': '/news-and-events/news/',
         'global_default_twitter_handle': "RCAevents",
     }
