@@ -6,27 +6,38 @@
 {% endblock %}
 
 {% block furniture %}
-<form>
+<form action="{% url 'django.contrib.auth.views.login' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
     <h1>Sign in to <span>V</span>erdant</h1>
+
+    {% if form.errors %}
+        <div class="messages">
+            <ul>
+                <li class="error">Your username and password didn't match. Please try again.</li>
+            </ul>
+        </div>
+    {% endif %}
+
     <ul class="fields">
         <li class="full">
             <div class="field icon icon-user">
-                <label>Email or username</label>
-                <input type="email" placeholder="Enter your email or username"  />
+                {{ form.username.label_tag }}
+                {{ form.username }}
             </div>
         </li>
         <li class="full">
             <div class="field icon icon-password">
-                <label>Password</label>
-                <input type="password" placeholder="Enter password" />
+                {{ form.password.label_tag }}
+                {{ form.password }}
             </div>
-            <p class="help"><a href="#">Forgotten it?</a></p>
+            {# <p class="help"><a href="#">Forgotten it?</a></p> #}
         </li>
-        <li class="checkbox">
+        {% comment %} <li class="checkbox">
             <div class="field">
                 <label><input type="checkbox" /> Remember me</label>
             </div>
-        </li>
+        </li> {% endcomment %}
         <li>
             <input type="submit" value="Sign in"/>
         </li>

@@ -201,8 +201,8 @@ class Page(MP_Node, ClusterableModel, Indexed):
             else:
                 raise Http404
 
-    def save_revision(self):
-        self.revisions.create(content_json=self.to_json())
+    def save_revision(self, user=None):
+        self.revisions.create(content_json=self.to_json(), user=user)
 
     def get_latest_revision(self):
         try:
@@ -424,4 +424,5 @@ class Orderable(models.Model):
 class PageRevision(models.Model):
     page = models.ForeignKey('Page', related_name='revisions')
     created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey('auth.User', null=True, blank=True)
     content_json = models.TextField()

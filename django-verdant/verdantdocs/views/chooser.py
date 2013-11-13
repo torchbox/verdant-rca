@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.contrib.auth.decorators import login_required
 
 import json
 
@@ -8,6 +9,7 @@ from verdantdocs.forms import DocumentForm
 from verdantadmin.forms import SearchForm
 
 
+@login_required
 def chooser(request):
     uploadform = DocumentForm()
     documents = []
@@ -26,6 +28,7 @@ def chooser(request):
     )
 
 
+@login_required
 def document_chosen(request, document_id):
     document = get_object_or_404(Document, id=document_id)
 
@@ -37,6 +40,7 @@ def document_chosen(request, document_id):
     )
 
 
+@login_required
 def chooser_upload(request):
     if request.POST:
         form = DocumentForm(request.POST, request.FILES)

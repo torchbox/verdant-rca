@@ -1,7 +1,12 @@
 from django.conf.urls import patterns, url
+from verdantadmin.forms import LoginForm
 
+urlpatterns = patterns('django.contrib.auth.views',
+    url(r'^login/$', 'login', {'template_name': 'verdantadmin/login.html', 'authentication_form': LoginForm}),
+    url(r'^logout/$', 'logout', {'next_page': '/admin/login/'}),
+)
 
-urlpatterns = patterns('verdantadmin.views',
+urlpatterns += patterns('verdantadmin.views',
     url(r'^$', 'home.home', name='verdantadmin_home'),
 
     url(r'^pages/$', 'pages.index', name='verdantadmin_explore_root'),
