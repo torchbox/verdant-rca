@@ -22,11 +22,12 @@
 
         <!--facebook opengraph-->
         <!--<meta property="fb:app_id"          content="1234567890" /> 
-        <meta property="og:type"            content="social-cookbook:recipe" /> 
+        <meta property="og:type"            content="website" /> 
         <meta property="og:url"             content="http://samples.ogp.me/136756249803614" /> 
-        <meta property="og:title"           content="Chocolate Pecan Pie" /> 
-        <meta property="og:image"           content="https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-prn1/851565_496755187057665_544240989_n.jpg" /> 
-        <meta property="cookbook:author"    content="http://samples.ogp.me/390580850990722" />-->
+        <meta property="og:title"           content="{{ self.title }}" /> 
+        <meta property="og:image"           content="http://{{ request.site.hostname }}{{ social_img.url }}" /> 
+        <meta property="og:description"    content="{{ self.social_text }}" />
+        <meta property="og:site_name"    content="Royal College of Art" />-->
 
         <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
         <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
