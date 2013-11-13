@@ -417,7 +417,7 @@ $(function(){
         // prepare the items already in the page (if non-inifinite-scroll)
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
-        $("#listing").on("click", loadmore, function(e){
+        $("#listing").on("click", ".load-more", function(e){
             e.preventDefault();
 
             if(paginationContainer && $(paginationContainer).length){
