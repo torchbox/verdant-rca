@@ -113,7 +113,9 @@
 /**
  *$Three plus
  */
-.three-plus{
+
+/* at desktop size three-plus-no-scroll (used by current resarch) is the same as three-plus */
+.three-plus, .three-plus-no-scroll{
     li{
         .column(3); 
     }
@@ -344,6 +346,9 @@
     .double{
         .column(4);
     }
+    .half{
+        .column(6);
+    }
     .three-quarters{
         .column(8);
     }
@@ -364,6 +369,9 @@
         &.landscape{
             .column(6);
         }
+    }
+    .load-more{
+        display:inline;
     }
 }
 

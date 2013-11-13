@@ -288,6 +288,7 @@
     h2 {
         .h7;
         margin: 0;
+        min-height: 25px;
 
         a {
             color: @color-highlight-blue;
@@ -312,14 +313,22 @@
         .column(12);
         margin-bottom:@spacing-one;
         overflow:hidden;
+        padding-left: 0;
+        padding-right: 10px;
     }
-        h3 {
+        h3, .tweet-time, .tweet-join {
             .a2;
             margin: 0;
         }
         p {
             .bc4;
             margin: 0;
+        }
+        .tweet-text{
+            display: block;
+        }
+        .tweet-avatar{
+            display: none;
         }
 
 }
@@ -369,6 +378,7 @@
     bottom: @share-link-height + 15px;
     width: 100%;
     display: none;
+    z-index: 4001; //show above header
 }
 
 /**
@@ -678,6 +688,19 @@
         padding-top:@grid-gutter-width/2;
     }
 
+    .single{
+        .row();
+        .image{
+            .column(3);
+        }
+        .content{
+            .column(9);
+        }
+        .image{
+            padding-left:0;
+        }
+    }
+
     .load-more {
         border:0;
 
@@ -685,6 +708,22 @@
             width: 96px;
             height: 96px;
         }
+    }
+    .tweet{
+       .tweet-time, .tweet-join {
+            .a2;
+            margin: 0;
+        }
+        p {
+            .bc4;
+            margin: 0;
+        }
+    }
+    .tweet-avatar{
+        display:none;
+    }
+    .tweet-text{
+        display:block;
     }
 }
 
@@ -714,7 +753,10 @@
 /**
  *$One plus block
  */
-.one-plus {
+
+/* current research has 4 items on a line but only one at mobile and shouldn't scroll
+- so doubling up with a three-plus-no-scroll class here */
+.one-plus, .three-plus-no-scroll {
     ul{
         li {
             margin-bottom: @spacing-one;
@@ -727,7 +769,6 @@
         }
     }
     .load-more{
-        display:none;
         a{
             height:126px;
             width:126px;
@@ -736,6 +777,12 @@
     h3, p{
         margin:0;
     }
+}
+.one-plus .load-more {
+    display: none;
+}
+.three-plus-no-scroll .load-more, .index-listing .load-more {
+    display:inline;
 }
 
 /**
@@ -749,7 +796,7 @@
  *$Five plus block + $Three plus block (on homepage)
  */
 
-.five-plus, .col9 .three-plus{
+.five-plus, .col9 .three-plus {
     li{
         .column(4);
         display:inline-block;
@@ -804,6 +851,8 @@
     .header{
         margin:0;
         border-bottom:1px solid white;
+        position: relative;
+        z-index: 4;
 
         a{
             padding:@grid-gutter-width;
@@ -1439,6 +1488,13 @@
     h2,h3,p{
         margin:0;
     }
+    .load-more{
+        display:none;
+        a{
+            height:126px;
+            width:126px;
+        }
+    }
 }
 
 
@@ -1503,6 +1559,33 @@
     &.infinite{
         display:none;
     }
+
+    .next,.prev{
+        float:left;
+    }
+    .next{
+        float:right;
+    }
+    a{
+        line-height:27px;
+        display:block;
+    }
+    a:after,
+    .prev a:before{
+        margin-bottom:-0.5em;
+        margin-left:0.5em;
+        display:inline-block;
+        content:"";
+        opacity:0.4;
+        .sprite-load(-95px, -1178px, 15px, 27px);
+    }
+    .prev a:after{
+        display:none;
+    }
+    .prev a:before{
+        margin-right:0.5em;
+        background-position:-131px -1178px;
+    }
 }
 
 
@@ -1528,7 +1611,7 @@ form.loading{
     }
 }
 
-.body-text ul, .body-text-style ul {
+.body-text form ul, .body-text-style form ul {
     padding: 0;
     margin: 0;
 }
@@ -1575,6 +1658,11 @@ input[type=checkbox], input[type=radio]{
 }
 select{
     .border-radius(0px);
+    z-index: 2;
+}
+.select{
+    background-color:@color-pale-grey;
+    padding-top: 4px;
 }
 .select:after{
     .sprite-load(-53px, -1178px, 27px, 15px);
@@ -1582,11 +1670,18 @@ select{
     content: ' ';
     position: relative;
     float:right;
-    margin:-3em 0 0 0;
+    margin: 0;
     background-color:@color-pale-grey;
     border:1em solid @color-pale-grey;
+    z-index: 1;
 }
-    .expirydatefield select, #id_cvc{
+.selectInner{
+    padding: 12px 17px;
+}
+    .expirydatefield select{
+        width: 50px;
+    }
+    #id_cvc{
         width: 75px;
     }
     select[data-stripe="exp-month"]{

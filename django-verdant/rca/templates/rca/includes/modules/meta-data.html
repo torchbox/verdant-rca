@@ -1,3 +1,5 @@
+{% load pageurl %}
+
 <section class="four">
     <div class="meta-data">
         <dl>
@@ -69,7 +71,9 @@
                                 {% for creator in creators %}
                                     <li>
                                         {% if creator.person %}
-                                            {{ creator.person.title }}
+                                            <a href='{% pageurl creator.person %}'>
+                                                {{ creator.person.title }}
+                                            </a>
                                         {% elif creator.manual_person_name %}
                                             {{ creator.manual_person_name }}
                                         {% endif %}
@@ -125,8 +129,16 @@
                 <dd>Programme</dd>
                 <dt>{{ self.get_programme_display }}</dt>
 
-                <dd>Tags</dd>
-                <dt>Tags are TBD</dt>
+                {% if self.tags.all.count > 0 %}
+                    <dd>Tags</dd>
+                    <dt>
+                        {% with self.tags.all as tags %}
+                            {% for tag in tags %}
+                                {{ tag }}{% if not forloop.last %},{% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </dt>
+                {% endif %}
 
             {% endif %}
 

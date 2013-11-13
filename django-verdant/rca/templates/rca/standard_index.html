@@ -21,6 +21,10 @@
             {% include "rca/includes/modules/body-text.html" with body=self.body %}
         </section>
     {% endif %}
+
+    {% if self.staff_feed_source %}
+        {% related_staff school=self.staff_feed_source %}
+    {% endif %}
     
     <!--custom module block-->
     {% with self.custom_content_modules.all as custom_modules %}
@@ -31,7 +35,7 @@
                     <div class="item-container">
                         <ul class="row">
                             {% for block in custom_module.custom_content_module.blocks.all %}
-                                {% if forloop.counter == 6 %}
+                                {% if forloop.counter == 7 %}
                                     <li class="load-more-target">
                                 {% elif forloop.counter0|divisibleby:"3" %}
                                     <li class="newrow">
@@ -57,7 +61,7 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% if custom_module.custom_content_module.blocks|length > 6 %}
+                            {% if custom_module.custom_content_module.blocks.all|length > 6 %}
                                 <li class="load-more"><a href="#">+</a></li>
                             {% endif %}
                         </ul>
@@ -123,7 +127,12 @@
         {% upcoming_events_related area=self.events_feed_area display_name=self.get_events_feed_area_display %}
     {% endif %}
 
+    {% if self.our_sites %}
+        {% include "rca/includes/modules/our_sites.html" %}
+    {% endif %}
+
     {% include "rca/includes/modules/contact.html" %}
+    {% include "rca/includes/modules/contact_snippet.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}
 
 {% endblock %}

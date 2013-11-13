@@ -13,7 +13,6 @@ html{
 }
 
 body{
-    text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased; /* Do not remove! */
     font-family:Open Sans,Arial,sans-serif;
     font-size:80%;
@@ -225,9 +224,7 @@ header{
 
     /* For case where content below header should merge with it */
     &.merged{
-        border-bottom:0; 
-        margin-bottom:0;
-        padding-bottom:6em;    
+        margin-bottom:0;  
     }
 }
 
@@ -383,6 +380,21 @@ a{
     footer{
         width:80%;
         margin-left:40px;
+    }
+}
+
+.media-placeholder {
+    width: 600px;
+    height: 400px;
+    background-color: #CCC;
+    padding: 5px;
+    h3, p {
+        margin: 0;
+    }
+    img {
+        max-width: 350px;
+        max-height: 350px;
+        margin: 20px;
     }
 }
 

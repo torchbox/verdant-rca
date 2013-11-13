@@ -9,9 +9,10 @@ $(function(){
 
 
 	// copy the sidebar so that we can show it on the left in the mobile version
-	if(!$(".mobile-menu-wrapper > aside").length){
-		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
-	}
+	// HC: please note this functionality has now been moved to Harvey in site.js, where the sidebar is moved for mobile rather than cloned
+	//if(!$(".mobile-menu-wrapper > aside").length){
+		//$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	//}
 
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
@@ -57,7 +58,19 @@ $(function(){
 
 var desktopNav = {
 	apply: function(){
-		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
+		// highlight the path to the current page in the menu based on the url
+		// it might not contain all the levels leading to it
+		var path = document.location.pathname;
+		while(path.split("/").length > 2){
+			var $menuItem = $(".menu a[href$='" + path + "']");
+			if($menuItem.length){
+				$menuItem.parents("li").addClass("selected");
+				break;
+			}else{
+				path = path.split("/").slice(0, -2).join("/") + "/";
+			}
+		}
+
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;

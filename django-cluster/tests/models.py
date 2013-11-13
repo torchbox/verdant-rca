@@ -49,3 +49,31 @@ class Place(ClusterableModel):
 
 class Restaurant(Place):
     serves_hot_dogs = models.BooleanField()
+    proprietor = models.ForeignKey('Chef', null=True, blank=True, on_delete=models.SET_NULL, related_name='restaurants')
+
+class Dish(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+class Wine(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+class Chef(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.name
+
+class MenuItem(models.Model):
+    restaurant = ParentalKey('Restaurant', related_name='menu_items')
+    dish = models.ForeignKey('Dish', related_name='+')
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    recommended_wine = models.ForeignKey('Wine', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    def __unicode__(self):
+        return "%s - %f" % (self.dish, self.price)

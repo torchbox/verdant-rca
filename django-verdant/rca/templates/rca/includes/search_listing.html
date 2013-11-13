@@ -1,19 +1,41 @@
-{% load rca_tags %}
+{% load rca_tags image_tags %}
 
 {% if search_results %}
-  <ul class="row">
-    {% for result in search_results %}
-      {% with result.specific as result_specific %}
-        <li><h3><a href="{{ result_specific.url }}">{{ result_specific }}</a></h3><span>{{ result_specific|search_content_type }}</span></li>
-      {% endwith %}
-    {% endfor %}
-  </ul>
+    <ul>
+        {% for result in search_results %}
+            {% with result.specific as result_specific %}
+                <li class="row">
+                    <a href="{{ result_specific.url }}">
+                        <div class="image">
+                            {% if result_specific.feed_image %}
+                                {% image result_specific.feed_image fill-90x80 %}
+                            {% else %}
+                                {% with result_specific.carousel_items.all as carousel_items %}
+                                    {% with carousel_items|first as carousel_item %}
+                                        {% if carousel_item.image %}
+                                            {% image carousel_item.image fill-90x80 %}
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                        <div class="content">
+                            <h4 class="h6">{{ result_specific }}</h4>
+                            <!-- Description will go here -->
+                            <div class="a2">{{ result_specific|search_content_type }}</div>
+                        </div>
+                    </a>
+                </li>
+            {% endwith %}
+        {% endfor %}
+    </ul>
 
-  {% if search_results.has_previous %}
-    <a class="previous-page" href="?q={{ query_string }}&amp;p={{ search_results.previous_page_number }}">Previous Page</a>
-  {% endif %}
-
-  {% if search_results.has_next %}
-    <a class="next-page" href="?q={{ query_string }}&amp;p={{ search_results.next_page_number }}">Next Page</a>
-  {% endif %}
+    {% comment %}{% if search_results.has_previous or search_results.has_next %}{% endcomment %}
+        <ul class="row pagination">
+            <li class="prev"><a href="?q={{ query_string }}&amp;p={% comment %}{{ search_results.previous_page_number }}{% endcomment %}">Previous</a></li>
+            <li class="next"><a href="?q={{ query_string }}&amp;p={% comment %}{{ search_results.next_page_number }}{% endcomment %}">Next</a></li>
+        </ul>
+    {% comment %}{% endif %}{% endcomment %}
 {% endif %}

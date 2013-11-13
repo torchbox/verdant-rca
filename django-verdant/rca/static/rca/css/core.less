@@ -22,7 +22,7 @@
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
  * Mobile menu styles.........Only visible in mobile layout
- * Images.....................img and picture
+ * Images & media.............img and other media
  * Links and lists............default styles for links and lists
  * Typography.................reusable typographical styles
  * Structure..................structure and layout
@@ -38,6 +38,7 @@
  * Template specific styles...toggled with a class on the body of all pages of the same template
  * * Programme
  * * News
+ * Search results
  */
 
 /**
@@ -162,6 +163,24 @@ img, picture {
     vertical-align: middle;
     border: 0;
     -ms-interpolation-mode: bicubic;
+}
+
+/* Makes embedly embeds responsive
+   From: http://embed.ly/docs/tutorials/responsive */
+
+.responsive-object {
+    position: relative;
+    padding-bottom: 67.5%;
+    height: 0;
+    margin: 10px 0;
+    overflow: hidden;
+    iframe, object, embed {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
 }
 
 
@@ -553,10 +572,15 @@ header {
     &:after{
         .sprite-load(-105px, -1094px, 44px, 44px);
     }
-
+    /*&:after{
+        .sprite-load-medium2(-119px, -566px, -81px, -106px, 44px, 44px);
+    }*/
 }
 
 .showmenu {
+    /*&:after{
+        .sprite-load-medium2(-1077px, -566px, -1600px, -213px, 46px, 24px);
+    }*/
     &:after{
         .sprite-load(-1064px, -1095px, 46px, 24px);
     }
@@ -590,6 +614,7 @@ header {
         outline:none;
     }
     input[type="submit"] {
+        /*.sprite-load-medium2(-1226px, -566px, -1810px, -213px, 25px, 44px);*/
         .sprite-load(-1212px, -1094px, 25px, 44px);
         background-color:transparent;
         text-indent: -9999px;
@@ -602,6 +627,38 @@ header {
 
 form.search.expanded {
     display: block;
+}
+
+/**
+ * Search field autocomplete
+ */
+.ui-autocomplete{
+    width: 100%;
+    position:absolute;
+    background-color:white;
+    z-index:3500;
+    
+    li{
+        border-top:1px solid @color-light-grey;
+        &:first{
+            border:0;
+        }
+        a{
+            .h7;
+            display:block;
+            padding:0.5em 10px;
+        }
+        a:hover{
+            background-color:@color-pale-grey;
+        }
+        span{
+            .a1;
+            display:block;
+        }
+    }
+}
+.ui-helper-hidden-accessible{
+    display:none;
 }
 
 /**
@@ -983,7 +1040,7 @@ footer {
         padding-top: 60px;
         text-indent: -9999px;
         width: 110px;
-        height: 48px;
+        height: 47px;
     }
     ul {
         margin: 0;
@@ -1242,31 +1299,25 @@ footer {
     }
 }
 
+/**
+ * Search results
+ */
+
 .search-results {
-    h4 {
-        color: @color-dark-grey;
-    }
-    ul {
-        background-color: @color-white; /* fallback for ie8 */
-        background-color: fade(@color-white, 75%);
-        padding: 0;
-        margin: 0;
-    }
     li {
-        margin: 0;
-        border-bottom: 1px solid @color-medium-grey;
-        padding: @spacing-one 0;
-        margin: 0 10px;
-        &:last-child {
-            border: none;
-        }
-        h3 {
-            .bc3;
-            margin: 0;
-        }
-        span {
-            .a2;
-        }
+        border-top: 1px solid @color-pale-grey;
+        padding:@grid-gutter-width 0;
+        min-height:130px;
+    }
+    .image{
+        .column(3);
+        padding-left:0;
+    }
+    .content{
+        .column(9);
+    }
+    h4{
+        margin:0;
     }
 }
 

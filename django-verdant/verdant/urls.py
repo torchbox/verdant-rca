@@ -7,6 +7,7 @@ import os.path
 from core import urls as verdant_urls
 from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
+from verdantmedia import urls as verdantmedia_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
@@ -15,6 +16,7 @@ from verdantusers import urls as verdantusers_urls
 
 from donations import urls as donations_urls
 from rca import app_urls
+from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
@@ -34,6 +36,7 @@ urlpatterns = patterns('',
     # TODO: some way of getting verdantimages to register itself within verdant so that we
     # don't have to define it separately here
     url(r'^admin/images/', include(verdantimages_urls)),
+    url(r'^admin/media/', include(verdantmedia_urls)),
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),
@@ -45,6 +48,8 @@ urlpatterns = patterns('',
     url(r'^donations/', include(donations_urls)),
 
     url(r'^app/', include(app_urls)),
+
+    url(r'^twitter/', include(twitter_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism

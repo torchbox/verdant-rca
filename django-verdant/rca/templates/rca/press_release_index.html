@@ -1,0 +1,28 @@
+{% extends "rca/base.html" %}
+{% load rca_tags pageurl %}
+
+{% block body_class %}
+    type-news-index
+{% endblock %}
+
+{% block content %}
+	{% include "rca/includes/modules/h1-major.html" %}
+
+	{% include "rca/includes/modules/intro-large.html" %}
+
+	<div id="listing">
+	    {% include "rca/includes/press_release_listing.html" %}
+	</div>
+
+	{% include "rca/includes/modules/twitter-feed.html" %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
+
+
+<!-- TODOs:
+	- filter of programme by school (or other filtering to be discussed)
+ -->

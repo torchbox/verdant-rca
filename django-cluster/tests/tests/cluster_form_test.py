@@ -1,7 +1,9 @@
 from django.test import TestCase
-from tests.models import Band, BandMember
+from tests.models import Band, BandMember, Album
 from cluster.forms import ClusterForm
 from django.forms import Textarea, CharField
+
+import datetime
 
 
 class ClusterFormTest(TestCase):
@@ -305,3 +307,56 @@ class ClusterFormTest(TestCase):
 
         self.assertEqual('Please Please Me', beatles.albums.all()[0].name)
         self.assertEqual('With The Beatles', beatles.albums.all()[1].name)
+
+    def test_ignore_validation_on_deleted_items(self):
+        class BandForm(ClusterForm):
+            class Meta:
+                model = Band
+
+        please_please_me = Album(name='Please Please Me', release_date = datetime.date(1963, 3, 22))
+        beatles = Band(name='The Beatles', albums=[please_please_me])
+        beatles.save()
+
+        form = BandForm({
+            'name': "The Beatles",
+
+            'members-TOTAL_FORMS': 0,
+            'members-INITIAL_FORMS': 0,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'albums-TOTAL_FORMS': 1,
+            'albums-INITIAL_FORMS': 1,
+            'albums-MAX_NUM_FORMS': 1000,
+
+            'albums-0-name': 'With The Beatles',
+            'albums-0-release_date': '1963-02-31',  # invalid date
+            'albums-0-id': please_please_me.id,
+            'albums-0-ORDER': 1,
+        }, instance=beatles)
+
+        self.assertFalse(form.is_valid())
+
+        form = BandForm({
+            'name': "The Beatles",
+
+            'members-TOTAL_FORMS': 0,
+            'members-INITIAL_FORMS': 0,
+            'members-MAX_NUM_FORMS': 1000,
+
+            'albums-TOTAL_FORMS': 1,
+            'albums-INITIAL_FORMS': 1,
+            'albums-MAX_NUM_FORMS': 1000,
+
+            'albums-0-name': 'With The Beatles',
+            'albums-0-release_date': '1963-02-31',  # invalid date
+            'albums-0-id': please_please_me.id,
+            'albums-0-ORDER': 1,
+            'albums-0-DELETE': 'albums-0-DELETE',
+        }, instance=beatles)
+
+        self.assertTrue(form.is_valid())
+        result = form.save(commit=False)
+        self.assertEqual(0, beatles.albums.count())
+        self.assertEqual(1, Band.objects.get(id=beatles.id).albums.count())
+        beatles.save()
+        self.assertEqual(0, Band.objects.get(id=beatles.id).albums.count())

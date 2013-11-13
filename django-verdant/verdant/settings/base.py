@@ -12,7 +12,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Matthew Westcott', 'matthew@torchbox.com'),
+    ('Verdant RCA errors', 'verdant-rca-errors@torchbox.com'),
 )
 
 MANAGERS = ADMINS
@@ -152,6 +152,9 @@ INSTALLED_APPS = (
     'django_embedly',
     'cluster',
     'gunicorn',
+    'djcelery',
+    'kombu.transport.django',
+    'twitter',  # the app used to proxy the Twitter REST API
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -160,6 +163,7 @@ INSTALLED_APPS = (
     'core',
     'verdantadmin',
     'verdantimages',
+    'verdantmedia',
     'verdantdocs',
     'verdantsnippets',
     'verdantsearch',
@@ -237,4 +241,22 @@ VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for verdantsearch
 VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
+
 VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
+
+
+# CELERY SETTINGS
+
+# Use separate queues on each host if uploads should be processed by celery
+# import socket
+# CELERY_HOSTNAME = socket.gethostname()
+
+BROKER_URL = 'redis://'
+
+CELERY_SEND_TASK_ERROR_EMAILS = True
+
+CELERYD_LOG_COLOR = False
+
+# The scheduler used by this app needs to be defined in the settings.
+# It also contains some additional configuration options, some need to be set in the local settings.
+from twitter.settings import *

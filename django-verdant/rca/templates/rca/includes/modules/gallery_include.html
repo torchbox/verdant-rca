@@ -1,0 +1,20 @@
+{% load pageurl image_tags %}
+
+{% if gallery_image.is_landscape %}
+    <li class="item landscape">
+        <a href="{% pageurl galleryitem %}">
+            <div class="gallery_image landscape">
+{% else %}
+    <li class="item portrait">
+        <a href="{% pageurl galleryitem %}">
+            <div class="gallery_image portrait">
+{% endif %}
+                {% image gallery_image width-600 %}
+            </div>
+            <div class="content">
+                <h2 class="h6"><i>{{ gallery_image.title }}</i></h2>
+                <p>{{ galleryitem.title }}</p>
+                <p class="meta a2">{{ galleryitem.get_programme_display }}</p>
+            </div>
+        </a>
+    </li>

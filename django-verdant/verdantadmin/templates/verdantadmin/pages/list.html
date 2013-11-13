@@ -1,7 +1,8 @@
-<table class="listing">
+<table class="listing {% if full_width %}full-width{% endif %}">
     <thead>
         <tr>
-            <th class="title">Title
+            <th class="title">
+                Title
                 {% if sortable %}
                     {% if ordering == "title" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-title" class="icon icon-arrow-down-after teal"></a>
@@ -12,7 +13,11 @@
                     {% endif %}
                 {% endif %}
             </th>
-            <th class="type">Type
+            {% if show_parent %}
+                <th class="parent">Parent</th>
+            {% endif %}
+            <th class="type">
+                Type
                 {% if sortable %}
                     {% if ordering == "content_type" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-content_type" class="icon icon-arrow-down-after teal"></a>
@@ -23,14 +28,8 @@
                     {% endif %}
                 {% endif %}
             </th>
-            {% if show_parent %}
-                {% comment %}
-                    I'm using the "type" class here as the "parent" class
-                    does not have "display: inline" or "float: left"
-                {% endcomment %}
-                <th class="type">Parent</th>
-            {% endif %}
-            <th class="status">Status
+            <th class="status">
+                Status
                 {% if sortable %}
                     {% if ordering == "live" %}
                         <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-live" class="icon icon-arrow-down-after teal"></a>
@@ -41,7 +40,9 @@
                     {% endif %}
                 {% endif %}
             </th>
-            <th class="children"></th>
+            {% if allow_navigation %}
+                <th class="children"></th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -65,23 +66,21 @@
                             <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
                         </ul>
                     </td>
-                    <td class="type">{{ page.content_type|title }}</td>
                     {% if show_parent %}
-                        {% comment %}
-                            I'm using the "type" class here as the "parent" class
-                            does not have "display: inline" or "float: left"
-                        {% endcomment %}
-                        <td class="type">{{ page.get_parent.title }}</td>
+                        <td class="parent"><a href="{% url 'verdantadmin_explore' page.get_parent.id %}">{{ page.get_parent.title }}</a></td>
                     {% endif %}
+                    <td class="type">{{ page.content_type|title }}</td>
                     <td class="status">{{ page.status_string|capfirst }}</td>
-                    {% if page.is_navigable %}
-                        <td class="children">
-                            <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
-                        </td>
-                    {% else %}
-                        <td class="no-children">
-                            <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
-                        </td>
+                    {% if allow_navigation %}
+                        {% if page.is_navigable %}
+                            <td class="children">
+                                <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                            </td>
+                        {% else %}
+                            <td class="no-children">
+                                <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
+                            </td>
+                        {% endif %}
                     {% endif %}
                 </tr>
             {% endfor %}

@@ -36,18 +36,19 @@
  * Contact
  */
 
- 
+
 /**
  * $Carousel
  */
 
 .bx-wrapper {
     padding-bottom:20px; /* necessary to give pager dots space to exist */
+    overflow: visible; /* because the padding above doesn't work in safari and dots get cut off */
 
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
         opacity:0
-    } 
+    }
     &:hover {
         .bx-next, .bx-prev {
             opacity: 1;
@@ -101,6 +102,8 @@
 .twitter-feed {
     li {
         .column(4);
+        padding-left: 0;
+        padding-right: 10px;
     }
 }
 
@@ -253,7 +256,7 @@
 .four-cols{
     //.row-flush();
     .col{
-        .column(3); 
+        .column(3);
     }
 }
 .three-nine-cols {
@@ -327,7 +330,7 @@
 }
 
 
-/** 
+/**
  *$Half-width double item
  */
  .half-double{
@@ -349,7 +352,10 @@
 
     .single{
         .column(4);
-        
+        .image,.content{
+            .column(12);
+            padding:0;
+        }
         .image img{
             width:auto;
         }
@@ -357,11 +363,17 @@
     .double{
         .column(6);
     }
+    .half{
+        .column(6);
+    }
     .three-quarters{
         .column(8);
     }
     .full{
         .column(12);
+    }
+    .tweet{
+        min-height:130px;
     }
     .load-more {
         position:absolute;
@@ -422,7 +434,7 @@
  */
 
 .teaser-image {
-    
+
 }
 
 /**
@@ -438,12 +450,12 @@
  */
 
 .gallery {
-    ul{
+    ul.row {
         .row-flush();
     }
     li {
         float:left;
-    
+
         &.portrait{
             .column(6);
         }
@@ -497,7 +509,7 @@
 
 .contact {
     li.col {
-        .column(4, @grid-gutter-width, 12); 
+        .column(4, @grid-gutter-width, 12);
         p {
             margin: 0;
         }
