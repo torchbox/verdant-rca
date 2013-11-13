@@ -575,6 +575,31 @@ class SchoolPage(Page, SocialFields):
 
     search_name = 'School'
 
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True).order_by('-year')
+
+        page = request.GET.get('page')
+        paginator = Paginator(research_items, 8)  # Show 6 research items per page
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
+
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
@@ -3157,7 +3182,7 @@ class CurrentResearchPage(Page, SocialFields):
             research_items = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/current_research_listing.html", {
+            return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
             })
