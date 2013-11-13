@@ -326,6 +326,14 @@
         }
         .tweet-text{
             display: block;
+            a { /* repeating body-text-style styles here because I don't want to 
+            screw with the javascript without being able to test it */
+                color: @color-highlight-blue;
+                font-weight: bold;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
         }
         .tweet-avatar{
             display: none;

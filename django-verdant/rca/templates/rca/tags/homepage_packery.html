@@ -122,8 +122,8 @@
                     <!-- tweets-->
                     <li class="item double tweet" data-twitter-feed="{{ calling_page.twitter_feed }}" data-twitter-count="{{ calling_page.packery_tweets }}">
                         <div class="inner">
-                            <h3 class="h7 highlight-blue">@{{ calling_page.twitter_feed }}</h3>
-                            <div class="content"></div>
+                            <h3 class="h7 highlight-blue"><a href="http://www.twitter.com/{{ calling_page.twitter_feed }}">@{{ calling_page.twitter_feed }}</a></h3>
+                            <div class="content body-text-style"></div>
                         </div>
                     </li>
                 {% endif %}
