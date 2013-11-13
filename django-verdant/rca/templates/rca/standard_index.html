@@ -35,7 +35,7 @@
                     <div class="item-container">
                         <ul class="row">
                             {% for block in custom_module.custom_content_module.blocks.all %}
-                                {% if forloop.counter == 6 %}
+                                {% if forloop.counter == 7 %}
                                     <li class="load-more-target">
                                 {% elif forloop.counter0|divisibleby:"3" %}
                                     <li class="newrow">
@@ -61,7 +61,7 @@
                                 {% endif %}
                             {% endfor %}
 
-                            {% if custom_module.custom_content_module.blocks|length > 6 %}
+                            {% if custom_module.custom_content_module.blocks.all|length > 6 %}
                                 <li class="load-more"><a href="#">+</a></li>
                             {% endif %}
                         </ul>
