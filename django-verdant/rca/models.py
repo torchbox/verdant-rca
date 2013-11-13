@@ -759,6 +759,36 @@ class ProgrammePage(Page, SocialFields):
 
     search_name = 'Programme'
 
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
+
+        # Get 4 results on page and 8 results for each ajax request
+        if request.is_ajax():
+            paginator = Paginator(research_items, 8)
+        else:
+            paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
+
     def tabbed_feature_count(self):
         count = 0;
         if self.programme_video:

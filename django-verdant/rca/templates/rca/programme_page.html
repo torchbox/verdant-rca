@@ -153,8 +153,9 @@
     {% rca_now_related programme=self.programme %}
 
     <!-- research -->
-    {% research_related programme=self.programme %}
-    
+    <div id="listing">
+        {% include "rca/includes/research_listing.html" %}
+    </div>
 
     <!-- our sites -->
     {% include "rca/includes/modules/our_sites.html" %}   
