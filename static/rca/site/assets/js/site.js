@@ -22,9 +22,9 @@ function showHide(clickElement, classElement){
 
 /* show hide the footer - needs its own function because of being idiosyncratic */
 function showHideFooter() {
-    $('.footer-expand').click(function(eventObject){
-        $(this).parent().toggleClass('expanded');
-        $(this).prev().slideToggle(expansionAnimationSpeed);
+    $('footer .menu .main').click(function(eventObject){
+        $(this).toggleClass('expanded');
+        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
     });
 }
 
