@@ -30,7 +30,7 @@ def get_serializable_data_for_fields(model):
 
     return obj
 
-def model_from_serializable_data(model, data):
+def model_from_serializable_data(model, data, check_fks=True):
     pk_field = model._meta.pk
     # If model is a child via multitable inheritance, use parent's pk
     while pk_field.rel and pk_field.rel.parent_link:
@@ -49,7 +49,16 @@ def model_from_serializable_data(model, data):
             if field_value is None:
                 kwargs[field.attname] = None
             else:
-                kwargs[field.attname] = field.rel.to._meta.get_field(field.rel.field_name).to_python(field_value)
+                clean_value = field.rel.to._meta.get_field(field.rel.field_name).to_python(field_value)
+                kwargs[field.attname] = clean_value
+                if check_fks:
+                    try:
+                        field.rel.to._default_manager.get(**{field.rel.field_name: clean_value})
+                    except field.rel.to.DoesNotExist:
+                        if field.rel.on_delete == models.SET_NULL:
+                            kwargs[field.attname] = None
+                        else:
+                            raise Exception("can't currently handle on_delete types other than SET_NULL")
         else:
             kwargs[field.name] = field.to_python(field_value)
 
@@ -143,8 +152,8 @@ class ClusterableModel(models.Model):
         return json.dumps(self.serializable_data(), cls=DjangoJSONEncoder)
 
     @classmethod
-    def from_serializable_data(cls, data):
-        obj = model_from_serializable_data(cls, data)
+    def from_serializable_data(cls, data, check_fks=True):
+        obj = model_from_serializable_data(cls, data, check_fks=check_fks)
 
         try:
             child_relations = cls._meta.child_relations
@@ -159,17 +168,23 @@ class ClusterableModel(models.Model):
                 continue
 
             if hasattr(rel.model, 'from_serializable_data'):
-                children = [rel.model.from_serializable_data(child_data) for child_data in child_data_list]
+                children = [
+                    rel.model.from_serializable_data(child_data, check_fks=check_fks)
+                    for child_data in child_data_list
+                ]
             else:
-                children = [model_from_serializable_data(rel.model, child_data) for child_data in child_data_list]
+                children = [
+                    model_from_serializable_data(rel.model, child_data, check_fks=check_fks)
+                    for child_data in child_data_list
+                ]
 
             setattr(obj, rel_name, children)
 
         return obj
 
     @classmethod
-    def from_json(cls, json_data):
-        return cls.from_serializable_data(json.loads(json_data))
+    def from_json(cls, json_data, check_fks=True):
+        return cls.from_serializable_data(json.loads(json_data), check_fks=check_fks)
 
     class Meta:
         abstract = True
