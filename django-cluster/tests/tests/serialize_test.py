@@ -80,3 +80,8 @@ class SerializeTest(TestCase):
         fat_duck = Restaurant.from_json(fat_duck_json)
         # the deserialised record should now have a null recommended_wine field
         self.assertEqual(None, fat_duck.menu_items.all()[0].recommended_wine)
+
+        snail_ice_cream.delete()  # NOM NOM NOM
+        fat_duck = Restaurant.from_json(fat_duck_json)
+        # the menu item should now be dropped entirely (because the foreign key to Dish has on_delete=CASCADE)
+        self.assertEqual(0, fat_duck.menu_items.count())

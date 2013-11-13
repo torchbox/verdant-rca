@@ -30,7 +30,7 @@ def get_serializable_data_for_fields(model):
 
     return obj
 
-def model_from_serializable_data(model, data, check_fks=True):
+def model_from_serializable_data(model, data, check_fks=True, strict_fks=False):
     pk_field = model._meta.pk
     # If model is a child via multitable inheritance, use parent's pk
     while pk_field.rel and pk_field.rel.parent_link:
@@ -55,10 +55,19 @@ def model_from_serializable_data(model, data, check_fks=True):
                     try:
                         field.rel.to._default_manager.get(**{field.rel.field_name: clean_value})
                     except field.rel.to.DoesNotExist:
-                        if field.rel.on_delete == models.SET_NULL:
+                        if field.rel.on_delete == models.DO_NOTHING:
+                            pass
+                        elif field.rel.on_delete == models.CASCADE:
+                            if strict_fks:
+                                return None
+                            else:
+                                kwargs[field.attname] = None
+
+                        elif field.rel.on_delete == models.SET_NULL:
                             kwargs[field.attname] = None
+
                         else:
-                            raise Exception("can't currently handle on_delete types other than SET_NULL")
+                            raise Exception("can't currently handle on_delete types other than CASCADE, SET_NULL and DO_NOTHING")
         else:
             kwargs[field.name] = field.to_python(field_value)
 
@@ -152,8 +161,21 @@ class ClusterableModel(models.Model):
         return json.dumps(self.serializable_data(), cls=DjangoJSONEncoder)
 
     @classmethod
-    def from_serializable_data(cls, data, check_fks=True):
-        obj = model_from_serializable_data(cls, data, check_fks=check_fks)
+    def from_serializable_data(cls, data, check_fks=True, strict_fks=False):
+        """
+        Build an instance of this model from the JSON-like structure passed in,
+        recursing into related objects as required.
+        If check_fks is true, it will check whether referenced foreign keys still
+        exist in the database.
+        - dangling foreign keys on related objects are dealt with by either nullifying the key or
+        dropping the related object, according to the 'on_delete' setting.
+        - dangling foreign keys on the base object will be nullified, unless strict_fks is true,
+        in which case any dangling foreign keys with on_delete=CASCADE will cause None to be
+        returned for the entire object.
+        """
+        obj = model_from_serializable_data(cls, data, check_fks=check_fks, strict_fks=strict_fks)
+        if obj is None:
+            return None
 
         try:
             child_relations = cls._meta.child_relations
@@ -169,22 +191,24 @@ class ClusterableModel(models.Model):
 
             if hasattr(rel.model, 'from_serializable_data'):
                 children = [
-                    rel.model.from_serializable_data(child_data, check_fks=check_fks)
+                    rel.model.from_serializable_data(child_data, check_fks=check_fks, strict_fks=True)
                     for child_data in child_data_list
                 ]
             else:
                 children = [
-                    model_from_serializable_data(rel.model, child_data, check_fks=check_fks)
+                    model_from_serializable_data(rel.model, child_data, check_fks=check_fks, strict_fks=True)
                     for child_data in child_data_list
                 ]
+
+            children = filter(lambda child: child is not None, children)
 
             setattr(obj, rel_name, children)
 
         return obj
 
     @classmethod
-    def from_json(cls, json_data, check_fks=True):
-        return cls.from_serializable_data(json.loads(json_data), check_fks=check_fks)
+    def from_json(cls, json_data, check_fks=True, strict_fks=False):
+        return cls.from_serializable_data(json.loads(json_data), check_fks=check_fks, strict_fks=strict_fks)
 
     class Meta:
         abstract = True
