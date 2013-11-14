@@ -71,4 +71,8 @@ $(function(){
             $(this).prop('checked', !$(this).prop('checked'));            
         })
     });
+
+    $('.listing tbody td').click(function(){
+        document.location.href = $(this).parent().find('.title a').attr("href")
+    })
 })

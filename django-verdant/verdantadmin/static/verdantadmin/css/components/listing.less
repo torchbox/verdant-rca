@@ -91,6 +91,7 @@ ul.listing{
         &:first-child{
             border-top:1px dashed @color-input-border;
         }
+        cursor:pointer;
     }
 
     &.small tbody tr{
@@ -172,14 +173,13 @@ ul.listing{
             }
         }
     }
+
     .moderate-actions form{
         float:left;
         margin:0 1em 1em 0;
     }
 
-    td:hover .actions{
-        visibility:visible;
-    }
+   
     
     .children,
     .no-children{
@@ -302,6 +302,9 @@ ul.listing{
         } 
         .actions{
            visibility: hidden;
+        }
+        td:hover .actions{
+            visibility:visible;
         }
         .no-children {
             border-color:transparent;
