@@ -50,6 +50,7 @@
  * Strapline
  * Pagination
  * Forms
+ * Cookie notice
  */
 
 /**
@@ -1745,4 +1746,25 @@ form {
 }
 form .heading{
     .a0;
+}
+
+/*
+ * $Cookie notice
+ */
+.cookie-notice {
+    color: @color-white;
+    background-color: @color-rca-blue;
+    font-weight: bold;
+    padding: @spacing-one;
+    position: fixed;
+    bottom: 0;
+    z-index: 4002; //show above dialogue box
+    width: 100%;
+
+    .button {
+        font-size: 0.8em;
+        padding: @spacing-half;
+        float: right;
+        margin: 0 0 0 @spacing-one;
+    }
 }

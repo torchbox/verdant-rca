@@ -86,6 +86,11 @@
         <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
         <script src="https://js.stripe.com/v2/"></script>
 
+        <script type="text/javascript">
+            //domainroot var is needed by the cookie notice code in site.js
+            var domainroot = "{{ request.site.hostname }}";
+        </script>
+
         {% compress js%}
             <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
             <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
@@ -98,6 +103,7 @@
             <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
             <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
             <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script>
+            <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
             <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
             <script src="{% static "rca/js/carousel-news.js" %}"></script>
             <script src="{% static "rca/js/tweets.js" %}"></script>

@@ -567,4 +567,44 @@ $(function(){
     $('select:not(.filters select)').customSelect({
         customClass: "select"
     });
+
+    /* Cookie notice */
+
+    var displayCookieNotice = function(context, settings) {
+      // Notice and message
+      $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="">privacy policy</a> to find out more.</p></div></div>');
+
+      // Close button
+      $(document).delegate('#cookie-notice-close', 'click', function() {
+        $(".cookie-notice").slideUp("slow");
+      });
+
+      $(".cookie-notice").slideDown("slow");
+
+      //set notice to never show again by default. Unnecessary to show every page load, particularly if we're suggesting showing it once is considered as acceptance.
+      dontShowCookieNoticeAgain();
+    }
+
+    var dontShowCookieNoticeAgain = function() {
+      // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
+
+      // set or extend the cookie life for a year
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + 365);
+      console.log(domainroot);
+      document.cookie = "dontShowCookieNotice=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
+      console.log('set cookie! ' + document.cookie);
+    }
+
+    var pleaseShowCookieNotice = function() {
+      // Don't show the notice if we have previously set a cookie to hide it
+      var dontShowCookieNotice = (document.cookie.indexOf("dontShowCookieNotice") != -1) ? false : true;
+      return dontShowCookieNotice;
+    }
+
+    $('body').once(function(){
+      if (pleaseShowCookieNotice() == true) {
+        displayCookieNotice();
+      }
+    });
 });
