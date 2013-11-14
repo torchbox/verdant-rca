@@ -475,7 +475,7 @@ class TabDeckNode(template.Node):
         self.nodelist = nodelist
 
     def render(self, context):
-        context['tabdeck'] = {'tab_headings': [], 'index': 0}
+        context['tabdeck'] = {'tab_headings': [], 'index': 1}
         output = self.nodelist.render(context)  # run the contents of the tab; any {% tab %} tags within it will populate tabdeck.tab_headings
         headings = context['tabdeck']['tab_headings']
 
@@ -509,8 +509,11 @@ class TabNode(template.Node):
 
     def render(self, context):
         heading = self.heading_expr.resolve(context)
-        context['tabdeck']['tab_headings'].append(heading)
-        context['tabdeck']['index'] += 1
+        tab_content = self.nodelist.render(context)
+        if not tab_content.strip():
+            # tab content is empty; skip outputting the container elements,
+            # and skip updating the tabdeck template vars so that it isn't allocated a heading
+            return ''
 
         header_html = """<h2 class="header"><a class="a0%s">%s</a></h2>""" % (
             (' active' if context['tabdeck']['index'] == 1 else ''),
@@ -523,5 +526,8 @@ class TabNode(template.Node):
 
         if context['tabdeck']['index'] == 1:
             classname += ' active'
+
+        context['tabdeck']['tab_headings'].append(heading)
+        context['tabdeck']['index'] += 1
 
         return header_html + ('<div class="%s">' % classname) + self.nodelist.render(context) + '</div>'
