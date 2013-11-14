@@ -72,7 +72,7 @@
                         <td class="parent"><a href="{% url 'verdantadmin_explore' page.get_parent.id %}">{{ page.get_parent.title }}</a></td>
                     {% endif %}
                     <td class="type">{{ page.content_type|title }}</td>
-                    <td class="status">{{ page.status_string|capfirst }}</td>
+                    <td class="status"><span class="status-tag {{ page.status_string }}">{{ page.status_string|capfirst }}</span></td>
                     {% if allow_navigation %}
                         {% if page.is_navigable %}
                             <td class="children">

@@ -6,7 +6,12 @@
 	font-style: normal;
 }
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Open Sans'), local('OpenSans'), url(http://themes.googleusercontent.com/static/fonts/opensans/v6/cJZKeOuBrn4kERxqtaUH3bO3LdcAZYWl9Si6vvxL-qU.woff) format('woff');
+}
 
 #verdant-userbar{
 	-webkit-box-sizing: border-box; 
@@ -44,8 +49,9 @@
 	display:block;
 	float:left;
 	margin:-10px 0 0 -70px;
-	background-color:#5cc1c0;
+	background-color:#000;
 	color:white;
+	opacity:0.4;
 	text-align:center;
 }
 
@@ -59,7 +65,7 @@
 	margin-bottom:10px;
 }
 #verdant-userbar p{
-	margin:0 0 10px 0;
+	margin:0.5em 0 1em 0;
 }
 #verdant-userbar .label{
 	float:left;
@@ -89,7 +95,7 @@
 	background-color:#555;
 }
 #verdant-userbar .button.yes{
-	background-color:#5cc1c0;
+	background-color:#43b1b0;
 }
 #verdant-userbar .button.yes:hover{
 	background-color:#43b1b0;

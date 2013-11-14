@@ -9,7 +9,7 @@
     ul{
         .transition(opacity 0.2s linear);
         .unlist();
-        background-color:@color-context-popup-bg;
+        background-color:@color-teal;
         position:absolute;
         overflow:hidden;
         top:100%;
@@ -26,6 +26,7 @@
         }
 
         a{
+            .transition(background-color 0.3s ease);
             box-sizing:border-box;
             white-space: nowrap;
             position:relative;
@@ -37,7 +38,7 @@
             font-weight:normal;
 
             &:hover{
-                background-color:@color-context-popup-bg-hover;
+                background-color:@color-teal-darker;
             }
             &.icon{
                 padding-right:5em;
@@ -102,7 +103,7 @@
         float:left;
 
         &:hover{
-            background-color:@color-context-popup-bg-hover;
+            background-color:@color-teal-darker;
         }
     }
 
@@ -119,11 +120,11 @@
         }
 
         &:hover{
-            background-color:@color-context-popup-bg-hover;
+            background-color:@color-teal-darker;
         }
     }
     &.open > .button + .dropdown-toggle{
-        background-color:@color-context-popup-bg-hover;
+        background-color:@color-teal-darker;
     }
 }
 
