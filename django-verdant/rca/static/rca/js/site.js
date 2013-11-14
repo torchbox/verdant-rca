@@ -591,9 +591,7 @@ $(function(){
       // set or extend the cookie life for a year
       var exdate = new Date();
       exdate.setDate(exdate.getDate() + 365);
-      console.log(domainroot);
       document.cookie = "dontShowCookieNotice=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
-      console.log('set cookie! ' + document.cookie);
     }
 
     var pleaseShowCookieNotice = function() {
