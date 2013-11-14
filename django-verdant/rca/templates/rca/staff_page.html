@@ -9,155 +9,153 @@
     <h1 class="h1">{{ self.title }}</h1>
 
     {% tabdeck %}
-        {% tab "Info" %}
+        {% tab "Info" class="flush" %}
             <!--INFO TAB-->
             <!-- links and ids added by javascript -->
-            <div class="tab-pane active flush">
-                <div class="profile">
-                    <ul class="four-cols">
-                        <li class="col first">
-                            {% if self.profile_image %}
-                                {% image self.profile_image width-300 %}
+            <div class="profile">
+                <ul class="four-cols">
+                    <li class="col first">
+                        {% if self.profile_image %}
+                            {% image self.profile_image width-300 %}
+                        {% else %}
+                            <img src="/static/rca/images/staff-default-image.png" width="300">
+                        {% endif %}
+                    </li>
+                    <li class="col">{% comment %} note closed within forloop {% endcomment %}
+                        <h3 class="a2">School or Centre</h3>
+                        <p class="h7">{{ self.get_school_display }}</p>
+
+                        {% with self.roles.all as roles %}
+                            {% if roles %}
+                                {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}
+                                    {% if forloop.counter == 1 %}
+                                        <h3 class="a2 space">Role</h3>
+                                    {% else %}
+                                        <li class="col">
+                                    {% endif %}
+                                    <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
+                                    <ul>
+                                        <li>{{ role.get_programme_display }}</li>
+                                        <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
+                                    </ul>
+                                </li> {% comment %} close col {% endcomment %}
+                                {% endfor %}
                             {% else %}
-                                <img src="/static/rca/images/staff-default-image.png" width="300">
+                                </li>{% comment %}close col li if no roles{% endcomment %}
                             {% endif %}
-                        </li>
-                        <li class="col">{% comment %} note closed within forloop {% endcomment %}
-                            <h3 class="a2">School or Centre</h3>
-                            <p class="h7">{{ self.get_school_display }}</p>
+                        {% endwith %}
 
-                            {% with self.roles.all as roles %}
-                                {% if roles %}
-                                    {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}
-                                        {% if forloop.counter == 1 %}
-                                            <h3 class="a2 space">Role</h3>
-                                        {% else %}
-                                            <li class="col">
-                                        {% endif %}
-                                        <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
-                                        <ul>
-                                            <li>{{ role.get_programme_display }}</li>
-                                            <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
-                                        </ul>
-                                    </li> {% comment %} close col {% endcomment %}
-                                    {% endfor %}
-                                {% else %}
-                                    </li>{% comment %}close col li if no roles{% endcomment %}
-                                {% endif %}
-                            {% endwith %}
+                </ul>
 
-                    </ul>
+                <div class="divider"></div>
+                <ul class="three-nine-cols">
+                    <li class="col col-3 first">
+                        <div class="row">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </li>
+                    <li class="col col-9 last body-text-style">
+                        {{ self.intro|richtext }}
+                    </li>
+                </ul>
 
+
+                <div class="divider"></div>
+                <ul class="three-nine-cols">
+                    <li class="col col-3 first">
+                        <h2 class="a2">Biography</h2>
+                    </li>
+                    <li class="col col-9 last body-text-style">
+
+                        {% with self.biography|paragraph_split:"</p>" as parts %}
+                            {{ parts.0|richtext }}
+                            {% if parts.1 %}
+                                <div class="remainder biography">{{ parts.1|richtext }}</div>
+                                <a class="t2 showmore showBiography">Show more</a>
+                            {% endif %}
+                        {% endwith %}
+                    </li>
+                </ul>
+                {% if self.practice %}
                     <div class="divider"></div>
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
-                            <div class="row">
-                                {% include "rca/includes/modules/share-button.html" %}
-                            </div>
+                            <h2 class="a2">Practice</h2>
                         </li>
                         <li class="col col-9 last body-text-style">
-                            {{ self.intro|richtext }}
-                        </li>
-                    </ul>
-
-
-                    <div class="divider"></div>
-                    <ul class="three-nine-cols">
-                        <li class="col col-3 first">
-                            <h2 class="a2">Biography</h2>
-                        </li>
-                        <li class="col col-9 last body-text-style">
-
-                            {% with self.biography|paragraph_split:"</p>" as parts %}
+                            {% with self.practice|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
                                 {% if parts.1 %}
-                                    <div class="remainder biography">{{ parts.1|richtext }}</div>
-                                    <a class="t2 showmore showBiography">Show more</a>
+                                    <div class="remainder practice">{{ parts.1|richtext }}</div>
+                                    <a class="t2 showmore showPractice">Show more</a>
                                 {% endif %}
                             {% endwith %}
                         </li>
                     </ul>
-                    {% if self.practice %}
-                        <div class="divider"></div>
-                        <ul class="three-nine-cols">
-                            <li class="col col-3 first">
-                                <h2 class="a2">Practice</h2>
-                            </li>
-                            <li class="col col-9 last body-text-style">
-                                {% with self.practice|paragraph_split:"</p>" as parts %}
-                                    {{ parts.0|richtext }}
-                                    {% if parts.1 %}
-                                        <div class="remainder practice">{{ parts.1|richtext }}</div>
-                                        <a class="t2 showmore showPractice">Show more</a>
-                                    {% endif %}
-                                {% endwith %}
-                            </li>
-                        </ul>
-                    {% endif %}
+                {% endif %}
 
-                    {% with self.collaborations.all as collaborations %}
-                        {% if collaborations %}
-                            <div class="divider"></div>
-                            <ul class="three-nine-cols">
-                                <li class="col col-3 first">
-                                    <h2 class="a2">External collaborations</h2>
-                                </li>
-                                <li class="col col-9 last">
-                                    {% for collaboration in collaborations %}
-                                        
-                                        <h3 class="h7{% if forloop.counter != 1 %} space{% endif %}"><a href="{{ collaboration.link }}">{{ collaboration.title }}</a></h3>
-
-                                        {% if collaboration.text %}
-                                            <div class="body-text-style">{{ collaboration.text|richtext }}</div>
-                                        {% endif %}
-                                        {% if collaboration.date %}
-                                            <p class="date">{{ collaboration.date }}</p>
-                                        {% endif %}
-                                    {% endfor %}
-                                </li>
-                            </ul>
-                        {% endif %}
-                    {% endwith %}
-
-                    {% if self.external_collaborations_placeholder %}
+                {% with self.collaborations.all as collaborations %}
+                    {% if collaborations %}
                         <div class="divider"></div>
                         <ul class="three-nine-cols">
                             <li class="col col-3 first">
                                 <h2 class="a2">External collaborations</h2>
                             </li>
                             <li class="col col-9 last">
-                                <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                                {% for collaboration in collaborations %}
+                                    
+                                    <h3 class="h7{% if forloop.counter != 1 %} space{% endif %}"><a href="{{ collaboration.link }}">{{ collaboration.title }}</a></h3>
+
+                                    {% if collaboration.text %}
+                                        <div class="body-text-style">{{ collaboration.text|richtext }}</div>
+                                    {% endif %}
+                                    {% if collaboration.date %}
+                                        <p class="date">{{ collaboration.date }}</p>
+                                    {% endif %}
+                                {% endfor %}
                             </li>
                         </ul>
                     {% endif %}
+                {% endwith %}
 
-                    {% if self.publications_exhibtions_and_other_outcomes_placeholder %}
-                        <div class="divider"></div>
-                        <ul class="three-nine-cols">
-                            <li class="col col-3 first">
-                                <h2 class="a2">Publications, exhibitions and other outcomes</h2>
-                            </li>
-                            <li class="col col-9 last">
-                                <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
-                            </li>
-                        </ul>
-                    {% endif %}
-                    
-                    {% if self.awards_and_grants %}
-                        <div class="divider"></div>
-                        <ul class="three-nine-cols">
-                            <li class="col col-3 first">
-                                <h2 class="a2">Publications, exhibitions and other outcomes</h2>
-                            </li>
-                            <li class="col col-9 last">
-                                <div class="body-text-style">{{ self.awards_and_grants|richtext }}</div>
-                            </li>
-                        </ul>
-                    {% endif %}
+                {% if self.external_collaborations_placeholder %}
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="a2">External collaborations</h2>
+                        </li>
+                        <li class="col col-9 last">
+                            <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                        </li>
+                    </ul>
+                {% endif %}
 
-                    {% research_students_list staff_page=self %}
+                {% if self.publications_exhibtions_and_other_outcomes_placeholder %}
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="a2">Publications, exhibitions and other outcomes</h2>
+                        </li>
+                        <li class="col col-9 last">
+                            <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
+                        </li>
+                    </ul>
+                {% endif %}
+                
+                {% if self.awards_and_grants %}
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="a2">Publications, exhibitions and other outcomes</h2>
+                        </li>
+                        <li class="col col-9 last">
+                            <div class="body-text-style">{{ self.awards_and_grants|richtext }}</div>
+                        </li>
+                    </ul>
+                {% endif %}
 
-                </div>
+                {% research_students_list staff_page=self %}
+
             </div>
             <!-- end info tab -->
         {% endtab %}
@@ -166,9 +164,7 @@
         <!-- links and ids added by javascript -->
         {% if self.carousel_items.all|length > 0 %}
             {% tab "Selected work" %}
-                <div class="tab-pane">
-                    {% include "rca/includes/modules/carousel.html" %}
-                </div>
+                {% include "rca/includes/modules/carousel.html" %}
             {% endtab %}
         {% endif %}
         <!-- end selected work tab-->
@@ -176,78 +172,73 @@
         <!-- PUBLICATIONS AND EXHIBITIONS TAB-->
         <!-- links and ids added by javascript -->
         {% if self.publications_exhibitions.all|length > 0 %}
-            {% tab "Publications & exhibitions" %}
-                <div class="tab-pane x-plus">
-                    <div class="item-container">
-                        <ul class="two-cols two-cols-image-big">
-                            {% with self.publications_exhibitions.all as publications %}
-                                {% if publications %}
-                                    {% for publication in publications %}
-                                        {% if forloop.counter0|divisibleby:"2" %}
-                                            <li class="newrow">
-                                        {% elif forloop.counter == 4 %}
-                                            <li class="load-more-target">
-                                        {% else %}
-                                            <li>
-                                        {% endif %}
-                                                
-                                                {% if publication.image %}
-                                                    <div class="image">
-                                                        {% image publication.image width-150 %}
-                                                    </div>
-                                                {% endif %}
-                                                
-                                                <div class="content{% if not publication.image %} flushleft{% endif %}">
-                                                    <p class="bc3 a2">{{ publication.typeof }}</p>
-                                                    {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
-                                                        <h3 class="h6">{{ publication.title }}</h3>
-                                                    {% if publication.link %}</a>{% endif %}
-                                                    <p class="bc4">{{ publication.location_year }}</p>
-                                                    {% if publication.authors_collaborators %}
-                                                        <p class="bc4">{{ publication.authors_collaborators|linebreaksbr }}</p>
-                                                    {% endif %}
-                                                </div>
-                                            </li>
-                                    {% endfor %}
-                                    {% if publications|length > 3 %} 
-                                        <li class="load-more"><a href="#">+</a></li>
+            {% tab "Publications & exhibitions" class="x-plus" %}
+                <div class="item-container">
+                    <ul class="two-cols two-cols-image-big">
+                        {% with self.publications_exhibitions.all as publications %}
+                            {% if publications %}
+                                {% for publication in publications %}
+                                    {% if forloop.counter0|divisibleby:"2" %}
+                                        <li class="newrow">
+                                    {% elif forloop.counter == 4 %}
+                                        <li class="load-more-target">
+                                    {% else %}
+                                        <li>
                                     {% endif %}
+                                            
+                                            {% if publication.image %}
+                                                <div class="image">
+                                                    {% image publication.image width-150 %}
+                                                </div>
+                                            {% endif %}
+                                            
+                                            <div class="content{% if not publication.image %} flushleft{% endif %}">
+                                                <p class="bc3 a2">{{ publication.typeof }}</p>
+                                                {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
+                                                    <h3 class="h6">{{ publication.title }}</h3>
+                                                {% if publication.link %}</a>{% endif %}
+                                                <p class="bc4">{{ publication.location_year }}</p>
+                                                {% if publication.authors_collaborators %}
+                                                    <p class="bc4">{{ publication.authors_collaborators|linebreaksbr }}</p>
+                                                {% endif %}
+                                            </div>
+                                        </li>
+                                {% endfor %}
+                                {% if publications|length > 3 %} 
+                                    <li class="load-more"><a href="#">+</a></li>
                                 {% endif %}
-                            {% endwith %}
-                        </ul>
-                    </div>
-                {% endtab %}
-            </div>
+                            {% endif %}
+                        {% endwith %}
+                    </ul>
+                </div>
+            {% endtab %}
         {% endif %}
         <!-- end publications and exhibitions tab-->
 
         <!-- RESEARCH TAB -->
         <!-- links and ids added by javascript -->
         {% tab "Research" %}
-            <div class="tab-pane">
-                {% if self.research_interests %}
-                    <h3 class="h6">Research interests</h3>
+            {% if self.research_interests %}
+                <h3 class="h6">Research interests</h3>
+                <div class="body-text-style">
+                    {{ self.research_interests|richtext }}
+                </div>
+            {% endif %}
+
+            {% if self.current_recent_research %}
+                <div class='module'>
+                    <h3 class="h6">Current and recent research</h3>
                     <div class="body-text-style">
-                        {{ self.research_interests|richtext }}
+                        {{ self.current_recent_research|richtext }}
                     </div>
-                {% endif %}
+                </div>
+            {% endif %}
 
-                {% if self.current_recent_research %}
-                    <div class='module'>
-                        <h3 class="h6">Current and recent research</h3>
-                        <div class="body-text-style">
-                            {{ self.current_recent_research|richtext }}
-                        </div>
-                    </div>
-                {% endif %}
+             <!-- research -->
+            {% research_related person=self %}
 
-                 <!-- research -->
-                {% research_related person=self %}
-
-                <!-- research students -->
-                {% research_students_feed staff_page=self %}
-
-            </div>
+            <!-- research students -->
+            {% research_students_feed staff_page=self %}
         {% endtab %}<!-- end research tab-->
     {% endtabdeck %}
 

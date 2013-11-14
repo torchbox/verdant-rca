@@ -1,11 +1,13 @@
-import random
 from django import template
 from django.utils.html import conditional_escape
-from rca.models import *
+from django.db.models import Min, Max
+from django.template.base import parse_bits
+
 from datetime import date
 from itertools import chain
-from django.db.models import Min, Max
-from core.models import get_navigation_menu_items
+import random
+
+from rca.models import *
 from verdantdocs.models import Document
 
 register = template.Library()
@@ -487,21 +489,26 @@ class TabDeckNode(template.Node):
 
 @register.tag
 def tab(parser, token):
-    try:
-        tag_name, heading_expr = token.split_contents()
-    except ValueError:
-         raise template.TemplateSyntaxError("tab tag requires a single argument")
+    bits = token.split_contents()[1:]
+    args, kwargs = parse_bits(parser, bits, ['heading_expr'], 'args', 'kwargs', None, False, 'tab')
+
+    if len(args) != 1:
+        raise template.TemplateSyntaxError("The 'tab' tag requires exactly one unnamed argument (the tab heading).")
+
+    heading_expr = args[0]
+
     nodelist = parser.parse(('endtab',))
     parser.delete_first_token()  # discard the 'endtab' tag
-    return TabNode(nodelist, heading_expr)
+    return TabNode(nodelist, heading_expr, kwargs)
 
 class TabNode(template.Node):
-    def __init__(self, nodelist, heading_expr):
+    def __init__(self, nodelist, heading_expr, kwargs):
         self.nodelist = nodelist
         self.heading_expr = heading_expr
+        self.extra_classname_expr = kwargs.get('class')
 
     def render(self, context):
-        heading = template.Variable(self.heading_expr).resolve(context)
+        heading = self.heading_expr.resolve(context)
         context['tabdeck']['tab_headings'].append(heading)
         context['tabdeck']['index'] += 1
 
@@ -509,4 +516,12 @@ class TabNode(template.Node):
             (' active' if context['tabdeck']['index'] == 1 else ''),
             conditional_escape(heading)
         )
-        return header_html + self.nodelist.render(context)
+        if self.extra_classname_expr:
+            classname = "tab-pane %s" % self.extra_classname_expr.resolve(context)
+        else:
+            classname = "tab-pane"
+
+        if context['tabdeck']['index'] == 1:
+            classname += ' active'
+
+        return header_html + ('<div class="%s">' % classname) + self.nodelist.render(context) + '</div>'
