@@ -11,10 +11,13 @@
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script src="{{ STATIC_URL }}verdantadmin/js/vendor/modernizr-2.6.2.min.js"></script>
+    <!--
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
-
+    -->
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" /> 
+    
     {% compress css %}
         <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
         <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
@@ -38,12 +41,15 @@
        {% block furniture %}{% endblock %}
     </div>
 
+    <!--
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    -->
+
     {% compress js %}
         {% comment %}
             Core JS includes (for inclusion on all pages) to be specified here
         {% endcomment %}
-
+        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-1.10.3.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-ui-1.10.3.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.timepicker.min.js"></script>
         <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.autosize.js"></script>

@@ -29,7 +29,10 @@ def index(request, parent_page_id=None):
         if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
             pages = pages.order_by(ordering)
     else:
-        ordering = None
+        ordering = 'title'
+    
+    if ordering == 'ord':    
+        messages.error(request, "You are now able to reorder pages. Click 'Save order' when you've finished")
 
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
@@ -232,7 +235,7 @@ def reorder(request, parent_page_id=None):
             page.move(parent_page, pos='last-child')
 
         # Success message
-        messages.success(request, "Pages reordered successfully")
+        messages.success(request, "Pages have been reordered")
 
         return redirect('verdantadmin_explore', parent_page_id)
     else:
