@@ -1043,7 +1043,6 @@ NewsItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1169,7 +1168,6 @@ PressRelease.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1419,7 +1417,6 @@ EventItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1773,7 +1770,6 @@ ReviewPage.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
