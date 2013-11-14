@@ -24,7 +24,7 @@ function showHide(clickElement, classElement){
 function showHideFooter() {
     $('footer .menu .main').click(function(eventObject){
         $(this).toggleClass('expanded');
-        $('.submenu-block', this).prev().slideToggle(expansionAnimationSpeed);
+        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
     });
 }
 
