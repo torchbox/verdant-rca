@@ -68,6 +68,31 @@ class FakeQuerySet(object):
         # has no meaningful effect on non-db querysets
         return self
 
+    def values_list(self, *fields, **kwargs):
+        # FIXME: values_list should return an object that behaves like both a queryset and a list,
+        # so that we can do things like Foo.objects.values_list('id').order_by('id')
+
+        flat = kwargs.get('flat')  # TODO: throw TypeError if other kwargs are present
+
+        if not fields:
+            # return a tuple of all fields
+            field_names = [field.name for field in self.model._meta.fields]
+            return [
+                tuple([getattr(obj, field_name) for field_name in field_names])
+                for obj in self.results
+            ]
+
+        if flat:
+            if len(fields) > 1:
+                raise TypeError("'flat' is not valid when values_list is called with more than one field.")
+            field_name = fields[0]
+            return [getattr(obj, field_name) for obj in self.results]
+        else:
+            return [
+                tuple([getattr(obj, field_name) for field_name in fields])
+                for obj in self.results
+            ]
+
     def __getitem__(self, k):
         return self.results[k]
 

@@ -89,7 +89,7 @@ function showSearchAutocomplete() {
             window.location.href = ui.item.url;
         }
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a><span>" + item.type + "</span> " + item.label + "</a>" ).appendTo( ul );
+        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.label + "<span>" + item.type + "</span></a>" ).appendTo( ul );
     };
 }
 
@@ -165,7 +165,7 @@ $(function(){
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
-    showHideDialogue();
+    //showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */

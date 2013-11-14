@@ -11,20 +11,20 @@
 			{% endif %}
 				<ul class="row">
 					<li class="col col-1">
-						<p>
+						<p class="bc3">
 							{% if contact.contact_snippet.contact_title %}
 								<strong>{{ contact.contact_snippet.contact_title }}</strong><br />
 							{% endif %}
 							{% if contact.contact_snippet.contact_address %}
-								{{ contact.contact_snippet.contact_address|linebreaks }}
-							{% endif %}
-							{% if contact.contact_snippet.contact_link and contact.contact_snippets.contact_link_text %}
-								<a href="{{ contact.contact_link }}" class="chevron">{{ contact.contact_snippet.contact_link_text }}</a>
+								{{ contact.contact_snippet.contact_address|linebreaksbr }}
 							{% endif %}
 						</p>
+						{% if contact.contact_snippet.contact_link and contact.contact_snippets.contact_link_text %}
+							<p><a href="{{ contact.contact_link }}" class="chevron">{{ contact.contact_snippet.contact_link_text }}</a></p>
+						{% endif %}
 					</li>
 					<li class="col col-2">
-						<p>
+						<p class="bc3">
 							{% with contact.contact_snippet.contact_phone.all as phone_nos %}
 								{% if phone_nos %}
 									{% for phone_no in phone_nos %}

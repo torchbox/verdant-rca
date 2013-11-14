@@ -1,5 +1,6 @@
 from __future__ import division # Use true division
 from django_embedly.templatetags.embed_filters import embedly_get_dict
+from django.utils.html import escape
 
 
 def media_to_frontend_html(url):
@@ -22,4 +23,4 @@ def media_to_editor_html(url):
     embed = embedly_get_dict(url)
     if embed is None:
         return ''
-    return '<div class="media-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, embed['title'], url, embed['thumbnail_url'])
+    return '<div class="media-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, escape(embed['title']), url, embed['thumbnail_url'])

@@ -111,10 +111,25 @@
     width: @width;
     height: @height;
 
-    //@media only screen and (max-width: 768px) { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        //background-position: @retinaPositionX @retinaPositionY;
-        //background-size:2000/2px 730/2px;  
-    //}
+    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        background-position: @retinaPositionX/1.5 @retinaPositionY/1.5;
+        background-size:2000/1.5px 730/1.5px;
+        background-color: red;
+    }
+}
+
+.sprite-load-small (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/sprites-small.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+
+    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        background-position: @retinaPositionX/1.5 @retinaPositionY/1.5;
+        background-size:358/1.5px 438/1.5px;
+        //background-color: red;
+    }
 }
 
 /* sidebar advert */

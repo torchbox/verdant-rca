@@ -173,217 +173,143 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('schoolofappliedart', 'School of Applied Art'),
+    ('schoolofarchitecturedesign', 'School of Architecture & Design'),
+    ('schoolofcommunications', 'School of Communications'),
+    ('schooloffashiontextiles', 'School of Fashion & Textiles'),
+    ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
-
 )
 
-HISTORICAL_PROGRAMMES = {
-    '2007': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('industrialdesignengineering', 'Industrial Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2008': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2009': (
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('architecture', 'Architecture'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('animation', 'Animation'),
-        ('communicationartdesign', 'Communication Art & Design'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('textiles', 'Textiles'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('conservation', 'Conservation'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-    ),
-    '2010': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2011': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2012': (
-        ('architecture', 'Architecture'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-    ),
-    '2013': (
-        ('architecture', 'Architecture'),
-        ('interiordesign', 'Interior Design'),
-        ('animation', 'Animation'),
-        ('visualcommunication', 'Visual Communication'),
-        ('informationexperiencedesign', 'Information Experience Design'),
-        ('designinteractions', 'Design Interactions'),
-        ('designproducts', 'Design Products'),
-        ('innovationdesignengineering', 'Innovation Design Engineering'),
-        ('servicedesign', 'Service Design'),
-        ('vehicledesign', 'Vehicle Design'),
-        ('painting', 'Painting'),
-        ('photography', 'Photography'),
-        ('printmaking', 'Printmaking'),
-        ('sculpture', 'Sculpture'),
-        ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-        ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-        ('curatingcontemporaryart', 'Curating Contemporary Art'),
-        ('historyofdesign', 'History of Design'),
-        ('ceramicsglass', 'Ceramics & Glass'),
-        ('fashionmenswear', 'Fashion Menswear'),
-        ('fashionwomenswear', 'Fashion Womenswear'),
-        ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-        ('textiles', 'Textiles'),
-        ('globalinnovationdesign', 'Global Innovation Design'),
-        ('drawingstudio', 'Drawing Studio'),
-    ),
-}
-
-ALL_PROGRAMMES = list(set([x for year_tuple in HISTORICAL_PROGRAMMES.values() for x in year_tuple]))
-
-PROGRAMME_CHOICES = (
-    ('architecture', 'Architecture'),
-    ('interiordesign', 'Interior Design'),
-    ('animation', 'Animation'),
-    ('informationexperiencedesign', 'Information Experience Design'),
-    ('visualcommunication', 'Visual Communication'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('globalinnovationdesign', 'Global Innovation Design'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('servicedesign', 'Service Design'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-    ('curatingcontemporaryart', 'Curating Contemporary Art'),
-    ('historyofdesign', 'History of Design'),
-    ('ceramicsglass', 'Ceramics & Glass'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('fashionmenswear', 'Fashion Menswear'),
+ALL_PROGRAMMES = (
     ('fashionwomenswear', 'Fashion Womenswear'),
     ('textiles', 'Textiles'),
+    ('ceramicsglass', 'Ceramics & Glass'),
+    ('sculpture', 'Sculpture'),
+    ('designproducts', 'Design Products'),
+    ('industrialdesignengineering', 'Industrial Design Engineering'),
+    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('visualcommunication', 'Visual Communication'),
+    ('designinteractions', 'Design Interactions'),
+    ('innovationdesignengineering', 'Innovation Design Engineering'),
+    ('historyofdesign', 'History of Design'),
+    ('fashionmenswear', 'Fashion Menswear'),
+    ('printmaking', 'Printmaking'),
+    ('globalinnovationdesign', 'Global Innovation Design'),
+    ('architecture', 'Architecture'),
+    ('interiordesign', 'Interior Design'),
     ('drawingstudio', 'Drawing Studio'),
+    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
+    ('painting', 'Painting'),
+    ('photography', 'Photography'),
+    ('servicedesign', 'Service Design'),
+    ('animation', 'Animation'),
+    ('informationexperiencedesign', 'Information Experience Design'),
+    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
+    ('curatingcontemporaryart', 'Curating Contemporary Art'),
+    ('conservation', 'Conservation'),
+    ('vehicledesign', 'Vehicle Design'),
+    ('communicationartdesign', 'Communication Art & Design'),
 )
 
+
 SCHOOL_PROGRAMME_MAP = {
-    'schoolofarchitecture': ['architecture', 'interiordesign'],
-    'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
-    'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-    'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-    'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-    'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    'helenhamlyn': [],
-    'rectorate': [],
+    '2014': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'helenhamlyn': [],
+        'rectorate': [],
+    },
+    '2013': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'helenhamlyn': [],
+        'rectorate': [],
+    },
+    '2012': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2011': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2010': {
+        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2009': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
+    '2008': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
+    '2007': {
+        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
+        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts', 'industrialdesignengineering', 'vehicledesign'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
+    },
 }
 
-# Make sure values used in SCHOOL_PROGRAMME_MAP are valid
-assert set(SCHOOL_PROGRAMME_MAP.keys()) == set(dict(SCHOOL_CHOICES).keys())
-assert set(sum(SCHOOL_PROGRAMME_MAP.values(), [])).issubset(dict(PROGRAMME_CHOICES).keys())
+# generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP
+PROGRAMME_CHOICES = sorted([
+    (
+        year,   tuple([
+                    (programme, dict(ALL_PROGRAMMES)[programme])
+                    for programme
+                    in sorted(set(sum(mapping.values(), [])))
+                ])
+    )
+    for year, mapping
+    in SCHOOL_PROGRAMME_MAP.items()
+])
+
+
+# Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
+# 1. check schools
+assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(SCHOOL_CHOICES)))
+# 2. check programmes
+assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
+        .issubset(set(dict(ALL_PROGRAMMES)))
+
+YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
 
 SUBJECT_CHOICES = (
     ('animation', 'Animation'),
@@ -432,7 +358,7 @@ TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alter
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
-    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     social_text = models.CharField(max_length=255, blank=True)
 
     class Meta:
@@ -440,11 +366,11 @@ class SocialFields(models.Model):
 
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField(blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
-    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -488,9 +414,9 @@ class AdvertPlacement(models.Model):
 
 class CustomContentModuleBlock(Orderable):
     content_module = ParentalKey('rca.CustomContentModule', related_name='blocks')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     item_title = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image for the module block")
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image for the module block")
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
@@ -632,18 +558,18 @@ class SchoolPageAd(Orderable):
 
 class SchoolPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_school_statement = RichTextField(null=True, blank=True)
-    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
-    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_research_statement = RichTextField(null=True, blank=True)
-    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_school_display', )
 
@@ -747,7 +673,7 @@ class ProgrammePageOurSites(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
     url = models.URLField()
     site_name = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -769,8 +695,8 @@ class ProgrammePageStudentStory(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='student_stories')
     name = models.CharField(max_length=255)
     text = RichTextField()
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         FieldPanel('name'),
@@ -790,12 +716,12 @@ class ProgrammePageAd(Orderable):
 class ProgrammePage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text="This is my help text")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="This is my help text")
     head_of_programme_statement = RichTextField(null=True, blank=True, help_text="This is my content this is my content this is my content")
-    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
-    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
@@ -805,8 +731,8 @@ class ProgrammePage(Page, SocialFields):
     download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_programme_display', 'get_school_display')
 
@@ -909,7 +835,7 @@ class NewsIndex(Page, SocialFields):
 
         news = news.distinct().order_by('-date')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(news, 10)  # Show 10 news items per page
@@ -995,7 +921,7 @@ class NewsItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     indexed_fields = ('intro', 'body')
@@ -1221,7 +1147,7 @@ PressRelease.promote_panels = [
 
 class EventItemSpeaker(Orderable):
     page = ParentalKey('rca.EventItem', related_name='speakers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     link = models.URLField(blank=True)
@@ -1525,7 +1451,7 @@ class EventIndex(Page, SocialFields):
             events = events.filter(audience=audience)
         events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
@@ -1931,8 +1857,8 @@ class StandardIndexCarouselItem(Orderable, CarouselItemFields):
 
 class StandardIndexTeaser(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='teasers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
 
@@ -1973,7 +1899,7 @@ class StandardIndexOurSites(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='our_sites')
     url = models.URLField()
     site_name = models.CharField(max_length=255)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         ImageChooserPanel('image'),
@@ -2007,12 +1933,12 @@ class StandardIndexContactSnippet(Orderable):
 
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
     body = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
@@ -2023,7 +1949,7 @@ class StandardIndex(Page, SocialFields):
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
     indexed = False
-    
+
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
@@ -2090,9 +2016,9 @@ class HomePageAd(Orderable):
     ]
 
 class HomePage(Page, SocialFields):
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('core.Page', null=True, related_name='+')
-    news_item_2 = models.ForeignKey('core.Page', null=True, related_name='+')
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
+    news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
@@ -2160,7 +2086,7 @@ class JobPage(Page, SocialFields):
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)
     description = RichTextField()
-    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
 
@@ -2304,7 +2230,7 @@ class AlumniIndex(Page, SocialFields):
 
         # research_items.order_by('-year')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
@@ -2359,7 +2285,7 @@ AlumniIndex.promote_panels = [
 # == Alumni profile page ==
 
 class AlumniPage(Page, SocialFields):
-    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     year = models.CharField(max_length=4, blank=True)
@@ -2443,8 +2369,8 @@ class StaffPagePublicationExhibition(Orderable):
     location_year = models.CharField("Location and year", max_length=255)
     authors_collaborators = models.TextField("Authors/collaborators", blank=True)
     link = models.URLField(blank=True)
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
 
     panels = [
         FieldPanel('title'),
@@ -2457,7 +2383,7 @@ class StaffPagePublicationExhibition(Orderable):
 
 class StaffPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     intro = RichTextField()
@@ -2475,7 +2401,7 @@ class StaffPage(Page, SocialFields):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
@@ -2572,7 +2498,7 @@ class StaffIndex(Page, SocialFields):
         # staff_pages = staff_pages.distinct()
         staff_pages = staff_pages.order_by('?')
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         # research_items.order_by('-year')
 
@@ -2650,7 +2576,7 @@ class ResearchStudentIndex(Page, SocialFields):
 
         research_students = research_students.distinct()
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         # research_items.order_by('-year')
 
@@ -2702,7 +2628,7 @@ ResearchStudentIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
-    
+
 
 
 # == Student profile page ==
@@ -2766,12 +2692,12 @@ class StudentPageWorkSponsor(Orderable):
 
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    programme = models.CharField(max_length=255, choices=ALL_PROGRAMMES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.CharField(max_length=4)
     specialism = models.CharField(max_length=255, blank=True)
-    profile_image = models.ForeignKey('rca.RcaImage', related_name='+', null=True, blank=True)
+    profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
@@ -2780,10 +2706,10 @@ class StudentPage(Page, SocialFields):
     funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    rca_content_id = models.CharField(max_length=255, blank=True)  # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     show_on_homepage = models.BooleanField()
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
@@ -2924,7 +2850,7 @@ class RcaNowIndex(Page, SocialFields):
         if area:
             rca_now_items = rca_now_items.filter(area=area)
 
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         rca_now_items = rca_now_items.order_by('-date')
 
@@ -3009,7 +2935,7 @@ class ResearchItem(Page, SocialFields):
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    rca_content_id = models.CharField(max_length=255, blank=True) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
     show_on_homepage = models.BooleanField()
 
@@ -3069,7 +2995,7 @@ class ResearchInnovationPageCarouselItem(Orderable, CarouselItemFields):
 
 class ResearchInnovationPageTeaser(Orderable):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='teasers')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     url = models.URLField(blank=True)
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
@@ -3129,10 +3055,10 @@ class ResearchInnovationPageAd(Orderable):
 
 class ResearchInnovationPage(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The full bleed image in the background")
+    background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
@@ -3277,6 +3203,7 @@ class GalleryPageRelatedLink(Orderable):
         FieldPanel('link_text'),
     ]
 
+
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -3294,10 +3221,25 @@ class GalleryPage(Page, SocialFields):
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
-        gallery_items = gallery_items.order_by('?');
-        
-        related_programmes = SCHOOL_PROGRAMME_MAP[school] if school else []
+        gallery_items = gallery_items.order_by('?')
 
+        if year:
+            if school:
+                related_programmes = SCHOOL_PROGRAMME_MAP[year].get(school, [])
+            else:
+                # get all programmess from all schools in the year specified
+                related_programmes = sum(SCHOOL_PROGRAMME_MAP[year].values(), [])
+        else:
+            if school:
+                # get all programmess from in this school in all years
+                related_programmes = set()
+                for _year, mapping in SCHOOL_PROGRAMME_MAP.items():
+                    if school in mapping:
+                        related_programmes |= set(mapping.get(school, []))
+                related_programmes = list(related_programmes)
+            else:
+                # show all programmes for current year
+                related_programmes = sum(SCHOOL_PROGRAMME_MAP[str(date.today().year)].values(), [])
 
         page = request.GET.get('page')
         paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
@@ -3319,7 +3261,9 @@ class GalleryPage(Page, SocialFields):
         else:
             return render(request, self.template, {
                 'self': self,
-                'gallery_items': gallery_items
+                'gallery_items': gallery_items,
+                'related_programmes': related_programmes,
+                'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
             })
 
 GalleryPage.content_panels = [
@@ -3373,7 +3317,7 @@ ContactUsPage.promote_panels = [
 
 
 class DonationPage(Page, SocialFields):
-    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, related_name='+')
+    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, on_delete=models.PROTECT, related_name='+')
     payment_description = models.CharField(max_length=255, blank=True, help_text="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages.")
 
     # fields copied from StandrdPage
