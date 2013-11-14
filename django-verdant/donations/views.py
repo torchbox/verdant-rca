@@ -59,9 +59,6 @@ def export(request):
         result = []
         for item in seq:
             marker = idfun(item)
-            # in old Python versions:
-            # if seen.has_key(marker)
-            # but in new ones:
             if marker in seen:
                 continue
             seen[marker] = 1
@@ -147,3 +144,8 @@ def export(request):
         writer.writerow(data)
 
     return response
+
+
+def verdantadmin(request, title=None):
+    return render(request, 'donations/verdantadmin.html', {
+    })

@@ -540,7 +540,7 @@ class SchoolPageContactEmail(Orderable):
 class SchoolPageRelatedLink(Orderable):
     page = ParentalKey('rca.SchoolPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -574,6 +574,32 @@ class SchoolPage(Page, SocialFields):
     indexed_fields = ('get_school_display', )
 
     search_name = 'School'
+
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -621,17 +647,8 @@ SchoolPage.promote_panels = [
 
 # == Programme page ==
 
-class ProgrammePageCarouselItem(Orderable):
+class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=255, help_text='This text will overlay the image', blank=True)
-    url = models.URLField(null=True, blank=True)
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('text'),
-        FieldPanel('url'),
-    ]
 
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
@@ -646,7 +663,7 @@ class ProgrammePageManualStaffFeed(Orderable):
 class ProgrammePageRelatedLink(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -737,6 +754,32 @@ class ProgrammePage(Page, SocialFields):
     indexed_fields = ('get_programme_display', 'get_school_display')
 
     search_name = 'Programme'
+
+    def serve(self, request):
+        research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
     def tabbed_feature_count(self):
         count = 0;
@@ -1398,7 +1441,7 @@ EventItem.promote_panels = [
 class EventIndexRelatedLink(Orderable):
     page = ParentalKey('rca.EventIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -1650,7 +1693,7 @@ class ReviewPageCarouselItem(Orderable, CarouselItemFields):
 class ReviewPageRelatedLink(Orderable):
     page = ParentalKey('rca.ReviewPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -1750,7 +1793,7 @@ class StandardPageCarouselItem(Orderable, CarouselItemFields):
 class StandardPageRelatedLink(Orderable):
     page = ParentalKey('rca.StandardPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -1872,7 +1915,7 @@ class StandardIndexTeaser(Orderable):
 class StandardIndexRelatedLink(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -2015,6 +2058,16 @@ class HomePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+class HomePageRelatedLink(Orderable):
+    page = ParentalKey('rca.HomePage', related_name='related_links')
+    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Link title")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
@@ -2042,6 +2095,7 @@ HomePage.content_panels = [
         FieldPanel('packery_rcanow'),
         FieldPanel('packery_standard'),
     ], 'Packery content'),
+    InlinePanel(HomePage, 'related_links', label="Related links"),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
 ]
 
@@ -2137,7 +2191,7 @@ JobPage.promote_panels = [
 class JobsIndexRelatedLink(Orderable):
     page = ParentalKey('rca.JobsIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -2192,7 +2246,7 @@ JobsIndex.promote_panels = [
 class AlumniIndexRelatedLink(Orderable):
     page = ParentalKey('rca.AlumniIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -2402,6 +2456,7 @@ class StaffPage(Page, SocialFields):
     last_name = models.CharField(max_length=255)
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
@@ -2495,8 +2550,7 @@ class StaffIndex(Page, SocialFields):
         if area and area != '':
             staff_pages = staff_pages.filter(roles__area=area)
 
-        # staff_pages = staff_pages.distinct()
-        staff_pages = staff_pages.order_by('?')
+        staff_pages = staff_pages.order_by('-random_order')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
@@ -2938,6 +2992,7 @@ class ResearchItem(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True) # for import
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
@@ -3010,7 +3065,7 @@ class ResearchInnovationPageTeaser(Orderable):
 class ResearchInnovationPageRelatedLink(Orderable):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -3157,7 +3212,7 @@ class CurrentResearchPage(Page, SocialFields):
             research_items = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/current_research_listing.html", {
+            return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
             })
@@ -3196,7 +3251,7 @@ CurrentResearchPage.promote_panels = [
 class GalleryPageRelatedLink(Orderable):
     page = ParentalKey('rca.GalleryPage', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Alternative link title (default is target page's title)")
+    link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         PageChooserPanel('link'),
@@ -3264,6 +3319,10 @@ class GalleryPage(Page, SocialFields):
                 'gallery_items': gallery_items,
                 'related_programmes': related_programmes,
                 'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
+                # on first page load the current year needs to appear in the url for the next page
+                # but we can't change the value on the request.GET dictionary, which is used to render that url
+                # so it's just append it to that url if the year filter wasn't defined already
+                'default_year': ('&year=%d' % date.today().year) if not year else '',
             })
 
 GalleryPage.content_panels = [

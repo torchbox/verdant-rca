@@ -2,6 +2,8 @@ jQuery(function(){
 
     var $dateRange = $('#dateRange');
 
+    var downloadLink = $(".download").attr("href") + "?";
+
     $dateRange.daterangepicker({
         posX: $dateRange.offset().left,
         posY: $dateRange.offset().top + $('#dateRange').height() + 18,
@@ -21,17 +23,16 @@ jQuery(function(){
                 // date range
                 bits = to.split("/");
                 to = new Date(bits[2], parseInt(bits[1], 10) - 1, bits[0]);
-                params = "from_date=" + from.toString('yyyy-MM-dd') + "&to_date=" + to.toString('yyyy-MM-dd');
+                params = "date_from=" + from.toString('yyyy-MM-dd') + "&date_to=" + to.toString('yyyy-MM-dd');
             }else{
                 // single day
-                params = "from_date=" + from.toString('yyyy-MM-dd') + "&to_date=" + from.toString('yyyy-MM-dd');
+                params = "date_from=" + from.toString('yyyy-MM-dd') + "&date_to=" + from.toString('yyyy-MM-dd');
             }
 
-            $dateRange.data("params", params);
-            console.log($dateRange.data("params"));
-            // window.location.href = window.location.pathname + "?" + $dateRange.data("params") + window.location.hash;
-
+            $(".download").attr("href", downloadLink + params);
        }
     });
+
+    $(".ui-daterangepickercontain").css($dateRange .position()).css("top", "+=" + $dateRange.outerHeight());
 
 });

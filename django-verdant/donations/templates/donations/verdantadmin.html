@@ -1,0 +1,25 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block extra_js %}
+    <script type="text/javascript" src="{{ STATIC_URL }}donations/js/jquery.daterangepicker.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}donations/js/donation-export.js"></script>
+{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}donations/css/donation-export.css">
+
+{% endblock extra_css %}
+
+{% block content %}
+    <header class="merged">
+        <div class="row row-flush">
+            <div class="left col12">
+                <h1>Donations</h1>
+            </div>
+        </div>
+    </header>
+    <section class="nice-padding" style="padding-top:2em;">
+        <input type="text" id="dateRange" />
+        <a href="{% url 'donations_export' %}" class="button icon icon-doc-full download">Download</a>
+    </section>
+{% endblock %}
