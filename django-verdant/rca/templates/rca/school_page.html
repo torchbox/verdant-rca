@@ -11,10 +11,13 @@
     {% include "rca/includes/modules/carousel.html" %}
 
    <!-- head of school -->
-    {% if self.head_of_school %}
+    {% if self.head_of_school or self.head_of_school_statement %}
         <section class="head-of-programme row module">
-            <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Head of school</a></h2>
+            {% if self.head_of_school %}
+                <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Head of school</a></h2>
+            {% endif %}
             
+            {% if self.head_of_school %}
             <a href="{% pageurl self.head_of_school %}">
                 <div class="image">
                     {% if self.head_of_school.profile_image %}
@@ -24,9 +27,15 @@
                     {% endif %}
                 </div>
             </a>
+            {% endif %}
+
             <div class="content bc2{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
-                <strong>{{ self.head_of_school.title }}</strong>
-                {{ self.head_of_school_statement|richtext }}
+                {% if self.head_of_school %}
+                    <strong>{{ self.head_of_school.title }}</strong>
+                {% endif %}
+                {% if self.head_of_school_statement %}
+                    {{ self.head_of_school_statement|richtext }}
+                {% endif %}
                 {% if self.head_of_school_link %}
                     ...<a href="{% pageurl self.head_of_school_link %}"><span class="bc4 caps">Continue</a></span>
                 {% endif %}
