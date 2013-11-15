@@ -2181,7 +2181,7 @@ HomePage.content_panels = [
         FieldPanel('twitter_feed'),
         FieldPanel('packery_rcanow'),
         FieldPanel('packery_research'),
-        FieldPanel('packery_alumni),
+        FieldPanel('packery_alumni'),
         FieldPanel('packery_review'),
         FieldPanel('packery_events')
     ], 'Packery content'),
