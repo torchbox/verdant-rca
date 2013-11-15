@@ -2070,8 +2070,8 @@ class HomePageRelatedLink(Orderable):
 
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
-    news_item_2 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_1 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
