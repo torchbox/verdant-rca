@@ -1,6 +1,9 @@
 from datetime import date
 import datetime
 import logging
+import random
+
+from itertools import chain
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
@@ -2074,8 +2077,82 @@ class HomePage(Page, SocialFields):
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_standard = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_events = models.IntegerField("Number of events to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+  
+
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    def future_events(self):
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
+
+    def past_events(self):
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
+
+    def serve(self, request):
+        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        tweets = [[],[],[],[],[]]
+
+        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], tweets[:self.packery_tweets]))
+        random.shuffle(packery)
+
+        # programme = request.GET.get('programme')
+        # school = request.GET.get('school')
+        # location = request.GET.get('location')
+        # location_other = request.GET.get('location_other')
+        # area = request.GET.get('area')
+        # audience = request.GET.get('audience')
+        # period = request.GET.get('period')
+
+        # if period == 'past':
+        #     events = self.past_events()
+        # else:
+        #     events = self.future_events()
+
+        # if programme and programme != '':
+        #     events = events.filter(related_programmes__programme=programme)
+        # if school and school != 'all':
+        #     events = events.filter(related_schools__school=school)
+        # if location and location != '':
+        #     events = events.filter(location=location)
+        # if area and area != 'all':
+        #     events = events.filter(related_areas__area=area)
+        # if audience and audience != '':
+        #     events = events.filter(audience=audience)
+        # events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+
+        # related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
+
+        # page = request.GET.get('page')
+        # paginator = Paginator(events, 10)  # Show 10 events per page
+        # try:
+        #     events = paginator.page(page)
+        # except PageNotAnInteger:
+        #     # If page is not an integer, deliver first page.
+        #     events = paginator.page(1)
+        # except EmptyPage:
+        #     # If page is out of range (e.g. 9999), deliver last page of results.
+        #     events = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/events_listing.html", {
+                'self': self,
+                'packery': packery
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'packery': packery
+            })
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
