@@ -1,13 +1,17 @@
 {% extends "verdantadmin/base.html" %}
+{% load compress %}
 
 {% block extra_js %}
-    <script type="text/javascript" src="{{ STATIC_URL }}donations/js/jquery.daterangepicker.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}donations/js/donation-export.js"></script>
+    {% compress js %}
+        <script type="text/javascript" src="{{ STATIC_URL }}donations/js/jquery.daterangepicker.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}donations/js/donation-export.js"></script>
+    {% endcompress %}
 {% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}donations/css/donation-export.css">
-
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}donations/css/donation-export.css">
+    {% endcompress %}
 {% endblock extra_css %}
 
 {% block content %}

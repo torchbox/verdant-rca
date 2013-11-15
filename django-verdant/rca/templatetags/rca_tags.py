@@ -466,25 +466,35 @@ def search_content_type(result):
 
 @register.tag
 def tabdeck(parser, token):
+    bits = token.split_contents()[:]
+    args, kwargs = parse_bits(parser, bits, [], 'args', 'kwargs', None, False, 'tabdeck')
+
     nodelist = parser.parse(('endtabdeck',))
     parser.delete_first_token()  # discard the 'endtabdeck' tag
-    return TabDeckNode(nodelist)
+    return TabDeckNode(nodelist, kwargs)
 
 class TabDeckNode(template.Node):
-    def __init__(self, nodelist):
+    def __init__(self, nodelist, kwargs):
         self.nodelist = nodelist
+        self.moduletitle_expr = kwargs.get('moduletitle')
 
     def render(self, context):
         context['tabdeck'] = {'tab_headings': [], 'index': 1}
         output = self.nodelist.render(context)  # run the contents of the tab; any {% tab %} tags within it will populate tabdeck.tab_headings
         headings = context['tabdeck']['tab_headings']
 
+        if not headings:
+            return ''
+
         tab_headers = [
             """<li%s><a class="t0">%s</a></li>""" % ((' class="active"' if i == 0 else ''), conditional_escape(heading))
             for i, heading in enumerate(headings)
         ]
         tab_header_html = """<ul class="tab-nav tabs-%d">%s</ul>""" % (len(headings), ''.join(tab_headers))
-        return '<section class="four-tab row module">' + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        moduletitlehtml = '';
+        if self.moduletitle_expr:
+            moduletitlehtml = '<h2 class="module-title">%s</h2>' % self.moduletitle_expr.resolve(context)
+        return '<section class="row module">' + moduletitlehtml + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
