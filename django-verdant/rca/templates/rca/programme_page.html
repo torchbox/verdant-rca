@@ -55,11 +55,8 @@
     <!-- tabs -->
     
     {% tabdeck moduletitle="Student info" %}
-        <h2 class="module-title">Student info</h2>
 
-        <!--show tabs if there is more than 1 (javascript applies the correct links and active class for the
-        tabs as this is hard to do in the template)-->
-
+        <!-- links and ids added by javascript -->
         {% tab "Programme video" class="flush" %}
             {% if self.programme_video %}
                 <div class="videoembed vimeo">
@@ -72,6 +69,7 @@
             {% endif %}
         {% endtab %}
 
+        <!-- links and ids added by javascript -->
         {% tab "Student stories" %}    
             {% with self.student_stories.all as student_stories %}
                 {% if student_stories %}    
@@ -92,6 +90,7 @@
             {% endwith %}
         {% endtab %}
 
+        <!-- links and ids added by javascript -->
         {% tab "Facilities" class="flush" %}
             
             {% if self.facilities_text or self.facilities_image %}
