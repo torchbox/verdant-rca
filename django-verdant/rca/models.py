@@ -1562,7 +1562,7 @@ class TalksIndex(Page, SocialFields):
     indexed = False
 
     def serve(self, request):
-        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
 
         talks = talks.distinct()
 
