@@ -1,0 +1,133 @@
+{% load rca_tags pageurl image_tags %}
+
+<section class="packery module row">
+    <ul>
+        {% for item in packery %}
+            {% if item|content_type = 'newsitem' %}
+                <li class="item half">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-464 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                <p class="a2">News</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            {% elif item|content_type = 'staffpage' %}
+                <li class="item single">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.profile_image fill-80x80 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                <p class="bc4">{{ item.specific.listing_intro }}</p>
+                                <p class="a2">Staff</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            {% elif item|content_type = 'studentpage' %}
+                {# NB: this is not really displaying a student page, but rather their work #}
+                
+                {% with item.carousel_items.all|first as carouselitem %}
+                    <li class="item {% if carouselitem.image.is_landscape %}three-quarters{% else %}full{% endif %}">
+                        <div class="inner">
+                            <a href="{% pageurl item %}">
+                                {% if carouselitem.image.is_landscape %}
+                                    <div class="image">{% image carouselitem.image width-944 %}</div>
+                                {% else %}
+                                    <div class="image">{% image carouselitem.image width-624 %}</div>
+                                {% endif %}
+
+                                <div class="content">
+                                    <h3 class="h6">{{ carouselitem.image.title }}</h3>
+                                    <p class="a0">{{ item.title }}</p>
+                                    <p class="a1">{{ item.get_school_display }}</p>
+                                    <p class="a2">Work</p>
+                                </div>
+                            </a>
+                        </div>
+                    </li>
+                {% endwith %}
+            {% elif item|content_type = 'rcanowpage' %}
+                <li class="item half">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-464 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                {% if item.author %}
+                                    <p class="a0">{{ item.author }}</p>
+                                {% endif %}
+                                <p class="a2">RCA Now</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            {% elif item|content_type = 'researchitem' %}
+                <li class="item double">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                <p class="a0">
+
+                                    {% with item.specific.creator.all as creators %}
+                                        {% for creator in creators %}
+                                            {{ creator.person.title}}{{ creator.manual_person_name }}
+                                            {% if not forloop.last %},{% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                </p>
+                                <p class="a1">{{ item.get_school_display }}{% if item.get_programme_display %}, {{ item.get_programme_display }}{% endif %}</p>
+                                <p class="a2">Research</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            {% elif item|content_type = 'alumnipage' %}
+                <li class="item single">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image fill-80x80 %}</div>
+                            <div class="content">
+                                <p class="bc4">{{ item.listing_intro }}</p>
+                                <p class="a0">{{ item.title }}</p>
+                                <p class="a1">{{ item.get_programme_display }} Graduate, {{ item.year }}</p>
+                                <p class="a2">Alumni</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+             {% elif item|content_type = 'reviewpage' %}
+                <li class="item double">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                <p class="bc4">{{ item.listing_intro }}</p>
+                                <p class="a0">{{ item.author }}</p>
+                                <p class="a2">Review</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+            {% else %}
+                <!-- tweets-->
+                <li class="item double tweet" data-twitter-feed="{{ self.twitter_feed }}" data-twitter-count="{{ self.packery_tweets }}">
+                    <div class="inner">
+                        <h3 class="h7 highlight-blue"><a href="http://www.twitter.com/{{ self.twitter_feed }}">@{{ self.twitter_feed }}</a></h3>
+                        <div class="content body-text-style"></div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+        <li class="stamp load-more"><a href="#">+</a></li>
+        <!--TODO: make work! <li class="stamp load-more"><a href="#">+</a></li>-->
+    </ul>
+</section>

@@ -2092,6 +2092,9 @@ class HomePage(Page, SocialFields):
         return EventItem.past_objects.filter(live=True, path__startswith=self.path)
 
     def serve(self, request):
+
+        already_used_ids = request.GET.get('already_used_ids')
+
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -2101,6 +2104,16 @@ class HomePage(Page, SocialFields):
         review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         tweets = [[],[],[],[],[]]
+
+        if already_used_ids:
+            news = news.exclude(id_in=already_used_ids);
+            staff = staff.exclude(id_in=already_used_ids);
+            news = news.exclude(id_in=already_used_ids);
+            rcanow = rcanow.exclude(id_in=already_used_ids);
+            research = research.exclude(id_in=already_used_ids);
+            alumni = alumni.exclude(id_in=already_used_ids);
+            review = review.exclude(id_in=already_used_ids);
+            events = events.exclude(id_in=already_used_ids);
 
         packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], tweets[:self.packery_tweets]))
         random.shuffle(packery)
@@ -2144,7 +2157,7 @@ class HomePage(Page, SocialFields):
         #     events = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/events_listing.html", {
+            return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
                 'packery': packery
             })
@@ -2167,7 +2180,10 @@ HomePage.content_panels = [
         FieldPanel('packery_tweets'),
         FieldPanel('twitter_feed'),
         FieldPanel('packery_rcanow'),
-        FieldPanel('packery_standard'),
+        FieldPanel('packery_research'),
+        FieldPanel('packery_alumni),
+        FieldPanel('packery_review'),
+        FieldPanel('packery_events')
     ], 'Packery content'),
     InlinePanel(HomePage, 'related_links', label="Related links"),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
