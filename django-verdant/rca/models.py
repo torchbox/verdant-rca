@@ -1047,6 +1047,7 @@ NewsItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -1429,6 +1430,7 @@ EventItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
