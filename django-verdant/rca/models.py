@@ -2080,7 +2080,8 @@ class HomePage(Page, SocialFields):
     packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    
+    packery_events = models.IntegerField("Number of events to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+  
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
@@ -2091,7 +2092,6 @@ class HomePage(Page, SocialFields):
         return EventItem.past_objects.filter(live=True, path__startswith=self.path)
 
     def serve(self, request):
-        
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -2099,9 +2099,10 @@ class HomePage(Page, SocialFields):
         research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         tweets = [[],[],[],[],[]]
 
-        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], tweets[:self.packery_tweets]))
+        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], tweets[:self.packery_tweets]))
         random.shuffle(packery)
 
         # programme = request.GET.get('programme')
