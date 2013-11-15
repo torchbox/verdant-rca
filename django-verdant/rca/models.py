@@ -784,16 +784,6 @@ class ProgrammePage(Page, SocialFields):
                 'research_items': research_items
             })
 
-    def tabbed_feature_count(self):
-        count = 0;
-        if self.programme_video:
-            count = count + 1;
-        if self.facilities_text or self.facilities_image:
-            count = count + 1;
-        if self.student_stories.exists():
-            count = count + 1;
-        return count;
-
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
     FieldPanel('title', classname="full title"),
@@ -2468,14 +2458,6 @@ class StaffPage(Page, SocialFields):
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
     search_name = 'Staff'
-
-    def tabbed_feature_count(self):
-        count = 2 #info tab and research tab will always show
-        if self.carousel_items.exists():
-            count = count + 1
-        if self.publications_exhibitions.exists():
-            count = count + 1
-        return count
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
