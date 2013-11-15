@@ -18,9 +18,8 @@ def deploy_staging():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --noinput")
 
         sudo("supervisorctl restart verdant-rca")
-        # MW 2013-11-13 - leave celery disabled while we diagnose runaway memory usage
-        #sudo("supervisorctl restart rca-celeryd")
-        #sudo("supervisorctl restart rca-celerybeat")
+        sudo("supervisorctl restart rca-celeryd")
+        sudo("supervisorctl restart rca-celerybeat")
 
         with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index")
@@ -37,9 +36,8 @@ def deploy_production():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --noinput")
 
         sudo("supervisorctl restart verdant-rca")
-        # MW 2013-11-13 - leave celery disabled while we diagnose runaway memory usage
-        #sudo("supervisorctl restart rca-celeryd")
-        #sudo("supervisorctl restart rca-celerybeat")
+        sudo("supervisorctl restart rca-celeryd")
+        sudo("supervisorctl restart rca-celerybeat")
 
         with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index")
