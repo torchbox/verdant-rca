@@ -4,6 +4,7 @@ from fabric.api import *
 env.roledefs = {
     'staging': ['django-staging.torchbox.com'],
     'production': ['rca2.dh.bytemark.co.uk'],
+    #'production': ['rca2.dh.bytemark.co.uk', 'rca3.dh.bytemark.co.uk'],
 }
 
 @roles('staging')
