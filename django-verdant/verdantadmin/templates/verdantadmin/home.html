@@ -1,16 +1,18 @@
 {% extends "verdantadmin/base.html" %}
+{% load compress %}
 
 {% block bodyclass %}homepage{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/layouts/home.less" type="text/less" />
+    {% compress css %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/layouts/home.less" type="text/less" />
+    {% endcompress %}
 {% endblock %}
 
 {% block content %}
     <header class="merged">
         <h1>Welcome to the Verdant CMS for {{ site_name }}</h1>
     </header>
-
 
     <section class="summary">
         <h2>Site summary</h2>
