@@ -360,6 +360,12 @@ STAFF_TYPES_CHOICES = (
     ('administrative', 'Administrative'),
 )
 
+SCREEN_CHOICES = (
+    ('screen1', 'Screen 1'),
+    ('screen2', 'Screen 2'),
+    ('screen3', 'Screen 3'),
+)
+
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
@@ -1200,6 +1206,12 @@ class EventItemSpeaker(Orderable):
 class EventItemCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.EventItem', related_name='carousel_items')
 
+class EventItemScreen(models.Model):
+    page = ParentalKey('rca.EventItem', related_name='screens')
+    screen = models.CharField(max_length=255, choices=SCREEN_CHOICES, blank=True)
+
+    panels = [FieldPanel('screen')]
+
 class EventItemRelatedSchool(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_schools')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
@@ -1279,7 +1291,8 @@ class EventItem(Page, SocialFields):
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
-    gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
+    gallery = models.CharField("RCA galleries and rooms", max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
+    special_event = models.BooleanField(default=False)
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
     external_link = models.URLField(blank=True)
@@ -1394,6 +1407,7 @@ EventItem.content_panels = [
         FieldPanel('specific_directions'),
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
+        FieldPanel('special_event'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
         FieldPanel('external_link'),
@@ -2070,8 +2084,8 @@ class HomePageRelatedLink(Orderable):
 
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
-    news_item_2 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_1 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
