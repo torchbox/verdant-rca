@@ -2,10 +2,24 @@
 
 {% block bodyclass %}homepage{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/layouts/home.less" type="text/less" />
+{% endblock %}
+
 {% block content %}
-    <header>
+    <header class="merged">
         <h1>Welcome to the Verdant CMS for {{ site_name }}</h1>
     </header>
+
+
+    <section class="summary">
+        <h2>Site summary</h2>
+        <ul>
+            <li class="icon icon-doc-empty-inverse"><span>{{ total_pages }}</span> Page{{ total_pages|pluralize:"s" }}</li>
+            <li class="icon icon-image"><span>{{ total_images }}</span> Image{{ total_images|pluralize:"s" }}</li>
+            <li class="icon icon-doc-full-inverse"><span>{{ total_docs }}</span> Document{{ total_docs|pluralize:"s" }}</li>
+        </ul>
+    </section>
 
     {% if page_revisions_for_moderation %}
         <div class="nice-padding">
