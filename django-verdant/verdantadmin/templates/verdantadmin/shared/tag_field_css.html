@@ -1,1 +1,4 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery.tagit.css">
+{% load compress %}
+{% compress css %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery.tagit.css">
+{% endcompress %}
