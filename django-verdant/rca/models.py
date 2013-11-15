@@ -32,6 +32,9 @@ from donations.forms import DonationForm
 from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
+import hashlib
+
+
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -1352,7 +1355,7 @@ class EventItem(Page, SocialFields):
                         # Make event
                         ical_components.extend([
                             'BEGIN:VEVENT',
-                            'UID:' + add_slashes(self.url) + str(day + 1),
+                            'UID:' + hashlib.sha1(self.url + str(start_datetime)).hexdigest() + '@rca.ac.uk',
                             'URL:' + add_slashes(self.url),
                             'DTSTAMP:' + start_time.strftime('%Y%m%dT%H%M%S'),
                             'SUMMARY:' + add_slashes(self.title),
