@@ -1264,6 +1264,13 @@ class FutureEventItemManager(models.Manager):
             params=[date.today(), date.today()]
         )
 
+class FutureNotCurrentEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
+            params=[date.today()]
+        )
+
 class PastEventItemManager(models.Manager):
     def get_query_set(self):
         return super(PastEventItemManager, self).get_query_set().extra(
@@ -1296,6 +1303,7 @@ class EventItem(Page, SocialFields):
     objects = models.Manager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
+    future_not_current_objects = FutureNotCurrentEventItemManager()
 
     indexed_fields = ('body', 'get_location_display', 'location_other')
 
