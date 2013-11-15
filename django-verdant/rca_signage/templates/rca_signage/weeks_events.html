@@ -1,0 +1,13 @@
+{% extends 'rca_signage/base.html' %}
+
+{% block content %}
+ <h1>This weeks events</h1>
+
+ {% if week_start.month != week_end.month %}
+  <h2>{{ week_start|date:"j F" }} &ndash; {{ week_end|date:"j F" }}</h2>
+ {% else %}
+  <h2>{{ week_start|date:"j" }} &ndash; {{ week_end|date:"j" }} {{ week_start|date:"F" }}</h2>
+ {% endif %}
+
+ 
+{% endblock %}

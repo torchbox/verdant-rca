@@ -171,6 +171,7 @@ INSTALLED_APPS = (
 
     'donations',
     'rca',
+    'rca_signage',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
