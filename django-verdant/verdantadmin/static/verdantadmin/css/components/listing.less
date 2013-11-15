@@ -27,13 +27,11 @@ ul.listing{
     }
    
     td, th{
-        padding-top:1.5em;
-        padding-bottom:1.5em;
+        padding:1.5em 1em;
     }
 
     &.small td, th{
-        padding-top:1em;
-        padding-bottom:1em;
+        padding:1em 0.75em;
     }
 
     thead{
@@ -127,6 +125,7 @@ ul.listing{
         .table-column(5);
 
         h2{
+            text-transform:none;
             margin:0;
             font-size:1.1em;
             font-weight:700;
@@ -319,11 +318,12 @@ ul.listing{
             a{opacity:1;}
         }
     }
-}
-
-@media screen and (min-width: @breakpoint-desktop-small){
     table.listing.full-width td:first-child,
     table.listing.full-width th:first-child{
         .push-padding(@grid-content-indent);
     }
+}
+
+@media screen and (min-width: @breakpoint-desktop-small){
+   
 }
