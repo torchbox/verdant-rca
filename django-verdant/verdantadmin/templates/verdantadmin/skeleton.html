@@ -13,21 +13,18 @@
 
     <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
-    {% compress css %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery.timepicker.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/core.less" type="text/less" />
-    {% endcompress %}
+    {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" />
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Bitter:400,700" />
+        {% compress css %}
+            <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/normalize.css" />
+            <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
+            <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/vendor/jquery.timepicker.css" />
+            <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/core.less" type="text/less" />
+        {% endcompress %}
 
-    {% compress css %}
-        {% comment %}
-            Per-page CSS is compressed separately so that the global stuff doesn't get re-downloaded each time
-        {% endcomment %}
         {% block extra_css %}{% endblock %}
-    {% endcompress %}
+    {% endblock %}
 </head>
 <body class="{% block bodyclass %}{% endblock %}">
     <!--[if lt IE 9]>
@@ -38,27 +35,24 @@
        {% block furniture %}{% endblock %}
     </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    {% compress js %}
-        {% comment %}
-            Core JS includes (for inclusion on all pages) to be specified here
-        {% endcomment %}
+    {% block js %}
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        {% compress js %}
+            {% comment %}
+                Core JS includes (for inclusion on all pages) to be specified here
+            {% endcomment %}
 
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-ui-1.10.3.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.timepicker.min.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.autosize.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-modal.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-tab.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.dlmenu.js"></script>
-        <script src="{{ STATIC_URL }}verdantadmin/js/core.js"></script>
-    {% endcompress %}
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery-ui-1.10.3.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.timepicker.min.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.autosize.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-modal.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/bootstrap-tab.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/vendor/jquery.dlmenu.js"></script>
+            <script src="{{ STATIC_URL }}verdantadmin/js/core.js"></script>
+        {% endcompress %}
 
-    {% compress js %}
-        {% comment %}
-            Per-page JS is compressed separately so that the global stuff doesn't get re-downloaded each time
-        {% endcomment %}
         {% block extra_js_base %}{% endblock %}
         {% block extra_js %}{% endblock %}
-    {% endcompress %}
+    {% endblock %}
 </body>
 </html>

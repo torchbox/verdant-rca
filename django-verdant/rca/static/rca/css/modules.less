@@ -330,7 +330,7 @@
             a { /* repeating body-text-style styles here because I don't want to 
             screw with the javascript without being able to test it */
                 color: @color-highlight-blue;
-                font-weight: bold;
+                .bold();
                 &:hover {
                     text-decoration: underline;
                 }
@@ -1006,6 +1006,7 @@
         text-transform: uppercase;
         display: block;
         padding-bottom:@grid-gutter-width;
+        color: #444;
     }
 }
 
@@ -1104,7 +1105,7 @@
 
     a {
         color: @color-highlight-blue;
-        font-weight: bold;
+        .bold();
         &:hover {
             text-decoration: underline;
         }
@@ -1118,8 +1119,8 @@
     ul li {
         list-style-type: none;
         &:before {
-            content: '\002D\00A0\00A0\00A0\00A0\00A0'; /* 002D is hex for a hyphen, 00A0 is hex for nbsp */
-            margin-left: -1.5em;
+            content: '\2013\00A0\00A0\00A0\00A0\00A0'; /* 2013 is hex for an en dash, 00A0 is hex for nbsp */
+            margin-left: -1.7em;
         }
     }
 
@@ -1128,6 +1129,10 @@
         li {
             font-style: italic;
         }
+    }
+
+    b {
+        .bold();
     }
     /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
     hello.js will allow and we can't add classes. This mimics the intro style on the standard page. */
@@ -1535,24 +1540,6 @@
 }
 
 /**
- * Three search
- */
-.three-search {
-    .research-search {
-        /* overriding core search styles */
-        position: static;
-        display: block;
-        width: 100%;
-        background-color: @color-light-grey;
-        border-bottom: 0;
-        input[type="text"] {
-            color: @color-black;
-            font-weight: bold;
-        }
-    }
-}
-
-/**
  * Strapline
  */
 
@@ -1754,7 +1741,7 @@ form .heading{
 .cookie-notice {
     color: @color-white;
     background-color: @color-rca-blue;
-    font-weight: bold;
+    .bold();
     padding: @spacing-one;
     position: fixed;
     bottom: 0;

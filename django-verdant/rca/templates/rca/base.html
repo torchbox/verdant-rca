@@ -30,25 +30,28 @@
         <meta property="og:description"    content="{{ self.social_text }}" />
         <meta property="og:site_name"    content="Royal College of Art" />-->
 
-        <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
-        <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
-        <link rel="stylesheet" href="{% static "rca/css/vendor/normalize.css" %}" />
-        <link rel="stylesheet" href="{% static "rca/css/vendor/jquery.bxslider.css" %}" />
+        {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
+            <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
 
-        {% compress css %}
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
-            {% block extra_css %}{% endblock %}
-        {% endcompress %}
-
-        <!--[if lt IE 9]>
             {% compress css %}
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" />
+                <link rel="stylesheet" href="{% static "rca/css/vendor/normalize.css" %}" />
+                <link rel="stylesheet" href="{% static "rca/css/vendor/jquery.bxslider.css" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
             {% endcompress %}
-        <![endif]-->
+
+            {% block extra_css %}{% endblock %}
+
+            <!--[if lt IE 9]>
+                {% compress css %}
+                    <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" />
+                    <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" />
+                {% endcompress %}
+            <![endif]-->
+        {% endblock %}
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
     </head>
@@ -83,45 +86,47 @@
 
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
-        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
-        <script src="https://js.stripe.com/v2/"></script>
+        {% block js %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
+            <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+            <script src="https://js.stripe.com/v2/"></script>
 
-        <script type="text/javascript">
-            //domainroot var is needed by the cookie notice code in site.js
-            var domainroot = "{{ request.site.hostname }}";
-        </script>
+            <script type="text/javascript">
+                //domainroot var is needed by the cookie notice code in site.js
+                var domainroot = "{{ request.site.hostname }}";
+            </script>
 
-        {% compress js%}
-            <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
-            <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
-            <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
-            <script src="{% static "rca/js/carousel-news.js" %}"></script>
-            <script src="{% static "rca/js/tweets.js" %}"></script>
-            <script src="{% static "rca/js/site.js" %}"></script>
-            <script src="{% static "rca/js/nav.js" %}"></script>
+
+            {% compress js %}
+                <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
+                <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
+                <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
+                <script src="{% static "rca/js/carousel-news.js" %}"></script>
+                <script src="{% static "rca/js/tweets.js" %}"></script>
+                <script src="{% static "rca/js/site.js" %}"></script>
+                <script src="{% static "rca/js/nav.js" %}"></script>
+            {% endcompress %}
 
             {% block extra_js %}{% endblock %}
 
-        {% endcompress %}
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src='//www.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+            <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+            <script>
+                var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+                (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+                g.src='//www.google-analytics.com/ga.js';
+                s.parentNode.insertBefore(g,s)}(document,'script'));
+            </script>
+        {% endblock %}
     </body>
 </html>

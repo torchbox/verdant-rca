@@ -198,7 +198,7 @@ DEBUG_TOOLBAR_PANELS = (
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/less', 'lessc {infile}'),
+    ('text/less', 'lesspress.LessCompiler'),
 )
 
 # Auth settings
