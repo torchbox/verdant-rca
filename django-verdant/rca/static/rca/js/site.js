@@ -460,6 +460,14 @@ $(function(){
         });
     });
 
+    $('.packery .load-more').each(function(){
+        $(this).click(function(){
+            $('.packery').load(current_page, "exclude="+excludeIds, function(data){
+                console.log(data);
+            });
+        })
+    });
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
 
     var alignGallery = function(){

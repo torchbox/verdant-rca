@@ -2093,7 +2093,7 @@ class HomePage(Page, SocialFields):
 
     def serve(self, request):
 
-        already_used_ids = request.GET.get('already_used_ids')
+        exclude = request.GET.get('exclude')
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -2105,17 +2105,29 @@ class HomePage(Page, SocialFields):
         events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         tweets = [[],[],[],[],[]]
 
-        if already_used_ids:
-            news = news.exclude(id_in=already_used_ids);
-            staff = staff.exclude(id_in=already_used_ids);
-            news = news.exclude(id_in=already_used_ids);
-            rcanow = rcanow.exclude(id_in=already_used_ids);
-            research = research.exclude(id_in=already_used_ids);
-            alumni = alumni.exclude(id_in=already_used_ids);
-            review = review.exclude(id_in=already_used_ids);
-            events = events.exclude(id_in=already_used_ids);
 
-        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], tweets[:self.packery_tweets]))
+        print news
+
+        if exclude:
+
+            exclude = exclude.split(',')
+
+            news = news.exclude(id__in=exclude);
+            staff = staff.exclude(id__in=exclude);
+            student = student.exclude(id__in=exclude);
+            news = news.exclude(id__in=exclude);
+            rcanow = rcanow.exclude(id__in=exclude);
+            research = research.exclude(id__in=exclude);
+            alumni = alumni.exclude(id__in=exclude);
+            review = review.exclude(id__in=exclude);
+            events = events.exclude(id__in=exclude);
+
+        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events]))
+
+        # only add tweets to the packery content if not using the plus button
+        if not exclude:
+            packery = packery + tweets[:self.packery_tweets]
+
         random.shuffle(packery)
 
         # programme = request.GET.get('programme')
