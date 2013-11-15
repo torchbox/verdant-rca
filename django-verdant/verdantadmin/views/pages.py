@@ -22,7 +22,7 @@ def index(request, parent_page_id=None):
     else:
         parent_page = Page.get_first_root_node()
 
-    pages = parent_page.get_children()
+    pages = parent_page.get_children().prefetch_related('content_type')
 
     # Get page ordering
     if 'ordering' in request.GET:
