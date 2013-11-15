@@ -209,7 +209,14 @@ $(function(){
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault();
-        $(this).tab('show');
+
+        /* This hides the tab on mobile phones if clicked a second time */
+        if ($(this).hasClass('active')) {
+            $('.tab-pane.active').toggleClass('hide_if_mobile');
+        } else {
+            $(this).tab('show');
+            $('.tab-pane.hide_if_mobile').removeClass('hide_if_mobile');
+        }
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
