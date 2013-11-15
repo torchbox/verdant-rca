@@ -200,6 +200,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lesspress.LessCompiler'),
 )
+COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
