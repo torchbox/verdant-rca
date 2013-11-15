@@ -32,6 +32,9 @@ from donations.forms import DonationForm
 from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
+import hashlib
+
+
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -1043,7 +1046,6 @@ NewsItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1169,7 +1171,6 @@ PressRelease.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1263,6 +1264,13 @@ class FutureEventItemManager(models.Manager):
             params=[date.today(), date.today()]
         )
 
+class FutureNotCurrentEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
+            params=[date.today()]
+        )
+
 class PastEventItemManager(models.Manager):
     def get_query_set(self):
         return super(PastEventItemManager, self).get_query_set().extra(
@@ -1295,6 +1303,7 @@ class EventItem(Page, SocialFields):
     objects = models.Manager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
+    future_not_current_objects = FutureNotCurrentEventItemManager()
 
     indexed_fields = ('body', 'get_location_display', 'location_other')
 
@@ -1354,7 +1363,7 @@ class EventItem(Page, SocialFields):
                         # Make event
                         ical_components.extend([
                             'BEGIN:VEVENT',
-                            'UID:' + add_slashes(self.url) + str(day + 1),
+                            'UID:' + hashlib.sha1(self.url + str(start_datetime)).hexdigest() + '@rca.ac.uk',
                             'URL:' + add_slashes(self.url),
                             'DTSTAMP:' + start_time.strftime('%Y%m%dT%H%M%S'),
                             'SUMMARY:' + add_slashes(self.title),
@@ -1419,7 +1428,6 @@ EventItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1562,7 +1570,7 @@ class TalksIndex(Page, SocialFields):
     indexed = False
 
     def serve(self, request):
-        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
 
         talks = talks.distinct()
 
@@ -1773,7 +1781,6 @@ ReviewPage.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),

@@ -30,8 +30,6 @@
 {% endblock %}
 
 {% block extra_css %}
-    {% include "verdantadmin/pages/_css.html" %}
-
     <style type="text/css">
         #sortable li {
             padding: 10px;
@@ -44,8 +42,6 @@
     </style>
 {% endblock %}
 {% block extra_js %}
-    {% include "verdantadmin/pages/_js.html" %}
-
     <script type="text/javascript">
         $(function() {
             $('#sortable').sortable({cursor: 'move'});
