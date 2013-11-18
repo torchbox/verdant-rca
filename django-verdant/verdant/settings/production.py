@@ -11,6 +11,8 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
+
 try:
 	from .local import *
 except ImportError:
