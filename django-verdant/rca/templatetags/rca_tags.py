@@ -164,6 +164,7 @@ def jobs_listing(context):
 def students_related(context, programme="", year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, programme=programme)
     students = students.filter(degree_year=year)
+    students = students.order_by('?')
     if exclude:
         students = students.exclude(id=exclude.id)
     return {
@@ -176,7 +177,7 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 def students_related_work(context, year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, degree_year=year)
     students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
-    students=students.distinct()
+    students = students.order_by('?')
 
     if exclude:
         students = students.exclude(id=exclude.id)
