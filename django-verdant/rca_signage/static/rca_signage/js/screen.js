@@ -30,11 +30,11 @@ $(function() {
 	updateSlides();
 
 	// Update slides every minute
-	window.setInterval(updateSlides, 6000);
+	window.setInterval(updateSlides, 60000);
 
 	// Rotate slides every 10 seconds
 	window.setInterval(function() {
 		// Go to next slide
 		setSlide(currentSlide + 1)
-	}, 1000);
+	}, 10000);
 });
