@@ -57,5 +57,49 @@
     }
 }
 
+.type-donations{
+    .amount{
+        position:relative;
+        .field:before{
+            opacity:0.5;
+            position:absolute;
+            content: "£";
+            font-size:3em;
+            top:0.85em;
+            left:0.3em;
+           
+        }
+        input{
+            width:7em;
+            padding-left:1.4em;
+            font-size:2.5em;
+        }
+    }
+    .expiration{
+        float:left;
+        margin-right:2em;
+    }
+
+   
+
+    .title, .first_name,.last_name{
+        width:40%;
+        float:left;
+        margin-left:3%;
+    }
+    .title{
+        width:12%;
+        margin-left:0;
+    }
+
+    .address_state, .address_zip{
+        width:45%;
+        float:left;
+    }
+    .address_zip{
+        margin-left:3%;
+    }
+}
+
 /* must come at bottom of file*/
 @import "modules-desktop-regular.less";

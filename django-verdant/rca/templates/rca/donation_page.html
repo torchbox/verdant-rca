@@ -1,16 +1,14 @@
 {% extends "rca/base.html" %}
-{% load rich_text image_tags %}
+{% load compress rca_tags rich_text image_tags %}
 
-{% block body_class %}
-    type-standard
-{% endblock %}
-
+{% block body_class %}type-donations{% endblock %}
 
 {% block extra_js %}
     <script type="text/javascript">
         // Stripe.js is includded in base.html
         Stripe.setPublishableKey('{{ STRIPE_PUBLISHABLE_KEY }}');
     </script>
+    {# TODO: what's with these sources that don't use {% static %}? #}
     <script type="text/javascript" src="/static/donations/js/jquery.payment.js"></script>
     <script type="text/javascript" src="/static/donations/js/donation.js"></script>
 {% endblock extra_js %}
@@ -41,9 +39,34 @@
                     <ul class="errorlist"></ul>
                 </div>
 
-                <ul>
-                    {{ form.as_ul }}
-                </ul>
+                <fieldset>
+                    <legend>Your donation</legend>
+                    <ul>
+                        {% with form.amount as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.number as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.expiration as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                    </ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Your details</legend>
+                    <ul>
+                        {% with form.title as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.first_name as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.last_name as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_line1 as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_line2 as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_city as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_state as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_zip as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.address_country as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        <li class="divider"></li>
+                        {% with form.email as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.phone as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                    </ul>
+                </fieldset>
 
                 {% csrf_token %}
 
