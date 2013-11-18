@@ -343,13 +343,12 @@ $(function(){
             /* Packery */
             $('.packery').imagesLoaded( function() {
                 window.packery = $('.packery').packery({
-                    itemSelector: '.item',
-                    stamp: ".stamp"
+                    itemSelector: '.item'
                 });
             });
         },
         off: function(){
-             $('.packery').packery('destroy');
+            $('.packery').packery('destroy');
         }
     });
 
@@ -357,9 +356,8 @@ $(function(){
     $('.lt-ie9').each(function(){
         /* Packery */
         $('.packery').imagesLoaded( function() {
-            var packery = $('.packery').packery({
-                itemSelector: '.item',
-                stamp: ".stamp"
+            window.packery = $('.packery').packery({
+                itemSelector: '.item'
             });
         });
     });
@@ -465,9 +463,25 @@ $(function(){
     });
 
     $('.packery .load-more').each(function(){
-        $(this).click(function(){
-            $('.packery').load(current_page, "exclude="+excludeIds, function(data){
-                console.log(data);
+        $this = $(this);
+        $this .click(function(e){
+            e.preventDefault();
+            var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
+                var items = $('.item', tmp);
+                
+                if (items.length){
+                    $('.packery ul').append(items);
+                    $('.packery').imagesLoaded( function() {
+                        $('.packery').packery('appended', items);
+                    });
+
+                    //append ids returned to those already excluded
+                    items.each(function(){
+                        excludeIds.push($(this).data('id'))
+                    })
+                } else {
+                    $this.fadeOut();
+                }
             });
         });
     });

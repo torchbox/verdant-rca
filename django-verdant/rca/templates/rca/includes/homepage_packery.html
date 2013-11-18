@@ -4,7 +4,7 @@
     <ul>
         {% for item in packery %}
             {% if item|content_type = 'newsitem' %}
-                <li class="item half">
+                <li class="item half" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image width-464 %}</div>
@@ -17,7 +17,7 @@
                     </div>
                 </li>
             {% elif item|content_type = 'staffpage' %}
-                <li class="item single">
+                <li class="item single" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.profile_image fill-80x80 %}</div>
@@ -33,7 +33,7 @@
                 {# NB: this is not really displaying a student page, but rather their work #}
                 
                 {% with item.carousel_items.all|first as carouselitem %}
-                    <li class="item {% if carouselitem.image.is_landscape %}three-quarters{% else %}full{% endif %}">
+                    <li class="item {% if carouselitem.image.is_landscape %}three-quarters{% else %}full{% endif %}" data-id="{{ item.id }}">
                         <div class="inner">
                             <a href="{% pageurl item %}">
                                 {% if carouselitem.image.is_landscape %}
@@ -53,7 +53,7 @@
                     </li>
                 {% endwith %}
             {% elif item|content_type = 'rcanowpage' %}
-                <li class="item half">
+                <li class="item half" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image width-464 %}</div>
@@ -68,7 +68,7 @@
                     </div>
                 </li>
             {% elif item|content_type = 'researchitem' %}
-                <li class="item double">
+                <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image width-304 %}</div>
@@ -90,7 +90,7 @@
                     </div>
                 </li>
             {% elif item|content_type = 'alumnipage' %}
-                <li class="item single">
+                <li class="item single" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image fill-80x80 %}</div>
@@ -104,7 +104,7 @@
                     </div>
                 </li>
              {% elif item|content_type = 'reviewpage' %}
-                <li class="item double">
+                <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image width-304 %}</div>
@@ -113,6 +113,19 @@
                                 <p class="bc4">{{ item.listing_intro }}</p>
                                 <p class="a0">{{ item.author }}</p>
                                 <p class="a2">Review</p>
+                            </div>
+                        </a>
+                    </div>
+                </li>
+             {% elif item|content_type = 'eventitem' %}
+                <li class="item double" data-id="{{ item.id }}">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                <p class="a0">{{ item.date }}</p>
+                                <p class="a2">Event</p>
                             </div>
                         </a>
                     </div>
@@ -128,6 +141,5 @@
             {% endif %}
         {% endfor %}
         <li class="stamp load-more"><a href="#">+</a></li>
-        <!--TODO: make work! <li class="stamp load-more"><a href="#">+</a></li>-->
     </ul>
 </section>
