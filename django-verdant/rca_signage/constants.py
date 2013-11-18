@@ -1,7 +1,11 @@
 SCREEN_CHOICES = (
-    ('screen1', 'Screen 1'),
-    ('screen2', 'Screen 2'),
-    ('screen3', 'Screen 3'),
+    ('darwin-albert-hall', 'Darwin Albert Hall'),
+    ('darwin-jay-mews', 'Darwin Jay Mews'),
+    ('stevens', 'Stevens'),
+    ('dyson-hester-road', 'Dyson Hester Road'),
+    ('dyson-howie-street', 'Dyson Howie Street'),
+    ('sculpture', 'Sculpture'),
+    ('sackler', 'Sackler'),
 )
 
 SCREEN_CHOICES_DICT = {
