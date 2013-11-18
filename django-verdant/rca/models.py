@@ -1426,6 +1426,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel(EventItem, 'screens', label="Screens"),
 ]
 
 EventItem.promote_panels = [
