@@ -36,10 +36,10 @@ urlpatterns += patterns('verdantadmin.views',
     url(r'^pages/moderation/(\d+)/reject/$', 'pages.reject_moderation', name='verdantadmin_pages_reject_moderation'),
     url(r'^pages/moderation/(\d+)/preview/$', 'pages.preview_for_moderation', name='verdantadmin_pages_preview_for_moderation'),
 
-    url(r'^choose-page/$', 'choose_page.browse', name='verdantadmin_choose_page'),
-    url(r'^choose-page/(\d+)/$', 'choose_page.browse', name='verdantadmin_choose_page_child'),
-    url(r'^choose-external-link/$', 'choose_page.external_link', name='verdantadmin_choose_page_external_link'),
-    url(r'^choose-email-link/$', 'choose_page.email_link', name='verdantadmin_choose_page_email_link'),
+    url(r'^choose-page/$', 'chooser.browse', name='verdantadmin_choose_page'),
+    url(r'^choose-page/(\d+)/$', 'chooser.browse', name='verdantadmin_choose_page_child'),
+    url(r'^choose-external-link/$', 'chooser.external_link', name='verdantadmin_choose_page_external_link'),
+    url(r'^choose-email-link/$', 'chooser.email_link', name='verdantadmin_choose_page_email_link'),
 
     url(r'^tag-autocomplete/$', 'tags.autocomplete', name='verdantadmin_tag_autocomplete'),
 )
