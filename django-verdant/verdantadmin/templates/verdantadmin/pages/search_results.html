@@ -1,6 +1,5 @@
-{% if pages %}
-    
-    <div class="nice-padding">
+<div class="nice-padding">
+    {% if pages %}
         {% if is_searching %}
             <h2>{{ pages.paginator.count }} match{{ pages.paginator.count|pluralize:"es" }}</h2>
         {% endif %}
@@ -30,5 +29,11 @@
                 </li>
             </ul>
         </div>
-    </div>
-{% endif %}
+    {% else %}
+        {% if is_searching %}
+            <p>Sorry, no pages matched "{{ search_query }}"</p>
+        {% else %}
+            <p>Enter a search term above</p>
+        {% endif %}
+    {% endif %}
+</div>

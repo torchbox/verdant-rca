@@ -201,24 +201,24 @@ class Page(MP_Node, ClusterableModel, Indexed):
             else:
                 raise Http404
 
-    def save_revision(self, user=None):
-        self.revisions.create(content_json=self.to_json(), user=user)
+    def save_revision(self, user=None, submitted_for_moderation=False):
+        self.revisions.create(content_json=self.to_json(), user=user, submitted_for_moderation=submitted_for_moderation)
 
     def get_latest_revision(self):
         try:
             revision = self.revisions.order_by('-created_at')[0]
         except IndexError:
+            return False
+
+        return revision
+
+    def get_latest_revision_as_page(self):
+        try:
+            revision = self.revisions.order_by('-created_at')[0]
+        except IndexError:
             return self.specific
 
-        result = self.specific_class.from_json(revision.content_json)
-
-        # Override the possibly-outdated tree parameter fields from the revision object
-        # with up-to-date values
-        result.path = self.path
-        result.depth = self.depth
-        result.numchild = self.numchild
-
-        return result
+        return revision.as_page_object()
 
     def serve(self, request):
         return render(request, self.template, {
@@ -353,9 +353,17 @@ class Page(MP_Node, ClusterableModel, Indexed):
             return "draft"
         else:
             if self.has_unpublished_changes:
-                return "live with draft updates"
+                return "live + Draft"
             else:
                 return "live"
+
+    def has_unpublished_subtree(self):
+        """
+        An awkwardly-defined flag used in determining whether unprivileged editors have
+        permission to delete this article. Returns true if and only if this page is non-live,
+        and it has no live children.
+        """
+        return (not self.live) and (not self.get_descendants().filter(live=True).exists())
 
 
 def get_navigation_menu_items():
@@ -421,8 +429,40 @@ class Orderable(models.Model):
         ordering = ['sort_order']
 
 
+class SubmittedRevisionsManager(models.Manager):
+    def get_query_set(self):
+        return super(SubmittedRevisionsManager, self).get_query_set().filter(submitted_for_moderation=True)
+
 class PageRevision(models.Model):
     page = models.ForeignKey('Page', related_name='revisions')
+    submitted_for_moderation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True, blank=True)
     content_json = models.TextField()
+
+    objects = models.Manager()
+    submitted_revisions = SubmittedRevisionsManager()
+
+    def save(self, *args, **kwargs):
+        super(PageRevision, self).save(*args, **kwargs)
+        if self.submitted_for_moderation:
+            # ensure that all other revisions of this page have the 'submitted for moderation' flag unset
+            self.page.revisions.exclude(id=self.id).update(submitted_for_moderation=False)
+
+    def as_page_object(self):
+        obj = self.page.specific_class.from_json(self.content_json)
+
+        # Override the possibly-outdated tree parameter fields from this revision object
+        # with up-to-date values
+        obj.path = self.page.path
+        obj.depth = self.page.depth
+        obj.numchild = self.page.numchild
+
+        return obj
+
+    def publish(self):
+        page = self.as_page_object()
+        page.live = True
+        page.save()
+        self.submitted_for_moderation = False
+        self.save(update_fields=['submitted_for_moderation'])

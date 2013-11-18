@@ -1048,6 +1048,7 @@ NewsItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -1440,6 +1441,7 @@ EventItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -2107,7 +2109,7 @@ class HomePage(Page, SocialFields):
     packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_events = models.IntegerField("Number of events to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-  
+
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
@@ -3403,6 +3405,9 @@ class GalleryPage(Page, SocialFields):
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
+        if not programme and not school and not year:
+            gallery_items = gallery_items.filter(degree_year=date.today().year)
+
         gallery_items = gallery_items.order_by('?')
 
         if year:
@@ -3448,7 +3453,7 @@ class GalleryPage(Page, SocialFields):
                 'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
                 # on first page load the current year needs to appear in the url for the next page
                 # but we can't change the value on the request.GET dictionary, which is used to render that url
-                # so it's just append it to that url if the year filter wasn't defined already
+                # so just append it to that url if the year filter wasn't defined already
                 'default_year': ('&year=%d' % date.today().year) if not year else '',
             })
 
