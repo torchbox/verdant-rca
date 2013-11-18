@@ -154,12 +154,13 @@ nav {
     height:34px;  //adjusted by eye to match search box
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
+    overflow: visible;
 }
     nav h2{
         .transition(all 0.3s ease);
         position:absolute;
         top:0px;
-        z-index:1;
+        z-index:5000;
         left:0;
         cursor:pointer;
         margin:0 @grid-gutter-width 0 0;
@@ -176,11 +177,11 @@ nav {
             top: 10px; /* Arbitrary. Whatever looks good */
             right: @spacing-half;
         }
-
         &:hover{
             color:@color-white;
             background-color:@color-pink;
-
+            border-bottom: 1px solid @color-pink;
+            padding-bottom:6px;
             &:after{
                 background-position:-53px -623px;
             }
