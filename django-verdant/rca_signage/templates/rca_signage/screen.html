@@ -1,0 +1,20 @@
+{% load compress static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+
+        {% compress css %}
+            <link rel="stylesheet" type="text/less" href="{% static "rca_signage/css/screen.less" %}" />
+        {% endcompress %}
+    </head>
+    <body>
+    	<div id="content">Loading content...</div>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        {% compress js %}
+            <script src="{% static "rca_signage/js/screen.js" %}"></script>
+        {% endcompress %}
+    </body>
+</html>

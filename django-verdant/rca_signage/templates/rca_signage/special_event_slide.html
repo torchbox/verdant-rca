@@ -1,0 +1,12 @@
+{% load rca_signage_tags %}
+
+{% block content %}
+ <h1>Special event</h1>
+ <div class="special-event">
+  <div class="date">{{ date|date:"l j F" }}</div>
+  <div class="event-times">{{ event|event_times_display|safe }}</div>
+  <div class="event-title">{{ event.page.title }}</div>
+  <div class="event-location">{{ event|event_location_display|safe }}</div>
+  <div class="event-specific-directions">{{ event.page.specific_directions }}</div>
+ </div>
+{% endblock %}
