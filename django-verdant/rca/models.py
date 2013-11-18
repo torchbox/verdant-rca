@@ -2412,23 +2412,20 @@ class AlumniIndex(Page, SocialFields):
         if programme and programme != '':
             alumni_pages = alumni_pages.filter(programme=programme)
 
-        #alumni_pages = alumni_pages.distinct()
-        alumni_pages = alumni_pages.order_by('?');
-
-        # research_items.order_by('-year')
+        alumni_pages = alumni_pages.order_by('random_order')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
         paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
         try:
-            staff_pages = paginator.page(page)
+            alumni_pages = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            staff_pages = paginator.page(1)
+            alumni_pages = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            staff_pages = paginator.page(paginator.num_pages)
+            alumni_pages = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
             return render(request, "rca/includes/alumni_pages_listing.html", {
@@ -2480,6 +2477,7 @@ class AlumniPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     biography = RichTextField()
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'intro', 'biography')
 
@@ -2890,6 +2888,7 @@ class StudentPage(Page, SocialFields):
     last_name = models.CharField(max_length=255)
     supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
@@ -3397,7 +3396,7 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent").order_by('?')
+        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:
@@ -3408,7 +3407,7 @@ class GalleryPage(Page, SocialFields):
         if not request.is_ajax() and not programme and not school and not year:
             gallery_items = gallery_items.filter(degree_year=date.today().year)
 
-        gallery_items = gallery_items.order_by('?')
+        gallery_items = gallery_items.order_by('random_order')
 
         if year:
             if school:
@@ -3430,6 +3429,7 @@ class GalleryPage(Page, SocialFields):
 
         page = request.GET.get('page')
         paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
+
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:

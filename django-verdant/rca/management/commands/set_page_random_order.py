@@ -1,6 +1,7 @@
-from django.core.management.base import NoArgsCommand
 import random
-from rca.models import StaffPage, ResearchItem
+import inspect
+from django.core.management.base import NoArgsCommand
+from rca import models
 
 
 class Command(NoArgsCommand):
@@ -8,12 +9,14 @@ class Command(NoArgsCommand):
         # Initialise random number generator (this sets the seed to the system time)
         random.seed(None)
 
-        # Loop through staff and set random_order
-        for staff in StaffPage.objects.all():
-            staff.random_order = random.randrange(100000)
-            staff.save(update_fields=['random_order'])
+        # get classes which have a random_order field
+        classes = [
+            m[1] for m in inspect.getmembers(models, inspect.isclass)
+            if hasattr(m[1], "_meta") and [f for f in m[1]._meta.fields if f.name == "random_order"]
+        ]
 
-        # Loop through research items and set random_order
-        for researchitem in ResearchItem.objects.all():
-            researchitem.random_order = random.randrange(100000)
-            researchitem.save(update_fields=['random_order'])
+        for klass in classes:
+            # Loop through objects and set random_order
+            for obj in klass.objects.all():
+                obj.random_order = random.randrange(100000)
+                obj.save(update_fields=['random_order'])
