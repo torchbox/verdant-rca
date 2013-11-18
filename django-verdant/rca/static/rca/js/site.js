@@ -428,6 +428,7 @@ $(function(){
 
         $("#listing").on("click", ".load-more", function(e){
             e.preventDefault();
+            var listing = $(this).closest("#listing");
 
             if(paginationContainer && $(paginationContainer).length){
                 var nextLink = $('.next a', $(paginationContainer));
@@ -435,6 +436,7 @@ $(function(){
 
                 // get next set of results
                 var nextPage = $('<html></html>').load(nextLinkUrl, function(){
+                    loadmore = $(loadmore.selector, listing);
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
