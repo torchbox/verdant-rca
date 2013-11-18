@@ -1237,8 +1237,13 @@
         padding: 0 @grid-gutter-width;
     }
 
+    .bio p:first-child {
+        display:inline; //makes 'show' link inline with text
+    }
+
     .remainder {
         display: none;
+        margin-top: 1em; /*mimic p spacing because first paragraph is inline */
     }
 
     .date {
