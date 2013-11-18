@@ -24,21 +24,22 @@ class ScreenIndex(Page):
 
     def serve_screen(self, request, screen, extra_path=None):
         # Check for special event
-        special_events = EventItem.objects.filter(screens__screen=screen, special_event=True, live=True)
+        special_events = EventItemDatesTimes.objects.filter(page__screens__screen=screen, page__special_event=True, page__live=True)
         if len(special_events) > 0:
             return render(request, 'rca_signage/special_event.html', {
-                'screen': dict(slug = screen, name=SCREEN_CHOICES_DICT[screen]),
+                'screen': dict(slug=screen, name=SCREEN_CHOICES_DICT[screen]),
+                'date': datetime.date(2013, 9, 28),
                 'event': special_events[0],
             })
         else:
-            # Week start and week end
-            week_start = datetime.date(2013, 9, 28)
-            week_end = datetime.date(2013, 12, 5)
-            day_count = (week_end - week_start).days + 1
+            # Start and end dates
+            start_date = datetime.date(2013, 9, 28)
+            end_date = start_date + datetime.timedelta(days=70)
+            day_count = (end_date - start_date).days + 1
 
             # Get list of dates
             dates = [
-                week_start + datetime.timedelta(days=day_num)
+                start_date + datetime.timedelta(days=day_num)
                 for day_num in range(day_count)
             ]
 
@@ -54,10 +55,8 @@ class ScreenIndex(Page):
             # Remove days without any events
             days = filter(lambda day: len(day['events']) > 0, days)
 
-            return render(request, 'rca_signage/weeks_events.html', {
-                'screen': dict(slug = screen, name=SCREEN_CHOICES_DICT[screen]),
-                'week_start': week_start,
-                'week_end': week_end,
+            return render(request, 'rca_signage/upcoming_events.html', {
+                'screen': dict(slug=screen, name=SCREEN_CHOICES_DICT[screen]),
                 'days': days,
             })
 
@@ -73,5 +72,5 @@ class ScreenIndex(Page):
             return self.serve_screen(request, screen, extra_path=extra_path)
         else:
             return render(request, 'rca_signage/index.html', {
-                'screens': [dict(slug = screen[0], name=screen[1]) for screen in SCREEN_CHOICES],
+                'screens': [dict(slug=screen[0], name=screen[1]) for screen in SCREEN_CHOICES],
             })
