@@ -340,7 +340,9 @@ $(function(){
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
             
-            if($(document).height()-151 > $(window).height()){
+            console.log($(document).height());
+            console.log($(window).height());
+            if($(document).height()-250 > $(window).height()){
                 $('.header-wrapper, .page-wrapper').affix({
                     offset: 151
                 })
