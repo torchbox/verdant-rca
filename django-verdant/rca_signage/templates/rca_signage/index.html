@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+ <head>
+ </head>
+ <body>
+  <h1>Screens</h1>
+  <ul>
+   {% for screen in screens %}
+    <li>
+     <a href="{{ screen.slug }}">{{ screen.name }}</a>
+    </li>
+   {% endfor %}
+  </ul>
+ </body>
+</html>

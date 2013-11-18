@@ -37,6 +37,8 @@ import stripe
 
 import hashlib
 
+from rca_signage.constants import SCREEN_CHOICES
+
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -358,12 +360,6 @@ STAFF_TYPES_CHOICES = (
     ('academic', 'Academic'),
     ('technical', 'Technical'),
     ('administrative', 'Administrative'),
-)
-
-SCREEN_CHOICES = (
-    ('screen1', 'Screen 1'),
-    ('screen2', 'Screen 2'),
-    ('screen3', 'Screen 3'),
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
@@ -1434,6 +1430,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel(EventItem, 'screens', label="Screens"),
 ]
 
 EventItem.promote_panels = [
