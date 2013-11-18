@@ -339,6 +339,12 @@ $(function(){
         setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
+            
+            if($(document).height()-151 > $(window).height()){
+                $('.header-wrapper, .page-wrapper').affix({
+                    offset: 151
+                })
+            }
 
             /* Packery */
             $('.packery').imagesLoaded( function() {
