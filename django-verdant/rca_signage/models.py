@@ -24,7 +24,7 @@ class ScreenIndex(Page):
             # Request is for screens index
             return self.serve(request)
 
-    def get_upcoming_events(self, start_date=None, max_days=28, max_events=10):
+    def get_upcoming_events(self, start_date=None, max_days=7, max_events=10):
         # Get start date
         if start_date is None:
             start_date = datetime.date.today()
