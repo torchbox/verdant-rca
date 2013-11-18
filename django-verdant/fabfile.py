@@ -16,6 +16,7 @@ def deploy_staging():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=verdant.settings.production --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=verdant.settings.production --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.production --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.production")
 
         sudo("supervisorctl restart verdant-rca")
         sudo("supervisorctl restart rca-celeryd")
@@ -34,6 +35,7 @@ def deploy_production():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=verdant.settings.production --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=verdant.settings.production --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.production --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.production")
 
         sudo("supervisorctl restart verdant-rca")
         sudo("supervisorctl restart rca-celeryd")

@@ -65,7 +65,7 @@
                         <li class="col col-3 first">
                             <h2 class="a2">Biography</h2>
                         </li>
-                        <li class="col col-9 last body-text-style bio">
+                        <li class="col col-9 last body-text-style showmorestyle">
 
                             {% with self.biography|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
@@ -83,7 +83,7 @@
                         <li class="col col-3 first">
                             <h2 class="a2">Practice</h2>
                         </li>
-                        <li class="col col-9 last body-text-style">
+                        <li class="col col-9 last body-text-style showmorestyle">
                             {% with self.practice|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
                                 {% if parts.1 %}
