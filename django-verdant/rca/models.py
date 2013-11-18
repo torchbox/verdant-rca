@@ -770,7 +770,8 @@ class ProgrammePage(Page, SocialFields):
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
 
-        paginator = Paginator(research_items, 4)
+        per_page = 4
+        paginator = Paginator(research_items, per_page)
 
         page = request.GET.get('page')
         try:
@@ -785,12 +786,14 @@ class ProgrammePage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
 
 ProgrammePage.content_panels = [
@@ -2417,7 +2420,7 @@ class AlumniIndex(Page, SocialFields):
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
-        paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
+        paginator = Paginator(alumni_pages, 11)
         try:
             alumni_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2680,7 +2683,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 17)  # Show 11 research items per page
+        paginator = Paginator(staff_pages, 17)
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -3328,8 +3331,9 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items.order_by('-year')
 
+        per_page = 8
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 8)  # Show 8 research items per page
+        paginator = Paginator(research_items, per_page)  # Show 8 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
@@ -3342,12 +3346,14 @@ class CurrentResearchPage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
 
 CurrentResearchPage.content_panels = [
