@@ -67,6 +67,7 @@ $(function(){
 			$.each(["school", "degree_year"], function(){
 				applyFilters(this, showAll, showAllFor);
 			});
+			alignGallery(); // defined in site.js
 		});
 		$(this).parent().closest('li').removeClass('expanded');
 		return false;
