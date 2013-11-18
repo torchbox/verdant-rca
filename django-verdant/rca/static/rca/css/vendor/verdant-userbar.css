@@ -21,7 +21,9 @@
 	font-family:Open Sans,sans-serif;
 	font-size:13px;
 	min-height:50px;
-	position:relative;
+	position:fixed;
+	width:100%;
+	bottom:0;
 	background-color:#333;
 	z-index:10000;
 	padding:10px 10px 0px 70px;
@@ -98,7 +100,7 @@
 	background-color:#43b1b0;
 }
 #verdant-userbar .button.yes:hover{
-	background-color:#43b1b0;
+	background-color:#2c7d7b;
 }
 #verdant-userbar .button.no{
 	background-color:#f7474e;
