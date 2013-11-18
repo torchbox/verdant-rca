@@ -518,6 +518,7 @@ $(function(){
         });
     };
     alignGallery();
+    window.alignGallery = alignGallery; // this is used in filters.js too
 
     /* Search filters */
     $('.filters').each(function(){
