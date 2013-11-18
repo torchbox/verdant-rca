@@ -32,6 +32,7 @@
     width: 1.3em;
     line-height: 1em;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     vertical-align: -20%;
     font-size:25px;
     text-align:left;
@@ -199,6 +200,9 @@
 .icon-password:before{
     content:"Q";
 }
+.icon-download:before{
+    content:"S";
+}
 
 .icon.text-replace{
     font-size:0;
@@ -210,5 +214,21 @@
         width:100%;
         line-height:1.2em;
         text-align:center;
+    }
+}
+
+.status-tag{
+    .border-radius(2px);
+    text-transform:uppercase;
+    padding:0.2em 0.5em;
+    border:1px solid @color-grey-light;
+    color:@color-grey-light;
+    -webkit-font-smoothing: auto;
+    font-size:0.80em;
+    margin:0 0.5em;
+    
+    &.live{
+        color:@color-grey;
+        border:1px solid @color-grey;
     }
 }

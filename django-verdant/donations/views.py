@@ -11,6 +11,7 @@ from donations.forms import DonationForm
 from donations.mail_admins import mail_exception
 from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
+from django.contrib.auth.decorators import login_required
 
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -47,6 +48,7 @@ from donations.csv_unicode import UnicodeWriter
 #     })
 
 
+@login_required
 def export(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -125,9 +127,32 @@ def export(request):
         # http://docs.python.org/2/library/decimal.html#decimal-faq
         charge['amount_gift_aid'] = (charge['amount'] * Decimal(0.2)).quantize(Decimal(10) ** -2)
 
+        charge['created'] = datetime.fromtimestamp(int(charge['created'])).strftime('%Y-%m-%d %H:%M:%S')
+
         fieldnames |= set(charge.keys())
 
-    fieldnames = sorted(list(fieldnames))
+    _fieldnames = sorted(list(fieldnames))
+
+    headers = {
+        "id": "Transaction identifier",
+        "created": "Date created",
+        "description": "Description (set in page admin ui in Verdant)",
+        "amount": "Donation amount",
+        "amount_gift_aid": "Giftaid amount",
+        "card__address_city": "City",
+        "card__address_country": "Country",
+        "card__address_line1": "Address line 1",
+        "card__address_line2": "Address line 2",
+        "card__address_state": "State / County",
+        "card__address_country": "Country",
+        "metadata__title": "Title",
+        "metadata__first_name": "First name",
+        "metadata__last_name": "Last name",
+        "metadata__email": "Email",
+        "metadata__phone": "Phone number",
+    }
+
+    fieldnames = [str(f) for f in _fieldnames if str(f) in headers.keys()]
 
     # create response
     response = HttpResponse(content_type='text/csv')
@@ -136,16 +161,18 @@ def export(request):
 
     # write header
     writer = UnicodeWriter(response, delimiter=delimiter, quotechar='"', quoting=csv.QUOTE_MINIMAL)
-    writer.writerow(fieldnames)
+    writer.writerow([headers[f] for f in fieldnames])
 
     # write data rows
     for charge in all_charges:
+        if not charge.get('metadata__is_gift_aid') or not charge['paid'] or charge['refunded']:
+            continue
         data = [unicode(charge[f] if f in charge else '') for f in fieldnames]
         writer.writerow(data)
 
     return response
 
-
+@login_required
 def verdantadmin(request, title=None):
     return render(request, 'donations/verdantadmin.html', {
     })

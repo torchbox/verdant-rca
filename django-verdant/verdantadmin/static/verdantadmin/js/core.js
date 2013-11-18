@@ -42,6 +42,10 @@ $(function(){
         e.preventDefault()
         $(this).tab('show');
     });   
+    $(document).on('click', '.tab-toggle', function(e){
+        e.preventDefault()
+        $('.tab-nav a[href="'+ $(this).attr('href') +'"]').click();
+    })
 
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
@@ -67,4 +71,8 @@ $(function(){
             $(this).prop('checked', !$(this).prop('checked'));            
         })
     });
+
+    $('.listing tbody td').click(function(){
+        document.location.href = $(this).parent().find('.title a').attr("href")
+    })
 })
