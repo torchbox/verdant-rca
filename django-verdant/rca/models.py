@@ -862,7 +862,9 @@ class NewsIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     subpage_types = ['NewsItem']
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -1074,7 +1076,9 @@ class PressReleaseIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def serve(self, request):
         press_releases = PressRelease.objects.filter(live=True)
@@ -1475,7 +1479,9 @@ class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def future_events(self):
         return EventItem.future_objects.filter(live=True, path__startswith=self.path)
@@ -1574,7 +1580,9 @@ class TalksIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_page = None
 
     def serve(self, request):
         talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
@@ -1645,7 +1653,9 @@ class ReviewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def serve(self, request):
         reviews = ReviewPage.objects.filter(live=True)
@@ -2005,7 +2015,9 @@ class StandardIndex(Page, SocialFields):
     show_events_feed = models.BooleanField(default=False)
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
-    indexed = False
+    indexed_fields = ('intro', ' strapline', 'body')
+
+    search_name = None
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2315,7 +2327,9 @@ class JobsIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2369,8 +2383,9 @@ class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
+    indexed_fields = ('intro', )
 
-    indexed = False
+    search_name = None
 
     def serve(self, request):
         school = request.GET.get('school')
@@ -2984,7 +2999,9 @@ class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -3216,7 +3233,9 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
 ResearchInnovationPage.content_panels = [
     FieldPanel('title', classname="full title"),
