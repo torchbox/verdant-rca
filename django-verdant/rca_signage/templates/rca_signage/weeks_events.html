@@ -9,5 +9,32 @@
   <h2>{{ week_start|date:"j" }} &ndash; {{ week_end|date:"j" }} {{ week_start|date:"F" }}</h2>
  {% endif %}
 
+ <ul class="days">
+  {% for day in days %}
+   <li>
+    <h3>{{ day.date|date:"l j F" }}</h3>
+    <ul class="events">
+     {% for event in day.events %}
+      <li>
+       {% if event.time_from %}
+        <h5>
+         {{ event.time_from|time:"H.i" }} 
+         {% if event.time_to %}
+          &ndash; {{ event.time_to|time:"H.i" }}
+         {% endif %}
+        </h5>
+       {% elif event.time_other %}
+        <h5>
+         {{ event.time_other }}
+        </h5>
+       {% endif %}
+       <h4>{{ event.page.title }}</h4>
+       <h5>{{ event.page.get_location_display }}</h5>
+      </li>
+     {% endfor %}
+    </ul>
+   </li>
+  {% endfor %}
+ </ul>
  
 {% endblock %}
