@@ -3405,7 +3405,7 @@ class GalleryPage(Page, SocialFields):
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
-        if not programme and not school and not year:
+        if not request.is_ajax() and not programme and not school and not year:
             gallery_items = gallery_items.filter(degree_year=date.today().year)
 
         gallery_items = gallery_items.order_by('?')
