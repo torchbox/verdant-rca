@@ -124,7 +124,15 @@
                             <div class="image">{% image item.specific.feed_image width-304 %}</div>
                             <div class="content">
                                 <h3 class="h6">{{ item.title }}</h3>
-                                <p class="a0">{{ item.date }}</p>
+                                <p class="a0">
+                                    {% with item.specific.dates_times.all as dates %}
+                                        {% if dates %}
+                                            {% for date in dates %}
+                                                {{ date.date_from|date:"j F Y" }}{% if date.date_to %} - {{ date.date_to|date:"j F Y" }}<br />{% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+                                </p>
                                 <p class="a2">Event</p>
                             </div>
                         </a>

@@ -469,7 +469,7 @@ $(function(){
 
     $('.packery .load-more').each(function(){
         $this = $(this);
-        $this .click(function(e){
+        $this.click(function(e){
             e.preventDefault();
             var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
                 var items = $('.item', tmp);

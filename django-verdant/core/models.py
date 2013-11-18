@@ -465,4 +465,4 @@ class PageRevision(models.Model):
         page.live = True
         page.save()
         self.submitted_for_moderation = False
-        self.save(update_fields=['submitted_for_moderation'])
+        page.revisions.update(submitted_for_moderation=False)
