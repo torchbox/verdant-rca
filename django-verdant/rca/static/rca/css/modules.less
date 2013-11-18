@@ -1165,6 +1165,7 @@
         font-size: @font-size-18;
         line-height: @line-height-5;
         font-weight:normal;
+        margin-bottom: 0;
     }
 
     h4 {
@@ -1753,5 +1754,11 @@ form .heading{
         padding: @spacing-half;
         float: right;
         margin: 0 0 0 @spacing-one;
+    }
+}
+
+@media(max-width: 768px) {
+    .hide_if_mobile {
+        display:none !important;
     }
 }

@@ -93,24 +93,26 @@ function showSearchAutocomplete() {
     };
 }
 
-/*google maps for contact page */
-function initializeMaps() {
-    var mapCanvas = document.getElementById('map_canvas_kensington');
-    var mapOptions = {
-        center: new google.maps.LatLng(51.501144, -0.179285),
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(mapCanvas, mapOptions);
 
-    var mapCanvas2 = document.getElementById('map_canvas_battersea');
-    var mapOptions2 = {
-        center: new google.maps.LatLng(51.479167, -0.170076),
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
-}
+/*google maps for contact page
+Currently not being used but leaving commented out for reference - contains the correct lat and longs for Kensington and Battersea campuses */
+// function initializeMaps() {
+//     var mapCanvas = document.getElementById('map_canvas_kensington');
+//     var mapOptions = {
+//         center: new google.maps.LatLng(51.501144, -0.179285),
+//         zoom: 16,
+//         mapTypeId: google.maps.MapTypeId.ROADMAP
+//     };
+//     var map = new google.maps.Map(mapCanvas, mapOptions);
+
+//     var mapCanvas2 = document.getElementById('map_canvas_battersea');
+//     var mapOptions2 = {
+//         center: new google.maps.LatLng(51.479167, -0.170076),
+//         zoom: 16,
+//         mapTypeId: google.maps.MapTypeId.ROADMAP
+//     };
+//     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
+// }
 
 
 function applyCarousel(carouselSelector){
@@ -209,7 +211,14 @@ $(function(){
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault();
-        $(this).tab('show');
+
+        /* This hides the tab on mobile phones if clicked a second time */
+        if ($(this).hasClass('active')) {
+            $('.tab-pane.active').toggleClass('hide_if_mobile');
+        } else {
+            $(this).tab('show');
+            $('.tab-pane.hide_if_mobile').removeClass('hide_if_mobile');
+        }
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
@@ -453,6 +462,14 @@ $(function(){
         });
     });
 
+    $('.packery .load-more').each(function(){
+        $(this).click(function(){
+            $('.packery').load(current_page, "exclude="+excludeIds, function(data){
+                console.log(data);
+            });
+        })
+    });
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
 
     var alignGallery = function(){
@@ -559,9 +576,6 @@ $(function(){
             }
         });
     });
-
-    /* Google maps for contact page */
-    //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
 
     /* Apply custom styles to selects */
     $('select:not(.filters select)').customSelect({

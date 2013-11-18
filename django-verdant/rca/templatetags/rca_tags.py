@@ -14,7 +14,7 @@ register = template.Library()
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.future_not_current_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
+    events = EventItem.future_not_current_objects.filter(live=True).only('id', 'path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
@@ -466,7 +466,7 @@ def search_content_type(result):
 
 @register.tag
 def tabdeck(parser, token):
-    bits = token.split_contents()[:]
+    bits = token.split_contents()[1:]
     args, kwargs = parse_bits(parser, bits, [], 'args', 'kwargs', None, False, 'tabdeck')
 
     nodelist = parser.parse(('endtabdeck',))
@@ -476,7 +476,7 @@ def tabdeck(parser, token):
 class TabDeckNode(template.Node):
     def __init__(self, nodelist, kwargs):
         self.nodelist = nodelist
-        self.moduletitle_expr = kwargs.get('moduletitle')
+        self.module_title_expr = kwargs.get('moduletitle')
 
     def render(self, context):
         context['tabdeck'] = {'tab_headings': [], 'index': 1}
@@ -491,10 +491,10 @@ class TabDeckNode(template.Node):
             for i, heading in enumerate(headings)
         ]
         tab_header_html = """<ul class="tab-nav tabs-%d">%s</ul>""" % (len(headings), ''.join(tab_headers))
-        moduletitlehtml = '';
-        if self.moduletitle_expr:
-            moduletitlehtml = '<h2 class="module-title">%s</h2>' % self.moduletitle_expr.resolve(context)
-        return '<section class="row module">' + moduletitlehtml + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        module_title_html = '';
+        if self.module_title_expr:
+            module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
+        return '<section class="row module">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
