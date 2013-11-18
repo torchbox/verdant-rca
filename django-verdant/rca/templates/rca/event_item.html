@@ -7,99 +7,99 @@
 {% endblock %}
 
 {% block content %}
-	<span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.audience }}</a></span>
+    <span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.audience }}</a></span>
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="event-info row">
-		<div class="col-1">
+        <div class="col-1">
 
-		{% with self.dates_times.all as dates %}
+        {% with self.dates_times.all as dates %}
             {% if dates %}
-            	{% for date in dates %}
-                	<h3 class="h5">
-						{{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
-						{% if date.time_from %} &#124;
-							<span>{{ date.time_from|time_display }}{% if date.time_to %} - {{ date.time_to|time_display }}{% endif %}</span>
-						{% endif %}
-					</h3>
-				{% endfor %}
-			{% endif %}
+                {% for date in dates %}
+                    <h3 class="h5">
+                        {{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
+                        {% if date.time_from %} &#124;
+                            <span>{{ date.time_from|time_display }}{% if date.time_to %} - {{ date.time_to|time_display }}{% endif %}</span>
+                        {% endif %}
+                    </h3>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
-		<p class="bc3">
-			{% if self.location == "other" %}
-				{{ self.location_other }}
-			{% else %}
-				{{ self.get_location_display }}
-				{% if self.location_other %} 
-					and {{ self.location_other }}
-				{% endif %}
-			{% endif %}
-				{% if self.specific_directions_link and self.specific_directions %} 
-					&#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>
-				{% endif %}</p>
-		{% if self.cost %}{{ self.cost|richtext }}{% endif %}
-		
-		{% if self.external_link and self.external_link_text %}
-			<p><a href="{{ self.external_link }}">{{ self.external_link_text }}</a></p>
-		{% endif %}
-	</div>
-	<div class="col-2">
-		{% include "rca/includes/modules/calendar-button.html" with url=self.url %}
-		{% include "rca/includes/modules/share-button.html" %}
-		{% if self.eventbrite_id %}
-			<a href="http://www.eventbrite.com/event/{{ self.eventbrite_id }}" class="button icon icon-link-away">Book now</a>
-		{% endif %}
-	</div>
-	</section>
+        <p class="bc3">
+            {% if self.location == "other" %}
+                {{ self.location_other }}
+            {% else %}
+                {{ self.get_location_display }}
+                {% if self.location_other %} 
+                    and {{ self.location_other }}
+                {% endif %}
+            {% endif %}
+                {% if self.specific_directions_link and self.specific_directions %} 
+                    &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>
+                {% endif %}</p>
+        {% if self.cost %}{{ self.cost|richtext }}{% endif %}
+        
+        {% if self.external_link and self.external_link_text %}
+            <p><a href="{{ self.external_link }}">{{ self.external_link_text }}</a></p>
+        {% endif %}
+    </div>
+    <div class="col-2">
+        {% include "rca/includes/modules/calendar-button.html" with url=self.url %}
+        {% include "rca/includes/modules/share-button.html" %}
+        {% if self.eventbrite_id %}
+            <a href="http://www.eventbrite.com/event/{{ self.eventbrite_id }}" class="button icon icon-link-away">Book now</a>
+        {% endif %}
+    </div>
+    </section>
 
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
-	
-		{% include "rca/includes/modules/body-text.html" with body=self.body %}
+    
+        {% include "rca/includes/modules/body-text.html" with body=self.body %}
 
-		<section class="four">
-			{% with self.speakers.all as speakers %}
-				{% if speakers %}
-					<section class="speakers module">
-						<h2 class="module-title">Speakers</h2>
-						<ul class="row">
-							{% for speaker in speakers %}
-								<li>
-									{% if speaker.link %}
-										<a href="{{ speaker.link }}">
-									{% endif %}
-										{% if speaker.image %}
-											<div class="image">{% image speaker.image width-200 %}</div>
-										{% endif %}
-										<div class="content">
-											<p class="a3">
-												{% if speaker.name %}{{speaker.name}}{% endif %}
-												{% if speaker.surname %}
-													<span>{{speaker.surname}}</span>
-												{% endif %}
-											</p>
-										</div>
-									{% if speaker.link %}
-										</a>
-									{% endif %}
-								</li>
-							{% endfor %}
-						</ul>
-					</section>
-				{% endif %}
-				{% if self.middle_column_body %}
-	                <div class="body-text middle-column-body-text events-middle-column-body-text">
-	                    {{ self.middle_column_body|richtext }}
-	                </div>
-           	    {% endif %}
-			{% endwith %}
-		</section>
-			
-	</section>
-	
-	{% include "rca/includes/modules/contact.html" %}
-	{% include "rca/includes/modules/twitter-feed.html" %}
+        <section class="four">
+            {% with self.speakers.all as speakers %}
+                {% if speakers %}
+                    <section class="speakers module">
+                        <h2 class="module-title">Speakers</h2>
+                        <ul class="row">
+                            {% for speaker in speakers %}
+                                <li>
+                                    {% if speaker.link %}
+                                        <a href="{{ speaker.link }}">
+                                    {% endif %}
+                                        {% if speaker.image %}
+                                            <div class="image">{% image speaker.image width-200 %}</div>
+                                        {% endif %}
+                                        <div class="content">
+                                            <p class="a3">
+                                                {% if speaker.name %}{{speaker.name}}{% endif %}
+                                                {% if speaker.surname %}
+                                                    <span>{{speaker.surname}}</span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                    {% if speaker.link %}
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+                {% if self.middle_column_body %}
+                    <div class="body-text middle-column-body-text events-middle-column-body-text">
+                        {{ self.middle_column_body|richtext }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </section>
+            
+    </section>
+    
+    {% include "rca/includes/modules/contact.html" %}
+    {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 
 {% block sidebar %}
@@ -107,6 +107,6 @@
 {% endblock %}
 
 <!-- TODOs
-	- add to calendar
-	- book now icon when confirmed
+    - add to calendar
+    - book now icon when confirmed
 -->

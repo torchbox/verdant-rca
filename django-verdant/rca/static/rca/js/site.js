@@ -343,13 +343,12 @@ $(function(){
             /* Packery */
             $('.packery').imagesLoaded( function() {
                 window.packery = $('.packery').packery({
-                    itemSelector: '.item',
-                    stamp: ".stamp"
+                    itemSelector: '.item'
                 });
             });
         },
         off: function(){
-             $('.packery').packery('destroy');
+            $('.packery').packery('destroy');
         }
     });
 
@@ -357,9 +356,8 @@ $(function(){
     $('.lt-ie9').each(function(){
         /* Packery */
         $('.packery').imagesLoaded( function() {
-            var packery = $('.packery').packery({
-                itemSelector: '.item',
-                stamp: ".stamp"
+            window.packery = $('.packery').packery({
+                itemSelector: '.item'
             });
         });
     });
@@ -426,7 +424,13 @@ $(function(){
         // prepare the items already in the page (if non-inifinite-scroll)
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
-        $(document.body).on("click", ".load-more", function(e){
+        // This click event can originate from the filtered results on an index page or any other paginated content.
+        // If it is form a filter then we need to use event delegation but on other pages with multiple paginated
+        // items this would result in a single event handler bound multiple times to the same container element.
+        // So we have to use different containers to bind the event to: #listing for filters, and $this for everything else.
+        var $bindTo = $this.closest("#listing").length ? $this.closest("#listing") : $this;
+
+        $($bindTo).on("click", ".load-more", function(e){
             e.preventDefault();
             var loadmore = $(this);
 
@@ -464,9 +468,25 @@ $(function(){
     });
 
     $('.packery .load-more').each(function(){
-        $(this).click(function(){
-            $('.packery').load(current_page, "exclude="+excludeIds, function(data){
-                console.log(data);
+        $this = $(this);
+        $this.click(function(e){
+            e.preventDefault();
+            var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
+                var items = $('.item', tmp);
+                
+                if (items.length){
+                    $('.packery ul').append(items);
+                    $('.packery').imagesLoaded( function() {
+                        $('.packery').packery('appended', items);
+                    });
+
+                    //append ids returned to those already excluded
+                    items.each(function(){
+                        excludeIds.push($(this).data('id'))
+                    })
+                } else {
+                    $this.fadeOut();
+                }
             });
         });
     });
