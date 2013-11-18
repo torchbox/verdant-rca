@@ -83,7 +83,7 @@ function showSearchAutocomplete() {
         source: function(request, response) {
             $.getJSON("/search/suggest/?q=" + request.term, function(data) {
                 response(data);
-            })
+            });
         },
         select: function( event, ui ) {
             window.location.href = ui.item.url;
@@ -300,7 +300,7 @@ $(function(){
                 auto_join_text_default: 'from @' + username,
                 loading_text: 'Checking for new tweets...',
                 count: count
-            })
+            });
 
             window.packerytweets = tmp;
         }
@@ -310,7 +310,7 @@ $(function(){
         $('.packery .tweet .inner .content').each(function(){
             $(this).html($(arr.shift()).html());
         });
-    })
+    });
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
@@ -469,7 +469,7 @@ $(function(){
             $('.packery').load(current_page, "exclude="+excludeIds, function(data){
                 console.log(data);
             });
-        })
+        });
     });
 
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
@@ -485,7 +485,7 @@ $(function(){
             function addToArray(elem){
                 totalWidth += elem.width();
                 if(typeof rowArray[rowCounter] == "undefined"){
-                    rowArray[rowCounter] = new Array();
+                    rowArray[rowCounter] = [];
                 }
                 rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             }
@@ -599,7 +599,7 @@ $(function(){
 
       //set notice to never show again by default. Unnecessary to show every page load, particularly if we're suggesting showing it once is considered as acceptance.
       dontShowCookieNoticeAgain();
-    }
+    };
 
     var dontShowCookieNoticeAgain = function() {
       // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
@@ -608,13 +608,13 @@ $(function(){
       var exdate = new Date();
       exdate.setDate(exdate.getDate() + 365);
       document.cookie = "dontShowCookieNotice=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
-    }
+    };
 
     var pleaseShowCookieNotice = function() {
       // Don't show the notice if we have previously set a cookie to hide it
       var dontShowCookieNotice = (document.cookie.indexOf("dontShowCookieNotice") != -1) ? false : true;
       return dontShowCookieNotice;
-    }
+    };
 
     $('body').once(function(){
       if (pleaseShowCookieNotice() == true) {
