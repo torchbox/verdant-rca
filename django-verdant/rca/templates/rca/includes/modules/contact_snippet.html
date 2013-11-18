@@ -24,11 +24,11 @@
 						{% endif %}
 					</li>
 					<li class="col col-2">
-						<p class="bc3">
+						<p class="bc3 body-text-style">
 							{% with contact.contact_snippet.contact_phone.all as phone_nos %}
 								{% if phone_nos %}
 									{% for phone_no in phone_nos %}
-										{{ phone_no.phone_number }}<br />
+										<b>{{ phone_no.phone_number }}</b><br />
 									{% endfor %}
 								{% endif %}
 							{% endwith %}
