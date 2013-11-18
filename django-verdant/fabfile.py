@@ -34,6 +34,7 @@ def deploy():
             sudo("git pull")
 
     run("supervisorctl restart verdant-rca")
+    run("supervisorctl restart rca-celeryd")
 
 @roles('production_primary')
 def migrate():
@@ -45,8 +46,8 @@ def migrate():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.production --noinput")
 
         run("supervisorctl restart verdant-rca")
-        run("supervisorctl restart rca-celeryd")
         run("supervisorctl restart rca-celerybeat")
+        run("supervisorctl restart rca-celeryd")
 
         with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.production")
