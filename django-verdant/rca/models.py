@@ -3405,7 +3405,7 @@ class GalleryPage(Page, SocialFields):
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
-        if not programme and not school and not year:
+        if not request.is_ajax() and not programme and not school and not year:
             gallery_items = gallery_items.filter(degree_year=date.today().year)
 
         gallery_items = gallery_items.order_by('?')
@@ -3414,11 +3414,11 @@ class GalleryPage(Page, SocialFields):
             if school:
                 related_programmes = SCHOOL_PROGRAMME_MAP[year].get(school, [])
             else:
-                # get all programmess from all schools in the year specified
+                # get all programmes from all schools in the year specified
                 related_programmes = sum(SCHOOL_PROGRAMME_MAP[year].values(), [])
         else:
             if school:
-                # get all programmess from in this school in all years
+                # get all programmes from in this school in all years
                 related_programmes = set()
                 for _year, mapping in SCHOOL_PROGRAMME_MAP.items():
                     if school in mapping:
