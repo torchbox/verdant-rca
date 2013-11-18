@@ -1,14 +1,16 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError
+from django.template.loader import render_to_string
+from django.template import RequestContext
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
-from core.models import Page, get_page_types
+from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -139,7 +141,10 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            if request.POST.get('action-publish'):
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
+            is_submitting = bool(request.POST.get('action-submit'))
+
+            if is_publishing:
                 page.live = True
                 page.has_unpublished_changes = False
             else:
@@ -147,9 +152,14 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 page.has_unpublished_changes = True
 
             parent_page.add_child(page)  # assign tree parameters - will cause page to be saved
-            page.save_revision(user=request.user)
+            page.save_revision(user=request.user, submitted_for_moderation=is_submitting)
 
-            messages.success(request, "Page '%s' created." % page.title)
+            if is_publishing:
+                messages.success(request, "Page '%s' published." % page.title)
+            elif is_submitting:
+                messages.success(request, "Page '%s' submitted for moderation." % page.title)
+            else:
+                messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             edit_handler = edit_handler_class(instance=page, form=form)
@@ -167,7 +177,9 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 
 @login_required
 def edit(request, page_id):
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    latest_revision = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
+
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
@@ -175,7 +187,8 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = request.POST.get('action-publish')
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
+            is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
                 page.live = True
@@ -192,18 +205,26 @@ def edit(request, page_id):
                     page.has_unpublished_changes = True
                     form.save()
 
-            page.save_revision(user=request.user)
+            page.save_revision(user=request.user, submitted_for_moderation=is_submitting)
 
             if is_publishing:
                 messages.success(request, "Page '%s' published." % page.title)
+            elif is_submitting:
+                messages.success(request, "Page '%s' submitted for moderation." % page.title)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
+            messages.error(request, "The page could not be saved due to validation errors")
             edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
+
+
+    # Check for revisions still undergoing moderation and warn
+    if latest_revision and latest_revision.submitted_for_moderation:
+        messages.warning(request, "This page is currently awaiting moderation")
 
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
@@ -245,6 +266,18 @@ def reorder(request, parent_page_id=None):
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
+    if not request.user.has_perm('core.can_unpublish_page'):
+        # they should only be able to delete this page if this page is unpublished, AND it has no
+        # published children
+        if page.live:
+            parent_id = page.get_parent().id
+            messages.error(request, "You do not have permission to delete this page, because it is live on the site.")
+            return redirect('verdantadmin_explore', parent_id)
+        elif page.get_descendants().filter(live=True).exists():
+            parent_id = page.get_parent().id
+            messages.error(request, "You do not have permission to delete this page, because it has subpages that are live on the site.")
+            return redirect('verdantadmin_explore', parent_id)
+
     if request.POST:
         parent_id = page.get_parent().id
         page.delete()
@@ -258,14 +291,14 @@ def delete(request, page_id):
 
 @login_required
 def view_draft(request, page_id):
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
     return page.serve(request)
 
 @login_required
 def preview_on_edit(request, page_id):
     # Receive the form submission that would typically be posted to the 'edit' view. If submission is valid,
     # return the rendered page; if not, re-render the edit form
-    page = get_object_or_404(Page, id=page_id).get_latest_revision()
+    page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
@@ -332,7 +365,7 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
-@login_required
+@permission_required('core.can_unpublish_page')
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -449,3 +482,49 @@ def search(request):
             'is_searching': is_searching,
             'search_query': q,
         })
+
+
+@permission_required('core.can_publish_page')
+def approve_moderation(request, revision_id):
+    revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.submitted_for_moderation:
+        messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
+        return redirect('verdantadmin_home')
+
+    if request.POST:
+        revision.publish()
+        messages.success(request, "Page '%s' published." % revision.page.title)
+
+    return redirect('verdantadmin_home')
+
+@permission_required('core.can_publish_page')
+def reject_moderation(request, revision_id):
+    revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.submitted_for_moderation:
+        messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
+        return redirect('verdantadmin_home')
+
+    if request.POST:
+        revision.submitted_for_moderation = False
+        revision.save(update_fields=['submitted_for_moderation'])
+        messages.success(request, "Page '%s' rejected for publication." % revision.page.title)
+
+    return redirect('verdantadmin_home')
+
+@permission_required('core.can_publish_page')
+def preview_for_moderation(request, revision_id):
+    revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.submitted_for_moderation:
+        messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
+        return redirect('verdantadmin_home')
+
+    page = revision.as_page_object()
+    if not hasattr(request, 'userbar'):
+        request.userbar = []
+    request.userbar.append(
+        render_to_string('verdantadmin/pages/_moderator_userbar.html', {
+            'revision': revision,
+        }, context_instance=RequestContext(request))
+    )
+
+    return page.serve(request)

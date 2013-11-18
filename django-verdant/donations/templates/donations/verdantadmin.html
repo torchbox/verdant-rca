@@ -16,14 +16,11 @@
 
 {% block content %}
     <header class="merged">
-        <div class="row row-flush">
-            <div class="left col12">
-                <h1>Donations</h1>
-            </div>
-        </div>
+        <h1>Donations</h1>
     </header>
     <section class="nice-padding" style="padding-top:2em;">
+        <label>Date range</label>
         <input type="text" id="dateRange" />
-        <a href="{% url 'donations_export' %}" class="button icon icon-doc-full download">Download</a>
+        <a href="{% url 'donations_export' %}" class="button icon icon-download download">Download</a>
     </section>
 {% endblock %}

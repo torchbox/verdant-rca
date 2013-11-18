@@ -90,11 +90,13 @@ def search(request):
     if request.is_ajax():
         return render(request, "verdantdocs/documents/search-results.html", {
             'documents': documents,
+            'search_query': q
         })
     else:
         return render(request, "verdantdocs/documents/index.html", {
             'form': form,
             'documents': documents,
             'is_searching': True,
+            'search_query': q,
             'popular_tags': Document.popular_tags(),
         })
