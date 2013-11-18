@@ -48,6 +48,29 @@ class ScreenIndex(Page):
 
         return events
 
+    def build_upcoming_events_slide(self, events):
+        # Return nothing if there are no events
+        if len(events) == 0:
+            return None
+
+        # Sort events into days
+        days = []
+        previous_date = None
+        for event in events:
+            # If date changed, create new day
+            if event[0] != previous_date:
+                previous_date = event[0]
+                days.append({
+                    'date': event[0],
+                    'events': [],
+                })
+
+            # Add event to current day
+            days[-1]['events'].append(event[1])
+
+        # Return new slide
+        return ('rca_signage/upcoming_events_slide.html', dict(days=days))
+
     def get_slides(self, screen):
         slides = []
 
@@ -66,37 +89,15 @@ class ScreenIndex(Page):
         # Get list of upcoming events
         upcoming_events = self.get_upcoming_events()
 
-        # Build slides
-        def build_upcoming_events_slide(events):
-            # Return if there are no events
-            if len(events) == 0:
-                return None
-
-            # Sort events into days
-            days = []
-            previous_date = None
-            for event in events:
-                # If date changed, create new day
-                if event[0] != previous_date:
-                    previous_date = event[0]
-                    days.append({
-                        'date': event[0],
-                        'events': [],
-                    })
-
-                # Add event to current day
-                days[-1]['events'].append(event[1])
-
-            # Return new slide
-            return ('rca_signage/upcoming_events_slide.html', dict(days=days))
-
-        first_slide = build_upcoming_events_slide(upcoming_events[:5])
+        # Build first slide
+        first_slide = self.build_upcoming_events_slide(upcoming_events[:5])
         if not first_slide is None:
             slides.append(first_slide)
         else:
             slides.append(('rca_signage/upcoming_events_slide.html', dict(days=[])))
 
-        second_slide = build_upcoming_events_slide(upcoming_events[5:])
+        # Build second slide
+        second_slide = self.build_upcoming_events_slide(upcoming_events[5:])
         if not second_slide is None:
             slides.append(second_slide)
 
