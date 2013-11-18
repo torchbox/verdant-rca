@@ -466,7 +466,7 @@ def search_content_type(result):
 
 @register.tag
 def tabdeck(parser, token):
-    bits = token.split_contents()[:]
+    bits = token.split_contents()[1:]
     args, kwargs = parse_bits(parser, bits, [], 'args', 'kwargs', None, False, 'tabdeck')
 
     nodelist = parser.parse(('endtabdeck',))
