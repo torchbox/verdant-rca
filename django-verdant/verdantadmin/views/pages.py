@@ -195,6 +195,7 @@ def edit(request, page_id):
                 page.live = True
                 page.has_unpublished_changes = False
                 form.save()
+                page.revisions.update(submitted_for_moderation=False)
             else:
                 # not publishing the page
                 if page.live:
