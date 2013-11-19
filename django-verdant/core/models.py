@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection, transaction
 from django.db.models import get_model
 from django.http import Http404
 from django.shortcuts import render
@@ -166,6 +166,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
             # a page without a parent is the tree root, which always has a url_path of '/'
             self.url_path = '/'
 
+    @transaction.commit_on_success  # ensure that changes are only committed when we have updated all descendant URL paths, to preserve consistency
     def save(self, *args, **kwargs):
         update_descendant_url_paths = False
 
@@ -181,8 +182,20 @@ class Page(MP_Node, ClusterableModel, Indexed):
             if old_record.slug != self.slug:
                 self.set_url_path(self.get_parent())
                 update_descendant_url_paths = True
+                old_url_path = old_record.url_path
+                new_url_path = self.url_path
 
-        return super(Page, self).save(*args, **kwargs)
+        result = super(Page, self).save(*args, **kwargs)
+
+        if update_descendant_url_paths:
+            cursor = connection.cursor()
+            cursor.execute("""
+                UPDATE core_page
+                SET url_path = %s || substring(url_path from %s)
+                WHERE path LIKE %s AND id <> %s
+            """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
+
+        return result
 
     def object_indexed(self):
         # Exclude root node from index
