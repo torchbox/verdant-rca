@@ -125,6 +125,7 @@ AREA_CHOICES = (
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
     ('sustainrca', 'SustainRCA'),
+    ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
 )
 
