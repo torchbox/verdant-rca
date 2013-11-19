@@ -153,6 +153,37 @@ class Page(MP_Node, ClusterableModel, Indexed):
 
     is_abstract = True  # don't offer Page in the list of page types a superuser can create
 
+    def set_url_path(self, parent):
+        """
+        Populate the url_path field based on this page's slug and the specified parent page.
+        (We pass a parent in here, rather than retrieving it via get_parent, so that we can give
+        new unsaved pages a meaningful URL when previewing them; at that point the page has not
+        been assigned a position in the tree, as far as treebeard is concerned.
+        """
+        if parent:
+            self.url_path = parent.url_path + self.slug + '/'
+        else:
+            # a page without a parent is the tree root, which always has a url_path of '/'
+            self.url_path = '/'
+
+    def save(self, *args, **kwargs):
+        update_descendant_url_paths = False
+
+        if self.id is None:
+            # we are creating a record. If we're doing things properly, this should happen
+            # through a treebeard method like add_child, in which case the 'path' field
+            # has been set and so we can safely call get_parent
+            self.set_url_path(self.get_parent())
+        else:
+            # see if the slug has changed from the record in the db, in which case we need to
+            # update url_path of self and all descendants
+            old_record = Page.objects.get(id=self.id)
+            if old_record.slug != self.slug:
+                self.set_url_path(self.get_parent())
+                update_descendant_url_paths = True
+
+        return super(Page, self).save(*args, **kwargs)
+
     def object_indexed(self):
         # Exclude root node from index
         if self.depth == 1:
