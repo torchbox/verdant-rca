@@ -72,13 +72,11 @@ class DonationForm(forms.Form):
 
     def clean_amount(self):
         # stripe uses cents for the amount, i.e. $1.23 is represented as 123
-        self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
+        if self.cleaned_data['amount']:
+            self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
+        else:
+            self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
         return self.cleaned_data['amount']
-
-    def clean_amounts(self):
-        # stripe uses cents for the amount, i.e. $1.23 is represented as 123
-        self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
-        return self.cleaned_data['amounts']
 
     def clean(self):
         # the matadat field allows as to store extra information for each payment
