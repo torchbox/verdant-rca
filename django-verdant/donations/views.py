@@ -123,7 +123,7 @@ def export(request):
         # convert amount from cents
         charge['amount'] = int(charge['amount']) / Decimal(100)
 
-        if charge.get('metadata__is_gift_aid', False):
+        if charge.get('metadata__is_gift_aid') and charge.get('metadata__is_gift_aid') != "False":
             # add 20% giftaid field, with two decimal places:
             # http://docs.python.org/2/library/decimal.html#decimal-faq
             charge['amount_gift_aid'] = (charge['amount'] * Decimal(0.2)).quantize(Decimal(10) ** -2)
@@ -159,7 +159,7 @@ def export(request):
         "metadata__class_year": "Class year",
         "metadata__donation_for": "Gift directed to",
         "metadata__affiliation": "Affiliation",
-        "metadata__subscribe": "Subscribe to mailing list",
+        "metadata__not_included_in_supporters_list": "NOT included in supporters list",
         "metadata__is_gift_aid": "Gift aid donation",
         # "metadata__phone_type": "Phone type",
     }

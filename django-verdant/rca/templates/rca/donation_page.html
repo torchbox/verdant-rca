@@ -47,6 +47,7 @@
                         {% with form.expiration as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.not_included_in_supporters_list as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                     </ul>
                 </fieldset>
 
@@ -64,7 +65,6 @@
                         {% with form.address_country as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         <li class="divider"></li>
                         {% with form.email as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        {% with form.subscribe as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.phone as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                     </ul>
                 </fieldset>
