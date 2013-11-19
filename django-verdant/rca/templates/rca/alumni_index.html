@@ -10,6 +10,14 @@
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
+	{% include "rca/includes/modules/intro-large.html" %}
+
+	{% if self.body %}
+        <section class='row'>
+            {% include "rca/includes/modules/body-text.html" with body=self.body %}
+        </section>
+    {% endif %}
+
 	<section class="filters two-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>

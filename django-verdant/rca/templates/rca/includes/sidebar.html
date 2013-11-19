@@ -96,7 +96,7 @@
 {% endif %}
 
 {% if showRandomStaff %}
-    {% staff_random exclude=self %}
+    {% staff_random programmes=self.programmes exclude=self %}
 {% endif %}
 
 <!-- job adverts -->

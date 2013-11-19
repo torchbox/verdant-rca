@@ -148,6 +148,40 @@
                     {% endif %}
                 {% endwith %}
 
+                <!-- conferences -->
+                {% with self.conferences.all as conferences %}
+                    {% if conferences %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Conferences</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for conference in conferences %}
+                                    {{ conference.conference }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- publications -->
+                {% with self.publications.all as publications %}
+                    {% if publications %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Publications</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for publication in publications %}
+                                    {{ publication.publication }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
                 <div class="inner">
         
                     <!-- research -->

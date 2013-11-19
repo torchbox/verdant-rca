@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection, transaction
 from django.db.models import get_model
 from django.http import Http404
 from django.shortcuts import render
@@ -109,6 +109,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
     live = models.BooleanField(default=True, editable=False)
     has_unpublished_changes = models.BooleanField(default=False, editable=False)
+    url_path = models.CharField(max_length=255, blank=True, editable=False)
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -151,6 +152,54 @@ class Page(MP_Node, ClusterableModel, Indexed):
     subpage_types = []
 
     is_abstract = True  # don't offer Page in the list of page types a superuser can create
+
+    def set_url_path(self, parent):
+        """
+        Populate the url_path field based on this page's slug and the specified parent page.
+        (We pass a parent in here, rather than retrieving it via get_parent, so that we can give
+        new unsaved pages a meaningful URL when previewing them; at that point the page has not
+        been assigned a position in the tree, as far as treebeard is concerned.
+        """
+        if parent:
+            self.url_path = parent.url_path + self.slug + '/'
+        else:
+            # a page without a parent is the tree root, which always has a url_path of '/'
+            self.url_path = '/'
+
+        return self.url_path
+
+    @transaction.commit_on_success  # ensure that changes are only committed when we have updated all descendant URL paths, to preserve consistency
+    def save(self, *args, **kwargs):
+        update_descendant_url_paths = False
+
+        if self.id is None:
+            # we are creating a record. If we're doing things properly, this should happen
+            # through a treebeard method like add_child, in which case the 'path' field
+            # has been set and so we can safely call get_parent
+            self.set_url_path(self.get_parent())
+        else:
+            # see if the slug has changed from the record in the db, in which case we need to
+            # update url_path of self and all descendants
+            old_record = Page.objects.get(id=self.id)
+            if old_record.slug != self.slug:
+                self.set_url_path(self.get_parent())
+                update_descendant_url_paths = True
+                old_url_path = old_record.url_path
+                new_url_path = self.url_path
+
+        result = super(Page, self).save(*args, **kwargs)
+
+        if update_descendant_url_paths:
+            self._update_descendant_url_paths(old_url_path, new_url_path)
+        return result
+
+    def _update_descendant_url_paths(self, old_url_path, new_url_path):
+        cursor = connection.cursor()
+        cursor.execute("""
+            UPDATE core_page
+            SET url_path = %s || substring(url_path from %s)
+            WHERE path LIKE %s AND id <> %s
+        """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
 
     def object_indexed(self):
         # Exclude root node from index
@@ -365,6 +414,20 @@ class Page(MP_Node, ClusterableModel, Indexed):
         """
         return (not self.live) and (not self.get_descendants().filter(live=True).exists())
 
+    @transaction.commit_on_success  # only commit when all descendants are properly updated
+    def move(self, target, pos=None):
+        """
+        Extension to the treebeard 'move' method to ensure that url_path is updated too.
+        """
+        old_url_path = Page.objects.get(id=self.id).url_path
+        super(Page, self).move(target, pos=pos)
+        # treebeard's move method doesn't actually update the in-memory instance, so we need to work
+        # with a freshly loaded one now
+        new_self = Page.objects.get(id=self.id)
+        new_url_path = new_self.set_url_path(new_self.get_parent())
+        new_self.save()
+        new_self._update_descendant_url_paths(old_url_path, new_url_path)
+
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
@@ -457,6 +520,10 @@ class PageRevision(models.Model):
         obj.path = self.page.path
         obj.depth = self.page.depth
         obj.numchild = self.page.numchild
+
+        # Populate url_path based on the revision's current slug and the parent page as determined
+        # by path
+        obj.set_url_path(self.page.get_parent())
 
         return obj
 
