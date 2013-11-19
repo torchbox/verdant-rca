@@ -389,14 +389,23 @@ class SocialFields(models.Model):
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
-    link = models.URLField(blank=True)
+    link = models.URLField("External link", blank=True)
+    link_page = models.ForeignKey('core.Page', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    @property
+    def get_link(self):
+        if self.link_page:
+            return self.link_page.url
+        else:
+            return self.link
 
     panels = [
         ImageChooserPanel('image'),
         FieldPanel('overlay_text'),
         FieldPanel('link'),
+        PageChooserPanel('link_page'),
         FieldPanel('embedly_url'),
         ImageChooserPanel('poster_image'),
     ]
