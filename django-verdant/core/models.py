@@ -503,6 +503,10 @@ class PageRevision(models.Model):
         obj.depth = self.page.depth
         obj.numchild = self.page.numchild
 
+        # Populate url_path based on the revision's current slug and the parent page as determined
+        # by path
+        obj.set_url_path(self.page.get_parent())
+
         return obj
 
     def publish(self):
