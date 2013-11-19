@@ -124,7 +124,9 @@
     {% endif %}
 
     {% if self.show_events_feed %}
-        {% upcoming_events_related area=self.events_feed_area display_name=self.get_events_feed_area_display %}
+        <div id="listing">
+            {% include "rca/includes/standard_index_events_listing.html" %}
+        </div>
     {% endif %}
 
     {% if self.our_sites %}
