@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from decimal import Decimal
 
 from django.core import validators
@@ -16,7 +18,16 @@ class DonationForm(forms.Form):
     METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone']
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
-    amount = forms.FloatField(required=True)
+    amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", required=False, choices=(
+        ("50", "£50"),
+        ("100", "£100"),
+        ("250", "£250"),
+        ("500", "£500"),
+        ("1000", "£1000"),
+        ("", "Other"),
+    ))
+    amount = forms.FloatField(required=False)
+
     number = CreditCardField(label="Card number", required=False)
     expiration = ExpiryDateField(required=False)
     cvc = VerificationValueField(required=False, help_text="The 3-digit security code printed (not embossed) on the front of the card, or on the signature strip on the reverse")
@@ -37,14 +48,37 @@ class DonationForm(forms.Form):
     address_country = forms.CharField(label="Country", required=False, max_length=255)
     phone           = forms.CharField(required=False, max_length=255)
 
+    phone_type = forms.ChoiceField(required=False, choices=(
+            ("home", "Home"),
+            ("business", "Business"),
+            ("mobile", "Mobile"),
+    ))
+
+    affiliation = forms.ChoiceField(label="*Affiliation with the RCA", required=False, choices=(
+            ("Alumnus/alumna", "Alumnus/alumna"),
+            ("staff", "Staff"),
+            ("friend", "Friend"),
+            ("parent", "Parent"),
+    ))
+
+    donation_for = forms.ChoiceField(label="Please direct my gift towards", required=False, choices=(
+            ("scholarships", "Scholarships"),
+            ("college_greatest_need", "College’s greatest need"),
+    ))
+    klass = forms.CharField(label="Class", required=False, max_length=255)
+
     name = forms.CharField(required=False, max_length=255)
     stripe_token = forms.CharField(required=False, max_length=255)
 
     def clean_amount(self):
-        # stripe uses cents for the amount
-        # i.e. $1.23 is represented as 123
+        # stripe uses cents for the amount, i.e. $1.23 is represented as 123
         self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
         return self.cleaned_data['amount']
+
+    def clean_amounts(self):
+        # stripe uses cents for the amount, i.e. $1.23 is represented as 123
+        self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
+        return self.cleaned_data['amounts']
 
     def clean(self):
         # the matadat field allows as to store extra information for each payment
