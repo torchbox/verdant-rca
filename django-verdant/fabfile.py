@@ -2,7 +2,7 @@ from __future__ import with_statement
 from fabric.api import *
 
 env.roledefs = {
-    'staging': ['root@django-staging.torchbox.com'],
+    'staging': ['django-staging.torchbox.com'],
     # This is the host where migrations are done.
     'production_primary': ['root@rca2.dh.bytemark.co.uk'],
     # All hosts will be listed here.
