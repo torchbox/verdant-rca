@@ -10,6 +10,13 @@
 
 	{% include "rca/includes/modules/intro-large.html" %}
 
+	{% if self.body %}
+        <section class='row'>
+            {% include "rca/includes/modules/body-text.html" with body=self.body %}
+        </section>
+    {% endif %}
+
+
 	{% upcoming_events_related with display_name='Upcoming RCA talks' audience='rcatalks' %}
 
 	<div id="listing">
