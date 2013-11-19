@@ -1960,6 +1960,16 @@ class StandardIndexTeaser(Orderable):
         FieldPanel('text'),
     ]
 
+class StandardIndexStaffFeed(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='manual_staff_feed')
+    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    staff_role = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('staff', 'rca.StaffPage'),
+        FieldPanel('staff_role'),
+    ]
+
 class StandardIndexRelatedLink(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -2082,6 +2092,7 @@ StandardIndex.content_panels = [
     ],'Introduction'),
     FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
+    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
