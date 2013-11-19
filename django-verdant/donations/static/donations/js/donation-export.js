@@ -2,7 +2,6 @@ jQuery(function(){
 
     var $dateRange = $('#dateRange');
 
-    var downloadLink = $(".download").attr("href") + "?";
 
     $dateRange.daterangepicker({
         posX: $dateRange.offset().left,
@@ -29,7 +28,9 @@ jQuery(function(){
                 params = "date_from=" + from.toString('yyyy-MM-dd') + "&date_to=" + from.toString('yyyy-MM-dd');
             }
 
-            $(".download").attr("href", downloadLink + params);
+            $(".download").each(function(){
+                $(this).attr("href", $(this).data("href") + "?" + params);
+            });
        }
     });
 
