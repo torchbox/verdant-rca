@@ -65,6 +65,11 @@ jQuery(function($) {
         }
     });
 
+    // Gift aid toggles some fields
+    $('#id_is_gift_aid').change(function(){
+        $('.giftaid-toggled').toggle();
+    })
+
     $('#payment-form').submit(function(e) {
         var $form = $(this);
 
