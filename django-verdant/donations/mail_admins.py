@@ -1,47 +1,8 @@
 import sys
 import traceback
 from django.core.mail import mail_admins
-from django.utils.functional import wraps
 from django.utils.text import truncate_words
 from django.template.defaultfilters import slugify
-from celery.exceptions import SoftTimeLimitExceeded
-from celery import task as _task
-
-
-class email_errors(object):
-
-    """ Wraps a celery task in a try/catch with custom error types, only
-        sending admin alert emails on non-blacklisted exceptions.
-
-        Can be attached as a decorator to a task, such as :
-
-        @email_errors(error_blacklist=[MaybeEncodingError, ])
-        @task
-        def some_task():
-            pass
-    """
-
-    default_error_blacklist = [SoftTimeLimitExceeded, ]
-
-    def __init__(self, error_blacklist=[]):
-        self.error_blacklist = error_blacklist
-        self.error_blacklist.extend(self.default_error_blacklist)
-
-    def __call__(self, task):
-        task.unsynchronized_run = task.run
-
-        @wraps(task.unsynchronized_run)
-        def wrapper(*args, **kwargs):
-            try:
-                task.unsynchronized_run(*args, **kwargs)
-            except Exception, e:
-                if type(e) in self.error_blacklist:
-                    stacktrace = get_stacktrace(e)
-                    print "ERROR: task=%s\n%s" % (task.__name__, stacktrace)
-                else:
-                    mail_exception(e, prefix="[celery]")
-        task.run = wrapper
-        return task
 
 
 def get_stacktrace(error):

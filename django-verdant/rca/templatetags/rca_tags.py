@@ -2,6 +2,7 @@ from django import template
 from django.utils.html import conditional_escape
 from django.db.models import Min, Max
 from django.template.base import parse_bits
+from core.util import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain
@@ -12,9 +13,13 @@ from verdantdocs.models import Document
 
 register = template.Library()
 
+@register.filter(name='fieldtype')
+def fieldtype(bound_field):
+    return camelcase_to_underscore(bound_field.field.__class__.__name__)
+
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.future_not_current_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
+    events = EventItem.future_not_current_objects.filter(live=True).only('id', 'path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
@@ -42,15 +47,15 @@ def news_carousel(context, area="", programme="", school="", count=5):
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
 def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", audience=""):
-    events = EventItem.future_objects.all()
+    events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'))
     if school:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
+        events = events.filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+        events = events.filter(related_programmes__programme=programme).order_by('start_date')
     elif area:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
+        events = events.filter(area=area).order_by('start_date')
     elif audience:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(audience=audience).order_by('start_date')
+        events = events.filter(audience=audience).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -164,6 +169,7 @@ def jobs_listing(context):
 def students_related(context, programme="", year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, programme=programme)
     students = students.filter(degree_year=year)
+    students = students.order_by('?')
     if exclude:
         students = students.exclude(id=exclude.id)
     return {
@@ -176,7 +182,7 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 def students_related_work(context, year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, degree_year=year)
     students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
-    students=students.distinct()
+    students = students.order_by('?')
 
     if exclude:
         students = students.exclude(id=exclude.id)
@@ -466,7 +472,7 @@ def search_content_type(result):
 
 @register.tag
 def tabdeck(parser, token):
-    bits = token.split_contents()[:]
+    bits = token.split_contents()[1:]
     args, kwargs = parse_bits(parser, bits, [], 'args', 'kwargs', None, False, 'tabdeck')
 
     nodelist = parser.parse(('endtabdeck',))
@@ -476,7 +482,7 @@ def tabdeck(parser, token):
 class TabDeckNode(template.Node):
     def __init__(self, nodelist, kwargs):
         self.nodelist = nodelist
-        self.moduletitle_expr = kwargs.get('moduletitle')
+        self.module_title_expr = kwargs.get('moduletitle')
 
     def render(self, context):
         context['tabdeck'] = {'tab_headings': [], 'index': 1}
@@ -491,10 +497,10 @@ class TabDeckNode(template.Node):
             for i, heading in enumerate(headings)
         ]
         tab_header_html = """<ul class="tab-nav tabs-%d">%s</ul>""" % (len(headings), ''.join(tab_headers))
-        moduletitlehtml = '';
-        if self.moduletitle_expr:
-            moduletitlehtml = '<h2 class="module-title">%s</h2>' % self.moduletitle_expr.resolve(context)
-        return '<section class="row module">' + moduletitlehtml + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        module_title_html = '';
+        if self.module_title_expr:
+            module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
+        return '<section class="row module">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag

@@ -211,10 +211,6 @@
         position:relative;
         img{
             display:block;
-            &:hover {
-                .filter(brightness(0.7)); //nb doesn't work in firefox
-                .transition(all 0.5s ease);
-            }
         }
     }
 
@@ -247,7 +243,17 @@
 
 /* bold text - make sure correct web font is used */
 .bold {
-    font-family: @font-family-benton-bold;
-    font-weight: bold;
+    font-family: @font-family-benton;
+    font-weight: normal;
     font-style: normal;
+}
+
+/* image hover effect */
+.image-hover {
+    img {
+        &:hover {
+            .filter(brightness(0.7)); //nb doesn't work in firefox
+            .transition(all 0.5s ease);
+        }
+    }
 }

@@ -59,30 +59,31 @@
                     </li>
                 </ul>
 
+                {% if self.biography %}
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="a2">Biography</h2>
+                        </li>
+                        <li class="col col-9 last body-text-style showmorestyle">
 
-                <div class="divider"></div>
-                <ul class="three-nine-cols">
-                    <li class="col col-3 first">
-                        <h2 class="a2">Biography</h2>
-                    </li>
-                    <li class="col col-9 last body-text-style">
-
-                        {% with self.biography|paragraph_split:"</p>" as parts %}
-                            {{ parts.0|richtext }}
-                            {% if parts.1 %}
-                                <div class="remainder biography">{{ parts.1|richtext }}</div>
-                                <a class="t2 showmore showBiography">Show more</a>
-                            {% endif %}
-                        {% endwith %}
-                    </li>
-                </ul>
+                            {% with self.biography|paragraph_split:"</p>" as parts %}
+                                {{ parts.0|richtext }}
+                                {% if parts.1 %}
+                                    <div class="remainder biography">{{ parts.1|richtext }}</div>
+                                    <a class="t2 showmore showBiography">Show more</a>
+                                {% endif %}
+                            {% endwith %}
+                        </li>
+                    </ul>
+                {% endif %}
                 {% if self.practice %}
                     <div class="divider"></div>
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
                             <h2 class="a2">Practice</h2>
                         </li>
-                        <li class="col col-9 last body-text-style">
+                        <li class="col col-9 last body-text-style showmorestyle">
                             {% with self.practice|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
                                 {% if parts.1 %}

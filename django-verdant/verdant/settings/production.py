@@ -11,6 +11,9 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
+VERDANTSEARCH_ES_URLS = ['http://rca1.dh.bytemark.co.uk:9200']
+
 try:
 	from .local import *
 except ImportError:

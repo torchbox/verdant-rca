@@ -603,12 +603,31 @@ header {
 
     input[type="text"] {
         width: 90%;
-        .t2;
+        .bc5;
         color: @color-dark-grey;
         padding: 28px;
         border: none;
         border-image-width: 0;
         background-color:transparent;
+    }
+    ::-webkit-input-placeholder {
+        padding: 2px 0 0 0;
+       .t2;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+        padding: 2px 0 0 0;
+       .t2;
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+        padding: 2px 0 0 0;
+       .t2;
+    }
+
+    :-ms-input-placeholder {
+        padding: 2px 0 0 0;
+       .t2;
     }
     input[type="text"]:focus{
         outline:none;
@@ -955,6 +974,7 @@ div.related-content-item {
     a.index-page-link {
         .chevron();
     }
+    .image-hover();
     img {
         //height: 150px;
     }
@@ -1269,6 +1289,8 @@ footer {
         .location {
             color: @color-medium-grey;
             display: block;
+            text-overflow: ellipsis;
+            overflow:hidden;
         }
     }
 }

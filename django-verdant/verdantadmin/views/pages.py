@@ -162,6 +162,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
+            messages.error(request, "The page could not be created due to validation errors")
             edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
@@ -194,6 +195,7 @@ def edit(request, page_id):
                 page.live = True
                 page.has_unpublished_changes = False
                 form.save()
+                page.revisions.update(submitted_for_moderation=False)
             else:
                 # not publishing the page
                 if page.live:
