@@ -49,7 +49,7 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required
-def export(request):
+def export(request, include_all=False):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
     def unique(seq, idfun=None):
@@ -177,8 +177,9 @@ def export(request):
 
     # write data rows
     for charge in all_charges:
-        if not charge.get('metadata__is_gift_aid') or not charge['paid'] or charge['refunded']:
-            continue
+        if not include_all:
+            if not charge.get('amount_gift_aid') or not charge['paid'] or charge['refunded']:
+                continue
         data = [unicode(charge[f] if f in charge else '') for f in fieldnames]
         writer.writerow(data)
 
