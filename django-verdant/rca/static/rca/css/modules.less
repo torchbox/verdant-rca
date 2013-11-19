@@ -67,8 +67,9 @@
 }
 
 .bx-wrapper {
-    overflow: hidden;
-    margin-bottom:0;
+    margin-bottom:20px;
+    padding-bottom: 20px; /* necessary to give pager dots space to exist */
+    overflow: visible; /* because the padding above doesn't work in safari and dots get cut off */
 
     img {
         width: auto;
@@ -111,6 +112,7 @@
         &:hover:after{
             background-position: -211px -441px;
         }
+        display: none;
     }
     .bx-prev {
         left: 0;
@@ -120,6 +122,7 @@
         &:hover:after{
             background-position: -301px -441px;
         }
+        display: none;
     }
     .bx-controls-direction a {
         width: 87px;
@@ -132,6 +135,8 @@
     .bx-pager{
         text-align:left;
         padding-top:0;
+        bottom:-5px;
+        left:0;
 
         &.bx-default-pager a{
             background:transparent;
@@ -1757,7 +1762,7 @@ form .hidden-field{
  */
 .cookie-notice {
     color: @color-white;
-    background-color: @color-rca-blue;
+    background-color: @color-charcoal;
     .bold();
     padding: @spacing-one;
     position: fixed;
