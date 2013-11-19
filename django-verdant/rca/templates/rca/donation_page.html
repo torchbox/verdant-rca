@@ -64,9 +64,14 @@
                         {% with form.address_country as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         <li class="divider"></li>
                         {% with form.email as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.subscribe as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.phone as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                     </ul>
                 </fieldset>
+
+                <div class="hidden-field">
+                    {% with form.stripe_token as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                </div>
 
                 {% csrf_token %}
 

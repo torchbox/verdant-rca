@@ -62,7 +62,7 @@ jQuery(function($) {
         .keyup(function(eve) {
             // this part is when left part of number is deleted and leaves a . in the leftmost position.
             // For example, 33.25, then 33 is deleted
-            if($(this).val().indexOf('.') == 0) {
+            if($(this).val().indexOf('.') === 0) {
                 $(this).val($(this).val().substring(1));
             }
         })
@@ -77,7 +77,7 @@ jQuery(function($) {
     // Gift aid toggles some fields
     $('#id_is_gift_aid').change(function(){
         $('.giftaid-toggled').toggle();
-    })
+    });
 
     $('#payment-form').submit(function(e) {
         var $form = $(this);

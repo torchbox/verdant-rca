@@ -219,7 +219,17 @@ $(function(){
         if ($(this).hasClass('active')) {
             $('.tab-pane.active').toggleClass('hide_if_mobile');
         } else {
+            // Save old tab position
+            var oldY = $(this).offset().top;
+
+            // Switch tabs
             $(this).tab('show');
+
+            // Work out change in position and scroll by it
+            var changeY = $(this).offset().top - oldY;
+            window.scrollBy(0, changeY);
+
+            // Remove hide_if_mobile class from all tab-panes that have it
             $('.tab-pane.hide_if_mobile').removeClass('hide_if_mobile');
         }
 
