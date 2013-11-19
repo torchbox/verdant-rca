@@ -1024,17 +1024,17 @@ footer {
             top: 10px;
             cursor: pointer;
         }
-        .footer-expand:hover {
-            background-position:-53px -1729px;
-        }
 
         > a{
             display:inline-block;
             text-indent:2px;
         }
 
-        &:hover .footer-expand{
-            background-position:-53px -1729px;
+        &:hover {
+            .footer-expand{
+                background-position:-53px -1729px;
+            }
+            cursor: pointer;
         }
     }
 
@@ -1044,12 +1044,21 @@ footer {
         .footer-expand {
             .sprite-load(-17px, -623px, 27px, 15px);
         }
-        .footer-expand:hover {
-            background-position:-17px -1729px;
+        &:hover {
+            .footer-expand {
+                background-position:-17px -1729px;
+            }
+            cursor:pointer;
+            div.submenu-block {
+                cursor: auto;
+            }
         }
         div.submenu-block {
             .clearfix();
             border-top: 1px solid @color-dark-grey;
+        }
+        div.submenu-block:hover + .footer-expand {
+            background-position:-17px -623px;
         }
     }
     a.footer-logo {

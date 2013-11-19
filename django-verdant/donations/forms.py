@@ -15,7 +15,8 @@ class DonationForm(forms.Form):
         self.fields['name'].widget = forms.HiddenInput()
         self.fields['name'].initial = ""  # name on card is optional and set by javascript
 
-    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone']
+    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
+
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
     amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", required=False, choices=(
@@ -37,6 +38,8 @@ class DonationForm(forms.Form):
         from the date of this declaration until I notify you otherwise.
     """)
     email = forms.EmailField(required=False)
+    not_included_in_supporters_list = forms.BooleanField(label="Please tick this box if you do not wish to be included in our list of supporters", required=False, help_text="")
+
     title           = forms.CharField(required=False, max_length=255)
     first_name      = forms.CharField(required=False, max_length=255)
     last_name       = forms.CharField(required=False, max_length=255)
@@ -48,11 +51,11 @@ class DonationForm(forms.Form):
     address_country = forms.CharField(label="Country", required=False, max_length=255)
     phone           = forms.CharField(required=False, max_length=255)
 
-    phone_type = forms.ChoiceField(required=False, choices=(
-            ("home", "Home"),
-            ("business", "Business"),
-            ("mobile", "Mobile"),
-    ))
+    # phone_type = forms.ChoiceField(required=False, choices=(
+    #         ("home", "Home"),
+    #         ("business", "Business"),
+    #         ("mobile", "Mobile"),
+    # ))
 
     affiliation = forms.ChoiceField(label="*Affiliation with the RCA", required=False, choices=(
             ("Alumnus/alumna", "Alumnus/alumna"),
@@ -65,7 +68,7 @@ class DonationForm(forms.Form):
             ("scholarships", "Scholarships"),
             ("college_greatest_need", "College’s greatest need"),
     ))
-    klass = forms.CharField(label="Class", required=False, max_length=255)
+    class_year = forms.CharField(label="Class year", required=False, max_length=255)
 
     name = forms.CharField(required=False, max_length=255)
     stripe_token = forms.CharField(required=False, max_length=255)

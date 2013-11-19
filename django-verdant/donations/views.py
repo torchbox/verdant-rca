@@ -49,7 +49,7 @@ from django.contrib.auth.decorators import login_required
 
 
 @login_required
-def export(request):
+def export(request, include_all=False):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
     def unique(seq, idfun=None):
@@ -123,9 +123,14 @@ def export(request):
         # convert amount from cents
         charge['amount'] = int(charge['amount']) / Decimal(100)
 
-        # add 20% giftaid field, with two decimal places:
-        # http://docs.python.org/2/library/decimal.html#decimal-faq
-        charge['amount_gift_aid'] = (charge['amount'] * Decimal(0.2)).quantize(Decimal(10) ** -2)
+        if charge.get('metadata__is_gift_aid') and charge.get('metadata__is_gift_aid') != "False":
+            # add 20% giftaid field, with two decimal places:
+            # http://docs.python.org/2/library/decimal.html#decimal-faq
+            charge['amount_gift_aid'] = (charge['amount'] * Decimal(0.2)).quantize(Decimal(10) ** -2)
+        else:
+            charge['amount_gift_aid'] = 0
+
+        charge.get('metadata__is_gift_aid', False)
 
         charge['created'] = datetime.fromtimestamp(int(charge['created'])).strftime('%Y-%m-%d %H:%M:%S')
 
@@ -143,13 +148,20 @@ def export(request):
         "card__address_country": "Country",
         "card__address_line1": "Address line 1",
         "card__address_line2": "Address line 2",
-        "card__address_state": "State / County",
+        "card__address_state": "County",
         "card__address_country": "Country",
+        "card__address_zip": "Post code",
         "metadata__title": "Title",
         "metadata__first_name": "First name",
         "metadata__last_name": "Last name",
         "metadata__email": "Email",
         "metadata__phone": "Phone number",
+        "metadata__class_year": "Class year",
+        "metadata__donation_for": "Gift directed to",
+        "metadata__affiliation": "Affiliation",
+        "metadata__not_included_in_supporters_list": "NOT included in supporters list",
+        "metadata__is_gift_aid": "Gift aid donation",
+        # "metadata__phone_type": "Phone type",
     }
 
     fieldnames = [str(f) for f in _fieldnames if str(f) in headers.keys()]
@@ -165,14 +177,15 @@ def export(request):
 
     # write data rows
     for charge in all_charges:
-        if not charge.get('metadata__is_gift_aid') or not charge['paid'] or charge['refunded']:
-            continue
+        if not include_all:
+            if not charge.get('amount_gift_aid') or not charge['paid'] or charge['refunded']:
+                continue
         data = [unicode(charge[f] if f in charge else '') for f in fieldnames]
         writer.writerow(data)
 
     return response
 
+
 @login_required
 def verdantadmin(request, title=None):
-    return render(request, 'donations/verdantadmin.html', {
-    })
+    return render(request, 'donations/verdantadmin.html', {})

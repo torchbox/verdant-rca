@@ -125,6 +125,7 @@ AREA_CHOICES = (
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
     ('sustainrca', 'SustainRCA'),
+    ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
 )
 
@@ -147,9 +148,21 @@ CAMPUS_CHOICES = (
 )
 
 EVENT_GALLERY_CHOICES = (
-    ('gallery1', 'Gallery 1'),
-    ('gallery2', 'Gallery 2'),
-    ('galleryn', 'Gallery N'),
+    ('courtyardgalleries', 'Courtyard Galleries'),
+    ('henrymooregallery', 'Henry Moore Gallery'),
+    ('lecturetheatre1', 'Lecture Theatre 1'),
+    ('lecturetheatre2', 'Lecture Theatre 2'),
+    ('linkgallery', 'Link Gallery'),
+    ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('palstevensbuilding', 'PAL, Stevens Building'),
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
+    ('photographystudios', 'Photography Studios'),
+    ('printmakingstudios', 'Printmaking Studios'),
+    ('sacklerbuilding', 'Sackler Building'),
+    ('sculpturebuilding', 'Sculpture Building'),
+    ('testbed1', 'Testbed 1'),
+
 )
 
 WORK_TYPES_CHOICES = (
@@ -376,14 +389,23 @@ class SocialFields(models.Model):
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
-    link = models.URLField(blank=True)
+    link = models.URLField("External link", blank=True)
+    link_page = models.ForeignKey('core.Page', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    @property
+    def get_link(self):
+        if self.link_page:
+            return self.link_page.url
+        else:
+            return self.link
 
     panels = [
         ImageChooserPanel('image'),
         FieldPanel('overlay_text'),
         FieldPanel('link'),
+        PageChooserPanel('link_page'),
         FieldPanel('embedly_url'),
         ImageChooserPanel('poster_image'),
     ]
@@ -1074,9 +1096,10 @@ class PressReleaseIndexAd(Orderable):
 
 class PressReleaseIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -1091,6 +1114,7 @@ class PressReleaseIndex(Page, SocialFields):
 PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1430,7 +1454,6 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
-    
 ]
 
 EventItem.promote_panels = [
@@ -1481,9 +1504,10 @@ class EventIndexAd(Orderable):
 
 class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -1547,6 +1571,7 @@ class EventIndex(Page, SocialFields):
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(EventIndex, 'related_links', label="Related links"),
     InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -1582,9 +1607,10 @@ class TalksIndexAd(Orderable):
 
 class TalksIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_page = None
 
@@ -1619,6 +1645,7 @@ class TalksIndex(Page, SocialFields):
 TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1655,9 +1682,10 @@ class ReviewsIndexAd(Orderable):
 
 class ReviewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -1692,6 +1720,7 @@ class ReviewsIndex(Page, SocialFields):
 ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1940,6 +1969,16 @@ class StandardIndexTeaser(Orderable):
         FieldPanel('text'),
     ]
 
+class StandardIndexStaffFeed(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='manual_staff_feed')
+    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    staff_role = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('staff', 'rca.StaffPage'),
+        FieldPanel('staff_role'),
+    ]
+
 class StandardIndexRelatedLink(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -2060,8 +2099,9 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
+    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
@@ -2379,7 +2419,7 @@ class JobsIndex(Page, SocialFields):
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(JobsIndex, 'related_links', label="Related links"),
     InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2426,9 +2466,10 @@ class AlumniIndexAd(Orderable):
 
 class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -2474,6 +2515,7 @@ class AlumniIndex(Page, SocialFields):
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(AlumniIndex, 'related_links', label="Related links"),
     InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2624,6 +2666,10 @@ class StaffPage(Page, SocialFields):
 
     search_name = 'Staff'
 
+    @property
+    def programmes(self):
+        return list({role.programme for role in StaffPageRole.objects.filter(page=self)})
+
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
@@ -2683,6 +2729,7 @@ class StaffIndexAd(Orderable):
 
 class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed = False
@@ -2736,6 +2783,7 @@ class StaffIndex(Page, SocialFields):
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -3055,9 +3103,10 @@ RcaNowPage.promote_panels = [
 
 class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -3105,6 +3154,7 @@ class RcaNowIndex(Page, SocialFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3437,7 +3487,12 @@ class GalleryPageRelatedLink(Orderable):
 
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = 'Gallery'
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -3508,6 +3563,7 @@ class GalleryPage(Page, SocialFields):
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
     InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
