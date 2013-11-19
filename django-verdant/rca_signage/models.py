@@ -77,7 +77,7 @@ class ScreenIndex(Page):
             data = dict(is_special=False, events=upcoming_events)
 
         # Return as JSON
-        return HttpResponse(json.dumps(data))
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
     def serve_screen(self, request, screen, extra_path=None):
         if extra_path == '':
