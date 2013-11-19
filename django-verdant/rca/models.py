@@ -1403,6 +1403,7 @@ class EventItem(Page, SocialFields):
 
 EventItem.content_panels = [
     MultiFieldPanel([
+        FieldPanel('special_event'),
         FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
         FieldPanel('area'),
@@ -1411,7 +1412,6 @@ EventItem.content_panels = [
         FieldPanel('specific_directions'),
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
-        FieldPanel('special_event'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
         FieldPanel('external_link'),
@@ -1430,7 +1430,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
-    InlinePanel(EventItem, 'screens', label="Screens"),
+    
 ]
 
 EventItem.promote_panels = [
@@ -1450,6 +1450,8 @@ EventItem.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    InlinePanel(EventItem, 'screens', label="On signage screens"),
 
     InlinePanel(EventItem, 'related_schools', label="Related schools"),
     InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
@@ -2020,6 +2022,35 @@ class StandardIndex(Page, SocialFields):
     indexed_fields = ('intro', ' strapline', 'body')
 
     search_name = None
+
+    def serve(self, request):
+        # Get list of events
+        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=self.events_feed_area).order_by('start_date')
+
+        # Event pagination
+        page = request.GET.get('page')
+        paginator = Paginator(events, 3)
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            events = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            events = paginator.page(paginator.num_pages)
+
+        # If the request is ajax, only return a new list of events
+        if request.is_ajax():
+            return render(request, 'rca/includes/standard_index_events_listing.html', {
+                'self': self,
+                'events': events,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'events': events,
+            })
+
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
