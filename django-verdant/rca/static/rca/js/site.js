@@ -26,6 +26,9 @@ function showHideFooter() {
         $(this).toggleClass('expanded');
         $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
     });
+    $('.submenu-block').click(function(e){
+        e.stopPropagation();
+    });
 }
 
 /* show hide dialogue - has its own funciton because of hide behaviour */
