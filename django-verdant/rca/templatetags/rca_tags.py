@@ -2,6 +2,7 @@ from django import template
 from django.utils.html import conditional_escape
 from django.db.models import Min, Max
 from django.template.base import parse_bits
+from core.util import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain
@@ -11,6 +12,10 @@ from rca.models import *
 from verdantdocs.models import Document
 
 register = template.Library()
+
+@register.filter(name='fieldtype')
+def fieldtype(bound_field):
+    return camelcase_to_underscore(bound_field.field.__class__.__name__)
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):

@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -36,6 +36,8 @@ from donations.mail_admins import mail_exception, full_exc_info
 import stripe
 
 import hashlib
+
+from rca_signage.constants import SCREEN_CHOICES
 
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -358,12 +360,6 @@ STAFF_TYPES_CHOICES = (
     ('academic', 'Academic'),
     ('technical', 'Technical'),
     ('administrative', 'Administrative'),
-)
-
-SCREEN_CHOICES = (
-    ('screen1', 'Screen 1'),
-    ('screen2', 'Screen 2'),
-    ('screen3', 'Screen 3'),
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
@@ -770,7 +766,8 @@ class ProgrammePage(Page, SocialFields):
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
 
-        paginator = Paginator(research_items, 4)
+        per_page = 4
+        paginator = Paginator(research_items, per_page)
 
         page = request.GET.get('page')
         try:
@@ -785,12 +782,14 @@ class ProgrammePage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
 
 ProgrammePage.content_panels = [
@@ -1431,6 +1430,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel(EventItem, 'screens', label="Screens"),
 ]
 
 EventItem.promote_panels = [
@@ -1486,10 +1486,10 @@ class EventIndex(Page, SocialFields):
     search_name = None
 
     def future_events(self):
-        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def past_events(self):
-        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -2417,7 +2417,7 @@ class AlumniIndex(Page, SocialFields):
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
-        paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
+        paginator = Paginator(alumni_pages, 11)
         try:
             alumni_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2680,7 +2680,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 17)  # Show 11 research items per page
+        paginator = Paginator(staff_pages, 17)
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2867,6 +2867,18 @@ class StudentPageWorkSponsor(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPagePublication(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='publications')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class StudentPageConference(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='conferences')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -2924,6 +2936,8 @@ StudentPage.content_panels = [
     FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
 ]
@@ -3328,8 +3342,9 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items.order_by('-year')
 
+        per_page = 8
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 8)  # Show 8 research items per page
+        paginator = Paginator(research_items, per_page)  # Show 8 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
@@ -3342,12 +3357,14 @@ class CurrentResearchPage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
 
 CurrentResearchPage.content_panels = [
@@ -3525,8 +3542,6 @@ class DonationPage(Page, SocialFields):
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
-        if request.method == "GET":
-            form = DonationForm()
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
@@ -3551,6 +3566,8 @@ class DonationPage(Page, SocialFields):
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
+        else:
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,
