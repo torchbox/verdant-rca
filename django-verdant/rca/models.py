@@ -1078,7 +1078,7 @@ class PressReleaseIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -1486,7 +1486,7 @@ class EventIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -1589,7 +1589,7 @@ class TalksIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_page = None
 
@@ -1664,7 +1664,7 @@ class ReviewsIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -2437,7 +2437,7 @@ class AlumniIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
@@ -3070,7 +3070,7 @@ class RcaNowIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed_fields = ('intro', )
+    indexed_fields = ('intro', 'body')
 
     search_name = None
 
