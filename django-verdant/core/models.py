@@ -166,6 +166,8 @@ class Page(MP_Node, ClusterableModel, Indexed):
             # a page without a parent is the tree root, which always has a url_path of '/'
             self.url_path = '/'
 
+        return self.url_path
+
     @transaction.commit_on_success  # ensure that changes are only committed when we have updated all descendant URL paths, to preserve consistency
     def save(self, *args, **kwargs):
         update_descendant_url_paths = False
@@ -188,14 +190,16 @@ class Page(MP_Node, ClusterableModel, Indexed):
         result = super(Page, self).save(*args, **kwargs)
 
         if update_descendant_url_paths:
-            cursor = connection.cursor()
-            cursor.execute("""
-                UPDATE core_page
-                SET url_path = %s || substring(url_path from %s)
-                WHERE path LIKE %s AND id <> %s
-            """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
-
+            self._update_descendant_url_paths(old_url_path, new_url_path)
         return result
+
+    def _update_descendant_url_paths(self, old_url_path, new_url_path):
+        cursor = connection.cursor()
+        cursor.execute("""
+            UPDATE core_page
+            SET url_path = %s || substring(url_path from %s)
+            WHERE path LIKE %s AND id <> %s
+        """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
 
     def object_indexed(self):
         # Exclude root node from index
@@ -409,6 +413,20 @@ class Page(MP_Node, ClusterableModel, Indexed):
         and it has no live children.
         """
         return (not self.live) and (not self.get_descendants().filter(live=True).exists())
+
+    @transaction.commit_on_success  # only commit when all descendants are properly updated
+    def move(self, target, pos=None):
+        """
+        Extension to the treebeard 'move' method to ensure that url_path is updated too.
+        """
+        old_url_path = Page.objects.get(id=self.id).url_path
+        super(Page, self).move(target, pos=pos)
+        # treebeard's move method doesn't actually update the in-memory instance, so we need to work
+        # with a freshly loaded one now
+        new_self = Page.objects.get(id=self.id)
+        new_url_path = new_self.set_url_path(new_self.get_parent())
+        new_self.save()
+        new_self._update_descendant_url_paths(old_url_path, new_url_path)
 
 
 def get_navigation_menu_items():
