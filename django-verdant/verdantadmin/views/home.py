@@ -25,3 +25,7 @@ def home(request):
         'site_name': settings.VERDANT_SITE_NAME,
         'page_revisions_for_moderation': page_revisions_for_moderation
     })
+
+
+def error_test(request):
+    raise Exception("This is a test of the emergency broadcast system.")
