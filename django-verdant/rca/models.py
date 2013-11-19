@@ -1075,6 +1075,7 @@ class PressReleaseIndexAd(Orderable):
 
 class PressReleaseIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', )
@@ -1092,6 +1093,7 @@ class PressReleaseIndex(Page, SocialFields):
 PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1431,7 +1433,6 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
-    
 ]
 
 EventItem.promote_panels = [
@@ -1482,6 +1483,7 @@ class EventIndexAd(Orderable):
 
 class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', )
@@ -1548,6 +1550,7 @@ class EventIndex(Page, SocialFields):
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(EventIndex, 'related_links', label="Related links"),
     InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -1583,6 +1586,7 @@ class TalksIndexAd(Orderable):
 
 class TalksIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
     indexed_fields = ('intro', )
@@ -1620,6 +1624,7 @@ class TalksIndex(Page, SocialFields):
 TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1656,6 +1661,7 @@ class ReviewsIndexAd(Orderable):
 
 class ReviewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
     indexed_fields = ('intro', )
@@ -1693,6 +1699,7 @@ class ReviewsIndex(Page, SocialFields):
 ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -2427,6 +2434,7 @@ class AlumniIndexAd(Orderable):
 
 class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', )
@@ -2475,6 +2483,7 @@ class AlumniIndex(Page, SocialFields):
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(AlumniIndex, 'related_links', label="Related links"),
     InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2684,6 +2693,7 @@ class StaffIndexAd(Orderable):
 
 class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed = False
@@ -2737,6 +2747,7 @@ class StaffIndex(Page, SocialFields):
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -3056,6 +3067,7 @@ RcaNowPage.promote_panels = [
 
 class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed_fields = ('intro', )
@@ -3106,6 +3118,7 @@ class RcaNowIndex(Page, SocialFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3438,6 +3451,7 @@ class GalleryPageRelatedLink(Orderable):
 
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     def serve(self, request):
@@ -3509,6 +3523,7 @@ class GalleryPage(Page, SocialFields):
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body'),
     FieldPanel('twitter_feed'),
     InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
