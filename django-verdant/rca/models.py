@@ -37,6 +37,8 @@ import stripe
 
 import hashlib
 
+from rca_signage.constants import SCREEN_CHOICES
+
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -358,12 +360,6 @@ STAFF_TYPES_CHOICES = (
     ('academic', 'Academic'),
     ('technical', 'Technical'),
     ('administrative', 'Administrative'),
-)
-
-SCREEN_CHOICES = (
-    ('screen1', 'Screen 1'),
-    ('screen2', 'Screen 2'),
-    ('screen3', 'Screen 3'),
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
@@ -1434,6 +1430,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel(EventItem, 'screens', label="Screens"),
 ]
 
 EventItem.promote_panels = [
@@ -2870,6 +2867,18 @@ class StudentPageWorkSponsor(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPagePublication(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='publications')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class StudentPageConference(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='conferences')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -2927,6 +2936,8 @@ StudentPage.content_panels = [
     FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
 ]
