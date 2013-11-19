@@ -5,6 +5,13 @@ $(function(){
 		$("body").addClass("show-mobile-menu");
 	},function(){
 		$("body").removeClass("show-mobile-menu");
+
+		// measuring the width of some elements removes the white area appearing on the right after closing left menubar
+		setTimeout(function(){
+			$("body > *").each(function() {
+				$(this).width();
+			});
+		}, 250);
 	});
 
 
@@ -41,18 +48,18 @@ $(function(){
 			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
 			//enable desktop dropdown nav
-			desktopNav.apply()
+			desktopNav.apply();
 		},
 		off: function(){
 			//kill desktop dropdown nav
-			desktopNav.revoke()
+			desktopNav.revoke();
 		}
 	});
 
 	/* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
-    $('.lt-ie9').each(function(){
-        desktopNav.apply()
-    })
+	$('.lt-ie9').each(function(){
+		desktopNav.apply();
+	});
 
 });
 
