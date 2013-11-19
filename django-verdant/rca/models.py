@@ -148,9 +148,21 @@ CAMPUS_CHOICES = (
 )
 
 EVENT_GALLERY_CHOICES = (
-    ('gallery1', 'Gallery 1'),
-    ('gallery2', 'Gallery 2'),
-    ('galleryn', 'Gallery N'),
+    ('courtyardgalleries', 'Courtyard Galleries'),
+    ('henrymooregallery', 'Henry Moore Gallery'),
+    ('lecturetheatre1', 'Lecture Theatre 1'),
+    ('lecturetheatre2', 'Lecture Theatre 2'),
+    ('linkgallery', 'Link Gallery'),
+    ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('palstevensbuilding', 'PAL, Stevens Building'),
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
+    ('photographystudios', 'Photography Studios'),
+    ('printmakingstudios', 'Printmaking Studios'),
+    ('sacklerbuilding', 'Sackler Building'),
+    ('sculpturebuilding', 'Sculpture Building'),
+    ('testbed1', 'Testbed 1'),
+
 )
 
 WORK_TYPES_CHOICES = (
