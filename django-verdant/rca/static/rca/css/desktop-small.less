@@ -166,14 +166,15 @@ nav {
         font-size: 12px;
         text-transform:uppercase;
         float:right;
-        padding:8px 45px 8px @grid-gutter-width;
+        padding:9px 45px 8px @grid-gutter-width;
         line-height:1.6em;
         border-right:1px solid fade(@color-medium-grey, 40%);
+        .bold();
         &:after {
             .sprite-load(-53px, -1178px, 27px, 15px);
             content: ' ';
             position: absolute;
-            top: 10px; /* Arbitrary. Whatever looks good */
+            top: 11px; /* Arbitrary. Whatever looks good */
             right: @spacing-half;
         }
 
