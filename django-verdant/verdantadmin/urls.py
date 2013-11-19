@@ -9,6 +9,8 @@ urlpatterns = patterns('django.contrib.auth.views',
 urlpatterns += patterns('verdantadmin.views',
     url(r'^$', 'home.home', name='verdantadmin_home'),
 
+    url(r'^failwhale/$', 'home.error_test', name='verdantadmin_error_test'),
+
     url(r'^pages/$', 'pages.index', name='verdantadmin_explore_root'),
     url(r'^pages/(\d+)/$', 'pages.index', name='verdantadmin_explore'),
 
