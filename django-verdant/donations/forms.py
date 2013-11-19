@@ -15,7 +15,8 @@ class DonationForm(forms.Form):
         self.fields['name'].widget = forms.HiddenInput()
         self.fields['name'].initial = ""  # name on card is optional and set by javascript
 
-    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone']
+    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'klass', 'donation_for', 'affiliation', 'phone_type']
+
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
     amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", required=False, choices=(
@@ -72,13 +73,11 @@ class DonationForm(forms.Form):
 
     def clean_amount(self):
         # stripe uses cents for the amount, i.e. $1.23 is represented as 123
-        self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
+        if self.cleaned_data['amount']:
+            self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
+        else:
+            self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
         return self.cleaned_data['amount']
-
-    def clean_amounts(self):
-        # stripe uses cents for the amount, i.e. $1.23 is represented as 123
-        self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
-        return self.cleaned_data['amounts']
 
     def clean(self):
         # the matadat field allows as to store extra information for each payment
