@@ -5,6 +5,7 @@ from django.template.loader import render_to_string
 from core.models import Page
 from rca.models import EventItemDatesTimes, EventItem
 from constants import SCREEN_CHOICES, SCREEN_CHOICES_DICT
+from rca_signage.templatetags import rca_signage_tags
 import datetime
 import json
 
@@ -48,82 +49,45 @@ class ScreenIndex(Page):
 
         return events
 
-    def build_upcoming_events_slide(self, events):
-        # Return nothing if there are no events
-        if len(events) == 0:
-            return None
-
-        # Sort events into days
-        days = []
-        previous_date = None
-        for event in events:
-            # If date changed, create new day
-            if event[0] != previous_date:
-                previous_date = event[0]
-                days.append({
-                    'date': event[0],
-                    'events': [],
-                })
-
-            # Add event to current day
-            days[-1]['events'].append(event[1])
-
-        # Return new slide
-        return ('rca_signage/upcoming_events_slide.html', dict(days=days))
-
-    def get_slides(self, screen):
-        slides = []
-
-        # Check for special event
+    def serve_data(self, request, screen):
+       # Check for special event
         special_events = EventItemDatesTimes.objects.filter(page__screens__screen=screen, page__special_event=True, page__live=True)
         if len(special_events) > 0:
-            for event in special_events:
-                slides.append(('rca_signage/special_event_slide.html', {
-                    'event': event,
-                }))
-
-            return slides
-
-        # No special event, get upcoming events instead
-
-        # Get list of upcoming events
-        upcoming_events = self.get_upcoming_events()
-
-        # Build first slide
-        first_slide = self.build_upcoming_events_slide(upcoming_events[:5])
-        if not first_slide is None:
-            slides.append(first_slide)
+            # Special event found, get special events
+            new_special_events = [{
+                    'date': rca_signage_tags.date_display(datetime.date.today()),
+                    'times': rca_signage_tags.event_times_display(event),
+                    'title': event.page.title,
+                    'location': rca_signage_tags.event_location_display(event),
+                    'specific_directions': event.page.specific_directions,
+                }
+                for event in special_events
+            ]
+            data = dict(is_special=True, events=new_special_events)
         else:
-            slides.append(('rca_signage/upcoming_events_slide.html', dict(days=[])))
-
-        # Build second slide
-        second_slide = self.build_upcoming_events_slide(upcoming_events[5:])
-        if not second_slide is None:
-            slides.append(second_slide)
-
-        return slides
-
-    def serve_slides(self, request, screen):
-        # Get slides
-        slides = []
-        for slide in self.get_slides(screen):
-            context = {
-                'screen': dict(slug=screen, name=SCREEN_CHOICES_DICT[screen]),
-                'date': datetime.date.today(),
-            }
-            context.update(slide[1])
-            slides.append(render_to_string(slide[0], context))
+            # No special events, get upcoming events instead
+            upcoming_events = [{
+                    'date': rca_signage_tags.date_display(event[0]),
+                    'times': rca_signage_tags.event_times_display(event[1]),
+                    'title': event[1].page.title,
+                    'location': rca_signage_tags.event_location_display(event[1]),
+                }
+                for event in self.get_upcoming_events()
+            ]
+            data = dict(is_special=False, events=upcoming_events)
 
         # Return as JSON
-        return HttpResponse(json.dumps(slides))
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
     def serve_screen(self, request, screen, extra_path=None):
-        if extra_path == 'slides':
-            return self.serve_slides(request, screen)
-
-        return render(request, 'rca_signage/screen.html', {
-                'screen': dict(slug=screen, name=SCREEN_CHOICES_DICT[screen]),
-            })
+        if extra_path == '':
+            return render(request, 'rca_signage/screen.html', {
+                    'screen': dict(slug=screen, name=SCREEN_CHOICES_DICT[screen]),
+                })
+        elif extra_path == 'data':
+            return self.serve_data(request, screen)
+        else:
+            raise Http404
 
     def serve(self, request, screen=None, extra_path=None):
         # Check if this request is for a screen

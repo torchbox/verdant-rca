@@ -1,40 +1,40 @@
 $(function() {
-	var currentSlide = 0;
-	var slides = [];
+    var currentPage = 0;
+    var pages = []
 
-	function setSlide(newSlide) {
-		// If there are no slides, do nothing
-		if (slides.length == 0) {
-			return;
-		}
+    function setPage(newPage) {
+        // If there are no pages, do nothing
+        if (pages.length == 0) {
+            return;
+        }
 
-		// Wrap slide id
-		if (newSlide >= slides.length)
-			newSlide = 0;
+        // Wrap page id
+        if (newPage >= pages.length)
+            newPage = 0;
 
-		// Switch to next slide
-		currentSlide = newSlide;
-		$("div#content").html(slides[currentSlide]);
-	}
+        // Switch to next page
+        currentPage = newPage;
+        $("div#content").html(pages[currentPage]);
+    }
 
-	function updateSlides() {
-		// Perform ajax request
-		$.getJSON("slides", function(newSlides) {
-			// Get new slides
-			slides = newSlides;
+    function updatePages() {
+        // Perform ajax request
+        $.getJSON("data", function(newPages) {
+            // Get new pages
+            pages = newPages;
 
-			// Go back to first slide
-			setSlide(0);
-		});
-	}
-	updateSlides();
+            // Go back to first page
+            setPage(0);
+        });
+    }
+    updatePages();
 
-	// Update slides every minute
-	window.setInterval(updateSlides, 60000);
+    // Update pages every minute
+    window.setInterval(updatePages, 60000);
 
-	// Rotate slides every 10 seconds
-	window.setInterval(function() {
-		// Go to next slide
-		setSlide(currentSlide + 1)
-	}, 10000);
+    // Rotate pages every 10 seconds
+    window.setInterval(function() {
+        // Go to next page
+        setPage(currentPage + 1)
+    }, 10000);
 });

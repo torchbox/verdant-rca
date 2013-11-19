@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -1486,10 +1486,10 @@ class EventIndex(Page, SocialFields):
     search_name = None
 
     def future_events(self):
-        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def past_events(self):
-        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -3542,8 +3542,6 @@ class DonationPage(Page, SocialFields):
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
-        if request.method == "GET":
-            form = DonationForm()
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
@@ -3568,6 +3566,8 @@ class DonationPage(Page, SocialFields):
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
+        else:
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,

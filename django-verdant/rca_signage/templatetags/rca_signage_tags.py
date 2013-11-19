@@ -5,6 +5,11 @@ register = template.Library()
 
 
 @register.filter()
+def date_display(date):
+    return date.strftime('%A %d %B')
+
+
+@register.filter()
 def event_times_display(event_datetime):
     if event_datetime.time_from:
         time_from = event_datetime.time_from.strftime('%H.%M')
