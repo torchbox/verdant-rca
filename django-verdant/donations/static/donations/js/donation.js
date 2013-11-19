@@ -53,17 +53,26 @@ jQuery(function($) {
 
     $('[data-stripe="number"]').payment('formatCardNumber');
     $('[data-stripe="cvc"]').payment('formatCardCVC');
-    $('[name="amount"]').keypress(function(eve) {
-        if ((eve.which != 46 || $(this).val().indexOf('.') != -1) && (eve.which < 48 || eve.which > 57)  ) {
-            eve.preventDefault();
-        }
-    }).keyup(function(eve) {
-        // this part is when left part of number is deleted and leaves a . in the leftmost position.
-        // For example, 33.25, then 33 is deleted
-        if($(this).val().indexOf('.') == 0) {
-            $(this).val($(this).val().substring(1));
-        }
-    });
+    $('[name="amount"]')
+        .keypress(function(eve) {
+            if ((eve.which != 46 || $(this).val().indexOf('.') != -1) && (eve.which < 48 || eve.which > 57)  ) {
+                eve.preventDefault();
+            }
+        })
+        .keyup(function(eve) {
+            // this part is when left part of number is deleted and leaves a . in the leftmost position.
+            // For example, 33.25, then 33 is deleted
+            if($(this).val().indexOf('.') == 0) {
+                $(this).val($(this).val().substring(1));
+            }
+        })
+        .autocomplete({
+            source: ["50", "100", "250", "500", "1000"],
+            minLength: 0
+        })
+        .focus(function(){
+            $(this).autocomplete("search", "" );
+        });
 
     // Gift aid toggles some fields
     $('#id_is_gift_aid').change(function(){
