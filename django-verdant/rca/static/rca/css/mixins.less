@@ -104,6 +104,19 @@
     height: @height;
 }
 
+.sprite-load-standard (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height, @file, @retinaFile) {
+    background-image: url("@{path-static}images/@{file}");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:2616/2px 600/2px;
+        background-color: red;
+    }
+}
+
 .sprite-load-medium2 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
     background-image: url("@{path-static}images/sprites-medium2.png");
     background-repeat: no-repeat;

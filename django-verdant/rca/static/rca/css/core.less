@@ -569,12 +569,18 @@ header {
 }
 
 .showsearch {
-    &:after{
+    /*&:after{
         .sprite-load(-105px, -1094px, 44px, 44px);
-    }
+    }*/
+    //.sprite { background: url('imgs/icons-54-std.png') no-repeat -86px -87px; width: 44px; height: 43px; }
+    //background: url('imgs/icons-54-std@2x.png') no-repeat -173px -174px; width: 88px; height: 87px;
+
     /*&:after{
         .sprite-load-medium2(-119px, -566px, -81px, -106px, 44px, 44px);
     }*/
+    &:after {
+        .sprite-load-standard(-86px, -87px, -173px, -174px, 44px, 43px, 'icons-54-std.png', 'icons-54-std@2x.png');
+    }
 }
 
 .showmenu {
