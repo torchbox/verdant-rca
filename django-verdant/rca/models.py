@@ -1093,7 +1093,7 @@ class PressReleaseIndex(Page, SocialFields):
 PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1550,7 +1550,7 @@ class EventIndex(Page, SocialFields):
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(EventIndex, 'related_links', label="Related links"),
     InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -1624,7 +1624,7 @@ class TalksIndex(Page, SocialFields):
 TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1699,7 +1699,7 @@ class ReviewsIndex(Page, SocialFields):
 ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -2068,7 +2068,7 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
@@ -2387,7 +2387,7 @@ class JobsIndex(Page, SocialFields):
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(JobsIndex, 'related_links', label="Related links"),
     InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2483,7 +2483,7 @@ class AlumniIndex(Page, SocialFields):
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(AlumniIndex, 'related_links', label="Related links"),
     InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2747,7 +2747,7 @@ class StaffIndex(Page, SocialFields):
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -3118,7 +3118,7 @@ class RcaNowIndex(Page, SocialFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3523,7 +3523,7 @@ class GalleryPage(Page, SocialFields):
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
     InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
