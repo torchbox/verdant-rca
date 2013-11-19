@@ -3454,6 +3454,10 @@ class GalleryPage(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
+    indexed_fields = ('intro', 'body')
+
+    search_name = 'Gallery'
+
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
