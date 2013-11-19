@@ -3542,8 +3542,6 @@ class DonationPage(Page, SocialFields):
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
-        if request.method == "GET":
-            form = DonationForm()
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
@@ -3568,6 +3566,8 @@ class DonationPage(Page, SocialFields):
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
+        else:
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,
