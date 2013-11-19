@@ -2867,6 +2867,18 @@ class StudentPageWorkSponsor(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPagePublication(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='publications')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class StudentPageConference(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='conferences')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -2924,6 +2936,8 @@ StudentPage.content_panels = [
     FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
 ]
