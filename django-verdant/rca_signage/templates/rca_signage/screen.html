@@ -4,15 +4,28 @@
 <html>
     <head>
         <meta charset="utf-8" />
+        <title>{{ screen.name }}</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta http-equiv="cleartype" content="on" />
 
         {% compress css %}
+            <link rel="stylesheet" href="{% static "rca_signage/css/normalize.css" %}" />
             <link rel="stylesheet" type="text/less" href="{% static "rca_signage/css/screen.less" %}" />
         {% endcompress %}
     </head>
     <body>
-        <div id="content">Loading content...</div>
-
+        <div class="wrapper">
+            <h1 id="heading">Events</h1>
+            <h2 class="todays-date">Monday 25th September</h2>
+            <div id="loading">Loading events...</div>
+            <div id="eventlist" class="loading">
+                <ul></ul>
+            </div>
+            <div id="paging" class="loading">1/1</div>
+        </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        
         {% compress js %}
             <script src="{% static "rca_signage/js/screen.js" %}"></script>
         {% endcompress %}

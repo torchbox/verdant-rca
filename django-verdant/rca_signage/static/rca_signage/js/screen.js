@@ -1,40 +1,121 @@
-$(function() {
-    var currentPage = 0;
-    var pages = []
+var conf = {
+    currentPage: 1, // NB: number of page is 1-based so must be n-1 to use for array access purposes
+    eventsData: [],
+    loadInterval: 120, // frequency (seconds) that new events are pulled from DB
+    pageInterval: 1, // frequence (seconds) that events are paginated
+    eventsElem: $('#eventlist'),
+    headingElem: $('#heading'),
+    loadingElem: $('#loading'),
+    pagingElem: $('#paging'),
+    pages: [],
 
-    function setPage(newPage) {
-        // If there are no pages, do nothing
-        if (pages.length == 0) {
-            return;
+    loadEvents: function() {
+        $this = this;
+
+        console.log('loading events');
+        // Perform ajax request
+        $.getJSON("data", function(data) {
+            console.log('events loaded');
+            $this.eventsData = data;
+            $this.handleEvents();
+        });
+    },
+
+    handleEvents: function(){
+        console.log('handling events');
+
+        if(this.eventsData.is_special){
+            console.log('special event detected');
+            this.headingElem.html('Special events')
+        } else {
+            console.log('no special events detected');
+            this.headingElem.html('Upcoming events')
         }
 
-        // Wrap page id
-        if (newPage >= pages.length)
-            newPage = 0;
+        for (var e=0; e < this.eventsData.events.length; e++){
+            var li = $('<li></li>').appendTo(this.eventsElem.find('ul'));
+            if (this.eventsData.events[e].times && this.eventsData.events[e].times.length){
+               $('<p>' + this.eventsData.events[e].times + '</p>').appendTo(li);
+            }
+            $('<h3>' + this.eventsData.events[e].title + '</h3>').appendTo(li);
+            if (this.eventsData.events[e].location && this.eventsData.events[e].location.length){
+               $('<p>' + this.eventsData.events[e].location + '</p>').appendTo(li);
+            }
+            if (this.eventsData.events[e].specific_directions && this.eventsData.events[e].specific_directions.length){
+               $('<p>' + this.eventsData.events[e].specific_directions + '</p>').appendTo(li);
+            }
+        }
 
-        // Switch to next page
-        currentPage = newPage;
-        $("div#content").html(pages[currentPage]);
+        if(this.eventsElem.find('ul').height() > this.eventsElem.height()){
+            console.log('more events than space available, paginating');
+
+            $this = this;
+            var totalHeight = 0;
+            var pageCounter = 0;
+
+            function addToPage(elem){
+                totalHeight += elem.outerHeight();
+                if(typeof $this.pages[pageCounter] == "undefined"){
+                    $this.pages[pageCounter] = [];
+                }
+                $this.pages[pageCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
+            }
+
+            this.eventsElem.find('li').each(function(){
+                if(totalHeight + $(this).outerHeight() > $this.eventsElem.outerHeight()){
+                    pageCounter ++;
+                    totalHeight = 0;
+
+                    addToPage($(this));
+                }else{
+                    addToPage($(this));
+                }
+            });
+
+            $this.eventsElem.empty();
+
+            for(var i=0; i < $this.pages.length; i++){
+                var ul = $('<ul></ul>').appendTo($this.eventsElem);
+                ul.append($this.pages[i]);
+            }
+
+            //reset current page
+            $this.currentPage = 0;
+            $this.changePage();
+
+            $this.eventsElem.removeClass('loading');
+            $this.pagingElem.html($this.currentPage + '/' + $this.pages.length).removeClass('loading');
+            $this.loadingElem.hide();
+        }
+    },
+
+    changePage: function(){
+        // if beyond number of available pages, reset to 1
+        if(this.currentPage + 1 > this.pages.length){
+            this.currentPage = 0;
+        }
+        this.currentPage++;
+
+        if(this.pages.length >= this.currentPage){
+            this.pagingElem.html(this.currentPage + '/' + $this.pages.length);
+            this.eventsElem.find('ul').hide();
+            this.eventsElem.find('ul:eq(' + (this.currentPage-1) + ')').show()
+        }
     }
+}
 
-    function updatePages() {
-        // Perform ajax request
-        $.getJSON("data", function(newPages) {
-            // Get new pages
-            pages = newPages;
 
-            // Go back to first page
-            setPage(0);
-        });
-    }
-    updatePages();
+$(function() {
+    // load events
+    conf.loadEvents();
 
-    // Update pages every minute
-    window.setInterval(updatePages, 60000);
+    // load new events on an interval
+    window.setInterval(function(){
+        conf.loadEvents();
+    }, conf.loadInterval * 1000);
 
-    // Rotate pages every 10 seconds
+    // rotate pages of events on an interval
     window.setInterval(function() {
-        // Go to next page
-        setPage(currentPage + 1)
-    }, 10000);
+       conf.changePage();
+    }, conf.pageInterval * 1000);
 });
