@@ -1403,6 +1403,7 @@ class EventItem(Page, SocialFields):
 
 EventItem.content_panels = [
     MultiFieldPanel([
+        FieldPanel('special_event'),
         FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
         FieldPanel('area'),
@@ -1411,7 +1412,6 @@ EventItem.content_panels = [
         FieldPanel('specific_directions'),
         FieldPanel('specific_directions_link'),
         FieldPanel('gallery'),
-        FieldPanel('special_event'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
         FieldPanel('external_link'),
@@ -1430,7 +1430,7 @@ EventItem.content_panels = [
     ],'Contact'),
     InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
     InlinePanel(EventItem, 'contact_email', label="Contact email address"),
-    InlinePanel(EventItem, 'screens', label="Screens"),
+    
 ]
 
 EventItem.promote_panels = [
@@ -1450,6 +1450,8 @@ EventItem.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    InlinePanel(EventItem, 'screens', label="On signage screens"),
 
     InlinePanel(EventItem, 'related_schools', label="Related schools"),
     InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
