@@ -2634,6 +2634,10 @@ class StaffPage(Page, SocialFields):
 
     search_name = 'Staff'
 
+    @property
+    def programmes(self):
+        return list({role.programme for role in StaffPageRole.objects.filter(page=self)})
+
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
