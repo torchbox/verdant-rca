@@ -15,7 +15,7 @@ class DonationForm(forms.Form):
         self.fields['name'].widget = forms.HiddenInput()
         self.fields['name'].initial = ""  # name on card is optional and set by javascript
 
-    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'subscribe']  # 'phone_type'
+    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
 
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
@@ -38,7 +38,7 @@ class DonationForm(forms.Form):
         from the date of this declaration until I notify you otherwise.
     """)
     email = forms.EmailField(required=False)
-    subscribe = forms.BooleanField(label="Subscribe to mailing list", required=False, initial=True, help_text="")
+    not_included_in_supporters_list = forms.BooleanField(label="Please tick this box if you do not wish to be included in our list of supporters", required=False, help_text="")
 
     title           = forms.CharField(required=False, max_length=255)
     first_name      = forms.CharField(required=False, max_length=255)

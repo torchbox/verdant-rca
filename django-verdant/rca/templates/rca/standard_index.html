@@ -22,9 +22,7 @@
         </section>
     {% endif %}
 
-    {% if self.staff_feed_source %}
-        {% related_staff school=self.staff_feed_source %}
-    {% endif %}
+    {% include "rca/includes/modules/manual_staff_feed.html" %}
     
     <!--custom module block-->
     {% with self.custom_content_modules.all as custom_modules %}
