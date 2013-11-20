@@ -47,7 +47,7 @@ REDIRECTS = {
     'accounts': '/more/official-information/governance/corporate-publications/',
     'admissions': '/studying-at-the-rca/apply/',
     'alumni': '/more/for-alumni/',
-    'alumniRCA': ' /more/for-alumni/',
+    'alumnirca': '/more/for-alumni/',
     'annualreview': '/more/official-information/governance/corporate-publications/',
     'applying': '/studying-at-the-rca/apply/',
     'applications': '/studying-at-the-rca/apply/',
