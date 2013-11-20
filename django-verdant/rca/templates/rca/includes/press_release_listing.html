@@ -22,7 +22,7 @@
                                         {% with press_release.carousel_items.all as carousel_items %}
                                             {% with carousel_items|first as carousel_item %}
                                                 {% if carousel_item.image %}
-                                                    {% image carousel_item.image fill-300x169 %}
+                                                    {% image carousel_item.image fill-600x338 %}
                                                 {% else %}
                                                     <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="600">
                                                 {% endif %}

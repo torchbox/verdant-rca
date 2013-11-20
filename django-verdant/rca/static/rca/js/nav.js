@@ -3,6 +3,11 @@ $(function(){
 	/* configure left slideout menu toggle */
 	$(".mobile-menu-button").toggleClick(function(){
 		$("body").addClass("show-mobile-menu");
+
+		// Scroll back to top of page
+		$("body,html").animate({
+			scrollTop: 0
+		}, 800);
 	},function(){
 		$("body").removeClass("show-mobile-menu");
 

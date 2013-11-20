@@ -184,6 +184,8 @@ def edit(request, page_id):
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
 
+    errors_debug = None
+
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=page)
 
@@ -219,6 +221,10 @@ def edit(request, page_id):
         else:
             messages.error(request, "The page could not be saved due to validation errors")
             edit_handler = edit_handler_class(instance=page, form=form)
+            errors_debug = (
+                repr(edit_handler.form.errors)
+                + repr([(name, formset.errors) for (name, formset) in edit_handler.form.formsets.iteritems() if formset.errors])
+            )
     else:
         form = form_class(instance=page)
         edit_handler = edit_handler_class(instance=page, form=form)
@@ -231,6 +237,7 @@ def edit(request, page_id):
     return render(request, 'verdantadmin/pages/edit.html', {
         'page': page,
         'edit_handler': edit_handler,
+        'errors_debug': errors_debug,
     })
 
 @login_required
