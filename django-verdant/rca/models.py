@@ -2843,9 +2843,9 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
 
         if school and school != '':
-            research_students = research_students.filter(roles__school=school)
+            research_students = research_students.filter(school=school)
         if programme and programme != '':
-            research_students = research_students.filter(roles__programme=programme)
+            research_students = research_students.filter(programme=programme)
 
         research_students = research_students.distinct()
 
@@ -2865,7 +2865,7 @@ class ResearchStudentIndex(Page, SocialFields):
             research_students = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/research_students_listing.html", {
+            return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
                 'research_students': research_students,
                 'related_programmes': related_programmes,
@@ -2975,6 +2975,12 @@ class StudentPageConference(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPageSupervisor(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+
+    panels = [FieldPanel('supervisor')]
+
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -2994,7 +3000,7 @@ class StudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
+    supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, editable=False)
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
@@ -3014,8 +3020,8 @@ StudentPage.content_panels = [
     FieldPanel('degree_qualification'),
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
-    PageChooserPanel('supervisor'),
     ImageChooserPanel('profile_image'),
+    InlinePanel(StudentPage, 'supervisors', label="Supervisor"),
     InlinePanel(StudentPage, 'email', label="Email"),
     InlinePanel(StudentPage, 'phone', label="Phone"),
     InlinePanel(StudentPage, 'website', label="Website"),
