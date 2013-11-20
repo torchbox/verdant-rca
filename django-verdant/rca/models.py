@@ -1105,11 +1105,28 @@ class PressReleaseIndex(Page, SocialFields):
 
     def serve(self, request):
         press_releases = PressRelease.objects.filter(live=True)
-        return render(request, self.template, {
-            'self': self,
-            'press_releases': press_releases,
-        })
 
+        page = request.GET.get('page')
+        paginator = Paginator(press_releases, 10)  # Show 10 press_releases items per page
+        try:
+            press_releases = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            press_releases = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            press_releases = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/press_release_listing.html", {
+                'self': self,
+                'press_releases': press_releases,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'press_releases': press_releases,
+            })
 
 PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
