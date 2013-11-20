@@ -352,13 +352,13 @@ $(function(){
         setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
-            
-            console.log($(document).height());
-            console.log($(window).height());
+
+            // console.log($(document).height());
+            // console.log($(window).height());
             if($(document).height()-250 > $(window).height()){
                 $('.header-wrapper, .page-wrapper').affix({
                     offset: 151
-                })
+                });
             }
 
             /* Packery */
@@ -494,7 +494,7 @@ $(function(){
             e.preventDefault();
             var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
                 var items = $('.item', tmp);
-                
+
                 if (items.length){
                     $('.packery ul').append(items);
                     $('.packery').imagesLoaded( function() {
