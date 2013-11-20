@@ -158,7 +158,7 @@
                             </li>
                             <li class="col col-9 last body-text-style">
                                 {% for conference in conferences %}
-                                    {{ conference.conference }}{% if not forloop.last %}; {% endif %}
+                                    {{ conference.name }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
                             </li>
                         </ul>
@@ -175,7 +175,7 @@
                             </li>
                             <li class="col col-9 last body-text-style">
                                 {% for publication in publications %}
-                                    {{ publication.publication }}{% if not forloop.last %}; {% endif %}
+                                    {{ publication.name }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
                             </li>
                         </ul>
