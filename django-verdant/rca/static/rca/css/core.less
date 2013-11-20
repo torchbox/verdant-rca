@@ -570,47 +570,26 @@ header {
 
 .showsearch {
     &:after {
-        .sprite-load-standard(
-            @positionX: -86px,
-            @positionY: -87px,
-            @retinaPositionX: -173px,
-            @retinaPositionY: -174px,
-            @width: 44px,
-            @height: 43px,
-            @file: 'icons-54-std.png',
-            @retinaFile: 'icons-54-std@2x.png'
+        .sprite-load-23(
+            @positionX: -229px,
+            @positionY: -50px,
+            @retinaPositionX: -459px,
+            @retinaPositionY: -100px,
+            @width: 20px,
+            @height: 19px
         );
     }
 }
 
-/*
-//@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height, @file, @retinaFile
-.sprite-load-standard(
-    @positionX: ,
-    @positionY: ,
-    @retinaPositionX: ,
-    @retinaPositionY: ,
-    @width: ,
-    @height: ,
-    @file: ,
-    @retinaFile: 
-);
-*/
-
 .showmenu {
-    //background: url('imgs/icons-23-std.png') no-repeat -48px -48px; width: 23px; height: 13px; }
-    //background: url('imgs/icons-23-std@2x.png') no-repeat -97px -97px; width: 44px; height: 24px;
-    &:after{
-        //.sprite-load(-1064px, -1095px, 46px, 24px);
-        .sprite-load-standard(
+    &:after {
+        .sprite-load-23(
             @positionX: -48px,
             @positionY: -48px,
             @retinaPositionX: -97px,
             @retinaPositionY: -97px,
             @width: 23px,
-            @height: 13px,
-            @file: 'icons-23-std.png',
-            @retinaFile: 'icons-23-std@2x.png'
+            @height: 13px
         );
     }
 
@@ -663,13 +642,19 @@ header {
         outline:none;
     }
     input[type="submit"] {
-        /*.sprite-load-medium2(-1226px, -566px, -1810px, -213px, 25px, 44px);*/
-        .sprite-load(-1212px, -1094px, 25px, 44px);
+        .sprite-load-23(
+            @positionX: -89px,
+            @positionY: -48px,
+            @retinaPositionX: -179px,
+            @retinaPositionY: -97px,
+            @width: 13px,
+            @height: 23px
+        );
         background-color:transparent;
         text-indent: -9999px;
         border: 0;
         position: relative;
-        top: 2px;
+        top: 0px;
         padding: 0;
     }
  }
@@ -906,7 +891,14 @@ nav.dl-menuwrapper{
         cursor:pointer;
         &:after {
             content:' ';
-            .sprite-load(-53px, -623px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -12px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
             position: absolute;
             top: @spacing-half;
             right: @spacing-half;
@@ -914,7 +906,14 @@ nav.dl-menuwrapper{
     }
     &.expanded {
         h2:after {
-            .sprite-load(-17px, -623px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
         }
     }
     h2:hover {
@@ -927,10 +926,24 @@ nav.dl-menuwrapper{
 
 .today.expanded h2 {
     &:after {
-        .sprite-load(-17px, -1178px, 27px, 15px);
+        .sprite-load-23(
+            @positionX: -12px,
+            @positionY: -48px,
+            @retinaPositionX: -25px,
+            @retinaPositionY: -97px,
+            @width: 23px,
+            @height: 13px
+        );
     }
     &:hover:after {
-        background-position:-17px -623px;
+        .sprite-load-23(
+            @positionX: -12px,
+            @positionY: -12px,
+            @retinaPositionX: -25px,
+            @retinaPositionY: -25px,
+            @width: 23px,
+            @height: 13px
+        );
     }
 }
 
@@ -946,7 +959,14 @@ nav.dl-menuwrapper{
         background-color: fade(@color-dark-grey, 20%);
         position: relative;
         &:after {
-            .sprite-load(-53px, -1178px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -48px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 13px
+            );
             content: ' ';
             position: absolute;
             top: @spacing-half;
@@ -957,7 +977,14 @@ nav.dl-menuwrapper{
             background-color: @color-pink;
             color: @color-white;
             &:after {
-                background-position:-53px -623px;
+                .sprite-load-23(
+                    @positionX: -48px,
+                    @positionY: -12px,
+                    @retinaPositionX: -97px,
+                    @retinaPositionY: -25px,
+                    @width: 23px,
+                    @height: 13px
+                );
             }
         }
     }
@@ -1048,7 +1075,14 @@ footer {
         }
         .footer-expand {
             content: "";
-            .sprite-load(-53px, -623px, 24px, 15px);
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -12px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
             position: absolute;
             right: @grid-gutter-width;
             top: 10px;
@@ -1062,7 +1096,14 @@ footer {
 
         &:hover {
             .footer-expand{
-                background-position:-53px -1729px;
+                .sprite-load-23(
+                    @positionX: -48px,
+                    @positionY: -84px,
+                    @retinaPositionX: -97px,
+                    @retinaPositionY: -169px,
+                    @width: 23px,
+                    @height: 13px
+                );
             }
             cursor: pointer;
         }
@@ -1072,11 +1113,25 @@ footer {
     li.main.expanded {
         padding-bottom: 0;
         .footer-expand {
-            .sprite-load(-17px, -623px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
         }
         &:hover {
             .footer-expand {
-                background-position:-17px -1729px;
+                .sprite-load-23(
+                    @positionX: -12px,
+                    @positionY: -84px,
+                    @retinaPositionX: -25px,
+                    @retinaPositionY: -169px,
+                    @width: 23px,
+                    @height: 13px
+                );
             }
             cursor:pointer;
             div.submenu-block {
@@ -1088,7 +1143,14 @@ footer {
             border-top: 1px solid @color-dark-grey;
         }
         div.submenu-block:hover + .footer-expand {
-            background-position:-17px -623px;
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
         }
     }
     a.footer-logo {
@@ -1167,7 +1229,14 @@ footer {
             .facebook {
                 background-color: @color-facebook-blue;
                 &:after {
-                    .sprite-load(-160px, -83px, 20px, 42px);
+                    .sprite-load-standard(
+                        @positionX: -171px,
+                        @positionY: -76px,
+                        @retinaPositionX: -342px,
+                        @retinaPositionY: -152px,
+                        @width: 21px,
+                        @height: 43px
+                    );
                     margin-top: -21px;
                     margin-left: -10px;
                 }
@@ -1175,7 +1244,14 @@ footer {
             .vimeo {
                 background-color: @color-vimeo-blue;
                 &:after {
-                    .sprite-load(-6px, -88px, 40px, 35px);
+                    .sprite-load-standard(
+                        @positionX: -14px,
+                        @positionY: -80px,
+                        @retinaPositionX: -29px,
+                        @retinaPositionY: -161px,
+                        @width: 40px,
+                        @height: 35px
+                    );
                     margin-top: -17px;
                     margin-left: -20px;
                 }
@@ -1183,15 +1259,29 @@ footer {
             .twitter {
                 background-color: @color-twitter-blue;
                 &:after {
-                    .sprite-load(-216px, -85px, 51px, 37px);
+                    .sprite-load-standard(
+                        @positionX: -231px,
+                        @positionY: -78px,
+                        @retinaPositionX: -462px,
+                        @retinaPositionY: -156px,
+                        @width: 45px,
+                        @height: 37px
+                    );
                     margin-top: -18px;
-                    margin-left: -26px;
+                    margin-left: -23px;
                 }
             }
             .youtube {
                 background-color: @color-youtube-red;
                 &:after {
-                    .sprite-load(-79px, -81px, 38px, 44px);
+                    .sprite-load-standard(
+                        @positionX: -91px,
+                        @positionY: -75px,
+                        @retinaPositionX: -184px,
+                        @retinaPositionY: -150px,
+                        @width: 37px,
+                        @height: 44px
+                    );
                     margin-top: -22px;
                     margin-left: -19px;
                 }
@@ -1221,7 +1311,14 @@ footer {
     position: relative;
     &:after {
         content: '';
-        .sprite-load(-17px, -1220px, 7px, 13px);
+        .sprite-load-11(
+            @positionX: -12px,
+            @positionY: -36px,
+            @retinaPositionX: -25px,
+            @retinaPositionY: -73px,
+            @width: 7px,
+            @height: 11px
+        );
         opacity: 0.3;
         position: absolute;
         right: -10px;
