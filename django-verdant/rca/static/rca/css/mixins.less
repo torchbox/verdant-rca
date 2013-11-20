@@ -104,31 +104,88 @@
     height: @height;
 }
 
-.sprite-load-medium2 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
-    background-image: url("@{path-static}images/sprites-medium2.png");
+
+.sprite-load-standard (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-std.png");
     background-repeat: no-repeat;
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
-
     @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        background-position: @retinaPositionX/1.5 @retinaPositionY/1.5;
-        background-size:2000/1.5px 730/1.5px;
+        background-image: url("@{path-static}images/icons-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:624/2px 384/2px;
         background-color: red;
     }
 }
 
-.sprite-load-small (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
-    background-image: url("@{path-static}images/sprites-small.png");
+.sprite-load-71 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-71-std.png");
     background-repeat: no-repeat;
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
+    @media @media-retina {
+        background-image: url("@{path-static}images/icons-71-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:360/2px 696/2px;
+        background-color: red;
+    }
+}
 
-    @media @media-retina { //this *will* work despite being a media query: retina is only for webkit browser anyway;
-        background-position: @retinaPositionX/1.5 @retinaPositionY/1.5;
-        background-size:358/1.5px 438/1.5px;
-        //background-color: red;
+.sprite-load-63 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-63-std.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+    @media @media-retina {
+        background-image: url("@{path-static}images/icons-63-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:1200/2px 624/2px;
+        background-color: red;
+    }
+}
+
+.sprite-load-54 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-54-std.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+   @media @media-retina {
+        background-image: url("@{path-static}images/icons-54-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:2808/2px 600/2px;
+        background-color: red;
+    }
+}
+
+.sprite-load-23 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-23-std.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+    @media @media-retina {
+        background-image: url("@{path-static}images/icons-23-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:528/2px 312/2px;
+        background-color: red;
+    }
+}
+
+.sprite-load-11 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
+    background-image: url("@{path-static}images/icons-11-std.png");
+    background-repeat: no-repeat;
+    background-position: @positionX @positionY;
+    width: @width;
+    height: @height;
+    @media @media-retina {
+        background-image: url("@{path-static}images/icons-11-std@2x.png");
+        background-position: @retinaPositionX/2 @retinaPositionY/2;
+        background-size:72/2px 216/2px;
+        background-color: red;
     }
 }
 
@@ -174,11 +231,25 @@
             display:inline-block;
             content:"";
             opacity:0.4;
-            .sprite-load(-17px, -1217px, 7px, 14px);
+            .sprite-load-11(
+                @positionX: -12px,
+                @positionY: -36px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -73px,
+                @width: 7px,
+                @height: 11px
+            );
         }
 
         a:hover:after{
-            background-position:-17px -2323px;
+            .sprite-load-11(
+                @positionX: -12px,
+                @positionY: -84px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -169px,
+                @width: 7px,
+                @height: 11px
+            );
             opacity:1;
         }
     }

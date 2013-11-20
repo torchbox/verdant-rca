@@ -171,10 +171,17 @@ nav {
         border-right:1px solid fade(@color-medium-grey, 40%);
         .bold();
         &:after {
-            .sprite-load(-53px, -1178px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -48px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 13px
+            );
             content: ' ';
             position: absolute;
-            top: 11px; /* Arbitrary. Whatever looks good */
+            top: 12px; /* Arbitrary. Whatever looks good */
             right: @spacing-half;
         }
 
@@ -183,16 +190,37 @@ nav {
             background-color:@color-pink;
 
             &:after{
-                background-position:-53px -623px;
+                .sprite-load-23(
+                    @positionX: -48px,
+                    @positionY: -12px,
+                    @retinaPositionX: -97px,
+                    @retinaPositionY: -25px,
+                    @width: 23px,
+                    @height: 13px
+                );
             }
         }
     }
    nav.open h2{
         &:after{
-            background-position:-17px -1178px;
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -48px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 13px
+            );
         }
         &:hover:after{
-            background-position:-17px -623px;
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
         }
     }
 
@@ -352,9 +380,6 @@ form.search {
     input[type="text"] {
         padding: 9px @spacing-half;
         width: 85%;
-    }
-    input[type="submit"] {
-        .sprite-load(-95px, -1178px, 15px, 27px);
     }
 }
 
