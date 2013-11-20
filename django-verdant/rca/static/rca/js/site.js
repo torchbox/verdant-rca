@@ -170,7 +170,7 @@ $(function(){
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
-    //showHideDialogue();
+    showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
