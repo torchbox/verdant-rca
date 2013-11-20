@@ -48,11 +48,12 @@
                         {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.not_included_in_supporters_list as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.donation_for as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                     </ul>
                 </fieldset>
 
                 <fieldset>
-                    <legend>Your details</legend>
+                    <legend>Billing details</legend>
                     <ul>
                         {% with form.title as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.first_name as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
@@ -63,9 +64,16 @@
                         {% with form.address_state as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.address_zip as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.address_country as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        <li class="divider"></li>
-                        {% with form.email as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.phone as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                    </ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>A little more about you</legend>
+                    <ul>
+                        {% with form.email as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.affiliation as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.class_year as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                     </ul>
                 </fieldset>
 

@@ -1647,6 +1647,16 @@ label{
     display:block;
     margin-bottom:@grid-gutter-width/2;
 }
+
+.required label:after{
+    content: "*";
+    color: #ff00dc;
+    font-weight: bold;
+    margin-left: 0.3em;
+    font-size: 1.3em;
+    vertical-align: middle
+}
+
 input, textarea, select{
     width:100%;
     border:0;
