@@ -819,6 +819,12 @@
         display:inline-block;
         white-space:normal;
         float:none;
+        h3, p {
+            line-height:13px;
+        }
+        p.a3 {
+            margin-top:3px;
+        }
     }
 }
 
@@ -1140,7 +1146,7 @@
         }
     }
 
-    b {
+    b, strong {
         .bold();
     }
     /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
@@ -1175,6 +1181,10 @@
         line-height: @line-height-5;
         font-weight:normal;
         margin-bottom: 0;
+    }
+
+    h3 + p {
+        margin-top:0.25em; /* reduce top margin of p immediately following an h3 */
     }
 
     h4 {
@@ -1781,19 +1791,5 @@ form .hidden-field{
 @media(max-width: 768px) {
     .hide_if_mobile {
         display:none !important;
-    }
-}
-
-
-/*
- * KH - This removes gaps in the press releases listing
- */
-.press_release_listing {
-    .image {
-        height: 0;
-        margin-bottom: 56.25%;
-    }
-    .content {
-        height: 4em;
     }
 }
