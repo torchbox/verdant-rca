@@ -27,7 +27,7 @@ register_signal_handlers()
 
 # Redirects
 from redirects import REDIRECTS
-redirect_urls = [url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()]
+redirect_urls = patterns('', *[url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()])
 
 
 urlpatterns = patterns('',
