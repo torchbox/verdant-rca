@@ -14,19 +14,16 @@
     {% if self.head_of_school or self.head_of_school_statement %}
         <section class="head-of-programme row module">
             {% if self.head_of_school %}
-                <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Head of school</a></h2>
-            {% endif %}
-            
-            {% if self.head_of_school %}
-            <a href="{% pageurl self.head_of_school %}">
-                <div class="image">
-                    {% if self.head_of_school.profile_image %}
-                        {% image self.head_of_school.profile_image width-200 %}
-                    {% else %}
-                        <img src="/static/rca/images/staff-default-image.png" width="200">
-                    {% endif %}
-                </div>
-            </a>
+                <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Dean of School</a></h2>
+                <a href="{% pageurl self.head_of_school %}">
+                    <div class="image">
+                        {% if self.head_of_school.profile_image %}
+                            {% image self.head_of_school.profile_image width-200 %}
+                        {% else %}
+                            <img src="/static/rca/images/staff-default-image.png" width="200">
+                        {% endif %}
+                    </div>
+                </a>
             {% endif %}
 
             <div class="content bc2{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
@@ -47,24 +44,29 @@
     {% programme_by_school school=self.school %}
 
     
-   <!-- head of research -->
-    {% if self.head_of_research %}
+    <!-- head of research -->
+    {% if self.head_of_research or self.head_of_research_statement %}
         <section class="head-of-programme row module">
-            <h2 class="module-title"><a href="{% pageurl self.head_of_research %}">Head of Research</a></h2>
-
-            <a href="{% pageurl self.head_of_research %}">
-                <div class="image">
-                    {% if self.head_of_research.profile_image %}
-                        {% image self.head_of_research.profile_image width-200 %}
-                    {% else %}
-                        <img src="/static/rca/images/staff-default-image.png" width="200">
-                    {% endif %}
-                </div>
-            </a>
+            {% if self.head_of_research %}
+                <h2 class="module-title"><a href="{% pageurl self.head_of_research %}">Research Leader</a></h2>
+                <a href="{% pageurl self.head_of_research %}">
+                    <div class="image">
+                        {% if self.head_of_research.profile_image %}
+                            {% image self.head_of_research.profile_image width-200 %}
+                        {% else %}
+                            <img src="/static/rca/images/staff-default-image.png" width="200">
+                        {% endif %}
+                    </div>
+                </a>
+            {% endif %}
 
             <div class="content bc2{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
-                <strong>{{ self.head_of_research.title }}</strong>
-                {{ self.head_of_research_statement|richtext }}
+                {% if self.head_of_research %}
+                    <strong>{{ self.head_of_research.title }}</strong>
+                {% endif %}
+                {% if self.head_of_research_statement %}
+                    {{ self.head_of_research_statement|richtext }}
+                {% endif %}
                 {% if self.head_of_research_link %}
                     ...<a href="{% pageurl self.head_of_research_link %}"><span class="bc4 caps">Continue</a></span>
                 {% endif %}

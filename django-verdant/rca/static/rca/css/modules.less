@@ -67,8 +67,9 @@
 }
 
 .bx-wrapper {
-    overflow: hidden;
-    margin-bottom:0;
+    margin-bottom:20px;
+    padding-bottom: 20px; /* necessary to give pager dots space to exist */
+    overflow: visible; /* because the padding above doesn't work in safari and dots get cut off */
 
     img {
         width: auto;
@@ -111,6 +112,7 @@
         &:hover:after{
             background-position: -211px -441px;
         }
+        display: none;
     }
     .bx-prev {
         left: 0;
@@ -120,6 +122,7 @@
         &:hover:after{
             background-position: -301px -441px;
         }
+        display: none;
     }
     .bx-controls-direction a {
         width: 87px;
@@ -132,6 +135,8 @@
     .bx-pager{
         text-align:left;
         padding-top:0;
+        bottom:-5px;
+        left:0;
 
         &.bx-default-pager a{
             background:transparent;
@@ -327,7 +332,7 @@
         }
         .tweet-text{
             display: block;
-            a { /* repeating body-text-style styles here because I don't want to 
+            a { /* repeating body-text-style styles here because I don't want to
             screw with the javascript without being able to test it */
                 color: @color-highlight-blue;
                 .bold();
@@ -677,7 +682,7 @@
     position:relative;
     padding-bottom:114px;
     .image-hover();
-    
+
     &.module{
         border:0;
     }
@@ -814,6 +819,12 @@
         display:inline-block;
         white-space:normal;
         float:none;
+        h3, p {
+            line-height:13px;
+        }
+        p.a3 {
+            margin-top:3px;
+        }
     }
 }
 
@@ -1135,7 +1146,7 @@
         }
     }
 
-    b {
+    b, strong {
         .bold();
     }
     /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
@@ -1170,6 +1181,10 @@
         line-height: @line-height-5;
         font-weight:normal;
         margin-bottom: 0;
+    }
+
+    h3 + p {
+        margin-top:0.25em; /* reduce top margin of p immediately following an h3 */
     }
 
     h4 {
@@ -1748,12 +1763,16 @@ form .heading{
     .a0;
 }
 
+form .hidden-field{
+    display: none;
+}
+
 /*
  * $Cookie notice
  */
 .cookie-notice {
     color: @color-white;
-    background-color: @color-rca-blue;
+    background-color: @color-charcoal;
     .bold();
     padding: @spacing-one;
     position: fixed;
