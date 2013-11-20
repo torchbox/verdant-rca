@@ -43,12 +43,13 @@
                     <legend>Your donation</legend>
                     <ul>
                         {% with form.amount as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.donation_for as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.number as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.expiration as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" with field_title="Gift Aid" %}{% endwith %}
                         {% with form.not_included_in_supporters_list as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        {% with form.donation_for as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        
                     </ul>
                 </fieldset>
 
@@ -83,8 +84,15 @@
 
                 {% csrf_token %}
 
-                <input type="submit" value="Submit Payment" />
+                <h3>Data Protection</h3>
 
+                <p>Information provided by you on this form will be used by the Royal College of Art for the purpose of correctly recording and acknowledging your gift. Personal information contained in the RCA’s Development Office records is used only for College-related business.</p>
+
+                <p>Please click here for the College’s full Data Protection Statement or contact <a href="mailto:development@rca.ac.uk">development@rca.ac.uk</a>.</p>
+
+                <input type="submit" value="Donate now" />
+
+                <p>Thank you for supporting the RCA!</p>
                 <div class="spinner">&nbsp;</div>
             </form>
         </section>
