@@ -2843,9 +2843,9 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
 
         if school and school != '':
-            research_students = research_students.filter(roles__school=school)
+            research_students = research_students.filter(school=school)
         if programme and programme != '':
-            research_students = research_students.filter(roles__programme=programme)
+            research_students = research_students.filter(programme=programme)
 
         research_students = research_students.distinct()
 
@@ -2865,7 +2865,7 @@ class ResearchStudentIndex(Page, SocialFields):
             research_students = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/research_students_listing.html", {
+            return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
                 'research_students': research_students,
                 'related_programmes': related_programmes,
