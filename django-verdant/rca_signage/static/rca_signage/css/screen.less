@@ -1,4 +1,5 @@
-@root-url:"/static/rca_signage/";
+@root-url: "/static/rca_signage/";
+@padding: 1.5em;
 
 @font-face {
     font-family: 'calvert_107regular';
@@ -41,7 +42,7 @@ body{
     height:100%;
     font-family:calvert_107light, courier, sans-serif;
     color:white;
-    font-size:150%;
+    font-size:170%;
 }
 h1,h2,h3,h4,h5,p{
     margin:0;
@@ -57,7 +58,7 @@ h3{
 }
 .wrapper{
     overflow:hidden;
-    padding:5%;
+    padding:@padding;
     background:black url("@{root-url}images/logo-white.png") 5% 95% no-repeat;
     background-size:30%;
     position:absolute;
@@ -66,38 +67,30 @@ h3{
     top:0;
     bottom:0;
 }
-.todays-date{
+#date{
     font-family:calvert_107light, courier, sans-serif;
 }
 #loading{
     position:absolute;
-    top:50%;
-    left:0;
-    right:0;    
+    top:2em;
+    right:2em;    
     text-align:center;
+    visibility:hidden;
 }
 #paging{
+    font-size:1.5em;
     position:absolute;
-    bottom:5%;
-    right:5%;
-
-    &.loading{
-        visibility:hidden;
-    }
+    bottom:@padding;
+    right:@padding
 }
 
 #eventlist {
     position:absolute;
-    top:20%;
-    bottom:18%;
+    top:8em;
+    bottom:10em;
     left:0;
     right:0;
-    padding:0 5%;
-    overflow:hidden;
-
-    &.loading{
-        visibility:hidden;
-    }
+    padding:0 @padding;
 
     ul, li{
         margin:0;
@@ -108,4 +101,43 @@ h3{
         border-top:1px solid white;
         padding:0.5em 0;
     }
+    .directions{
+        margin-top:1em;
+    }
+    .date{
+        margin-bottom:1em;
+    }
+    /* identifies events that are the same date as the previous, therefore requiring no divider between them, nor date before*/
+    .same{
+        border-top:0;
+        .date{
+            display:none;
+        }
+    }
+    ul .same:first-child{
+        .date{
+            display:block;
+        }
+        border-top:1px solid white;
+    }
+}
+
+.special #eventlist{
+    top:8em/1.8;
+    font-size:1.8em;
+    padding:0 @padding/1.8;
+}
+
+.special .date{
+    margin-top:-2.5em;
+}
+
+.loading{
+    #loading{
+        visibility:visible;
+    }
+}
+
+#tmp{
+    visibility:hidden;
 }
