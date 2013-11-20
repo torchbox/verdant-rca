@@ -14,6 +14,13 @@
         </div>
     </header>
 
+    {% if errors_debug %}
+    <!--
+        Error messages:
+        {{ errors_debug }}
+    -->
+    {% endif %}
+
     <form id="page-edit-form" action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
         {{ edit_handler.render_form_content }}
