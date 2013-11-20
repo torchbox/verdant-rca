@@ -400,9 +400,6 @@
 
 .share {
     text-indent: -9999px;
-    //.sprite-load(-188px, -2200px, 45px, @share-link-height);
-    //background: url('imgs/icons-54-std.png') no-repeat -161px -230px; width: 47px; height: 48px;
-    //background: url('imgs/icons-54-std@2x.png') no-repeat -323px -460px; width: 92px; height: 96px;
     .sprite-load-54(
         @positionX: -161px,
         @positionY: -230px,
@@ -1372,10 +1369,20 @@
         position: relative;
         &:after {
             content:"";
-            .sprite-load(-988px, -539px, 44px, 44px);
+            //.sprite-load(-988px, -539px, 44px, 44px);
+            //background: url('imgs/icons-54-std.png') no-repeat -1313px -18px; width: 43px; height: 42px;
+            //background: url('imgs/icons-54-std@2x.png') no-repeat -2626px -36px; width: 86px; height: 84px;
+            .sprite-load-54(
+                @positionX: -1313px,
+                @positionY: -18px,
+                @retinaPositionX: -2626px,
+                @retinaPositionY: -36px,
+                @width: 43px,
+                @height: 42px
+            );
             position: absolute;
-            right: 2px;
-            top: 2px;
+            right: 6px;
+            top: 4px;
         }
     }
 }
