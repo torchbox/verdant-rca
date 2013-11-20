@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
 import os.path
@@ -22,6 +23,7 @@ admin.autodiscover()
 
 from verdantsearch import register_signal_handlers
 register_signal_handlers()
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -53,12 +55,21 @@ urlpatterns = patterns('',
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
-    url(r'', include(verdant_urls))
+    # MOVED TO BELOW REDIRECTS!
+    # url(r'', include(verdant_urls)),
 )
+
+# Redirects
+from redirects import REDIRECTS
+redirects_urls = [url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()]
+urlpatterns += patterns('', *redirects_urls)
+
+# This was temporarily moved out of urlpatterns
+urlpatterns += patterns('', url(r'', include(verdant_urls)))
+
 
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-    from django.views.generic.base import RedirectView
 
     urlpatterns += staticfiles_urlpatterns() # tell gunicorn where static files are in dev mode
     urlpatterns += static(settings.MEDIA_URL + 'images/', document_root=os.path.join(settings.MEDIA_ROOT, 'images'))
