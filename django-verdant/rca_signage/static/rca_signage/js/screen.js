@@ -1,6 +1,6 @@
 var Screen = function() {
     this.loadInterval = 120; // frequency (seconds) that new events are pulled from DB
-    this.pageInterval = 30; // frequence (seconds) that events pages are paginated
+    this.pageInterval = 3; // frequence (seconds) that events pages are paginated
     this.currentPage =  0;
     this.eventsData = [];
     this.eventsElemSelector = '#eventlist';
