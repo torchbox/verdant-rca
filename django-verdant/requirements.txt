@@ -24,3 +24,4 @@ tweepy==2.1
 simplejson==3.3.1
 elasticutils==0.8.1
 stripe==1.9.8
+django-redis==3.3
