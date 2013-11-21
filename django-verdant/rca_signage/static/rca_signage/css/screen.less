@@ -43,12 +43,22 @@ html{
     box-sizing: border-box;
 }
 body{
+    -webkit-transform: rotate(0deg);
     -webkit-font-smoothing: antialiased;
     height:100%;
     font-family:calvert_107light, courier, sans-serif;
     color:white;
     font-size:170%;
 
+    &.rotated{
+        overflow:hidden;
+        -webkit-transform: rotate(-90deg);
+        -webkit-transform-origin: 0% 0%;
+        width:720px;
+        height:1280px;
+        margin-top: 720px;
+        font-size:140%;
+    }
 }
 h1,h2,h3,h4,h5,p{
     margin:0;
@@ -72,6 +82,9 @@ h3{
     right:0;
     top:0;
     bottom:0;
+
+    
+
 }
 #date{
     font-family:calvert_107light, courier, sans-serif;
