@@ -10,14 +10,13 @@
 
 <!-- adverts -->
 {% if showAdverts %}
-    <!-- adverts -->
     {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block. Because of the way cycles work initially start it outside any forloop, with display:none {% endcomment %}
     <div class="adverts">
         <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
 
         {% for advert in global_adverts %}
             <div class="{% cycle adcolors %}">
-                {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
+                {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{% pageurl advert.page %}">{% endif %}
                     <h2>{{ advert.text }}</h2>
                     {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
                 {% if advert.url or advert.page %}</a>{% endif %}
@@ -26,7 +25,7 @@
 
         {% for advert in self.manual_adverts.all %}
             <div class="{% cycle adcolors %}">
-                {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
+                {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{% pageurl advert.ad.page %}">{% endif %}
                 <h2>{{ advert.ad.text }}</h2>
                 {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
             {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
