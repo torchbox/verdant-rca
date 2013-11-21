@@ -195,7 +195,7 @@ $(function() {
     var screen = new Screen();
     screen.run();
 
-    //means of test rotated version
+    // means of testing non-rotated version
     $(document).click(function(){
         $('body').toggleClass('rotated')
     })
