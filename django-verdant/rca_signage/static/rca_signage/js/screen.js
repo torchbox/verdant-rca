@@ -1,149 +1,181 @@
 var Screen = function() {
-    this.currentPage =  1; // NB: number of page is 1-based so must be n-1 to use for array access purposes
+    this.loadInterval = 120; // frequency (seconds) that new events are pulled from DB
+    this.pageInterval = 30; // frequence (seconds) that events pages are paginated
+    this.currentPage =  0;
     this.eventsData = [];
-    this.eventsElem = '#eventlist';
+    this.eventsElemSelector = '#eventlist';
     this.headingElem = $('#heading');
-    this.loadingElem = $('#loading');
     this.pagingElem = $('#paging');
+    this.dateHeadingElem = $('#date');
     this.pages = [];
 
     var $this = this;
 
-    this.loadEvents = function() {
-        console.log('loading events');
-        
+    this.loadEvents = function(onComplete) {
+
+        $('body').addClass('loading');
+
         // Perform ajax request
         $.getJSON("data", function(data) {
-            console.log('events loaded');
             $this.eventsData = data;
-
-            console.log($this.eventsData);
-            $this.handleEvents();
+            $this.handleEvents(onComplete);
         });
     };
 
-    this.addToPage = function(elem){
-        totalHeight += elem.outerHeight();
-        if(typeof $this.pages[pageCounter] == "undefined"){
-            $this.pages[pageCounter] = [];
-        }
-        $this.pages[pageCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
-    };
-
-    this.handleEvents = function(){
-        console.log('handling events');
-        
-        // empty events list and create temporary ul used to measure height
-        var tmpUl = $($this.eventsElem).empty().append('<ul id="tmp"></ul>');
-
-        console.log(tmpUl)
+    this.handleEvents = function(onComplete){       
+        var pageCounter = 0;
 
         if($this.eventsData.is_special){
-            console.log('special event detected');
-            $this.headingElem.html('Special events')
+            $this.headingElem.html('Special events');
+            $('body').addClass('special');
         } else {
-            console.log('no special events detected');
-            $this.headingElem.html('Upcoming events')
+            $this.headingElem.html('Upcoming events');
+            $('body').removeClass('special');
         }
 
+        // temporary UL used to find heights of each event item
+        var tmpUl = $('<ul id="tmp"></ul>');
+
+        var tmpDate = null;
         for (var e=0; e < $this.eventsData.events.length; e++){
-            var li = $('<li></li>');
-            if ($this.eventsData.events[e].times && $this.eventsData.events[e].times.length){
-               $('<p>' + $this.eventsData.events[e].times + '</p>').appendTo(li);
+            if($this.eventsData.events[e].date === tmpDate){
+                $this.eventsData.events[e].sameDay = true;
+            } else {
+                tmpDate = $this.eventsData.events[e].date;
             }
-            $('<h3>' + $this.eventsData.events[e].title + '</h3>').appendTo(li);
-            if ($this.eventsData.events[e].location && $this.eventsData.events[e].location.length){
-               $('<p>' + $this.eventsData.events[e].location + '</p>').appendTo(li);
-            }
-            if ($this.eventsData.events[e].specific_directions && $this.eventsData.events[e].specific_directions.length){
-               $('<p>' + $this.eventsData.events[e].specific_directions + '</p>').appendTo(li);
-            }
-            $($this.eventsElem).find('#tmp').append(li);
-        }        
 
-        var totalHeight = 0;
-        var pageCounter = 0;
-        /*
-            $($this.eventsElem).find('li').each(function(){
-                if(totalHeight + $(this).outerHeight() > $($this.eventsElem).outerHeight()){
-                    pageCounter ++;
-                    totalHeight = 0;
+            tmpUl.append($this.renderEvent($this.eventsData.events[e])); 
+        }       
 
-                    $this.addToPage($(this));
-                }else{
-                    $this.addToPage($(this));
+        // empty events list and create temporary ul used to measure height
+        $($this.eventsElemSelector).empty().append(tmpUl);
+
+        // if special events, do one per page
+        if($this.eventsData.is_special){
+
+            $('li', tmpUl).each(function(){
+                var thisLi = $(this);
+                
+                if(typeof $this.pages[pageCounter] == "undefined"){
+                    $this.pages[pageCounter] = [];
                 }
+                var thisLi = $(this);
+                $this.pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
+                pageCounter ++;
             });
-        */
 
-        $($this.eventsElem).empty();
+        } else {    
 
-        for(var i=0; i < $this.pages.length; i++){
-            var ul = $('<ul></ul>').appendTo($($this.eventsElem));
-            ul.append($this.pages[i]);
+            // distribute events into pages as required by their height
+            var totalHeight = 0;
+            
+            $('li', tmpUl).each(function(){
+                var thisLi = $(this);
+                var thisLiHeight = parseInt(thisLi.outerHeight());
+
+                if(totalHeight + thisLiHeight > $($this.eventsElemSelector).outerHeight()){
+                    // start a new page
+                    pageCounter ++;
+                    
+                    // reset total height
+                    totalHeight = thisLiHeight;
+                }else{
+                    totalHeight += thisLiHeight;
+                }
+
+                if(typeof $this.pages[pageCounter] == "undefined"){
+                    $this.pages[pageCounter] = [];
+                }
+                $this.pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
+            });
         }
 
-        //reset current page
-        $this.currentPage = 0;
+        // create separate UL for each page
+        for(var i=0; i < $this.pages.length; i++){
+            var ul = $('<ul></ul>').append($this.pages[i]);
+            ul.appendTo($($this.eventsElemSelector));
+        }
+
+        // set loadInterval to at least the total time for all pages to have rotated once at their current pageInterval rate
+        if(($this.pages.length * $this.pageInterval) > $this.loadInterval){
+            $this.loadInterval = $this.pages.length * $this.pageInterval;
+        }
+
+        tmpUl.remove();
+
+        // remove loading indicators
+        $($this.eventsElemSelector).removeClass('loading');
+        $this.pagingElem.html($this.currentPage + '/' + $this.pages.length).removeClass('loading');
+        $('body').removeClass('loading');
+
+        // change to first page current page
         $this.changePage();
 
-        $($this.eventsElem).removeClass('loading');
-        $this.pagingElem.html($this.currentPage + '/' + $this.pages.length).removeClass('loading');
-        $this.loadingElem.hide();
+        if(typeof onComplete == "function"){
+            onComplete();
+        }
+    }; 
 
-    };   
+    this.renderEvent = function(event){
+        var li = $('<li></li>');
+        if (event.sameDay){
+            li.addClass('same');
+        }
+        if (event.date && event.date.length){
+           $('<p class="date">' + event.date + '</p>').appendTo(li);
+        }
+        if (event.times && event.times.length){
+           $('<p>' + event.times + '</p>').appendTo(li);
+        }
+        $('<h3>' + event.title + '</h3>').appendTo(li);
+        if (event.location && event.location.length){
+           $('<p>' + event.location + '</p>').appendTo(li);
+        }
+        if (event.specific_directions && event.specific_directions.length){
+           $('<p class="directions">' + event.specific_directions + '</p>').appendTo(li);
+        }
+
+        return li;
+    };
+
+    this.changePage = function(){
+        // if beyond number of available pages, reset to 1
+        if($this.currentPage + 1 > $this.pages.length){
+            $this.currentPage = 1;
+        }else{
+            $this.currentPage++;
+        }
+
+        if($this.pages.length >= $this.currentPage){
+            $this.pagingElem.html($this.currentPage + '/' + $this.pages.length);
+            $($this.eventsElemSelector).find('ul').hide();
+            $($this.eventsElemSelector).find('ul:eq(' + ( $this.currentPage-1 ) + ')').show()
+        }
+    };
 }
 
-Screen.prototype.loadEvents = function() {
-    $this = this;
-
-    console.log('loading events');
-    // Perform ajax request
-    $.getJSON("data", function(data) {
-        console.log('events loaded');
-        $this.eventsData = data;
-        $this.handleEvents();
-    });
-};
-
-Screen.prototype.changePage = function(){
-    $this = this;
-
-    // if beyond number of available pages, reset to 1
-    if($this.currentPage + 1 > $this.pages.length){
-        $this.currentPage = 0;
-    }
-    $this.currentPage++;
-
-    if($this.pages.length >= $this.currentPage){
-        $this.pagingElem.html($this.currentPage + '/' + $this.pages.length);
-        $($this.eventsElem).find('ul').hide();
-        $($this.eventsElem).find('ul:eq(' + ($this.currentPage-1) + ')').show()
-    }
-};
-
-
 $(function() {
-    var loadInterval = 3; // frequency (seconds) that new events are pulled from DB
-    var pageInterval = 1; // frequence (seconds) that events are paginated
-
     // start screen system
+    var loadInterval;
     var screen = new Screen();
-    screen.loadEvents();
-
-    // load new events on an interval
-    if(loadInterval){
-        window.setInterval(function(){
-            console.log($(screen.eventsElem).html())
-            screen.loadEvents();
+    screen.loadEvents(function(){
+        loadInterval = screen.loadInterval;
+    
+        // load new events on an interval
+        window.setInterval(function(){          
+            screen = new Screen();
+            screen.loadEvents(function(){
+                loadInterval = screen.loadInterval;
+            });            
 
         }, loadInterval * 1000);
-    }
+
+    });
 
     // rotate pages of events on an interval
-    if(pageInterval){
+    if(screen.pageInterval){
         window.setInterval(function() {
            screen.changePage();
-        }, pageInterval * 1000);
+        }, screen.pageInterval * 1000);
     }
 });
