@@ -182,6 +182,11 @@ $(function(){
         }
     });
 
+    /* add focus to the search input when the mobile search button is clicked */
+    $('.showsearch').click(function() {
+        $('#search_box').focus();
+    });
+
 
     /* tabs */
     //apply active class in correct place and add tab links
