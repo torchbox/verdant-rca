@@ -236,6 +236,16 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379:1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+        }
+    }
+}
+
 # VERDANT SETTINGS
 
 # Override the Image class used by verdantimages with a custom one
