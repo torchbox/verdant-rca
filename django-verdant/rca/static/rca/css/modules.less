@@ -18,7 +18,6 @@
  * Landscape and portrait images (outside carousel)
  * Twitter block
  * Share and dialogue box
- * Add to contacts
  * Add to calendar
  * Download
  * News carousel
@@ -107,20 +106,48 @@
     .bx-next {
         right: 0;
         &:after{
-            .sprite-load(-211px, -996px, 37px, 66px);
+            .sprite-load-63(
+                @positionX: -180px,
+                @positionY: -84px,
+                @retinaPositionX: -360px,
+                @retinaPositionY: -167px,
+                @width: 34px,
+                @height: 63px
+            );
         }
         &:hover:after{
-            background-position: -211px -441px;
+            .sprite-load-63(
+                @positionX: -180px,
+                @positionY: -12px,
+                @retinaPositionX: -360px,
+                @retinaPositionY: -23px,
+                @width: 34px,
+                @height: 63px
+            );
         }
         display: none;
     }
     .bx-prev {
         left: 0;
         &:after{
-            .sprite-load(-301px, -996px, 37px, 66px);
+            .sprite-load-63(
+                @positionX: -293px,
+                @positionY: -84px,
+                @retinaPositionX: -585px,
+                @retinaPositionY: -167px,
+                @width: 34px,
+                @height: 63px
+            );
         }
         &:hover:after{
-            background-position: -301px -441px;
+            .sprite-load-63(
+                @positionX: -293px,
+                @positionY: -12px,
+                @retinaPositionX: -585px,
+                @retinaPositionY: -23px,
+                @width: 34px,
+                @height: 63px
+            );
         }
         display: none;
     }
@@ -428,23 +455,6 @@
     width: 100%;
     display: none;
     z-index: 4001; //show above header
-}
-
-/**
- * $Add to contacts
- */
-
-.contact-wrapper {
-
-}
-
-.add-to-contacts {
-    text-indent: -9999px;
-    .sprite-load(-15px, -2200px, 55px, 52px);
-    cursor: pointer;
-    &:hover {
-        background-position:-15px -1645px;
-    }
 }
 
 /**
