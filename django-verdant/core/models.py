@@ -39,6 +39,15 @@ class Site(models.Model):
             # failing that, look for a catch-all Site. If that fails, let the Site.DoesNotExist propagate back to the caller
             return Site.objects.get(is_default_site=True)
 
+    @property
+    def root_url(self):
+        if self.port == 80:
+            return 'http://%s' % self.hostname
+        elif self.port == 443:
+            return 'https://%s' % self.hostname
+        else:
+            return 'http://%s:%d' % (self.hostname, self.port)
+
 
 PAGE_MODEL_CLASSES = []
 _PAGE_CONTENT_TYPES = []
