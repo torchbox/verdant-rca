@@ -6,13 +6,27 @@ var Screen = function() {
     this.eventsElemSelector = '#eventlist';
     this.headingElem = $('#heading');
     this.pagingElem = $('#paging');
+    this.pagingTimerElem = $('#paging-timer');
     this.dateHeadingElem = $('#date');
     this.pages = [];
 
     var $this = this;
 
-    this.loadEvents = function(onComplete) {
+    this.run = function(){
+        var loadTimeout, tmpLoadInterval;
+        clearTimeout(loadTimeout);
 
+        $this.loadEvents(function(){
+            // load new events on an interval
+            loadTimeout = setTimeout(function(){   
+                screen = new Screen();
+                screen.run(); 
+            }, $this.loadInterval * 1000);
+        });  
+    };
+
+    this.loadEvents = function(onComplete) {
+        clearInterval(window.pagingTimeout);
         $('body').addClass('loading');
 
         // Perform ajax request
@@ -22,7 +36,8 @@ var Screen = function() {
         });
     };
 
-    this.handleEvents = function(onComplete){       
+    this.handleEvents = function(onComplete){
+
         var pageCounter = 0;
 
         if($this.eventsData.is_special){
@@ -31,6 +46,12 @@ var Screen = function() {
         } else {
             $this.headingElem.html('Upcoming events');
             $('body').removeClass('special');
+        }
+
+        // Check there actually are some events
+        if (!$this.eventsData.events.length){
+            $($this.eventsElemSelector).append('<p>There are no upcoming events</p>');
+            return false;
         }
 
         // temporary UL used to find heights of each event item
@@ -111,6 +132,13 @@ var Screen = function() {
         // change to first page current page
         $this.changePage();
 
+           // set further rotation of pages on an interval
+        if($this.pageInterval){
+            window.pagingTimeout = setInterval(function() {
+                $this.changePage();
+            }, $this.pageInterval * 1000);
+        }
+
         if(typeof onComplete == "function"){
             onComplete();
         }
@@ -139,11 +167,19 @@ var Screen = function() {
     };
 
     this.changePage = function(){
+        var pagerHtml = $this.pagingTimerElem.html(); 
+        $this.pagingTimerElem.empty().append(pagerHtml);
+
         // if beyond number of available pages, reset to 1
         if($this.currentPage + 1 > $this.pages.length){
             $this.currentPage = 1;
         }else{
             $this.currentPage++;
+        }
+
+        // add timer css to paging pie spinner if > 1 page
+        if ($this.pages.length > 1){
+            $this.pagingTimerElem.find('*').attr('style', '-webkit-animation-duration:'+ $this.pageInterval+'s').addClass('start');
         }
 
         if($this.pages.length >= $this.currentPage){
@@ -156,26 +192,6 @@ var Screen = function() {
 
 $(function() {
     // start screen system
-    var loadInterval;
     var screen = new Screen();
-    screen.loadEvents(function(){
-        loadInterval = screen.loadInterval;
-    
-        // load new events on an interval
-        window.setInterval(function(){          
-            screen = new Screen();
-            screen.loadEvents(function(){
-                loadInterval = screen.loadInterval;
-            });            
-
-        }, loadInterval * 1000);
-
-    });
-
-    // rotate pages of events on an interval
-    if(screen.pageInterval){
-        window.setInterval(function() {
-           screen.changePage();
-        }, screen.pageInterval * 1000);
-    }
+    screen.run();
 });
