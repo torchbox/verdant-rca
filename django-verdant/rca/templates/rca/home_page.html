@@ -45,7 +45,7 @@
         {% include "rca/includes/homepage_packery.html" %}
         
         <script>
-            var current_page = "http://localhost:8111/home/"//"{{ self.url }}";
+            var current_page = "{{ self.url }}";
             var excludeIds = [{% for item in packery %}{% if item.id %}{{ item.id }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}]; 
         </script>
     {% endif %}

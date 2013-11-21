@@ -9,7 +9,7 @@ from .models import Tweet
 
 def statuses_user_timeline(request):
     callback = request.GET.get("callback")
-    screen_name = request.GET.get("screen_name", "PrimarySite")
+    screen_name = request.GET.get("screen_name", "RCAevents")
     count = int(request.GET.get("count", 10))
     cache_key = "tweets_from_%s_last_%s" % (slugify(screen_name), count)
     result = cache.get(cache_key)

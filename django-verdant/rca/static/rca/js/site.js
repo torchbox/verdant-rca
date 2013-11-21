@@ -170,7 +170,7 @@ $(function(){
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
-    //showHideDialogue();
+    showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
@@ -352,13 +352,13 @@ $(function(){
         setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
-            
-            console.log($(document).height());
-            console.log($(window).height());
+
+            // console.log($(document).height());
+            // console.log($(window).height());
             if($(document).height()-250 > $(window).height()){
                 $('.header-wrapper, .page-wrapper').affix({
                     offset: 151
-                })
+                });
             }
 
             /* Packery */
@@ -494,7 +494,7 @@ $(function(){
             e.preventDefault();
             var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
                 var items = $('.item', tmp);
-                
+
                 if (items.length){
                     $('.packery ul').append(items);
                     $('.packery').imagesLoaded( function() {
@@ -629,7 +629,7 @@ $(function(){
 
     var displayCookieNotice = function(context, settings) {
       // Notice and message
-      $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="">privacy policy</a> to find out more.</p></div></div>');
+      $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button" href="#">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="/more/contact-us/about-this-website/privacy-cookies/">privacy policy</a> to find out more.</p></div></div>');
 
       // Close button
       $(document).delegate('#cookie-notice-close', 'click', function() {

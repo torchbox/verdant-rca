@@ -137,7 +137,7 @@ function InlinePanel(opts) {
                 if (!prevChild.length) return;
                 var prevChildOrderElem = prevChild.find('input[name$="-ORDER"]');
                 var prevChildOrder = prevChildOrderElem.val();
-                
+
                 // async swap animation must run before the insertBefore line below, but doesn't need to finish first
                 self.animateSwap(currentChild, prevChild);
 
@@ -172,7 +172,7 @@ function InlinePanel(opts) {
     };
 
     self.formsUl = $('#' + opts.formsetPrefix + '-FORMS');
-    
+
     self.updateMoveButtonDisabledStates = function() {
         if (opts.canOrder) {
             forms = self.formsUl.children('li:visible');
@@ -188,11 +188,11 @@ function InlinePanel(opts) {
         var children = parent.children('li:visible');
 
         // Apply moving class to container (ul.multiple) so it can assist absolute positioning of it's children
-        // Also set it's relatively calculated height to be an absolute one, to prevent the container collapsing while its children go absolute 
+        // Also set it's relatively calculated height to be an absolute one, to prevent the container collapsing while its children go absolute
         parent.addClass('moving').css('height', parent.height());
-        
+
         children.each(function(){
-            console.log($(this));
+            // console.log($(this));
             $(this).css('top', $(this).position().top);
         }).addClass('moving');
 
@@ -240,7 +240,7 @@ function initSlugAutoPopulate(){
     $('#id_title').on('keyup keydown keypress blur', function(){
         if($('body').hasClass('create') || (!$('#id_slug').data('previous-val').length || cleanForSlug($('#id_title').data('previous-val')) === $('#id_slug').data('previous-val'))){
             // only update slug if the page is being created from scratch, if slug is completely blank, or if title and slug prior to typing were identical
-            $('#id_slug').val(cleanForSlug($('#id_title').val()));          
+            $('#id_slug').val(cleanForSlug($('#id_title').val()));
         }
     });
 }
@@ -248,7 +248,7 @@ function initSlugAutoPopulate(){
 function initSlugCleaning(){
     $('#id_slug').on('keyup blur', function(){
         $(this).val(cleanForSlug($(this).val()));
-    })    
+    })
 }
 
 $(function() {

@@ -1,0 +1,143 @@
+@root-url: "/static/rca_signage/";
+@padding: 1.5em;
+
+@font-face {
+    font-family: 'calvert_107regular';
+    src: url('@{root-url}css/fonts/calvert107-webfont.eot');
+    src: url('@{root-url}css/fonts/calvert107-webfont.eot?#iefix') format('embedded-opentype'),
+         url('@{root-url}css/fonts/calvert107-webfont.woff') format('woff'),
+         url('@{root-url}css/fonts/calvert107-webfont.ttf') format('truetype'),
+         url('@{root-url}css/fonts/calvert107-webfont.svg#calvert_107regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'calvert_107light';
+    src: url('@{root-url}css/fonts/calvert107-light-webfont.eot');
+    src: url('@{root-url}css/fonts/calvert107-light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('@{root-url}css/fonts/calvert107-light-webfont.woff') format('woff'),
+         url('@{root-url}css/fonts/calvert107-light-webfont.ttf') format('truetype'),
+         url('@{root-url}css/fonts/calvert107-light-webfont.svg#calvert_107light') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'calvert_107bold';
+    src: url('@{root-url}css/fonts/calvert107-bold-webfont.eot');
+    src: url('@{root-url}css/fonts/calvert107-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('@{root-url}css/fonts/calvert107-bold-webfont.woff') format('woff'),
+         url('@{root-url}css/fonts/calvert107-bold-webfont.ttf') format('truetype'),
+         url('@{root-url}css/fonts/calvert107-bold-webfont.svg#calvert_107bold') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+html{
+    background:black;
+    height:100%;
+}
+body{
+    -webkit-font-smoothing: antialiased;
+    height:100%;
+    font-family:calvert_107light, courier, sans-serif;
+    color:white;
+    font-size:170%;
+}
+h1,h2,h3,h4,h5,p{
+    margin:0;
+}
+h1,h2,h3,h4,h5{
+    font-family:calvert_107regular, courier, sans-serif;
+}
+h1{
+    font-size:2.2em;
+}
+h3{
+
+}
+.wrapper{
+    overflow:hidden;
+    padding:@padding;
+    background:black url("@{root-url}images/logo-white.png") 5% 95% no-repeat;
+    background-size:30%;
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+}
+#date{
+    font-family:calvert_107light, courier, sans-serif;
+}
+#loading{
+    position:absolute;
+    top:2em;
+    right:2em;    
+    text-align:center;
+    visibility:hidden;
+}
+#paging{
+    font-size:1.5em;
+    position:absolute;
+    bottom:@padding;
+    right:@padding
+}
+
+#eventlist {
+    position:absolute;
+    top:8em;
+    bottom:10em;
+    left:0;
+    right:0;
+    padding:0 @padding;
+
+    ul, li{
+        margin:0;
+        padding:0;
+        list-style-type:none;
+    }
+    li{
+        border-top:1px solid white;
+        padding:0.7em 0;
+    }
+    .directions{
+        margin-top:1em;
+    }
+    .date{
+        margin-bottom:1em;
+    }
+    /* identifies events that are the same date as the previous, therefore requiring no divider between them, nor date before*/
+    .same{
+        border-top:0;
+        .date{
+            display:none;
+        }
+    }
+    ul .same:first-child{
+        .date{
+            display:block;
+        }
+        border-top:1px solid white;
+    }
+}
+
+.special #eventlist{
+    top:8em/1.8;
+    font-size:1.8em;
+    padding:0 @padding/1.8;
+}
+
+.special .date{
+    margin-top:-2.5em;
+}
+
+.loading{
+    #loading{
+        visibility:visible;
+    }
+}
+
+#tmp{
+    visibility:hidden;
+}

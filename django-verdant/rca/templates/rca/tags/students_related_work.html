@@ -12,7 +12,7 @@
                             {% with student.carousel_items.all as carousel_items %}
                                 {% with carousel_items|first as carousel_item %}
                                     {% if carousel_item.image %}
-                                        {% image carousel_item.image fill-300x300 %}
+                                        {% image carousel_item.image fill-180x101 %}
                                     {% else %}
                                         <img src="/static/rca/images/medium-grey-placeholder.png" width="width-180">
                                     {% endif %}

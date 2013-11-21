@@ -70,6 +70,7 @@ jQuery(function($) {
             source: ["50", "100", "250", "500", "1000"],
             minLength: 0
         })
+        .autocomplete( "widget" ).addClass( "donation-amount" )
         .focus(function(){
             $(this).autocomplete("search", "" );
         });

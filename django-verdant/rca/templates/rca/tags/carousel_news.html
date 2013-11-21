@@ -15,7 +15,7 @@
                                     {% with news_item.carousel_items.all as carousel_items %}
                                         {% with carousel_items|first as carousel_item %}
                                             {% if carousel_item.image %}
-                                                {% image carousel_item.image fill-300x169 %}
+                                                {% image carousel_item.image fill-700x394 %}
                                             {% else %}
                                                 {# TODO: delete these placeholder images from git once proper image exists #}
                                                 <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="300">
