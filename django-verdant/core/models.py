@@ -2,6 +2,7 @@ from django.db import models, connection, transaction
 from django.db.models import get_model
 from django.http import Http404
 from django.shortcuts import render
+from django.core.cache import cache
 
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
@@ -47,6 +48,29 @@ class Site(models.Model):
             return 'https://%s' % self.hostname
         else:
             return 'http://%s:%d' % (self.hostname, self.port)
+
+    # clear the verdant_site_root_paths cache whenever Site records are updated
+    def save(self, *args, **kwargs):
+        result = super(Site, self).save(*args, **kwargs)
+        cache.delete('verdant_site_root_paths')
+        return result
+
+    @staticmethod
+    def get_site_root_paths():
+        """
+        Return a list of (root_path, root_url) tuples, most specific path first -
+        used to translate url_paths into actual URLs with hostnames
+        """
+        result = cache.get('verdant_site_root_paths')
+
+        if result is None:
+            result = [
+                (site.root_page.url_path, site.root_url)
+                for site in Site.objects.select_related('root_page').order_by('-root_page__url_path')
+            ]
+            cache.set('verdant_site_root_paths', result, 3600)
+
+        return result
 
 
 PAGE_MODEL_CLASSES = []
