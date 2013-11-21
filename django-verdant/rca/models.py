@@ -1337,7 +1337,7 @@ class EventItem(Page, SocialFields):
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField("RCA galleries and rooms", max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
-    special_event = models.BooleanField(default=False)
+    special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens below")
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
     external_link = models.URLField(blank=True)
@@ -1444,7 +1444,6 @@ class EventItem(Page, SocialFields):
 
 EventItem.content_panels = [
     MultiFieldPanel([
-        FieldPanel('special_event'),
         FieldPanel('title', classname="full title"),
         FieldPanel('audience'),
         FieldPanel('area'),
@@ -1491,8 +1490,10 @@ EventItem.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
-    InlinePanel(EventItem, 'screens', label="On signage screens"),
-
+    MultiFieldPanel([
+        FieldPanel('special_event'),
+        InlinePanel(EventItem, 'screens', label="Screen on which to highlight"),
+        ], 'Special event signage'),
     InlinePanel(EventItem, 'related_schools', label="Related schools"),
     InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
     InlinePanel(EventItem, 'related_areas', label="Related areas"),

@@ -247,11 +247,31 @@
 
     &.expanded .load-more {
         a:after{
-            background-position:-377px -996px;
+            //background-position:-377px -996px;
+            //background: url('imgs/icons-63-std.png') no-repeat -349px -85px; width: 61px; height: 62px;
+            //background: url('imgs/icons-63-std@2x.png') no-repeat -697px -170px; width: 124px; height: 124px;
+            .sprite-load-63(
+                @positionX: -349px,
+                @positionY: -85px,
+                @retinaPositionX: -697px,
+                @retinaPositionY: -170px,
+                @width: 61px,
+                @height: 62px
+            );
         }
 
         a:hover:after{
-            background-position:-377px -441px;
+            //background-position:-377px -441px;
+            //background: url('imgs/icons-63-std.png') no-repeat -349px -13px; width: 61px; height: 62px;
+            //background: url('imgs/icons-63-std@2x.png') no-repeat -697px -26px; width: 124px; height: 124px;
+            .sprite-load-63(
+                @positionX: -349px,
+                @positionY: -13px,
+                @retinaPositionX: -697px,
+                @retinaPositionY: -26px,
+                @width: 61px,
+                @height: 62px
+            );
         }
     }
 }
