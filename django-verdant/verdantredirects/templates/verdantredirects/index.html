@@ -15,11 +15,14 @@
     </header>
 
     <table class="listing full-width">
+        <col />
+        <col width="40%"/>
+        <col />
         <thead>
             <tr>
-                <th class="title">Title</th>
+                <th class="title">From</th>
+                <th>To</th>
                 <th class="type">Type</th>
-                <th class="status">Redirect</th>
             </tr>
         </thead>
         <tbody>
@@ -29,14 +32,15 @@
                         <td class="title">
                             <h2><a href="{% url 'verdantredirects_edit_redirect' redirect.id %}" title="Edit this redirect">{{ redirect.title }}</a></h2>
                         </td>
-                        <td class="type">{{ redirect.get_is_permanent_display }}</td>
-                        <td class="status">
+                         <td>
                             {% if redirect.redirect_page %}
-                                Page: <a href="{% url 'verdantadmin_pages_edit' redirect.redirect_page.id %}">{{ redirect.redirect_page.title }}</a>
+                                <a href="{% url 'verdantadmin_pages_edit' redirect.redirect_page.id %}">{{ redirect.redirect_page.title }}</a>
                             {% else %}
-                                Link: {{ redirect.link }}
+                                {{ redirect.link }}
                             {% endif %}
                         </td>
+                        <td class="type">{{ redirect.get_is_permanent_display }}</td>
+                       
                     </tr>
                 {% endfor %}
             {% else %}
