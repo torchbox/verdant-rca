@@ -1,4 +1,4 @@
-{% load rca_tags image_tags pageurl %}
+{% load pageurl rca_tags %}
 
 
 <div class="events-ads-wrapper">
@@ -52,33 +52,7 @@
 
 <!-- related content -->
 {% if showRelatedNews %}
-    {% with self.get_related_news as related_news %}
-        {% if related_news %}
-            {% for news_item in related_news %}
-                <div class="related-content-item">
-                    <a href="{% pageurl news_item %}">
-                        <figure>
-                            {% if news_item.feed_image %}
-                                {% image news_item.feed_image width-180 %}
-                            {% else %}
-                                {% with news_item.carousel_items.all as carousel_items %}
-                                    {% with carousel_items|first as carousel_item %}
-                                        {% if carousel_item.image %}
-                                            {% image carousel_item.image fill-180x101 %}
-                                        {% else %}
-                                            {# TODO: delete these placeholder images from git once proper image exists #}
-                                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="180">
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endwith %}
-                            {% endif %}
-                            <figcaption>{{news_item.title }}</figcaption>
-                        </figure>
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    {% include 'rca/includes/sidebar_related_news.html' %}
 {% endif %}
 
 {% if showRelatedStudents %}
