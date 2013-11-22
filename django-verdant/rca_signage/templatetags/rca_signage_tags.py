@@ -17,7 +17,8 @@ def date_range_display(date_from, date_to):
                 date_from.strftime('%d %B').lstrip('0'), '&ndash;', date_to.strftime('%d %B').lstrip('0')
             ])
     return ' '.join([
-            date_from.strftime('%A %d').lstrip('0'),
+            date_from.strftime('%A'),
+            date_from.strftime('%d').lstrip('0'),
             date_from.strftime('%B')
         ])
 
