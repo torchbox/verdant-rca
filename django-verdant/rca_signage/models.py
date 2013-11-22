@@ -13,17 +13,8 @@ import json
 class ScreenIndex(Page):
     indexed = False
 
-    def route(self, request, path_components):
-        # If this page is not published, raise 404 error
-        if not self.live:
-            raise Http404
-
-        if path_components:
-            # Request is for a screen
-            return self.serve(request, screen=path_components[0], extra_path='/'.join(path_components[1:]))
-        else:
-            # Request is for screens index
-            return self.serve(request)
+    def get_special_events(self, screen):
+        return EventItemDatesTimes.objects.filter(page__screens__screen=screen, page__special_event=True, page__live=True)
 
     def get_upcoming_events(self, start_date=None, max_days=7, max_events=10):
         # Get start date
@@ -50,11 +41,13 @@ class ScreenIndex(Page):
         return events
 
     def serve_data(self, request, screen):
-       # Check for special event
-        special_events = EventItemDatesTimes.objects.filter(page__screens__screen=screen, page__special_event=True, page__live=True)
+        # Get special events
+        special_events = self.get_special_events(screen)
+
+        # Check if there is a special event
         if len(special_events) > 0:
             # Special event found, get special events
-            new_special_events = [{
+            data = dict(is_special=True, events=[{
                     'date': rca_signage_tags.event_date_display(event),
                     'times': rca_signage_tags.event_times_display(event),
                     'title': event.page.title,
@@ -62,19 +55,18 @@ class ScreenIndex(Page):
                     'specific_directions': event.page.specific_directions,
                 }
                 for event in special_events
-            ]
-            data = dict(is_special=True, events=new_special_events)
+            ])
         else:
             # No special events, get upcoming events instead
-            upcoming_events = [{
+            upcoming_events = self.get_upcoming_events()
+            data = dict(is_special=False, events=[{
                     'date': rca_signage_tags.date_display(event[0]),
                     'times': rca_signage_tags.event_times_display(event[1]),
                     'title': event[1].page.title,
                     'location': rca_signage_tags.event_location_display(event[1]),
                 }
-                for event in self.get_upcoming_events()
-            ]
-            data = dict(is_special=False, events=upcoming_events)
+                for event in upcoming_events
+            ])
 
         # Return as JSON
         return HttpResponse(json.dumps(data), content_type='application/json')
@@ -101,3 +93,15 @@ class ScreenIndex(Page):
             return render(request, 'rca_signage/index.html', {
                 'screens': [dict(slug=screen[0], name=screen[1]) for screen in SCREEN_CHOICES],
             })
+
+    def route(self, request, path_components):
+        # If this page is not published, raise 404 error
+        if not self.live:
+            raise Http404
+
+        if path_components:
+            # Request is for a screen
+            return self.serve(request, screen=path_components[0], extra_path='/'.join(path_components[1:]))
+        else:
+            # Request is for screens index
+            return self.serve(request)
