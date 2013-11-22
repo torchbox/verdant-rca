@@ -35,6 +35,10 @@ class Redirect(models.Model):
 
     @staticmethod
     def normalise_path(path):
+        # Check that the path has content before normalising
+        if path is None or path == '':
+            return ''
+
         # Make sure theres a '/' at the beginning
         if path[0] != '/':
             path = '/' + path
