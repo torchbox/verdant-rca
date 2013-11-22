@@ -223,6 +223,16 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/sidebar_adverts.html', takes_context=True)
+def sidebar_adverts(context, show_open_days=False):
+    return {
+        'global_adverts': Advert.objects.filter(show_globally=True),
+        'show_open_days': show_open_days,
+        'self': context['self'],
+        'global_events_index_url': context['global_events_index_url'],
+        'request': context['request'],
+    }
+
 @register.inclusion_tag('rca/tags/sidebar_links.html', takes_context=True)
 def sidebar_links(context, calling_page=None):
     if calling_page:
