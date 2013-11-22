@@ -41,10 +41,10 @@ var Screen = function() {
         var pageCounter = 0;
 
         if($this.eventsData.is_special){
-            $this.headingElem.html('Special events');
+            $this.headingElem.html('Special Events');
             $('body').addClass('special');
         } else {
-            $this.headingElem.html('Upcoming events');
+            $this.headingElem.html('Upcoming Events');
             $('body').removeClass('special');
         }
 

@@ -139,7 +139,8 @@ EVENT_AUDIENCE_CHOICES = (
 EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
-    ('other', 'Other (enter below)')
+    ('collegewide', 'College-wide'),
+    ('other', 'Other/External (enter below)')
 )
 
 CAMPUS_CHOICES = (
@@ -1337,7 +1338,7 @@ class EventItem(Page, SocialFields):
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
     gallery = models.CharField("RCA galleries and rooms", max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
-    special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens below")
+    special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below")
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
     external_link = models.URLField(blank=True)
@@ -3433,7 +3434,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter(live=True).order_by('?')
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
 
         if research_type:
             research_items = research_items.filter(research_type=research_type)

@@ -9,12 +9,20 @@ def date_range_display(date_from, date_to):
     if date_to:
         if date_to.month == date_from.month:
             return ''.join([
-                date_from.strftime('%d'), '&ndash;', date_to.strftime('%d'), # From and to days
+                date_from.strftime('%d').lstrip('0'), '&ndash;', date_to.strftime('%d').lstrip('0'), # From and to days
                 date_from.strftime(' %B') # Month
             ])
         else:
             return ''.join([
-                date_from.strftime('%d %B'), '&ndash;', date_to.strftime('%d %B')
+                ' '.join([
+                    date_from.strftime('%d').lstrip('0'),
+                    date_from.strftime('%B')
+                ]),
+                '&ndash;',
+                ' '.join([
+                    date_to.strftime('%d').lstrip('0'),
+                    date_to.strftime('%B')
+                ]),
             ])
     return date_from.strftime('%A %d %B')
 

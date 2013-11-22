@@ -76,7 +76,7 @@ h3{
 .wrapper{
     overflow:hidden;
     padding:@padding;
-    background:black url("@{root-url}images/logo-white.png") 5% 95% no-repeat;
+    background:black url("@{root-url}images/logo-white.png") @padding 95% no-repeat;
     position:absolute;
     left:0;
     right:0;
@@ -94,13 +94,6 @@ h3{
     text-align:center;
     visibility:hidden;
 }
-#paging{
-    font-size:1.5em;
-    position:absolute;
-    bottom:@padding;
-    right:@padding
-}
-
 #eventlist {
     position:absolute;
     top:8em;
@@ -164,14 +157,20 @@ h3{
     visibility:hidden;
 }
 
+#paging{
+    font-size:1.5em;
+    position:absolute;
+    bottom:@padding;
+    right:1em
+}
+
 #paging-timer {
     position: absolute;
-    bottom:@padding * 1.5;
-    right:@padding * 4;
+    bottom:@padding * 1.7;
+    right:@padding * 3.5;
     background: black;
-    width: 2em;
-    height: 2em;
-    overflow:hidden;
+    width: 1.3em;
+    height: 1.3em;
 
     .pie {
         width: 50%;
@@ -179,7 +178,7 @@ h3{
         -webkit-transform-origin: 100% 50%;
         position: absolute;
         background: black;
-        border:5px solid white;
+        border:3px solid #666;
     }
 
     .spinner {

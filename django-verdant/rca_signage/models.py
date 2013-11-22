@@ -27,7 +27,7 @@ class ScreenIndex(Page):
             date = start_date + datetime.timedelta(days=day_num)
 
             # Get event dates times for this day
-            event_dates_times = EventItemDatesTimes.objects.filter(page__live=True).filter(
+            event_dates_times = EventItemDatesTimes.objects.exclude(page__location="other").filter(page__live=True).filter(
                 Q(date_from__lte=date, date_to__gte=date) | # Multi day events
                 Q(date_from=date, date_to=None) # Single day events
             )
