@@ -70,8 +70,9 @@ h1{
     font-size:2.2em;
 }
 h3{
-    margin-bottom:0.2em;
+    font-size:1em;
 }
+
 .wrapper{
     overflow:hidden;
     padding:@padding;
@@ -82,10 +83,8 @@ h3{
     right:0;
     top:0;
     bottom:0;
-
-    
-
 }
+
 #date{
     font-family:calvert_107light, courier, sans-serif;
 }
@@ -118,7 +117,7 @@ h3{
     }
     li{
         border-top:1px solid white;
-        padding:0.7em 0;
+        padding:0.4em 0;
     }
     .directions{
         margin-top:1em;
@@ -145,9 +144,14 @@ h3{
     top:8em/1.8;
     font-size:1.8em;
     padding:0 @padding/1.8;
+
+    li{
+        padding:0.2em 0;
+    }
 }
 
 .special .date{
+    position:absolute;
     margin-top:-2.5em;
 }
 
@@ -164,7 +168,7 @@ h3{
 #paging-timer {
     position: absolute;
     bottom:@padding * 1.5;
-    right:@padding * 3.5;
+    right:@padding * 4;
     background: black;
     width: 2em;
     height: 2em;
