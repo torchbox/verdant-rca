@@ -3433,7 +3433,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter(live=True).order_by('?')
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
 
         if research_type:
             research_items = research_items.filter(research_type=research_type)
