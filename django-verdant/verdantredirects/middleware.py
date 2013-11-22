@@ -15,7 +15,7 @@ class RedirectMiddleware(object):
 
         # Find redirect
         try:
-            redirect = models.Redirect.get_for_site(request.site).get(old_path=request.get_full_path())
+            redirect = models.Redirect.get_for_site(request.site).get(old_path=path)
 
             if redirect.is_permanent:
                 return http.HttpResponsePermanentRedirect(redirect.link)
