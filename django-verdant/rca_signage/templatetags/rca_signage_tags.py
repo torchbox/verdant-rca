@@ -35,7 +35,7 @@ def event_times_display(event_datetime):
         time_from = event_datetime.time_from.strftime('%H.%M')
         if event_datetime.time_to:
             time_to = event_datetime.time_to.strftime('%H.%M')
-            return ' &ndash; '.join([time_from, time_to])
+            return '&ndash;'.join([time_from, time_to])
         else:
             return time_from
 
