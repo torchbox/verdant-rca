@@ -22,7 +22,9 @@ def statuses_user_timeline(request):
         # on the next request the tweets will be there
         cache_key_initial = "tweets_from_%s_initial" % slugify(screen_name)
         if not cache.get(cache_key_initial):
-            tasks.get_tweets.delay(screen_name, count)
+            tasks.get_tweets(screen_name, count)
+            tweets_for_screen_name = Tweet.objects.filter(user_screen_name__iexact=screen_name).order_by('-created_at')
+            tweets_for_screen_name_exist = tweets_for_screen_name.exists()
             cache.set(cache_key_initial, True, settings.CELERYBEAT_CACHE_MED_TIME)
 
     if not result and tweets_for_screen_name_exist:
