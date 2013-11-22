@@ -21,7 +21,7 @@ def date_range_display(date_from, date_to):
 
 @register.filter()
 def date_display(date):
-    date_range_display(date, None)
+    return date_range_display(date, None)
 
 
 @register.filter()
