@@ -1,16 +1,10 @@
 from django.db import models
 
 
-REDIRECT_TYPE_CHOICES = (
-    (False, "Temporary"),
-    (True, "Permanent"),
-)
-
-
 class Redirect(models.Model):
     old_path = models.CharField(max_length=255, unique=True, db_index=True)
     site = models.ForeignKey('core.Site', null=True, blank=True, related_name='redirects', db_index=True, editable=False)
-    is_permanent = models.BooleanField("Type", default=True, choices=REDIRECT_TYPE_CHOICES)
+    is_permanent = models.BooleanField("Permanent", default=True)
     redirect_page = models.ForeignKey('core.Page', related_name='+', null=True, blank=True)
     redirect_link = models.URLField(blank=True)
 
@@ -24,6 +18,12 @@ class Redirect(models.Model):
             return self.redirect_page.url
         else:
             return self.redirect_link
+
+    def get_is_permanent_display(self):
+        if self.is_permanent:
+            return "Permanent"
+        else:
+            return "Temporary"
 
     @classmethod
     def get_for_site(cls, site=None):
