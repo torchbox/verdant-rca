@@ -14,6 +14,7 @@ from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
 from verdantsearch import urls as verdantsearch_urls
 from verdantusers import urls as verdantusers_urls
+from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
 from rca import app_urls
@@ -47,6 +48,7 @@ urlpatterns = patterns('',
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),
+    url(r'^admin/redirects/', include(verdantredirects_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
     url(r'^search/', include(verdantsearch_urls)),
 
