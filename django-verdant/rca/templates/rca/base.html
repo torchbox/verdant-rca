@@ -11,14 +11,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <title>{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | Royal College of Art</title>
-        <meta name="description" content="{{ self.social_text }}" />
+        <meta name="description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
 
         <!-- twitter cards -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="{{ self.title }}">
-        <meta name="twitter:description" content="{{ self.social_text }}">
+        <meta name="twitter:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}">
         {% image self.social_image width-320 as social_img %}
         <meta name="twitter:image:src" content="http://{{ request.site.hostname }}{{ social_img.url }}">
 

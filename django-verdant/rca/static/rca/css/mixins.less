@@ -96,15 +96,6 @@
     filter: ~"alpha(opacity=@{opacity})";
 }
 
-.sprite-load (@positionX, @positionY, @width, @height) {
-    background-image: url("@{path-static}images/sprites.png");
-    background-repeat: no-repeat;
-    background-position: @positionX @positionY;
-    width: @width;
-    height: @height;
-}
-
-
 .sprite-load-standard (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
     background-image: url("@{path-static}images/icons-std.png");
     background-repeat: no-repeat;

@@ -1,7 +1,9 @@
+import time
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse
 from django.template.defaultfilters import slugify
+from django.utils.http import http_date
 
 from . import tasks
 from .models import Tweet
@@ -35,6 +37,10 @@ def statuses_user_timeline(request):
     if callback:
         result = "%s(%s)" % (callback, result or "[]")
 
-    return HttpResponse(result or "[]",
+    response = HttpResponse(result or "[]",
                         content_type="application/json; charset=utf-8",
                         mimetype="application/json")
+    # tell the browser and / or reverse proxy to cache this response
+    response['Expires'] = http_date(time.time() + settings.CELERYBEAT_CACHE_SHORT_TIME)
+
+    return response

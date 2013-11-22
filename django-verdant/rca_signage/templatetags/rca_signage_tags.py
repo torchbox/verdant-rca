@@ -35,6 +35,6 @@ def event_location_display(event_datetime):
         location.append(event.location_other)
 
     if event.gallery:
-        location.insert(0, event.gallery)
+        location.insert(0, event.get_gallery_display())
 
     return ', '.join(location)
