@@ -55,7 +55,7 @@ class ScreenIndex(Page):
         if len(special_events) > 0:
             # Special event found, get special events
             new_special_events = [{
-                    'date': rca_signage_tags.date_display(datetime.date.today()),
+                    'date': rca_signage_tags.event_date_display(event),
                     'times': rca_signage_tags.event_times_display(event),
                     'title': event.page.title,
                     'location': rca_signage_tags.event_location_display(event),
