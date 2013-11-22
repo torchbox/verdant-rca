@@ -8,6 +8,7 @@ from constants import SCREEN_CHOICES, SCREEN_CHOICES_DICT
 from rca_signage.templatetags import rca_signage_tags
 import datetime
 import json
+from itertools import chain
 
 
 class ScreenIndex(Page):
@@ -30,7 +31,10 @@ class ScreenIndex(Page):
             event_dates_times = EventItemDatesTimes.objects.exclude(page__location="other").filter(page__live=True).filter(
                 Q(date_from__lte=date, date_to__gte=date) | # Multi day events
                 Q(date_from=date, date_to=None) # Single day events
-            )
+            ).order_by('time_from')
+
+            # Make sure all day events are put first
+            event_dates_times = chain(event_dates_times.filter(time_from=None), event_dates_times.exclude(time_from=None))
 
             # Add all events for this day to events list
             for event_date_time in event_dates_times:
