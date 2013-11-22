@@ -12,6 +12,7 @@ TEMPLATE_LOADERS = (
 )
 
 BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
+CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 VERDANTSEARCH_ES_URLS = ['http://rca1.dh.bytemark.co.uk:9200']
 
 try:
