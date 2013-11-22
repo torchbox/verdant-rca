@@ -30,7 +30,7 @@ var Screen = function() {
         $('body').addClass('loading');
 
         // Perform ajax request
-        $.getJSON("data", function(data) {
+        $.getJSON("data/", function(data) {
             $this.eventsData = data;
             $this.handleEvents(onComplete);
         });
