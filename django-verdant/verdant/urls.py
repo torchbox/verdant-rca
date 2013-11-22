@@ -26,11 +26,6 @@ from verdantsearch import register_signal_handlers
 register_signal_handlers()
 
 
-# Redirects
-from redirects import REDIRECTS
-redirect_urls = patterns('', *[url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()])
-
-
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'verdant.views.home', name='home'),
@@ -59,9 +54,6 @@ urlpatterns = patterns('',
     url(r'^app/', include(app_urls)),
 
     url(r'^twitter/', include(twitter_urls)),
-
-    # Redirects
-    url(r'', include(redirect_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
