@@ -5,15 +5,12 @@
         <h1>Add redirect</h1>
     </header>
 
-    <div class="nice-padding">
-        <form action="{% url 'verdantredirects_add_redirect' %}" method="POST">
-            {% csrf_token %}
-            <ul class="fields">
-                {% for field in form %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
-                <li><input type="submit" value="Save" /></li>
-            </ul>
-        </form>
-    </div>
+    <form action="{% url 'verdantredirects_add_redirect' %}" method="POST">
+        {% csrf_token %}
+        {{ edit_handler.render_form_content }}
+
+        <div class="nice-padding">
+            <input type="submit" value="Save" />
+        </div>
+    </form>
 {% endblock %}

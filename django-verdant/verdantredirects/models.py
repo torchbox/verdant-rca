@@ -1,4 +1,5 @@
 from django.db import models
+from verdantadmin.edit_handlers import FieldPanel, PageChooserPanel
 
 
 class Redirect(models.Model):
@@ -47,3 +48,10 @@ class Redirect(models.Model):
     def clean(self):
         # Normalise old path
         self.old_path = Redirect.normalise_path(self.old_path)
+
+Redirect.content_panels = [
+    FieldPanel('old_path'),
+    FieldPanel('is_permanent'),
+    PageChooserPanel('redirect_page'),
+    FieldPanel('redirect_link'),
+]

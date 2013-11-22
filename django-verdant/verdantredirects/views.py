@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from verdantadmin.edit_handlers import ObjectList
 
 import models
 import forms
 
+
+REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)
 
 @login_required
 def index(request):
@@ -23,19 +26,23 @@ def index(request):
 def edit(request, redirect_id):
     theredirect = get_object_or_404(models.Redirect, id=redirect_id)
 
+    form_class = REDIRECT_EDIT_HANDLER.get_form_class(models.Redirect)
     if request.POST:
-        form = forms.RedirectForm(request.POST, request.FILES, instance=theredirect)
+        form = form_class(request.POST, request.FILES, instance=theredirect)
         if form.is_valid():
             form.save()
             messages.success(request, "Redirect '%s' updated." % theredirect.title)
             return redirect('verdantredirects_index')
-
+        else:
+            messages.error(request, "The redirect could not be saved due to validation errors")
+            edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
     else:
-        form = forms.RedirectForm(instance=theredirect)
+        form = form_class(instance=theredirect)
+        edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
 
     return render(request, "verdantredirects/edit.html", {
         'redirect': theredirect,
-        'form': form,
+        'edit_handler': edit_handler,
     })
 
 
@@ -55,8 +62,11 @@ def delete(request, redirect_id):
 
 @login_required
 def add(request):
+    theredirect = models.Redirect()
+
+    form_class = REDIRECT_EDIT_HANDLER.get_form_class(models.Redirect)
     if request.POST:
-        form = forms.RedirectForm(request.POST, request.FILES)
+        form = form_class(request.POST, request.FILES)
         if form.is_valid():
             theredirect = form.save(commit=False)
             theredirect.site = request.site
@@ -64,9 +74,13 @@ def add(request):
 
             messages.success(request, "Redirect '%s' added." % theredirect.title)
             return redirect('verdantredirects_index')
+        else:
+            messages.error(request, "The redirect could not be created due to validation errors")
+            edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
     else:
-        form = forms.RedirectForm()
+        form = form_class()
+        edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
 
     return render(request, "verdantredirects/add.html", {
-        'form': form,
+        'edit_handler': edit_handler,
     })
