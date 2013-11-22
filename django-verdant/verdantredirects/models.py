@@ -34,10 +34,19 @@ class Redirect(models.Model):
             return cls.objects.all()
 
     @staticmethod
-    def normalise_path(path):
+    def normalise_path(full_path):
+        # Split full_path into path and query_string
+        try:
+            question_mark = full_path.index('?')
+            path = full_path[:question_mark]
+            query_string = full_path[question_mark:]
+        except ValueError:
+            path = full_path
+            query_string = ''
+
         # Check that the path has content before normalising
         if path is None or path == '':
-            return ''
+            return query_string
 
         # Make sure theres a '/' at the beginning
         if path[0] != '/':
@@ -47,7 +56,7 @@ class Redirect(models.Model):
         if path[-1] == '/':
             path = path[:-1]
 
-        return path
+        return path + query_string
 
     def clean(self):
         # Normalise old path
