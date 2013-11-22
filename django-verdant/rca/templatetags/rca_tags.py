@@ -228,7 +228,7 @@ def sidebar_adverts(context, show_open_days=False):
     return {
         'global_adverts': Advert.objects.filter(show_globally=True),
         'show_open_days': show_open_days,
-        'self': context['self'],
+        'self': context.get('self'),
         'global_events_index_url': context['global_events_index_url'],
         'request': context['request'],
     }
