@@ -97,6 +97,13 @@ function showSearchAutocomplete() {
 }
 
 
+function showHideMobileMenu(){
+    $('.showmenu').click(function(eventObject){
+        $('nav').toggleClass('expanded');
+        $(this).toggleClass('expanded');
+    });
+}
+
 /*google maps for contact page
 Currently not being used but leaving commented out for reference - contains the correct lat and longs for Kensington and Battersea campuses */
 // function initializeMaps() {
@@ -168,7 +175,7 @@ $(function(){
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
-    showHide('.showmenu', 'nav');
+    showHideMobileMenu();
     showHide('.showsearch', 'form.search');
     showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
