@@ -593,6 +593,17 @@ header {
         );
     }
 
+    &.expanded:after {
+        .sprite-load-23(
+            @positionX: -12px,
+            @positionY: -48px,
+            @retinaPositionX: -25px,
+            @retinaPositionY: -97px,
+            @width: 23px,
+            @height: 13px
+        );
+    }
+
 }
 
 
@@ -1023,7 +1034,7 @@ figure {
 }
 
 div.related-content-item {
-    margin: 0 0 30px 0;
+    margin: 0 0 30px 10px;
     overflow: hidden;
     a {
         //.clearfix();
@@ -1189,6 +1200,11 @@ footer {
             color: @color-pale-grey;
         }
     }
+
+    li.parentlink {
+        margin-bottom:1em;
+    }
+
     h3 {
         .module-title;
         margin-top: 0;

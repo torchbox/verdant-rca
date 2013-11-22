@@ -1,6 +1,6 @@
 var Screen = function() {
-    this.loadInterval = 120; // frequency (seconds) that new events are pulled from DB
-    this.pageInterval = 30; // frequence (seconds) that events pages are paginated
+    this.pageInterval = 20; // frequence (seconds) that events pages are paginated
+    this.loadInterval = this.pageInterval * 10; // frequency (seconds) that new events are pulled from DB
     this.currentPage =  0;
     this.eventsData = [];
     this.eventsElemSelector = '#eventlist';
@@ -30,7 +30,7 @@ var Screen = function() {
         $('body').addClass('loading');
 
         // Perform ajax request
-        $.getJSON("data", function(data) {
+        $.getJSON("data/", function(data) {
             $this.eventsData = data;
             $this.handleEvents(onComplete);
         });

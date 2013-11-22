@@ -10,6 +10,9 @@ from .models import Tweet
 
 
 def statuses_user_timeline(request):
+    if not settings.TWITTER_CONSUMER_KEY:
+        return HttpResponse("[]", content_type="application/json; charset=utf-8", mimetype="application/json")
+
     callback = request.GET.get("callback")
     screen_name = request.GET.get("screen_name", "RCAevents")
     count = int(request.GET.get("count", 10))
