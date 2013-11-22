@@ -17,7 +17,12 @@ def statuses_user_timeline(request):
     result = cache.get(cache_key)
 
     tweets_for_screen_name = Tweet.objects.filter(user_screen_name__iexact=screen_name).order_by('-created_at')
-    tweets_for_screen_name_exist = tweets_for_screen_name.exists()
+
+    tweets_for_screen_name_exist_cache_key = "tweets_for_screen_name_exist_%s" % (slugify(screen_name))
+    tweets_for_screen_name_exist = cache.get(tweets_for_screen_name_exist_cache_key)
+    if not tweets_for_screen_name_exist:
+        tweets_for_screen_name_exist = tweets_for_screen_name.exists()
+        cache.set(tweets_for_screen_name_exist_cache_key, tweets_for_screen_name_exist, settings.CELERYBEAT_CACHE_MED_TIME)
 
     if not tweets_for_screen_name_exist:
         # no tweets in the database -> fetch some ASAP (but with a long delay between retries)
