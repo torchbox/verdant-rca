@@ -194,4 +194,9 @@ $(function() {
     // start screen system
     var screen = new Screen();
     screen.run();
+
+    // means of testing non-rotated version
+    $(document).click(function(){
+        $('body').toggleClass('rotated')
+    })
 });

@@ -2,7 +2,7 @@
 jQuery.fn.reverse = [].reverse;
 
 var breakpoints = {
-    mobile: "screen and (max-width:768px)",
+    mobile: "screen and (max-width:767px)", /* NB: max-width must be 1px less than the min-width use for desktopSmall, below, otherwise both fire */
     desktopSmall: "screen and (min-width:768px)",
     desktopRegular: "screen and (min-width:1024px)",
     desktopLarge: "screen and (min-width:1280px)"

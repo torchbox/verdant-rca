@@ -33,7 +33,7 @@
                 {# NB: this is not really displaying a student page, but rather their work #}
                 
                 {% with item.carousel_items.all|first as carouselitem %}
-                    <li class="item {% if carouselitem.image.is_landscape %}three-quarters{% else %}full{% endif %}" data-id="{{ item.id }}">
+                    <li class="item {% if carouselitem.image.is_landscape %}half{% else %}double{% endif %}" data-id="{{ item.id }}">
                         <div class="inner">
                             <a href="{% pageurl item %}">
                                 {% if carouselitem.image.is_landscape %}
