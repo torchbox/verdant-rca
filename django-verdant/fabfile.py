@@ -3,6 +3,8 @@ from fabric.api import *
 
 env.roledefs = {
     'staging': ['django-staging.torchbox.com'],
+
+    'squid': ['root@rca1.dh.bytemark.co.uk'],
     # All hosts will be listed here.
     'production': ['root@rca2.dh.bytemark.co.uk', 'root@rca3.dh.bytemark.co.uk'],
 }
@@ -45,3 +47,7 @@ def deploy():
             if env['host'] == MIGRATION_SERVER:
                 run("supervisorctl restart rca-celerybeat")
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.production")
+
+@roles('squid')
+def clear_cache():
+    run('squidclient -p 80 -m PURGE http://www.rca.ac.uk')
