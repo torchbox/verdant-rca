@@ -13,8 +13,6 @@ class RedirectMiddleware(object):
         # Get the path
         path = models.Redirect.normalise_path(request.get_full_path())
 
-        print path
-
         # Find redirect
         try:
             redirect = models.Redirect.get_for_site(request.site).get(old_path=path)
