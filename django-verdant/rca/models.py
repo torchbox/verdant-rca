@@ -137,9 +137,9 @@ EVENT_AUDIENCE_CHOICES = (
 )
 
 EVENT_LOCATION_CHOICES = (
-    ('collegewide', 'College-wide'),
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
+    ('collegewide', 'College-wide'),
     ('other', 'Other/External (enter below)')
 )
 
