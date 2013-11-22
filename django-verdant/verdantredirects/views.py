@@ -58,7 +58,10 @@ def add(request):
     if request.POST:
         form = forms.RedirectForm(request.POST, request.FILES)
         if form.is_valid():
-            theredirect = form.save()
+            theredirect = form.save(commit=False)
+            theredirect.site = request.site
+            theredirect.save()
+
             messages.success(request, "Redirect '%s' added." % theredirect.title)
             return redirect('verdantredirects_index')
     else:
