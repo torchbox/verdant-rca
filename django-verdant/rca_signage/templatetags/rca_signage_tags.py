@@ -8,12 +8,12 @@ register = template.Library()
 def date_range_display(date_from, date_to):
     if date_to:
         if date_to.month == date_from.month:
-            return ' '.join([
+            return ''.join([
                 date_from.strftime('%d'), '&ndash;', date_to.strftime('%d'), # From and to days
-                date_from.strftime('%B') # Month
+                date_from.strftime(' %B') # Month
             ])
         else:
-            return ' '.join([
+            return ''.join([
                 date_from.strftime('%d %B'), '&ndash;', date_to.strftime('%d %B')
             ])
     return date_from.strftime('%A %d %B')
