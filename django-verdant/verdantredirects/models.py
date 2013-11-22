@@ -1,13 +1,13 @@
 from django.db import models
-from verdantadmin.edit_handlers import FieldPanel, PageChooserPanel
+from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel
 
 
 class Redirect(models.Model):
-    old_path = models.CharField(max_length=255, unique=True, db_index=True)
+    old_path = models.CharField("Redirect from",max_length=255, unique=True, db_index=True)
     site = models.ForeignKey('core.Site', null=True, blank=True, related_name='redirects', db_index=True, editable=False)
     is_permanent = models.BooleanField("Permanent", default=True)
-    redirect_page = models.ForeignKey('core.Page', related_name='+', null=True, blank=True)
-    redirect_link = models.URLField(blank=True)
+    redirect_page = models.ForeignKey('core.Page', verbose_name="Redirect to a page", related_name='+', null=True, blank=True)
+    redirect_link = models.URLField("Redirect to any URL", blank=True)
 
     @property
     def title(self):
@@ -54,8 +54,10 @@ class Redirect(models.Model):
         self.old_path = Redirect.normalise_path(self.old_path)
 
 Redirect.content_panels = [
-    FieldPanel('old_path'),
-    FieldPanel('is_permanent'),
-    PageChooserPanel('redirect_page'),
-    FieldPanel('redirect_link'),
+    MultiFieldPanel([
+        FieldPanel('old_path'),
+        FieldPanel('is_permanent'),
+        PageChooserPanel('redirect_page'),
+        FieldPanel('redirect_link'),
+    ])
 ]
