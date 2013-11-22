@@ -1,0 +1,22 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Editing: <span>{{ redirect.title }}</span></h1>
+    </header>
+    <div class="row row-flush nice-padding">
+       
+        <div class="col7">
+            <form action="{% url 'verdantredirects_edit_redirect' redirect.id %}" method="POST">
+                {% csrf_token %}
+                <ul class="fields">
+                    {% for field in form %}
+                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                    {% endfor %}
+                    <li><input type="submit" value="Save" /></li>
+                </ul>
+            </form>
+            <a href="{% url 'verdantredirects_delete_redirect' redirect.id %}">Delete redirect</a>
+        </div>
+    </div>
+{% endblock %}
