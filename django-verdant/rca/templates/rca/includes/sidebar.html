@@ -1,4 +1,4 @@
-{% load rca_tags image_tags pageurl %}
+{% load rca_tags %}
 
 
 <div class="events-ads-wrapper">
@@ -10,43 +10,7 @@
 
 <!-- adverts -->
 {% if showAdverts %}
-    <!-- adverts -->
-    {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block. Because of the way cycles work initially start it outside any forloop, with display:none {% endcomment %}
-    <div class="adverts">
-        <span style="display:none">{% cycle 'advert-grey' 'advert-pale-blue' 'advert-green' 'advert-blue' 'advert-pink' as adcolors %}</span>
-
-        {% if global_adverts %}
-            {% for advert in global_adverts %}
-                <div class="{% cycle adcolors %}">
-                    {% if advert.url %}<a href="{{ advert.url }}">{% elif advert.page %}<a href="{{ advert.page }}">{% endif %}
-                        <h2>{{ advert.text }}</h2>
-                        {% if advert.plain_text %}{{ advert.plain_text }}{% endif %}
-                    {% if advert.url or advert.page %}</a>{% endif %}
-                </div>
-            {% endfor %}
-        {% endif %}
-        {% with self.manual_adverts.all as adverts %}
-            {% if adverts %}
-                {% for advert in adverts %}
-                    <div class="{% cycle adcolors %}">
-                        {% if advert.ad.url %}<a href="{{ advert.ad.url }}">{% elif advert.ad.page %}<a href="{{ advert.ad.page }}">{% endif %}
-                        <h2>{{ advert.ad.text }}</h2>
-                        {% if advert.ad.plain_text %}{{ advert.ad.plain_text }}{% endif %}
-                    {% if advert.ad.url or advert.ad.page %}</a>{% endif %}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
-{% endif %}
-
-<!--open days-->
-{% if showOpenDays %}
-    <div class="{% cycle adcolors %} open-days">
-        <a href="{{ global_events_index_url }}?audience=openday&programme={{ self.programme }}">
-            <h2>Open Days</h2>
-        </a>
-    </div>
+    {% sidebar_adverts show_open_days=showOpenDays %}
 {% endif %}
 
 </div>
@@ -58,33 +22,7 @@
 
 <!-- related content -->
 {% if showRelatedNews %}
-    {% with self.get_related_news as related_news %}
-        {% if related_news %}
-            {% for news_item in related_news %}
-                <div class="related-content-item">
-                    <a href="{% pageurl news_item %}">
-                        <figure>
-                            {% if news_item.feed_image %}
-                                {% image news_item.feed_image width-180 %}
-                            {% else %}
-                                {% with news_item.carousel_items.all as carousel_items %}
-                                    {% with carousel_items|first as carousel_item %}
-                                        {% if carousel_item.image %}
-                                            {% image carousel_item.image fill-300x169 %}
-                                        {% else %}
-                                            {# TODO: delete these placeholder images from git once proper image exists #}
-                                            <img src="/static/rca/images/16x9-light-grey-placeholder.png" width="180">
-                                        {% endif %}
-                                    {% endwith %}
-                                {% endwith %}
-                            {% endif %}
-                            <figcaption>{{news_item.title }}</figcaption>
-                        </figure>
-                    </a>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    {% include 'rca/includes/sidebar_related_news.html' %}
 {% endif %}
 
 {% if showRelatedStudents %}
@@ -96,7 +34,7 @@
 {% endif %}
 
 {% if showRandomStaff %}
-    {% staff_random exclude=self %}
+    {% staff_random programmes=self.programmes exclude=self %}
 {% endif %}
 
 <!-- job adverts -->
@@ -110,17 +48,5 @@
 
 <!-- tags -->
 {% if showTags %}
-    <!--<div class="related expanded">
-        <h2>Tags</h2>
-        <div class="wrapper">
-            <ul>
-                <li><a href="">animation (12)</a></li>
-                <li><a href="">glassmaking (5)</a></li>
-                <li><a href="">fashion (2)</a></li>
-                <li><a href="">design (1)</a></li>
-                <li><a href="">architecture (1)</a></li>
-                <li><a href="">illustration (1)</a></li>
-            </ul>
-        </div>
-    </div>-->
+    {% include 'rca/includes/sidebar_tags.html' %}
 {% endif %}

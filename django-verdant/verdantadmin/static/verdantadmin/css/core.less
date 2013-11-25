@@ -14,13 +14,12 @@ html{
 
 body{
     -webkit-font-smoothing: antialiased; /* Do not remove! */
-    font-family:@font-base;
+    font-family:Open Sans,Arial,sans-serif;
     font-size:80%;
     line-height:1.5em;
     color:@color-text-base;
     overflow-x: hidden;
     position: relative;
-    -webkit-font-smoothing: antialiased; /* Do not remove! */
 
     &.reordering{
         overflow:visible;
@@ -29,23 +28,34 @@ body{
 
 h1,h2,h3,h4,h5,h6{
     font-weight:normal;
+    -webkit-font-smoothing: auto;
 }
 
 h1{
     line-height:1.3em;
-    font-size:1.6em;
+    font-size:1.5em;
     text-transform:uppercase;
     color:@color-grey;
-    font-weight:300;
+    font-weight:700;
 
     span{
-        font-weight:700;
+        font-weight:400;
         color:@color-grey-dark;
+    }
+
+    .homepage &{
+        text-transform:none;
     }
 }
 h2{
-    font-size:1.4em;
+    text-transform:uppercase;
+    font-size:1.3em;
+    font-family:Open Sans;
     font-weight:300;
+
+    .page-explorer &{
+        text-transform:none;
+    }
 }
 a{
     color:@color-link;
@@ -64,6 +74,7 @@ code{
 
 kbd{
     .border-radius(3px);
+    font-family:Open Sans, Arial, sans-serif;
     border:1px solid @color-grey;
     border-color:rgba(0,0,0,0.2);
     padding:0.3em 0.5em;
@@ -148,6 +159,7 @@ img{
         }
 
         a {
+            -webkit-font-smoothing: auto;
             text-decoration:none;
             text-transform:uppercase;
             display: block;
@@ -156,7 +168,7 @@ img{
             padding: 1em 0.8em;
             position:relative;
             font-size:1em;
-            font-weight:600;
+            font-weight:300;
 
             &:hover{
                 opacity:1;
@@ -228,6 +240,9 @@ header{
     &.merged{
         margin-bottom:0;
     }
+    &.tab-merged{
+        border:0;
+    }
 }
 
 .page-explorer header{
@@ -256,6 +271,19 @@ footer{
     .actions{
         width:250px;
         margin-right:@grid-gutter-width/2;
+    }
+
+    .meta{
+        float:right;
+        text-align:right;
+        padding-right:@grid-gutter-width/2;
+        line-height:3.5em;
+        font-size:0.85em;
+
+        span{
+            margin-right:@grid-gutter-width;
+        }
+        
     }
 }
 
@@ -348,6 +376,11 @@ a{
 
     #nav-toggle{
         display:none;
+    }
+
+    .nav-main .footer{
+        position:absolute;
+        bottom:0;
     }
 
     .explorer {

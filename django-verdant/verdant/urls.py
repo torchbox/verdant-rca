@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
+from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
 import os.path
@@ -22,6 +23,12 @@ admin.autodiscover()
 
 from verdantsearch import register_signal_handlers
 register_signal_handlers()
+
+
+# Redirects
+from redirects import REDIRECTS
+redirect_urls = patterns('', *[url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()])
+
 
 urlpatterns = patterns('',
     # Examples:
@@ -51,12 +58,20 @@ urlpatterns = patterns('',
 
     url(r'^twitter/', include(twitter_urls)),
 
+    # Redirects
+    url(r'', include(redirect_urls)),
+
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
-    url(r'', include(verdant_urls))
+    url(r'', include(verdant_urls)),
 )
+
 
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
     urlpatterns += staticfiles_urlpatterns() # tell gunicorn where static files are in dev mode
     urlpatterns += static(settings.MEDIA_URL + 'images/', document_root=os.path.join(settings.MEDIA_ROOT, 'images'))
+    urlpatterns += patterns('',
+        (r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'rca/images/favicon.ico'))
+    )

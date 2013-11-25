@@ -28,6 +28,8 @@ DATABASES = {
     }
 }
 
+CONN_MAX_AGE = 600  # number of seconds database connections should persist for
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = []
@@ -171,6 +173,7 @@ INSTALLED_APPS = (
 
     'donations',
     'rca',
+    'rca_signage',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
@@ -198,8 +201,9 @@ DEBUG_TOOLBAR_PANELS = (
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/less', 'lessc {infile}'),
+    ('text/less', 'lesspress.LessCompiler'),
 )
+COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
@@ -234,6 +238,16 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379:1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+        }
+    }
+}
+
 # VERDANT SETTINGS
 
 # Override the Image class used by verdantimages with a custom one
@@ -244,6 +258,7 @@ VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 
 VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
+VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 
 # CELERY SETTINGS
 

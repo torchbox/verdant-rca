@@ -166,14 +166,22 @@ nav {
         font-size: 12px;
         text-transform:uppercase;
         float:right;
-        padding:8px 45px 8px @grid-gutter-width;
+        padding:9px 45px 8px @grid-gutter-width;
         line-height:1.6em;
         border-right:1px solid fade(@color-medium-grey, 40%);
+        .bold();
         &:after {
-            .sprite-load(-53px, -1178px, 27px, 15px);
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -48px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 13px
+            );
             content: ' ';
             position: absolute;
-            top: 10px; /* Arbitrary. Whatever looks good */
+            top: 12px; /* Arbitrary. Whatever looks good */
             right: @spacing-half;
         }
 
@@ -182,16 +190,37 @@ nav {
             background-color:@color-pink;
 
             &:after{
-                background-position:-53px -623px;
+                .sprite-load-23(
+                    @positionX: -48px,
+                    @positionY: -12px,
+                    @retinaPositionX: -97px,
+                    @retinaPositionY: -25px,
+                    @width: 23px,
+                    @height: 13px
+                );
             }
         }
     }
    nav.open h2{
         &:after{
-            background-position:-17px -1178px;
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -48px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 13px
+            );
         }
         &:hover:after{
-            background-position:-17px -623px;
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
         }
     }
 
@@ -245,7 +274,7 @@ nav {
         font-size:12px;
         display:inline-block;
         visibility:hidden;
-        font-weight:bold;
+        .bold();
         color:black;
     }
     nav .selected > a{
@@ -315,7 +344,7 @@ nav {
                 content:"/";
                 font-size:12px;
                 display:inline;
-                font-weight:bold;
+                .bold();
                 color:black;
                 padding-right:0.4em;
             }
@@ -349,11 +378,8 @@ form.search {
     border-bottom: 1px solid fade(@color-medium-grey, 40%);
 
     input[type="text"] {
-        padding: 10px @spacing-half;
+        padding: 9px @spacing-half;
         width: 85%;
-    }
-    input[type="submit"] {
-        .sprite-load(-95px, -1178px, 15px, 27px);
     }
 }
 
@@ -428,6 +454,10 @@ aside {
     padding-right: @right-col-width + @grid-gutter-width;
 }
 
+/* related content */
+div.related-content-item {
+    margin: 0 0 30px 0;
+}
 
 footer {
     padding:2em 0 0 0;

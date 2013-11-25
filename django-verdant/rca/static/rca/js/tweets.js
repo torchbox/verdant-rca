@@ -139,7 +139,7 @@ $("#tweets").tweet({
         function build_api_url() {
             var proto = "https:" === document.location.protocol ? "https:" : "http:";
             var count = s.fetch === null ? s.count : s.fetch;
-            var common_params = "&include_entities=1&callback=?";
+            var common_params = "&include_entities=1";
             if (s.list) {
                 return proto + "//" + s.twitter_api_url + "/1/" + s.username[0] + "/lists/" + s.list + "/statuses.json?page=" + s.page + "&per_page=" + count + common_params
             } else if (s.favorites) {

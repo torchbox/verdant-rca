@@ -1,12 +1,15 @@
 from datetime import date
 import datetime
 import logging
+import random
+
+from itertools import chain
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
 from django.db import models
-from django.db.models import Min
+from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -31,6 +34,11 @@ from taggit.models import TaggedItemBase
 from donations.forms import DonationForm
 from donations.mail_admins import mail_exception, full_exc_info
 import stripe
+
+import hashlib
+
+from rca_signage.constants import SCREEN_CHOICES
+
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -117,6 +125,7 @@ AREA_CHOICES = (
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
     ('sustainrca', 'SustainRCA'),
+    ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
 )
 
@@ -130,7 +139,8 @@ EVENT_AUDIENCE_CHOICES = (
 EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
-    ('other', 'Other (enter below)')
+    ('collegewide', 'College-wide'),
+    ('other', 'Other/External (enter below)')
 )
 
 CAMPUS_CHOICES = (
@@ -139,9 +149,21 @@ CAMPUS_CHOICES = (
 )
 
 EVENT_GALLERY_CHOICES = (
-    ('gallery1', 'Gallery 1'),
-    ('gallery2', 'Gallery 2'),
-    ('galleryn', 'Gallery N'),
+    ('courtyardgalleries', 'Courtyard Galleries'),
+    ('henrymooregallery', 'Henry Moore Gallery'),
+    ('lecturetheatre1', 'Lecture Theatre 1'),
+    ('lecturetheatre2', 'Lecture Theatre 2'),
+    ('linkgallery', 'Link Gallery'),
+    ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('palstevensbuilding', 'PAL, Stevens Building'),
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
+    ('photographystudios', 'Photography Studios'),
+    ('printmakingstudios', 'Printmaking Studios'),
+    ('sacklerbuilding', 'Sackler Building'),
+    ('sculpturebuilding', 'Sculpture Building'),
+    ('testbed1', 'Testbed 1'),
+
 )
 
 WORK_TYPES_CHOICES = (
@@ -368,14 +390,23 @@ class SocialFields(models.Model):
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
-    link = models.URLField(blank=True)
+    link = models.URLField("External link", blank=True)
+    link_page = models.ForeignKey('core.Page', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    @property
+    def get_link(self):
+        if self.link_page:
+            return self.link_page.url
+        else:
+            return self.link
 
     panels = [
         ImageChooserPanel('image'),
         FieldPanel('overlay_text'),
         FieldPanel('link'),
+        PageChooserPanel('link_page'),
         FieldPanel('embedly_url'),
         ImageChooserPanel('poster_image'),
     ]
@@ -758,7 +789,8 @@ class ProgrammePage(Page, SocialFields):
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
 
-        paginator = Paginator(research_items, 4)
+        per_page = 4
+        paginator = Paginator(research_items, per_page)
 
         page = request.GET.get('page')
         try:
@@ -773,23 +805,15 @@ class ProgrammePage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
-
-    def tabbed_feature_count(self):
-        count = 0;
-        if self.programme_video:
-            count = count + 1;
-        if self.facilities_text or self.facilities_image:
-            count = count + 1;
-        if self.student_stories.exists():
-            count = count + 1;
-        return count;
 
 ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
@@ -860,7 +884,9 @@ class NewsIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     subpage_types = ['NewsItem']
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -1043,8 +1069,8 @@ NewsItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -1071,21 +1097,42 @@ class PressReleaseIndexAd(Orderable):
 
 class PressReleaseIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
     def serve(self, request):
         press_releases = PressRelease.objects.filter(live=True)
-        return render(request, self.template, {
-            'self': self,
-            'press_releases': press_releases,
-        })
 
+        page = request.GET.get('page')
+        paginator = Paginator(press_releases, 10)  # Show 10 press_releases items per page
+        try:
+            press_releases = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            press_releases = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            press_releases = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/press_release_listing.html", {
+                'self': self,
+                'press_releases': press_releases,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'press_releases': press_releases,
+            })
 
 PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1169,7 +1216,6 @@ PressRelease.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -1205,6 +1251,12 @@ class EventItemSpeaker(Orderable):
 
 class EventItemCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.EventItem', related_name='carousel_items')
+
+class EventItemScreen(models.Model):
+    page = ParentalKey('rca.EventItem', related_name='screens')
+    screen = models.CharField(max_length=255, choices=SCREEN_CHOICES, blank=True)
+
+    panels = [FieldPanel('screen')]
 
 class EventItemRelatedSchool(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_schools')
@@ -1263,6 +1315,13 @@ class FutureEventItemManager(models.Manager):
             params=[date.today(), date.today()]
         )
 
+class FutureNotCurrentEventItemManager(models.Manager):
+    def get_query_set(self):
+        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
+            params=[date.today()]
+        )
+
 class PastEventItemManager(models.Manager):
     def get_query_set(self):
         return super(PastEventItemManager, self).get_query_set().extra(
@@ -1278,7 +1337,8 @@ class EventItem(Page, SocialFields):
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
     specific_directions_link = models.URLField(blank=True)
-    gallery = models.CharField(max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
+    gallery = models.CharField("RCA galleries and rooms", max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True)
+    special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below")
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
     external_link = models.URLField(blank=True)
@@ -1295,6 +1355,7 @@ class EventItem(Page, SocialFields):
     objects = models.Manager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
+    future_not_current_objects = FutureNotCurrentEventItemManager()
 
     indexed_fields = ('body', 'get_location_display', 'location_other')
 
@@ -1354,7 +1415,7 @@ class EventItem(Page, SocialFields):
                         # Make event
                         ical_components.extend([
                             'BEGIN:VEVENT',
-                            'UID:' + add_slashes(self.url) + str(day + 1),
+                            'UID:' + hashlib.sha1(self.url + str(start_datetime)).hexdigest() + '@rca.ac.uk',
                             'URL:' + add_slashes(self.url),
                             'DTSTAMP:' + start_time.strftime('%Y%m%dT%H%M%S'),
                             'SUMMARY:' + add_slashes(self.title),
@@ -1419,8 +1480,8 @@ EventItem.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -1430,6 +1491,10 @@ EventItem.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
+    MultiFieldPanel([
+        FieldPanel('special_event'),
+        InlinePanel(EventItem, 'screens', label="Screen on which to highlight"),
+        ], 'Special event signage'),
     InlinePanel(EventItem, 'related_schools', label="Related schools"),
     InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
     InlinePanel(EventItem, 'related_areas', label="Related areas"),
@@ -1458,15 +1523,18 @@ class EventIndexAd(Orderable):
 
 class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
     def future_events(self):
-        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def past_events(self):
-        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -1522,6 +1590,7 @@ class EventIndex(Page, SocialFields):
 EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(EventIndex, 'related_links', label="Related links"),
     InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -1557,12 +1626,15 @@ class TalksIndexAd(Orderable):
 
 class TalksIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_page = None
 
     def serve(self, request):
-        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
 
         talks = talks.distinct()
 
@@ -1592,6 +1664,7 @@ class TalksIndex(Page, SocialFields):
 TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1628,9 +1701,12 @@ class ReviewsIndexAd(Orderable):
 
 class ReviewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
     def serve(self, request):
         reviews = ReviewPage.objects.filter(live=True)
@@ -1663,6 +1739,7 @@ class ReviewsIndex(Page, SocialFields):
 ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -1773,7 +1850,6 @@ ReviewPage.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
@@ -1912,6 +1988,16 @@ class StandardIndexTeaser(Orderable):
         FieldPanel('text'),
     ]
 
+class StandardIndexStaffFeed(Orderable):
+    page = ParentalKey('rca.StandardIndex', related_name='manual_staff_feed')
+    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
+    staff_role = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        PageChooserPanel('staff', 'rca.StaffPage'),
+        FieldPanel('staff_role'),
+    ]
+
 class StandardIndexRelatedLink(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
     link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
@@ -1991,7 +2077,38 @@ class StandardIndex(Page, SocialFields):
     show_events_feed = models.BooleanField(default=False)
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
-    indexed = False
+    indexed_fields = ('intro', ' strapline', 'body')
+
+    search_name = None
+
+    def serve(self, request):
+        # Get list of events
+        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=self.events_feed_area).order_by('start_date')
+
+        # Event pagination
+        page = request.GET.get('page')
+        paginator = Paginator(events, 3)
+        try:
+            events = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            events = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            events = paginator.page(paginator.num_pages)
+
+        # If the request is ajax, only return a new list of events
+        if request.is_ajax():
+            return render(request, 'rca/includes/standard_index_events_listing.html', {
+                'self': self,
+                'events': events,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'events': events,
+            })
+
 
 StandardIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2001,8 +2118,9 @@ StandardIndex.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
+    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
@@ -2070,15 +2188,114 @@ class HomePageRelatedLink(Orderable):
 
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
-    news_item_2 = models.ForeignKey('core.Page', null=True, on_delete=models.SET_NULL, related_name='+')
-    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
-    packery_standard = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=((1,1),(2,2),(3,3),(4,4),(5,5),))
+    news_item_1 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
+    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_events = models.IntegerField("Number of events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+
+
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    def future_events(self):
+        return EventItem.future_objects.filter(live=True, path__startswith=self.path)
+
+    def past_events(self):
+        return EventItem.past_objects.filter(live=True, path__startswith=self.path)
+
+    def serve(self, request):
+
+        exclude = request.GET.get('exclude')
+
+        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        tweets = [[],[],[],[],[]]
+
+
+        print news
+
+        if exclude:
+
+            exclude = exclude.split(',')
+
+            news = news.exclude(id__in=exclude);
+            staff = staff.exclude(id__in=exclude);
+            student = student.exclude(id__in=exclude);
+            news = news.exclude(id__in=exclude);
+            rcanow = rcanow.exclude(id__in=exclude);
+            research = research.exclude(id__in=exclude);
+            alumni = alumni.exclude(id__in=exclude);
+            review = review.exclude(id__in=exclude);
+            events = events.exclude(id__in=exclude);
+
+        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events]))
+
+        # only add tweets to the packery content if not using the plus button
+        if not exclude:
+            packery = packery + tweets[:self.packery_tweets]
+
+        random.shuffle(packery)
+
+        # programme = request.GET.get('programme')
+        # school = request.GET.get('school')
+        # location = request.GET.get('location')
+        # location_other = request.GET.get('location_other')
+        # area = request.GET.get('area')
+        # audience = request.GET.get('audience')
+        # period = request.GET.get('period')
+
+        # if period == 'past':
+        #     events = self.past_events()
+        # else:
+        #     events = self.future_events()
+
+        # if programme and programme != '':
+        #     events = events.filter(related_programmes__programme=programme)
+        # if school and school != 'all':
+        #     events = events.filter(related_schools__school=school)
+        # if location and location != '':
+        #     events = events.filter(location=location)
+        # if area and area != 'all':
+        #     events = events.filter(related_areas__area=area)
+        # if audience and audience != '':
+        #     events = events.filter(audience=audience)
+        # events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+
+        # related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
+
+        # page = request.GET.get('page')
+        # paginator = Paginator(events, 10)  # Show 10 events per page
+        # try:
+        #     events = paginator.page(page)
+        # except PageNotAnInteger:
+        #     # If page is not an integer, deliver first page.
+        #     events = paginator.page(1)
+        # except EmptyPage:
+        #     # If page is out of range (e.g. 9999), deliver last page of results.
+        #     events = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/homepage_packery.html", {
+                'self': self,
+                'packery': packery
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'packery': packery
+            })
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2093,7 +2310,10 @@ HomePage.content_panels = [
         FieldPanel('packery_tweets'),
         FieldPanel('twitter_feed'),
         FieldPanel('packery_rcanow'),
-        FieldPanel('packery_standard'),
+        FieldPanel('packery_research'),
+        FieldPanel('packery_alumni'),
+        FieldPanel('packery_review'),
+        FieldPanel('packery_events')
     ], 'Packery content'),
     InlinePanel(HomePage, 'related_links', label="Related links"),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
@@ -2211,12 +2431,14 @@ class JobsIndex(Page, SocialFields):
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
 JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body'),
+    FieldPanel('body', classname="full"),
     InlinePanel(JobsIndex, 'related_links', label="Related links"),
     InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2263,10 +2485,12 @@ class AlumniIndexAd(Orderable):
 
 class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
+    indexed_fields = ('intro', 'body')
 
-    indexed = False
+    search_name = None
 
     def serve(self, request):
         school = request.GET.get('school')
@@ -2279,23 +2503,20 @@ class AlumniIndex(Page, SocialFields):
         if programme and programme != '':
             alumni_pages = alumni_pages.filter(programme=programme)
 
-        #alumni_pages = alumni_pages.distinct()
-        alumni_pages = alumni_pages.order_by('?');
-
-        # research_items.order_by('-year')
+        alumni_pages = alumni_pages.order_by('random_order')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
         page = request.GET.get('page')
-        paginator = Paginator(alumni_pages, 11)  # Show 8 research items per page
+        paginator = Paginator(alumni_pages, 11)
         try:
-            staff_pages = paginator.page(page)
+            alumni_pages = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            staff_pages = paginator.page(1)
+            alumni_pages = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            staff_pages = paginator.page(paginator.num_pages)
+            alumni_pages = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
             return render(request, "rca/includes/alumni_pages_listing.html", {
@@ -2313,6 +2534,7 @@ class AlumniIndex(Page, SocialFields):
 AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(AlumniIndex, 'related_links', label="Related links"),
     InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
@@ -2347,6 +2569,7 @@ class AlumniPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages displaying a list of pages of this type', blank=True)
     biography = RichTextField()
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'intro', 'biography')
 
@@ -2462,13 +2685,9 @@ class StaffPage(Page, SocialFields):
 
     search_name = 'Staff'
 
-    def tabbed_feature_count(self):
-        count = 2 #info tab and research tab will always show
-        if self.carousel_items.exists():
-            count = count + 1
-        if self.publications_exhibitions.exists():
-            count = count + 1
-        return count
+    @property
+    def programmes(self):
+        return list({role.programme for role in StaffPageRole.objects.filter(page=self)})
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -2529,6 +2748,7 @@ class StaffIndexAd(Orderable):
 
 class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
     indexed = False
@@ -2557,7 +2777,7 @@ class StaffIndex(Page, SocialFields):
         # research_items.order_by('-year')
 
         page = request.GET.get('page')
-        paginator = Paginator(staff_pages, 17)  # Show 11 research items per page
+        paginator = Paginator(staff_pages, 17)
         try:
             staff_pages = paginator.page(page)
         except PageNotAnInteger:
@@ -2582,6 +2802,7 @@ class StaffIndex(Page, SocialFields):
 StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
@@ -2624,9 +2845,9 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
 
         if school and school != '':
-            research_students = research_students.filter(roles__school=school)
+            research_students = research_students.filter(school=school)
         if programme and programme != '':
-            research_students = research_students.filter(roles__programme=programme)
+            research_students = research_students.filter(programme=programme)
 
         research_students = research_students.distinct()
 
@@ -2646,7 +2867,7 @@ class ResearchStudentIndex(Page, SocialFields):
             research_students = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/research_students_listing.html", {
+            return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
                 'research_students': research_students,
                 'related_programmes': related_programmes,
@@ -2744,6 +2965,24 @@ class StudentPageWorkSponsor(Orderable):
 
     panels = [FieldPanel('name')]
 
+class StudentPagePublication(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='publications')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class StudentPageConference(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='conferences')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class StudentPageSupervisor(Orderable):
+    page = ParentalKey('rca.StudentPage', related_name='supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+
+    panels = [PageChooserPanel('supervisor')]
+
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -2763,8 +3002,8 @@ class StudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    supervisor = models.ForeignKey('rca.StaffPage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     show_on_homepage = models.BooleanField()
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
@@ -2782,8 +3021,8 @@ StudentPage.content_panels = [
     FieldPanel('degree_qualification'),
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
-    PageChooserPanel('supervisor'),
     ImageChooserPanel('profile_image'),
+    InlinePanel(StudentPage, 'supervisors', label="Supervisor"),
     InlinePanel(StudentPage, 'email', label="Email"),
     InlinePanel(StudentPage, 'phone', label="Phone"),
     InlinePanel(StudentPage, 'website', label="Website"),
@@ -2800,6 +3039,8 @@ StudentPage.content_panels = [
     FieldPanel('funding'),
     InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
     InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
     FieldPanel('work_awards'),
     FieldPanel('twitter_feed'),
 ]
@@ -2886,9 +3127,12 @@ RcaNowPage.promote_panels = [
 
 class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
 
-    indexed = False
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
 
     def serve(self, request):
         programme = request.GET.get('programme')
@@ -2934,6 +3178,7 @@ class RcaNowIndex(Page, SocialFields):
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2979,6 +3224,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link_text')
     ]
 class ResearchItem(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True)
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
     ref = models.BooleanField(default=False, blank=True)
     year = models.CharField(max_length=4)
@@ -2994,7 +3240,7 @@ class ResearchItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
-    indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
     search_name = 'Research'
 
@@ -3008,6 +3254,7 @@ class ResearchItem(Page, SocialFields):
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
     InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
     InlinePanel(ResearchItem, 'creator', label="Creator"),
@@ -3120,7 +3367,9 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
 
-    indexed = False
+    indexed_fields = ('intro', )
+
+    search_name = None
 
 ResearchInnovationPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3187,7 +3436,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter(live=True).order_by('?')
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
 
         if research_type:
             research_items = research_items.filter(research_type=research_type)
@@ -3200,8 +3449,9 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items.order_by('-year')
 
+        per_page = 8
         page = request.GET.get('page')
-        paginator = Paginator(research_items, 8)  # Show 8 research items per page
+        paginator = Paginator(research_items, per_page)  # Show 8 research items per page
         try:
             research_items = paginator.page(page)
         except PageNotAnInteger:
@@ -3214,12 +3464,14 @@ class CurrentResearchPage(Page, SocialFields):
         if request.is_ajax():
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'per_page': per_page,
             })
 
 CurrentResearchPage.content_panels = [
@@ -3261,14 +3513,19 @@ class GalleryPageRelatedLink(Orderable):
 
 class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = 'Gallery'
 
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent").order_by('?')
+        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:
@@ -3276,17 +3533,20 @@ class GalleryPage(Page, SocialFields):
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
-        gallery_items = gallery_items.order_by('?')
+        if not request.is_ajax() and not programme and not school and not year:
+            gallery_items = gallery_items.filter(degree_year=date.today().year)
+
+        gallery_items = gallery_items.order_by('random_order')
 
         if year:
             if school:
                 related_programmes = SCHOOL_PROGRAMME_MAP[year].get(school, [])
             else:
-                # get all programmess from all schools in the year specified
+                # get all programmes from all schools in the year specified
                 related_programmes = sum(SCHOOL_PROGRAMME_MAP[year].values(), [])
         else:
             if school:
-                # get all programmess from in this school in all years
+                # get all programmes from in this school in all years
                 related_programmes = set()
                 for _year, mapping in SCHOOL_PROGRAMME_MAP.items():
                     if school in mapping:
@@ -3298,6 +3558,7 @@ class GalleryPage(Page, SocialFields):
 
         page = request.GET.get('page')
         paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
+
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:
@@ -3321,13 +3582,14 @@ class GalleryPage(Page, SocialFields):
                 'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
                 # on first page load the current year needs to appear in the url for the next page
                 # but we can't change the value on the request.GET dictionary, which is used to render that url
-                # so it's just append it to that url if the year filter wasn't defined already
+                # so just append it to that url if the year filter wasn't defined already
                 'default_year': ('&year=%d' % date.today().year) if not year else '',
             })
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
     InlinePanel(GalleryPage, "related_links", label="Related links")
 ]
@@ -3393,8 +3655,6 @@ class DonationPage(Page, SocialFields):
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
-        if request.method == "GET":
-            form = DonationForm()
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
@@ -3419,6 +3679,8 @@ class DonationPage(Page, SocialFields):
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
+        else:
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,

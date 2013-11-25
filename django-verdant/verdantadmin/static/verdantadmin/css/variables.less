@@ -11,35 +11,33 @@
 @breakpoint-desktop-large:75em; /* 1200px */
 @breakpoint-desktop-larger:100em; /* 1600px */
 
-@font-base:Open Sans,Arial,sans-serif;
-
-@color-teal: #5cc1c0;
+// generic colours
+@color-teal: #43b1b0;
+@color-teal-darker: darken(@color-teal, 10%);
 @color-teal-dark: #246060;
 @color-grey: #666;
 @color-grey-light:#CCC;
 @color-grey-lighter:lighten(@color-grey-light, 10%);
 @color-grey-dark: #333;
 @color-red: #f7474e;
+@color-orange:#e9b04d;
 @color-green: #00FF00;
 
 @color-thead-bg: lighten(@color-grey, 58%);
-@color-header-bg: lighten(@color-grey, 58%);
-@color-fieldset-hover: lighten(@color-grey, 58%);
+@color-header-bg: @color-thead-bg;
+@color-fieldset-hover: @color-thead-bg;
 @color-input-border: @color-grey-light;
 @color-input-border-focus: darken(@color-input-border, 25%);
 @color-input-focus: #f4fcfc;
 @color-input-error-bg: #feedee;
 @color-button: @color-teal;
-@color-button-hover: darken(@color-button, 8%);
+@color-button-hover: @color-teal-darker;
 @color-button-yes: @color-green;
 @color-button-yes-hover: darken(@color-button-yes, 8%);
 @color-button-no: @color-red;
-@color-button-no-hover: darken(@color-button-no, 8%);
+@color-button-no-hover: darken(@color-button-no, 20%);
 @color-link: @color-teal;
 @color-link-hover: darken(@color-button, 8%);
-
-@color-context-popup-bg: @color-teal;
-@color-context-popup-bg-hover: darken(@color-teal, 20%);
 
 @color-text-base: #555;
 @color-text-input: #333;

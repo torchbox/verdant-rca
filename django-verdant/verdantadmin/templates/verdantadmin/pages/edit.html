@@ -3,9 +3,23 @@
 {% block bodyclass %}page-editor{% endblock %}
 
 {% block content %}
-    <header class="merged">
-        <h1>Editing: <span>{{ page.title }}</span></h1>
+    <header class="merged tab-merged">
+        <div class="row row-flush">
+            <div class="left col9">
+                <h1>Editing: <span>{{ page.title }}</span></h1>
+            </div>
+            <div class="right col3">
+                 Status: {% if page.live %}<a href="{{ page.url }}" class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</a>{% else %}<span class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</span>{% endif %}
+            </div>
+        </div>
     </header>
+
+    {% if errors_debug %}
+    <!--
+        Error messages:
+        {{ errors_debug }}
+    -->
+    {% endif %}
 
     <form id="page-edit-form" action="{% url 'verdantadmin_pages_edit' page.id %}" method="POST">
         {% csrf_token %}
@@ -15,17 +29,32 @@
             <ul>
                 <li class="actions">
                     <div class="dropdown dropup match-width">
-                        <input type="submit" value="Save as draft" class="button" />
+                        <input type="submit" value="Save draft" class="button" />
                         <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
-                            <li><input type="button" id="action-preview" data-action="{% url 'verdantadmin_pages_preview_on_edit' page.id %}" data-windowname="verdant_preview_{{ page.id }}" value="Preview" class="button" /></li>
-                            {% if page.live %}
+                            {% if page.live and perms.core.can_unpublish_page %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                            {% elif perms.core.can_unpublish_page or page.has_unpublished_subtree %}
+                                <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
                             {% endif %}
-                            <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
-                            <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
+                            {% if perms.core.can_publish_page %}
+                                <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
+                            {% endif %}
+                            <li><input type="submit" name="action-submit" value="Submit for moderation" class="button" /></li>
+                            <li><input type="button" id="action-preview" data-action="{% url 'verdantadmin_pages_preview_on_edit' page.id %}" data-windowname="verdant_preview_{{ page.id }}" value="Preview" class="button" /></li>
                         </ul>
                     </div>
+                </li>
+                <li class="notices">
+
+                </li>
+                <li class="meta">
+                   
+                    <span class="modified">
+                        {% if page.get_latest_revision %}
+                            Last modified: {{ page.get_latest_revision.created_at }} by {% if page.get_latest_revision.user.get_full_name %}{{ page.get_latest_revision.user.get_full_name }}{% else %}{{ page.get_latest_revision.user.username }}{% endif %}
+                        {% endif %}
+                    </span>
                 </li>
             </ul>
         </footer>
@@ -34,8 +63,8 @@
 {% endblock %}
 
 {% block extra_css %}
-    {% include "verdantadmin/pages/_css.html" %}
+    {% include "verdantadmin/pages/_editor_css.html" %}
 {% endblock %}
 {% block extra_js %}
-    {% include "verdantadmin/pages/_js.html" %}
+    {% include "verdantadmin/pages/_editor_js.html" %}
 {% endblock %}

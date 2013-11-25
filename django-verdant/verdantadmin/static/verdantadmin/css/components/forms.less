@@ -150,7 +150,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     font-size:0.95em;
     white-space: nowrap;
     position:relative;
-    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: auto;
     vertical-align: middle;
 
     &:hover{
@@ -158,6 +158,12 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
         color:white;
     }
 
+    &.lowpriority{
+        background-color: lighten(@color-grey, 10%);
+        &:hover{
+            background-color: @color-grey;
+        }
+    }
     &.yes{
         background-color: @color-button-yes;
         &:hover{
@@ -487,6 +493,7 @@ ul.tagit li.tagit-choice-editable{
         }
     }
     .submit{
+        display:none;
         position:absolute;
         right:0;
         top:0;
@@ -496,8 +503,12 @@ ul.tagit li.tagit-choice-editable{
     }
     .popular-tags{
         font-size:0.9em;
+        line-height:2.4em;
         h3{
             display:inline;
+        }
+        a{
+            white-space: nowrap
         }
     }
 }

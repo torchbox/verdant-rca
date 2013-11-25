@@ -9,6 +9,8 @@ urlpatterns = patterns('django.contrib.auth.views',
 urlpatterns += patterns('verdantadmin.views',
     url(r'^$', 'home.home', name='verdantadmin_home'),
 
+    url(r'^failwhale/$', 'home.error_test', name='verdantadmin_error_test'),
+
     url(r'^pages/$', 'pages.index', name='verdantadmin_explore_root'),
     url(r'^pages/(\d+)/$', 'pages.index', name='verdantadmin_explore'),
 
@@ -31,6 +33,10 @@ urlpatterns += patterns('verdantadmin.views',
     url(r'^pages/(\d+)/move/$', 'pages.move_choose_destination', name='verdantadmin_pages_move'),
     url(r'^pages/(\d+)/move/(\d+)/$', 'pages.move_choose_destination', name='verdantadmin_pages_move_choose_destination'),
     url(r'^pages/(\d+)/move/(\d+)/confirm/$', 'pages.move_confirm', name='verdantadmin_pages_move_confirm'),
+
+    url(r'^pages/moderation/(\d+)/approve/$', 'pages.approve_moderation', name='verdantadmin_pages_approve_moderation'),
+    url(r'^pages/moderation/(\d+)/reject/$', 'pages.reject_moderation', name='verdantadmin_pages_reject_moderation'),
+    url(r'^pages/moderation/(\d+)/preview/$', 'pages.preview_for_moderation', name='verdantadmin_pages_preview_for_moderation'),
 
     url(r'^choose-page/$', 'chooser.browse', name='verdantadmin_choose_page'),
     url(r'^choose-page/(\d+)/$', 'chooser.browse', name='verdantadmin_choose_page_child'),

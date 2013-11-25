@@ -19,7 +19,7 @@
                                 {% if student.profile_image %}
                                     {% image student.profile_image width-200 %}
                                 {% else %}
-                                    <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                    <img src="/static/rca/images/rca-placeholder-square.jpg" width="200">
                                 {% endif %}
                             </div>
                             <div class="content">
@@ -32,8 +32,8 @@
                     </li>
 
                 {% endfor %}
-                {% if staff_pages.paginator.count > 17 %}
-                    <li class="load-more{% if staff_pages|length|divisibleby:'6' %} newrow{% endif %}"><a href="#">+</a></li>
+                {% if research_students.paginator.count > 17 %}
+                    <li class="load-more{% if research_students|length|divisibleby:'6' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
         </div>

@@ -1,18 +1,25 @@
-import random
 from django import template
 from django.utils.html import conditional_escape
-from rca.models import *
+from django.db.models import Min, Max
+from django.template.base import parse_bits
+from core.util import camelcase_to_underscore
+
 from datetime import date
 from itertools import chain
-from django.db.models import Min, Max
-from core.models import get_navigation_menu_items
+import random
+
+from rca.models import *
 from verdantdocs.models import Document
 
 register = template.Library()
 
+@register.filter(name='fieldtype')
+def fieldtype(bound_field):
+    return camelcase_to_underscore(bound_field.field.__class__.__name__)
+
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
+    events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
@@ -40,15 +47,15 @@ def news_carousel(context, area="", programme="", school="", count=5):
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
 def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", audience=""):
-    events = EventItem.future_objects.all()
+    events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'))
     if school:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_schools__school=school).order_by('start_date')
+        events = events.filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(related_programmes__programme=programme).order_by('start_date')
+        events = events.filter(related_programmes__programme=programme).order_by('start_date')
     elif area:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=area).order_by('start_date')
+        events = events.filter(area=area).order_by('start_date')
     elif audience:
-        events = events.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(audience=audience).order_by('start_date')
+        events = events.filter(audience=audience).order_by('start_date')
     if opendays:
         events = events.filter(audience='openday')
     else:
@@ -162,6 +169,7 @@ def jobs_listing(context):
 def students_related(context, programme="", year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, programme=programme)
     students = students.filter(degree_year=year)
+    students = students.order_by('?')
     if exclude:
         students = students.exclude(id=exclude.id)
     return {
@@ -174,7 +182,7 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 def students_related_work(context, year="", exclude=None, count=4):
     students = StudentPage.objects.filter(live=True, degree_year=year)
     students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
-    students=students.distinct()
+    students = students.order_by('?')
 
     if exclude:
         students = students.exclude(id=exclude.id)
@@ -184,10 +192,12 @@ def students_related_work(context, year="", exclude=None, count=4):
     }
 
 @register.inclusion_tag('rca/tags/staff_random.html', takes_context=True)
-def staff_random(context, exclude=None, count=4):
+def staff_random(context, exclude=None, programmes=None, count=4):
     staff = StaffPage.objects.filter(live=True).order_by('?')
     if exclude:
         staff = staff.exclude(id=exclude.id)
+    if programmes:
+        staff = staff.filter(roles__programme__in=programmes)
     return {
         'staff': staff[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -213,6 +223,16 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/sidebar_adverts.html', takes_context=True)
+def sidebar_adverts(context, show_open_days=False):
+    return {
+        'global_adverts': Advert.objects.filter(show_globally=True),
+        'show_open_days': show_open_days,
+        'self': context.get('self'),
+        'global_events_index_url': context['global_events_index_url'],
+        'request': context['request'],
+    }
+
 @register.inclusion_tag('rca/tags/sidebar_links.html', takes_context=True)
 def sidebar_links(context, calling_page=None):
     if calling_page:
@@ -229,7 +249,7 @@ def sidebar_links(context, calling_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_feed.html', takes_context=True)
 def research_students_feed(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisor=staff_page)
+    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
     return {
         'students': students,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -237,7 +257,7 @@ def research_students_feed(context, staff_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_list.html', takes_context=True)
 def research_students_list(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisor=staff_page)
+    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
     return {
         'students': students,
         'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages
@@ -464,49 +484,78 @@ def search_content_type(result):
 
 @register.tag
 def tabdeck(parser, token):
+    bits = token.split_contents()[1:]
+    args, kwargs = parse_bits(parser, bits, [], 'args', 'kwargs', None, False, 'tabdeck')
+
     nodelist = parser.parse(('endtabdeck',))
     parser.delete_first_token()  # discard the 'endtabdeck' tag
-    return TabDeckNode(nodelist)
+    return TabDeckNode(nodelist, kwargs)
 
 class TabDeckNode(template.Node):
-    def __init__(self, nodelist):
+    def __init__(self, nodelist, kwargs):
         self.nodelist = nodelist
+        self.module_title_expr = kwargs.get('moduletitle')
 
     def render(self, context):
-        context['tabdeck'] = {'tab_headings': [], 'index': 0}
+        context['tabdeck'] = {'tab_headings': [], 'index': 1}
         output = self.nodelist.render(context)  # run the contents of the tab; any {% tab %} tags within it will populate tabdeck.tab_headings
         headings = context['tabdeck']['tab_headings']
+
+        if not headings:
+            return ''
 
         tab_headers = [
             """<li%s><a class="t0">%s</a></li>""" % ((' class="active"' if i == 0 else ''), conditional_escape(heading))
             for i, heading in enumerate(headings)
         ]
         tab_header_html = """<ul class="tab-nav tabs-%d">%s</ul>""" % (len(headings), ''.join(tab_headers))
-        return '<section class="four-tab row module">' + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        module_title_html = '';
+        if self.module_title_expr:
+            module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
+        return '<section class="row module">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
 def tab(parser, token):
-    try:
-        tag_name, heading_expr = token.split_contents()
-    except ValueError:
-         raise template.TemplateSyntaxError("tab tag requires a single argument")
+    bits = token.split_contents()[1:]
+    args, kwargs = parse_bits(parser, bits, ['heading_expr'], 'args', 'kwargs', None, False, 'tab')
+
+    if len(args) != 1:
+        raise template.TemplateSyntaxError("The 'tab' tag requires exactly one unnamed argument (the tab heading).")
+
+    heading_expr = args[0]
+
     nodelist = parser.parse(('endtab',))
     parser.delete_first_token()  # discard the 'endtab' tag
-    return TabNode(nodelist, heading_expr)
+    return TabNode(nodelist, heading_expr, kwargs)
 
 class TabNode(template.Node):
-    def __init__(self, nodelist, heading_expr):
+    def __init__(self, nodelist, heading_expr, kwargs):
         self.nodelist = nodelist
         self.heading_expr = heading_expr
+        self.extra_classname_expr = kwargs.get('class')
 
     def render(self, context):
-        heading = template.Variable(self.heading_expr).resolve(context)
-        context['tabdeck']['tab_headings'].append(heading)
-        context['tabdeck']['index'] += 1
+        heading = self.heading_expr.resolve(context)
+        tab_content = self.nodelist.render(context)
+        if not tab_content.strip():
+            # tab content is empty; skip outputting the container elements,
+            # and skip updating the tabdeck template vars so that it isn't allocated a heading
+            return ''
 
         header_html = """<h2 class="header"><a class="a0%s">%s</a></h2>""" % (
             (' active' if context['tabdeck']['index'] == 1 else ''),
             conditional_escape(heading)
         )
-        return header_html + self.nodelist.render(context)
+        if self.extra_classname_expr:
+            classname = "tab-pane %s" % self.extra_classname_expr.resolve(context)
+        else:
+            classname = "tab-pane"
+
+        if context['tabdeck']['index'] == 1:
+            classname += ' active'
+
+        context['tabdeck']['tab_headings'].append(heading)
+        context['tabdeck']['index'] += 1
+
+        return header_html + ('<div class="%s">' % classname) + self.nodelist.render(context) + '</div>'

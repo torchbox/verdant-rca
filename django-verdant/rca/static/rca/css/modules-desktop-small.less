@@ -42,12 +42,10 @@
  */
 
 .bx-wrapper {
-    padding-bottom:20px; /* necessary to give pager dots space to exist */
-    overflow: visible; /* because the padding above doesn't work in safari and dots get cut off */
-
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
-        opacity:0
+        opacity:0;
+        display: block;
     }
     &:hover {
         .bx-next, .bx-prev {
@@ -73,10 +71,6 @@
     }
     &:hover .bc1, &:hover .caption {
         opacity:1;
-    }
-    .bx-pager{
-        bottom:-5px;
-        left:0;
     }
 }
 
@@ -142,26 +136,6 @@
 /* user for all x-plus items, to ensure that new rows are cleared */
 .newrow{
     clear:left;
-}
-
-/**
- *$Six menu block
- */
-
-.six-menu-block{
-    ul li{
-        .column(2);
-        margin-bottom: -1000px;
-
-        a{
-            border-left: 1px solid @color-divider;
-            padding: 0 0 1000px @grid-gutter-width/2;
-        }
-    }
-    ul li:first-child a{
-        border-left: 0;
-        padding-left:0;
-    }
 }
 
 

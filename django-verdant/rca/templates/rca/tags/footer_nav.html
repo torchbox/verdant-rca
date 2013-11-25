@@ -1,9 +1,10 @@
 {% load rca_tags %}
 
 {% for page, children in nodes %}
-    <li class="main"><a href="{{ page.url }}">{{ page.title }}</a>
+    <li class="main">{{ page.title }}
     <div class="submenu-block">
         <ul>
+            <li class="parentlink"><a href="{{ page.url }}">{{ page.title }}</a></li>
             {% for sublist in children|rows_distributed:"3" %}
             <section>
                 {% for child, grandchildren in sublist %}

@@ -1,7 +1,8 @@
-from django.db import models
+from django.db import models, connection, transaction
 from django.db.models import get_model
 from django.http import Http404
 from django.shortcuts import render
+from django.core.cache import cache
 
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
@@ -38,6 +39,38 @@ class Site(models.Model):
         except Site.DoesNotExist:
             # failing that, look for a catch-all Site. If that fails, let the Site.DoesNotExist propagate back to the caller
             return Site.objects.get(is_default_site=True)
+
+    @property
+    def root_url(self):
+        if self.port == 80:
+            return 'http://%s' % self.hostname
+        elif self.port == 443:
+            return 'https://%s' % self.hostname
+        else:
+            return 'http://%s:%d' % (self.hostname, self.port)
+
+    # clear the verdant_site_root_paths cache whenever Site records are updated
+    def save(self, *args, **kwargs):
+        result = super(Site, self).save(*args, **kwargs)
+        cache.delete('verdant_site_root_paths')
+        return result
+
+    @staticmethod
+    def get_site_root_paths():
+        """
+        Return a list of (root_path, root_url) tuples, most specific path first -
+        used to translate url_paths into actual URLs with hostnames
+        """
+        result = cache.get('verdant_site_root_paths')
+
+        if result is None:
+            result = [
+                (site.id, site.root_page.url_path, site.root_url)
+                for site in Site.objects.select_related('root_page').order_by('-root_page__url_path')
+            ]
+            cache.set('verdant_site_root_paths', result, 3600)
+
+        return result
 
 
 PAGE_MODEL_CLASSES = []
@@ -109,6 +142,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     content_type = models.ForeignKey('contenttypes.ContentType', related_name='pages')
     live = models.BooleanField(default=True, editable=False)
     has_unpublished_changes = models.BooleanField(default=False, editable=False)
+    url_path = models.CharField(max_length=255, blank=True, editable=False)
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -151,6 +185,54 @@ class Page(MP_Node, ClusterableModel, Indexed):
     subpage_types = []
 
     is_abstract = True  # don't offer Page in the list of page types a superuser can create
+
+    def set_url_path(self, parent):
+        """
+        Populate the url_path field based on this page's slug and the specified parent page.
+        (We pass a parent in here, rather than retrieving it via get_parent, so that we can give
+        new unsaved pages a meaningful URL when previewing them; at that point the page has not
+        been assigned a position in the tree, as far as treebeard is concerned.
+        """
+        if parent:
+            self.url_path = parent.url_path + self.slug + '/'
+        else:
+            # a page without a parent is the tree root, which always has a url_path of '/'
+            self.url_path = '/'
+
+        return self.url_path
+
+    @transaction.commit_on_success  # ensure that changes are only committed when we have updated all descendant URL paths, to preserve consistency
+    def save(self, *args, **kwargs):
+        update_descendant_url_paths = False
+
+        if self.id is None:
+            # we are creating a record. If we're doing things properly, this should happen
+            # through a treebeard method like add_child, in which case the 'path' field
+            # has been set and so we can safely call get_parent
+            self.set_url_path(self.get_parent())
+        else:
+            # see if the slug has changed from the record in the db, in which case we need to
+            # update url_path of self and all descendants
+            old_record = Page.objects.get(id=self.id)
+            if old_record.slug != self.slug:
+                self.set_url_path(self.get_parent())
+                update_descendant_url_paths = True
+                old_url_path = old_record.url_path
+                new_url_path = self.url_path
+
+        result = super(Page, self).save(*args, **kwargs)
+
+        if update_descendant_url_paths:
+            self._update_descendant_url_paths(old_url_path, new_url_path)
+        return result
+
+    def _update_descendant_url_paths(self, old_url_path, new_url_path):
+        cursor = connection.cursor()
+        cursor.execute("""
+            UPDATE core_page
+            SET url_path = %s || substring(url_path from %s)
+            WHERE path LIKE %s AND id <> %s
+        """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
 
     def object_indexed(self):
         # Exclude root node from index
@@ -201,24 +283,24 @@ class Page(MP_Node, ClusterableModel, Indexed):
             else:
                 raise Http404
 
-    def save_revision(self, user=None):
-        self.revisions.create(content_json=self.to_json(), user=user)
+    def save_revision(self, user=None, submitted_for_moderation=False):
+        self.revisions.create(content_json=self.to_json(), user=user, submitted_for_moderation=submitted_for_moderation)
 
     def get_latest_revision(self):
         try:
             revision = self.revisions.order_by('-created_at')[0]
         except IndexError:
+            return False
+
+        return revision
+
+    def get_latest_revision_as_page(self):
+        try:
+            revision = self.revisions.order_by('-created_at')[0]
+        except IndexError:
             return self.specific
 
-        result = self.specific_class.from_json(revision.content_json)
-
-        # Override the possibly-outdated tree parameter fields from the revision object
-        # with up-to-date values
-        result.path = self.path
-        result.depth = self.depth
-        result.numchild = self.numchild
-
-        return result
+        return revision.as_page_object()
 
     def serve(self, request):
         return render(request, self.template, {
@@ -239,68 +321,14 @@ class Page(MP_Node, ClusterableModel, Indexed):
 
     @property
     def url(self):
-        if not hasattr(self, '_url_base'):
-            self._set_url_properties()
-        if self._url_base:
-            return self._url_base + self._url_path
+        for (id, root_path, root_url) in Site.get_site_root_paths():
+            if self.url_path.startswith(root_path):
+                return root_url + self.url_path[len(root_path) - 1:]
 
     def relative_url(self, current_site):
-        if not hasattr(self, '_url_base'):
-            self._set_url_properties()
-        if self._url_site_id == current_site.id:
-            # don't prepend the full _url_base, just add a slash
-            return '/' + self._url_path
-        else:
-            return self._url_base + self._url_path
-
-    def _set_url_properties(self):
-        # populate a bunch of properties necessary for forming relative URLs:
-        # _url_path - the path portion of the url (without the initial '/')
-        # _url_site_id - the site
-        # _url_base - the http://example.com:8000/ portion of the url
-
-        # get a list of all ancestor paths of this page
-        paths = [
-            self.path[0:pos]
-            for pos in range(0, len(self.path) + self.steplen, self.steplen)[1:]
-        ]
-        # retrieve the pages with those paths, along with any site records that they
-        # are roots of. We don't worry about the join returning multiple results because
-        # 1) we're going to stop at the first row where we see a site, and 2) people really
-        # shouldn't be rooting sites at the same place anyway.
-        pages = Page.objects.raw("""
-            SELECT
-                core_page.id, core_page.slug,
-                core_site.id AS site_id, core_site.hostname, core_site.port
-            FROM
-                core_page
-                LEFT JOIN core_site ON (core_page.id = core_site.root_page_id)
-            WHERE
-                core_page.path IN %s
-            ORDER BY
-                core_page.depth DESC
-        """, [tuple(paths)])
-
-        url = ''
-        for page in pages:
-            if page.site_id:
-                # we've found a site root
-                self._url_site_id = page.site_id
-                self._url_path = url
-                if page.port == 80:
-                    self._url_base = "http://%s/" % page.hostname
-                else:
-                    self._url_base = "http://%s:%d/" % (page.hostname, page.port)
-                return
-            else:
-                # attach the parent's slug and move on to the next level up
-                url = page.slug + '/' + url
-
-        # if we got here, we've reached the end of the ancestor list without finding a site,
-        # which means that this page doesn't have a routeable URL
-        self._url_site_id = None
-        self._url_path = None
-        self._url_base = None
+        for (id, root_path, root_url) in Site.get_site_root_paths():
+            if self.url_path.startswith(root_path):
+                return ('' if current_site.id == id else root_url) + self.url_path[len(root_path) - 1:]
 
     @classmethod
     def clean_subpage_types(cls):
@@ -353,9 +381,31 @@ class Page(MP_Node, ClusterableModel, Indexed):
             return "draft"
         else:
             if self.has_unpublished_changes:
-                return "live with draft updates"
+                return "live + Draft"
             else:
                 return "live"
+
+    def has_unpublished_subtree(self):
+        """
+        An awkwardly-defined flag used in determining whether unprivileged editors have
+        permission to delete this article. Returns true if and only if this page is non-live,
+        and it has no live children.
+        """
+        return (not self.live) and (not self.get_descendants().filter(live=True).exists())
+
+    @transaction.commit_on_success  # only commit when all descendants are properly updated
+    def move(self, target, pos=None):
+        """
+        Extension to the treebeard 'move' method to ensure that url_path is updated too.
+        """
+        old_url_path = Page.objects.get(id=self.id).url_path
+        super(Page, self).move(target, pos=pos)
+        # treebeard's move method doesn't actually update the in-memory instance, so we need to work
+        # with a freshly loaded one now
+        new_self = Page.objects.get(id=self.id)
+        new_url_path = new_self.set_url_path(new_self.get_parent())
+        new_self.save()
+        new_self._update_descendant_url_paths(old_url_path, new_url_path)
 
 
 def get_navigation_menu_items():
@@ -421,8 +471,44 @@ class Orderable(models.Model):
         ordering = ['sort_order']
 
 
+class SubmittedRevisionsManager(models.Manager):
+    def get_query_set(self):
+        return super(SubmittedRevisionsManager, self).get_query_set().filter(submitted_for_moderation=True)
+
 class PageRevision(models.Model):
     page = models.ForeignKey('Page', related_name='revisions')
+    submitted_for_moderation = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True, blank=True)
     content_json = models.TextField()
+
+    objects = models.Manager()
+    submitted_revisions = SubmittedRevisionsManager()
+
+    def save(self, *args, **kwargs):
+        super(PageRevision, self).save(*args, **kwargs)
+        if self.submitted_for_moderation:
+            # ensure that all other revisions of this page have the 'submitted for moderation' flag unset
+            self.page.revisions.exclude(id=self.id).update(submitted_for_moderation=False)
+
+    def as_page_object(self):
+        obj = self.page.specific_class.from_json(self.content_json)
+
+        # Override the possibly-outdated tree parameter fields from this revision object
+        # with up-to-date values
+        obj.path = self.page.path
+        obj.depth = self.page.depth
+        obj.numchild = self.page.numchild
+
+        # Populate url_path based on the revision's current slug and the parent page as determined
+        # by path
+        obj.set_url_path(self.page.get_parent())
+
+        return obj
+
+    def publish(self):
+        page = self.as_page_object()
+        page.live = True
+        page.save()
+        self.submitted_for_moderation = False
+        page.revisions.update(submitted_for_moderation=False)

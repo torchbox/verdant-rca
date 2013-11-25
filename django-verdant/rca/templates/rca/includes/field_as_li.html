@@ -1,0 +1,23 @@
+{% load rca_tags %}
+
+<li class="{{ field|fieldtype }} {{ field.name }} {{ field.css_classes }}">
+    {% if field_title %}<h3 class="heading">{{ field_title }}</h3>{% endif %}
+    <div class="field">
+        {% if field|fieldtype != "boolean_field" %}{{ field.label_tag }}{% endif %}
+        {% block form_field %}
+            {{ field }}
+        {% endblock %}
+        {% if field|fieldtype = "boolean_field" %}{{ field.label_tag }}{% endif %}
+    </div>
+
+    {% if field.errors %}
+        <p class="error-message">
+            {% for error in field.errors %}
+                <span>{{ error|escape }}</span>
+            {% endfor %}
+        </p>
+    {% endif %}
+    {% if field.help_text %}
+        <p class="help">{{ field.help_text }}</p>
+    {% endif %}
+</li>

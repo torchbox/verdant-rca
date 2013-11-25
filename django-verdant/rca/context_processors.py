@@ -1,4 +1,4 @@
-from rca.models import Advert, YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES
+from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES
 from datetime import date
 
 
@@ -9,7 +9,6 @@ def global_vars(request):
     years_until_current_year = [y for y in YEARS if int(y) <= year]
 
     return {
-        'global_adverts': Advert.objects.filter(show_globally=True),
         'global_all_schools': SCHOOL_CHOICES,
         'global_schools': schools_current_year,
         'global_all_programmes': ALL_PROGRAMMES,

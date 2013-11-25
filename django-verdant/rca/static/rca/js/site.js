@@ -2,7 +2,7 @@
 jQuery.fn.reverse = [].reverse;
 
 var breakpoints = {
-    mobile: "screen and (max-width:768px)",
+    mobile: "screen and (max-width:767px)", /* NB: max-width must be 1px less than the min-width use for desktopSmall, below, otherwise both fire */
     desktopSmall: "screen and (min-width:768px)",
     desktopRegular: "screen and (min-width:1024px)",
     desktopLarge: "screen and (min-width:1280px)"
@@ -24,7 +24,10 @@ function showHide(clickElement, classElement){
 function showHideFooter() {
     $('footer .menu .main').click(function(eventObject){
         $(this).toggleClass('expanded');
-        $('.submenu-block', this).prev().slideToggle(expansionAnimationSpeed);
+        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
+    });
+    $('.submenu-block').click(function(e){
+        e.stopPropagation();
     });
 }
 
@@ -83,7 +86,7 @@ function showSearchAutocomplete() {
         source: function(request, response) {
             $.getJSON("/search/suggest/?q=" + request.term, function(data) {
                 response(data);
-            })
+            });
         },
         select: function( event, ui ) {
             window.location.href = ui.item.url;
@@ -93,24 +96,33 @@ function showSearchAutocomplete() {
     };
 }
 
-/*google maps for contact page */
-function initializeMaps() {
-    var mapCanvas = document.getElementById('map_canvas_kensington');
-    var mapOptions = {
-        center: new google.maps.LatLng(51.501144, -0.179285),
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map = new google.maps.Map(mapCanvas, mapOptions);
 
-    var mapCanvas2 = document.getElementById('map_canvas_battersea');
-    var mapOptions2 = {
-        center: new google.maps.LatLng(51.479167, -0.170076),
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
+function showHideMobileMenu(){
+    $('.showmenu').click(function(eventObject){
+        $('nav').toggleClass('expanded');
+        $(this).toggleClass('expanded');
+    });
 }
+
+/*google maps for contact page
+Currently not being used but leaving commented out for reference - contains the correct lat and longs for Kensington and Battersea campuses */
+// function initializeMaps() {
+//     var mapCanvas = document.getElementById('map_canvas_kensington');
+//     var mapOptions = {
+//         center: new google.maps.LatLng(51.501144, -0.179285),
+//         zoom: 16,
+//         mapTypeId: google.maps.MapTypeId.ROADMAP
+//     };
+//     var map = new google.maps.Map(mapCanvas, mapOptions);
+
+//     var mapCanvas2 = document.getElementById('map_canvas_battersea');
+//     var mapOptions2 = {
+//         center: new google.maps.LatLng(51.479167, -0.170076),
+//         zoom: 16,
+//         mapTypeId: google.maps.MapTypeId.ROADMAP
+//     };
+//     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
+// }
 
 
 function applyCarousel(carouselSelector){
@@ -129,6 +141,7 @@ function applyCarousel(carouselSelector){
     var carousel = $this.bxSlider({
         adaptiveHeight: true,
         pager: function(){ return $(this).hasClass('paginated'); },
+        touchEnabled: ($(".carousel > li").length > 1) ? true: false,
         onSliderLoad: function(){
             $this.parent().css('max-height', calcHeight());
             $('li', $this).css('max-height', calcHeight());
@@ -163,9 +176,9 @@ $(function(){
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
-    showHide('.showmenu', 'nav');
+    showHideMobileMenu();
     showHide('.showsearch', 'form.search');
-    //showHideDialogue();
+    showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
@@ -175,6 +188,11 @@ $(function(){
         } else {
             $(this).html('hide');
         }
+    });
+
+    /* add focus to the search input when the mobile search button is clicked */
+    $('.showsearch').click(function() {
+        $('#search_box').focus();
     });
 
 
@@ -209,7 +227,24 @@ $(function(){
 
     $('.tab-nav a, .tab-content .header a').click(function (e) {
         e.preventDefault();
-        $(this).tab('show');
+
+        /* This hides the tab on mobile phones if clicked a second time */
+        if ($(this).hasClass('active')) {
+            $('.tab-pane.active').toggleClass('hide_if_mobile');
+        } else {
+            // Save old tab position
+            var oldY = $(this).offset().top;
+
+            // Switch tabs
+            $(this).tab('show');
+
+            // Work out change in position and scroll by it
+            var changeY = $(this).offset().top - oldY;
+            window.scrollBy(0, changeY);
+
+            // Remove hide_if_mobile class from all tab-panes that have it
+            $('.tab-pane.hide_if_mobile').removeClass('hide_if_mobile');
+        }
 
         /* ensure carousels within tabs only execute once, on first viewing */
         if(!$(this).data('carousel')){
@@ -291,7 +326,7 @@ $(function(){
                 auto_join_text_default: 'from @' + username,
                 loading_text: 'Checking for new tweets...',
                 count: count
-            })
+            });
 
             window.packerytweets = tmp;
         }
@@ -301,7 +336,7 @@ $(function(){
         $('.packery .tweet .inner .content').each(function(){
             $(this).html($(arr.shift()).html());
         });
-    })
+    });
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
@@ -331,16 +366,23 @@ $(function(){
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
+            // console.log($(document).height());
+            // console.log($(window).height());
+            if($(document).height()-250 > $(window).height()){
+                $('.header-wrapper, .page-wrapper').affix({
+                    offset: 151
+                });
+            }
+
             /* Packery */
             $('.packery').imagesLoaded( function() {
                 window.packery = $('.packery').packery({
-                    itemSelector: '.item',
-                    stamp: ".stamp"
+                    itemSelector: '.item'
                 });
             });
         },
         off: function(){
-             $('.packery').packery('destroy');
+            $('.packery').packery('destroy');
         }
     });
 
@@ -348,9 +390,8 @@ $(function(){
     $('.lt-ie9').each(function(){
         /* Packery */
         $('.packery').imagesLoaded( function() {
-            var packery = $('.packery').packery({
-                itemSelector: '.item',
-                stamp: ".stamp"
+            window.packery = $('.packery').packery({
+                itemSelector: '.item'
             });
         });
     });
@@ -417,8 +458,15 @@ $(function(){
         // prepare the items already in the page (if non-inifinite-scroll)
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
-        $("#listing").on("click", ".load-more", function(e){
+        // This click event can originate from the filtered results on an index page or any other paginated content.
+        // If it is form a filter then we need to use event delegation but on other pages with multiple paginated
+        // items this would result in a single event handler bound multiple times to the same container element.
+        // So we have to use different containers to bind the event to: #listing for filters, and $this for everything else.
+        var $bindTo = $this.closest("#listing").length ? $this.closest("#listing") : $this;
+
+        $($bindTo).on("click", ".load-more", function(e){
             e.preventDefault();
+            var loadmore = $(this);
 
             if(paginationContainer && $(paginationContainer).length){
                 var nextLink = $('.next a', $(paginationContainer));
@@ -453,6 +501,30 @@ $(function(){
         });
     });
 
+    $('.packery .load-more').each(function(){
+        $this = $(this);
+        $this.click(function(e){
+            e.preventDefault();
+            var tmp = $('<div></div>').load(current_page + " .item", "exclude=" + excludeIds, function(data){
+                var items = $('.item', tmp);
+
+                if (items.length){
+                    $('.packery ul').append(items);
+                    $('.packery').imagesLoaded( function() {
+                        $('.packery').packery('appended', items);
+                    });
+
+                    //append ids returned to those already excluded
+                    items.each(function(){
+                        excludeIds.push($(this).data('id'))
+                    })
+                } else {
+                    $this.fadeOut();
+                }
+            });
+        });
+    });
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
 
     var alignGallery = function(){
@@ -466,7 +538,7 @@ $(function(){
             function addToArray(elem){
                 totalWidth += elem.width();
                 if(typeof rowArray[rowCounter] == "undefined"){
-                    rowArray[rowCounter] = new Array();
+                    rowArray[rowCounter] = [];
                 }
                 rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             }
@@ -499,6 +571,7 @@ $(function(){
         });
     };
     alignGallery();
+    window.alignGallery = alignGallery; // this is used in filters.js too
 
     /* Search filters */
     $('.filters').each(function(){
@@ -560,11 +633,46 @@ $(function(){
         });
     });
 
-    /* Google maps for contact page */
-    //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
-
     /* Apply custom styles to selects */
     $('select:not(.filters select)').customSelect({
         customClass: "select"
+    });
+
+    /* Cookie notice */
+
+    var displayCookieNotice = function(context, settings) {
+      // Notice and message
+      $('body').prepend('<div class="cookie-notice" style="display: block;"><div class="cookie-notice-content"><a id="cookie-notice-close" class="button" href="#">Dismiss</a><p class="cookie-notice-text bc4 body-text-style">We use cookies to help give you the best experience on our website. By continuing without changing your cookie settings, we assume you agree to this. Please read our <a href="/more/contact-us/about-this-website/privacy-cookies/">privacy policy</a> to find out more.</p></div></div>');
+
+      // Close button
+      $(document).delegate('#cookie-notice-close', 'click', function() {
+        $(".cookie-notice").slideUp("slow");
+      });
+
+      $(".cookie-notice").slideDown("slow");
+
+      //set notice to never show again by default. Unnecessary to show every page load, particularly if we're suggesting showing it once is considered as acceptance.
+      dontShowCookieNoticeAgain();
+    };
+
+    var dontShowCookieNoticeAgain = function() {
+      // domainroot root variable is set in base.html - needed so the same cookie works across all subdomains
+
+      // set or extend the cookie life for a year
+      var exdate = new Date();
+      exdate.setDate(exdate.getDate() + 365);
+      document.cookie = "dontShowCookieNotice=" + "TRUE; expires=" + exdate.toUTCString() + ";domain=" + domainroot + ";path=/";
+    };
+
+    var pleaseShowCookieNotice = function() {
+      // Don't show the notice if we have previously set a cookie to hide it
+      var dontShowCookieNotice = (document.cookie.indexOf("dontShowCookieNotice") != -1) ? false : true;
+      return dontShowCookieNotice;
+    };
+
+    $('body').once(function(){
+      if (pleaseShowCookieNotice() == true) {
+        displayCookieNotice();
+      }
     });
 });
