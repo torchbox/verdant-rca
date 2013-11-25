@@ -16,17 +16,17 @@ def deploy_staging():
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r rcasite/requirements.txt")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py syncdb --settings=verdant.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py migrate --settings=verdant.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py collectstatic --settings=verdant.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py compress --settings=verdant.settings.staging")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py syncdb --settings=rcasite.settings.staging --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py migrate --settings=rcasite.settings.staging --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py compress --settings=rcasite.settings.staging")
 
         sudo("supervisorctl restart verdant-rca")
         sudo("supervisorctl restart rca-celeryd")
         sudo("supervisorctl restart rca-celerybeat")
 
         with settings(sudo_user='verdant-rca'):
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py update_index --settings=verdant.settings.staging")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py update_index --settings=rcasite.settings.staging")
 
 
 @roles('production')
@@ -37,16 +37,16 @@ def deploy():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r rcasite/requirements.txt")
 
             if env['host'] == MIGRATION_SERVER:
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py syncdb --settings=verdant.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py migrate --settings=verdant.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py collectstatic --settings=verdant.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py compress --settings=verdant.settings.production")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py syncdb --settings=rcasite.settings.production --noinput")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py migrate --settings=rcasite.settings.production --noinput")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py compress --settings=rcasite.settings.production")
 
             run("supervisorctl restart verdant-rca")
             run("supervisorctl restart rca-celeryd")
             if env['host'] == MIGRATION_SERVER:
                 run("supervisorctl restart rca-celerybeat")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py update_index --settings=verdant.settings.production")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python rcasite/manage.py update_index --settings=rcasite.settings.production")
 
 @roles('squid')
 def clear_cache():
