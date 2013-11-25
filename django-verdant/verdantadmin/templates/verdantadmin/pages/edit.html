@@ -52,7 +52,10 @@
                    
                     <span class="modified">
                         {% if page.get_latest_revision %}
-                            Last modified: {{ page.get_latest_revision.created_at }} by {% if page.get_latest_revision.user.get_full_name %}{{ page.get_latest_revision.user.get_full_name }}{% else %}{{ page.get_latest_revision.user.username }}{% endif %}
+                            Last modified: {{ page.get_latest_revision.created_at }}
+                            {% if page.get_latest_revision.user %}
+                                by {% if page.get_latest_revision.user.get_full_name %}{{ page.get_latest_revision.user.get_full_name }}{% else %}{{ page.get_latest_revision.user.username }}{% endif %}
+                            {% endif %}
                         {% endif %}
                     </span>
                 </li>
