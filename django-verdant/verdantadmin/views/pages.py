@@ -258,7 +258,7 @@ def reorder(request, parent_page_id=None):
         except:
             # Invalid
             messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_pages_reorder', parent_page_id)
+            return redirect('verdantadmin_explore', parent_page.id)
 
         # Reorder
         for page in pages_ordered:
@@ -267,12 +267,7 @@ def reorder(request, parent_page_id=None):
         # Success message
         messages.success(request, "Pages have been reordered")
 
-        return redirect('verdantadmin_explore', parent_page_id)
-    else:
-        return render(request, 'verdantadmin/pages/reorder.html', {
-            'parent_page': parent_page,
-            'pages': pages,
-        })
+    return redirect('verdantadmin_explore', parent_page.id)
 
 @login_required
 def delete(request, page_id):
