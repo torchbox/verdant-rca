@@ -675,4 +675,5 @@ $(function(){
         displayCookieNotice();
       }
     });
+
 });
