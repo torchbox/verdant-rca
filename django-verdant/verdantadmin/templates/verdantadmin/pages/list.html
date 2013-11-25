@@ -1,5 +1,38 @@
 <table class="listing {% if full_width %}full-width{% endif %}">
     <thead>
+        {% if parent_page %}
+            <tr class="index {% if not page.live %}inactive{% endif %}">
+                <td class="title">
+                    <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
+                    <ul class="actions">
+                        <li><a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button button-small icon white icon-plus-inverse">Add child page</a></li>
+                        {% if parent_page.has_unpublished_changes %}
+                            <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank">View draft</a></li>
+                        {% endif %}
+                        {% if parent_page.live %}
+                            <li><a href="{{ parent_page.url }}" target="_blank">View live</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
+                        {% if perms.core.can_unpublish_page or parent_page.has_unpublished_subtree %}
+                            <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
+                        {% endif %}
+                        {% if parent_page.live and perms.core.can_unpublish_page %}
+                            <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}">Unpublish</a></li>
+                        {% endif %}
+                       
+                    </ul>
+                </td>
+                <td class="type">{{ parent_page.content_type|title }}</td>
+                <td class="status"><span class="status-tag {{ parent_page.status_string }}">{{ parent_page.status_string|capfirst }}</span></td>
+                <td class="no-children">
+                    <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="icon text-replace icon-plus-inverse" title="Add a child page to '{{ parent_page.title }}'">Add subpage</a>
+                </td>
+            </tr>
+            <tr class="divider">
+                <td colspan="4">Child pages</td>
+            </tr>
+        {% endif %}
+    
         <tr>
             <th class="title">
                 Title
@@ -65,7 +98,7 @@
                             {% if page.live and perms.core.can_unpublish_page %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
                             {% endif %}
-                            <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
+                            <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add child page</a></li>
                         </ul>
                     </td>
                     {% if show_parent %}
@@ -76,11 +109,11 @@
                     {% if allow_navigation %}
                         {% if page.is_navigable %}
                             <td class="children">
-                                <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                                <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer child pages of '{{ page.title }}'">Explore</a>
                             </td>
                         {% else %}
                             <td class="no-children">
-                                <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
+                                <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a child page to '{{ page.title }}'">Add subpage</a>
                             </td>
                         {% endif %}
                     {% endif %}
