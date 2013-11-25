@@ -33,8 +33,8 @@ def index(request, parent_page_id=None):
     else:
         ordering = 'title'
     
-    if ordering == 'ord':    
-        messages.error(request, "You are now able to reorder pages. Click 'Save order' when you've finished")
+    # if ordering == 'ord':    
+    #     messages.warning(request, "You are now able to reorder pages. Click 'Save order' when you've finished")
 
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,

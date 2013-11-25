@@ -1,7 +1,26 @@
 <table class="listing {% if full_width %}full-width{% endif %}">
+    {% if orderable %}
+        <col width="4.83%" />
+    {% endif %}
+    <col />
+    {% if show_parent %}
+        <col width="20%" />
+    {% endif %}
+    <col width="12%"/>
+    <col width="12%"/>
+    {% if allow_navigation %}
+        <col width="5%"/>
+    {% endif %}
     <thead>
         <tr>
-            <th><a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-arrow-down-after teal">#</a></th>
+            {% if orderable %}
+                <th class="ord">
+                    {% if ordering == "ord" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-order text-replace">Order</a></th> 
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-order text-replace">Order</a></th>
+                    {% endif %}
+            {% endif %}
             <th class="title">
                 Title
                 {% if sortable %}
@@ -50,7 +69,7 @@
         {% if pages %}
             {% for page in pages %}
                 <tr {% if not page.live %}class="inactive"{% endif %}>
-                    <td class="ord">{% if ordering == "ord" %}<div class="handle">handle</div>{% endif %}</td>
+                    <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
                     <td class="title">
                         <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a></h2>
                         <ul class="actions">

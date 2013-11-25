@@ -54,18 +54,23 @@
         </div>
     </header>
 
-    {% include "verdantadmin/pages/list.html" with sortable=1 allow_navigation=1 full_width=1 %}
-    
+    <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+        {% csrf_token %}
+        <input type='hidden' name='order' id='order'>
 
-    {% if ordering == 'ord' %}
-        <footer>
-            <ul>
-                <li class="actions">
-                    <input type="submit" value="Save order" class="button" />
-                </li>
-            </ul>
-        </footer>
-    {% endif %}
+        {% include "verdantadmin/pages/list.html" with sortable=1 allow_navigation=1 full_width=1 orderable=1 %}
+        
+
+        {% if ordering == 'ord' %}
+            <footer>
+                <ul>
+                    <li class="actions">
+                        <input type="submit" value="Save order" class="button" />
+                    </li>
+                </ul>
+            </footer>
+        {% endif %}
+    </form>
 
 {% endblock %}
 
@@ -78,7 +83,14 @@
                     containment: "parent", 
                     handle: ".handle", 
                     items: "> tr",
-                    axis: "y"
+                    axis: "y",
+                    placeholder: "dropzone",
+                    start: function(){
+                        $(this).parent().addClass('sorting');
+                    },
+                    stop: function(){
+                        $(this).parent().removeClass('sorting');
+                    }
                 });
                 $('.listing tbody').disableSelection();
 

@@ -96,14 +96,12 @@ ul.listing{
     &.small tbody tr{
         font-size:1em;
     }
-    
-    tbody td{
-        .table-column(1);
-    }
+
 
     /* specific columns */
+
+
     .bulk{
-        .table-column(1);
         padding-right:0;
 
         label{
@@ -122,8 +120,6 @@ ul.listing{
        
     }
     .title{
-        .table-column(5);
-
         h2{
             text-transform:none;
             margin:0;
@@ -144,13 +140,13 @@ ul.listing{
     }
 
     .parent{
-        .table-column(2);
+        
     }
     .type{
-        .table-column(1);
+        
     }
     .status{
-        .table-column(1);
+        
     }
 
     .actions{
@@ -179,11 +175,8 @@ ul.listing{
         margin:0 1em 1em 0;
     }
 
-   
-    
     .children,
     .no-children{
-        width:5%;
         padding:0 !important;
         .transition(background-color 0.2s ease);
         border-left:1px dashed @color-input-border;
@@ -209,6 +202,59 @@ ul.listing{
         font-size:30px;
     }    
 
+    .ord{
+        padding-left:10px !important;
+    }
+    th.ord a:before{
+        width:1em;
+        font-size:15px;
+    }
+    th.ord a:hover:before{
+        color:@color-teal;
+    }
+    .handle{
+        cursor:move;
+        width:20px;
+
+        &:before{
+            font-size:20px;
+            color:@color-grey-light;
+            width:1em;
+        }
+        &:hover:before{
+            color:@color-text-base;
+        }
+    }
+
+    .ui-sortable-helper{
+        border:1px dashed @color-input-border;
+        border-width:1px 0;
+        
+
+        td{
+            display:none;
+           
+        }
+        .ord,.title{
+            display:table-cell;
+        }
+        .ord{
+           
+        }
+    }
+    .dropzone{
+        height:80px;
+        background-color:@color-grey-dark;
+
+        &:hover{
+            background-color:@color-grey-dark;
+        }
+        td{
+            padding: 0 !important;
+        }
+    }
+
+
     td.children:hover{
         background-color:@color-teal;
 
@@ -223,9 +269,6 @@ ul.listing{
 
     .inactive h2{
         opacity:0.5;
-    }
-    .handle{
-        cursor:move;
     }
 }
 
