@@ -27,13 +27,13 @@ class ResearchBookTitlesImporter(object):
 
         # Check that this is a book_section
         if researchitem_type != 'book_section':
-        	return
+            return
 
         # Find research item record
         try:
-        	researchitem = ResearchItem.objects.get(eprintid=researchitem_eprintid)
+            researchitem = ResearchItem.objects.get(eprintid=researchitem_eprintid)
         except ResearchItem.DoesNotExist:
-        	print "Cannot find research item. Eprintid: " + researchitem_eprintid
+            print "Cannot find research item. Eprintid: " + researchitem_eprintid
 
         # Add book title
         researchitem.subtitle = element['book_title']
