@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm as BaseUserCreationForm
-from django.contrib.auth.hashers import MAXIMUM_PASSWORD_LENGTH
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -51,10 +50,10 @@ class UserEditForm(forms.ModelForm):
     last_name = forms.CharField(required=True)
 
     password1 = forms.CharField(label=_("Password"), required=False,
-        widget=forms.PasswordInput, max_length=MAXIMUM_PASSWORD_LENGTH,
+        widget=forms.PasswordInput,
         help_text=_("Leave blank if not changing."))
     password2 = forms.CharField(label=_("Password confirmation"), required=False,
-        widget=forms.PasswordInput, max_length=MAXIMUM_PASSWORD_LENGTH,
+        widget=forms.PasswordInput,
         help_text=_("Enter the same password as above, for verification."))
 
     is_superuser = forms.BooleanField(label=_("Administrator"), required=False,

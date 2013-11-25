@@ -1,7 +1,7 @@
 import sys
 import traceback
 from django.core.mail import mail_admins
-from django.utils.text import truncate_words
+from django.utils.text import Truncator
 from django.template.defaultfilters import slugify
 
 
@@ -28,8 +28,8 @@ def mail_exception(error, prefix=None):
 
 def _error_subjects(error):
     """ returns a list of potential subjects for an error email, some may fail """
-    error_str = str(error)
-    return [truncate_words(error_str, 5), slugify(truncate_words(error_str, 5)), "mail_exception error"]
+    error_str = Truncator(str(error)).words(5, truncate='...')
+    return [error_str, slugify(error_str), "mail_exception error"]
 
 
 class FauxTb(object):
