@@ -1,0 +1,23 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Add redirect</h1>
+    </header>
+
+    <form action="{% url 'verdantredirects_add_redirect' %}" method="POST">
+        {% csrf_token %}
+        {{ edit_handler.render_form_content }}
+
+        <div class="nice-padding">
+            <input type="submit" value="Save" />
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_css %}
+    {% include "verdantadmin/pages/_editor_css.html" %}
+{% endblock %}
+{% block extra_js %}
+    {% include "verdantadmin/pages/_editor_js.html" %}
+{% endblock %}

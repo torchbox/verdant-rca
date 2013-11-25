@@ -14,6 +14,7 @@ from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
 from verdantsearch import urls as verdantsearch_urls
 from verdantusers import urls as verdantusers_urls
+from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
 from rca import app_urls
@@ -23,11 +24,6 @@ admin.autodiscover()
 
 from verdantsearch import register_signal_handlers
 register_signal_handlers()
-
-
-# Redirects
-from redirects import REDIRECTS
-redirect_urls = patterns('', *[url('^' + redirect[0] + '/$', RedirectView.as_view(url=redirect[1])) for redirect in REDIRECTS.items()])
 
 
 urlpatterns = patterns('',
@@ -47,6 +43,7 @@ urlpatterns = patterns('',
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),
+    url(r'^admin/redirects/', include(verdantredirects_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
     url(r'^search/', include(verdantsearch_urls)),
 
@@ -57,9 +54,6 @@ urlpatterns = patterns('',
     url(r'^app/', include(app_urls)),
 
     url(r'^twitter/', include(twitter_urls)),
-
-    # Redirects
-    url(r'', include(redirect_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Verdant's serving mechanism
