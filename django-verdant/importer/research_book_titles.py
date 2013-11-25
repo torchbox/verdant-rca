@@ -34,6 +34,7 @@ class ResearchBookTitlesImporter(object):
             researchitem = ResearchItem.objects.get(eprintid=researchitem_eprintid)
         except ResearchItem.DoesNotExist:
             print "Cannot find research item. Eprintid: " + str(researchitem_eprintid)
+            return
 
         # Add book title
         researchitem.subtitle = element['book_title']
