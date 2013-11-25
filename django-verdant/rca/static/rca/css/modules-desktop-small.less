@@ -61,11 +61,21 @@
     }
 
     .caption{
+        background-color:rgba(0,0,0,0.62);
+        position:absolute;
+        right:@grid-gutter-width;
+        padding:@grid-gutter-width;
+        margin:0;
         bottom:@grid-gutter-width;
         top: auto;
     }
-    .hover-content .bc1, .caption {
+    .hover-content {
         display: block;
+    }
+    .mobilecaption {
+        display: none;
+    }
+    .hover-content .bc1, .caption {
         .transition(opacity 0.3s ease);
         opacity:0;
     }
