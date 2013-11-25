@@ -4,7 +4,7 @@ SCREEN_CHOICES = (
     ('stevens', 'Stevens'),
     ('dyson-hester-road', 'Dyson Hester Road'),
     ('dyson-howie-street', 'Dyson Howie Street'),
-    ('sculpture-screen', 'Sculpture'),
+    ('sculpture', 'Sculpture'),
     ('sackler', 'Sackler'),
 )
 
