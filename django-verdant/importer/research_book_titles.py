@@ -22,18 +22,17 @@ class ResearchBookTitlesImporter(object):
 
     def import_researchitem(self, element):
         # Get basic info
-        researchitem_eprintid = element['eprintid']
-        researchitem_type = element['type']
+        eprintid = element['eprintid']
 
         # Check that this is a book_section
-        if researchitem_type != 'book_section':
+        if element['type'] != 'book_section':
             return
 
         # Find research item record
         try:
-            researchitem = ResearchItem.objects.get(eprintid=researchitem_eprintid)
+            researchitem = ResearchItem.objects.get(eprintid=eprintid)
         except ResearchItem.DoesNotExist:
-            print "Cannot find research item. Eprintid: " + str(researchitem_eprintid)
+            print "Cannot find research item. Eprintid: " + str(eprintid)
             return
 
         # Add book title
@@ -42,6 +41,16 @@ class ResearchBookTitlesImporter(object):
         # Save
         if self.save:
             researchitem.save()
+
+        # Find latest revision of researchitem
+        researchitem_latest_revision = researchitem.get_latest_revision_as_page()
+
+        # Add book title to latest revision
+        researchitem_latest_revision.subtitle = element['book_title']
+
+        # Save latest revision
+        if self.save:
+            researchitem_latest_revision.save_revision()
 
     def get_research_file(self, eprintid):
         # Attempt to load from cache
