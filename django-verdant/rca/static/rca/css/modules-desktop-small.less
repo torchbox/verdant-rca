@@ -36,18 +36,17 @@
  * Contact
  */
 
- 
+
 /**
  * $Carousel
  */
 
 .bx-wrapper {
-    padding-bottom:20px; /* necessary to give pager dots space to exist */
-
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
-        opacity:0
-    } 
+        opacity:0;
+        display: block;
+    }
     &:hover {
         .bx-next, .bx-prev {
             opacity: 1;
@@ -62,20 +61,26 @@
     }
 
     .caption{
+        background-color:rgba(0,0,0,0.62);
+        position:absolute;
+        right:@grid-gutter-width;
+        padding:@grid-gutter-width;
+        margin:0;
         bottom:@grid-gutter-width;
         top: auto;
     }
-    .hover-content .bc1, .caption {
+    .hover-content {
         display: block;
+    }
+    .mobilecaption {
+        display: none;
+    }
+    .hover-content .bc1, .caption {
         .transition(opacity 0.3s ease);
         opacity:0;
     }
     &:hover .bc1, &:hover .caption {
         opacity:1;
-    }
-    .bx-pager{
-        bottom:-5px;
-        left:0;
     }
 }
 
@@ -101,6 +106,8 @@
 .twitter-feed {
     li {
         .column(4);
+        padding-left: 0;
+        padding-right: 10px;
     }
 }
 
@@ -139,26 +146,6 @@
 /* user for all x-plus items, to ensure that new rows are cleared */
 .newrow{
     clear:left;
-}
-
-/**
- *$Six menu block
- */
-
-.six-menu-block{
-    ul li{
-        .column(2);
-        margin-bottom: -1000px;
-
-        a{
-            border-left: 1px solid @color-divider;
-            padding: 0 0 1000px @grid-gutter-width/2;
-        }
-    }
-    ul li:first-child a{
-        border-left: 0;
-        padding-left:0;
-    }
 }
 
 
@@ -253,7 +240,7 @@
 .four-cols{
     //.row-flush();
     .col{
-        .column(3); 
+        .column(3);
     }
 }
 .three-nine-cols {
@@ -316,12 +303,9 @@
     .col.last {
         padding-right: @grid-gutter-width;
     }
-    .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .h7.space-large {
-        margin-top: 6em; /* attempt to align jobs on staff profile page */
+        margin-top: 5.5em; /* attempt to align jobs on staff profile page */
     }
 
     .dialogue {
@@ -330,7 +314,7 @@
 }
 
 
-/** 
+/**
  *$Half-width double item
  */
  .half-double{
@@ -352,7 +336,10 @@
 
     .single{
         .column(4);
-        
+        .image,.content{
+            .column(12);
+            padding:0;
+        }
         .image img{
             width:auto;
         }
@@ -360,11 +347,17 @@
     .double{
         .column(6);
     }
+    .half{
+        .column(6);
+    }
     .three-quarters{
         .column(8);
     }
     .full{
         .column(12);
+    }
+    .tweet{
+        min-height:130px;
     }
     .load-more {
         position:absolute;
@@ -386,9 +379,6 @@
  */
 
 .job-summary {
-    .share-wrapper, .download-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .dialogue {
         width: 180px;
@@ -428,7 +418,7 @@
  */
 
 .teaser-image {
-    
+
 }
 
 /**
@@ -444,12 +434,12 @@
  */
 
 .gallery {
-    ul{
+    ul.row {
         .row-flush();
     }
     li {
         float:left;
-    
+
         &.portrait{
             .column(6);
         }
@@ -503,7 +493,7 @@
 
 .contact {
     li.col {
-        .column(4, @grid-gutter-width, 12); 
+        .column(4, @grid-gutter-width, 12);
         p {
             margin: 0;
         }

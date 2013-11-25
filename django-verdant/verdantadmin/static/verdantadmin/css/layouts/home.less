@@ -1,0 +1,42 @@
+@import "../variables.less";
+@import "../mixins.less";
+@import "../grid.less";
+
+.summary{
+    .row();
+    margin-bottom:2em;
+
+    h2{
+        .visuallyhidden();
+    }
+    ul{
+        .unlist();
+        width:100%;
+    }
+    li{
+        .column(4);
+        padding-top:3em;
+        padding-bottom:3em;
+        background-color:@color-header-bg;
+    
+        &:first-child{
+            .push-padding(@grid-content-indent);
+        }
+    }
+
+
+    li:before{
+        opacity:0.2;
+        font-size:6em;
+        float:left;
+    }
+
+
+    span{
+        font-family:Bitter, Georgia, serif;
+        display:block;
+        font-size:4em;
+        line-height:1em;
+        font-weight:300;
+    }
+}

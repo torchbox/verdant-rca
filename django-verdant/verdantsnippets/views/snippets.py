@@ -4,9 +4,10 @@ from django.utils.encoding import force_text
 from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from verdantsnippets.models import get_snippet_content_types
-from verdantadmin.edit_handlers import ObjectList, get_form_for_model, extract_panel_definitions_from_form_class
+from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==
 
@@ -37,13 +38,8 @@ def get_content_type_from_url_params(app_name, model_name):
 SNIPPET_EDIT_HANDLERS = {}
 def get_snippet_edit_handler(model):
     if model not in SNIPPET_EDIT_HANDLERS:
-        if hasattr(model, 'panels'):
-            edit_handler = ObjectList(model.panels)
-            # form = edit_handler.get_form_class()
-        else:
-            form = get_form_for_model(model)
-            panels = extract_panel_definitions_from_form_class(form)
-            edit_handler = ObjectList(panels)
+        panels = extract_panel_definitions_from_model_class(model)
+        edit_handler = ObjectList(panels)
 
         SNIPPET_EDIT_HANDLERS[model] = edit_handler
 
@@ -51,6 +47,7 @@ def get_snippet_edit_handler(model):
 
 # == Views ==
 
+@login_required
 def index(request):
     snippet_types = [
         (
@@ -64,6 +61,7 @@ def index(request):
     })
 
 
+@login_required
 def list(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -79,6 +77,7 @@ def list(request, content_type_app_name, content_type_model_name):
     })
 
 
+@login_required
 def create(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -90,18 +89,17 @@ def create(request, content_type_app_name, content_type_model_name):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=instance)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=instance, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             form.save()
-            edit_handler.post_save()
 
             messages.success(
                 request,
                 "%s '%s' created." % (capfirst(get_snippet_type_name(content_type)[0]), instance)
             )
             return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+        else:
+            edit_handler = edit_handler_class(instance=instance, form=form)
     else:
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
@@ -112,6 +110,7 @@ def create(request, content_type_app_name, content_type_model_name):
         'edit_handler': edit_handler,
     })
 
+@login_required
 def edit(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()
@@ -123,18 +122,17 @@ def edit(request, content_type_app_name, content_type_model_name, id):
 
     if request.POST:
         form = form_class(request.POST, request.FILES, instance=instance)
-        edit_handler = edit_handler_class(request.POST, request.FILES, instance=instance, form=form)
 
-        if all([form.is_valid(), edit_handler.is_valid()]):
-            edit_handler.pre_save()
+        if form.is_valid():
             form.save()
-            edit_handler.post_save()
 
             messages.success(
                 request,
                 "%s '%s' updated." % (capfirst(snippet_type_name), instance)
             )
             return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+        else:
+            edit_handler = edit_handler_class(instance=instance, form=form)
     else:
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
@@ -147,6 +145,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
     })
 
 
+@login_required
 def delete(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
     model = content_type.model_class()

@@ -99,21 +99,24 @@ def import_image(element):
     image.permission = image_rights
 
     # Load image file
-    try:
-        with File(open(IMAGE_PATH + image_filename.encode('utf-8'), 'r')) as f:
-            if image.id:
-                image.delete()
-            image.file = f
-            image.save()
-    except IOError as e:
-        print "I/O error({0}): {1}".format(e.errno, e.strerror)
-        print repr(image_filename)
-    except ValueError:
-        print "Could not convert data to an integer."
-    except:
-        import sys
-        print "Unexpected error:", sys.exc_info()[0]
-        raise
+    if not image.id:
+        try:
+            with File(open(IMAGE_PATH + image_filename.encode('utf-8'), 'r')) as f:
+                image.file = f
+                image.save()
+        except IOError as e:
+            print "I/O error({0}): {1}".format(e.errno, e.strerror)
+            print repr(image_filename)
+            return None, None
+        except ValueError:
+            print "Could not convert data to an integer."
+            return None, None
+        except:
+            import sys
+            print "Unexpected error:", sys.exc_info()[0]
+            raise
+    else:
+        image.save()
 
     return image, errors
 
@@ -139,15 +142,8 @@ def import_staff_researchpage(staffpage, element):
                 theimage, error = import_image(image)
 
                 # Add to carousel
-                # TODO: Replace with get_or_create
-                try:
-                    carouselitem = StaffPageCarouselItem.objects.get(page=staffpage, image=theimage)
-                except StaffPageCarouselItem.DoesNotExist:
-                    carouselitem = StaffPageCarouselItem()
-                    carouselitem.page = staffpage
-                    carouselitem.image = theimage
-
-                carouselitem.save()
+                if theimage is not None:
+                    StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
 
     else:
         # Get school and programme from staffpage role
@@ -167,7 +163,6 @@ def import_staff_researchpage(staffpage, element):
             researchitem.rca_content_id = page_contentid
         researchitem.title = page_title
         researchitem.research_type = "staff"
-        researchitem.year = "0000"
         researchitem.description = page_texts
         researchitem.school = school
         researchitem.programme = programme
@@ -189,16 +184,8 @@ def import_staff_researchpage(staffpage, element):
                 theimage, error = import_image(image)
 
                 # Add to carousel
-                # TODO: Replace with get_or_create
-                try:
-                    carouselitem = ResearchItemCarouselItem.objects.get(page=researchitem, image=theimage)
-                except ResearchItemCarouselItem.DoesNotExist:
-                    carouselitem = ResearchItemCarouselItem()
-                    carouselitem.page = researchitem
-                    carouselitem.image = theimage
-
-                carouselitem.save()
-
+                if theimage is not None:
+                    ResearchItemCarouselItem.objects.get_or_create(page=researchitem, image=theimage)
 
     return errors
 
@@ -217,18 +204,18 @@ def import_staff(element):
     staff_editorialreference, errors['editorialreference'] = text_from_elem(element, 'editorialreference', length=255, textify=True)
 
     # Emails
-    staff_emails = []
     emails_element = element.find('emails')
     if emails_element is not None:
-        for email in emails_element.findall('email'):
-            staff_emails.append(email.text)
+        staff_emails = [email.text for email in emails_element.findall('email')]
+    else:
+        staff_emails = []
 
     # URLs
-    staff_urls = []
     urls_element = element.find('urls')
     if urls_element is not None:
-        for url in urls_element.findall('url'):
-            staff_urls.append(url.text)
+        staff_urls = [url.text for url in urls_element.findall('url')]
+    else:
+        staff_urls = []
 
     # Supervised students
     staff_supervisedstudents = []
@@ -239,29 +226,39 @@ def import_staff(element):
             if supervised_student is not None:
                 staff_supervisedstudents.append(supervisedstudent.text)
 
+
+
     # Cleanup statement and biography
     staff_statement = cleanup_html(staff_statement)
     staff_biography = cleanup_html(staff_biography)
 
     # Split name into first name, last name and title
-    name_split = staff_name.split()
-    if name_split[0] == "Professor" or name_split[0] == "Dr" or name_split[0] == "Sir":
-        staff_titleprefix = name_split[0]
-        staff_firstname = name_split[1]
-        staff_lastname = " ".join(name_split[2:])
-    else:
+    # A L Rees needs to be split up manually
+    if staff_name == "A L Rees":
         staff_titleprefix = ""
-        staff_firstname = " ".join(name_split[:1])
-        staff_lastname = " ".join(name_split[1:])
+        staff_firstname = "A L"
+        staff_lastname = "Rees"
+    else:
+        name_split = staff_name.split()
+        if name_split[0] == "Professor" or name_split[0] == "Dr" or name_split[0] == "Sir":
+            staff_titleprefix = name_split[0]
+            staff_firstname = name_split[1]
+            staff_lastname = " ".join(name_split[2:])
+        else:
+            staff_titleprefix = ""
+            staff_firstname = " ".join(name_split[:1])
+            staff_lastname = " ".join(name_split[1:])
 
-    # Remove "Programme" from staff_programme if it is there
-    staff_programme_split = staff_programme.split()
-    if staff_programme_split[-1] == "Programme" or staff_programme_split[-1] == "Programmes":
-        staff_programme = " ".join(staff_programme_split[:-1])
+        # Remove "Programme" from staff_programme if it is there
+        staff_programme_split = staff_programme.split()
+        if staff_programme_split[-1] == "Programme" or staff_programme_split[-1] == "Programmes":
+            staff_programme = " ".join(staff_programme_split[:-1])
 
     # Slugs
     staff_programme_slug = constants.PROGRAMMES.get(staff_programme, "")
     staff_school_slug = constants.SCHOOLS.get(staff_programme, "")
+
+
 
     # Create page for staff member
     try:
@@ -287,6 +284,8 @@ def import_staff(element):
     else:
         STAFF_INDEX_PAGE.add_child(staffpage)
 
+
+
     # Create role
     try:
         staffpagerole = StaffPageRole.objects.get(page=staffpage)
@@ -301,24 +300,20 @@ def import_staff(element):
         staffpagerole.email = staff_emails[0]
     staffpagerole.save()
 
+
+
     # Images
     images_element = element.find('images')
     if images_element is not None:
         for image in images_element.findall('image'):
-            theimage, error = import_image(image)
             # Import the image
             theimage, error = import_image(image)
 
             # Add to carousel
-            # TODO: Replace with get_or_create
-            try:
-                carouselitem = StaffPageCarouselItem.objects.get(page=staffpage, image=theimage)
-            except StaffPageCarouselItem.DoesNotExist:
-                carouselitem = StaffPageCarouselItem()
-                carouselitem.page = staffpage
-                carouselitem.image = theimage
+            if theimage is not None:
+                StaffPageCarouselItem.objects.get_or_create(page=staffpage, image=theimage)
 
-            carouselitem.save()
+
 
     # Research pages
     researchpages_element = element.find('researchpages')
@@ -331,6 +326,20 @@ def import_staff(element):
         if research_childpages_element is not None:
             for childpage in research_childpages_element.findall('page'):
                 import_staff_researchpage(staffpage, childpage)
+
+
+
+    # Append URLs to bottom of practise block
+    urls_html = "<ul>"
+    for url in staff_urls:
+        url_valid = url
+        if "://" not in url_valid:
+            url_valid = "http://" + url_valid
+        urls_html += "<li><a href=\"" + url_valid + "\">" + url + "</a></li>"
+    urls_html += "</ul>"
+    staffpage.practice += urls_html
+
+
 
     # Resave page
     staffpage.save()

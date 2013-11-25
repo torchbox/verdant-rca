@@ -42,13 +42,28 @@ $(function(){
         e.preventDefault()
         $(this).tab('show');
     });   
+    $(document).on('click', '.tab-toggle', function(e){
+        e.preventDefault()
+        $('.tab-nav a[href="'+ $(this).attr('href') +'"]').click();
+    })
 
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
 
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
+
+        // Stop event propagating so the "close all dropdowns on body clicks" code (below) doesn't immediately close the dropdown
+        return false;
     });
+
+    /* close all dropdowns on body clicks */
+    $(document).on('click', function(e){
+        var relTarg = e.relatedTarget || e.toElement;
+        if(!$(relTarg).hasClass('dropdown-toggle')){
+            $('.dropdown').removeClass('open');
+        }
+    })
 
     /* Bulk-selection */
     $(document).on('click', 'thead .bulk', function(){
@@ -56,4 +71,8 @@ $(function(){
             $(this).prop('checked', !$(this).prop('checked'));            
         })
     });
+
+    $('.listing tbody td').click(function(){
+        document.location.href = $(this).parent().find('.title a').attr("href")
+    })
 })

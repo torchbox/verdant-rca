@@ -1,0 +1,34 @@
+---
+django_root: /usr/local/django
+project_root: ${django_root}/${project_name}
+
+# nodejs variables
+node_version: "0.10.12"
+node_prefix: "node-v${node_version}"
+node_tarball: "${node_prefix}.tar.gz"
+node_path: "/usr/local"
+
+web_packages:
+    - build-essential
+    - git
+    - python-dev
+    - python-pip 
+    - nginx
+    - supervisor
+    - libpq-dev
+    - libjpeg62-dev
+    - libfreetype6-dev
+    - zlib1g-dev
+    - liblcms1-dev
+    - libxslt1-dev
+    - libxml2-dev
+    - virtualenvwrapper
+    - redis-server
+python_packages:
+    - pip 
+    - virtualenv
+database_packages:
+    - postgresql
+    - libpq-dev
+    - python-psycopg2
+

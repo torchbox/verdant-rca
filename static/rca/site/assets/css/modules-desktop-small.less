@@ -36,7 +36,7 @@
  * Contact
  */
 
- 
+
 /**
  * $Carousel
  */
@@ -47,7 +47,7 @@
     .bx-next, .bx-prev {
         .transition(opacity 0.3s ease);
         opacity:0
-    } 
+    }
     &:hover {
         .bx-next, .bx-prev {
             opacity: 1;
@@ -101,6 +101,8 @@
 .twitter-feed {
     li {
         .column(4);
+        padding-left: 0;
+        padding-right: 10px;
     }
 }
 
@@ -253,7 +255,7 @@
 .four-cols{
     //.row-flush();
     .col{
-        .column(3); 
+        .column(3);
     }
 }
 .three-nine-cols {
@@ -316,12 +318,9 @@
     .col.last {
         padding-right: @grid-gutter-width;
     }
-    .share-wrapper, .contact-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .h7.space-large {
-        margin-top: 6em; /* attempt to align jobs on staff profile page */
+        margin-top: 5.5em; /* attempt to align jobs on staff profile page */
     }
 
     .dialogue {
@@ -330,7 +329,7 @@
 }
 
 
-/** 
+/**
  *$Half-width double item
  */
  .half-double{
@@ -352,12 +351,15 @@
 
     .single{
         .column(4);
-        
+
         .image img{
             width:auto;
         }
     }
     .double{
+        .column(6);
+    }
+    .half{
         .column(6);
     }
     .three-quarters{
@@ -386,9 +388,6 @@
  */
 
 .job-summary {
-    .share-wrapper, .download-wrapper {
-        .column(1.5, @grid-gutter-width, 3);
-    }
 
     .dialogue {
         width: 180px;
@@ -428,7 +427,7 @@
  */
 
 .teaser-image {
-    
+
 }
 
 /**
@@ -444,12 +443,12 @@
  */
 
 .gallery {
-    ul{
+    ul.row {
         .row-flush();
     }
     li {
         float:left;
-    
+
         &.portrait{
             .column(6);
         }
@@ -503,7 +502,7 @@
 
 .contact {
     li.col {
-        .column(4, @grid-gutter-width, 12); 
+        .column(4, @grid-gutter-width, 12);
         p {
             margin: 0;
         }

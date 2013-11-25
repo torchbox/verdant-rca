@@ -1,4 +1,5 @@
-{% load compress static %}
+{% load compress static image_tags verdantuserbar %}
+{% static "rca/css/vendor/verdant-userbar.css" as verdantuserbarcss %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie10 lt-ie9 lt-ie8"> <![endif]-->
@@ -8,34 +9,67 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-        <title>{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | Royal College of Art</title>
-        <meta name="description" content="" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Royal College of Art{% endblock %}</title>
+        <meta name="description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
 
-        <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
-        <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
-        <link rel="stylesheet" href="{% static "rca/css/vendor/normalize.css" %}" />
-        <link rel="stylesheet" href="{% static "rca/css/vendor/jquery.bxslider.css" %}" />
+        <!-- twitter cards -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ self.title }}">
+        <meta name="twitter:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}">
+        {% image self.social_image width-320 as social_img %}
+        <meta name="twitter:image:src" content="http://{{ request.site.hostname }}{{ social_img.url }}">
 
-        {% compress css %}
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
-            {% block extra_css %}{% endblock %}
-        {% endcompress %}
+        <!--facebook opengraph-->
+        <!--<meta property="fb:app_id"          content="1234567890" /> 
+        <meta property="og:type"            content="website" /> 
+        <meta property="og:url"             content="http://samples.ogp.me/136756249803614" /> 
+        <meta property="og:title"           content="{{ self.title }}" /> 
+        <meta property="og:image"           content="http://{{ request.site.hostname }}{{ social_img.url }}" /> 
+        <meta property="og:description"    content="{{ self.social_text }}" />
+        <meta property="og:site_name"    content="Royal College of Art" />-->
 
-        <!--[if lt IE 9]>
+        {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
+            <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
+
             {% compress css %}
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" />
+                <link rel="stylesheet" href="{% static "rca/css/vendor/normalize.css" %}" />
+                <link rel="stylesheet" href="{% static "rca/css/vendor/jquery.bxslider.css" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
             {% endcompress %}
-        <![endif]-->
+
+            {% block extra_css %}{% endblock %}
+
+            <!--[if lt IE 9]>
+                {% compress css %}
+                    <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" />
+                    <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" />
+                {% endcompress %}
+            <![endif]-->
+        {% endblock %}
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+       <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script type="text/javascript">
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', 'UA-3809199-5']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+        </script>
     </head>
     <body class="{% block body_class %}{% endblock %}">
+        {% verdantuserbar verdantuserbarcss %}
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
@@ -44,13 +78,13 @@
         </div>
 
         <div class="mobile-content-wrapper">
-            <div class="mobile-menu-button">Today</div>
+            <div class="mobile-menu-button">Inside</div>
 
-            <div class="header-wrapper" data-spy="affix" data-offset-top="151">
+            <div class="header-wrapper">
                 {% include "rca/includes/header.html" %}
             </div>
 
-            <div class="page-wrapper" data-spy="affix" data-offset-top="151">
+            <div class="page-wrapper">
                 <div class="page-content">
                     <div class="inner">
                         {% block content %}{% endblock %}
@@ -65,35 +99,40 @@
 
         </div>
 
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
-        <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        {% block js %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
+            <script src="https://js.stripe.com/v2/"></script>
 
-        {% compress js%}
-            <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
-            <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
-            <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
-            <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
-            <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
-            <script src="{% static "rca/js/carousel-news.js" %}"></script>
-            <script src="{% static "rca/js/site.js" %}"></script>
-            <script src="{% static "rca/js/nav.js" %}"></script>
+            <script type="text/javascript">
+                //domainroot var is needed by the cookie notice code in site.js
+                var domainroot = "{{ request.site.hostname }}";
+            </script>
+
+
+            {% compress js %}
+                <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
+                <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
+                <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
+                <script src="{% static "rca/js/carousel-news.js" %}"></script>
+                <script src="{% static "rca/js/tweets.js" %}"></script>
+                <script src="{% static "rca/js/site.js" %}"></script>
+                <script src="{% static "rca/js/nav.js" %}"></script>
+            {% endcompress %}
 
             {% block extra_js %}{% endblock %}
 
-        {% endcompress %}
-
-        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-        <script>
-            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-            g.src='//www.google-analytics.com/ga.js';
-            s.parentNode.insertBefore(g,s)}(document,'script'));
-        </script>
+ 
+        {% endblock %}
     </body>
 </html>

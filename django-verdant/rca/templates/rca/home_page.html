@@ -3,6 +3,8 @@
 
 {% block body_class %}type-homepage{% endblock %}
 
+{% block title_postfix %}{% endblock %}
+
 {% block content %}
     {% include "rca/includes/modules/background-image.html" %}
 
@@ -13,11 +15,11 @@
             {% if self.news_item_1 %}
                 <li>
                     <a href="{% pageurl self.news_item_1 %}">
-                        <div class="image">{% image self.news_item_1.specific.feed_image width-464 %}</div>
+                        <div class="image">{% image self.news_item_1.feed_image width-464 %}</div>
                         <div class="content">
                             <h2 class="h5">{{ self.news_item_1.title }}</h2>
-                            {% if self.news_item_1.specific.listing_intro %}
-                                <p class="bc4">{{ self.news_item_1.specific.listing_intro }}</p>
+                            {% if self.news_item_1.listing_intro %}
+                                <p class="bc4">{{ self.news_item_1.listing_intro }}</p>
                             {% endif %} 
                             <p class="a2">News</p>
                         </div>
@@ -27,11 +29,11 @@
             {% if self.news_item_2 %}
                 <li>
                     <a href="{% pageurl self.news_item_2 %}">
-                        <div class="image">{% image self.news_item_2.specific.feed_image width-464 %}</div>
+                        <div class="image">{% image self.news_item_2.feed_image width-464 %}</div>
                         <div class="content">
                             <h2 class="h5">{{ self.news_item_2.title }}</h2>
-                            {% if self.news_item_2.specific.listing_intro %}
-                                <p class="bc4">{{ self.news_item_2.specific.listing_intro }}</p>
+                            {% if self.news_item_2.listing_intro %}
+                                <p class="bc4">{{ self.news_item_2.listing_intro }}</p>
                             {% endif %} 
                             <p class="a2">News</p>
                         </div>
@@ -41,10 +43,26 @@
         </ul>
     </section>
 
-    {% homepage_packery %}
+    {% if packery %}
+        {% include "rca/includes/homepage_packery.html" %}
+        
+        <script>
+            var current_page = "{{ self.url }}";
+            var excludeIds = [{% for item in packery %}{% if item.id %}{{ item.id }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}]; 
+        </script>
+    {% endif %}
 
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showRelatedNews="true" showAdverts="true" %}
+    <div class="events-ads-wrapper">
+        <!-- Events -->
+        {% upcoming_events exclude=self %}
+
+        <!-- adverts -->
+        {% sidebar_adverts %}
+    </div>
+
+    <!-- Related links -->
+    {% sidebar_links calling_page=self %}
 {% endblock %}

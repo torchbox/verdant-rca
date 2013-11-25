@@ -8,7 +8,12 @@ function buildExpandingFormset(prefix, opts) {
     var totalFormsInput = $('#' + prefix + '-TOTAL_FORMS');
     var formCount = parseInt(totalFormsInput.val(), 10);
 
-    var emptyFormTemplate = document.getElementById(prefix + '-EMPTY_FORM_TEMPLATE').innerText;
+    var emptyFormTemplate = document.getElementById(prefix + '-EMPTY_FORM_TEMPLATE');
+    if (emptyFormTemplate.innerText) {
+        emptyFormTemplate = emptyFormTemplate.innerText;
+    } else if (emptyFormTemplate.textContent) {
+        emptyFormTemplate = emptyFormTemplate.textContent;
+    }
 
     addButton.click(function() {
         var newFormHtml = emptyFormTemplate.replace(/__prefix__/g, formCount);

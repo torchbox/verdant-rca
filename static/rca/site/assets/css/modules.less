@@ -32,6 +32,7 @@
  * Five block
  * five plus/six-plus block
  * Speakers
+ * Events middle column body text
  * Tabbed content
  * Stats block
  * Button bar
@@ -48,6 +49,7 @@
  * Contact
  * Strapline
  * Pagination
+ * Forms
  */
 
 /**
@@ -58,9 +60,11 @@
 
 @carousel-image-height: 500px;
 
-.bx-wrapper .bx-viewport {
-    background-color:darken(@color-pale-grey, 10%);
+/* carousels in tabs have a background colour, others are transparent */
+.tab-content .bx-wrapper .bx-viewport {
+    background-color: #F4F4F4;
 }
+
 .bx-wrapper {
     overflow: hidden;
     margin-bottom:0;
@@ -147,12 +151,12 @@
         box-shadow: none;
         left: 0;
     }
-   
+
     .bx-loading {
         background: url(../images/bx_loader.gif) center center no-repeat #fff;
     }
 
-    .content, 
+    .content,
     .hover-content{
         color:@color-white;
         position:absolute;
@@ -187,6 +191,11 @@
     }
 }
 
+/* Hide pager for carousels with only one item */
+.single-carousel .bx-wrapper .bx-pager {
+    display: none;
+}
+
 /**
  * $Landscape and portrait images (outside carousel)
  */
@@ -199,7 +208,7 @@
     img {
         width: auto;
         display: block;
-        margin: auto; 
+        margin: auto;
     }
     &.standalone {
         background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
@@ -212,6 +221,13 @@
 
 .videoembed{
     overflow:hidden;
+
+    &:hover {
+        cursor: pointer;
+        .playpause:after {
+            .sprite-load(-1278px, -1645px, 22px, 33px);
+        }
+    }
 
     .playpause, .poster{
         position:absolute;
@@ -272,7 +288,8 @@
     h2 {
         .h7;
         margin: 0;
-       
+        min-height: 25px;
+
         a {
             color: @color-highlight-blue;
         }
@@ -296,8 +313,10 @@
         .column(12);
         margin-bottom:@spacing-one;
         overflow:hidden;
+        padding-left: 0;
+        padding-right: 10px;
     }
-        h3 {
+        h3, .tweet-time, .tweet-join {
             .a2;
             margin: 0;
         }
@@ -305,7 +324,13 @@
             .bc4;
             margin: 0;
         }
-   
+        .tweet-text{
+            display: block;
+        }
+        .tweet-avatar{
+            display: none;
+        }
+
 }
 
 /**
@@ -328,7 +353,7 @@
         }
     &.borders {
         .share-wrapper {
-            border-top: 1px solid @color-medium-grey;
+            border-top: 1px solid @color-middle-column-lines;
             padding: @spacing-one 0;
             margin-bottom: @spacing-one;
         }
@@ -457,7 +482,7 @@
         }
     }
 
-    .image{  
+    .image{
         border-left:1px solid black;
         overflow:hidden;
         background-color:black;
@@ -495,6 +520,10 @@
             font-size:0.8em;
         }
 
+        p {
+            display:inline;
+        }
+
         &.flushleft {
             padding-left: 0;
         }
@@ -508,7 +537,7 @@
 .load-more{
     a{
         .transition(background-color 0.2s ease);
-        text-indent:-2000px;            
+        text-indent:-2000px;
         display:block;
         background-color:@color-pale-grey;
         position:relative;
@@ -569,7 +598,7 @@
         .column(7, @grid-gutter-width);
         min-height:120px;
         border-left:1px solid fade(@color-divider, 50%);
-        
+
         &:before{
             content:"" !important;
             display:inline-block;
@@ -599,7 +628,7 @@
             width:132px;
         }
     }
-    
+
     .h7, .a2, .bc4 {
         margin:0;
     }
@@ -657,7 +686,7 @@
         border-top:1px solid @color-divider;
         padding-top:@grid-gutter-width/2;
     }
-    
+
     .load-more {
         border:0;
 
@@ -694,7 +723,10 @@
 /**
  *$One plus block
  */
-.one-plus {
+
+/* current research has 4 items on a line but only one at mobile and shouldn't scroll
+- so doubling up with a three-plus-no-scroll class here */
+.one-plus, .three-plus-no-scroll {
     ul{
         li {
             margin-bottom: @spacing-one;
@@ -729,7 +761,7 @@
  *$Five plus block + $Three plus block (on homepage)
  */
 
-.five-plus, .col9 .three-plus{
+.five-plus, .col9 .three-plus {
     li{
         .column(4);
         display:inline-block;
@@ -744,6 +776,18 @@
 
 .speakers p {
     .name();
+}
+
+/**
+ *$events middle column body text
+ */
+
+.events-middle-column-body-text {
+    margin-left: 0;
+    margin-top: @spacing-half;
+    .column(11);
+    padding-left:0;
+    padding-right:0;
 }
 
 /**
@@ -768,7 +812,7 @@
     .clearfix();
     background-color:darken(@color-pale-grey, 10%);
     position: relative;
-    
+
     .header{
         margin:0;
         border-bottom:1px solid white;
@@ -848,7 +892,7 @@
     div.bc3 p {
         display: inline;
     }
-    
+
 
     /* alternate version with bigger images */
     &.two-cols-image-big {
@@ -883,6 +927,15 @@
     margin:@grid-gutter-width 0;
     .col {
         .column(12, @grid-gutter-width, 12);
+    }
+    li {
+        -ms-word-break: break-all;
+        word-break: break-all;
+        /* Non standard for webkit */
+        word-break: break-word;
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
     }
 }
 
@@ -941,7 +994,7 @@
  */
 
 .button-bar{
-    .clearfix();  
+    .clearfix();
     li {
         position:relative;
     }
@@ -982,6 +1035,11 @@
             margin-bottom: 0;
         }
     }
+
+}
+/* Alternative for author field on review page */
+.meta-data.review {
+    border:0;
 }
 
 /**
@@ -990,7 +1048,6 @@
 
 .body-text,
 .body-text-style /* allows highlighted links etc without the column stuff */ {
-    
     .intro {
         margin-top: @spacing-one;
     }
@@ -1049,6 +1106,7 @@
         padding-top: @spacing-one;
         border-top: 1px solid @color-dark-grey;
         margin-top: @spacing-two;
+        clear: both;
     }
 
     h3 {
@@ -1064,6 +1122,23 @@
         line-height: @line-height-3;
         text-transform: none;
         font-weight: normal;
+    }
+
+    hr {
+        border-bottom: 1px solid @color-dark-grey;
+        border-top: none;
+        border-left: none;
+    }
+
+    /* different colour lines for middle-column body text */
+    &.middle-column-body-text {
+        hr {
+            border-bottom-color: @color-middle-column-lines;
+        }
+
+        h2 {
+            border-top-color: @color-middle-column-lines;
+        }
     }
 
 }
@@ -1086,31 +1161,19 @@
     .body-text-style p:first-child {
         margin-top: 0;
     }
-    
+
     h2 {
         font-weight: normal;
         margin-top: -1em;
     }
     .space {
-        margin-top: @spacing-two;
+        margin-top: @spacing-onepointfive;
     }
 
     .divider {
         border-bottom: 1px solid @color-medium-grey;
         max-width: 100%;
         margin: @spacing-one @grid-gutter-width;
-    }
-
-    .share-wrapper, .contact-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        margin-top: @spacing-one * -1; /* sit flush against divider */
-        border-right: 1px solid @color-medium-grey;
-        min-width: 75px;
-    }
-
-    .share, .add-to-contacts {
-        margin: 0 auto;
     }
 
     .dialogue {
@@ -1196,9 +1259,10 @@
 .filters{
     font-family:@font-family-benton;
     .row();
-  
+
     li{
         margin-bottom:1px;
+        padding:0;
     }
 
     label{
@@ -1246,7 +1310,7 @@
     .expanded label{
         background-color:@color-pink;
         color:white;
-    }      
+    }
 
     select.enhanced{
         /* this class added once select has been replicated as a list of text */
@@ -1290,7 +1354,7 @@
             .visuallyhidden();
         }
     }*/
-    
+
     input[type="submit"] {
         display:none;
     }
@@ -1312,21 +1376,6 @@
     &:first-child {
         padding-top: 4px;
     }
-    .share-wrapper, .download-wrapper {
-        .column(1.5);
-        padding-top: @spacing-one;
-        border-top: 1px solid @color-medium-grey;
-        min-width: 75px;
-        margin-bottom: @spacing-one;
-    }
-
-    .download-wrapper {
-        border-right: 1px solid @color-medium-grey;
-    }
-
-    .share, .download {
-        margin: 0 auto;
-    }
 
     .dialogue {
         bottom: @share-link-height + @spacing-one;
@@ -1347,6 +1396,9 @@
     .job-description.module {
         margin-top: 0;
     }
+    .button-bar {
+        margin: @spacing-one 0 @spacing-onepointfive 0;
+    }
 }
 
 /**
@@ -1354,11 +1406,11 @@
  */
 
 .bodytext-image {
-    margin-top: @spacing-two;
+    margin-top: 3px; /* close as possible to match line-height space above p */
     figcaption {
         display: block;
         width: 100%;
-        text-align: right;
+        text-align: left;
         margin-top: @spacing-half;
         margin-bottom: @spacing-one;
     }
@@ -1372,7 +1424,7 @@
  */
 
 .quotation {
-    border-top: 1px solid @color-medium-grey;
+    border-top: 1px solid @color-middle-column-lines;
     padding-top: @spacing-one;
     margin: 0;
     padding-right: @spacing-three;
@@ -1398,6 +1450,13 @@
     }
     h2,h3,p{
         margin:0;
+    }
+    .load-more{
+        display:none;
+        a{
+            height:126px;
+            width:126px;
+        }
     }
 }
 
@@ -1463,4 +1522,155 @@
     &.infinite{
         display:none;
     }
+}
+
+
+/**
+ * Forms
+ */
+
+form{
+    .spinner{
+        display: none;
+    }
+}
+form.loading{
+    position: relative;
+    .spinner{
+        display: block;
+        position: absolute;
+        bottom: 10px;
+        left: 190px;
+        background: url(/static/rca/images/bx_loader.gif) no-repeat;
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.body-text ul, .body-text-style ul {
+    padding: 0;
+    margin: 0;
+}
+.body-text form ul li:before, .body-text-style form ul li:before {
+    content: none;
+    margin-left: 0;
+}
+
+fieldset{
+    border:0;
+    border-bottom:1px solid @color-light-grey;
+    margin:0 0 @grid-gutter-width*2;
+    padding:0 0 @grid-gutter-width;
+}
+legend{
+    .h5;
+    padding:0 0 @grid-gutter-width;
+}
+
+label{
+    .a1;
+    display:block;
+    margin-bottom:@grid-gutter-width/2;
+}
+input, textarea, select{
+    width:100%;
+    border:0;
+    background-color:@color-pale-grey;
+    padding:@grid-gutter-width;
+    -webkit-appearance: none;
+    outline:none;
+}
+input[type=submit],input[type=reset],input[type=button],input[type=checkbox],input[type=radio]{
+    width:auto;
+}
+input[type=checkbox]{
+    -webkit-appearance: checkbox;
+}
+input[type=radio]{
+    -webkit-appearance: radio;
+}
+input[type=checkbox], input[type=radio]{
+    margin-right:@grid-gutter-width/2;
+}
+select{
+    .border-radius(0px);
+    z-index: 2;
+}
+.select{
+    background-color:@color-pale-grey;
+    padding-top: 4px;
+}
+.select:after{
+    .sprite-load(-53px, -1178px, 27px, 15px);
+    display:block;
+    content: ' ';
+    position: relative;
+    float:right;
+    margin: 0;
+    background-color:@color-pale-grey;
+    border:1em solid @color-pale-grey;
+    z-index: 1;
+}
+.selectInner{
+    padding: 12px 17px;
+}
+    .expirydatefield select{
+        width: 50px;
+    }
+    #id_cvc{
+        width: 75px;
+    }
+    select[data-stripe="exp-month"]{
+        padding: 16px 12px;
+    }
+    select[data-stripe="exp-year"]{
+        text-indent: 1px;
+    }
+
+input[type=submit],input[type=reset],input[type=button], button, .button{
+    .t0;
+    background-color:@color-highlight-blue;
+    color:@color-white;
+    padding:@grid-gutter-width @grid-gutter-width;
+    display:inline-block;
+
+    &:hover{
+        color:@color-white;
+        background-color:@color-pink;
+    }
+}
+form li{
+    padding-bottom:@grid-gutter-width;
+}
+form li.error{
+    input,textarea,select{
+        border:1px solid @color-pink;
+    }
+
+}
+form .help{
+    .a4;
+    margin:@grid-gutter-width/2 0 0 0;
+
+    + input,
+    + label{
+        margin-top:@grid-gutter-width/2;
+    }
+}
+form .divider{
+    margin-top:@grid-gutter-width;
+    padding-top:@grid-gutter-width;
+    border-top:1px solid @color-light-grey;
+}
+form .error-message{
+    color:@color-pink;
+    margin:@grid-gutter-width/2 0 0 0 ;
+}
+form {
+    .messages.error h2, .errorlist, .errorlist li, .error{
+        color:@color-pink;
+    }
+}
+form .heading{
+    .a0;
 }

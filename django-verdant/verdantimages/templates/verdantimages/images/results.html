@@ -40,4 +40,10 @@
             </li>
         </ul>
     </div>
+{% else %}
+    {% if is_searching %}
+        <p>Sorry, no images matched "{{ search_query }}"</p>
+    {% else %}
+        <p>You've not uploaded any images. Why not <a href="{% url 'verdantimages_add_image' %}">add one now</a>?</p>
+    {% endif %}
 {% endif %}

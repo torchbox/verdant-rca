@@ -32,6 +32,8 @@ apt-get install -y libjpeg62-dev zlib1g-dev libfreetype6-dev liblcms1-dev
 # Git (we'd rather avoid people keeping credentials for git commits in the repo, but sometimes we need it for pip requirements that aren't in PyPI)
 apt-get install -y git
 
+apt-get install -y redis-server
+
 # Postgresql
 if ! command -v psql; then
     apt-get install -y postgresql-$PGSQL_VERSION libpq-dev
@@ -68,6 +70,15 @@ if ! command -v lessc; then
 fi
 
 # ---
+
+# ElasticSearch
+if ! command -v elasticsearch; then
+    apt-get install -y openjdk-6-jre-headless
+    echo "Downloading ElasticSearch..."
+    wget -q https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.5.deb
+    dpkg -i elasticsearch-0.90.5.deb
+    service elasticsearch start
+fi
 
 # postgresql setup for project
 createdb -Upostgres $DB_NAME

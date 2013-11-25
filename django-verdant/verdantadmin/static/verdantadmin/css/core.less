@@ -1,4 +1,4 @@
-/* 
+/*
 min z-index: 1;
 max z-index: 5;
 */
@@ -24,24 +24,34 @@ body{
 
 h1,h2,h3,h4,h5,h6{
     font-weight:normal;
+    -webkit-font-smoothing: auto;
 }
 
 h1{
     line-height:1.3em;
-    font-size:1.6em;
+    font-size:1.5em;
     text-transform:uppercase;
     color:@color-grey;
-    font-weight:300;
+    font-weight:700;
 
     span{
-        font-weight:700;
+        font-weight:400;
         color:@color-grey-dark;
+    }
+
+    .homepage &{
+        text-transform:none;
     }
 }
 h2{
-    font-size:1.4em;
+    text-transform:uppercase;
+    font-size:1.3em;
     font-family:Open Sans;
     font-weight:300;
+
+    .page-explorer &{
+        text-transform:none;
+    }
 }
 a{
     color:@color-link;
@@ -84,7 +94,7 @@ img{
     float: left;
     height:100%;
     min-height:800px;
-}  
+}
     .logo{
         display:block;
         margin:2em auto;
@@ -94,9 +104,9 @@ img{
         opacity:0.4;
 
         em{
-            font-family: verdant; 
+            font-family: verdant;
             font-style: normal;
-            font-size:7.7em; 
+            font-size:7.7em;
             line-height:1em;
         }
         span{
@@ -120,7 +130,7 @@ img{
             font-size:30px;
             color:white;
             line-height:40px;
-        }       
+        }
     }
 
     .nav-main{
@@ -138,13 +148,14 @@ img{
 
         li{
             border-bottom:1px solid rgba(200,200,200,0.1);
-        
+
             &.selected{
                 background-color:@color-grey-dark;
             }
         }
 
-        a {    
+        a {
+            -webkit-font-smoothing: auto;
             text-decoration:none;
             text-transform:uppercase;
             display: block;
@@ -153,8 +164,8 @@ img{
             padding: 1em 0.8em;
             position:relative;
             font-size:1em;
-            font-weight:600;
-           
+            font-weight:300;
+
             &:hover{
                 opacity:1;
             }
@@ -223,9 +234,10 @@ header{
 
     /* For case where content below header should merge with it */
     &.merged{
-        border-bottom:0; 
         margin-bottom:0;
-        padding-bottom:6em;    
+    }
+    &.tab-merged{
+        border:0;
     }
 }
 
@@ -243,6 +255,7 @@ footer{
     height:3em;
     width:90%;
     margin:0 5%;
+    color:white;
 
     ul{
         .unlist();
@@ -253,7 +266,21 @@ footer{
 
     .actions{
         width:250px;
-    }   
+        margin-right:@grid-gutter-width/2;
+    }
+
+    .meta{
+        float:right;
+        text-align:right;
+        padding-right:@grid-gutter-width/2;
+        line-height:3.5em;
+        font-size:0.85em;
+
+        span{
+            margin-right:@grid-gutter-width;
+        }
+        
+    }
 }
 
 /* Z-indexes */
@@ -318,7 +345,7 @@ a{
     .col12{
         .column(12);
     }
-    
+
     body{
         margin-left:@menu-width;
     }
@@ -335,7 +362,7 @@ a{
         height:100%;
         width:@menu-width;
         margin-left:-@menu-width;
-    } 
+    }
 
     .inner{ /* inner only serves a purpose to position content */
         height:100%;
@@ -345,6 +372,11 @@ a{
 
     #nav-toggle{
         display:none;
+    }
+
+    .nav-main .footer{
+        position:absolute;
+        bottom:0;
     }
 
     .explorer {
@@ -358,9 +390,9 @@ a{
     .dl-menu {
         position: absolute;
     }
-    
+
     /* UN-set the transformations used on mobile */
-    body.nav-open .nav-wrapper, 
+    body.nav-open .nav-wrapper,
     body.nav-open .content-wrapper{
         transform: none;
         -webkit-transform: none;
@@ -381,6 +413,21 @@ a{
     footer{
         width:80%;
         margin-left:40px;
+    }
+}
+
+.media-placeholder {
+    width: 600px;
+    height: 400px;
+    background-color: #CCC;
+    padding: 5px;
+    h3, p {
+        margin: 0;
+    }
+    img {
+        max-width: 350px;
+        max-height: 350px;
+        margin: 20px;
     }
 }
 

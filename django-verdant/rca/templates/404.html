@@ -1,0 +1,16 @@
+{% extends "rca/base.html" %}
+
+{% block title %}Page not found{% endblock %}
+
+{% block content %}
+    <h1 class="h1">Page not found</h1>
+
+    <h2>Sorry, this page could not be found.</h2>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showJobs="true" %}
+{% endblock %}

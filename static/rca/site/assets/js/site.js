@@ -1,9 +1,12 @@
+/* mini plugin to allow reversing an array see http://stackoverflow.com/questions/1394020/jquery-each-backwards */
+jQuery.fn.reverse = [].reverse;
+
 var breakpoints = {
     mobile: "screen and (max-width:768px)",
     desktopSmall: "screen and (min-width:768px)",
     desktopRegular: "screen and (min-width:1024px)",
     desktopLarge: "screen and (min-width:1280px)"
-}
+};
 
 var expansionAnimationSpeed = 300;
 
@@ -19,9 +22,9 @@ function showHide(clickElement, classElement){
 
 /* show hide the footer - needs its own function because of being idiosyncratic */
 function showHideFooter() {
-    $('.footer-expand').click(function(eventObject){
-        $(this).parent().toggleClass('expanded');
-        $(this).prev().slideToggle(expansionAnimationSpeed);
+    $('footer .menu .main').click(function(eventObject){
+        $(this).toggleClass('expanded');
+        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
     });
 }
 
@@ -64,12 +67,31 @@ on typing text */
 function showSearchSubmit() {
     $('form.search input[type="submit"]').hide();
     $('form.search input[type="text"]').focus(function() {
-       $('form.search input[type="submit"]').show(); 
+       $('form.search input[type="submit"]').show();
     });
-    $('form.search input[type="text"]').focusout(function() {
-       $('form.search input[type="submit"]').hide(); 
+    $(document).click(function() {
+        $('form.search input[type="submit"]').hide();
+    });
+    $('form.search input[type="text"]').click(function(e){
+        e.stopPropagation();
     });
 }
+
+/* search autocomplete */
+// function showSearchAutocomplete() {
+//     $("input#search_box").autocomplete({
+//         source: function(request, response) {
+//             $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+//                 response(data);
+//             })
+//         },
+//         select: function( event, ui ) {
+//             window.location.href = ui.item.url;
+//         }
+//     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+//         return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a><span>" + item.type + "</span> " + item.label + "</a>" ).appendTo( ul );
+//     };
+// }
 
 /*google maps for contact page */
 function initializeMaps() {
@@ -78,7 +100,7 @@ function initializeMaps() {
         center: new google.maps.LatLng(51.501144, -0.179285),
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    };
     var map = new google.maps.Map(mapCanvas, mapOptions);
 
     var mapCanvas2 = document.getElementById('map_canvas_battersea');
@@ -86,7 +108,7 @@ function initializeMaps() {
         center: new google.maps.LatLng(51.479167, -0.170076),
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP
-    }
+    };
     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
 }
 
@@ -102,11 +124,11 @@ function applyCarousel(carouselSelector){
         $this.parent().css('max-height', calcHeight());
         $('li', $this).css('max-height', calcHeight());
         $('.portrait img', $this).css('max-height', calcHeight());
-    })
+    });
 
     var carousel = $this.bxSlider({
         adaptiveHeight: true,
-        pager: function(){return $(this).hasClass('paginated')},
+        pager: function(){ return $(this).hasClass('paginated'); },
         onSliderLoad: function(){
             $this.parent().css('max-height', calcHeight());
             $('li', $this).css('max-height', calcHeight());
@@ -116,7 +138,7 @@ function applyCarousel(carouselSelector){
             // find vimeos in old slide and stop them if playing
             post($('.videoembed.vimeo iframe'), 'pause');
         }
-    }); 
+    });
 
     return carousel;
 }
@@ -126,25 +148,26 @@ function post(frame, action, value) {
     $(frame).each(function(){
         var url = $(this).attr('src').split('?')[0];
         var data = { method: action };
-        
+
         if (value) {
             data.value = value;
         }
-        
+
         $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
-    })
+    });
 }
 
 $(function(){
     showSearchSubmit();
+    // showSearchAutocomplete();
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul');
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHide('.showmenu', 'nav');
     showHide('.showsearch', 'form.search');
     showHideDialogue();
-    showHideSlide('.profile .continue', '.profile .remainder', '.profile .remainder');
-    
+    showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
+    showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -154,10 +177,6 @@ $(function(){
         }
     });
 
-    /* start any bxslider carousels not found within a tab  */
-    $('.carousel:not(.tab-pane .carousel)').each(function(){
-        applyCarousel($(this));
-    })
 
     /* tabs */
     //apply active class in correct place and add tab links
@@ -174,8 +193,22 @@ $(function(){
         $(this).attr('href', "#tab" + (index+1));
     });
 
+    /* start any bxslider carousels not found within a tab  */
+    $('.carousel:not(.tab-pane .carousel)').each(function(){
+        applyCarousel($(this));
+    });
+
+    /* check if there's a carousel in the first tab and start it if so */
+    /* also find the associated nav element and set carousel=true so it only executes once */
+    $('.tab-content #tab1 .carousel').each(function(){
+        applyCarousel($(this));
+        $(this).closest('.tab-content').siblings('.tab-nav').find('a[href="#tab1"]').each(function(){
+            $(this).data('carousel', true);
+        });
+    });
+
     $('.tab-nav a, .tab-content .header a').click(function (e) {
-        e.preventDefault()
+        e.preventDefault();
         $(this).tab('show');
 
         /* ensure carousels within tabs only execute once, on first viewing */
@@ -183,7 +216,7 @@ $(function(){
             applyCarousel($('.carousel', $($(this).attr('href'))));
             $(this).data('carousel', true);
         }
-    });   
+    });
 
     /* Vimeo player API */
     $('.videoembed.vimeo').each(function(){
@@ -201,17 +234,17 @@ $(function(){
         // Handle messages received from the player
         function onMessageReceived(e) {
             var data = JSON.parse(e.data);
-            
+
             switch (data.event) {
                 case 'ready':
                     post(f, 'addEventListener', 'pause');
                     post(f, 'addEventListener', 'finish');
                     break;
-                                       
+
                 case 'pause':
                     //nothing
                     break;
-                   
+
                 case 'finish':
                     //nothing
                     break;
@@ -220,43 +253,94 @@ $(function(){
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
+             post(f, 'play');
+             $this.toggleClass('playing');
+         });
+
+        //also start playback if poster image is clicked anywhere
+        $('.poster').click(function(){
             post(f, 'play');
             $this.toggleClass('playing');
         });
     });
+
+    /* Tweet blocks */
+    $('.twitter-feed-items').each(function(){
+        var username = $(this).data('twitter-feed');
+        $(this).tweet({
+            join_text: 'auto',
+            username: username,
+            avatar_size: 32,
+            auto_join_text_default: 'from @' + username,
+            loading_text: 'Checking for new tweets...',
+            count: 3
+        });
+    });
+
+    /* Packery tweet blocks (behaves as several individual blocks) */
+    $('.packery .tweet').each(function(){
+        if(!window.packerytweets){
+            var username = $(this).data('twitter-feed');
+            var count = $(this).data('twitter-count');
+
+            var tmp = $('<div></div>');
+            tmp.tweet({
+                join_text: 'auto',
+                username: username,
+                avatar_size: 32,
+                auto_join_text_default: 'from @' + username,
+                loading_text: 'Checking for new tweets...',
+                count: count
+            })
+
+            window.packerytweets = tmp;
+        }
+    });
+    $(window.packerytweets).on('loaded', function(){
+        var arr = jQuery.makeArray($('li', window.packerytweets));
+        $('.packery .tweet .inner .content').each(function(){
+            $(this).html($(arr.shift()).html());
+        });
+    })
 
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
         setup: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
+        },
         on: function(){
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
-        }, 
+            $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertAfter('aside .related'); //events and ads move to bottom of sidebar in mobile
+        },
         off: function(){
             $('footer .social-wrapper').insertBefore('footer .smallprint'); //move social icons for mobile
             $('footer .smallprint ul').insertAfter('span.address'); //move smallprint for mobile
+            $('aside').insertAfter('.page-content'); //move sidebar for mobile
+            $('aside .events-ads-wrapper').insertBefore('aside .related'); //events and ads moving to top of sidebar for desktop
         }
     });
 
     // Things definitely only for desktop
     Harvey.attach(breakpoints.desktopSmall, {
-        setup: function(){}, 
+        setup: function(){},
         on: function(){
             /* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
             /* Packery */
             $('.packery').imagesLoaded( function() {
-                var packery = $('.packery').packery({
+                window.packery = $('.packery').packery({
                     itemSelector: '.item',
                     stamp: ".stamp"
                 });
             });
-        }, 
+        },
         off: function(){
-            $('.packery').destroy();
+             $('.packery').packery('destroy');
         }
     });
 
@@ -269,7 +353,7 @@ $(function(){
                 stamp: ".stamp"
             });
         });
-    })
+    });
 
     /* x-plus functionality */
 
@@ -281,8 +365,9 @@ $(function(){
         var itemContainer = $('.item-container', $this);
         var ul = $('> ul', itemContainer);
         var items = $('> li', ul);
-        var step = 100
+        var step = 100;
         var hiddenClasses = 'hidden fade-in-before';
+        var contractedHeight = items.first().height();
 
         // split list at the 'load-more-target' item.
         var loadmoreTargetIndex = items.index(loadmoreTarget);
@@ -291,7 +376,7 @@ $(function(){
 
         var prepareNewItems = function(items){
             items.addClass(hiddenClasses);
-        }
+        };
 
         var showNewItems = function(){
             itemContainer.css('height', itemContainer.height());
@@ -304,17 +389,29 @@ $(function(){
             var time = 0;
             newItems.each(function(index){
                 var $item = $(this);
-                setTimeout( function(){ 
+                setTimeout( function(){
                     $item.addClass('fade-in-after');
                 }, time);
                 time += step;
             });
-        }
+        };
 
         var hideNewItems = function(){
             $this.removeClass('expanded');
-            itemContainer.removeAttr('style');
-            newItems.removeClass('fade-in-after').addClass(hiddenClasses);
+            itemContainer.animate({height:contractedHeight}, expansionAnimationSpeed, function(){
+                itemContainer.removeAttr('style');
+                newItems.addClass('hidden');
+            });
+
+            // Fade out each item one by one
+            var time = 0;
+            newItems.reverse().each(function(index){
+                var $item = $(this);
+                setTimeout( function(){
+                    $item.removeClass('fade-in-after').addClass('fade-in-before');
+                }, time);
+                time += step;
+            });
         }
 
         // prepare the items already in the page (if non-inifinite-scroll)
@@ -322,7 +419,7 @@ $(function(){
 
         loadmore.click(function(e){
             e.preventDefault();
-            
+
             if(paginationContainer && $(paginationContainer).length){
                 var nextLink = $('.next a', $(paginationContainer));
                 var nextLinkUrl = nextLink.attr('href');
@@ -332,16 +429,19 @@ $(function(){
                     newItems = $('.x-plus .item-container > ul > li:not(.load-more)', nextPage);
                     prepareNewItems(newItems);
                     loadmore.before(newItems);
-                    
+                    if(loadmore.hasClass('gallery-load-more')){
+                        alignGallery();
+                    }
+
                     // get next pagination link
                     if($(paginationContainer + ' .next a', nextPage).length){
                         nextLink.attr('href', $(paginationContainer + ' .next a', nextPage).attr('href'));
                     }else{
                         loadmore.remove();
                     }
-
                     showNewItems();
-                });                
+                    
+                });
             }else if(!$this.hasClass('expanded')){
                 showNewItems();
                 $this.addClass('expanded');
@@ -352,45 +452,53 @@ $(function(){
             return false;
         });
     });
-    
+
     /* Alters a UL of gallery items, so that each row's worth of iems are within their own UL, to avoid alignment issues */
-    $('.gallery').each(function(){
-        var maxWidth = $(this).width();
-        var totalWidth = 0;
-        var rowCounter = 0;
-        var rowArray = [];
-        var items = $('.item', $(this));
 
-        function addToArray(elem){
-            totalWidth += elem.width();
-            if(typeof rowArray[rowCounter] == "undefined"){
-                rowArray[rowCounter] = new Array();
+    var alignGallery = function(){
+        $('.gallery').each(function(){
+            var maxWidth = $(this).width();
+            var totalWidth = 0;
+            var rowCounter = 0;
+            var rowArray = [];
+            var items = $('.item', $(this));
+
+            function addToArray(elem){
+                totalWidth += elem.width();
+                if(typeof rowArray[rowCounter] == "undefined"){
+                    rowArray[rowCounter] = new Array();
+                }
+                rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             }
-            rowArray[rowCounter].push(elem.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */   
-        }
 
-        items.each(function(){
-            if(totalWidth + $(this).width() >= maxWidth){
-                rowCounter ++;
-                totalWidth = 0;
+            items.each(function(){
+                if(totalWidth + $(this).width() >= maxWidth){
+                    rowCounter ++;
+                    totalWidth = 0;
 
-                addToArray($(this));
-            }else{
-                addToArray($(this));
+                    addToArray($(this));
+                }else{
+                    addToArray($(this));
+                }
+            });
+
+
+            // Remove any existing ul.newrow elements before rewrapping
+            // Means we don't get lots of nested uls when clicking the load more button
+            items.parent().each(function(){
+                if($(this).prop('tagName') == 'UL' && $(this).hasClass('newrow')){
+                    $(this).replaceWith(function(){
+                        return $(this).contents();
+                    });
+                }
+            });
+        
+            for(i = 0; i < rowArray.length; i++){
+                $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
             }
         });
-        
-        // Change items parent container to a div, to maintain validity
-        if(items.parent().prop('tagName') == 'UL'){
-            items.parent().replaceWith(function(){
-                return $("<div />").append($(this).contents());
-            });
-        }
-
-        for(i = 0; i < rowArray.length; i++){
-            $(rowArray[i]).wrapAll('<ul class="newrow"></ul>');
-        }
-    })
+    };
+    alignGallery();
 
     /* Search filters */
     $('.filters').each(function(){
@@ -417,7 +525,7 @@ $(function(){
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
             options.each(function(){
                 newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ ($(this).prop('selected') ? "selected":"") +'">' + $(this).html() + '</li>';
-            })
+            });
 
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
@@ -449,9 +557,14 @@ $(function(){
             if(!$(e.target).parent().hasClass('filter')){
                 $('label', $self).parent().removeClass('expanded');
             }
-        })
+        });
     });
- 
+
     /* Google maps for contact page */
     //initializeMaps(); //leaving commented out for now - needs to be specific to contact page
+
+    // /* Apply custom styles to selects */
+    // $('select:not(.filters select)').customSelect({
+    //     customClass: "select"
+    // });
 });

@@ -1,7 +1,9 @@
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from taggit.models import Tag
 import json
 
+@login_required
 def autocomplete(request):
     term = request.GET.get('term', None)
     if term:

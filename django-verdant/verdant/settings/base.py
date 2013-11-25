@@ -12,7 +12,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Verdant RCA errors', 'verdant-rca-errors@torchbox.com'),
 )
 
 MANAGERS = ADMINS
@@ -27,6 +27,8 @@ DATABASES = {
         'PORT': '',  # Set to empty string for default.
     }
 }
+
+CONN_MAX_AGE = 600  # number of seconds database connections should persist for
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -115,6 +117,8 @@ MIDDLEWARE_CLASSES = (
 
     'core.middleware.SiteMiddleware',
 
+    'verdantredirects.middleware.RedirectMiddleware',
+
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
@@ -152,6 +156,9 @@ INSTALLED_APPS = (
     'django_embedly',
     'cluster',
     'gunicorn',
+    'djcelery',
+    'kombu.transport.django',
+    'twitter',  # the app used to proxy the Twitter REST API
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -160,10 +167,16 @@ INSTALLED_APPS = (
     'core',
     'verdantadmin',
     'verdantimages',
+    'verdantmedia',
     'verdantdocs',
     'verdantsnippets',
+    'verdantsearch',
+    'verdantusers',
+    'verdantredirects',
 
+    'donations',
     'rca',
+    'rca_signage',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
@@ -191,8 +204,13 @@ DEBUG_TOOLBAR_PANELS = (
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
     ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/less', 'lessc {infile}'),
+    ('text/less', 'lesspress.LessCompiler'),
 )
+COMPRESS_OFFLINE = True
+
+# Auth settings
+LOGIN_URL = 'django.contrib.auth.views.login'
+LOGIN_REDIRECT_URL = 'verdantadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -223,7 +241,40 @@ LOGGING = {
     }
 }
 
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': '127.0.0.1:6379:1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+        }
+    }
+}
+
 # VERDANT SETTINGS
 
 # Override the Image class used by verdantimages with a custom one
 VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+
+# Override the search results template for verdantsearch
+VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
+
+VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
+
+VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
+
+# CELERY SETTINGS
+
+# Use separate queues on each host if uploads should be processed by celery
+# import socket
+# CELERY_HOSTNAME = socket.gethostname()
+
+BROKER_URL = 'redis://'
+
+CELERY_SEND_TASK_ERROR_EMAILS = True
+
+CELERYD_LOG_COLOR = False
+
+# The scheduler used by this app needs to be defined in the settings.
+# It also contains some additional configuration options, some need to be set in the local settings.
+from twitter.settings import *

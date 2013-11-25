@@ -4,26 +4,37 @@ ul.listing{
 }
 
 .listing{
+    margin-bottom:2em;
     ul&{
         border-top:1px dashed @color-input-border;
         margin-bottom:2em;
     }
-    table&{
-        width:100%;
+    ul{
+        .unlist();
     }
-
     > li{
         padding:1em 0;
         border-bottom:1px dashed @color-input-border;
     }
+
+    h3{
+        margin:0;
+        font-size:0.95em;
+    }
+
+    table&{
+        width:100%;
+    }
    
     td, th{
-        padding-top:1.5em;
-        padding-bottom:1.5em;
+        padding:1.5em 1em;
+    }
+
+    &.small td, th{
+        padding:1em 0.75em;
     }
 
     thead{
-        background-color:@color-thead-bg;
         color: @color-grey;
         text-transform:uppercase;
         border-bottom:1px solid @color-input-border;
@@ -48,37 +59,51 @@ ul.listing{
                 right:0;
             }
         }
+
+        .dropdown{
+            padding:0;
+        }
+        .dropdown-toggle{
+            display:block;
+            padding:1.5em;
+        }
         .dropdown ul{
             .transition(none);            
         }
-        .dropdown-toggle{
-           
-        }
-        .dropdown:hover{
+        .dropdown:hover,
+        .dropdown.open{
             .box-shadow(0px 0px 3px 0 rgba(0,0,0,0.2));
             background-color:white;
-            padding-top:1.5em;
-            padding-bottom:1.5em;
-            margin-top:-1.5em;
-            margin-bottom:-1.5em;
             margin-left:-@grid-gutter-width * 2;
-            padding-left:@grid-gutter-width * 2;
         }
+    }
+    &.full-width thead{
+        background-color:@color-thead-bg;
+    }
+    &.full-width tbody tr:hover,
+    &.chooser tbody tr:hover{
+        background-color:#FDFDFD;
     }
 
     tbody tr{
         border-bottom:1px dashed @color-input-border;
-        /*&:first-child{
+        &:first-child{
             border-top:1px dashed @color-input-border;
-        }*/
+        }
+        cursor:pointer;
     }
-    tbody tr.divider,
-    tbody tr.index{
-        border:0;
+
+    &.small tbody tr{
+        font-size:1em;
     }
     
+    tbody td{
+        .table-column(1);
+    }
+
+    /* specific columns */
     .bulk{
-        .column(1);
+        .table-column(1);
         padding-right:0;
 
         label{
@@ -94,12 +119,13 @@ ul.listing{
             margin-top:3px;
             
         }
+       
     }
-    
     .title{
-        .column(4);
+        .table-column(5);
 
         h2{
+            text-transform:none;
             margin:0;
             font-size:1.1em;
             font-weight:700;
@@ -117,25 +143,18 @@ ul.listing{
         }
     }
 
+    .parent{
+        .table-column(2);
+    }
     .type{
-        .column(2);
+        .table-column(1);
     }
     .status{
-        .column(2);
-    }
-
-    ul{
-        .unlist();
-    }
-
-    h3{
-        margin:0;
-        font-size:0.95em;
+        .table-column(1);
     }
 
     .actions{
         margin-top:0.5em;
-        visibility: hidden;
         text-transform:uppercase;
         font-size:0.85em;
 
@@ -155,15 +174,18 @@ ul.listing{
         }
     }
 
-    td:hover .actions{
-        visibility:visible;
+    .moderate-actions form{
+        float:left;
+        margin:0 1em 1em 0;
     }
+
+   
     
     .children,
     .no-children{
+        width:5%;
+        padding:0 !important;
         .transition(background-color 0.2s ease);
-        width:8%;
-        padding:0;
         border-left:1px dashed @color-input-border;
         &:hover{
             background-color:@color-header-bg;
@@ -176,10 +198,16 @@ ul.listing{
         display:block;
         padding:2em 0;       
     }
-    
-    .children a:before{
-        font-size:50px
+
+    .children a{
+        display:block;
+        &:before{
+            font-size:50px
+        }
     }
+    &.small .children a:before{
+        font-size:30px;
+    }    
 
     td.children:hover{
         background-color:@color-teal;
@@ -188,27 +216,14 @@ ul.listing{
             color:white;
         }
     }
-    .children{
-        border-left:1px dashed @color-input-border;
-        a{
-            display:block;
-        }
-    }
 
     table .no-results-message{
         .push-padding(@grid-content-indent);
     }
-    table& .divider{
-        text-transform:uppercase;
-        font-size:0.8em;
-        background-color:lighten(@color-grey-lighter, 5%);
-        td{
-           .push-padding(@grid-content-indent);
-           padding-top:0.5em;
-           padding-bottom:0.5em;
-        }
-    } 
 
+    .inactive h2{
+        opacity:0.5;
+    }
 }
 
 
@@ -254,7 +269,6 @@ ul.listing{
                 border-width:1px 1px 1px 0px;               
 
                 .image{
-                    
                     text-align:center;
                     height:180px;
                    
@@ -274,7 +288,7 @@ ul.listing{
                 }
 
                 &:hover{
-                    background-color:@color-header-bg;
+                    background-color:#FDFDFD;
 
                     img{
                         border-color:@color-teal;
@@ -285,7 +299,13 @@ ul.listing{
                 color:inherit;
             }
             
-        }   
+        } 
+        .actions{
+           visibility: hidden;
+        }
+        td:hover .actions{
+            visibility:visible;
+        }
         .no-children {
             border-color:transparent;
         }
@@ -295,22 +315,15 @@ ul.listing{
         }
         .no-children:hover{
             border-color:@color-input-border;
-            a{
-                opacity:1;
-            }
+            a{opacity:1;}
         }
-        .index .no-children{
-            border-left:1px dashed @color-input-border;
-            a{
-                opacity:1;
-            }
-        }
-        
+    }
+    table.listing.full-width td:first-child,
+    table.listing.full-width th:first-child{
+        .push-padding(@grid-content-indent);
     }
 }
 
 @media screen and (min-width: @breakpoint-desktop-small){
-    .listing .bulk{
-        .push-padding(@grid-content-indent);
-    }
+   
 }

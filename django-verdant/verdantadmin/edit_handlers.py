@@ -1,16 +1,23 @@
 from django.template.loader import render_to_string
+from django.template.defaultfilters import addslashes
 from django.utils.safestring import mark_safe
 from django import forms
 from django.db import models
-from django.forms.models import modelform_factory, inlineformset_factory, ModelForm, ModelFormMetaclass
+from django.forms.models import fields_for_model
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured, ValidationError
+from django.core.urlresolvers import reverse
 
 import copy
 
 from core.models import Page
 from core.util import camelcase_to_underscore
 from core.fields import RichTextArea
+from cluster.forms import ClusterForm, ClusterFormMetaclass
+from taggit.forms import TagWidget
+
+import re
+import datetime
 
 
 class FriendlyDateInput(forms.DateInput):
@@ -25,14 +32,68 @@ class FriendlyDateInput(forms.DateInput):
 
         super(FriendlyDateInput, self).__init__(attrs=default_attrs, format='%d %b %Y')
 
+
+class FriendlyTimeInput(forms.TimeInput):
+    """
+    A custom TimeInput widget that formats dates as "5.30pm"
+    and adds class="friendly_time" to be picked up by jquery timepicker.
+    """
+    def __init__(self, attrs=None):
+        default_attrs = {'class': 'friendly_time'}
+        if attrs:
+            default_attrs.update(attrs)
+
+        super(FriendlyTimeInput, self).__init__(attrs=default_attrs, format='%I.%M%p')
+
+
+class FriendlyTimeField(forms.CharField):
+    def to_python(self, time_string):
+        # Check if the string is blank
+        if not time_string:
+            return None
+
+        # Look for time in the string
+        expr = re.compile("^(?P<hour>\d+)(?:(?:.|:)(?P<minute>\d+))?(?P<am_pm>am|pm)")
+        match = expr.match(time_string.lower())
+        if match:
+            # Pull out values from string
+            hour_string, minute_string, am_pm = match.groups()
+
+            # Convert hours and minutes to integers
+            hour = int(hour_string)
+            if minute_string:
+                minute = int(minute_string)
+            else:
+                minute = 0
+
+            # Create python time
+            if am_pm == "pm" and hour < 12:
+                hour += 12
+
+            if am_pm == "am" and hour >= 12:
+                hour -= 12
+
+            return datetime.time(hour=hour, minute=minute)
+        else:
+            raise ValidationError("Please type a valid time")
+
+
 FORM_FIELD_OVERRIDES = {
     models.DateField: {'widget': FriendlyDateInput},
+    models.TimeField: {'widget': FriendlyTimeInput, 'form_class': FriendlyTimeField},
 }
 
 WIDGET_JS = {
     FriendlyDateInput: (lambda id: "initDateChooser(fixPrefix('%s'));" % id),
+    FriendlyTimeInput: (lambda id: "initTimeChooser(fixPrefix('%s'));" % id),
     RichTextArea: (lambda id: "makeRichTextEditable(fixPrefix('%s'));" % id),
+    TagWidget: (
+        lambda id: "initTagField(fixPrefix('%s'), '%s');" % (
+            id, addslashes(reverse('verdantadmin_tag_autocomplete'))
+        )
+    ),
 }
+
 
 # Callback to allow us to override the default form fields provided for each model field.
 def formfield_for_dbfield(db_field, **kwargs):
@@ -48,13 +109,19 @@ def formfield_for_dbfield(db_field, **kwargs):
     # For any other type of field, just call its formfield() method.
     return db_field.formfield(**kwargs)
 
-class VerdantAdminModelFormMetaclass(ModelFormMetaclass):
+
+class VerdantAdminModelFormMetaclass(ClusterFormMetaclass):
     # Override the behaviour of the regular ModelForm metaclass -
     # which handles the translation of model fields to form fields -
     # to use our own formfield_for_dbfield function to do that translation.
     # This is done by sneaking a formfield_callback property into the class
     # being defined (unless the class already provides a formfield_callback
     # of its own).
+
+    # while we're at it, we'll also set extra_form_count to 0, as we're creating
+    # extra forms in JS
+    extra_form_count = 0
+
     def __new__(cls, name, bases, attrs):
         if 'formfield_callback' not in attrs or attrs['formfield_callback'] is None:
             attrs['formfield_callback'] = formfield_for_dbfield
@@ -62,28 +129,61 @@ class VerdantAdminModelFormMetaclass(ModelFormMetaclass):
         new_class = super(VerdantAdminModelFormMetaclass, cls).__new__(cls, name, bases, attrs)
         return new_class
 
-VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', (ModelForm,), {})
+VerdantAdminModelForm = VerdantAdminModelFormMetaclass('VerdantAdminModelForm', (ClusterForm,), {})
 
 # Now, any model forms built off VerdantAdminModelForm instead of ModelForm should pick up
 # the nice form fields defined in FORM_FIELD_OVERRIDES.
 
 
-def get_form_for_model(model, **kwargs):
+def get_form_for_model(model, fields=None, exclude=None, formsets=None, exclude_formsets=None,
+    widgets=None):
+
     # django's modelform_factory with a bit of custom behaviour
     # (dealing with Treebeard's tree-related fields that really should have
     # been editable=False)
+    attrs = {'model': model}
+
+    if fields is not None:
+        attrs['fields'] = fields
+
+    if exclude is not None:
+        attrs['exclude'] = exclude
     if issubclass(model, Page):
-        kwargs['exclude'] = kwargs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
+        attrs['exclude'] = attrs.get('exclude', []) + ['content_type', 'path', 'depth', 'numchild']
 
-    kwargs['form'] = VerdantAdminModelForm
+    if widgets is not None:
+        attrs['widgets'] = widgets
 
-    return modelform_factory(model, **kwargs)
+    if formsets is not None:
+        attrs['formsets'] = formsets
+
+    if exclude_formsets is not None:
+        attrs['exclude_formsets'] = exclude_formsets
+
+    # Give this new form class a reasonable name.
+    class_name = model.__name__ + str('Form')
+    form_class_attrs = {
+        'Meta': type('Meta', (object,), attrs)
+    }
+
+    return VerdantAdminModelFormMetaclass(class_name, (VerdantAdminModelForm,), form_class_attrs)
 
 
-def extract_panel_definitions_from_form_class(form_class):
+def extract_panel_definitions_from_model_class(model, exclude=None):
+    if hasattr(model, 'panels'):
+        return model.panels
+
     panels = []
 
-    for field_name, field in form_class.base_fields.items():
+    _exclude = []
+    if exclude:
+        _exclude.extend(exclude)
+    if issubclass(model, Page):
+        _exclude = ['content_type', 'path', 'depth', 'numchild']
+
+    fields = fields_for_model(model, exclude=_exclude, formfield_callback=formfield_for_dbfield)
+
+    for field_name, field in fields.items():
         try:
             panel_class = field.widget.get_panel()
         except AttributeError:
@@ -107,16 +207,23 @@ class EditHandler(object):
     def widget_overrides(cls):
         return {}
 
+    # return list of formset names that this EditHandler requires to be present
+    # as children of the ClusterForm
+    @classmethod
+    def required_formsets(cls):
+        return []
+
     # the top-level edit handler is responsible for providing a form class that can produce forms
     # acceptable to the edit handler
     _form_class = None
     @classmethod
     def get_form_class(cls, model):
         if cls._form_class is None:
-            cls._form_class = get_form_for_model(model, widgets=cls.widget_overrides())
+            cls._form_class = get_form_for_model(model,
+                formsets=cls.required_formsets(), widgets=cls.widget_overrides())
         return cls._form_class
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
+    def __init__(self, instance=None, form=None):
         if not instance:
             raise ValueError("EditHandler did not receive an instance object")
         self.instance = instance
@@ -173,28 +280,6 @@ class EditHandler(object):
         """
         return ""
 
-    def is_valid(self):
-        """
-        Return false if any of the data that this EditHandler is responsible for handling
-        is invalid. (NB very few EditHandlers actually handle data; in particular,
-        FieldPanels don't (the accompanying Form instance does it instead).)
-        """
-        return True
-
-    def pre_save(self):
-        """
-        Do the manipulations that have to be done before the instance is saved.
-        (Again, few if any EditHandlers actually have to do anything here;
-        usually the form object will handle it.)
-        """
-        pass
-
-    def post_save(self):
-        """
-        Do the manipulations that have to be done after the instance is saved.
-        """
-        pass
-
     def rendered_fields(self):
         """
         return a list of the fields of the passed form which are rendered by this
@@ -216,6 +301,13 @@ class EditHandler(object):
 
         return mark_safe(u''.join(missing_fields_html))
 
+    def render_form_content(self):
+        """
+        Render this as an 'object', along with any unaccounted-for fields to make this
+        a valid submittable form
+        """
+        return mark_safe(self.render_as_object() + self.render_missing_fields())
+
 
 class BaseCompositeEditHandler(EditHandler):
     """
@@ -234,11 +326,22 @@ class BaseCompositeEditHandler(EditHandler):
 
         return cls._widget_overrides
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseCompositeEditHandler, self).__init__(data, files, instance=instance, form=form)
+    _required_formsets = None
+    @classmethod
+    def required_formsets(cls):
+        if cls._required_formsets is None:
+            formsets = []
+            for handler_class in cls.children:
+                formsets.extend(handler_class.required_formsets())
+            cls._required_formsets = formsets
+
+        return cls._required_formsets
+
+    def __init__(self, instance=None, form=None):
+        super(BaseCompositeEditHandler, self).__init__(instance=instance, form=form)
 
         self.children = [
-            handler_class(data, files, instance=self.instance, form=self.form)
+            handler_class(instance=self.instance, form=self.form)
             for handler_class in self.__class__.children
         ]
 
@@ -249,17 +352,6 @@ class BaseCompositeEditHandler(EditHandler):
 
     def render_js(self):
         return mark_safe(u'\n'.join([handler.render_js() for handler in self.children]))
-
-    def is_valid(self):
-        return all([child.is_valid() for child in self.children])
-
-    def pre_save(self):
-        for handler in self.children:
-            handler.pre_save()
-
-    def post_save(self):
-        for handler in self.children:
-            handler.post_save()
 
     def rendered_fields(self):
         result = []
@@ -296,8 +388,8 @@ def MultiFieldPanel(children, heading=""):
 
 
 class BaseFieldPanel(EditHandler):
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseFieldPanel, self).__init__(data, files, instance=instance, form=form)
+    def __init__(self, instance=None, form=None):
+        super(BaseFieldPanel, self).__init__(instance=instance, form=form)
         self.bound_field = self.form[self.field_name]
 
         self.heading = self.bound_field.label
@@ -456,81 +548,41 @@ def PageChooserPanel(field_name, page_type=None):
 
 
 class BaseInlinePanel(EditHandler):
-    # get_formset_class is dependent on get_child_edit_handler_class if a panel list is passed
-    #   (so that the edit handler can specify widget overrides on the form);
-    # get_child_edit_handler_class is dependent on get_formset_class if a panel list is NOT passed
-    #   (because the edit handler needs to find out its panel list from the form).
-    # Look ma, no circular dependency!
-
     @classmethod
     def get_panel_definitions(cls):
         # Look for a panels definition in the InlinePanel declaration
         if cls.panels is not None:
             return cls.panels
-        # Failing that, see if the related model has one defined
-        elif hasattr(cls.related_model, 'panels'):
-            return cls.related_model.panels
+        # Failing that, get it from the model
         else:
-            return None
+            return extract_panel_definitions_from_model_class(cls.related.model, exclude=[cls.related.field.name])
 
     _child_edit_handler_class = None
     @classmethod
     def get_child_edit_handler_class(cls):
         if cls._child_edit_handler_class is None:
             panels = cls.get_panel_definitions()
-            if panels:
-                cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
-            else:
-                # create the formset class first - this will internally build a modelform class,
-                # which we will pick out and derive panel definitions from
-                formset_class = cls.get_formset_class()
-                panels = extract_panel_definitions_from_form_class(formset_class.form)
-                cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
+            cls._child_edit_handler_class = MultiFieldPanel(panels, heading=cls.heading)
 
         return cls._child_edit_handler_class
 
-    _formset_class = None
     @classmethod
-    def get_formset_class(cls):
-        if cls._formset_class is None:
-            if cls.get_panel_definitions():
-                # panel definitions have been provided, so build the edit handler first
-                # and pick up any widget overrides from it when building the formset class
-                widget_overrides = cls.get_child_edit_handler_class().widget_overrides()
+    def required_formsets(cls):
+        return [cls.relation_name]
 
-                # As of Django 1.6 we can pass a 'widgets' argument directly to inlineformset_factory.
-                # In the meantime, we have to assemble a largely useless subclass of VerdantAdminModelForm
-                # with the widget spec baked in... inlineformset_factory will promptly use this to 
-                # create its *own* model-specific subclass, and forget about this one.
-                form_class = get_form_for_model(cls.related_model, widgets=widget_overrides)
-
-                cls._formset_class = inlineformset_factory(
-                    cls.base_model, cls.related_model,
-                    form=form_class, can_order=cls.can_order,
-                    fk_name=cls.fk_name, extra=0
-                )
-            else:
-                # no panel definitions are provided, so dismiss the possibility of
-                # there being widget overrides
-                cls._formset_class = inlineformset_factory(
-                    cls.base_model, cls.related_model,
-                    form=VerdantAdminModelForm, can_order=cls.can_order,
-                    fk_name=cls.fk_name, extra=0
-                )
-
-            # at this point we can fill in a heading, if we don't have one already
-            if not cls.heading:
-                relation_name = cls._formset_class.fk.rel.related_name
-                cls.heading = relation_name.replace('_', ' ').capitalize()
-
-        return cls._formset_class
+    @classmethod
+    def widget_overrides(cls):
+        overrides = cls.get_child_edit_handler_class().widget_overrides()
+        if overrides:
+            return {cls.relation_name: overrides}
+        else:
+            return {}
 
 
-    def __init__(self, data=None, files=None, instance=None, form=None):
-        super(BaseInlinePanel, self).__init__(data, files, instance=instance, form=form)
+    def __init__(self, instance=None, form=None):
+        super(BaseInlinePanel, self).__init__(instance=instance, form=form)
 
-        formset_class = self.__class__.get_formset_class()
-        self.formset = formset_class(data, files, instance=self.instance)
+        self.formset = form.formsets[self.__class__.relation_name]
 
         child_edit_handler_class = self.__class__.get_child_edit_handler_class()
         self.children = []
@@ -539,66 +591,42 @@ class BaseInlinePanel(EditHandler):
             subform.fields['DELETE'].widget = forms.HiddenInput()
 
             # ditto for the ORDER field, if present
-            if self.can_order:
+            if self.formset.can_order:
                 subform.fields['ORDER'].widget = forms.HiddenInput()
 
             self.children.append(
-                child_edit_handler_class(data, files, instance=subform.instance, form=subform)
+                child_edit_handler_class(instance=subform.instance, form=subform)
             )
 
         empty_form = self.formset.empty_form
         empty_form.fields['DELETE'].widget = forms.HiddenInput()
-        if self.can_order:
+        if self.formset.can_order:
             empty_form.fields['ORDER'].widget = forms.HiddenInput()
 
-        self.empty_child = child_edit_handler_class(data, files, instance=empty_form.instance, form=empty_form)
+        self.empty_child = child_edit_handler_class(instance=empty_form.instance, form=empty_form)
 
     template = "verdantadmin/edit_handlers/inline_panel.html"
     def render(self):
         return mark_safe(render_to_string(self.template, {
             'self': self,
+            'can_order': self.formset.can_order,
         }))
 
     js_template = "verdantadmin/edit_handlers/inline_panel.js"
     def render_js(self):
         return mark_safe(render_to_string(self.js_template, {
             'self': self,
+            'can_order': self.formset.can_order,
         }))
 
-    def is_valid(self):
-        formset_is_valid = self.formset.is_valid()
-        children_are_valid = all([child.is_valid() for child in self.children])
-        return (formset_is_valid and children_are_valid)
-
-    def pre_save(self):
-        for child in self.children:
-            child.pre_save()
-
-    def post_save(self):
-        if self.can_order:
-            self.formset.save(commit=False)
-            for i, form in enumerate(self.formset.ordered_forms):
-                form.instance.sort_order = i
-                form.instance.save()
-        else:
-            self.formset.save()
-
-        for child in self.children:
-            child.post_save()
-
 def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
-    relation = getattr(base_model, relation_name).related
-    related_model = relation.model
-    fk_name = relation.field.name
-
+    rel = getattr(base_model, relation_name).related
     return type('_InlinePanel', (BaseInlinePanel,), {
-        'base_model': base_model,
-        'related_model': related_model,
+        'relation_name': relation_name,
+        'related': rel,
         'panels': panels,
         'heading': label,
-        'fk_name': fk_name,
         'help_text': help_text,  # TODO: can we pick this out of the foreign key definition as an alternative? (with a bit of help from the inlineformset object, as we do for label/heading)
-        'can_order': ('sort_order' in related_model._meta.get_all_field_names()),
     })
 
 

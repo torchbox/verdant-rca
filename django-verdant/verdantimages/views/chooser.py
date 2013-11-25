@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 
 import json
 
@@ -15,7 +16,7 @@ def get_image_json(image):
     helper function: given an image, return the json to pass back to the
     image chooser panel
     """
-    preview_image = image.get_rendition('fill-130x100')
+    preview_image = image.get_rendition('max-130x100')
 
     return json.dumps({
         'id': image.id,
@@ -27,6 +28,7 @@ def get_image_json(image):
         }
     })
 
+@login_required
 def chooser(request):
     Image = get_image_model()
     ImageForm = get_image_form()
@@ -89,6 +91,7 @@ def chooser(request):
     })
 
 
+@login_required
 def image_chosen(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
 
@@ -98,6 +101,7 @@ def image_chosen(request, image_id):
     )
 
 
+@login_required
 def chooser_upload(request):
     Image = get_image_model()
     ImageForm = get_image_form()
@@ -130,6 +134,7 @@ def chooser_upload(request):
     )
 
 
+@login_required
 def chooser_select_format(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
 

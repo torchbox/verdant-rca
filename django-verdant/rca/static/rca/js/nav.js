@@ -3,15 +3,28 @@ $(function(){
 	/* configure left slideout menu toggle */
 	$(".mobile-menu-button").toggleClick(function(){
 		$("body").addClass("show-mobile-menu");
+
+		// Scroll back to top of page
+		$("body,html").animate({
+			scrollTop: 0
+		}, 800);
 	},function(){
 		$("body").removeClass("show-mobile-menu");
+
+		// measuring the width of some elements removes the white area appearing on the right after closing left menubar
+		setTimeout(function(){
+			$("body > *").each(function() {
+				$(this).width();
+			});
+		}, 250);
 	});
 
 
 	// copy the sidebar so that we can show it on the left in the mobile version
-	if(!$(".mobile-menu-wrapper > aside").length){
-		$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
-	}
+	// HC: please note this functionality has now been moved to Harvey in site.js, where the sidebar is moved for mobile rather than cloned
+	//if(!$(".mobile-menu-wrapper > aside").length){
+		//$(".mobile-menu-wrapper").append($(".page-wrapper > aside").clone(true, true));
+	//}
 
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
@@ -40,24 +53,36 @@ $(function(){
 			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
 			//enable desktop dropdown nav
-			desktopNav.apply()
+			desktopNav.apply();
 		},
 		off: function(){
 			//kill desktop dropdown nav
-			desktopNav.revoke()
+			desktopNav.revoke();
 		}
 	});
 
 	/* IE<9 targetted execution of above desktopSmall Harvey stuff, since media queries aren't understood */
-    $('.lt-ie9').each(function(){
-        desktopNav.apply()
-    })
+	$('.lt-ie9').each(function(){
+		desktopNav.apply();
+	});
 
 });
 
 var desktopNav = {
 	apply: function(){
-		$(".menu a[href$='" + document.location.pathname + "']").parents("li").addClass("selected");
+		// highlight the path to the current page in the menu based on the url
+		// it might not contain all the levels leading to it
+		var path = document.location.pathname;
+		while(path.split("/").length > 2){
+			var $menuItem = $(".menu a[href$='" + path + "']");
+			if($menuItem.length){
+				$menuItem.parents("li").addClass("selected");
+				break;
+			}else{
+				path = path.split("/").slice(0, -2).join("/") + "/";
+			}
+		}
+
 		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;

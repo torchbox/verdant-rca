@@ -89,7 +89,7 @@ input[type=radio]{
 
 input[type=radio]:before{
     .border-radius(100%);
-    font-family: verdant; 
+    font-family: verdant;
     font-style: normal;
     text-align:center;
     position:absolute;
@@ -98,12 +98,12 @@ input[type=radio]:before{
     cursor:pointer;
     display:block;
     content:"K";
-    width:20px;
-    height:20px;
-    line-height:20px;
-    background-color:white;
-    border:1px solid lighten(@color-grey, 50%);
-    color:#EEE;
+    width: 1em;
+    line-height: 1.1em;
+    padding: 4px;
+    background-color: white;
+    color:@color-grey-lighter;
+    border: 1px solid @color-grey-lighter;
 }
 input[type=radio]:checked:before{
     content:"K";
@@ -118,7 +118,7 @@ input[type=checkbox]{
 }
 
 input[type=checkbox]:before{
-    font-family: verdant; 
+    font-family: verdant;
     font-style: normal;
     text-align:center;
     position:absolute;
@@ -134,13 +134,13 @@ input[type=checkbox]:before{
     color:#EEE;
 }
 input[type=checkbox]:checked:before{
-    color:@color-teal; 
+    color:@color-teal;
 }
 
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 2em;
+    padding:1.3em 2.4em;
     border:none;
     background-color: @color-button;
     color:white;
@@ -149,25 +149,42 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     font-size:0.95em;
     white-space: nowrap;
     position:relative;
-    
+    -webkit-font-smoothing: auto;
+    vertical-align: middle;
+
     &:hover{
         background-color: @color-button-hover;
         color:white;
     }
 
+    &.lowpriority{
+        background-color: lighten(@color-grey, 10%);
+        &:hover{
+            background-color: @color-grey;
+        }
+    }
     &.yes{
         background-color: @color-button-yes;
         &:hover{
             background-color: @color-button-yes-hover;
         }
     }
-    &.no{
+    &.no, &.serious{
         background-color: @color-button-no;
         &:hover{
             background-color: @color-button-no-hover;
         }
     }
+
+    + input[type=submit],
+    + input[type=reset],
+    + input[type=button],
+    + .button,
+    + button{
+        margin-left:1em;
+    }
 }
+
 
 input[type=submit].button-small, input[type=reset].button-small, input[type=button].button-small, .button.button-small, button.button-small{
     font-size:0.85em;
@@ -187,7 +204,7 @@ a.button{
 }
 .help{
     /* TODO: This transitionmakes the browser go nuts and the left menu jerk around. Find way to solve */
-    .transition(opacity 0.2s ease); 
+    .transition(opacity 0.2s ease);
     color:@color-grey;
     opacity:0;
 }
@@ -227,7 +244,7 @@ li.focused > .help{
 }
 
 /* field sizing */
-.field{ 
+.field{
     &.col1,
     &.col2,
     &.col3,
@@ -254,7 +271,7 @@ li.inline .field{
     &.col9,
     &.col10,
     &.col11,
-    &.col12{clear:none;} 
+    &.col12{clear:none;}
 }
 
 /* solve gutter issues of inline fields */
@@ -267,18 +284,18 @@ ul.inline li:first-child, li.inline:first-child{
 
 .chooser {
     /* We show the 'chosen' state...*/
-    
+
     .chosen {
         display: block;
     }
     .unchosen, .chosen{
         position:relative;
-        padding-left:@thumbnail-width+15; 
+        padding-left:@thumbnail-width+15;
 
         &:before{
             .transition(opacity 0.3s ease);
             font-family:verdant;
-            content:"";           
+            content:"";
             position:absolute;
             top:0;
             left:0;
@@ -291,10 +308,10 @@ ul.inline li:first-child, li.inline:first-child{
         }
         &:hover:before{
             opacity:0.2;
-        }    
+        }
     }
     .unchosen {
-        display: none;      
+        display: none;
     }
 
     /* ...unless the .page-chooser has the 'blank' class set */
@@ -326,29 +343,24 @@ ul.inline li:first-child, li.inline:first-child{
             content:"b";
         }
         .title{
+            z-index:0;
             float: left;
             margin-left: -146px;
             width: 126px;
             max-height: 40px;
             overflow: hidden;
             font-size: 0.7em;
-            padding: 30px 10px 0 10px;
+            padding: 30px 10px 0px 10px;
             display: block;
             top: 0px;
             position: absolute;
             line-height: 1.4em;
             text-align: center;
             color: black;
-
-           
-            &:hover{
-                width:130px;
-                padding:0;
-                top: 0;
-                height: 200px;
-                max-height:100%;
-                background-color: white;
-            }
+            white-space:nowrap;
+            text-overflow:ellipsis;
+        }
+        &:hover .title{
         }
     }
 }
@@ -356,7 +368,7 @@ ul.inline li:first-child, li.inline:first-child{
 .snippet-chooser {
     .unchosen:before,
     .chosen:before{
-        content:"D"; 
+        content:"D";
     }
 }
 
@@ -376,15 +388,16 @@ ul.inline li:first-child, li.inline:first-child{
 
 .image-chooser {
     .unchosen, .chosen{
-        height:95px;
+        .clearfix;
+        min-height:95px;
 
         &:before{
-            content:"o"; 
+            content:"o";
             font-size:120px;
             line-height:97px;
         }
     }
-    .chosen{
+    .chosen{        
         &:before{
             content:"";
         }
@@ -461,7 +474,7 @@ ul.tagit li.tagit-choice-editable{
 
     .fields{
         position:relative;
-    
+
         .field label{
             display:none;
         }
@@ -479,6 +492,7 @@ ul.tagit li.tagit-choice-editable{
         }
     }
     .submit{
+        display:none;
         position:absolute;
         right:0;
         top:0;
@@ -488,8 +502,12 @@ ul.tagit li.tagit-choice-editable{
     }
     .popular-tags{
         font-size:0.9em;
+        line-height:2.4em;
         h3{
             display:inline;
+        }
+        a{
+            white-space: nowrap
         }
     }
 }

@@ -1,0 +1,93 @@
+<table class="listing {% if full_width %}full-width{% endif %}">
+    <thead>
+        <tr>
+            <th class="title">
+                Title
+                {% if sortable %}
+                    {% if ordering == "title" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-title" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-title" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=title" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=title" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
+                {% endif %}
+            </th>
+            {% if show_parent %}
+                <th class="parent">Parent</th>
+            {% endif %}
+            <th class="type">
+                Type
+                {% if sortable %}
+                    {% if ordering == "content_type" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-content_type" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-content_type" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=content_type" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=content_type" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
+                {% endif %}
+            </th>
+            <th class="status">
+                Status
+                {% if sortable %}
+                    {% if ordering == "live" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=-live" class="icon icon-arrow-down-after teal"></a>
+                    {% elif ordering == "-live" %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=live" class="icon icon-arrow-up-after teal"></a>
+                    {% else %}
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=live" class="icon icon-arrow-down-after"></a>
+                    {% endif %}
+                {% endif %}
+            </th>
+            {% if allow_navigation %}
+                <th class="children"></th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% if pages %}
+            {% for page in pages %}
+                <tr {% if not page.live %}class="inactive"{% endif %}>
+                    <td class="title">
+                        <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a></h2>
+                        <ul class="actions">
+                            {% if page.has_unpublished_changes %}
+                                <li><a href="{% url 'verdantadmin_pages_view_draft' page.id %}" target="_blank">View draft</a></li>
+                            {% endif %}
+                            {% if page.live %}
+                                <li><a href="{{ page.url }}" target="_blank">View live</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
+                            {% if perms.core.can_unpublish_page or page.has_unpublished_subtree %}
+                                <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
+                            {% endif %}
+                            {% if page.live and perms.core.can_unpublish_page %}
+                                <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add subpage</a></li>
+                        </ul>
+                    </td>
+                    {% if show_parent %}
+                        <td class="parent"><a href="{% url 'verdantadmin_explore' page.get_parent.id %}">{{ page.get_parent.title }}</a></td>
+                    {% endif %}
+                    <td class="type">{{ page.content_type|title }}</td>
+                    <td class="status"><span class="status-tag {{ page.status_string }}">{{ page.status_string|capfirst }}</span></td>
+                    {% if allow_navigation %}
+                        {% if page.is_navigable %}
+                            <td class="children">
+                                <a href="{% url 'verdantadmin_explore' page.id %}" class="icon text-replace icon-arrow-right" title="Explorer subpages of '{{ page.title }}'">Explore</a>
+                            </td>
+                        {% else %}
+                            <td class="no-children">
+                                <a href="{% url 'verdantadmin_pages_add_subpage' page.id %}" class="icon text-replace icon-plus-inverse" title="Add a subpage to '{{ page.title }}'">Add subpage</a>
+                            </td>
+                        {% endif %}
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3" class="no-results-message"><p>No pages have been created here.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
+        {% endif %}
+    </tbody>
+</table>

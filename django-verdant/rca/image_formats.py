@@ -15,15 +15,13 @@ class CaptionedImageFormat(Format):
         else:
             class_attr = ''
 
-        caption_html = '<br />'.join([escape(line) for line in image.caption_lines()])
-
         return """<figure %s%s>
             <img src="%s" width="%d" height="%d" alt="%s" />
             <figcaption class="a4">%s</figcaption>
         </figure>""" % (
             extra_attributes, class_attr,
             escape(rendition.url), rendition.width, rendition.height, alt_text,
-            caption_html
+            image.caption_html()
         )
 
 unregister_image_format('fullwidth')

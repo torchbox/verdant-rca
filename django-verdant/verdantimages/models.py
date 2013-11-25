@@ -1,5 +1,5 @@
 from django.core.files import File
-from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist
+from django.core.exceptions import ImproperlyConfigured, ObjectDoesNotExist, ValidationError
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch.dispatcher import receiver
@@ -22,12 +22,21 @@ class AbstractImage(models.Model, TagSearchable):
     def get_upload_to(self, filename):
         folder_name = 'original_images'
         filename = self.file.field.storage.get_valid_name(filename)
+
+        # replace non-ascii characters in filename with _ , to sidestep issues with filesystem encoding
+        filename = "".join((i if ord(i)<128 else '_') for i in filename)
+
         while len(os.path.join(folder_name, filename)) >= 95:
             prefix, dot, extension = filename.rpartition('.')
             filename = prefix[:-1] + dot + extension
         return os.path.join(folder_name, filename)
 
-    file = models.ImageField(upload_to=get_upload_to, width_field='width', height_field='height')
+    def file_extension_validator(ffile):
+        extension = ffile.name.split(".")[-1].lower()
+        if extension not in ["gif", "jpg", "jpeg", "png"]:
+            raise ValidationError("Not a valid image format. Please use a gif, jpeg or png file instead.")
+
+    file = models.ImageField(upload_to=get_upload_to, width_field='width', height_field='height', validators=[file_extension_validator])
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -155,7 +164,9 @@ class Filter(models.Model):
 
         # generate new filename derived from old one, inserting the filter spec string before the extension
         input_filename_parts = os.path.basename(input_file.name).split('.')
-        output_filename_parts = input_filename_parts[:-1] + [self.spec] + input_filename_parts[-1:]
+        filename_without_extension = '.'.join(input_filename_parts[:-1])
+        filename_without_extension = filename_without_extension[:60]  # trim filename base so that we're well under 100 chars
+        output_filename_parts = [filename_without_extension, self.spec] + input_filename_parts[-1:]
         output_filename = '.'.join(output_filename_parts)
 
         output_file = File(output, name=output_filename)

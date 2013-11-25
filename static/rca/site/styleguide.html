@@ -206,78 +206,67 @@ layout: default
 		</tr>	
 	</table> 
 	
-	<h2 class="h2">Forms</h2>
+	<h2 class="h2" id="forms">Forms</h2>
 	
-	<form action="http://www.cs.tut.fi/cgi-bin/run/~jkorpela/echo.cgi">
-
-		<div><input type="hidden" name="hidden field" value="42"></div>
-		<div><label for="f1">Single-line text input field: <input id="f1" name="text" size="20" value="Default text."></label></div>
-		<div><label for="f2">Multi-line text input field (textarea):</label></div>
-		<div><textarea id="f2" name="textarea" rows="16" cols="20">Default text.</textarea></div>
-
-		<p>The following two radio buttons are inside <code>fieldset</code> element with a <code>legend</code>:</p>
-
-	
-		<fieldset>
-			<legend>Legend</legend>
-			<div>
-				<label for="f3">Radio button 1</label>
-				<input id="f3" type="radio" name="radio" value="1">
-			</div>
-			<div>
-				<label for="f4">Radio button 2 (initially checked)</label>
-
-				<input id="f4" type="radio" name="radio" value="2" checked>
-			</div>
-		</fieldset>
-
-		<fieldset>
-			<legend>Check those that apply</legend>
-			<div>
-				<label for="f5">Checkbox 1</label>
-
-				<input id="f5" type="checkbox" name="checkbox">
-			</div>
-			<div>
-				<label for="f6">Checkbox 2 (initially checked)</label>
-				<input id="f6" type="checkbox" name="checkbox2" checked>
-			</div>
-		</fieldset>
-	
-		<p>
-
-			<label for="f10">A <code>select</code> element with <code>size="1"</code> (dropdown box):</label>
-		</p>
-
-		<select id="f10" name="select1" size="1">
-			<option>one</option>
-
-			<option selected>two (default)</option>
-			<option>three</option>
-		</select>
-		
-		<p>
-			<label for="f11">A <code>select</code> element with <code>size="3"</code> (listbox):</label>
-
-		</p>
-
-		<select id="f11" name="select2" size="3">
-			<option>one</option>
-			<option selected>two (default)</option>
-			<option>three</option>
-		</select>
-
-		<div>
-			<label for="f99">Submit button:</label>
-			<input id="f99" type="submit" name="submit" value="Just a test">
+	<form action="">
+		<div class="messages error">
+			<h2 class="a0">Error message header</h2>
+			<ul class="errorlist">
+				<li>This is an error</li>
+				<li>This is also an error</li>
+			</ul>
 		</div>
-		<div>
-			<label for="f0">Reset button:</label>
-			<input id="f0" type="reset" name="reset" value="Reset">
-		</div>	
+		<fieldset>
+			<legend>This is a legend for the fields grouped in this fieldset</legend>
+			<ul>
+				<li>
+					<label>This is a standard text field</label>
+					<input type="text" placeholder="Guide text"/>
+					<p class="help">This is some help text</p>
+				</li>
+				<li class="error">
+					<label>And this is a text area</label>
+					<textarea rows="10" cols="20" placeholder="Guide text"></textarea>
+					<p class="error-message">This is an error message</p>
+					<p class="help">This is some help text</p>
+				</li>
+			</ul>
+		</fieldset>
+		<fieldset>
+			<legend>This is a legend for the fields grouped in this fieldset</legend>
+			<ul>
+				<li>
+					<label>This is for a select box</label>
+					<div class="select">
+						<select>
+							<option>Select</option>
+							<option value="test">Option</option>
+						</select>
+					</div>
+					<p class="help">This is some help text</p>
+				</li>
+				<li class="error">
+					<p class="heading">Pseudo-label for a group of checkboxes</p>
+					<p class="help">This is some help text</p>
+					<label><input type="checkbox"> Here we go with a checkbox</label>
+					<label><input type="checkbox"> And here is a radio</label>
+					<label><input type="checkbox"> This is a checkbox with a huge amount of text as a label, probably used for some kind of disclaimer that might run onto several lines and would ordinarily wrap onto the next line below the checkbox and look rather ugly.</label>
+					<p class="error-message">This is an error message</p>
+				</li>
+				<li class="divider">
+					<p class="heading">This group of radios had a divider above it for no good reason</p>
+					<label><input type="radio"> Here we go with a checkbox</label>
+					<label><input type="radio"> And here is a radio</label>
+					<p class="help">This is some help text</p>
+				</li>
+				<li class="submit">
+					<input type="submit" value="Submit" />			
+				</li>
+			</ul>
+		</fieldset>
 	</form>
 
-	
+
 	<p>This next bit shows that PREformatted text is working.</p>
 	
 <pre>

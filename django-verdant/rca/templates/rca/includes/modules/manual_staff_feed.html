@@ -1,0 +1,42 @@
+{% load pageurl image_tags %}
+
+    {% with self.manual_staff_feed.all as staff %}
+        {% if staff %}
+            <section class="five-plus x-plus row module">
+                <h2 class="module-title">Staff</h2>
+                <div class="item-container">
+                    <ul class="row">
+                        {% for staffpage in staff %}
+                            {% if forloop.counter == 6 %}
+                                <li class="load-more-target">
+                            {% elif forloop.counter0|divisibleby:"6" %}
+                                <li class="newrow">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                                <a href="{% pageurl staffpage.staff %}">
+                                    <div class="image">
+                                    {% if staffpage.staff.profile_image %}
+                                        {% image staffpage.staff.profile_image width-200 %}
+                                    {% else %}
+                                        <img src="/static/rca/images/rca-placeholder-square.jpg" width="200">
+                                    {% endif %}
+                                    </div>
+                                    <div class="content">
+                                        <h3 class="a3">{{ staffpage.staff.title }}</h3>
+                                        <p class="a3">{{ staffpage.staff_role }}</h3>
+                                        {% if staffpage.staff.listing_intro %}
+                                            <p class="a4">{{ staffpage.staff.listing_intro }}</p>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                        {% if staff|length > 6 %} 
+                            <li class="load-more"><a href="#">+</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}

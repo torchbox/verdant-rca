@@ -1,0 +1,49 @@
+
+#dateRange {
+  width: 210px;
+}
+.ui-daterangepickercontain{
+  float: left;
+  position: absolute;
+}
+.ui-daterangepickercontain *:before, .ui-daterangepickercontain *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+ }
+
+.ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content{
+  width: 210px;
+  float: left;
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content li{
+  border: none;
+  padding: 0;
+}
+.ui-daterangepickercontain > .ui-daterangepicker > .ui-widget-content li > a{
+  display: block;
+  padding: 3px;
+}
+
+
+.ranges.ui-widget-header{
+  float: left;
+}
+
+.ui-icon-triangle-1-e{
+  float: right;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.ui-daterangepickercontain ul{
+  list-style: none;
+}
+
+.btnDone{
+  width: 100%;
+}

@@ -3,3 +3,6 @@
 # local.py should not be checked in to version control.
 
 EMBEDLY_KEY = 'get-one-from-http://embed.ly/'
+
+STRIPE_PUBLISHABLE_KEY = ""
+STRIPE_SECRET_KEY = ""

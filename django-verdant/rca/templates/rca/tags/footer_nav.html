@@ -1,0 +1,27 @@
+{% load rca_tags %}
+
+{% for page, children in nodes %}
+    <li class="main">{{ page.title }}
+    <div class="submenu-block">
+        <ul>
+            <li class="parentlink"><a href="{{ page.url }}">{{ page.title }}</a></li>
+            {% for sublist in children|rows_distributed:"3" %}
+            <section>
+                {% for child, grandchildren in sublist %}
+                    <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+                    {% if grandchildren %}
+                        <ul class="dl-submenu">
+                            {% for grandchild, greatgrandchildren in grandchildren %}
+                            {% if grandchild.show_in_menus %}
+                                <li><a href="{{ grandchild.url }}">{{ grandchild.title }}</a></li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </ul>
+    </div>
+    <span class="footer-expand"></span>
+{% endfor %}
