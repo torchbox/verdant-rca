@@ -53,5 +53,14 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="True" showAdverts="true" showRelatedLinks="true" %}
+    <div class="events-ads-wrapper">
+        <!-- Events -->
+        {% upcoming_events exclude=self %}
+
+        <!-- adverts -->
+        {% sidebar_adverts %}
+    </div>
+
+    <!-- Related links -->
+    {% sidebar_links calling_page=self %}
 {% endblock %}
