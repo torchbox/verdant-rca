@@ -32,7 +32,7 @@ class RedirectsImporter(object):
         redirect_object.site = self.site
 
         # Add link
-        page = self.find_page_from_url(self.site.root_page, redirect_to.split('/'))
+        page = self.find_page_from_url(self.site.root_page, [component for component in redirect_to.split('/') if component])
         if page:
             redirect_object.redirect_page = page
         else:
