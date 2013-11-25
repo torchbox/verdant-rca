@@ -51,6 +51,10 @@ jQuery(function($) {
         }
     }
 
+    $('[data-stripe="number"], [data-stripe="cvc"], [data-stripe="exp-month"]')
+        .closest("li")
+        .addClass("required");
+
     $('[data-stripe="number"]').payment('formatCardNumber');
     $('[data-stripe="cvc"]').payment('formatCardCVC');
     $('[name="amount"]')
