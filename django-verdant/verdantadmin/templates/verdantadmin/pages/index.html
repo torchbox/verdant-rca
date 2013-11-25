@@ -95,7 +95,7 @@
                 $('.listing tbody').disableSelection();
 
                 $('#page-reorder-form').submit(function() {
-                    $('#order').val($('.listing tbody tr').sortable('toArray'));
+                    $('#order').val($('.listing tbody').sortable('toArray'));
                     return true;
                 });
             })

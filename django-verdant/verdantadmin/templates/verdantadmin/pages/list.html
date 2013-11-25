@@ -68,7 +68,7 @@
     <tbody>
         {% if pages %}
             {% for page in pages %}
-                <tr {% if not page.live %}class="inactive"{% endif %}>
+                <tr {% if ordering == "ord" %}id="page_{{ page.id }}"{% endif %} {% if not page.live %}class="inactive"{% endif %}>
                     <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
                     <td class="title">
                         <h2><a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a></h2>
