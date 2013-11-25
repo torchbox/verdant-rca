@@ -26,7 +26,6 @@ REDIRECTS = {
     'painting': '/schools/school-of-fine-art/painting/',
     'photography': '/schools/school-of-fine-art/photography/',
     'printmaking': '/schools/school-of-fine-art/printmaking/',
-    'sculpture': '/schools/school-of-fine-art/sculpture/',
     'fine-art-routes': '/schools/school-of-fine-art/routes/',
     'fine-art-research': '/schools/school-of-fine-art/fine-art-research/',
     'school-of-fine-art': '/schools/school-of-fine-art/',
