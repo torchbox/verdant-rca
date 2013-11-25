@@ -1,9 +1,9 @@
 *.pyc
 .DS_Store
 /.vagrant
-/django-verdant/static
-/django-verdant/media
-/django-verdant/verdant/settings/local.py
-/django-verdant/celerybeat*
+/rcasite/static
+/rcasite/media
+/rcasite/verdant/settings/local.py
+/rcasite/celerybeat*
 /static/rca/site/assets/css/*.css
 

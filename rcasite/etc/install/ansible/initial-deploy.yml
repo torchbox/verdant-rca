@@ -27,8 +27,8 @@
 #
 #  - name: Use pip to install the project requirements 
 #    sudo_user: ${project_name}
-#    pip: requirements=${project_root}/django-verdant/requirements.txt virtualenv=${django_root}/virtualenvs/${project_name} virtualenv_site_packages=no
-#    ## Note that unusually this project root is within the django-verdant subdirectory
+#    pip: requirements=${project_root}/rcasite/requirements.txt virtualenv=${django_root}/virtualenvs/${project_name} virtualenv_site_packages=no
+#    ## Note that unusually this project root is within the rcasite subdirectory
 #
 
 #    ## Note that workon is now installed as a bash extension in Debian 7
@@ -37,13 +37,13 @@
     lineinfile: dest=/home/${project_name}/.bashrc regexp="^export WORKON_HOME" line="export WORKON_HOME=${django_root}/virtualenvs"
 
   - name: Create local settings file from template
-    template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/django-verdant/verdant/settings/local.py owner=${project_name} group=djangoapps
+    template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/rcasite/verdant/settings/local.py owner=${project_name} group=djangoapps
 
   - name: Create the django database
     sudo_user: ${project_name}
     django_manage: 
       command=syncdb
-      app_path=${django_root}/${project_name}/django-verdant
+      app_path=${django_root}/${project_name}/rcasite
       settings='verdant.settings.production'
       pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
       virtualenv=${django_root}/virtualenvs/${project_name}
@@ -52,7 +52,7 @@
     sudo_user: ${project_name}
     django_manage: 
       command=migrate
-      app_path=${django_root}/${project_name}/django-verdant
+      app_path=${django_root}/${project_name}/rcasite
       settings='verdant.settings.production'
       pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
       virtualenv=${django_root}/virtualenvs/${project_name}
