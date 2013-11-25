@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 
-urlpatterns = patterns('verdantsnippets.views',
+urlpatterns = patterns('verdant.snippets.views',
     url(r'^$', 'snippets.index', name='verdantsnippets_index'),
 
     url(r'^choose/(\w+)/(\w+)/$', 'chooser.choose', name='verdantsnippets_choose'),

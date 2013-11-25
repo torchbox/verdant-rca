@@ -8,6 +8,9 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
+# Also add the django-verdant library dir (which lives alongside PROJECT_ROOT)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-verdant'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -169,7 +172,7 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantmedia',
     'verdantdocs',
-    'verdantsnippets',
+    'verdant.snippets',
     'verdantsearch',
     'verdantusers',
     'verdantredirects',

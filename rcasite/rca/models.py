@@ -25,8 +25,8 @@ from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel,
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
-from verdantsnippets.edit_handlers import SnippetChooserPanel
-from verdantsnippets.models import register_snippet
+from verdant.snippets.edit_handlers import SnippetChooserPanel
+from verdant.snippets.models import register_snippet
 
 from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
