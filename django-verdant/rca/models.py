@@ -3224,6 +3224,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link_text')
     ]
 class ResearchItem(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True)
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
     ref = models.BooleanField(default=False, blank=True)
     year = models.CharField(max_length=4)
@@ -3239,7 +3240,7 @@ class ResearchItem(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
-    indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
     search_name = 'Research'
 
@@ -3253,6 +3254,7 @@ class ResearchItem(Page, SocialFields):
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
     InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
     InlinePanel(ResearchItem, 'creator', label="Creator"),

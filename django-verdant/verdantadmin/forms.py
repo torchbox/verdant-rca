@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.hashers import MAXIMUM_PASSWORD_LENGTH
 
 class SearchForm(forms.Form):
     q = forms.CharField(label="Search term")
@@ -27,6 +26,5 @@ class LoginForm(AuthenticationForm):
         widget=forms.TextInput(attrs={'placeholder': "Enter your username"}),
     )
     password = forms.CharField(
-        max_length=MAXIMUM_PASSWORD_LENGTH,
         widget=forms.PasswordInput(attrs={'placeholder': "Enter password"}),
     )

@@ -20,12 +20,10 @@
                         <input type="submit" value="Save" class="button" />
                         <div class="dropdown-toggle icon icon-arrow-up"><input type="submit" value="Save" /></div>
                         <ul role="menu">
-                            <li><a href="{% url 'verdantsnippets_delete' content_type.app_label content_type.model instance.id %}" class="shortcut">Delete <span class="kbd"><kbd>Shift</kbd> + <kbd>P</kbd></span></a></li>
+                            <li><a href="{% url 'verdantsnippets_delete' content_type.app_label content_type.model instance.id %}" class="shortcut">Delete</a></li>
                         </ul>
                     </div>
-                   
                 </li>
-                <li>Something</li>
             </ul>
         </footer>
     </form>
