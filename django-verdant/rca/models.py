@@ -3236,7 +3236,7 @@ class ResearchItem(Page, SocialFields):
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
-    eprintid = models.CharField(max_length=255, blank=True) # for import
+    eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
