@@ -1560,7 +1560,11 @@ class EventIndex(Page, SocialFields):
             events = events.filter(related_areas__area=area)
         if audience and audience != '':
             events = events.filter(audience=audience)
-        events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        events = events.annotate(start_date=Min('dates_times__date_from'))
+        if period== 'past':
+            events = events.order_by('start_date').reverse()
+        else:
+            events = events.order_by('start_date')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
