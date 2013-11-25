@@ -40,7 +40,8 @@ class ResearchBookTitlesImporter(object):
         researchitem.subtitle = element['book_title']
 
         # Save
-        researchitem.save()
+        if self.save:
+            researchitem.save()
 
     def get_research_file(self, eprintid):
         # Attempt to load from cache
@@ -103,7 +104,7 @@ class ResearchBookTitlesImporter(object):
                 continue
 
 
-def run():
+def run(save=False):
     # Import
-    importer = ResearchBookTitlesImporter(save=True)
+    importer = ResearchBookTitlesImporter(save=save)
     importer.run()
