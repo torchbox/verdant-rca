@@ -1,6 +1,7 @@
 <table class="listing {% if full_width %}full-width{% endif %}">
     <thead>
         <tr>
+            <th><a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-arrow-down-after teal">#</a></th>
             <th class="title">
                 Title
                 {% if sortable %}
