@@ -36,7 +36,7 @@ class ResearchBookTitlesImporter(object):
         	print "Cannot find research item. Eprintid: " + researchitem_eprintid
 
         # Add book title
-        researchitem.sub_title = element['book_title']
+        researchitem.subtitle = element['book_title']
 
         # Save
         researchitem.save()
