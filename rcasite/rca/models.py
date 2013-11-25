@@ -1239,12 +1239,14 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
+    link_page = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     link = models.URLField(blank=True)
 
     panels=[
         FieldPanel('name'),
         FieldPanel('surname'),
         ImageChooserPanel('image'),
+        PageChooserPanel('link_page'),
         FieldPanel('link'),
     ]
 
