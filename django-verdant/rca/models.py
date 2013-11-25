@@ -1239,12 +1239,14 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
+    link_page = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     link = models.URLField(blank=True)
 
     panels=[
         FieldPanel('name'),
         FieldPanel('surname'),
         ImageChooserPanel('image'),
+        PageChooserPanel('link_page'),
         FieldPanel('link'),
     ]
 
@@ -1560,7 +1562,11 @@ class EventIndex(Page, SocialFields):
             events = events.filter(related_areas__area=area)
         if audience and audience != '':
             events = events.filter(audience=audience)
-        events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        events = events.annotate(start_date=Min('dates_times__date_from'))
+        if period== 'past':
+            events = events.order_by('start_date').reverse()
+        else:
+            events = events.order_by('start_date')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
@@ -3236,7 +3242,7 @@ class ResearchItem(Page, SocialFields):
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
-    eprintid = models.CharField(max_length=255, blank=True) # for import
+    eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 

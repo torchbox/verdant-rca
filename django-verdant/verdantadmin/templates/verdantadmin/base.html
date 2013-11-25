@@ -26,6 +26,8 @@
                     </li>
                     <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
 
+                    <li><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
+
                     {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
                     {% for name, title in verdantadmin_tab_urls %}
                         <li><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>

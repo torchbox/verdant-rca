@@ -66,7 +66,9 @@
                         <ul class="row">
                             {% for speaker in speakers %}
                                 <li>
-                                    {% if speaker.link %}
+                                    {% if speaker.link_page %}
+                                        <a href="{{ speaker.link_page.url }}">
+                                    {% elif speaker.link %}
                                         <a href="{{ speaker.link }}">
                                     {% endif %}
                                         {% if speaker.image %}
@@ -80,7 +82,7 @@
                                                 {% endif %}
                                             </p>
                                         </div>
-                                    {% if speaker.link %}
+                                    {% if speaker.link_page or speaker.link %}
                                         </a>
                                     {% endif %}
                                 </li>
