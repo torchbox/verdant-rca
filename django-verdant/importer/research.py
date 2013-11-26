@@ -145,6 +145,7 @@ class ResearchImporter(object):
         researchitempage.description = researchitem_abstract
         researchitempage.work_type = WORK_TYPES_CHOICES[researchitem_type]
         researchitempage.school = researchitem_school
+        researchitempage.show_on_homepage = False
         researchitempage.slug = make_slug(researchitempage)
 
         # Save researchitem
