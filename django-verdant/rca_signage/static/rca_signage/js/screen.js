@@ -1,5 +1,5 @@
 var Screen = function() {
-    var pageInterval = 120; // frequence (seconds) that events pages are paginated
+    var pageInterval = 20; // frequence (seconds) that events pages are paginated
     var loadInterval = pageInterval * 10; // frequency (seconds) that new events are pulled from DB
     var currentPage =  0;
     var eventsData = [];
