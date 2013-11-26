@@ -1472,8 +1472,44 @@ footer {
 }
 
 .type-donations{
+    .amounts{
+        ul{
+            .row();
+            .row-flush();
+        }
+        ul li{
+            .column(4);
+            
+            label{
+                font-size:2em;
+                margin:0;
+                line-height:1em;
+                font-style:normal;
+                background-color:@color-advert-pale-blue;
+                padding:@grid-gutter-width;
+                text-transform:none;
+                cursor:pointer;
+
+                &:hover{
+                    color:white;
+                    background-color:@color-highlight-blue;
+                }
+
+                &.selected{
+                    color:white;
+                    background-color:@color-pink;
+                }
+            }
+        }
+        input{
+            display:none;
+        }
+    }
     .amount{
+        margin-top:-@grid-gutter-width;
+        display:none;
         position:relative;
+
         .field:before{
             opacity:0.5;
             position:absolute;
@@ -1481,9 +1517,9 @@ footer {
             font-size:3em;
             top:0.85em;
             left:0.3em;
-           
         }
         input{
+            background-color:@color-advert-pale-blue;
             width:7em;
             padding-left:1.4em;
             font-size:2.5em;
@@ -1496,15 +1532,23 @@ footer {
         width:auto !important;
     }
     .number{
-        width:16em;
+        .column(6);
+        padding-left:0;
     }
     .expiration{
-        float:left;
-        margin-right:2em;
+        .column(6);
     } 
     .cvc{
-        float:left;
-        width:50%;
+        clear:both;
+        .field{
+            float:left;
+        }
+        .help{
+            float:left;
+            width:50%;
+            padding-top:2em;
+            padding-left:@grid-gutter-width;
+        }
     }
     .is_gift_aid{
         clear:both;
