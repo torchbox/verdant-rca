@@ -7,6 +7,7 @@
 
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
+    {% if self.subtitle %}<h2 clas="bc3">{{ self.subtitle }}</h2>{% endif %}
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
         {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.description %}
