@@ -1,56 +1,48 @@
 var Screen = function() {
-    this.pageInterval = 20; // frequence (seconds) that events pages are paginated
-    this.loadInterval = this.pageInterval * 10; // frequency (seconds) that new events are pulled from DB
-    this.currentPage =  0;
-    this.eventsData = [];
-    this.eventsElemSelector = '#eventlist';
-    this.headingElem = $('#heading');
-    this.pagingElem = $('#paging');
-    this.pagingTimerElem = $('#paging-timer');
-    this.dateHeadingElem = $('#date');
-    this.pages = [];
+    var pageInterval = 2; // frequence (seconds) that events pages are paginated
+    var loadInterval = 5//this.pageInterval * 10; // frequency (seconds) that new events are pulled from DB
+    var currentPage =  0;
+    var eventsData = [];
+    var eventsElemSelector = '#eventlist';
+    var headingElemSelector = '#heading';
+    var pagingElemSelector = '#paging';
+    var pagingTimerSelector = '#paging-timer';
+    var pages = [];
 
-    var $this = this;
-
-    this.run = function(){
-        var loadTimeout, tmpLoadInterval;
-        clearTimeout(loadTimeout);
-
-        $this.loadEvents(function(){
-            // load new events on an interval
-            loadTimeout = setTimeout(function(){   
-                screen = new Screen();
-                screen.run(); 
-            }, $this.loadInterval * 1000);
-        });  
-    };
-
-    this.loadEvents = function(onComplete) {
+    function loadEvents() {
         clearInterval(window.pagingTimeout);
         $('body').addClass('loading');
 
         // Perform ajax request
+        var data;
         $.getJSON("data/", function(data) {
-            $this.eventsData = data;
-            $this.handleEvents(onComplete);
+            eventsData = data;
+            handleEvents();
+
+            // load new events on an interval
+            window.loadTimeout = setTimeout(function(){
+                clearTimeout(window.loadTimeout); 
+                window.screen = null;
+                window.screen = new Screen();
+                window.screen.run();                
+            }, loadInterval * 1000);
         });
     };
 
-    this.handleEvents = function(onComplete){
-
+    function handleEvents(){
         var pageCounter = 0;
 
-        if($this.eventsData.is_special){
-            $this.headingElem.html('Special Events');
+        if(eventsData.is_special){
+            $(headingElemSelector).html('Special Events');
             $('body').addClass('special');
         } else {
-            $this.headingElem.html('Upcoming Events');
+            $(headingElemSelector).html('Upcoming Events');
             $('body').removeClass('special');
         }
 
         // Check there actually are some events
-        if (!$this.eventsData.events.length){
-            $($this.eventsElemSelector).append('<p>There are no upcoming events</p>');
+        if (!eventsData.events.length){
+            $(eventsElemSelector).append('<p>There are no upcoming events</p>');
             return false;
         }
 
@@ -58,30 +50,29 @@ var Screen = function() {
         var tmpUl = $('<ul id="tmp"></ul>');
 
         var tmpDate = null;
-        for (var e=0; e < $this.eventsData.events.length; e++){
-            if($this.eventsData.events[e].date === tmpDate){
-                $this.eventsData.events[e].sameDay = true;
+        for (var e=0; e < eventsData.events.length; e++){
+            if(eventsData.events[e].date === tmpDate){
+                eventsData.events[e].sameDay = true;
             } else {
-                tmpDate = $this.eventsData.events[e].date;
+                tmpDate = eventsData.events[e].date;
             }
 
-            tmpUl.append($this.renderEvent($this.eventsData.events[e])); 
+            tmpUl.append(renderEvent(eventsData.events[e])); 
         }       
 
         // empty events list and create temporary ul used to measure height
-        $($this.eventsElemSelector).empty().append(tmpUl);
+        $(eventsElemSelector).empty().append(tmpUl);
 
         // if special events, do one per page
-        if($this.eventsData.is_special){
-
+        if(eventsData.is_special){
             $('li', tmpUl).each(function(){
                 var thisLi = $(this);
                 
-                if(typeof $this.pages[pageCounter] == "undefined"){
-                    $this.pages[pageCounter] = [];
+                if(typeof pages[pageCounter] == "undefined"){
+                    pages[pageCounter] = [];
                 }
                 var thisLi = $(this);
-                $this.pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
+                pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
                 pageCounter ++;
             });
 
@@ -94,7 +85,7 @@ var Screen = function() {
                 var thisLi = $(this);
                 var thisLiHeight = parseInt(thisLi.outerHeight());
 
-                if(totalHeight + thisLiHeight > $($this.eventsElemSelector).outerHeight()){
+                if(totalHeight + thisLiHeight > $(eventsElemSelector).outerHeight()){
                     // start a new page
                     pageCounter ++;
                     
@@ -104,47 +95,44 @@ var Screen = function() {
                     totalHeight += thisLiHeight;
                 }
 
-                if(typeof $this.pages[pageCounter] == "undefined"){
-                    $this.pages[pageCounter] = [];
+                if(typeof pages[pageCounter] == "undefined"){
+                    pages[pageCounter] = [];
                 }
-                $this.pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
+                pages[pageCounter].push(thisLi.toArray()[0]); /* unclear why this bizarre toArray()[0] method is necessary. Can't find better alternative */
             });
         }
 
         // create separate UL for each page
-        for(var i=0; i < $this.pages.length; i++){
-            var ul = $('<ul></ul>').append($this.pages[i]);
-            ul.appendTo($($this.eventsElemSelector));
+        for(var i=0; i < pages.length; i++){
+            var ul = $('<ul></ul>').append(pages[i]);
+            ul.appendTo($(eventsElemSelector));
         }
 
         // set loadInterval to at least the total time for all pages to have rotated once at their current pageInterval rate
-        if(($this.pages.length * $this.pageInterval) > $this.loadInterval){
-            $this.loadInterval = $this.pages.length * $this.pageInterval;
+        if((pages.length * pageInterval) > loadInterval){
+            loadInterval = pages.length * pageInterval;
         }
 
         tmpUl.remove();
+        tmpUl = null;
 
         // remove loading indicators
-        $($this.eventsElemSelector).removeClass('loading');
-        $this.pagingElem.html($this.currentPage + '/' + $this.pages.length).removeClass('loading');
+        $(eventsElemSelector).removeClass('loading');
+        $(pagingElemSelector).html(currentPage + '/' + pages.length).removeClass('loading');
         $('body').removeClass('loading');
 
         // change to first page current page
-        $this.changePage();
+        changePage();
 
-           // set further rotation of pages on an interval
-        if($this.pageInterval){
+           // set further display of pages on an interval
+        if(pageInterval){
             window.pagingTimeout = setInterval(function() {
-                $this.changePage();
-            }, $this.pageInterval * 1000);
-        }
-
-        if(typeof onComplete == "function"){
-            onComplete();
+                changePage();
+            }, pageInterval * 1000);
         }
     }; 
 
-    this.renderEvent = function(event){
+    function renderEvent(event){
         var li = $('<li></li>');
         if (event.sameDay){
             li.addClass('same');
@@ -166,34 +154,41 @@ var Screen = function() {
         return li;
     };
 
-    this.changePage = function(){
-        var pagerHtml = $this.pagingTimerElem.html(); 
-        $this.pagingTimerElem.empty().append(pagerHtml);
+    function changePage(){
+        var pagerClone = $(pagingTimerSelector).clone(); 
+        $(pagingTimerSelector).replaceWith(pagerClone);
+        pagerClone = null;
 
         // if beyond number of available pages, reset to 1
-        if($this.currentPage + 1 > $this.pages.length){
-            $this.currentPage = 1;
+        if(currentPage + 1 > pages.length){
+            currentPage = 1;
         }else{
-            $this.currentPage++;
+            currentPage++;
         }
 
         // add timer css to paging pie spinner if > 1 page
-        if ($this.pages.length > 1){
-            $this.pagingTimerElem.find('*').attr('style', '-webkit-animation-duration:'+ $this.pageInterval+'s').addClass('start');
+        if (pages.length > 1){
+            $(pagingTimerSelector).find('*').attr('style', '-webkit-animation-duration:'+ pageInterval+'s').addClass('start');
         }
 
-        if($this.pages.length >= $this.currentPage){
-            $this.pagingElem.html($this.currentPage + '/' + $this.pages.length);
-            $($this.eventsElemSelector).find('ul').hide();
-            $($this.eventsElemSelector).find('ul:eq(' + ( $this.currentPage-1 ) + ')').show()
+        if(pages.length >= currentPage){
+            $(pagingElemSelector).html(currentPage + '/' + pages.length);
+            $(eventsElemSelector).find('ul').hide();
+            $(eventsElemSelector).find('ul:eq(' + ( currentPage-1 ) + ')').show()
         }
     };
+
+    this.run = function(){
+        clearTimeout(window.loadTimeout);
+        loadEvents();
+    };
+
 }
 
 $(function() {
     // start screen system
-    var screen = new Screen();
-    screen.run();
+    window.screen = new Screen();
+    window.screen.run();
 
     // means of testing non-rotated version
     $(document).click(function(){
