@@ -68,16 +68,16 @@ jQuery(function($) {
             $(this).val($(this).val().substring(1));
         }
     });
-       
+
     // Gift aid toggles some fields
     $('#id_is_gift_aid').change(function(){
         $('.giftaid-toggled').toggle();
     });
 
     // amounts field
-    
+
     // indicate selected val if already present
-    $('#id_amounts input:checked').each(function(){
+    $('.amounts input:checked').each(function(){
         $(this).parent().addClass('selected');
         if(!$(this).val().length){
             $('.amount').show();
@@ -85,17 +85,17 @@ jQuery(function($) {
     });
 
 
-    $('#id_amounts input').on('change click', function(){
-        $('#id_amounts label').removeClass('selected');
+    $('.amounts input').on('change click', function(){
+        $('.amounts label').removeClass('selected');
         $(this).parent().addClass('selected');
-        $('#id_amount').val($(this).val());
+        $('#id_amount').val($('[name="amounts"]:checked').val());
 
         if(!$(this).val().length){
             $('.amount').show();
         }else{
             $('.amount').hide();
         }
-    })
+    });
 
     $('#payment-form').submit(function(e) {
         var $form = $(this);
