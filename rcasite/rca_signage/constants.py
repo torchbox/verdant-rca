@@ -6,6 +6,7 @@ SCREEN_CHOICES = (
     ('dyson-howie-street', 'Dyson Howie Street'),
     ('sculpture', 'Sculpture'),
     ('sackler', 'Sackler'),
+    ('common-room-block', 'Common Room Block'),
 )
 
 SCREEN_CHOICES_DICT = {
