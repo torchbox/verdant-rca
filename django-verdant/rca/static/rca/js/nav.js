@@ -93,7 +93,7 @@ var desktopNav = {
 			var maxHeight = 0;
 			var selected = $('.selected', $self).clone();
 			var menu = $('.menu', $self);
-			var toggle = $('h2', $self);
+			var toggle = $('h2 a', $self);
 
 			// find tallest submenu
 			$self.find('ul').each(function(){
