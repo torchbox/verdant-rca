@@ -54,6 +54,7 @@ def text_to_html(text):
 class ResearchImporter(object):
     def __init__(self, **kwargs):
         self.save = kwargs.get("save", False)
+        self.link_creators = kwargs.get("link_creators", False)
         self.cache_directory = kwargs.get("cache_directory", "importer/data/research/")
         self.student_index = kwargs.get("student_index", "research-students")
         self.research_index = kwargs.get("research_index", "current-research")
@@ -155,9 +156,11 @@ class ResearchImporter(object):
             else:
                 self.research_index_page.add_child(researchitempage)
 
-        for creator in researchitem["creators"]:
-            creator_name = creator["name"]["given"] + " " + creator["name"]["family"]
-            self.add_researchitemcreator(researchitempage, creator_name)
+        # Link creators
+        if self.link_creators:
+            for creator in researchitem["creators"]:
+                creator_name = creator["name"]["given"] + " " + creator["name"]["family"]
+                self.add_researchitemcreator(researchitempage, creator_name)
 
     def get_research_file(self, eprintid):
         # Attempt to load from cache
@@ -209,11 +212,11 @@ class ResearchImporter(object):
             self.import_researchitem_from_eprintid(str(eprintid))
 
 
-def run(save=False, eprints_file='importer/data/research_eprints.json'):
+def run(save=False, link_creators=False, eprints_file='importer/data/research_eprints.json'):
     # Load json file
     with open(eprints_file, 'r') as f:
         eprintid_list = json.load(f)
 
     # Import
-    importer = ResearchImporter(save=save)
+    importer = ResearchImporter(save=save, link_creators=link_creators)
     importer.run(eprintid_list)
