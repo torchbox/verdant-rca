@@ -79,6 +79,7 @@ jQuery(function($) {
     // indicate selected val if already present
     $('.amounts input:checked').each(function(){
         $(this).parent().addClass('selected');
+        $('#id_amount').val($('[name="amounts"]:checked').val());
         if(!$(this).val().length){
             $('.amount').show();
         }
