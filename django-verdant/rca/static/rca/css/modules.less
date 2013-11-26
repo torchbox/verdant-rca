@@ -1773,10 +1773,9 @@ form{
 form.loading{
     position: relative;
     .spinner{
-        display: block;
-        position: absolute;
-        bottom: 10px;
-        left: 190px;
+        display: inline-block;
+        position: relative;
+        margin-left:@grid-gutter-width;
         background: url(/static/rca/images/bx_loader.gif) no-repeat;
         width: 32px;
         height: 32px;
@@ -1917,7 +1916,7 @@ form li.error{
 }
 form .help{
     .a4;
-    margin:@grid-gutter-width/2 0 0 0;
+    margin:@grid-gutter-width/2 0;
 
     + input,
     + label{

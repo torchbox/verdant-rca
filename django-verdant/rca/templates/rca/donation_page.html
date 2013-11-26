@@ -49,8 +49,10 @@
                         {% with form.number as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.expiration as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" with field_title="Gift Aid" %}{% endwith %}
+                        
                         {% with form.not_included_in_supporters_list as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" with field_title="Gift Aid" intro="If you are a UK taxpayer, the RCA can claim an extra 25p from HM Revenue and Customs for every £1 you donate through the Gift Aid scheme." %}{% endwith %}
+                        
                     </ul>
                 </fieldset>
 
@@ -85,15 +87,18 @@
 
                 {% csrf_token %}
 
-                <h3>Data Protection</h3>
-
-                <p>Information provided by you on this form will be used by the Royal College of Art for the purpose of correctly recording and acknowledging your gift. Personal information contained in the RCA’s Development Office records is used only for College-related business.</p>
-
-                <p>Please click here for the College’s full <a href="/more/contact-us/about-this-website/privacy-cookies/">Privacy Policy</a> or contact <a href="mailto:development@rca.ac.uk">development@rca.ac.uk</a>.</p>
-
                 <input type="submit" value="Donate now" /><div class="spinner">&nbsp;</div>
 
                 <p>Thank you for supporting the RCA!</p>
+                <br /><br />
+
+                <div class="bc5">
+                    <h4>Data Protection</h4>
+
+                    <p>Information provided by you on this form will be used by the Royal College of Art for the purpose of correctly recording and acknowledging your gift. Personal information contained in the RCA’s Development Office records is used only for College-related business.</p>
+
+                    <p>Please click here for the College’s full <a href="/more/contact-us/about-this-website/privacy-cookies/">Privacy Policy</a> or contact <a href="mailto:development@rca.ac.uk">development@rca.ac.uk</a>.</p>
+                </div>
             </form>
         </section>
 
