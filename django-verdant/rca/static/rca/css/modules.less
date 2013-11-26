@@ -210,16 +210,14 @@
         }
     }
 
-    .caption{
-        background-color:rgba(0,0,0,0.62);
-        position:absolute;
-        top:@grid-gutter-width;
-        right:@grid-gutter-width;
-        padding:@grid-gutter-width;
-        margin:0;
+    .hover-content {
         display: none;
-        &.showmobile {
-            display: block;
+    }
+
+    .mobilecaption {
+        display: block;
+        .bc4 {
+            font-size:0.667em;
         }
     }
 }
@@ -879,7 +877,8 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 .one-plus .load-more {
     display: none;
 }
-.three-plus-no-scroll .load-more, .index-listing .load-more {
+.three-plus-no-scroll .load-more,
+.index-listing .load-more {
     display:inline;
 }
 
@@ -1658,7 +1657,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         margin:0;
     }
     .load-more{
-        display:none;
+        display:inline;
         a{
             height:126px;
             width:126px;
