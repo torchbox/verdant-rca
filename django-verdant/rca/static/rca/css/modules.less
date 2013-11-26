@@ -63,6 +63,13 @@
 /* carousels in tabs have a background colour, others are transparent */
 .tab-content .bx-wrapper .bx-viewport {
     background-color: #F4F4F4;
+    div.mobilecaption p.caption,
+    div.mobilecaption .bc1 {
+        /* sort styling of captions under images when carousel is within a tab */
+        background-color: @color-tab-grey; /* match tab background colour */
+        padding: 20px 0;
+        margin: 0;
+    }
 }
 
 .bx-wrapper {
@@ -210,7 +217,8 @@
         }
     }
 
-    .hover-content {
+    .hover-content,
+    .content {
         display: none;
     }
 
@@ -242,7 +250,7 @@
         margin: auto;
     }
     &.standalone {
-        background-color: darken(@color-pale-grey, 10%); /* match carousel background colour */
+        background-color: @color-tab-grey; /* match carousel background colour */
     }
 }
 
@@ -949,7 +957,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 }
 .tab-content{
     .clearfix();
-    background-color:darken(@color-pale-grey, 10%);
+    background-color:@color-tab-grey;
     position: relative;
 
     .header{
@@ -974,7 +982,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
                 font-family:@font-family-benton-light;
             }
             &.active{
-                background-color:darken(@color-pale-grey, 10%);
+                background-color: @color-tab-grey;
             }
 
             &.active:after{

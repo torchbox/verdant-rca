@@ -54,6 +54,7 @@ def text_to_html(text):
 class ResearchImporter(object):
     def __init__(self, **kwargs):
         self.save = kwargs.get("save", False)
+        self.link_creators = kwargs.get("link_creators", False)
         self.cache_directory = kwargs.get("cache_directory", "importer/data/research/")
         self.student_index = kwargs.get("student_index", "research-students")
         self.research_index = kwargs.get("research_index", "current-research")
@@ -145,6 +146,7 @@ class ResearchImporter(object):
         researchitempage.description = researchitem_abstract
         researchitempage.work_type = WORK_TYPES_CHOICES[researchitem_type]
         researchitempage.school = researchitem_school
+        researchitempage.show_on_homepage = False
         researchitempage.slug = make_slug(researchitempage)
 
         # Save researchitem
@@ -154,9 +156,11 @@ class ResearchImporter(object):
             else:
                 self.research_index_page.add_child(researchitempage)
 
-        for creator in researchitem["creators"]:
-            creator_name = creator["name"]["given"] + " " + creator["name"]["family"]
-            self.add_researchitemcreator(researchitempage, creator_name)
+        # Link creators
+        if self.link_creators:
+            for creator in researchitem["creators"]:
+                creator_name = creator["name"]["given"] + " " + creator["name"]["family"]
+                self.add_researchitemcreator(researchitempage, creator_name)
 
     def get_research_file(self, eprintid):
         # Attempt to load from cache
@@ -184,17 +188,18 @@ class ResearchImporter(object):
 
     def import_researchitem_from_eprintid(self, eprintid):
         # Load file
-        with self.get_research_file(eprintid) as f:
-            # Check file
-            if f is None:
-                print "Cannot get file for " + eprintid
-                return
+        f = self.get_research_file(eprintid)
 
-            # Load contents
-            researchitem = json.loads(f.read())
+        # Check file
+        if f is None:
+            print "Cannot get file for " + eprintid
+            return
 
-            # Import it
-            self.import_researchitem(researchitem)
+        # Load contents
+        researchitem = json.loads(f.read())
+
+        # Import it
+        self.import_researchitem(researchitem)
 
     def run(self, eprintid_list):
         # Get index pages
@@ -207,11 +212,11 @@ class ResearchImporter(object):
             self.import_researchitem_from_eprintid(str(eprintid))
 
 
-def run(save=False, eprints_file='importer/data/research_eprints.json'):
+def run(save=False, link_creators=False, eprints_file='importer/data/research_eprints.json'):
     # Load json file
     with open(eprints_file, 'r') as f:
         eprintid_list = json.load(f)
 
     # Import
-    importer = ResearchImporter(save=save)
+    importer = ResearchImporter(save=save, link_creators=link_creators)
     importer.run(eprintid_list)

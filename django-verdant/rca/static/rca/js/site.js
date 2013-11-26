@@ -142,7 +142,6 @@ function applyCarousel(carouselSelector){
                 captionTextHeight = $(this).height();
             }
         });
-        captionTextHeight > 0 ? captionTextHeight += 40: captionTextHeight; // random addition of pixels seems to be necessary for it to display properly on mobile
         return captionTextHeight;
     }
 
