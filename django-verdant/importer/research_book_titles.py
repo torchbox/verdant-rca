@@ -74,17 +74,18 @@ class ResearchBookTitlesImporter(object):
 
     def import_researchitem_from_eprintid(self, eprintid):
         # Load file
-        with self.get_research_file(eprintid) as f:
-            # Check file
-            if f is None:
-                print "Cannot get file for " + eprintid
-                return
+        f = self.get_research_file(eprintid)
 
-            # Load contents
-            researchitem = json.loads(f.read())
+        # Check file
+        if f is None:
+            print "Cannot get file for " + eprintid
+            return
 
-            # Import it
-            self.import_researchitem(researchitem)
+        # Load contents
+        researchitem = json.loads(f.read())
+
+        # Import it
+        self.import_researchitem(researchitem)
 
     def run(self, eprintid_list):
         # Loop through eprint ids
