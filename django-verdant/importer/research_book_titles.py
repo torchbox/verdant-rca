@@ -2,15 +2,11 @@ from rca.models import ResearchItem
 import os
 import httplib2
 import json
-from collections import namedtuple
-import csv
-import re
 
 
 class ResearchBookTitlesImporter(object):
     def __init__(self, **kwargs):
         self.save = kwargs.get('save', False)
-        self.research_csv_filename = kwargs.get('research_csv_filename', 'importer/data/research.csv')
         self.cache_directory = kwargs.get('cache_directory', 'importer/data/research/')
         self.http = httplib2.Http()
 
@@ -78,42 +74,30 @@ class ResearchBookTitlesImporter(object):
 
     def import_researchitem_from_eprintid(self, eprintid):
         # Load file
-        with self.get_research_file(eprintid) as f:
-            # Check file
-            if f is None:
-                print "Cannot get file for " + eprintid
-                return
+        f = self.get_research_file(eprintid)
 
-            # Load contents
-            researchitem = json.loads(f.read())
+        # Check file
+        if f is None:
+            print "Cannot get file for " + eprintid
+            return
 
-            # Import it
-            self.import_researchitem(researchitem)
+        # Load contents
+        researchitem = json.loads(f.read())
 
-    def run(self):
-        # Load research
-        ResearchRecord = namedtuple('ResearchRecord', 'author, output_type, title, ref_url')
-        research_csv = csv.reader(open(self.research_csv_filename, 'rb'))
+        # Import it
+        self.import_researchitem(researchitem)
 
-        # Expression for finding eprintids in ref urls
-        eprint_expr = re.compile(r'^(?:http|https)://researchonline.rca.ac.uk/(\d+)/')
-
-        # Iterate through research
-        for research_line in research_csv:
-            # Load research item into named tuple
-            research = ResearchRecord._make(research_line)
-
-            # Work out the eprintid
-            match = eprint_expr.match(research.ref_url)
-            if match:
-                eprintid = match.group(1)
-                self.import_researchitem_from_eprintid(eprintid)
-            else:
-                print "Cannot find eprintid in " + research.ref_url
-                continue
+    def run(self, eprintid_list):
+        # Loop through eprint ids
+        for eprintid in eprintid_list:
+            self.import_researchitem_from_eprintid(str(eprintid))
 
 
-def run(save=False):
+def run(save=False, eprints_file='importer/data/research_eprints.json'):
+    # Load json file
+    with open(eprints_file, 'r') as f:
+        eprintid_list = json.load(f)
+
     # Import
     importer = ResearchBookTitlesImporter(save=save)
-    importer.run()
+    importer.run(eprintid_list)
