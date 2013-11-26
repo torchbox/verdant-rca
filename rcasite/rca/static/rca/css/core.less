@@ -89,9 +89,7 @@ html, body {
 
 .mobile-menu-button{
     @button-height:40px;
-
     font-family:@font-family-benton;
-    display: block;
     position: fixed;
     z-index: 3000;
     left: @spacing-two;
@@ -103,7 +101,7 @@ html, body {
     font-size: 1em;
     text-transform: uppercase;
     outline: none !important;
-
+    display: none; /* javascript is now used to display this only if there is some content within the aside block */
     transform: rotate(90deg);
     transform-origin: top left;
     -moz-transform: rotate(90deg);
@@ -141,6 +139,7 @@ body.show-mobile-menu{
     .mobile-menu-button{
         color:white;
         background-color:@color-pink;
+        display: block;
     }
 }
 
