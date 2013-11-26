@@ -16,7 +16,7 @@ class SearchResults(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             # Get primary keys
-            pk_list = [result._source["pk"] for result in self.query[key]]
+            pk_list = list({result._source["pk"] for result in self.query[key]})
 
             # Get results
             results = self.model.objects.filter(pk__in=pk_list)
