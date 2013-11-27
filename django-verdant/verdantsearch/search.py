@@ -197,7 +197,7 @@ class Search(object):
             return
 
         # Get ID for document
-        doc_id = obj.indexed_get_toplevel_content_type() + ":" + str(obj.pk)
+        doc_id = obj.indexed_get_document_id()
 
         # Delete document
         try:
