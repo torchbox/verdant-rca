@@ -1,11 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from verdantadmin.edit_handlers import ObjectList
+from verdant.verdantadmin.edit_handlers import ObjectList
 
-import models
-import forms
+from verdantredirects import models
 
 
 REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)

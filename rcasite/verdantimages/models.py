@@ -12,7 +12,7 @@ import os.path
 
 from taggit.managers import TaggableManager
 
-from verdantadmin.taggable import TagSearchable
+from verdant.verdantadmin.taggable import TagSearchable
 from verdantimages import image_ops
 
 

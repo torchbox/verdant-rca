@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 
 from verdant.verdantdocs.models import Document
 from verdant.verdantdocs.forms import DocumentForm
-from verdantadmin.forms import SearchForm
+from verdant.verdantadmin.forms import SearchForm
 
 
 @login_required

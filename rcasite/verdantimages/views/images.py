@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form
-from verdantadmin.forms import SearchForm
+from verdant.verdantadmin.forms import SearchForm
 
 @login_required
 def index(request):

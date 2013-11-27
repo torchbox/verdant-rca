@@ -21,7 +21,7 @@ from core.models import Page, Orderable
 from core.fields import RichTextField
 from cluster.fields import ParentalKey
 
-from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from verdant.verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdant.verdantdocs.edit_handlers import DocumentChooserPanel

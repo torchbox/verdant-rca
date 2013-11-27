@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 
 import json
 
-from verdantadmin.modal_workflow import render_modal_workflow
+from verdant.verdantadmin.modal_workflow import render_modal_workflow
 from verdant.verdantsnippets.views.snippets import get_content_type_from_url_params, get_snippet_type_name
 
 @login_required

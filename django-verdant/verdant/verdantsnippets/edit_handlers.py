@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_text
 
-from verdantadmin.edit_handlers import BaseChooserPanel
+from verdant.verdantadmin.edit_handlers import BaseChooserPanel
 
 
 class BaseSnippetChooserPanel(BaseChooserPanel):

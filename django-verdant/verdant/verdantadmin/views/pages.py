@@ -11,8 +11,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from treebeard.exceptions import InvalidMoveToDescendant
 
 from core.models import Page, PageRevision, get_page_types
-from verdantadmin.edit_handlers import TabbedInterface, ObjectList
-from verdantadmin.forms import SearchForm
+from verdant.verdantadmin.edit_handlers import TabbedInterface, ObjectList
+from verdant.verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 @login_required

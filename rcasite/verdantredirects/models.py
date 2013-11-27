@@ -1,5 +1,5 @@
 from django.db import models
-from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel
+from verdant.verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel
 
 
 class Redirect(models.Model):

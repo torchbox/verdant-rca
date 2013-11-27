@@ -5,8 +5,8 @@ from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 
 from core.models import Page
-from verdantadmin.modal_workflow import render_modal_workflow
-from verdantadmin.forms import SearchForm, ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
+from verdant.verdantadmin.modal_workflow import render_modal_workflow
+from verdant.verdantadmin.forms import SearchForm, ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
 
 def get_querystring(request):
     return urlencode({

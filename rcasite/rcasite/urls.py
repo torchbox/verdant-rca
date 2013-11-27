@@ -6,7 +6,7 @@ from django.conf import settings
 import os.path
 
 from core import urls as verdant_urls
-from verdantadmin import urls as verdantadmin_urls
+from verdant.verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantmedia import urls as verdantmedia_urls
 from verdant.verdantdocs import admin_urls as verdantdocs_admin_urls

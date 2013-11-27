@@ -168,7 +168,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'core',
-    'verdantadmin',
+    'verdant.verdantadmin',
     'verdantimages',
     'verdantmedia',
     'verdant.verdantdocs',
