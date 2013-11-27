@@ -22,9 +22,6 @@ from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
-from verdantsearch import register_signal_handlers
-register_signal_handlers()
-
 
 urlpatterns = patterns('',
     # Examples:
