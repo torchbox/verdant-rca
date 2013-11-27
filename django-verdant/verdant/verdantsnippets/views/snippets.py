@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from verdant.snippets.models import get_snippet_content_types
+from verdant.verdantsnippets.models import get_snippet_content_types
 from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==

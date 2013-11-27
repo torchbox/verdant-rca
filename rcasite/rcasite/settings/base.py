@@ -172,7 +172,7 @@ INSTALLED_APPS = (
     'verdantimages',
     'verdantmedia',
     'verdant.verdantdocs',
-    'verdant.snippets',
+    'verdant.verdantsnippets',
     'verdantsearch',
     'verdantusers',
     'verdantredirects',
