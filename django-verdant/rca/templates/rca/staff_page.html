@@ -126,8 +126,6 @@
                             <h2 class="a2">External collaborations</h2>
                         </li>
                         <li class="col col-9 last body-text-style showmorestyle">
-                            <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
-
                             {% with self.external_collaborations_placeholder|paragraph_split:"</p>" as parts %}
                                 {{ parts.0|richtext }}
                                 {% if parts.1 %}
