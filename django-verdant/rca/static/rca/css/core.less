@@ -39,6 +39,7 @@
  * * Programme
  * * News
  * Search results
+ * Skip navigation link
  */
 
 /**
@@ -1580,7 +1581,7 @@ footer {
 }
 
 /**
- * Search results
+ * &Search results
  */
 
 .search-results {
@@ -1600,6 +1601,19 @@ footer {
         margin:0;
     }
 }
+
+/**
+ * &Skip navigation link
+ */
+
+ a.hidden {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+ }
 
 @import "modules.less";
 @import "dlmenu.less";
