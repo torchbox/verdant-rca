@@ -1,6 +1,6 @@
 from django import forms
 
-from verdantdocs.models import Document
+from verdant.verdantdocs.models import Document
 
 
 class DocumentForm(forms.ModelForm):

@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from verdantdocs.models import Document
-from verdantdocs.forms import DocumentForm
+from verdant.verdantdocs.models import Document
+from verdant.verdantdocs.forms import DocumentForm
 from verdantadmin.forms import SearchForm
 
 

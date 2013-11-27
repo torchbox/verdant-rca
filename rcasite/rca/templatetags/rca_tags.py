@@ -9,7 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
-from verdantdocs.models import Document
+from verdant.verdantdocs.models import Document
 
 register = template.Library()
 

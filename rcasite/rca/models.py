@@ -24,7 +24,7 @@ from cluster.fields import ParentalKey
 from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
-from verdantdocs.edit_handlers import DocumentChooserPanel
+from verdant.verdantdocs.edit_handlers import DocumentChooserPanel
 from verdant.snippets.edit_handlers import SnippetChooserPanel
 from verdant.snippets.models import register_snippet
 

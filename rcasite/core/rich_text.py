@@ -12,7 +12,7 @@ from core.models import Page
 from verdantimages.models import get_image_model
 from verdantimages.formats import get_image_format
 
-from verdantdocs.models import Document
+from verdant.verdantdocs.models import Document
 
 # Define a set of 'embed handlers' and 'link handlers'. These handle the translation
 # of 'special' HTML elements in rich text - ones which we do not want to include

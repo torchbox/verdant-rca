@@ -4,7 +4,7 @@ from django.conf import settings
 
 from core.models import Page, PageRevision
 from verdantimages.models import get_image_model
-from verdantdocs.models import Document
+from verdant.verdantdocs.models import Document
 
 @login_required
 def home(request):

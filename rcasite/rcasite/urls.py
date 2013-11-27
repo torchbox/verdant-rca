@@ -9,8 +9,8 @@ from core import urls as verdant_urls
 from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantmedia import urls as verdantmedia_urls
-from verdantdocs import admin_urls as verdantdocs_admin_urls
-from verdantdocs import urls as verdantdocs_urls
+from verdant.verdantdocs import admin_urls as verdantdocs_admin_urls
+from verdant.verdantdocs import urls as verdantdocs_urls
 from verdant.snippets import urls as verdantsnippets_urls
 from verdantsearch import urls as verdantsearch_urls
 from verdantusers import urls as verdantusers_urls

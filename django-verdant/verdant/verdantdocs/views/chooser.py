@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 import json
 
 from verdantadmin.modal_workflow import render_modal_workflow
-from verdantdocs.models import Document
-from verdantdocs.forms import DocumentForm
+from verdant.verdantdocs.models import Document
+from verdant.verdantdocs.forms import DocumentForm
 from verdantadmin.forms import SearchForm
 
 
