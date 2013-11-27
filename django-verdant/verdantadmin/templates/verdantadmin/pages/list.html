@@ -16,9 +16,9 @@
             {% if orderable %}
                 <th class="ord">
                     {% if ordering == "ord" %}
-                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-order text-replace">Order</a></th> 
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-order text-replace" title="Disable ordering of child pages">Order</a></th> 
                     {% else %}
-                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-order text-replace">Order</a></th>
+                        <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-order text-replace" title="Enable ordering of child pages">Order</a></th>
                     {% endif %}
             {% endif %}
             <th class="title">
