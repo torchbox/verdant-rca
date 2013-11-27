@@ -39,11 +39,11 @@ def event_times_display(event_datetime):
         time_from = event_datetime.time_from.strftime('%I.%M%p').lstrip("0").replace(" 0", " ").replace(".00", "")
         if event_datetime.time_to:
             time_to = event_datetime.time_to.strftime('%I.%M%p').lstrip("0").replace(" 0", " ").replace(".00", "")
-            return '&ndash;'.join([time_from, time_to]).lower().capitalize()
+            return '&ndash;'.join([time_from, time_to]).lower()
         else:
-            return time_from.lower().capitalize()
+            return time_from.lower()
 
-    return event_datetime.time_other.lower().capitalize()
+    return event_datetime.time_other
 
 
 @register.filter()
