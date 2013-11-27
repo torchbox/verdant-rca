@@ -3,14 +3,15 @@
 {% block bodyclass %}page-explorer{% endblock %}
 
 {% block content %}
-    <header>
+    <header class="merged">
         <h1>Explorer</h1>
 
-        <p class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'verdantadmin_home' %}" class="icon icon-home text-replace">Home</a></li>
             {% for page in parent_page.get_ancestors %}
-                <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a> /
+                <li><a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a></li>
             {% endfor %}
-        </p>
+        </ul>
 
     </header>
 

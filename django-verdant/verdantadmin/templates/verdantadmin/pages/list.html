@@ -1,7 +1,7 @@
 <table class="listing {% if full_width %}full-width{% endif %}">
     <thead>
         {% if parent_page %}
-            <tr class="index {% if not page.live %}inactive{% endif %}">
+            <tr class="index {% if not parent_page.live %}inactive{% endif %}">
                 <td class="title">
                     <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
                     <ul class="actions">

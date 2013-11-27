@@ -31,12 +31,12 @@ ul.listing{
     }
 
     &.small td, th{
-        padding:1em 0.75em;
+        padding:1em 1em;
     }
 
     thead{
         color: @color-grey;
-        border-bottom:1px solid @color-input-border;
+        border-bottom:1px solid @color-grey-lighter;
         
         th{
             font-size:0.9em;
@@ -113,6 +113,7 @@ ul.listing{
     } 
 
     .index {
+        background-color:@color-header-bg;
         .title h2{
             font-size:1.2em;
             font-weight:normal;
@@ -187,7 +188,8 @@ ul.listing{
         li{
             display:inline-block;
             padding:0 0.5em;
-            border-left:1px solid @color-grey-lighter;
+            border-left:1px solid @color-grey-light;
+            line-height:1em;
             
             &:first-child{
                 border:0;
@@ -198,6 +200,7 @@ ul.listing{
         .button-small{
             font-size:1em;
             padding:0.6em 1.2em;
+            margin-right:1em;
 
             &:before{
                 font-size:1.7em;
