@@ -39,6 +39,7 @@
  * * Programme
  * * News
  * Search results
+ * Skip navigation link
  */
 
 /**
@@ -1346,7 +1347,9 @@ footer {
  */
 
 .type-programme{
-
+    .button-bar li {
+        z-index: 3; /* fixes issue with poster image appearing above download buttons when in tabs */
+    }
 }
 
 .type-news {
@@ -1580,7 +1583,7 @@ footer {
 }
 
 /**
- * Search results
+ * &Search results
  */
 
 .search-results {
@@ -1600,6 +1603,19 @@ footer {
         margin:0;
     }
 }
+
+/**
+ * &Skip navigation link
+ */
+
+ a.hidden {
+    position:absolute;
+    left:-10000px;
+    top:auto;
+    width:1px;
+    height:1px;
+    overflow:hidden;
+ }
 
 @import "modules.less";
 @import "dlmenu.less";

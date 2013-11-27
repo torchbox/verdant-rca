@@ -36,29 +36,30 @@ def event_date_display(event):
 @register.filter()
 def event_times_display(event_datetime):
     if event_datetime.time_from:
-        time_from = event_datetime.time_from.strftime('%H.%M')
+        time_from = event_datetime.time_from.strftime('%I.%M%p').lstrip("0").replace(" 0", " ").replace(".00", "")
         if event_datetime.time_to:
-            time_to = event_datetime.time_to.strftime('%H.%M')
-            return '&ndash;'.join([time_from, time_to])
+            time_to = event_datetime.time_to.strftime('%I.%M%p').lstrip("0").replace(" 0", " ").replace(".00", "")
+            return '&ndash;'.join([time_from, time_to]).lower()
         else:
-            return time_from
+            return time_from.lower()
 
-    return event_datetime.time_other
+    return event_datetime.time_other.lower()
 
 
 @register.filter()
 def event_location_display(event_datetime):
     event = event_datetime.page
 
-    if event.location == 'other':
-        return event.location_other
+    # NB: events with a location "other" are excluded from signage completely
 
-    location = [event.get_location_display()]
-
-    if event.location_other:
-        location.append(event.location_other)
+    location = []
 
     if event.gallery:
-        location.insert(0, event.get_gallery_display())
+        location.append(event.get_gallery_display())
+
+    if event.location_other:
+        location.append(event.location_other)   
+
+    location.append(event.get_location_display())
 
     return ', '.join(location)

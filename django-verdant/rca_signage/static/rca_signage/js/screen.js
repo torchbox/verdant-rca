@@ -19,13 +19,15 @@ var Screen = function() {
             eventsData = data;
             handleEvents();
 
-            // load new events on an interval
-            window.loadTimeout = setTimeout(function(){
-                clearTimeout(window.loadTimeout); 
-                window.screen = null;
-                window.screen = new Screen();
-                window.screen.run();                
-            }, loadInterval * 1000);
+            if(loadInterval){
+                // load new events on an interval
+                window.loadTimeout = setTimeout(function(){
+                    clearTimeout(window.loadTimeout); 
+                    window.screen = null;
+                    window.screen = new Screen();
+                    window.screen.run();                
+                }, loadInterval * 1000);
+            }
         });
     };
 
@@ -117,19 +119,25 @@ var Screen = function() {
         tmpUl = null;
 
         // remove loading indicators
-        $(eventsElemSelector).removeClass('loading');
-        $(pagingElemSelector).html(currentPage + '/' + pages.length).removeClass('loading');
         $('body').removeClass('loading');
+        $(eventsElemSelector).removeClass('loading');
 
-        // change to first page current page
-        changePage();
+        // show/activate paging
+        if(pages.length > 1){
+            $(pagingElemSelector).html(currentPage + '/' + pages.length).removeClass('loading');
+            // change to first page current page
+            changePage();
 
-           // set further display of pages on an interval
-        if(pageInterval){
-            window.pagingTimeout = setInterval(function() {
-                changePage();
-            }, pageInterval * 1000);
-        }
+            // set further display of pages on an interval
+            if(pageInterval){
+                window.pagingTimeout = setInterval(function() {
+                    changePage();
+                }, pageInterval * 1000);
+            }
+
+        }else{
+             $(pagingElemSelector).hide();
+        }       
     }; 
 
     function renderEvent(event){

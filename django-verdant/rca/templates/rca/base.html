@@ -69,6 +69,7 @@
         </script>
     </head>
     <body class="{% block body_class %}{% endblock %}">
+        <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a> 
         {% verdantuserbar verdantuserbarcss %}
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
@@ -87,6 +88,7 @@
             <div class="page-wrapper">
                 <div class="page-content">
                     <div class="inner">
+                        <a id="maincontent" name="maincontent">&nbsp;</a>
                         {% block content %}{% endblock %}
                     </div>
                 </div>

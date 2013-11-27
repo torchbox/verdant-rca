@@ -10,7 +10,7 @@
             {% if pages %}
                 <ul>
                     {% for page in pages %}
-                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
+                        <li><a href="{% pageurl page %}" tabindex="6">{{ page.title }}</a></li>
                     {% endfor %}
                 </ul>
             {% endif %}

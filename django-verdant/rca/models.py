@@ -163,7 +163,12 @@ EVENT_GALLERY_CHOICES = (
     ('sacklerbuilding', 'Sackler Building'),
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
-
+    ('danacentre', 'Dana Centre'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('jaymewsgallery', 'Jay Mews Gallery'),
+    ('humanitiesseminarroom', 'Humanities Seminar Room'),
+    ('movingimagestudio', 'Moving Image Studio'),
+    ('dysonbuilding', 'Dyson Building'),
 )
 
 WORK_TYPES_CHOICES = (
