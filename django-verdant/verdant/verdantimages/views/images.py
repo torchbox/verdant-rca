@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
-from verdantimages.models import get_image_model
-from verdantimages.forms import get_image_form
+from verdant.verdantimages.models import get_image_model
+from verdant.verdantimages.forms import get_image_form
 from verdant.verdantadmin.forms import SearchForm
 
 @login_required

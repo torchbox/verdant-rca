@@ -9,8 +9,8 @@ from core.models import Page
 # FIXME: we don't really want to import verdantimages within core.
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
-from verdantimages.models import get_image_model
-from verdantimages.formats import get_image_format
+from verdant.verdantimages.models import get_image_model
+from verdant.verdantimages.formats import get_image_format
 
 from verdant.verdantdocs.models import Document
 

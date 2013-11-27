@@ -1,8 +1,8 @@
 from django import forms
 from django.forms.models import modelform_factory
 
-from verdantimages.models import get_image_model
-from verdantimages.formats import get_image_formats
+from verdant.verdantimages.models import get_image_model
+from verdant.verdantimages.formats import get_image_formats
 
 
 def get_image_form():

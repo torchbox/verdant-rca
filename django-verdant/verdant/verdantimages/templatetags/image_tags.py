@@ -1,6 +1,6 @@
 from django import template
 
-from verdantimages.models import Filter
+from verdant.verdantimages.models import Filter
 
 register = template.Library()
 

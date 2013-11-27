@@ -1,4 +1,4 @@
-from verdantimages.formats import Format, unregister_image_format, register_image_format
+from verdant.verdantimages.formats import Format, unregister_image_format, register_image_format
 from django.utils.html import escape
 
 class CaptionedImageFormat(Format):

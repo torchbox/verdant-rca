@@ -6,9 +6,9 @@ import json
 
 from verdant.verdantadmin.modal_workflow import render_modal_workflow
 from verdant.verdantadmin.forms import SearchForm
-from verdantimages.models import get_image_model
-from verdantimages.forms import get_image_form, ImageInsertionForm
-from verdantimages.formats import get_image_format
+from verdant.verdantimages.models import get_image_model
+from verdant.verdantimages.forms import get_image_form, ImageInsertionForm
+from verdant.verdantimages.formats import get_image_format
 
 
 def get_image_json(image):

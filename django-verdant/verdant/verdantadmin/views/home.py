@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from core.models import Page, PageRevision
-from verdantimages.models import get_image_model
+from verdant.verdantimages.models import get_image_model
 from verdant.verdantdocs.models import Document
 
 @login_required

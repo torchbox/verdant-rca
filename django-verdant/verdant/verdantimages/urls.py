@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 
-urlpatterns = patterns('verdantimages.views',
+urlpatterns = patterns('verdant.verdantimages.views',
     url(r'^$', 'images.index', name='verdantimages_index'),
     url(r'^(\d+)/$', 'images.edit', name='verdantimages_edit_image'),
     url(r'^(\d+)/delete/$', 'images.delete', name='verdantimages_delete_image'),
