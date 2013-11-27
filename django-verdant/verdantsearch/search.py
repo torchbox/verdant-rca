@@ -16,7 +16,15 @@ class SearchResults(object):
     def __getitem__(self, key):
         if isinstance(key, slice):
             # Get primary keys
-            pk_list = list({result._source["pk"] for result in self.query[key]})
+            pk_list_unclean = [result._source["pk"] for result in self.query[key]]
+
+            # Remove duplicate keys (and preserve order)
+            seen_pks = set()
+            pk_list = []
+            for pk in pk_list_unclean:
+                if pk not in seen_pks:
+                    seen_pks.add(pk)
+                    pk_list.append(pk)
 
             # Get results
             results = self.model.objects.filter(pk__in=pk_list)
