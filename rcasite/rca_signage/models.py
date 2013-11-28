@@ -2,9 +2,9 @@ from django.http import HttpResponse, Http404
 from django.db.models import Q
 from django.shortcuts import render
 from django.template.loader import render_to_string
-from core.models import Page
+from verdant.verdantcore.models import Page
 from rca.models import EventItemDatesTimes, EventItem
-from constants import SCREEN_CHOICES, SCREEN_CHOICES_DICT
+from rca_signage.constants import SCREEN_CHOICES, SCREEN_CHOICES_DICT
 from rca_signage.templatetags import rca_signage_tags
 import datetime
 import json

@@ -1,7 +1,7 @@
 from django import template
 from django.core import urlresolvers
 
-from core.models import get_navigation_menu_items
+from verdant.verdantcore.models import get_navigation_menu_items
 
 register = template.Library()
 

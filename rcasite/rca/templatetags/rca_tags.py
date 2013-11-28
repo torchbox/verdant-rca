@@ -2,7 +2,7 @@ from django import template
 from django.utils.html import conditional_escape
 from django.db.models import Min, Max
 from django.template.base import parse_bits
-from core.util import camelcase_to_underscore
+from verdant.verdantcore.util import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain
@@ -303,7 +303,7 @@ def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True)
     depth_filter = 'AND depth <= %s' % (max_depth + 2) if max_depth else ''
 
     pages = Page.objects.raw("""
-        SELECT * FROM core_page
+        SELECT * FROM verdantcore_page
         WHERE depth = 2
         OR (
         live = True

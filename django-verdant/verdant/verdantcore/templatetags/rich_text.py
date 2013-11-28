@@ -1,7 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from core.rich_text import expand_db_html
+from verdant.verdantcore.rich_text import expand_db_html
 
 register = template.Library()
 

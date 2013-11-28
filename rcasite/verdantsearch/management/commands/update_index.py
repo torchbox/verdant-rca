@@ -38,7 +38,7 @@ class Command(NoArgsCommand):
                 if key in object_set:
                     # Conflict, work out who should get this space
                     # The object with the longest content type string gets the space
-                    # Eg, "core.Page-rca.StudentPage" kicks out "core.Page"
+                    # Eg, "verdantcore.Page-rca.StudentPage" kicks out "verdantcore.Page"
                     if len(obj.indexed_get_content_type()) > len(object_set[key].indexed_get_content_type()):
                         # Take the spot
                         object_set[key] = obj

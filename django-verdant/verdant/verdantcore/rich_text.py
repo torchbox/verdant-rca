@@ -1,10 +1,9 @@
 from django.utils.html import escape
 
-from bs4 import BeautifulSoup
 import re  # parsing HTML with regexes LIKE A BOSS.
 
-from core.whitelist import Whitelister
-from core.models import Page
+from verdant.verdantcore.whitelist import Whitelister
+from verdant.verdantcore.models import Page
 
 # FIXME: we don't really want to import verdantimages within core.
 # For that matter, we probably don't want core to be concerned about translating

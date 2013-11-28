@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from core.models import Page, PageRevision
+from verdant.verdantcore.models import Page, PageRevision
 from verdant.verdantimages.models import get_image_model
 from verdant.verdantdocs.models import Document
 

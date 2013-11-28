@@ -16,7 +16,7 @@ from rca.models import (
         StudentPageWorkSponsor,
         RcaImage,
         )
-from core.models import (
+from verdant.verdantcore.models import (
         Page,
         )
 import markdown

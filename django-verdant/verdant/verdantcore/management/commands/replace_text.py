@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.db import models
-from core.models import PageRevision, get_page_types
+from verdant.verdantcore.models import PageRevision, get_page_types
 
 
 def replace_in_model(model, from_text, to_text):

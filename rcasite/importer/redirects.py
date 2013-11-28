@@ -1,6 +1,6 @@
 from data.redirects import REDIRECTS
 from verdantredirects.models import Redirect
-from core.models import Site, Page
+from verdant.verdantcore.models import Site, Page
 
 
 class RedirectsImporter(object):

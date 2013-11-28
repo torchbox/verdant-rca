@@ -4,9 +4,9 @@ from verdant.verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, Page
 
 class Redirect(models.Model):
     old_path = models.CharField("Redirect from",max_length=255, unique=True, db_index=True)
-    site = models.ForeignKey('core.Site', null=True, blank=True, related_name='redirects', db_index=True, editable=False)
+    site = models.ForeignKey('verdantcore.Site', null=True, blank=True, related_name='redirects', db_index=True, editable=False)
     is_permanent = models.BooleanField("Permanent", default=True)
-    redirect_page = models.ForeignKey('core.Page', verbose_name="Redirect to a page", related_name='+', null=True, blank=True)
+    redirect_page = models.ForeignKey('verdantcore.Page', verbose_name="Redirect to a page", related_name='+', null=True, blank=True)
     redirect_link = models.URLField("Redirect to any URL", blank=True)
 
     @property

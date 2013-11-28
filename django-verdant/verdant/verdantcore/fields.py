@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import Textarea
 from south.modelsinspector import add_introspection_rules
 
-from core.rich_text import DbWhitelister, expand_db_html
+from verdant.verdantcore.rich_text import DbWhitelister, expand_db_html
 
 class RichTextArea(Textarea):
     def get_panel(self):

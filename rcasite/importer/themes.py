@@ -1,4 +1,4 @@
-from core.models import Page
+from verdant.verdantcore.models import Page
 from rca.models import ResearchItem
 import csv
 

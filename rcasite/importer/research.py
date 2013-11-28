@@ -1,6 +1,6 @@
 from importer.import_utils import make_slug
 from rca.models import ResearchItem, ResearchItemCreator
-from core.models import Page
+from verdant.verdantcore.models import Page
 import os
 import httplib2
 import json

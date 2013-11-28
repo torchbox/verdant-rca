@@ -118,7 +118,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'core.middleware.SiteMiddleware',
+    'verdant.verdantcore.middleware.SiteMiddleware',
 
     'verdantredirects.middleware.RedirectMiddleware',
 
@@ -167,7 +167,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
-    'core',
+    'core',  # legacy - only exists to assist in migrating old installations of RCA
+    'verdant.verdantcore',
     'verdant.verdantadmin',
     'verdant.verdantimages',
     'verdantmedia',

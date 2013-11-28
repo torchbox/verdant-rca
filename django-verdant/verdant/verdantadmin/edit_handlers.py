@@ -10,9 +10,9 @@ from django.core.urlresolvers import reverse
 
 import copy
 
-from core.models import Page
-from core.util import camelcase_to_underscore
-from core.fields import RichTextArea
+from verdant.verdantcore.models import Page
+from verdant.verdantcore.util import camelcase_to_underscore
+from verdant.verdantcore.fields import RichTextArea
 from cluster.forms import ClusterForm, ClusterFormMetaclass
 from taggit.forms import TagWidget
 
@@ -630,7 +630,7 @@ def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
     })
 
 
-# Now that we've defined EditHandlers, we can set up core.Page to have some.
+# Now that we've defined EditHandlers, we can set up verdantcore.Page to have some.
 Page.content_panels = [
     FieldPanel('title'),
     FieldPanel('slug'),

@@ -4,7 +4,7 @@ from django.http import Http404
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 
-from core.models import Page
+from verdant.verdantcore.models import Page
 from verdant.verdantadmin.modal_workflow import render_modal_workflow
 from verdant.verdantadmin.forms import SearchForm, ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
 
@@ -18,10 +18,9 @@ def get_querystring(request):
 
 @login_required
 def browse(request, parent_page_id=None):
-    page_type = request.GET.get('page_type') or 'core.page'
+    page_type = request.GET.get('page_type') or 'verdantcore.page'
     content_type_app_name, content_type_model_name = page_type.split('.')
 
-    q = None
     is_searching = False
 
     try:

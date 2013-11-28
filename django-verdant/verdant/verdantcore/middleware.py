@@ -1,4 +1,4 @@
-from core.models import Site
+from verdant.verdantcore.models import Site
 
 class SiteMiddleware(object):
     def process_request(self, request):

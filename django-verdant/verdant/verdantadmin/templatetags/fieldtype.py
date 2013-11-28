@@ -1,6 +1,6 @@
 from django import template
 
-from core.util import camelcase_to_underscore
+from verdant.verdantcore.util import camelcase_to_underscore
 
 register = template.Library()
 
