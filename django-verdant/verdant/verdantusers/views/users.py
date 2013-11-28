@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 
-from verdantusers.forms import UserCreationForm, UserEditForm
+from verdant.verdantusers.forms import UserCreationForm, UserEditForm
 
 @permission_required('auth.can_change_user')
 def index(request):

@@ -13,7 +13,7 @@ from verdant.verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdant.verdantdocs import urls as verdantdocs_urls
 from verdant.verdantsnippets import urls as verdantsnippets_urls
 from verdantsearch import urls as verdantsearch_urls
-from verdantusers import urls as verdantusers_urls
+from verdant.verdantusers import urls as verdantusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
