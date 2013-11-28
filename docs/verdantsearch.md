@@ -40,7 +40,7 @@ This command rebuilds the index from scratch. It is currently the only place whe
 To make verdantsearch index a model, simply inherit the "Indexed" class.
 
     from django.db import models
-    from verdantsearch import Indexed
+    from verdant.verdantsearch import Indexed
 
 
     class MyModel(models.Model, Indexed):
@@ -127,7 +127,7 @@ To search, firstly make an instance of the Search class (this sets up a connecti
 
 You can then run the search method on this class. Don't forget to specify the model you are searching.
 
-    from verdantsearch import Search
+    from verdant.verdantsearch import Search
     from core.models import Page
 
 
@@ -152,7 +152,7 @@ Searchers allow you to add search methods into the class. This makes searching m
 Creating searchers is very similar to just adding an extra field to the model.
 The first arguement is a list of fields this searcher will search. Set this to None to search all fields.
 
-	from verdantsearch import searcher
+	from verdant.verdantsearch import searcher
 
 
     class MyModel(models.Model, Indexed):

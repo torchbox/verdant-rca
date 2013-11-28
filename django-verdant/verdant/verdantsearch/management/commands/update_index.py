@@ -1,8 +1,7 @@
 from django.core.management.base import NoArgsCommand
-from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from verdantsearch.indexed import Indexed
-from verdantsearch.search import Search
+from verdant.verdantsearch.indexed import Indexed
+from verdant.verdantsearch.search import Search
 
 
 class Command(NoArgsCommand):

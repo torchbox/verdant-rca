@@ -12,7 +12,7 @@ from verdant.verdantmedia import urls as verdantmedia_urls
 from verdant.verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdant.verdantdocs import urls as verdantdocs_urls
 from verdant.verdantsnippets import urls as verdantsnippets_urls
-from verdantsearch import urls as verdantsearch_urls
+from verdant.verdantsearch import urls as verdantsearch_urls
 from verdant.verdantusers import urls as verdantusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
@@ -22,7 +22,7 @@ from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
-from verdantsearch import register_signal_handlers
+from verdant.verdantsearch import register_signal_handlers
 register_signal_handlers()
 
 

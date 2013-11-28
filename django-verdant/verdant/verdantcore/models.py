@@ -7,7 +7,7 @@ from django.core.cache import cache
 from django.contrib.contenttypes.models import ContentType
 from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
-from verdantsearch import Indexed, Searcher
+from verdant.verdantsearch import Indexed, Searcher  # FIXME: fold verdantsearch into verdantcore/verdantadmin, since it's probably too fundamental to be worth plugin-ifying
 
 from verdant.verdantcore.util import camelcase_to_underscore
 
