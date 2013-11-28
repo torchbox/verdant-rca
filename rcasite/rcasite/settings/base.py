@@ -10,6 +10,8 @@ sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
 # Also add the django-verdant library dir (which lives alongside PROJECT_ROOT)
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-verdant'))
+# ...and django-cluster
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
