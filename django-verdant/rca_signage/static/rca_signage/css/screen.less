@@ -185,6 +185,7 @@ h3{
         width: 50%;
         height: 100%;
         -webkit-transform-origin: 100% 50%;
+        -moz-transform-origin: 100% 50%;
         position: absolute;
         background: black;
         border:3px solid #888;
@@ -213,13 +214,16 @@ h3{
     }
 
     .mask.start{
-        -webkit-animation: opa 5s steps(1, end) ;
+        -webkit-animation: opa 5s steps(1, end);
+        -moz-animation: opa 5s steps(1, end);
     }
     .filler.start{
-        -webkit-animation: opa 5s steps(1, end)  reverse;
+        -webkit-animation: opa 5s steps(1, end) reverse;
+        -moz-animation: opa 5s steps(1, end) reverse;
     }
     .spinner.start{
         -webkit-animation: rota 5s linear 1;
+        -moz-animation: rota 5s linear 1;
     }
 }
 
@@ -227,9 +231,16 @@ h3{
     0% {
         -webkit-transform: rotate(0deg);
     }
-
     100% {
         -webkit-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes rota {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
     }
 }
 
@@ -237,9 +248,17 @@ h3{
     0% {
         opacity: 1;
     }
-
     50%, 100% {
         opacity: 0;
     }
 }
+@-moz-keyframes opa {
+    0% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
 
