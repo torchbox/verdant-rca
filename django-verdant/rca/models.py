@@ -150,25 +150,25 @@ CAMPUS_CHOICES = (
 
 EVENT_GALLERY_CHOICES = (
     ('courtyardgalleries', 'Courtyard Galleries'),
+    ('danacentre', 'Dana Centre'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('dysonbuilding', 'Dyson Building'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('henrymooregallery', 'Henry Moore Gallery'),
+    ('humanitiesseminarroom', 'Humanities Seminar Room'),
+    ('jaymewsgallery', 'Jay Mews Gallery'),
     ('lecturetheatre1', 'Lecture Theatre 1'),
     ('lecturetheatre2', 'Lecture Theatre 2'),
     ('linkgallery', 'Link Gallery'),
     ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('movingimagestudio', 'Moving Image Studio'),
     ('palstevensbuilding', 'PAL, Stevens Building'),
-    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
-    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('photographystudios', 'Photography Studios'),
     ('printmakingstudios', 'Printmaking Studios'),
     ('sacklerbuilding', 'Sackler Building'),
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
-    ('danacentre', 'Dana Centre'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('jaymewsgallery', 'Jay Mews Gallery'),
-    ('humanitiesseminarroom', 'Humanities Seminar Room'),
-    ('movingimagestudio', 'Moving Image Studio'),
-    ('dysonbuilding', 'Dyson Building'),
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
 )
 
 WORK_TYPES_CHOICES = (
