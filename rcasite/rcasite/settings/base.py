@@ -10,8 +10,10 @@ sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
 # Also add the django-verdant library dir (which lives alongside PROJECT_ROOT)
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-verdant'))
-# ...and django-cluster
+# and other local dependencies (will exist as external libraries at some point, but don't have releases yet.
+# treebeard is a fork of https://tabo.pe/projects/django-treebeard/ patched to support multi-table inheritance)
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
