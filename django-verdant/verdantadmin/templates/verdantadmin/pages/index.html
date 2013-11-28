@@ -7,7 +7,7 @@
         <h1>Explorer</h1>
 
         <ul class="breadcrumb">
-            <li><a href="{% url 'verdantadmin_home' %}" class="icon icon-home text-replace">Home</a></li>
+            <li><a href="{% url 'verdantadmin_explore_root' %}" class="icon icon-home text-replace">Home</a></li>
             {% for page in parent_page.get_ancestors %}
                 <li><a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a></li>
             {% endfor %}

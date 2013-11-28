@@ -401,13 +401,11 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     child_pages = []
     for page in viewed_page.get_children():
         # can't move the page into itself or its descendants
-        can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+        page.can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
 
-        can_descend = can_choose and page.get_children_count()
+        page.can_descend = page.can_choose and page.get_children_count()
 
-        child_pages.append({
-            'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
-        })
+        child_pages.append(page)
 
     return render(request, 'verdantadmin/pages/move_choose_destination.html', {
         'page_to_move': page_to_move,

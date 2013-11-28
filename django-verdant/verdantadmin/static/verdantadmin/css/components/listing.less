@@ -80,9 +80,9 @@ ul.listing{
     &.full-width th{
         background-color:@color-thead-bg;
     }
-    &.full-width tbody tr:hover,
-    &.chooser tbody tr:hover{
-        background-color:#FDFDFD;
+
+    .table-headers{
+        border-bottom:1px solid  @color-grey-lighter
     }
 
     tbody tr{
@@ -90,7 +90,25 @@ ul.listing{
         &:first-child{
             border-top:1px dashed @color-input-border;
         }
+        
+    }
+    tbody tr, thead .index{
         cursor:pointer;
+    }
+    &.full-width tbody tr:hover{
+        background-color:#FDFDFD;
+    }
+    &.chooser tr.can-choose:hover{
+        background-color:@color-teal;
+        color:white;
+
+        a,a:hover{
+            color:white;
+        }
+        .status-tag{
+            border-color:white;
+            color:white;
+        }
     }
 
     &.small tbody tr{
@@ -106,11 +124,15 @@ ul.listing{
         font-size:0.8em;
         background-color:lighten(@color-grey-lighter, 5%);
         td{
-           .push-padding(@grid-content-indent);
+           
            padding-top:0.5em;
            padding-bottom:0.5em;
         }
-    } 
+    }
+
+    &.full-width .divider td{
+        .push-padding(@grid-content-indent);
+    }
 
     .index {
         background-color:@color-header-bg;
