@@ -162,7 +162,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
-            messages.error(request, "The page could not be created due to validation errors")
+            messages.error(request, "The page could not be created due to errors.")
             edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)

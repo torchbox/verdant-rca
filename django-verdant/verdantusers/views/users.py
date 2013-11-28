@@ -21,6 +21,8 @@ def create(request):
             user = form.save()
             messages.success(request, "User '%s' created." % user)
             return redirect('verdantusers_index')
+        else:
+            messages.error(request, "The user could not be created due to errors.")
     else:
         form = UserCreationForm()
 
@@ -37,6 +39,8 @@ def edit(request, user_id):
             user = form.save()
             messages.success(request, "User '%s' updated." % user)
             return redirect('verdantusers_index')
+        else:
+            messages.error(request, "The user could not be saved due to errors.")
     else:
         form = UserEditForm(instance=user)
 
