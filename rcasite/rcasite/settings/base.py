@@ -124,7 +124,7 @@ MIDDLEWARE_CLASSES = (
 
     'verdant.verdantcore.middleware.SiteMiddleware',
 
-    'verdantredirects.middleware.RedirectMiddleware',
+    'verdant.verdantredirects.middleware.RedirectMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -180,7 +180,7 @@ INSTALLED_APPS = (
     'verdant.verdantsnippets',
     'verdant.verdantsearch',
     'verdant.verdantusers',
-    'verdantredirects',
+    'verdant.verdantredirects',
 
     'donations',
     'rca',

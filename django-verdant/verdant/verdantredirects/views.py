@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from verdant.verdantadmin.edit_handlers import ObjectList
 
-from verdantredirects import models
+from verdant.verdantredirects import models
 
 
 REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)
