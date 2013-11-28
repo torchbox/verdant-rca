@@ -1,6 +1,6 @@
 from verdant.verdantadmin.modal_workflow import render_modal_workflow
-from verdantmedia.forms import MediaForm
-from verdantmedia.format import media_to_editor_html
+from verdant.verdantmedia.forms import MediaForm
+from verdant.verdantmedia.format import media_to_editor_html
 from django.forms.util import ErrorList
 
 
