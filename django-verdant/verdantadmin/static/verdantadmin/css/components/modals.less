@@ -44,6 +44,7 @@ max z-index: 510;
     padding: 0px;
     z-index: (@zindex-modal-background + 10);
     height:90%;
+    width:85%;
     
     &:before{
         content: '';
@@ -57,10 +58,12 @@ max z-index: 510;
 // Actual modal
 .modal-content {
     .border-box();
+    .border-radius(3px);
     width:99.70%;
     position: relative;
     background-color: white;
     outline: none;
+    margin-top:2em;
     padding-bottom:3em;
     display:inline-block;
     vertical-align: middle;
@@ -98,6 +101,6 @@ max z-index: 510;
 
 @media screen and (min-width: @breakpoint-mobile) {
     .modal-dialog {
-        padding:0px 0 3px @menu-width;
+        padding:0px 0 2em @menu-width;
     }
 }
