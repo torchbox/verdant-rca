@@ -150,25 +150,25 @@ CAMPUS_CHOICES = (
 
 EVENT_GALLERY_CHOICES = (
     ('courtyardgalleries', 'Courtyard Galleries'),
+    ('danacentre', 'Dana Centre'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('dysonbuilding', 'Dyson Building'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('henrymooregallery', 'Henry Moore Gallery'),
+    ('humanitiesseminarroom', 'Humanities Seminar Room'),
+    ('jaymewsgallery', 'Jay Mews Gallery'),
     ('lecturetheatre1', 'Lecture Theatre 1'),
     ('lecturetheatre2', 'Lecture Theatre 2'),
     ('linkgallery', 'Link Gallery'),
     ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('movingimagestudio', 'Moving Image Studio'),
     ('palstevensbuilding', 'PAL, Stevens Building'),
-    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
-    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('photographystudios', 'Photography Studios'),
     ('printmakingstudios', 'Printmaking Studios'),
     ('sacklerbuilding', 'Sackler Building'),
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
-    ('danacentre', 'Dana Centre'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('jaymewsgallery', 'Jay Mews Gallery'),
-    ('humanitiesseminarroom', 'Humanities Seminar Room'),
-    ('movingimagestudio', 'Moving Image Studio'),
-    ('dysonbuilding', 'Dyson Building'),
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
 )
 
 WORK_TYPES_CHOICES = (
@@ -2222,24 +2222,26 @@ class HomePage(Page, SocialFields):
 
     def serve(self, request):
 
-        exclude = request.GET.get('exclude')
+        exclude = ','.join([str(self.news_item_1.id), str(self.news_item_2.id)])
+
+        if request.GET.get('exclude'):
+            exclude = ','.join([exclude, request.GET.get('exclude')])
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         tweets = [[],[],[],[],[]]
 
-
-        print news
-
         if exclude:
 
             exclude = exclude.split(',')
+
+            print exclude
 
             news = news.exclude(id__in=exclude);
             staff = staff.exclude(id__in=exclude);
@@ -3244,7 +3246,7 @@ class ResearchItem(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
-    theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
+    theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import

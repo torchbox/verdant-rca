@@ -1347,8 +1347,10 @@ footer {
  */
 
 .type-programme{
-    .button-bar li {
-        z-index: 3; /* fixes issue with poster image appearing above download buttons when in tabs */
+    .tab-pane .bx-wrapper { /* this is for the programme page video, which is a one off carousel in a tab content that shouldn't
+    have any bottom spacing */
+        margin-bottom: 0;
+        padding-bottom: 0;
     }
 }
 

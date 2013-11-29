@@ -154,7 +154,7 @@ function applyCarousel(carouselSelector){
     var carousel = $this.bxSlider({
         adaptiveHeight: true,
         pager: function(){ return $(this).hasClass('paginated'); },
-        touchEnabled: ($(".carousel > li").length > 1) ? true: false,
+        touchEnabled: ($('li', $this).length > 1) ? true: false,
         onSliderLoad: function(){
             $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
             $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());

@@ -49,7 +49,7 @@ urlpatterns = patterns('',
 
     url(r'^documents/', include(verdantdocs_urls)),
 
-    url(r'^donations/', include(donations_urls)),
+    url(r'^admin/donations/', include(donations_urls)),
 
     url(r'^app/', include(app_urls)),
 

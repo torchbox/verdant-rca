@@ -75,7 +75,8 @@ def edit(request, image_id):
             form.save()
             messages.success(request, "Image '%s' updated." % image.title)
             return redirect('verdantimages_index')
-
+        else:
+            messages.error(request, "The image could not be saved due to errors.")
     else:
         form = ImageForm(instance=image)
 
@@ -109,7 +110,8 @@ def add(request):
             image = form.save()
             messages.success(request, "Image '%s' added." % image.title)
             return redirect('verdantimages_index')
-
+        else:
+            messages.error(request, "The image could not be created due to errors.")
     else:
         form = ImageForm()
 

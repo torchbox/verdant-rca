@@ -43,7 +43,7 @@ def event_times_display(event_datetime):
         else:
             return time_from.lower()
 
-    return event_datetime.time_other.lower()
+    return event_datetime.time_other
 
 
 @register.filter()
