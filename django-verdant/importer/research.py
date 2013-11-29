@@ -135,8 +135,12 @@ class ResearchImporter(object):
         # Create researchitem page
         try:
             researchitempage = ResearchItem.objects.get(eprintid=researchitem_eprintid)
+
+            # Find latest revision of researchitem
+            researchitem_latest_revision = researchitempage.get_latest_revision_as_page()
         except ResearchItem.DoesNotExist:
             researchitempage = ResearchItem(eprintid=researchitem_eprintid)
+            researchitem_latest_revision = None
 
         # Set values
         researchitempage.title = researchitem_title
@@ -155,6 +159,21 @@ class ResearchImporter(object):
                 researchitempage.save()
             else:
                 self.research_index_page.add_child(researchitempage)
+
+        # Update latest revision
+        if researchitem_latest_revision is not None:
+            researchitem_latest_revision.title = researchitem_title
+            researchitem_latest_revision.ref = True
+            researchitem_latest_revision.research_type = "staff"
+            researchitem_latest_revision.year = researchitem_year
+            researchitem_latest_revision.description = researchitem_abstract
+            researchitem_latest_revision.work_type = WORK_TYPES_CHOICES[researchitem_type]
+            researchitem_latest_revision.school = researchitem_school
+            researchitem_latest_revision.show_on_homepage = False
+
+            # Save latest revision
+            if self.save:
+                researchitem_latest_revision.save_revision()
 
         # Link creators
         if self.link_creators:
