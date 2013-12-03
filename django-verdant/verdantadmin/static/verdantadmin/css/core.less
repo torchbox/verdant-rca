@@ -152,9 +152,32 @@ img{
 
         li{
             border-bottom:1px solid rgba(200,200,200,0.1);
+            position:relative;
 
             &.selected{
                 background-color:@color-grey-dark;
+            }
+
+            .menu-snippets &.menu-snippets,
+            .menu-users &.menu-users,
+            .menu-snippets &.menu-snippets,
+            .menu-documents &.menu-documents,
+            .menu-images &.menu-images,
+            .menu-search &.menu-search,
+            .menu-explorer &.menu-explorer{
+                background:#222;
+
+                &:after{
+                    content: " ";
+                    width: 0px;
+                    height: 0px;
+                    display: block;
+                    position: absolute;
+                    right: 0;
+                    top: 1em;
+                    border: 10px solid #fff;
+                    border-color: transparent #fff transparent transparent;
+                }
             }
         }
 
@@ -414,10 +437,6 @@ a{
         }
     }
    
-
-  
-        
-          
                 
 }
 
