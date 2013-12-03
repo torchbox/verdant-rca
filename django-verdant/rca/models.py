@@ -2855,7 +2855,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
+        research_students = StudentPage.objects.filter(live=True, degree_qualification__in=['researchstudent', 'phd'])
 
         if school and school != '':
             research_students = research_students.filter(school=school)
