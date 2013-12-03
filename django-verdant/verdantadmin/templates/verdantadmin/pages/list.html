@@ -51,6 +51,15 @@
     
         {% if not moving and not choosing %}
             <tr class="table-headers">
+                {% if orderable %}
+                    <th class="ord">
+                        {% if ordering == "ord" %}
+                            <a href="{% url 'verdantadmin_explore' parent_page.id %}" class="icon icon-order text-replace" title="Disable ordering of child pages">Order</a></th> 
+                        {% else %}
+                            <a href="{% url 'verdantadmin_explore' parent_page.id %}?ordering=ord" class="icon icon-order text-replace" title="Enable ordering of child pages">Order</a></th>
+                        {% endif %}
+                    </th>
+                {% endif %}
                 <th class="title">
                     Title
                     {% if sortable %}
@@ -97,7 +106,8 @@
     <tbody>
         {% if pages %}
             {% for page in pages %}
-                <tr class="{% if not page.live %} inactive{% endif %}{% if moving and page.can_choose %} can-choose{% elif choosing and page.can_choose %} can-choose{% else %} cant-choose{% endif %}">
+                <tr {% if ordering == "ord" %}id="page_{{ page.id }}"{% endif %} class="{% if not page.live %} inactive{% endif %}{% if moving and page.can_choose %} can-choose{% elif choosing and page.can_choose %} can-choose{% else %} cant-choose{% endif %}">
+                    <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
                     <td class="title">
                         <h2>
                             {% if moving and page.can_choose %}

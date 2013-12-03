@@ -23,7 +23,7 @@ $(function(){
 
     // Apply auto-height sizing to text areas
     // NB .richtext (hallo.js-enabled) divs do not need this as they expand to fit their content by default
-    $('textarea').autosize();
+    // $('.page-editor textarea').autosize();
 
     // Enable nice focus effects on all fields. This enables help text on hover.
     $(document).on('focus mouseover', 'input,textarea,select', function(){

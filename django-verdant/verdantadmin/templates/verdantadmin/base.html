@@ -24,7 +24,7 @@
                     <li class="footer">
                         <a href="{% url 'django.contrib.auth.views.logout' %}" class="icon icon-arrow-left">Log out</a>
                     </li>
-                    <li class="verdantadmin-tab-more"><a href="#" class="icon icon-arrow-down">More</a></li>
+                    <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
 
                     <li><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
 
@@ -62,16 +62,14 @@
 
 {% block extra_js_base %}
     <script type="text/javascript">
-        $(".verdantadmin-tab-more")
-            .nextAll().hide().end()
-            .find("a").click(function(){
-                $(this)
-                    .toggleClass('icon-arrow-down icon-arrow-up')
-                    .parent()
-                    .nextAll()
-                    .stop()
-                    .toggle('fast');
-                return false;
-            });
+        $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
+            $(this)
+                .toggleClass('icon-arrow-down icon-arrow-up')
+                .parent()
+                .nextAll()
+                .stop()
+                .toggle('fast');
+            return false;
+        });
     </script>
 {% endblock %}
