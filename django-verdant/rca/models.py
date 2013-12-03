@@ -2855,7 +2855,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, degree_qualification__in=['researchstudent', 'phd'])
+        research_students = StudentPage.objects.filter(live=True, degree_qualification__in=['researchstudent', 'phd']).order_by('random_order')
 
         if school and school != '':
             research_students = research_students.filter(school=school)
@@ -2865,8 +2865,6 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = research_students.distinct()
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
-
-        # research_items.order_by('-year')
 
         page = request.GET.get('page')
         paginator = Paginator(research_students, 17)  # Show 17 research students per page
