@@ -77,6 +77,9 @@ ul.listing{
             margin-left:-@grid-gutter-width * 2;
         }
     }
+    &.full-width{
+        margin-bottom:0;
+    }
     &.full-width th{
         background-color:@color-thead-bg;
     }
@@ -85,8 +88,11 @@ ul.listing{
         border-bottom:1px solid  @color-grey-lighter
     }
 
-    tbody tr{
+    tbody{
         border-bottom:1px dashed @color-input-border;
+    }
+    tbody tr{
+        border-top:1px dashed @color-input-border;
         &:first-child{
             border-top:1px dashed @color-input-border;
         }
@@ -94,6 +100,9 @@ ul.listing{
     }
     tbody tr, thead .index{
         cursor:pointer;
+    }
+    &.full-width tbody{
+        border:0;
     }
     &.full-width tbody tr:hover{
         background-color:#FDFDFD;

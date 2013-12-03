@@ -1,7 +1,20 @@
 <table class="listing{% if full_width %} full-width{% endif %}{% if moving or choosing %} chooser{% endif %}">
+    {% if orderable %}
+        <col width="5.3%" />
+    {% endif %}
+    <col />
+    {% if show_parent %}
+        <col />
+    {% endif %}
+    <col width="12%" />
+    <col width="12%" />
+    <col width="10%" />
     <thead>
         {% if moving or choosing %}
             <tr class="table-headers">
+                {% if orderable %}
+                    <th></th>
+                {% endif %}
                 <th class="title">Title</th>
                 {% if show_parent %}
                     <th class="parent">Parent</th>
@@ -13,7 +26,7 @@
         {% endif %}
         {% if parent_page %}
             <tr class="index {% if not parent_page.live %} inactive{% endif %} can-choose">
-                <td class="title">
+                <td class="title" {% if orderable %}colspan="2"{% endif %}>
                     {% if moving %}
                         <h2><a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id parent_page.id %}">{{ parent_page.title }}</a></h2>
                     {% elif choosing %}
@@ -46,7 +59,7 @@
                     {% endif %}
                 </td>
             </tr>
-            <tr class="divider"><td colspan="4">Child pages</td></tr>
+            <tr class="divider"><td colspan="100%">Child pages</td></tr>
         {% endif %}
     
         {% if not moving and not choosing %}
@@ -107,7 +120,9 @@
         {% if pages %}
             {% for page in pages %}
                 <tr {% if ordering == "ord" %}id="page_{{ page.id }}"{% endif %} class="{% if not page.live %} inactive{% endif %}{% if moving and page.can_choose %} can-choose{% elif choosing and page.can_choose %} can-choose{% else %} cant-choose{% endif %}">
-                    <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
+                    {% if orderable %}
+                        <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
+                    {% endif %}
                     <td class="title">
                         <h2>
                             {% if moving and page.can_choose %}
