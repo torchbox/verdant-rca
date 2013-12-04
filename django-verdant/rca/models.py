@@ -338,29 +338,9 @@ assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.va
 
 YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
 
-SUBJECT_CHOICES = (
-    ('animation', 'Animation'),
-    ('architecture', 'Architecture'),
-    ('ceramicsglass', 'Ceramics & Glass'),
+SUBJECT_CHOICES = ALL_PROGRAMMES + (
     ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
     ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('historyofdesign', 'History of Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('textiles', 'Textiles'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('visualcommunication', 'Visual Communication'),
 )
 
 QUALIFICATION_CHOICES = (
@@ -2855,7 +2835,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, degree_qualification__in=['researchstudent', 'phd']).order_by('random_order')
+        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
 
         if school and school != '':
             research_students = research_students.filter(school=school)
@@ -3019,6 +2999,14 @@ class StudentPage(Page, SocialFields):
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
     search_name = 'Student'
+
+    def serve(self, request):
+        parent_is_researchstudentindex = self.get_parent().content_type.model_class() == ResearchStudentIndex
+
+        return render(request, self.template, {
+            'self': self,
+            'parent_is_researchstudentindex': parent_is_researchstudentindex,
+        })
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3536,7 +3524,7 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:
