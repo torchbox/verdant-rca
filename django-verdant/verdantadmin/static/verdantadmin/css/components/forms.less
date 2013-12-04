@@ -508,10 +508,10 @@ ul.tagit li.tagit-choice-editable{
 
 /* Transitions */
 fieldset, input, textarea, select{
-    .transition(background-color linear 0.2s);
+    .transition(background-color 0.2s ease);
 }
 input[type=submit], input[type=reset], input[type=button], .button, button{
-    .transition(all linear 0.2s);
+    .transition(~"background-color 0.2s ease, color 0.2s ease");
 }
 .help{
     /* TODO: This transitionmakes the browser go nuts and the left menu jerk around. Find way to solve */
