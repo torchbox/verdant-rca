@@ -1,14 +1,10 @@
-{# TODO: fix the egregious copy-and-pasting and terminology subversion (e.g. calling this 'page-editor') from verdantadmin/pages #}
 {% extends "verdantadmin/base.html" %}
-
-{% block bodyclass %}page-editor{% endblock %}
-
+{% block bodyclass %}menu-snippets{% endblock %}
 {% block content %}
     <header>
         <h1>Editing: <span>{{ snippet_type_name }} "{{ instance }}"</span></h1>
     </header>
 
-    
     <form action="{% url 'verdantsnippets_edit' content_type.app_label content_type.model instance.id %}" method="POST">
         {% csrf_token %}
         {{ edit_handler.render_form_content }}

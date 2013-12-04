@@ -1,8 +1,8 @@
-{% load rca_tags %}
+{% load rca_tags pageurl %}
 
 {% for page, children in nodes %}
     <li class="{% if children %} has-children {% endif %} ">
-        <a href="{{ page.url }}" tabindex="4">{{ page.title }}</a>
+        <a href="{% pageurl page %}" tabindex="4">{{ page.title }}</a>
         {% if children %}
             <div class="children">+</div>
             <ul class="dl-submenu">

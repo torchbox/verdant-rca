@@ -1,8 +1,5 @@
-{# TODO: fix the egregious copy-and-pasting and terminology subversion (e.g. calling this 'page-editor') from verdantadmin/pages #}
 {% extends "verdantadmin/base.html" %}
-
-{% block bodyclass %}page-editor{% endblock %}
-
+{% block bodyclass %}menu-snippets{% endblock %}
 {% block content %}
     <header>
         <h1>New {{ snippet_type_name }}</h1>
@@ -20,7 +17,6 @@
                         <div><input type="submit" value="Save" /></div>
                     </div>
                 </li>
-                <li>Something</li>
             </ul>
         </footer>
     </form>

@@ -1,6 +1,6 @@
 {% extends "verdantadmin/base.html" %}
 {% load image_tags %}
-
+{% block bodyclass %}menu-users{% endblock %}
 {% block content %}
     <header class="merged tab-merged">
         <h1>Editing user: <span>{{ user.username }}</span></h1>

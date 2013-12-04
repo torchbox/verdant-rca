@@ -31,7 +31,10 @@ def index(request, parent_page_id=None):
         if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
             pages = pages.order_by(ordering)
     else:
-        ordering = None
+        ordering = 'title'
+    
+    # if ordering == 'ord':    
+    #     messages.warning(request, "You are now able to reorder pages. Click 'Save order' when you've finished")
 
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
@@ -162,7 +165,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
-            messages.error(request, "The page could not be created due to validation errors")
+            messages.error(request, "The page could not be created due to errors.")
             edit_handler = edit_handler_class(instance=page, form=form)
     else:
         form = form_class(instance=page)
@@ -255,21 +258,16 @@ def reorder(request, parent_page_id=None):
         except:
             # Invalid
             messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_pages_reorder', parent_page_id)
+            return redirect('verdantadmin_explore', parent_page.id)
 
         # Reorder
         for page in pages_ordered:
             page.move(parent_page, pos='last-child')
 
         # Success message
-        messages.success(request, "Pages reordered successfully")
+        messages.success(request, "Pages have been reordered")
 
-        return redirect('verdantadmin_explore', parent_page_id)
-    else:
-        return render(request, 'verdantadmin/pages/reorder.html', {
-            'parent_page': parent_page,
-            'pages': pages,
-        })
+    return redirect('verdantadmin_explore', parent_page.id)
 
 @login_required
 def delete(request, page_id):
@@ -401,13 +399,11 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     child_pages = []
     for page in viewed_page.get_children():
         # can't move the page into itself or its descendants
-        can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+        page.can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
 
-        can_descend = can_choose and page.get_children_count()
+        page.can_descend = page.can_choose and page.get_children_count()
 
-        child_pages.append({
-            'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
-        })
+        child_pages.append(page)
 
     return render(request, 'verdantadmin/pages/move_choose_destination.html', {
         'page_to_move': page_to_move,

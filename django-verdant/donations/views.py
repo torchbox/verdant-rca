@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from decimal import Decimal
 from datetime import date, datetime, timedelta
 import csv
@@ -134,37 +135,46 @@ def export(request, include_all=False):
 
         charge['created'] = datetime.fromtimestamp(int(charge['created'])).strftime('%Y-%m-%d %H:%M:%S')
 
+        phone = charge.get('metadata__phone')
+        if phone:
+            charge['metadata__phone'] = phone[:5] + " " + phone[5:]
+
         fieldnames |= set(charge.keys())
 
     _fieldnames = sorted(list(fieldnames))
 
-    headers = {
-        "id": "Transaction identifier",
-        "created": "Date created",
-        "description": "Description (set in page admin ui in Verdant)",
-        "amount": "Donation amount",
-        "amount_gift_aid": "Giftaid amount",
-        "card__address_city": "City",
-        "card__address_country": "Country",
-        "card__address_line1": "Address line 1",
-        "card__address_line2": "Address line 2",
-        "card__address_state": "County",
-        "card__address_country": "Country",
-        "card__address_zip": "Post code",
-        "metadata__title": "Title",
-        "metadata__first_name": "First name",
-        "metadata__last_name": "Last name",
-        "metadata__email": "Email",
-        "metadata__phone": "Phone number",
-        "metadata__class_year": "Class year",
-        "metadata__donation_for": "Gift directed to",
-        "metadata__affiliation": "Affiliation",
-        "metadata__not_included_in_supporters_list": "NOT included in supporters list",
-        "metadata__is_gift_aid": "Gift aid donation",
+    headers = OrderedDict((
+        ("id", "Transaction identifier"),
+        ("created", "Date created"),
+        ("description", "Description (set in page admin ui in Verdant)"),
+        ("amount", "Donation amount"),
+        ("amount_gift_aid", "Giftaid amount"),
+        ("metadata__is_gift_aid", "Gift aid donation"),
+        ("metadata__not_included_in_supporters_list", "NOT included in supporters list"),
+        ("metadata__title", "Title"),
+        ("metadata__first_name", "First name"),
+        ("metadata__last_name", "Last name"),
+        ("metadata__email", "Email"),
+        ("metadata__phone", "Phone number"),
+        ("metadata__class_year", "Class year"),
+        ("metadata__donation_for", "Gift directed to"),
+        ("metadata__affiliation", "Affiliation"),
+        ("card__address_city", "City"),
+        ("card__address_country", "Country"),
+        ("card__address_line1", "Address line 1"),
+        ("card__address_line2", "Address line 2"),
+        ("card__address_state", "County"),
+        ("card__address_country", "Country"),
+        ("card__address_zip", "Post code"),
         # "metadata__phone_type": "Phone type",
-    }
+    ))
 
     fieldnames = [str(f) for f in _fieldnames if str(f) in headers.keys()]
+
+    def key(f):
+        return headers.keys().index(f)
+
+    fieldnames = sorted(fieldnames, key=key)
 
     # create response
     response = HttpResponse(content_type='text/csv')

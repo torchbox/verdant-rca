@@ -176,7 +176,7 @@ var Screen = function() {
 
         // add timer css to paging pie spinner if > 1 page
         if (pages.length > 1){
-            $(pagingTimerSelector).find('*').attr('style', '-webkit-animation-duration:'+ pageInterval+'s').addClass('start');
+            $(pagingTimerSelector).find('*').attr('style', '-webkit-animation-duration:'+ pageInterval+'s; -moz-animation-duration:'+ pageInterval+'s').addClass('start');
         }
 
         if(pages.length >= currentPage){
@@ -195,8 +195,8 @@ var Screen = function() {
 
 $(function() {
     // start screen system
-    window.screen = new Screen();
-    window.screen.run();
+    var screen = window.screen = new Screen();
+    screen.run();
 
     // means of testing non-rotated version
     $(document).click(function(){

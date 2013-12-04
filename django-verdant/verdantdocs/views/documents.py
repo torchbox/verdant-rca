@@ -28,7 +28,8 @@ def add(request):
             doc = form.save()
             messages.success(request, "Document '%s' added." % doc.title)
             return redirect('verdantdocs_index')
-
+        else:
+            messages.error(request, "The document could not be saved due to errors.")
     else:
         form = DocumentForm()
 
@@ -50,9 +51,10 @@ def edit(request, document_id):
                 # which definitely isn't what we want...
                 original_file.storage.delete(original_file.name)
             doc = form.save()
-            messages.success(request, "Document '%s' updated." % doc.title)
+            messages.success(request, "Document '%s' updated" % doc.title)
             return redirect('verdantdocs_index')
-
+        else:
+            messages.error(request, "The document could not be saved due to errors.")
     else:
         form = DocumentForm(instance=doc)
 

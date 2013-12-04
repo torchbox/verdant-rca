@@ -82,12 +82,12 @@ h3{
     bottom:0;
 }
 #logo{
-    background:black url("@{root-url}images/logo-white.png") @padding 97% no-repeat;
+    background:black url("@{root-url}images/logo-white.png") 0 0 no-repeat;
     height:111px;
     width:250px;
     position:absolute;
     bottom:1.4em;
-    left:0;
+    left:1.5em;
 }
 #date{
     font-family:calvert_107light, courier, sans-serif;
@@ -185,6 +185,7 @@ h3{
         width: 50%;
         height: 100%;
         -webkit-transform-origin: 100% 50%;
+        -moz-transform-origin: 100% 50%;
         position: absolute;
         background: black;
         border:3px solid #888;
@@ -213,33 +214,69 @@ h3{
     }
 
     .mask.start{
-        -webkit-animation: opa 5s steps(1, end) ;
+        -webkit-animation: mask 5s steps(1, end);
+        -moz-animation: mask 5s steps(1, end);
     }
     .filler.start{
-        -webkit-animation: opa 5s steps(1, end)  reverse;
+        -webkit-animation: fill 5s steps(1, end);
+        -moz-animation: fill 5s steps(1, end);
     }
     .spinner.start{
         -webkit-animation: rota 5s linear 1;
+        -moz-animation: rota 5s linear 1;
     }
 }
 
 @-webkit-keyframes rota {
-    0% {
+    from {
         -webkit-transform: rotate(0deg);
     }
-
-    100% {
+    to {
         -webkit-transform: rotate(360deg);
     }
 }
+@-moz-keyframes rota {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
 
-@-webkit-keyframes opa {
+@-webkit-keyframes fill {
+    0% {
+        opacity: 0;
+    }
+    50%, 100% {
+        opacity: 1;
+    }
+}
+@-moz-keyframes fill {
+    0% {
+        opacity: 0;
+    }
+    50%, 100% {
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes mask {
     0% {
         opacity: 1;
     }
-
     50%, 100% {
         opacity: 0;
     }
 }
+@-moz-keyframes mask {
+    0% {
+        opacity: 1;
+    }
+    50%, 100% {
+        opacity: 0;
+    }
+}
+
+
 
