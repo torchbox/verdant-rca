@@ -338,29 +338,9 @@ assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.va
 
 YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
 
-SUBJECT_CHOICES = (
-    ('animation', 'Animation'),
-    ('architecture', 'Architecture'),
-    ('ceramicsglass', 'Ceramics & Glass'),
+SUBJECT_CHOICES = ALL_PROGRAMMES + (
     ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
     ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('historyofdesign', 'History of Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('textiles', 'Textiles'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('visualcommunication', 'Visual Communication'),
 )
 
 QUALIFICATION_CHOICES = (
