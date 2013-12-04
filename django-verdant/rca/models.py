@@ -2835,7 +2835,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, degree_qualification__in=['researchstudent', 'phd']).order_by('random_order')
+        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path, degree_qualification__in=['researchstudent', 'phd']).order_by('random_order')
 
         if school and school != '':
             research_students = research_students.filter(school=school)
@@ -3524,7 +3524,7 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:
