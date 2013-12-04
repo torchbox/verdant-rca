@@ -3000,6 +3000,14 @@ class StudentPage(Page, SocialFields):
 
     search_name = 'Student'
 
+    def serve(self, request):
+        parent_is_researchstudentindex = self.get_parent().content_type.model_class() == ResearchStudentIndex
+
+        return render(request, self.template, {
+            'self': self,
+            'parent_is_researchstudentindex': parent_is_researchstudentindex,
+        })
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
