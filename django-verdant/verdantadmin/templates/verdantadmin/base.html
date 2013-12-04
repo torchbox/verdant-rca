@@ -30,13 +30,12 @@
                         <li class="menu-users"><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
                     {% endif %}
                     {% comment %}
-                        Removed until functionality exists/works as expected
-
-                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
+                        Commented out until this works
+                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
                     {% endcomment %}
                     <li class="footer">
                         <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
-                        <a href="{% url 'django.contrib.auth.views.logout' %}" class="icon icon-arrow-left">Log out</a>
+                        <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
                     </li>
                     <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
 
@@ -63,7 +62,7 @@
                 <div class="messages">
                     <ul>
                         {% for message in messages %}
-                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -102,12 +101,7 @@
         };
 
         $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
-            $(this)
-                .toggleClass('icon-arrow-down icon-arrow-up')
-                .parent()
-                .nextAll()
-                .stop()
-                .toggle('fast');
+            $(this).parent().nextAll().stop().toggle('fast');
             return false;
         });
     </script>

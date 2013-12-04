@@ -50,9 +50,10 @@ def select_type(request):
         SELECT DISTINCT content_type_id AS id FROM core_page
     """)
 
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
     page_types = set()
-    for ct in existing_page_types:
-        allowed_subpage_types = ct.model_class().clean_subpage_types()
+    for content_type in existing_page_types:
+        allowed_subpage_types = content_type.model_class().clean_subpage_types()
         for subpage_type in allowed_subpage_types:
             subpage_content_type = ContentType.objects.get_for_model(subpage_type)
 
@@ -60,6 +61,7 @@ def select_type(request):
 
     return render(request, 'verdantadmin/pages/select_type.html', {
         'page_types': page_types,
+        'all_page_types':all_page_types
     })
 
 
@@ -91,12 +93,15 @@ def select_location(request, content_type_app_name, content_type_model_name):
     # find all the valid locations (parent pages) where a page of the chosen type can be added
     parent_pages = page_class.allowed_parent_pages()
 
+    print parent_pages
+
     if len(parent_pages) == 0:
         # user cannot create a page of this type anywhere - fail with an error
-        messages.error(request, "Sorry, you do not have access to create a page of type '%s'." % content_type.name)
+        messages.error(request, "Sorry, you do not have access to create a page of type <em>'%s'</em>." % content_type.name)
         return redirect('verdantadmin_pages_select_type')
     elif len(parent_pages) == 1:
         # only one possible location - redirect them straight there
+        messages.warning(request, "Pages of this type can only be created as children of <em>'%s'</em>. This new page will be saved there." % parent_pages[0].title)
         return redirect('verdantadmin_pages_create', content_type_app_name, content_type_model_name, parent_pages[0].id)
     else:
         # prompt them to select a location

@@ -17,7 +17,14 @@ $(function(){
 
     // Resize nav to fit height of window. This is an unimportant bell/whistle to make it look nice
     var fitNav = function(){
-        $('.nav-wrapper').css('min-height',$(window).height())
+        $('.nav-wrapper').css('min-height',$(window).height());
+        $('.nav-main').each(function(){
+            var thisHeight = $(this).height();
+            var footerHeight = $('.footer', $(this)).height();
+
+            // $(this).css({'height':thisHeight - footerHeight, 'overflow-y':'scroll'});
+            // $('> ul', $(this)).height(thisHeight)
+        });
     }
     fitNav();
     $(window).resize(function(){
