@@ -6,7 +6,7 @@
     <header class="merged tab-merged">
         <div class="row row-flush">
             <div class="left col9">
-                <h1>Editing: <span>{{ page.title }}</span></h1>
+                <h1>Editing <span>{{ page.title }}</span></h1>
             </div>
             <div class="right col3">
                  Status: {% if page.live %}<a href="{{ page.url }}" class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</a>{% else %}<span class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</span>{% endif %}

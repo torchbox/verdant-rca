@@ -2,7 +2,7 @@
 
 {% block content %}
     <header>
-        <h1>Editing: <span>{{ redirect.title }}</span></h1>
+        <h1>Editing <span>{{ redirect.title }}</span></h1>
     </header>
 
     <form action="{% url 'verdantredirects_edit_redirect' redirect.id %}" method="POST">
