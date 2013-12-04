@@ -6,7 +6,15 @@ max z-index: 5;
 @import "variables.less";
 @import "mixins.less";
 @import "grid.less";
+
 @import "components/explorer.less";
+@import "components/icons.less";
+@import "components/tabs.less";
+@import "components/dropdowns.less";
+@import "components/modals.less";
+@import "components/forms.less";
+@import "components/listing.less";
+@import "components/messages.less";
 
 html{
     background-color:@color-header-bg;
@@ -90,7 +98,7 @@ img{
 }
 
 .nav-wrapper{
-    .box-shadow(inset -5px 0px 10px 0px rgba(0, 0, 0, 0.5));
+    .box-shadow(inset -2px 0px 10px 0px rgba(0, 0, 0, 0.5));
     position:relative;
     background: @color-grey-dark;
     margin-left: -100%;
@@ -174,8 +182,8 @@ img{
                     display: block;
                     position: absolute;
                     right: 0;
-                    top: 1em;
-                    border: 10px solid #fff;
+                    top: 0.9em;
+                    border: 0.7em solid #fff;
                     border-color: transparent #fff transparent transparent;
                 }
             }
@@ -186,8 +194,7 @@ img{
             text-decoration:none;
             text-transform:uppercase;
             display: block;
-            opacity:0.5;
-            color: white;
+            color: #AAA;
             padding: 0.9em 1.2em;
             position:relative;
             font-size:0.9em;
@@ -198,12 +205,33 @@ img{
                 margin-right:0.3em;
             }
             &:hover{
-                opacity:1;
+                color:white;
             }
         }
 
         .icon-plus-inverse{
             font-weight:600;
+        }
+
+        #menu-search-toggle{}
+        #menu-search{
+            display:none;
+        }
+
+        .avatar{
+            display:block;
+            margin:auto;
+            text-align:center;
+            a{
+                padding:0;
+            }
+            &:before{
+                color:@color-grey;
+                border: 2px solid @color-grey;
+            }
+            &:hover{
+                .box-shadow(0px 0px 6px 0px rgba(0,0,0,1));
+            }
         }
     }
 
@@ -333,19 +361,6 @@ footer, .logo{
     z-index:1;
 }
 
-/* Transitions */
-.content-wrapper,
-.nav-wrapper,
-.nav-main,
-#nav-toggle,
-footer,
-.logo{
-    .transition(all 0.2s ease); /* TODO: ensure that nav-wrapper can't be seen to be gradually expanding to fill height of screen, by removing unnecessary transitions */
-}
-a{
-    .transition(opacity 0.2s ease);
-}
-
 .media-placeholder {
     width: 600px;
     height: 400px;
@@ -435,9 +450,48 @@ a{
                 }
             }
         }
+    }                
+}
+
+.avatar{
+    .border-radius(100%);
+    position:relative;
+    display:inline-block;
+    width:50px;
+    height:50px;
+
+    &:before{
+        .border-radius(100%);
+        color:@color-grey-lighter;
+        border: 2px solid @color-grey-lighter;
+        text-align:center;
+        display:block;
+        width:42px;
+        height:42px;
+        margin:2px 0 0 2px;
+        line-height:50px;
+        position:absolute;
+        z-index:1;
+        left:0;
     }
-   
-                
+    a{
+        position:absolute;
+        z-index:2;
+        left:0;
+        display:block;
+        width:100%;
+        height:50px;
+    }
+    img{
+        .border-radius(100%);
+        background-color:black;
+    }
+    &:hover{
+        &:before{
+            color:@color-teal;
+            border-color:@color-teal;
+        }
+    }
 }
 
 @media screen and (min-width: @breakpoint-mobile){
@@ -509,6 +563,7 @@ a{
     .nav-main .footer{
         position:absolute;
         bottom:0;
+        width:100%;
     }
 
     .explorer {
@@ -548,16 +603,17 @@ a{
     }
 }
 
-/* bits and pieces */
-
-@import "components/icons.less";
-@import "components/tabs.less";
-@import "components/dropdowns.less";
-@import "components/modals.less";
-@import "components/forms.less";
-@import "components/listing.less";
-@import "components/messages.less";
-
-/* specific page layouts, that require their own styles */
-
-@import "layouts/page-editor.less";
+/* Transitions */
+.content-wrapper,
+.nav-main,
+#nav-toggle,
+footer,
+.logo{
+    .transition(all 0.2s ease); /* TODO: ensure that nav-wrapper can't be seen to be gradually expanding to fill height of screen, by removing unnecessary transitions */
+}
+.nav-wrapper{
+    .transition(~"margin-left 0.2s ease, width 0.2s ease");
+}
+.nav-main a, a{
+    .transition(color 0.2s ease);
+}

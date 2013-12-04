@@ -67,9 +67,6 @@ ul.listing{
             display:block;
             padding:1.5em;
         }
-        .dropdown ul{
-            .transition(none);            
-        }
         .dropdown:hover,
         .dropdown.open{
             .box-shadow(0px 0px 3px 0 rgba(0,0,0,0.2));
@@ -243,7 +240,6 @@ ul.listing{
     .children,
     .no-children{
         padding:0 !important;
-        .transition(background-color 0.2s ease);
         border-left:1px dashed @color-input-border;
         &:hover{
             background-color:@color-header-bg;
@@ -251,7 +247,6 @@ ul.listing{
     }
     .children a,
     .no-children a{
-        .transition(all 0.2s ease);
         color:@color-grey-light;
         display:block;
         padding:2em 0;       
@@ -440,4 +435,18 @@ ul.listing{
 
 @media screen and (min-width: @breakpoint-desktop-small){
    
+}
+
+/* Transitions */
+.listing {
+    thead .dropdown ul{
+        .transition(none);
+    }
+    .children, .no-children{
+        .transition(background-color 0.2s ease);
+    }
+    .children a,
+    .no-children a{
+        .transition(all 0.2s ease);
+    }
 }

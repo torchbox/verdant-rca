@@ -7,7 +7,6 @@
     }
 
     ul{
-        .transition(opacity 0.2s linear);
         .unlist();
         background-color:@color-teal;
         position:absolute;
@@ -26,7 +25,6 @@
         }
 
         a{
-            .transition(background-color 0.3s ease);
             box-sizing:border-box;
             white-space: nowrap;
             position:relative;
@@ -218,3 +216,11 @@ footer .actions .dropdown ul li{
     border-top:0;
 }
 
+
+/* Transitions */
+ul{
+    .transition(opacity 0.2s linear);
+}
+a{
+    .transition(background-color 0.3s ease);
+}

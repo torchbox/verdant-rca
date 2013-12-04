@@ -2,8 +2,25 @@
 @import "../mixins.less";
 @import "../grid.less";
 
+h1{
+    font-weight:300;
+    font-size:2.2em;
+}
+header{
+    .clearfix();
+    .col1{
+        width:50px;
+        margin-right:1em;
+        padding:0;
+    }
+    h2{
+        text-transform:none;
+    }
+}
+
 .summary{
     .row();
+    background-color:@color-header-bg;
     margin-bottom:2em;
 
     h2{
@@ -17,7 +34,6 @@
         .column(4);
         padding-top:3em;
         padding-bottom:3em;
-        background-color:@color-header-bg;
     
         &:first-child{
             .push-padding(@grid-content-indent);
@@ -39,4 +55,7 @@
         line-height:1em;
         font-weight:300;
     }
+}
+section{
+    margin-bottom:4em;
 }

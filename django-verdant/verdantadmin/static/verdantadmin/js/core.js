@@ -1,4 +1,7 @@
 $(function(){
+    // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
+    $('body').addClass('ready'); 
+
     // Enable toggle to open/close nav
     $('#nav-toggle').click(function(){ 
         $('body').toggleClass('nav-open');
@@ -47,9 +50,7 @@ $(function(){
         $('.tab-nav a[href="'+ $(this).attr('href') +'"]').click();
     })
 
-    // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
-    $('body').addClass('ready'); 
-
+   
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
 
@@ -72,7 +73,9 @@ $(function(){
         })
     });
 
-    $('.listing tbody td').click(function(){
-        document.location.href = $(this).parent().find('.title a').attr("href")
+    $('.listing tbody td').click(function(e){
+        if(e.which == 1){
+            document.location.href = $(this).parent().find('.title a').attr("href")
+        }
     })
 })

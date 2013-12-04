@@ -1,5 +1,5 @@
 {% extends "verdantadmin/base.html" %}
-{% load compress %}
+{% load gravatar compress %}
 
 {% block bodyclass %}homepage{% endblock %}
 
@@ -11,7 +11,13 @@
 
 {% block content %}
     <header class="merged">
-        <h1>Welcome to the Verdant CMS for {{ site_name }}</h1>
+        <div class="col1">
+            <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+        </div>
+        <div class="col10">
+            <h1>Welcome to the Verdant CMS for {{ site_name }}</h1> 
+            <h2>{{ user.get_full_name|default:user.username }}</h2>
+        </div>
     </header>
 
     <section class="summary">
@@ -24,7 +30,7 @@
     </section>
 
     <div class="nice-padding row-flush">
-        <section class="col6">
+        <section>
 
             {% if page_revisions_for_moderation %}
                 <h2>Pages awaiting moderation</h2>
@@ -69,7 +75,7 @@
                 </table>
             {% endif %}
         </section>
-        <section class="col6">
+        <section >
             {% if last_edits %}
                 <h2>Your most recent edits</h2>
                 <table class="listing">

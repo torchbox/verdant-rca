@@ -31,7 +31,7 @@ max z-index: unknown;
 
     li {
         position: relative;
-        border-top:1px solid rgba(255,255,255,0.2);
+        border-top:1px solid rgba(200,200,200,0.1);
 
         &:first-child{
             border-top:0;
@@ -40,7 +40,7 @@ max z-index: unknown;
 
     a {
         text-decoration:none;
-        padding:1em;
+        padding:0.9em;
         color:white;
         display: block;
         position: relative;
@@ -52,7 +52,7 @@ max z-index: unknown;
         &:before{
             opacity:0.5;
             left:1em;
-            font-size:1.7em;
+            font-size:1.6em;
         }
 
         &:hover{
@@ -67,7 +67,6 @@ max z-index: unknown;
 
 
     .children{
-        .transition(all 0.2s linear);
         position:absolute;
         z-index:@explorer-z-index + 1;
         right:0;
@@ -81,7 +80,7 @@ max z-index: unknown;
         border-left:1px solid rgba(255,255,255,0.2);
         
         &:before{
-            padding:0.5em 0;
+            padding:0.35em 0;
         }
 
         &:hover{
@@ -118,10 +117,6 @@ max z-index: unknown;
         -webkit-backface-visibility: hidden;
         -moz-backface-visibility: hidden;
         backface-visibility: hidden;
-
-        &.dl-menu-toggle {
-            .transition(all 0.3s ease);
-        }
 
         &.dl-menuopen {
             opacity: 1;
@@ -921,4 +916,12 @@ body.explorer-open .explorer{
         transform: translateZ(-200px);
         opacity: 0;
     }
+}
+
+/* Transitions */ 
+.children{
+    .transition(all 0.2s linear);
+}
+.dl-menu.dl-menu-toggle {
+    .transition(all 0.3s ease);
 }
