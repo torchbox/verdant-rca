@@ -2835,7 +2835,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path, degree_qualification__in=['researchstudent', 'phd']).order_by('random_order')
+        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
 
         if school and school != '':
             research_students = research_students.filter(school=school)
