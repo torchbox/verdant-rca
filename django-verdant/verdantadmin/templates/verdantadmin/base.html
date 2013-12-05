@@ -75,12 +75,3 @@
         </div>
     </div>
 {% endblock %}
-
-{% block extra_js_base %}
-    <script type="text/javascript">
-        $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
-            $(this).parent().nextAll().stop().toggle('fast');
-            return false;
-        });
-    </script>
-{% endblock %}
