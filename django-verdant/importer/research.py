@@ -68,12 +68,20 @@ class ResearchImporter(object):
             pass
 
     def find_person_page(self, person_name):
+        titles = ["Dr", "Professor", "Sir"]
+        slug_separators = ['', '-', '_']
+
         # Get list of potential names
-        names = [title + " " + person_name for title in ["Dr", "Professor", "Sir"]]
+        names = [title + " " + person_name for title in titles]
         names.append(person_name)
 
+        # Replace dashes with spaces
+        names = [name.replace("-", " ") for name in names]
+
         # Slugify them
-        slugs = map(lambda slug: slug.strip(" ").replace("'", "").lower().replace(" ", "-"), names)
+        slugs = []
+        for separator in slug_separators:
+            slugs.extend(map(lambda slug: slug.strip(" ").replace("'", "").lower().replace(" ", separator), names))
 
         # Search the staff pages
         for slug in slugs:
