@@ -37,7 +37,9 @@
                         <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
                     {% endcomment %}
                     <li class="footer">
-                        <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+                        {% if user.email %}
+                            <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+                        {% endif %}
                         <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
                     </li>
                     <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
