@@ -68,7 +68,6 @@ class ResearchImporter(object):
             pass
 
     def find_person_page(self, person_name):
-        print person_name
         titles = ["Dr", "Professor", "Sir"]
         slug_separators = ['', '-', '_']
 
@@ -83,8 +82,7 @@ class ResearchImporter(object):
         slugs = []
         for separator in slug_separators:
             slugs.extend(map(lambda slug: slug.strip(" ").replace("'", "").lower().replace(" ", separator), names))
-        print slugs
-        return
+
         # Search the staff pages
         for slug in slugs:
             try:
@@ -239,7 +237,6 @@ class ResearchImporter(object):
         # Loop through eprint ids
         for eprintid in eprintid_list:
             self.import_researchitem_from_eprintid(str(eprintid))
-            return
 
 
 def run(save=False, link_creators=False, eprints_file='importer/data/research_eprints.json'):
