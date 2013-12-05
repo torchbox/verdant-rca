@@ -20,13 +20,11 @@
             {% csrf_token %}
             <ul class="fields">
                 {% for field in form %}
-
                     {% if field.name == 'file' %}
                         {% include "verdantdocs/documents/_file_field.html" %}
                     {% else %}
                         {% include "verdantadmin/shared/field_as_li.html" %}
                     {% endif %}
-
                 {% endfor %}
                 <li><input type="submit" value="Save" /> <a href="{% url 'verdantdocs_delete_document' document.id %}" class="button button-secondary no">Delete document</a></li>
             </ul>
