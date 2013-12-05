@@ -11,17 +11,20 @@
                     <li class="menu-explorer"><a href="#" class="icon icon-folder-open-inverse dl-trigger">Explorer</a></li>
                     <li class="menu-search">
                         <a href="{% url 'verdantadmin_pages_search' %}" id="menu-search-toggle" class="icon icon-search">Search</a>
-                        <form id="menu-search" action="{% url 'verdantadmin_pages_search' %}" method="get">
-                            <ul class="fields">
-                                <li class="char_field">
-                                    <div class="field">
-                                        <label for="id_q">Search term:</label>
-                                        <input id="id_q" name="q" type="text">
-                                    </div>
-                                </li>
-                                <li class="submit"><input type="submit" value="Search" /></li>
-                            </ul>
-                        </form>
+                        {% comment %}
+                            {# TODO: make this work #}
+                            <form id="menu-search" action="{% url 'verdantadmin_pages_search' %}" method="get">
+                                <ul class="fields">
+                                    <li class="char_field">
+                                        <div class="field">
+                                            <label for="id_q">Search term:</label>
+                                            <input id="id_q" name="q" type="text">
+                                        </div>
+                                    </li>
+                                    <li class="submit"><input type="submit" value="Search" /></li>
+                                </ul>
+                            </form>
+                        {% endcomment %}
                     </li>
                     <li class="menu-images"><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
                     <li class="menu-documents"><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
@@ -30,7 +33,7 @@
                         <li class="menu-users"><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
                     {% endif %}
                     {% comment %}
-                        Commented out until this works
+                        {# TODO: make this work #}
                         <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
                     {% endcomment %}
                     <li class="footer">
@@ -75,31 +78,6 @@
 
 {% block extra_js_base %}
     <script type="text/javascript">
-        $('#id_q').on('input', function() {
-            clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(search, 200);
-            $(this).data('timer', wait);
-        });
-        
-        // These variables keep track of ajax requests to prevent an older request from replacing a new one
-        var search_current_index = 0;
-        var search_next_index = 0;
-
-        function search () {
-            search_next_index++;
-            var index = search_next_index;
-            $.ajax({
-                url: "{%url 'verdantadmin_pages_search' %}",
-                data: {q: $('#id_q').val()},
-                success: function(data, status) {
-                    if (index > search_current_index) {
-                        search_current_index = index;
-                        $('#page-results').html(data);
-                    }
-                },
-            });
-        };
-
         $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
             $(this).parent().nextAll().stop().toggle('fast');
             return false;
