@@ -1,5 +1,5 @@
 {% extends "verdantadmin/base.html" %}
-
+{% block titletag %}New {{ content_type.name|title }}{% endblock %}
 {% block bodyclass %}menu-explorer page-editor create{% endblock %}
 
 {% block content %}

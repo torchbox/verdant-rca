@@ -1,5 +1,6 @@
 {% extends "verdantadmin/base.html" %}
 {% load image_tags %}
+{% block titletag %}Editing {{ document.title }}{% endblock %}
 {% block bodyclass %}menu-documents{% endblock %}
 {% block extra_css %}
     {% include "verdantadmin/shared/tag_field_css.html" %}
@@ -11,7 +12,7 @@
 
 {% block content %}
     <header>
-        <h1>Editing: <span>{{ document.title }}</span></h1>
+        <h1>Editing <span>{{ document.title }}</span></h1>
     </header>
 
     <div class="nice-padding">
