@@ -45,7 +45,7 @@ def browse(request, parent_page_id=None):
             parent_page = Page.get_first_root_node()
 
         search_form = SearchForm()
-        pages = parent_page.get_children().order_by('title')
+        pages = parent_page.get_children()
 
     # restrict the page listing to just those pages that:
     # - are of the given content type (taking into account class inheritance)
@@ -53,19 +53,17 @@ def browse(request, parent_page_id=None):
 
     shown_pages = []
     for page in pages:
-        can_choose = issubclass(page.specific_class, desired_class)
-        can_descend = page.get_children_count()
+        page.can_choose = issubclass(page.specific_class, desired_class)
+        page.can_descend = page.get_children_count()
 
-        if can_choose or can_descend:
-            shown_pages.append({
-                'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
-            })
+        if page.can_choose or page.can_descend:
+            shown_pages.append(page)
 
     if is_searching:
         return render(request, 'verdantadmin/chooser/_search_results.html', {
             'querystring': get_querystring(request),
             'search_form': search_form,
-            'pages': shown_pages,
+            'pages': pages,
             'is_searching': is_searching
         })
 

@@ -31,7 +31,10 @@ def index(request, parent_page_id=None):
         if ordering in ['title', '-title', 'content_type', '-content_type', 'live', '-live']:
             pages = pages.order_by(ordering)
     else:
-        ordering = None
+        ordering = 'title'
+    
+    # if ordering == 'ord':    
+    #     messages.warning(request, "You are now able to reorder pages. Click 'Save order' when you've finished")
 
     return render(request, 'verdantadmin/pages/index.html', {
         'parent_page': parent_page,
@@ -47,9 +50,10 @@ def select_type(request):
         SELECT DISTINCT content_type_id AS id FROM core_page
     """)
 
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
     page_types = set()
-    for ct in existing_page_types:
-        allowed_subpage_types = ct.model_class().clean_subpage_types()
+    for content_type in existing_page_types:
+        allowed_subpage_types = content_type.model_class().clean_subpage_types()
         for subpage_type in allowed_subpage_types:
             subpage_content_type = ContentType.objects.get_for_model(subpage_type)
 
@@ -57,6 +61,7 @@ def select_type(request):
 
     return render(request, 'verdantadmin/pages/select_type.html', {
         'page_types': page_types,
+        'all_page_types':all_page_types
     })
 
 
@@ -88,12 +93,15 @@ def select_location(request, content_type_app_name, content_type_model_name):
     # find all the valid locations (parent pages) where a page of the chosen type can be added
     parent_pages = page_class.allowed_parent_pages()
 
+    print parent_pages
+
     if len(parent_pages) == 0:
         # user cannot create a page of this type anywhere - fail with an error
-        messages.error(request, "Sorry, you do not have access to create a page of type '%s'." % content_type.name)
+        messages.error(request, "Sorry, you do not have access to create a page of type <em>'%s'</em>." % content_type.name)
         return redirect('verdantadmin_pages_select_type')
     elif len(parent_pages) == 1:
         # only one possible location - redirect them straight there
+        messages.warning(request, "Pages of this type can only be created as children of <em>'%s'</em>. This new page will be saved there." % parent_pages[0].title)
         return redirect('verdantadmin_pages_create', content_type_app_name, content_type_model_name, parent_pages[0].id)
     else:
         # prompt them to select a location
@@ -255,21 +263,16 @@ def reorder(request, parent_page_id=None):
         except:
             # Invalid
             messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_pages_reorder', parent_page_id)
+            return redirect('verdantadmin_explore', parent_page.id)
 
         # Reorder
         for page in pages_ordered:
             page.move(parent_page, pos='last-child')
 
         # Success message
-        messages.success(request, "Pages reordered successfully")
+        messages.success(request, "Pages have been reordered")
 
-        return redirect('verdantadmin_explore', parent_page_id)
-    else:
-        return render(request, 'verdantadmin/pages/reorder.html', {
-            'parent_page': parent_page,
-            'pages': pages,
-        })
+    return redirect('verdantadmin_explore', parent_page.id)
 
 @login_required
 def delete(request, page_id):
@@ -401,13 +404,11 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     child_pages = []
     for page in viewed_page.get_children():
         # can't move the page into itself or its descendants
-        can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+        page.can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
 
-        can_descend = can_choose and page.get_children_count()
+        page.can_descend = page.can_choose and page.get_children_count()
 
-        child_pages.append({
-            'page': page, 'can_choose': can_choose, 'can_descend': can_descend,
-        })
+        child_pages.append(page)
 
     return render(request, 'verdantadmin/pages/move_choose_destination.html', {
         'page_to_move': page_to_move,

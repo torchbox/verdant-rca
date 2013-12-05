@@ -26,7 +26,8 @@ def home(request):
         'total_docs': total_documents,
         'site_name': settings.VERDANT_SITE_NAME,
         'page_revisions_for_moderation': page_revisions_for_moderation,
-        'last_edits':last_edits
+        'last_edits':last_edits,
+        'user':request.user
     })
 
 

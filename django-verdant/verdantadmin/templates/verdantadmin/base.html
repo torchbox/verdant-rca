@@ -1,5 +1,5 @@
 {% extends "verdantadmin/skeleton.html" %}
-{% load explorer_nav %}
+{% load explorer_nav gravatar %}
 
 {% block furniture %}
     <div id="nav-toggle" data-afteropen="Collapse" class="icon icon-verdant text-replace">Menu</div>
@@ -8,29 +8,45 @@
             <a href="{% url 'verdantadmin_home' %}" class="logo"><em>V</em><span>erdant</span></a>
             <nav class="nav-main">
                 <ul>
-                    <li><a href="#" class="icon icon-folder-open-inverse dl-trigger">Explorer</a></li>
-                    <li><a href="{% url 'verdantadmin_pages_search' %}" class="icon icon-search">Search</a></li>
-                    <li><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
-                    <li><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
-                    <li><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
+                    <li class="menu-explorer"><a href="#" class="icon icon-folder-open-inverse dl-trigger">Explorer</a></li>
+                    <li class="menu-search">
+                        <a href="{% url 'verdantadmin_pages_search' %}" id="menu-search-toggle" class="icon icon-search">Search</a>
+                        {% comment %}
+                            {# TODO: make this work #}
+                            <form id="menu-search" action="{% url 'verdantadmin_pages_search' %}" method="get">
+                                <ul class="fields">
+                                    <li class="char_field">
+                                        <div class="field">
+                                            <label for="id_q">Search term:</label>
+                                            <input id="id_q" name="q" type="text">
+                                        </div>
+                                    </li>
+                                    <li class="submit"><input type="submit" value="Search" /></li>
+                                </ul>
+                            </form>
+                        {% endcomment %}
+                    </li>
+                    <li class="menu-images"><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
+                    <li class="menu-documents"><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
+                    <li class="menu-snippets"><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
                     {% if perms.auth %}
-                        <li><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
+                        <li class="menu-users"><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
                     {% endif %}
                     {% comment %}
-                        Removed until functionality exists/works as expected
-
-                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New</a></li>
+                        {# TODO: make this work #}
+                        <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
                     {% endcomment %}
                     <li class="footer">
-                        <a href="{% url 'django.contrib.auth.views.logout' %}" class="icon icon-arrow-left">Log out</a>
+                        <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+                        <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
                     </li>
-                    <li class="verdantadmin-tab-more"><a href="#" class="icon icon-arrow-down">More</a></li>
+                    <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
 
-                    <li><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
+                    <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
 
                     {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
                     {% for name, title in verdantadmin_tab_urls %}
-                        <li><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
+                        <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
                     {% endfor %}
                 </ul>
             </nav>
@@ -49,7 +65,7 @@
                 <div class="messages">
                     <ul>
                         {% for message in messages %}
-                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -62,16 +78,9 @@
 
 {% block extra_js_base %}
     <script type="text/javascript">
-        $(".verdantadmin-tab-more")
-            .nextAll().hide().end()
-            .find("a").click(function(){
-                $(this)
-                    .toggleClass('icon-arrow-down icon-arrow-up')
-                    .parent()
-                    .nextAll()
-                    .stop()
-                    .toggle('fast');
-                return false;
-            });
+        $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
+            $(this).parent().nextAll().stop().toggle('fast');
+            return false;
+        });
     </script>
 {% endblock %}
