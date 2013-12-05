@@ -14,7 +14,7 @@
 	    {% endif %}
 	    <form action="{% url 'verdantadmin_pages_delete' page.id %}" method="POST">
 	        {% csrf_token %}
-	        <input type="submit" value="Delete it" class="serious"> {% if page.live %}<a href="{% url 'verdantadmin_pages_unpublish' page.id %}" class="button">Unpublish it</a>{% endif %}
+	        <input type="submit" value="Delete it" class="serious {% if page.live %}button-secondary{% endif %}"> {% if page.live %}<a href="{% url 'verdantadmin_pages_unpublish' page.id %}" class="button">Unpublish it</a>{% endif %}
 	    </form>
 	</div>
 {% endblock %}

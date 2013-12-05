@@ -58,10 +58,10 @@
                                                 <input type="submit" class="button button-small" value="Approve">
                                             </form>
                                         </li>
-                                        <li>
+                                        <li class="no-border">
                                             <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
                                                 {% csrf_token %}
-                                                <input type="submit" class="button button-small no" value="Reject">
+                                                <input type="submit" class="button button-small button-secondary no" value="Reject">
                                             </form>
                                         </li>
                                         <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>

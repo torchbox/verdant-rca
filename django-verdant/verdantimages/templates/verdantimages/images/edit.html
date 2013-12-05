@@ -29,10 +29,10 @@
                         {% endif %}
 
                     {% endfor %}
-                    <li><input type="submit" value="Save" /></li>
+                    <li><input type="submit" value="Save" /><a href="{% url 'verdantimages_delete_image' image.id %}" class="button button-secondary no">Delete image</a></li>
                 </ul>
             </form>
-            <a href="{% url 'verdantimages_delete_image' image.id %}" class="button no">Delete image</a>
+            
         </div>
         <div class="col5">
             {% image image max-800x600 %}
