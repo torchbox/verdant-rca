@@ -69,7 +69,7 @@ def list(request, content_type_app_name, content_type_model_name):
 
     items = model.objects.all()
 
-    return render(request, 'verdantsnippets/snippets/list.html', {
+    return render(request, 'verdantsnippets/snippets/type_index.html', {
         'content_type': content_type,
         'snippet_type_name': snippet_type_name,
         'snippet_type_name_plural': snippet_type_name_plural,

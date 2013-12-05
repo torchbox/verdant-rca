@@ -19,6 +19,7 @@
             <section id="account" class="active nice-padding">
                 <ul class="fields">
                     {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
+                    {% include "verdantadmin/shared/field_as_li.html" with field=form.email %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=form.first_name %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=form.last_name %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}

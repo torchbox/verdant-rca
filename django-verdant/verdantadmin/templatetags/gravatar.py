@@ -23,11 +23,11 @@ class GravatarUrlNode(template.Node):
         except template.VariableDoesNotExist:
             return ''
  
-        default = "http://example.com/static/images/defaultavatar.jpg"
+        default = "blank"
         size = 50
  
-        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
-        gravatar_url += urllib.urlencode({'s':str(size)})
+        gravatar_url = "//www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'s':str(size), 'd':default})
  
         return gravatar_url
  
