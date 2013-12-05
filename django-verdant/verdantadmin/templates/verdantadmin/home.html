@@ -1,6 +1,6 @@
 {% extends "verdantadmin/base.html" %}
 {% load gravatar compress %}
-
+{% block titletag %}Dashboard{% endblock %}
 {% block bodyclass %}homepage{% endblock %}
 
 {% block extra_css %}
@@ -42,8 +42,8 @@
                     <thead>
                         <tr>
                             <th class="title">Title</th>
-                            <th>Author</th>
                             <th>Date</th>
+                            <th>Author</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,17 +58,18 @@
                                                 <input type="submit" class="button button-small" value="Approve">
                                             </form>
                                         </li>
-                                        <li>
+                                        <li class="no-border">
                                             <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
                                                 {% csrf_token %}
-                                                <input type="submit" class="button button-small no" value="Reject">
+                                                <input type="submit" class="button button-small button-secondary no" value="Reject">
                                             </form>
                                         </li>
                                         <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>
                                     </ul>
                                 </td>
+                                <td><div class="human-readable-date" title="{{ revision.created_at|date:"d M Y H:i" }}">{{ revision.created_at|timesince }} ago </div></td>
                                 <td>{{ revision.user.get_full_name }}</td>
-                                <td>{{ revision.created_at|date:"d M Y H:i" }}</td>
+                                
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -81,10 +82,12 @@
                 <table class="listing">
                     <col />
                     <col width="15%"/>
+                    <col width="15%"/>
                     <thead>
                         <tr>
                             <th class="title">Title</th>
                             <th>Date</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,7 +99,8 @@
                                         <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>
                                     </ul>
                                 </td>
-                                <td>{{ revision.created_at|date:"d M Y H:i" }}</td>
+                                <td><div class="human-readable-date" title="{{ revision.created_at|date:"d M Y H:i" }}">{{ revision.created_at|timesince }}</div></td>
+                                <td><span class="status-tag {{ revision.page.status_string }}">{{ revision.page.status_string }}</span></td>
                             </tr>
                         {% endfor %}
                     </tbody>

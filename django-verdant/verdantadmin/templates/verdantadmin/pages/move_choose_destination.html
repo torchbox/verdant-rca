@@ -1,8 +1,9 @@
 {% extends "verdantadmin/base.html" %}
+{% block titletag %}Select a new parent page for {{ page_to_move.title }}{% endblock %}
 {% block bodyclass %}menu-explorer{% endblock %}
 {% block content %}
     <header>
-        <h1>Select a move destination for: <span>{{ page_to_move.title }}</span></h1>
+        <h1>Select a new parent page for <span>{{ page_to_move.title }}</span></h1>
 
         <ul class="breadcrumb">
             <li><a href="{% url 'verdantadmin_explore_root' %}" class="icon icon-home text-replace">Home</a></li>

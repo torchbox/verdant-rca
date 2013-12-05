@@ -1,8 +1,9 @@
 {% extends "verdantadmin/base.html" %}
+{% block titletag %}Editing {{ snippet_type_name}} - {{ instance }}{% endblock %}
 {% block bodyclass %}menu-snippets{% endblock %}
 {% block content %}
     <header>
-        <h1>Editing: <span>{{ snippet_type_name }} "{{ instance }}"</span></h1>
+        <h1>Editing <span>{{ snippet_type_name }} - {{ instance }}</span></h1>
     </header>
 
     <form action="{% url 'verdantsnippets_edit' content_type.app_label content_type.model instance.id %}" method="POST">
@@ -14,7 +15,7 @@
                 <li class="actions">
                     <div class="dropdown dropup match-width">
                         <input type="submit" value="Save" class="button" />
-                        <div class="dropdown-toggle icon icon-arrow-up"><input type="submit" value="Save" /></div>
+                        <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
                             <li><a href="{% url 'verdantsnippets_delete' content_type.app_label content_type.model instance.id %}" class="shortcut">Delete</a></li>
                         </ul>

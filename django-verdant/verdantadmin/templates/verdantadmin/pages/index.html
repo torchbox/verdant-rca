@@ -1,5 +1,5 @@
 {% extends "verdantadmin/base.html" %}
-
+{% block titletag %}Exploring {{ parent_page.title }}{% endblock %}
 {% block bodyclass %}menu-explorer page-explorer {% if ordering == 'ord' %}reordering{% endif %}{% endblock %}
 
 {% block content %}
