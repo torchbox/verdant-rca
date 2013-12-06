@@ -26,3 +26,4 @@ elasticutils==0.8.1
 stripe==1.9.8
 django-redis==3.3
 python-ldap==2.4.13
+django-auth-ldap==1.1.7
