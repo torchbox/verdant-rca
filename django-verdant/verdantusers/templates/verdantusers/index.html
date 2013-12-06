@@ -24,7 +24,7 @@
         <tbody>
             {% for user in users %}
                 <tr>
-                    <td class="name">
+                    <td class="title">
                         <a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name|default:user.username }}</a>
                     </td>
                     <td class="username">{{ user.username }}</td>
