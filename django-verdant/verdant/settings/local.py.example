@@ -6,3 +6,10 @@ EMBEDLY_KEY = 'get-one-from-http://embed.ly/'
 
 STRIPE_PUBLISHABLE_KEY = ""
 STRIPE_SECRET_KEY = ""
+
+
+# Uncomment if using LDAP authentication
+#AUTHENTICATION_BACKENDS = (
+#    'django.contrib.auth.backends.ModelBackend',
+#    'rca_ldap.backends.LDAPBackend',
+#)
