@@ -15,15 +15,17 @@
         {% if all_page_types %}
             <ul class="listing">
                 {% for content_type in all_page_types %}
-                    <li class="row">
-                        <div class="col6">
-                            <a href="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a>
-                        </div>
-                        <div class="col6" style="text-align:right">
-                            <small>
+                    <li>
+                        <div class="row row-flush">
+                            <div class="col6">
+                                <a href="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" class="icon icon-plus-inverse">{{ content_type.name|title }}</a>
+                            </div>
+                           
+                            <small class="col6" style="text-align:right">
                                 {{ content_type|meta_description }}
                                 <a href="{% url 'verdantadmin_pages_type_use' content_type.app_label content_type.model %}" class="nolink">View all {{ content_type.name|title }} pages </a>
                             </small>
+                            
                         </div>
                     </li>
                 {% endfor %}
