@@ -53,11 +53,7 @@
                 </td>
                 <td class="type">{{ parent_page.content_type|title }}</td>
                 <td class="status"><span class="status-tag {{ parent_page.status_string }}">{{ parent_page.status_string|capfirst }}</span></td>
-                <td class="{% if not moving and not choosing %}no-children {% endif %}">
-                    {% if not moving and not choosing %}
-                        <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="icon text-replace icon-plus-inverse" title="Add a child page to '{{ parent_page.title }}'">Add subpage</a>
-                    {% endif %}
-                </td>
+                <td></td>
             </tr>
             <tr class="divider"><td colspan="100%">Child pages</td></tr>
         {% endif %}

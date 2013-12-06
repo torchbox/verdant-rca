@@ -3,9 +3,5 @@
 </header>
 
 <div class="nice-padding">
-    <ul class="listing snippets">
-        {% for item in items %}
-            <li><a class="snippet-choice" href="{% url 'verdantsnippets_chosen' content_type.app_label content_type.model item.id %}">{{ item }}</a></li>
-        {% endfor %}
-    </ul>
+	{% include "verdantsnippets/snippets/list.html" with choosing=1 %}
 </div>

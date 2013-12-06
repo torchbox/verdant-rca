@@ -6,4 +6,8 @@ register = template.Library()
 
 @register.filter
 def fieldtype(bound_field):
-    return camelcase_to_underscore(bound_field.field.__class__.__name__)
+	try:
+		return camelcase_to_underscore(bound_field.field.__class__.__name__)
+	except AttributeError:
+		return ""
+    
