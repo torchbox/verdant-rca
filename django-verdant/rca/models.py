@@ -1055,7 +1055,6 @@ NewsItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
-        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -1468,7 +1467,6 @@ EventItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
-        FieldPanel('show_in_menus'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
     ], 'Cross-page behaviour'),
@@ -2386,7 +2384,6 @@ JobPage.promote_panels = [
     ], 'Common page configuration'),
 
     MultiFieldPanel([
-        FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
@@ -2979,7 +2976,7 @@ class StudentPage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
-    degree_year = models.CharField(max_length=4)
+    degree_year = models.CharField(max_length=4, blank=True)
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
