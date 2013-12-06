@@ -69,6 +69,10 @@ class AbstractImage(models.Model, TagSearchable):
         return (self.height < self.width)
 
     @property
+    def filename(self):
+        return os.path.basename(self.file.name)
+
+    @property
     def default_alt_text(self):
         # by default the alt text field (used in rich text insertion) is populated
         # from the title. Subclasses might provide a separate alt field, and

@@ -1,31 +1,24 @@
-{% extends "verdantadmin/base.html" %}
-{% block titletag %}Snippets {{ snippet_type_name_plural|capfirst }}{% endblock %}
-{% block bodyclass %}menu-snippets{% endblock %}
-{% block content %}
-    <header>
-        <div class="row row-flush">
-            <div class="left col9">
-                <h1>Snippets <span>{{ snippet_type_name_plural|capfirst }}</span></h1>
-            </div>
-            <div class="right col3">
-                <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" class="button icon icon-plus-inverse">Add {{ snippet_type_name }}</a>
-                {# TODO: figure out a way of saying "Add a/an [foo]" #}
-            </div>
-        </div>
-    </header>
-    <div class="nice-padding">
-        {% if items %}
-        <ul class="listing">
-            {% for item in items %}
-                <li>
-                    <a href="{% url 'verdantsnippets_edit' content_type.app_label content_type.model item.id %}">
-                        {{ item }}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-            <p class="no-results-message">No {{ snippet_type_name_plural }} have been created. Why not <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}">add one</a></p>
-        {% endif %}
-    </div>
-{% endblock %}
+<table class="listing">
+    <col />
+    <col  />
+    <col width="16%" />
+    <thead>
+        <tr class="table-headers">
+            <th>Title</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for snippet in items %}
+            <tr>
+                <td class="title">
+                    {% if choosing %}
+                        <a class="snippet-choice" href="{% url 'verdantsnippets_chosen' content_type.app_label content_type.model snippet.id %}">{{ snippet }}</a>
+                        
+                    {% else %}
+                        <a href="{% url 'verdantsnippets_edit' content_type.app_label content_type.model snippet.id %}">{{ snippet }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

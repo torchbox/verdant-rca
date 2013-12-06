@@ -85,4 +85,9 @@ $(function(){
             document.location.href = $(this).parent().find('.title a').attr("href")
         }
     })
+
+    $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
+        $(this).parent().nextAll().stop().toggle('fast');
+        return false;
+    });
 })
