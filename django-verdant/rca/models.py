@@ -2498,9 +2498,6 @@ class AlumniIndex(Page, SocialFields):
 
     search_name = None
 
-    # class Meta:
-    #     description = "Test"
-
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
