@@ -52,7 +52,7 @@
                     {% endif %}
                 </td>
                 <td class="type">{{ parent_page.content_type|title }}</td>
-                <td class="status"><span class="status-tag {{ parent_page.status_string }}">{{ parent_page.status_string|capfirst }}</span></td>
+                <td class="status"><span class="status-tag {% if parent_page.status_string != "draft" %}primary{% endif %}">{{ parent_page.status_string|capfirst }}</span></td>
                 <td></td>
             </tr>
             <tr class="divider"><td colspan="100%">Child pages</td></tr>
@@ -156,7 +156,7 @@
                         <td class="parent"><a href="{% url 'verdantadmin_explore' page.get_parent.id %}">{{ page.get_parent.title }}</a></td>
                     {% endif %}
                     <td class="type">{{ page.content_type|title }}</td>
-                    <td class="status"><span class="status-tag {{ page.status_string }}">{{ page.status_string }}</span></td>
+                    <td class="status"><span class="status-tag {% if page.status_string != "draft" %}primary{% endif %}">{{ page.status_string }}</span></td>
                     <td class="{% if allow_navigation %}{% if choosing %}{% if page.can_descend %} children{% endif%}{% elif moving %}{% if page.can_descend %} children{% endif%}{% elif allow_navigation and page.is_navigable %} children{% else %}no-children{% endif %}{% endif %}">
                         {% if allow_navigation %}
                             {% if moving %}

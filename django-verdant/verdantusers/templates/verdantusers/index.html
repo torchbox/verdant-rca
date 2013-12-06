@@ -25,11 +25,11 @@
             {% for user in users %}
                 <tr>
                     <td class="title">
-                        <a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name|default:user.username }}</a>
+                        <h2><a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name|default:user.username }}</a></h2>
                     </td>
                     <td class="username">{{ user.username }}</td>
                     <td class="level">{% if user.is_superuser %}Adminstrator{% else %}User{% endif %}</td>
-                    <td class="status">{% if user.is_active %}Active{% else %}Inactive{% endif %}</td>
+                    <td class="status"><div class="status-tag {% if user.is_active %}primary{% endif %}">{% if user.is_active %}Active{% else %}Inactive{% endif %}</div></td>
                 </li>
             {% endfor %}
         </tbody>
