@@ -1,5 +1,7 @@
 {% extends "verdantadmin/base.html" %}
 {% block bodyclass %}menu-explorer{% endblock %}
+{% block titletag %}Create a page in {{ parent_page.title }}{% endblock %}
+
 {% block content %}
     <header>
         <h1>Create a page in <span>{{ parent_page.title }}</span></h1>

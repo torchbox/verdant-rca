@@ -1,6 +1,6 @@
 {% extends "verdantadmin/base.html" %}
 {% load gravatar compress %}
-
+{% block titletag %}Dashboard{% endblock %}
 {% block bodyclass %}homepage{% endblock %}
 
 {% block extra_css %}
@@ -11,9 +11,11 @@
 
 {% block content %}
     <header class="merged">
-        <div class="col1">
-            <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
-        </div>
+        {% if user.email %}
+            <div class="col1">
+                <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+            </div>
+        {% endif %}
         <div class="col10">
             <h1>Welcome to the Verdant CMS for {{ site_name }}</h1> 
             <h2>{{ user.get_full_name|default:user.username }}</h2>
@@ -58,10 +60,10 @@
                                                 <input type="submit" class="button button-small" value="Approve">
                                             </form>
                                         </li>
-                                        <li>
+                                        <li class="no-border">
                                             <form action="{% url 'verdantadmin_pages_reject_moderation' revision.id %}" method="POST">
                                                 {% csrf_token %}
-                                                <input type="submit" class="button button-small no" value="Reject">
+                                                <input type="submit" class="button button-small button-secondary no" value="Reject">
                                             </form>
                                         </li>
                                         <li><a href="{% url 'verdantadmin_pages_preview_for_moderation' revision.id %}">Preview</a></li>
@@ -76,7 +78,7 @@
                 </table>
             {% endif %}
         </section>
-        <section >
+        <section>
             {% if last_edits %}
                 <h2>Your most recent edits</h2>
                 <table class="listing">

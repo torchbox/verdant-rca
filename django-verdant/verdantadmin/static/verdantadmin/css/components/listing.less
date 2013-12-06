@@ -75,7 +75,7 @@ ul.listing{
         }
     }
     &.full-width{
-        margin-bottom:0;
+        margin-bottom:-3em; /* this negates the padding added to the bottom of .content */
     }
     &.full-width th{
         background-color:@color-thead-bg;
@@ -218,6 +218,9 @@ ul.listing{
             &:first-child{
                 border:0;
                 padding-left:0;
+            }
+            &.no-border{
+                border:0;
             }
         }
 

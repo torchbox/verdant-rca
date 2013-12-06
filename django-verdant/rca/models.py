@@ -1090,7 +1090,7 @@ class PressReleaseIndex(Page, SocialFields):
     search_name = None
 
     def serve(self, request):
-        press_releases = PressRelease.objects.filter(live=True)
+        press_releases = PressRelease.objects.filter(live=True).order_by('-date')
 
         page = request.GET.get('page')
         paginator = Paginator(press_releases, 10)  # Show 10 press_releases items per page

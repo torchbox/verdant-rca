@@ -137,7 +137,7 @@ input[type=checkbox]:checked:before{
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 2.4em;
+    padding:1.3em 2.2em;
     border:none;
     background-color: @color-button;
     color:white;
@@ -148,29 +148,58 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     position:relative;
     -webkit-font-smoothing: auto;
     vertical-align: middle;
+    line-height:1em;
+    display:inline-block;
 
+    &.button-small{
+        font-size:0.85em;
+        padding:1em 1.8em;
+    }
+
+    &.button-secondary{
+        border:1px solid @color-button;
+        color:@color-button;
+        background-color:transparent;
+    }
+    
     &:hover{
         background-color: @color-button-hover;
         color:white;
+        border-color:transparent;
     }
 
-    &.lowpriority{
-        background-color: lighten(@color-grey, 10%);
-        &:hover{
-            background-color: @color-grey;
-        }
-    }
     &.yes{
         background-color: @color-button-yes;
+       
+        &.button-secondary{
+            border:1px solid @color-button-yes;
+            color:@color-button-yes;
+            background-color:transparent;
+        }
         &:hover{
+            color:white;
+            border-color:transparent;
             background-color: @color-button-yes-hover;
         }
     }
     &.no, &.serious{
         background-color: @color-button-no;
+
+        &.button-secondary{
+            border:1px solid @color-button-no;
+            color:@color-button-no;
+            background-color:transparent;
+        }
         &:hover{
+            color:white;
+            border-color:transparent;
             background-color: @color-button-no-hover;
         }
+    }  
+
+    /* special consideration for buttons with icons in them, to make them smaller */
+    &.icon{
+        padding:1em 2.4em;
     }
 
     + input[type=submit],
@@ -181,17 +210,6 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
         margin-left:1em;
     }
 }
-
-
-input[type=submit].button-small, input[type=reset].button-small, input[type=button].button-small, .button.button-small, button.button-small{
-    font-size:0.85em;
-    padding:1em 1.8em;
-}
-
-a.button{
-    line-height:3.5em;
-}
-
 
 /* Other text */
 .help, .error-message{
@@ -233,7 +251,7 @@ li.focused > .help{
     color:@color-red;
     clear:both;
 }
-.error input[type=text], input[type=email], input[type=tel], .error textarea, .error select, .error .tagit{
+.error input[type=text], .error input[type=email], .error input[type=tel], .error textarea, .error select, .error .tagit{
     border-color:@color-red;
     background-color:@color-input-error-bg;
 }
@@ -316,7 +334,7 @@ ul.inline li:first-child, li.inline:first-child{
 
     input[type=button]{
         font-size:0.85em;
-        padding:1em 1.8em;
+        padding:0.9em 1.4em;
     }
 }
 
