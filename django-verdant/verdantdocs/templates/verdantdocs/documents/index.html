@@ -43,10 +43,10 @@
             {% endfor %}
             <li class="submit"><input type="submit" value="Search" /></li>
             {% if popular_tags %}
-                <li class="popular-tags">
+                <li class="taglist">
                     <h3>Popular tags</h3>
                     {% for tag in popular_tags %}
-                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
+                        <a class="suggested-tag tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
                     {% endfor %}
                 </li>
             {% endif %}

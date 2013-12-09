@@ -423,35 +423,20 @@ ul.inline li:first-child, li.inline:first-child{
 /* Tags */
 
 .tagit{
-    padding:0.9em 1.2em;
+    padding:0.6saem 1.2em;
+
+    .tagit-choice{
+        border:0;
+    }
+
+    ul& input[type="text"]{
+        padding: 0.2em 0.5em !important; /* having to use important, FML*/
+    }
+    ul& li.tagit-choice-editable{
+        padding:0 23px 0 0 !important; /* having to use important, FML*/
+    }
 }
 
-.tagit .ui-state-default{
-    border:1px solid @color-grey-lighter;
-}
-
-.tagit-choice{
-    border:0;
-}
-ul.tagit li.tagit-choice-editable{
-    padding-right:23px !important; /* having to use important, FML*/
-}
-
-.suggested-tag{
-    padding-right:0.5em;
-    border:1px solid @color-grey-lighter;
-    padding:0.2em 0.5em;
-    color:inherit;
-    line-height:2em;
-}
-.tagit-label:before,
-.suggested-tag:before{
-    font-family:verdant;
-    display:inline-block;
-    color:@color-grey-light;
-    content:"u";
-    padding-right:0.5em;
-}
 .tagit-close{
     .ui-icon-close{
         margin-left:1em;
@@ -512,7 +497,7 @@ ul.tagit li.tagit-choice-editable{
             padding:1.55em 2em;
         }
     }
-    .popular-tags{
+    .taglist{
         font-size:0.9em;
         line-height:2.4em;
         h3{

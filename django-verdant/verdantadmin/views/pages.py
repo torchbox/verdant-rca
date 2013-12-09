@@ -93,8 +93,6 @@ def select_location(request, content_type_app_name, content_type_model_name):
     # find all the valid locations (parent pages) where a page of the chosen type can be added
     parent_pages = page_class.allowed_parent_pages()
 
-    print parent_pages
-
     if len(parent_pages) == 0:
         # user cannot create a page of this type anywhere - fail with an error
         messages.error(request, "Sorry, you do not have access to create a page of type <em>'%s'</em>." % content_type.name)
@@ -110,6 +108,24 @@ def select_location(request, content_type_app_name, content_type_model_name):
             'page_class': page_class,
             'parent_pages': parent_pages,
         })
+
+@login_required
+def content_type_use(request, content_type_app_name, content_type_model_name):
+    try:
+        content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
+    except ContentType.DoesNotExist:
+        raise Http404
+
+    page_class = content_type.model_class()
+
+    # page_class must be a Page type and not some other random model
+    if not issubclass(page_class, Page):
+        raise Http404
+
+    return render(request, 'verdantadmin/pages/content_type_use.html', {
+        'pages': page_class.objects.all(),
+        'content_type': content_type,
+    })
 
 
 @login_required
