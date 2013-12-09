@@ -21,7 +21,7 @@ from rca_ldap.config import LDAPSearchRCA
 # Basic config
 AUTH_LDAP_BIND_DN = ''
 AUTH_LDAP_BIND_PASSWORD = ''
-AUTH_LDAP_SERVER_URI = 'ldaps://194.80.196.3:636'
+AUTH_LDAP_SERVER_URI = 'ldap://194.80.196.3'
 
 # Filter strings
 def get_filter_string(base, **kwargs):
