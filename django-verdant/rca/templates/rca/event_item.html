@@ -19,7 +19,7 @@
                     <h3 class="h5">
                         {{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
                         {% if date.time_from %} &#124;
-                            <span>{{ date.time_from|time_display }}{% if date.time_to %} - {{ date.time_to|time_display }}{% endif %}</span>
+                            <span>{{ date.time_from|time_display }}{% if date.time_to %} &#150; {{ date.time_to|time_display }}{% endif %}</span>
                         {% endif %}
                     </h3>
                 {% endfor %}
