@@ -37,7 +37,7 @@ def get_filter_string(base, **kwargs):
 
     return filter_string
 
-FILTER_BASE = '(uid=%(user)s)'
+FILTER_BASE = '(sAMAccountName=%(user)s)'
 FILTER_SUPER_PUBLISHERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Super-Publishers,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
 FILTER_PUBLISHERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Publishers,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
 FILTER_CONTRIBUTERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Contributors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
