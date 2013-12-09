@@ -20,16 +20,16 @@
         <meta name="twitter:title" content="{{ self.title }}">
         <meta name="twitter:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}">
         {% image self.social_image width-320 as social_img %}
-        <meta name="twitter:image:src" content="http://{{ request.site.hostname }}{{ social_img.url }}">
+        <meta name="twitter:image:src" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}">
 
         <!--facebook opengraph-->
-        <!--<meta property="fb:app_id"          content="1234567890" /> 
+        <meta property="fb:app_id"          content="775982992428351" /> 
         <meta property="og:type"            content="website" /> 
-        <meta property="og:url"             content="http://samples.ogp.me/136756249803614" /> 
-        <meta property="og:title"           content="{{ self.title }}" /> 
-        <meta property="og:image"           content="http://{{ request.site.hostname }}{{ social_img.url }}" /> 
+        <meta property="og:url"             content="{{ self.url }}" /> 
+        <meta property="og:title"           content="{{ self.title }}" />
+        <meta property="og:image"           content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" /> 
         <meta property="og:description"    content="{{ self.social_text }}" />
-        <meta property="og:site_name"    content="Royal College of Art" />-->
+        <meta property="og:site_name"    content="Royal College of Art" />
 
         {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
             <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />

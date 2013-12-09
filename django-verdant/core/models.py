@@ -381,7 +381,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
             return "draft"
         else:
             if self.has_unpublished_changes:
-                return "live + Draft"
+                return "live + draft"
             else:
                 return "live"
 

@@ -54,6 +54,15 @@ class BaseChildFormSet(BaseTransientModelFormSet):
 
         manager = getattr(self.instance, self.rel_name)
 
+        # If the manager has existing instances with a blank ID, we have no way of knowing
+        # whether these correspond to items in the submitted data. We'll assume that they do,
+        # as that's the most common case (i.e. the formset contains the full set of child objects,
+        # not just a selection of additions / updates) and so we delete all ID-less objects here
+        # on the basis that they will be re-added by the formset saving mechanism.
+        no_id_instances = [obj for obj in manager.all() if obj.pk is None]
+        if no_id_instances:
+            manager.remove(*no_id_instances)
+
         manager.add(*saved_instances)
         manager.remove(*self.deleted_objects)
 

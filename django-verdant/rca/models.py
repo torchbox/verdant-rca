@@ -11,6 +11,8 @@ from django.contrib import messages
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
+import django.db.models.options as options
+
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -39,6 +41,8 @@ import hashlib
 
 from rca_signage.constants import SCREEN_CHOICES
 
+# TODO: find a nicer way to do this. The following line is  presumptuous and dangerous. It adds "description" as a meta property of a class, used to describe a content type/snippet to a user so can make a choice of one type over another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
+options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
 # RCA defines its own custom image class to replace verdantimages.Image,
 # providing various additional data fields
@@ -182,6 +186,10 @@ WORK_TYPES_CHOICES = (
     ('showexhibitionorevent', 'Show, Exhibition or Event'),
     ('teachingresource', 'Teaching Resource'),
     ('residency', 'Residency'),
+    ('mphil_by_thesis', 'MPhil by Thesis'),
+    ('phd_by_thesis', 'PhD by Thesis'),
+    ('mphil_by_practice', 'MPhil by Practice'),
+    ('phd_by_practice', 'PhD by Practice'),
     ('other', 'Other (enter below)'),
 )
 
@@ -417,6 +425,9 @@ class Advert(models.Model):
         FieldPanel('show_globally'),
     ]
 
+    class Meta:
+        description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
+
     def __unicode__(self):
         return self.text
 
@@ -445,6 +456,9 @@ class CustomContentModuleBlock(Orderable):
 class CustomContentModule(models.Model):
     title = models.CharField(max_length=255)
 
+    class Meta:
+        description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
+
     def __unicode__(self):
         return self.title
 
@@ -467,6 +481,9 @@ class ReusableTextSnippet(models.Model):
         FieldPanel('name'),
         FieldPanel('text', classname="full")
     ]
+
+    class Meta:
+        description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
 
     def __unicode__(self):
         return self.name
@@ -501,6 +518,9 @@ class ContactSnippet(models.Model):
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        description = "Displayed in main body. Usable on standard index page only. "
 
     def __unicode__(self):
         return self.title
