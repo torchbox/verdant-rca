@@ -186,6 +186,10 @@ WORK_TYPES_CHOICES = (
     ('showexhibitionorevent', 'Show, Exhibition or Event'),
     ('teachingresource', 'Teaching Resource'),
     ('residency', 'Residency'),
+    ('mphil_by_thesis', 'MPhil by Thesis'),
+    ('phd_by_thesis', 'PhD by Thesis'),
+    ('mphil_by_practice', 'MPhil by Practice'),
+    ('phd_by_practice', 'PhD by Practice'),
     ('other', 'Other (enter below)'),
 )
 
