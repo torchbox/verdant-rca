@@ -13,17 +13,21 @@ def home(request):
     else:
         page_revisions_for_moderation = PageRevision.objects.none()
 
+    # Last n edited pages
+    last_edits = PageRevision.objects.filter(user=request.user).order_by('-created_at')[:5]
+
     total_images = get_image_model().objects.count()
     total_documents = Document.objects.count()
     total_pages = Page.objects.count()
-
 
     return render(request, "verdantadmin/home.html", {
         'total_pages': total_pages,
         'total_images': total_images,
         'total_docs': total_documents,
         'site_name': settings.VERDANT_SITE_NAME,
-        'page_revisions_for_moderation': page_revisions_for_moderation
+        'page_revisions_for_moderation': page_revisions_for_moderation,
+        'last_edits':last_edits,
+        'user':request.user
     })
 
 

@@ -8,17 +8,22 @@
                 <li class="{% if forloop.counter == 1 %}active{% endif %}{% if forloop.last %} last{% endif %}">
                     <a href="{% pageurl news_item %}">
                         {% with news_item.feed_image as feed_image %}
-                            <div class="image">
+                            <div class="image{% if forloop.counter == 1 %} first{% endif %}">
                                 {% if feed_image %}
-                                    {% image feed_image width-300 %}
+                                    {% image feed_image width-640 %}
                                 {% else %}
                                     {% with news_item.carousel_items.all as carousel_items %}
                                         {% with carousel_items|first as carousel_item %}
                                             {% if carousel_item.image %}
-                                                {% image carousel_item.image fill-300x169 %}
+                                                {% if carousel_item.image.width > 640 %}
+                                                    {% image carousel_item.image fill-640x360 %}
+                                                {% else %}
+                                                    {% comment %}Using a ratio of 16x9 that only uses whole numbers to prevent rounding issues which are possibly causing a white border{% endcomment %}
+                                                    {% image carousel_item.image fill-304x171 %}
+                                                {% endif %}
                                             {% else %}
                                                 {# TODO: delete these placeholder images from git once proper image exists #}
-                                                <img src="/static/rca/images/rca-placeholder.jpg" width="300">
+                                                <img src="/static/rca/images/rca-placeholder.jpg" width="640">
                                             {% endif %}
                                         {% endwith %}
                                     {% endwith %}

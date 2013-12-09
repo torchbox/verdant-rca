@@ -15,14 +15,13 @@ class DonationForm(forms.Form):
         self.fields['name'].widget = forms.HiddenInput()
         self.fields['name'].initial = ""  # name on card is optional and set by javascript
 
-    
     required_css_class = 'required'
 
     METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
 
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
-    amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", required=False, choices=(
+    amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", widget=forms.RadioSelect(), required=False, initial=50, choices=(
         ("50", "£50"),
         ("100", "£100"),
         ("250", "£250"),
@@ -30,17 +29,12 @@ class DonationForm(forms.Form):
         ("1000", "£1000"),
         ("", "Other"),
     ))
-    amount = forms.FloatField(required=True)
+    amount = forms.FloatField(label="Other amount", required=False)
 
-    number = CreditCardField(label="Card number", required=True)
-    expiration = ExpiryDateField(required=True)
-    cvc = VerificationValueField(required=True, help_text="The 3-digit security code printed (not embossed) on the front of the card, or on the signature strip on the reverse")
-    is_gift_aid = forms.BooleanField(label="I am eligible as a UK taxpayer and consent to the Royal College of Art claiming Gift Aid on my behalf on all qualifying donations from the date of this declaration until I notify you otherwise. I understand that I must pay an amount of UK income tax or capital gains tax equal to the tax deducted from my donations.", required=False, help_text="""
-        If you are a UK taxpayer, the Royal College of Art can reclaim the tax you have already paid on your gift from the Inland Revenue through the Gift Aid programme. By claiming Gift Aid, the RCA will receive an extra 25 pence from HM Revenue and Customs for every pound you give.
-
-        
-        
-    """)
+    number = CreditCardField(label="Card number", required=False)
+    expiration = ExpiryDateField(required=False)
+    cvc = VerificationValueField(required=False, help_text="The 3-digit security code printed on the signature strip on the reverse")
+    is_gift_aid = forms.BooleanField(label="I would like the royal college of art to claim gift aid on all my qualifying donations from the date of this declaration until I notify the college otherwise. I confirm that I have paid an amount of UK income tax or capital gains tax at least equal to the amount of tax that all the charities or community amateur sports clubs I donate to will reclaim on my donations for the tax year.", required=False)
     email = forms.EmailField(required=True)
     not_included_in_supporters_list = forms.BooleanField(label="Please tick this box if you do not wish to be included in our list of supporters", required=False, help_text="")
 
@@ -82,7 +76,7 @@ class DonationForm(forms.Form):
         if self.cleaned_data['amount']:
             self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amount']) * 100)
         else:
-            self.cleaned_data['amounts'] = int(Decimal(self.cleaned_data['amounts']) * 100)
+            self.cleaned_data['amount'] = int(Decimal(self.cleaned_data['amounts']) * 100)
         return self.cleaned_data['amount']
 
     def clean(self):

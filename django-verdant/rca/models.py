@@ -150,20 +150,25 @@ CAMPUS_CHOICES = (
 
 EVENT_GALLERY_CHOICES = (
     ('courtyardgalleries', 'Courtyard Galleries'),
+    ('danacentre', 'Dana Centre'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('dysonbuilding', 'Dyson Building'),
+    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('henrymooregallery', 'Henry Moore Gallery'),
+    ('humanitiesseminarroom', 'Humanities Seminar Room'),
+    ('jaymewsgallery', 'Jay Mews Gallery'),
     ('lecturetheatre1', 'Lecture Theatre 1'),
     ('lecturetheatre2', 'Lecture Theatre 2'),
     ('linkgallery', 'Link Gallery'),
     ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
+    ('movingimagestudio', 'Moving Image Studio'),
     ('palstevensbuilding', 'PAL, Stevens Building'),
-    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
-    ('gorvylecturetheatre', 'Gorvy Lecture Theatre'),
     ('photographystudios', 'Photography Studios'),
     ('printmakingstudios', 'Printmaking Studios'),
     ('sacklerbuilding', 'Sackler Building'),
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
-
+    ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
 )
 
 WORK_TYPES_CHOICES = (
@@ -333,29 +338,9 @@ assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.va
 
 YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
 
-SUBJECT_CHOICES = (
-    ('animation', 'Animation'),
-    ('architecture', 'Architecture'),
-    ('ceramicsglass', 'Ceramics & Glass'),
+SUBJECT_CHOICES = ALL_PROGRAMMES + (
     ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
     ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('criticalwritinginartdesign', 'Critical Writing In Art & Design'),
-    ('designinteractions', 'Design Interactions'),
-    ('designproducts', 'Design Products'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('historyofdesign', 'History of Design'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('printmaking', 'Printmaking'),
-    ('sculpture', 'Sculpture'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('textiles', 'Textiles'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('visualcommunication', 'Visual Communication'),
 )
 
 QUALIFICATION_CHOICES = (
@@ -1105,7 +1090,7 @@ class PressReleaseIndex(Page, SocialFields):
     search_name = None
 
     def serve(self, request):
-        press_releases = PressRelease.objects.filter(live=True)
+        press_releases = PressRelease.objects.filter(live=True).order_by('-date')
 
         page = request.GET.get('page')
         paginator = Paginator(press_releases, 10)  # Show 10 press_releases items per page
@@ -1239,12 +1224,14 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
+    link_page = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     link = models.URLField(blank=True)
 
     panels=[
         FieldPanel('name'),
         FieldPanel('surname'),
         ImageChooserPanel('image'),
+        PageChooserPanel('link_page'),
         FieldPanel('link'),
     ]
 
@@ -1560,7 +1547,11 @@ class EventIndex(Page, SocialFields):
             events = events.filter(related_areas__area=area)
         if audience and audience != '':
             events = events.filter(audience=audience)
-        events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
+        events = events.annotate(start_date=Min('dates_times__date_from'))
+        if period== 'past':
+            events = events.order_by('start_date').reverse()
+        else:
+            events = events.order_by('start_date')
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
 
@@ -2211,24 +2202,26 @@ class HomePage(Page, SocialFields):
 
     def serve(self, request):
 
-        exclude = request.GET.get('exclude')
+        exclude = ','.join([str(self.news_item_1.id), str(self.news_item_2.id)])
+
+        if request.GET.get('exclude'):
+            exclude = ','.join([exclude, request.GET.get('exclude')])
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
         tweets = [[],[],[],[],[]]
 
-
-        print news
-
         if exclude:
 
             exclude = exclude.split(',')
+
+            print exclude
 
             news = news.exclude(id__in=exclude);
             staff = staff.exclude(id__in=exclude);
@@ -2842,7 +2835,7 @@ class ResearchStudentIndex(Page, SocialFields):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        research_students = StudentPage.objects.filter(live=True, degree_qualification='researchstudent')
+        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
 
         if school and school != '':
             research_students = research_students.filter(school=school)
@@ -2852,8 +2845,6 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = research_students.distinct()
 
         related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
-
-        # research_items.order_by('-year')
 
         page = request.GET.get('page')
         paginator = Paginator(research_students, 17)  # Show 17 research students per page
@@ -3008,6 +2999,14 @@ class StudentPage(Page, SocialFields):
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
     search_name = 'Student'
+
+    def serve(self, request):
+        parent_is_researchstudentindex = self.get_parent().content_type.model_class() == ResearchStudentIndex
+
+        return render(request, self.template, {
+            'self': self,
+            'parent_is_researchstudentindex': parent_is_researchstudentindex,
+        })
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3224,6 +3223,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link_text')
     ]
 class ResearchItem(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True)
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES)
     ref = models.BooleanField(default=False, blank=True)
     year = models.CharField(max_length=4)
@@ -3232,14 +3232,14 @@ class ResearchItem(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES)
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True)
-    theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES)
+    theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
-    eprintid = models.CharField(max_length=255, blank=True) # for import
+    eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
-    indexed_fields = ('get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
     search_name = 'Research'
 
@@ -3253,6 +3253,7 @@ class ResearchItem(Page, SocialFields):
 
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
     InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
     InlinePanel(ResearchItem, 'creator', label="Creator"),
@@ -3523,7 +3524,7 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        gallery_items = StudentPage.objects.filter(live=True).exclude(degree_qualification="researchstudent")
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
         if school:

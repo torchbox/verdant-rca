@@ -132,19 +132,32 @@ function applyCarousel(carouselSelector){
         return $this.parent().width();
     }
 
+    // on mobile the overlay text (or the caption if there is no overlay text) display below the image.
+    // have to calculate the height and add it on to the max-height of the li and bx-viewpoort in the calculations to make sure it shows
+    // correctly for portrait images
+    function calcCaptionHeight(){
+        var captionTextHeight = 0;
+        $('.mobilecaption').each(function(){
+            if ($(this).height() > captionTextHeight) {
+                captionTextHeight = $(this).height();
+            }
+        });
+        return captionTextHeight;
+    }
+
     $(window).resize(function(){
-        $this.parent().css('max-height', calcHeight());
-        $('li', $this).css('max-height', calcHeight());
+        $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
+        $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
         $('.portrait img', $this).css('max-height', calcHeight());
     });
 
     var carousel = $this.bxSlider({
         adaptiveHeight: true,
         pager: function(){ return $(this).hasClass('paginated'); },
-        touchEnabled: ($(".carousel > li").length > 1) ? true: false,
+        touchEnabled: ($('li', $this).length > 1) ? true: false,
         onSliderLoad: function(){
-            $this.parent().css('max-height', calcHeight());
-            $('li', $this).css('max-height', calcHeight());
+            $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
+            $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
             $('.portrait img', $this).css('max-height', calcHeight());
         },
         onSlideBefore: function($slideElement, oldIndex, newIndex){
@@ -181,6 +194,8 @@ $(function(){
     showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
+    showHideSlide('.profile .showExternalCollaborations', '.profile .external-collaborations', '.profile .external-collaborations');
+    showHideSlide('.profile .showPublications', '.profile .publications', '.profile .publications');
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -675,4 +690,5 @@ $(function(){
         displayCookieNotice();
       }
     });
+
 });

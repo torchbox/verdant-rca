@@ -1,5 +1,6 @@
 {% extends "verdantadmin/base.html" %}
-
+{% block titletag %}Unpublish {{ page.title }}{% endblock %}
+{% block bodyclass %}menu-explorer{% endblock %}
 {% block content %}
     <header>
         <h1>Unpublish <span>{{ page.title }}</span></h1>

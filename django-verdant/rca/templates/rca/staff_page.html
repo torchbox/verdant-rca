@@ -22,7 +22,7 @@
                         {% endif %}
                     </li>
                     <li class="col">{% comment %} note closed within forloop {% endcomment %}
-                        <h3 class="a2">School or Centre</h3>
+                        <h3 class="a2">Schools &amp; Centres</h3>
                         <p class="h7">{{ self.get_school_display }}</p>
 
                         {% with self.roles.all as roles %}
@@ -125,8 +125,14 @@
                         <li class="col col-3 first">
                             <h2 class="a2">External collaborations</h2>
                         </li>
-                        <li class="col col-9 last">
-                            <div class="body-text-style">{{ self.external_collaborations_placeholder|richtext }}</div>
+                        <li class="col col-9 last body-text-style showmorestyle">
+                            {% with self.external_collaborations_placeholder|paragraph_split:"</p>" as parts %}
+                                {{ parts.0|richtext }}
+                                {% if parts.1 %}
+                                    <div class="remainder external-collaborations">{{ parts.1|richtext }}</div>
+                                    <a class="t2 showmore showExternalCollaborations">Show more</a>
+                                {% endif %}
+                            {% endwith %}
                         </li>
                     </ul>
                 {% endif %}
@@ -137,12 +143,18 @@
                         <li class="col col-3 first">
                             <h2 class="a2">Publications, exhibitions and other outcomes</h2>
                         </li>
-                        <li class="col col-9 last">
-                            <div class="body-text-style">{{ self.publications_exhibtions_and_other_outcomes_placeholder|richtext }}</div>
+                        <li class="col col-9 last body-text-style showmorestyle">
+                            {% with self.publications_exhibtions_and_other_outcomes_placeholder|paragraph_split:"</p>" as parts %}
+                                {{ parts.0|richtext }}
+                                {% if parts.1 %}
+                                    <div class="remainder publications">{{ parts.1|richtext }}</div>
+                                    <a class="t2 showmore showPublications">Show more</a>
+                                {% endif %}
+                            {% endwith %}
                         </li>
                     </ul>
                 {% endif %}
-                
+
                 {% if self.awards_and_grants %}
                     <div class="divider"></div>
                     <ul class="three-nine-cols">

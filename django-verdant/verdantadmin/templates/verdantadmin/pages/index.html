@@ -1,59 +1,63 @@
 {% extends "verdantadmin/base.html" %}
-
-{% block bodyclass %}page-explorer{% endblock %}
+{% block titletag %}Exploring {{ parent_page.title }}{% endblock %}
+{% block bodyclass %}menu-explorer page-explorer {% if ordering == 'ord' %}reordering{% endif %}{% endblock %}
 
 {% block content %}
-    <header>
+    <header class="merged no-border">
         <h1>Explorer</h1>
 
-        <p class="breadcrumb">
+        <ul class="breadcrumb">
+            <li><a href="{% url 'verdantadmin_explore_root' %}" class="icon icon-home text-replace">Home</a></li>
             {% for page in parent_page.get_ancestors %}
-                <a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a> /
+                <li><a href="{% url 'verdantadmin_explore' page.id %}">{{ page.title }}</a></li>
             {% endfor %}
-        </p>
-
-        <div class="row row-flush">
-            <div class="left col9">
-                <h2>
-                    {% comment %}
-                        The root node should serve as a container for the homepages of all
-                        the sites on this Verdant installation, and not be a usable page itself (and
-                        as such, we don't offer these edit actions for it).
-                    {% endcomment %}
-                    {% if not parent_page.is_root %}
-                        <div class="dropdown">
-                            <div class="dropdown-toggle icon icon-cog text-replace">Open drop-down</div> 
-                            <ul role="menu">
-                                <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}" class="shortcut">Edit this page</a></li>
-                                {% if parent_page.live %}
-                                    <li><a href="{{ parent_page.url }}" target="_blank" class="shortcut">View</a></li>
-                                {% else %}
-                                    <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank" class="shortcut">View draft</a></li>
-                                {% endif %}
-                                <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}" class="shortcut">Move</a></li>
-                                <li><a href="{% url 'verdantadmin_pages_reorder' parent_page.id %}" class="shortcut">Reorder</a></li>
-                                {% if perms.core.can_unpublish_page or page.has_unpublished_subtree %}
-                                    <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}" class="shortcut">Delete</a></li>
-                                {% endif %}
-                                {% if parent_page.live and perms.core.can_unpublish_page %}
-                                    <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}" class="shortcut">Unpublish</a></li>
-                                {% endif %}
-                            </ul>
-                        </div>
-                    {% endif %}
-
-                    {{ parent_page.title }}
-                </h2>
-                {% if not parent_page.live %}
-                    <p>This page is currently unpublished.</p>
-                {% endif %}
-            </div>
-            <div class="right col3">
-                <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button icon white icon-plus-inverse">Add page here</a>
-            </div>
-        </div>
+        </ul>
     </header>
-
-    {% include "verdantadmin/pages/list.html" with sortable=1 allow_navigation=1 full_width=1 %}
    
+    <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+        {% csrf_token %}
+        <input type='hidden' name='order' id='order'>
+
+        {% include "verdantadmin/pages/list.html" with sortable=1 allow_navigation=1 full_width=1 parent_page=parent_page orderable=1 %} 
+
+        {% if ordering == 'ord' %}
+            <footer>
+                <ul>
+                    <li class="actions">
+                        <input type="submit" value="Save order" class="button" />
+                    </li>
+                </ul>
+            </footer>
+        {% endif %}
+    </form>
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        {% if ordering == 'ord' %}
+            $(function() {
+                $('.listing tbody').sortable({
+                    cursor: "move", 
+                    containment: "parent", 
+                    handle: ".handle", 
+                    items: "> tr",
+                    axis: "y",
+                    placeholder: "dropzone",
+                    start: function(){
+                        $(this).parent().addClass('sorting');
+                    },
+                    stop: function(){
+                        $(this).parent().removeClass('sorting');
+                    }
+                });
+                $('.listing tbody').disableSelection();
+
+                $('#page-reorder-form').submit(function() {
+                    $('#order').val($('.listing tbody').sortable('toArray'));
+                    return true;
+                });
+            })
+        {% endif %}
+    </script>
 {% endblock %}

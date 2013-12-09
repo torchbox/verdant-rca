@@ -1,12 +1,12 @@
 {% extends "verdantadmin/base.html" %}
-
-{% block bodyclass %}page-editor{% endblock %}
+{% block titletag %}Editing {{ page.title }}{% endblock %}
+{% block bodyclass %}menu-explorer  page-editor{% endblock %}
 
 {% block content %}
     <header class="merged tab-merged">
         <div class="row row-flush">
             <div class="left col9">
-                <h1>Editing: <span>{{ page.title }}</span></h1>
+                <h1>Editing <span>{{ page.title }}</span></h1>
             </div>
             <div class="right col3">
                  Status: {% if page.live %}<a href="{{ page.url }}" class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</a>{% else %}<span class="status-tag {% if page.live %}live{% endif %}">{{ page.status_string }}</span>{% endif %}
@@ -52,7 +52,10 @@
                    
                     <span class="modified">
                         {% if page.get_latest_revision %}
-                            Last modified: {{ page.get_latest_revision.created_at }} by {% if page.get_latest_revision.user.get_full_name %}{{ page.get_latest_revision.user.get_full_name }}{% else %}{{ page.get_latest_revision.user.username }}{% endif %}
+                            Last modified: {{ page.get_latest_revision.created_at }}
+                            {% if page.get_latest_revision.user %}
+                                by {{ page.get_latest_revision.user.get_full_name|default:page.get_latest_revision.user.username }}
+                            {% endif %}
                         {% endif %}
                     </span>
                 </li>

@@ -34,7 +34,7 @@ def edit(request, redirect_id):
             messages.success(request, "Redirect '%s' updated." % theredirect.title)
             return redirect('verdantredirects_index')
         else:
-            messages.error(request, "The redirect could not be saved due to validation errors")
+            messages.error(request, "The redirect could not be saved due to errors.")
             edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
     else:
         form = form_class(instance=theredirect)
@@ -75,7 +75,7 @@ def add(request):
             messages.success(request, "Redirect '%s' added." % theredirect.title)
             return redirect('verdantredirects_index')
         else:
-            messages.error(request, "The redirect could not be created due to validation errors")
+            messages.error(request, "The redirect could not be created due to errors.")
             edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
     else:
         form = form_class()

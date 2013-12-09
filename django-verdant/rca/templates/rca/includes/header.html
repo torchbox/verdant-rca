@@ -1,19 +1,19 @@
 {% load rca_tags %}
 <header class="page-header">
-    <a href="/" class="site-name"><p>Royal College of Art</p></a>
+    <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
     <div class="showmenu dl-trigger">Show menu</div>
     <div class="showsearch">Show search</div>
     <div class="nav-wrapper">
         <div class="inner">
             <nav>
-                <h2>Menu</h2>
+                <h2><a href="#" class="trigger" tabindex="3">Menu</a></h2>
                 <ul class="menu dl-menu">
                     {% menu %}
                 </ul>
             </nav>
         </div>
         <form class="search" action="{% url 'verdantsearch_search' %}" method="get">
-            <input id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
+            <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
             <input type="submit" value="search" />
         </form>
     </div>

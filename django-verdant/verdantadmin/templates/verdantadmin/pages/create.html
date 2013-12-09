@@ -1,12 +1,10 @@
 {% extends "verdantadmin/base.html" %}
-
-{% block bodyclass %}page-editor create{% endblock %}
+{% block titletag %}New {{ content_type.name|title }}{% endblock %}
+{% block bodyclass %}menu-explorer page-editor create{% endblock %}
 
 {% block content %}
 	<header class="merged tab-merged">
-    	<h1>New <span>{{ content_type.name }}</span></h1>
-
-        {% if errors %}errors{% endif %}
+    	<h1>New <span>{{ content_type.name|title }}</span></h1>
    	</header>
 
     <form id="page-edit-form" action="{% url 'verdantadmin_pages_create' content_type.app_label content_type.model parent_page.id %}" method="POST">

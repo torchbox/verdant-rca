@@ -1,7 +1,8 @@
 {% load rca_tags %}
 
-
+{% if showToday or showAdverts %}
 <div class="events-ads-wrapper">
+{% endif %}
 
 <!-- Events -->
 {% if showToday %}
@@ -13,7 +14,9 @@
     {% sidebar_adverts show_open_days=showOpenDays %}
 {% endif %}
 
+{% if showToday or showAdverts %}
 </div>
+{% endif %}
 
 <!-- Related links -->
 {% if showRelatedLinks %}

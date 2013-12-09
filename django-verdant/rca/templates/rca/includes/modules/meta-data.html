@@ -93,8 +93,10 @@
                 <dd>Type</dd>
                 <dt>{{ self.get_work_type_display }}</dt>
 
-                <dd>Theme</dd>
-                <dt>{{ self.get_theme_display }}</dt>
+                {% if self.theme %}
+                    <dd>Theme</dd>
+                    <dt>{{ self.get_theme_display }}</dt>
+                {% endif %}
 
                 {% if self.programme %}
                     <dd>Programme</dd>

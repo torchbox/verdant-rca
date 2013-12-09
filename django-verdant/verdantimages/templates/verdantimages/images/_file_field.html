@@ -1,5 +1,8 @@
 {% extends "verdantadmin/shared/field_as_li.html" %}
+
 {% block form_field %}
-    (Leave blank if not changing)
+	<a href="{{MEDIA_URL}}images/{{ image.file }}" class="icon icon-image">{{ image.filename }}</a><br /><br />
+
+    Change image:
     {{ field }}
 {% endblock %}

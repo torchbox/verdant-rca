@@ -1,4 +1,7 @@
 $(function(){
+    // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
+    $('body').addClass('ready'); 
+
     // Enable toggle to open/close nav
     $('#nav-toggle').click(function(){ 
         $('body').toggleClass('nav-open');
@@ -14,7 +17,14 @@ $(function(){
 
     // Resize nav to fit height of window. This is an unimportant bell/whistle to make it look nice
     var fitNav = function(){
-        $('.nav-wrapper').css('min-height',$(window).height())
+        $('.nav-wrapper').css('min-height',$(window).height());
+        $('.nav-main').each(function(){
+            var thisHeight = $(this).height();
+            var footerHeight = $('.footer', $(this)).height();
+
+            // $(this).css({'height':thisHeight - footerHeight, 'overflow-y':'scroll'});
+            // $('> ul', $(this)).height(thisHeight)
+        });
     }
     fitNav();
     $(window).resize(function(){
@@ -23,7 +33,7 @@ $(function(){
 
     // Apply auto-height sizing to text areas
     // NB .richtext (hallo.js-enabled) divs do not need this as they expand to fit their content by default
-    $('textarea').autosize();
+    // $('.page-editor textarea').autosize();
 
     // Enable nice focus effects on all fields. This enables help text on hover.
     $(document).on('focus mouseover', 'input,textarea,select', function(){
@@ -47,9 +57,7 @@ $(function(){
         $('.tab-nav a[href="'+ $(this).attr('href') +'"]').click();
     })
 
-    // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
-    $('body').addClass('ready'); 
-
+   
     $('.dropdown-toggle').bind('click', function(){
         $(this).closest('.dropdown').toggleClass('open');
 
@@ -72,7 +80,14 @@ $(function(){
         })
     });
 
-    $('.listing tbody td').click(function(){
-        document.location.href = $(this).parent().find('.title a').attr("href")
+    $('.listing tbody td').click(function(e){
+        if(e.which == 1){
+            document.location.href = $(this).parent().find('.title a').attr("href")
+        }
     })
+
+    $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
+        $(this).parent().nextAll().stop().toggle('fast');
+        return false;
+    });
 })

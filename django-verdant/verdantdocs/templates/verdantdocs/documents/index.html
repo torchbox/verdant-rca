@@ -1,5 +1,6 @@
 {% extends "verdantadmin/base.html" %}
-
+{% block titletag %}Documents{% endblock %}
+{% block bodyclass %}menu-documents{% endblock %}
 {% block extra_js %}
     <script>
         $('#id_q').on('input', function() {
@@ -54,18 +55,19 @@
     <div class="nice-padding">
         <div id="document-results" class="documents">
             {% if is_searching %}
-                {% include "verdantdocs/documents/search-results.html" %}
+                {% if documents %}
+                    <h2>{{ documents|length }} match{{ documents|pluralize:"es" }}</h2>
+                    {% include "verdantdocs/documents/list.html" %}
+                {% else %}
+                    <p>Sorry, no documents match "<em>{{ search_query }}</em>"
+                {% endif %}
             {% else %}
                 <h2>Latest added documents</h2>
-                <ul class="listing">
-                    {% for doc in documents %}
-                        <li>
-                            <a href="{% url 'verdantdocs_edit_document' doc.id %}">
-                                {{ doc.title }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% if documents %}
+                    {% include "verdantdocs/documents/list.html" %}
+                {% else %}
+                    <p>You haven't uploaded any documents. Why not <a href="{% url 'verdantdocs_add_document' %}">upload one now</a>?</p>
+                {% endif %}
             {% endif %}
         </div>
     </div>

@@ -11,10 +11,11 @@ class UserCreationForm(BaseUserCreationForm):
     )
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "is_superuser", "groups")
+        fields = ("username", "email", "first_name", "last_name", "is_superuser", "groups")
         widgets = {
             'groups': forms.CheckboxSelectMultiple
         }
@@ -46,6 +47,7 @@ class UserEditForm(forms.ModelForm):
             'invalid': _("This value may contain only letters, numbers and "
                          "@/./+/-/_ characters.")})
 
+    email = forms.EmailField(required=True)
     first_name = forms.CharField(required=True)
     last_name = forms.CharField(required=True)
 
@@ -57,12 +59,12 @@ class UserEditForm(forms.ModelForm):
         help_text=_("Enter the same password as above, for verification."))
 
     is_superuser = forms.BooleanField(label=_("Administrator"), required=False,
-        help_text=_("If ticked, this user has the ability to manage user accounts.")
+        help_text=_("Administrators have the ability to manage user accounts.")
     )
 
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "is_active", "is_superuser", "groups")
+        fields = ("username", "email", "first_name", "last_name", "is_active", "is_superuser", "groups")
         widgets = {
             'groups': forms.CheckboxSelectMultiple
         }

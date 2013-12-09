@@ -155,51 +155,63 @@ nav {
     display:block;
     margin-right:@right-col-width + @grid-gutter-width;
 }
-    nav h2{
+    nav h2 {
         .transition(all 0.3s ease);
         position:absolute;
         top:0px;
         z-index:1;
         left:0;
-        cursor:pointer;
         margin:0 @grid-gutter-width 0 0;
         font-size: 12px;
         text-transform:uppercase;
         float:right;
-        padding:9px 45px 8px @grid-gutter-width;
         line-height:1.6em;
         border-right:1px solid fade(@color-medium-grey, 40%);
         .bold();
-        &:after {
-            .sprite-load-23(
-                @positionX: -48px,
-                @positionY: -48px,
-                @retinaPositionX: -97px,
-                @retinaPositionY: -97px,
-                @width: 23px,
-                @height: 13px
-            );
-            content: ' ';
-            position: absolute;
-            top: 12px; /* Arbitrary. Whatever looks good */
-            right: @spacing-half;
-        }
-
-        &:hover{
-            color:@color-white;
-            background-color:@color-pink;
-
-            &:after{
+        a {
+            padding:9px 45px 8px @grid-gutter-width;
+            display: block;
+            position: relative;
+            &:hover {
+                color: @color-white !important; /* obliged to use this to trump another important added to nav a */
+            }
+            &:after {
                 .sprite-load-23(
                     @positionX: -48px,
-                    @positionY: -12px,
+                    @positionY: -48px,
                     @retinaPositionX: -97px,
-                    @retinaPositionY: -25px,
+                    @retinaPositionY: -97px,
                     @width: 23px,
                     @height: 13px
                 );
+                content: ' ';
+                position: absolute;
+                top: 12px; /* Arbitrary. Whatever looks good */
+                right: @spacing-half;
+                visibility: visible; /* override generic nav a style */
+            }
+
+            &:hover{
+                color:@color-white;
+                background-color:@color-pink;
+
+                &:after{
+                    .sprite-load-23(
+                        @positionX: -48px,
+                        @positionY: -12px,
+                        @retinaPositionX: -97px,
+                        @retinaPositionY: -25px,
+                        @width: 23px,
+                        @height: 13px
+                    );
+                }
+            }
+            &:focus {
+                outline: none;
+                //color: #454545;
             }
         }
+        
     }
    nav.open h2{
         &:after{

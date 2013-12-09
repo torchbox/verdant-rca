@@ -1,6 +1,7 @@
 {% extends "verdantadmin/base.html" %}
 {% load image_tags %}
-
+{% block titletag %}Add an image{% endblock %}
+{% block bodyclass %}menu-images{% endblock %}
 {% block extra_css %}
     {% include "verdantadmin/shared/tag_field_css.html" %}
 {% endblock %}

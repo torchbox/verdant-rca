@@ -7,21 +7,36 @@
 
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
-    
 
     {% tabdeck %}
-        <!-- links and ids added by javascript -->
-        {% tab "Show RCA Work" %}
-            {% include "rca/includes/modules/carousel.html" %}
-            <section class="row">
-                <section class="body-text">
-                    {% if self.work_description %}
-                        {{ self.work_description|richtext }}
-                    {% endif %}
+
+        {% if parent_is_researchstudentindex %}
+            <!-- links and ids added by javascript -->
+            {% tab "Research Work" %}
+                {% include "rca/includes/modules/carousel.html" %}
+                <section class="row">
+                    <section class="body-text">
+                        {% if self.work_description %}
+                            {{ self.work_description|richtext }}
+                        {% endif %}
+                    </section>
+                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
                 </section>
-                {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
-            </section>
-        {% endtab %}
+            {% endtab %}
+        {% else %}
+            <!-- links and ids added by javascript -->
+            {% tab "Show RCA Work" %}
+                {% include "rca/includes/modules/carousel.html" %}
+                <section class="row">
+                    <section class="body-text">
+                        {% if self.work_description %}
+                            {{ self.work_description|richtext }}
+                        {% endif %}
+                    </section>
+                    {% include "rca/includes/modules/meta-data.html" with showStudentMeta="true" %}
+                </section>
+            {% endtab %}
+        {% endif %}
 
         <!-- links and ids added by javascript -->
         {% tab "Info" class="flush" %}
