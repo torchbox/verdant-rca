@@ -11,7 +11,7 @@ class LDAPSearchRCA(LDAPSearch):
             self.role = kwargs['role']
             del kwargs['role']
         else:
-            self.role = dict(superuser=False, groups=[])
+            self.role = None
 
         return super(LDAPSearchRCA, self).__init__(*args, **kwargs)
 

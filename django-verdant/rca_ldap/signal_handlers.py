@@ -8,7 +8,7 @@ def populate_user_signal_handler(user, ldap_user, **kwargs):
         role = ldap_user._user_attrs['role']
 
         # Apply role to user
-        if role is not None and isinstance(role, dict):
+        if role is not None:
             # Superuser
             if 'superuser' in role:
                 user.is_superuser = bool(role['superuser'])
