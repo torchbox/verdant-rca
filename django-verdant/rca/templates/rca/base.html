@@ -20,14 +20,14 @@
         <meta name="twitter:title" content="{{ self.title }}">
         <meta name="twitter:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}">
         {% image self.social_image width-320 as social_img %}
-        <meta name="twitter:image:src" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/logo-header.png{% endif %}">
+        <meta name="twitter:image:src" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}">
 
         <!--facebook opengraph-->
         <meta property="fb:app_id"          content="775982992428351" /> 
         <meta property="og:type"            content="website" /> 
         <meta property="og:url"             content="{{ self.url }}" /> 
         <meta property="og:title"           content="{{ self.title }}" />
-        <meta property="og:image"           content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/logo-header.png{% endif %}" /> 
+        <meta property="og:image"           content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" /> 
         <meta property="og:description"    content="{{ self.social_text }}" />
         <meta property="og:site_name"    content="Royal College of Art" />
 
