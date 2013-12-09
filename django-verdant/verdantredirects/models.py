@@ -22,9 +22,9 @@ class Redirect(models.Model):
 
     def get_is_permanent_display(self):
         if self.is_permanent:
-            return "Permanent"
+            return "permanent"
         else:
-            return "Temporary"
+            return "temporary"
 
     @classmethod
     def get_for_site(cls, site=None):
