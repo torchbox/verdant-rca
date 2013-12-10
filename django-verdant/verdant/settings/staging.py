@@ -14,14 +14,25 @@ TEMPLATE_LOADERS = (
 
 
 # LDAP
+# http://stackoverflow.com/questions/7716562/pythonldapssl
 import ldap
 from django_auth_ldap.config import LDAPSearchUnion
 from rca_ldap.config import LDAPSearchRCA
+
+ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
 
 # Basic config
 AUTH_LDAP_BIND_DN = ''
 AUTH_LDAP_BIND_PASSWORD = ''
 AUTH_LDAP_SERVER_URI = 'ldap://194.80.196.3'
+
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_REFERRALS: 0,
+    ldap.OPT_PROTOCOL_VERSION: 3,
+    ldap.OPT_X_TLS: ldap.OPT_X_TLS_DEMAND,
+    ldap.OPT_X_TLS_DEMAND: True,
+    ldap.OPT_DEBUG_LEVEL: 255,
+}
 
 # Filter strings
 def get_filter_string(base, **kwargs):
