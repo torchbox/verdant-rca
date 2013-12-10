@@ -34,6 +34,12 @@ AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_DEBUG_LEVEL: 255,
 }
 
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail",
+}
+
 # Filter strings
 def get_filter_string(base, **kwargs):
     filter_string = base
