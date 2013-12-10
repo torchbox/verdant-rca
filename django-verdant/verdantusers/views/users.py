@@ -5,7 +5,7 @@ from django.contrib import messages
 
 from verdantusers.forms import UserCreationForm, UserEditForm
 
-@permission_required('auth.can_change_user')
+@permission_required('auth.change_user')
 def index(request):
     users = User.objects.order_by('last_name', 'first_name')
 
@@ -13,7 +13,7 @@ def index(request):
         'users': users,
     })
 
-@permission_required('auth.can_change_user')
+@permission_required('auth.change_user')
 def create(request):
     if request.POST:
         form = UserCreationForm(request.POST)
@@ -30,7 +30,7 @@ def create(request):
         'form': form,
     })
 
-@permission_required('auth.can_change_user')
+@permission_required('auth.change_user')
 def edit(request, user_id):
     user = get_object_or_404(User, id=user_id)
     if request.POST:

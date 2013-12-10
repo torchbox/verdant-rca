@@ -42,10 +42,10 @@
                                 <li><a href="{{ parent_page.url }}" target="_blank">View live</a></li>
                             {% endif %}
                             <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
-                            {% if perms.core.can_unpublish_page or parent_page.has_unpublished_subtree %}
+                            {% if perms.core.unpublish_page or parent_page.has_unpublished_subtree %}
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
                             {% endif %}
-                            {% if parent_page.live and perms.core.can_unpublish_page %}
+                            {% if parent_page.live and perms.core.unpublish_page %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}">Unpublish</a></li>
                             {% endif %}
                         </ul>
@@ -142,10 +142,10 @@
                                     <li><a href="{{ page.url }}" target="_blank">View live</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
-                                {% if perms.core.can_unpublish_page or page.has_unpublished_subtree %}
+                                {% if perms.core.unpublish_page or page.has_unpublished_subtree %}
                                     <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                 {% endif %}
-                                {% if page.live and perms.core.can_unpublish_page %}
+                                {% if page.live and perms.core.unpublish_page %}
                                     <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add child page</a></li>

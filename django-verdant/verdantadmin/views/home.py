@@ -8,7 +8,7 @@ from verdantdocs.models import Document
 
 @login_required
 def home(request):
-    if request.user.has_perm('core.can_publish_page'):
+    if request.user.has_perm('core.publish_page'):
         page_revisions_for_moderation = PageRevision.submitted_revisions.select_related('page', 'user').order_by('-created_at')
     else:
         page_revisions_for_moderation = PageRevision.objects.none()
