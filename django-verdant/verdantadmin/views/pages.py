@@ -165,7 +165,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -214,7 +214,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.can_publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -294,7 +294,7 @@ def reorder(request, parent_page_id=None):
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
-    if not request.user.has_perm('core.can_unpublish_page'):
+    if not request.user.has_perm('core.unpublish_page'):
         # they should only be able to delete this page if this page is unpublished, AND it has no
         # published children
         if page.live:
@@ -393,7 +393,7 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
-@permission_required('core.can_unpublish_page')
+@permission_required('core.unpublish_page')
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -510,7 +510,7 @@ def search(request):
         })
 
 
-@permission_required('core.can_publish_page')
+@permission_required('core.publish_page')
 def approve_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:
@@ -523,7 +523,7 @@ def approve_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.can_publish_page')
+@permission_required('core.publish_page')
 def reject_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:
@@ -537,7 +537,7 @@ def reject_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.can_publish_page')
+@permission_required('core.publish_page')
 def preview_for_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
     if not revision.submitted_for_moderation:
