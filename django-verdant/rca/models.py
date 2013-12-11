@@ -2997,6 +2997,7 @@ class StudentPage(Page, SocialFields):
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.CharField(max_length=4, blank=True)
+    graduation_year = models.CharField(max_length=4, blank=True, help_text="This field should only be filled in for student's who's courses are more than 1 year. Should be filled in after graduation.")
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
@@ -3037,6 +3038,7 @@ StudentPage.content_panels = [
     FieldPanel('degree_qualification'),
     FieldPanel('degree_subject'),
     FieldPanel('degree_year'),
+    FieldPanel('graduation_year'),
     ImageChooserPanel('profile_image'),
     InlinePanel(StudentPage, 'supervisors', label="Supervisor"),
     InlinePanel(StudentPage, 'email', label="Email"),
