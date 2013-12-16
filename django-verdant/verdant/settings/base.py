@@ -153,7 +153,6 @@ INSTALLED_APPS = (
     'template_timings_panel',
     'treebeard',
     'taggit',
-    'django_embedly',
     'cluster',
     'gunicorn',
     'djcelery',

@@ -1,35 +1,14 @@
-import re
 from datetime import datetime
-from hashlib import md5
-
-from django import template
-from django.core.cache import cache
 from django.conf import settings
-from django.utils.safestring import mark_safe
-
 from embedly import Embedly
-from django_embedly.models import SavedEmbed
+from .models import SavedEmbed
 
-register = template.Library()
 
-EMBED_REGEX = re.compile(r'(https?://[\w\d:#@%/;$()~_?\+\-=\\\.&]+)', re.I)
 USER_AGENT = 'Mozilla/5.0 (compatible; django-embedly/0.2; ' \
         '+http://github.com/BayCitizen/)'
 
-@register.filter
-def embedly(html, arg=None):
-    return mark_safe(EMBED_REGEX.sub(lambda x: embed_replace(x.group(1), maxwidth=arg), html))
 
-
-def embed_replace(url, maxwidth=None):
-    embedly = embedly_get_dict(url, maxwidth)
-    if embedly is not None:
-        return embedly['html']
-    else:
-        return ''
-
-
-def embedly_get_dict(url, maxwidth=None):
+def get_embed(url, maxwidth=None):
     # Check database
     try:
         saved_embed = SavedEmbed.objects.get(url=url, maxwidth=maxwidth)

@@ -1,16 +1,18 @@
 from django.db import models
 
-OEMBED_TYPES = (
-    ('video',)*2,
-    ('photo',)*2,
-    ('link',)*2,
-    ('rich',)*2,
+
+EMBED_TYPES = (
+    ('video', 'Video'),
+    ('photo', 'Photo'),
+    ('link', 'Link'),
+    ('rich', 'Rich'),
 )
+
 
 class SavedEmbed(models.Model):
     url = models.URLField()
     maxwidth = models.SmallIntegerField(null=True, blank=True)
-    type = models.CharField(max_length=10, choices=OEMBED_TYPES)
+    type = models.CharField(max_length=10, choices=EMBED_TYPES)
     html = models.TextField(blank=True)
     title = models.TextField(blank=True)
     thumbnail_url = models.URLField(null=True, blank=True)
@@ -23,4 +25,3 @@ class SavedEmbed(models.Model):
 
     def __unicode__(self):
         return self.url
-

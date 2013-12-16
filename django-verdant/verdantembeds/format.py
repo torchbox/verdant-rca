@@ -1,10 +1,10 @@
 from __future__ import division # Use true division
-from django_embedly.templatetags.embed_filters import embedly_get_dict
+from .embeds import get_embed
 from django.utils.html import escape
 
 
 def embed_to_frontend_html(url):
-    embed = embedly_get_dict(url)
+    embed = get_embed(url)
     if embed is not None:
         # Work out ratio
         if embed['width'] and embed['height']:
@@ -20,7 +20,7 @@ def embed_to_frontend_html(url):
 
 def embed_to_editor_html(url):
     # Check that the embed exists
-    embed = embedly_get_dict(url)
+    embed = get_embed(url)
     if embed is None:
         return ''
     return '<div class="embed-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, escape(embed['title']), url, embed['thumbnail_url'])
