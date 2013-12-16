@@ -3,7 +3,7 @@ from django_embedly.templatetags.embed_filters import embedly_get_dict
 from django.utils.html import escape
 
 
-def media_to_frontend_html(url):
+def embed_to_frontend_html(url):
     embed = embedly_get_dict(url)
     if embed is not None:
         # Work out ratio
@@ -18,9 +18,9 @@ def media_to_frontend_html(url):
         return ''
 
 
-def media_to_editor_html(url):
-    # Check that the media exists
+def embed_to_editor_html(url):
+    # Check that the embed exists
     embed = embedly_get_dict(url)
     if embed is None:
         return ''
-    return '<div class="media-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, escape(embed['title']), url, embed['thumbnail_url'])
+    return '<div class="embed-placeholder" contenteditable="false" data-embedtype="media" data-url="%s"><h3>%s</h3><p>%s</p><img src="%s"></div>' % (url, escape(embed['title']), url, embed['thumbnail_url'])

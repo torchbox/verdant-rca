@@ -1,5 +1,5 @@
 function(modal) {
-    $('form.media-form', modal.body).submit(function() {
+    $('form.embed-form', modal.body).submit(function() {
         var formdata = new FormData(this);
 
         $.ajax({

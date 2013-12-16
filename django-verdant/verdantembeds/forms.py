@@ -11,5 +11,5 @@ def validate_url(url):
 		raise ValidationError("Please enter a valid URL")
 
 
-class MediaForm(forms.Form):
+class EmbedForm(forms.Form):
 	url = forms.CharField(label="URL", validators=[validate_url])
