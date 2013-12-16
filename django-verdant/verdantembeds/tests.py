@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.core.cache import cache
 from django.db import IntegrityError
-from embeds.templatetags.embed_filters import embedly
-from embeds.models import SavedEmbed
+from .templatetags.embed_filters import embedly
+from .models import SavedEmbed
 
 class EmbedlyTemplateFilterTest(TestCase):
     """Warning: This will clear your cache. see below yo.
