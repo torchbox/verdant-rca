@@ -4,12 +4,12 @@ from django.core.exceptions import ValidationError
 
 
 def validate_url(url):
-	validator = URLValidator()
-	try:
-		validator(url)
-	except ValidationError:
-		raise ValidationError("Please enter a valid URL")
+    validator = URLValidator()
+    try:
+        validator(url)
+    except ValidationError:
+        raise ValidationError("Please enter a valid URL")
 
 
 class EmbedForm(forms.Form):
-	url = forms.CharField(label="URL", validators=[validate_url])
+    url = forms.CharField(label="URL", validators=[validate_url])

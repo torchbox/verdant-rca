@@ -9,9 +9,9 @@ EMBED_TYPES = (
 )
 
 
-class SavedEmbed(models.Model):
+class Embed(models.Model):
     url = models.URLField()
-    maxwidth = models.SmallIntegerField(null=True, blank=True)
+    max_width = models.SmallIntegerField(null=True, blank=True)
     type = models.CharField(max_length=10, choices=EMBED_TYPES)
     html = models.TextField(blank=True)
     title = models.TextField(blank=True)
@@ -21,7 +21,7 @@ class SavedEmbed(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('url', 'maxwidth')
+        unique_together = ('url', 'max_width')
 
     def __unicode__(self):
         return self.url
