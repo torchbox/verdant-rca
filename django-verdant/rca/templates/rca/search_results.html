@@ -12,6 +12,15 @@
             <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
             <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
 
+            {% if editors_picks %}
+                <h3>Editors picks</h3>
+                <ul>
+                {% for editors_pick in editors_picks %}
+                    <li>{{ editors_pick.title }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
             {% include "rca/includes/search_listing.html" %}
             
         {% else %}
