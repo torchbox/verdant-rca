@@ -1,0 +1,17 @@
+{% extends "verdantadmin/base.html" %}
+{% block titletag %}Add editors pick{% endblock %}
+{% block content %}
+    <header>
+        <h1>Add editors pick</h1>
+    </header>
+
+    <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
+        {% csrf_token %}
+        
+        {% comment %}FORM HERE{% endcomment %}
+
+        <div class="nice-padding">
+            <input type="submit" value="Save" />
+        </div>
+    </form>
+{% endblock %}
