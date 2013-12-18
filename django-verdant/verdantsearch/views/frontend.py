@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from core import models
-from verdantsearch import Search, EditorsPick
+from verdantsearch import Search, SearchTerms
 import json
 
 
@@ -14,8 +14,8 @@ def search(request):
     # Search
     if query_string != "":
         search_results = models.Page.search_frontend(query_string)
-        editors_picks = EditorsPick.search(query_string)
-
+        #editors_picks = EditorsPick.search(query_string)
+        editors_picks = []
         # Pagination
         paginator = Paginator(search_results, 10)
         if paginator is not None:

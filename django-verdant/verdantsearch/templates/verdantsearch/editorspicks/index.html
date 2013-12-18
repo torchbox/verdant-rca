@@ -1,0 +1,47 @@
+{% extends "verdantadmin/base.html" %}
+{% block titletag %}Editors Picks{% endblock %}
+{% block bodyclass %}page-explorer{% endblock %}
+
+{% block content %}
+    <header>
+        <div class="row row-flush">
+            <div class="left col9">
+                <h1>Editors Picks</h1>
+            </div>
+            <div class="right col3">
+                <a href="{% url 'verdantredirects_add_redirect' %}" class="button icon icon-plus-inverse">Add editors pick</a>
+            </div>
+        </div>
+    </header>
+
+
+    <table class="listing full-width">
+        <col />
+        <col width="40%"/>
+        <col />
+        <thead>
+            <tr>
+                <th class="title">Terms</th>
+                <th>Pages</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if searchterms_list %}
+                {% for searchterms in searchterms_list %}
+                    <tr>
+                        <td class="title">
+                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" title="Edit this pick">{{ searchterms.terms }}</a></h2>
+                        </td>
+                        <td>
+                            {% for page in searchterms.picks.all %}
+                                <a href="{% url 'verdantadmin_pages_edit' page.id %}" class="nolink">{{ page.title }}</a>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="3" class="no-results-message"><p>No editors picks have been added. Why not <a href="{% url 'verdantsearch_editorspicks_add' %}">add one</a>?</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

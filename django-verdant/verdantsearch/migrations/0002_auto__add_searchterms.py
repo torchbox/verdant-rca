@@ -8,18 +8,29 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'EditorsPick'
-        db.create_table(u'verdantsearch_editorspick', (
+        # Adding model 'SearchTerms'
+        db.create_table(u'verdantsearch_searchterms', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('terms', self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
-            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Page'])),
+            ('terms', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
         ))
-        db.send_create_signal(u'verdantsearch', ['EditorsPick'])
+        db.send_create_signal(u'verdantsearch', ['SearchTerms'])
+
+        # Adding M2M table for field picks on 'SearchTerms'
+        m2m_table_name = db.shorten_name(u'verdantsearch_searchterms_picks')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('searchterms', models.ForeignKey(orm[u'verdantsearch.searchterms'], null=False)),
+            ('page', models.ForeignKey(orm[u'core.page'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['searchterms_id', 'page_id'])
 
 
     def backwards(self, orm):
-        # Deleting model 'EditorsPick'
-        db.delete_table(u'verdantsearch_editorspick')
+        # Deleting model 'SearchTerms'
+        db.delete_table(u'verdantsearch_searchterms')
+
+        # Removing M2M table for field picks on 'SearchTerms'
+        db.delete_table(db.shorten_name(u'verdantsearch_searchterms_picks'))
 
 
     models = {
@@ -64,11 +75,11 @@ class Migration(SchemaMigration):
             'width': ('django.db.models.fields.IntegerField', [], {}),
             'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
-        u'verdantsearch.editorspick': {
-            'Meta': {'object_name': 'EditorsPick'},
+        u'verdantsearch.searchterms': {
+            'Meta': {'object_name': 'SearchTerms'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Page']"}),
-            'terms': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
+            'picks': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.Page']", 'null': 'True', 'blank': 'True'}),
+            'terms': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
         },
         u'verdantsearch.searchtest': {
             'Meta': {'object_name': 'SearchTest'},
