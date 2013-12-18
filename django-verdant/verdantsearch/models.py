@@ -14,6 +14,10 @@ class SearchTerms(models.Model):
 
         super(SearchTerms, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_picks_for_terms(cls, terms):
+        return cls.objects.get(terms=cls.normalise_terms(terms)).picks.all()
+
     @staticmethod
     def normalise_terms(terms):
         return terms.lower()

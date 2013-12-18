@@ -14,8 +14,13 @@ def search(request):
     # Search
     if query_string != "":
         search_results = models.Page.search_frontend(query_string)
-        #editors_picks = EditorsPick.search(query_string)
-        editors_picks = []
+
+        # Editors picks
+        try:
+            editors_picks = SearchTerms.get_picks_for_terms(query_string)
+        except SearchTerms.DoesNotExist:
+            editors_picks = []
+
         # Pagination
         paginator = Paginator(search_results, 10)
         if paginator is not None:
