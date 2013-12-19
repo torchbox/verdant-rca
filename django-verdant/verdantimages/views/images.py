@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form
 from verdantadmin.forms import SearchForm
 
-@login_required
+@permission_required('verdantimages.add_image')
 def index(request):
     Image = get_image_model()
 
@@ -54,7 +54,7 @@ def index(request):
         })
 
 
-@login_required
+@permission_required('verdantimages.change_image')
 def edit(request, image_id):
     Image = get_image_model()
     ImageForm = get_image_form()
@@ -85,7 +85,7 @@ def edit(request, image_id):
     })
 
 
-@login_required
+@permission_required('verdantimages.delete_image')
 def delete(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
 
@@ -99,7 +99,7 @@ def delete(request, image_id):
     })
 
 
-@login_required
+@permission_required('verdantimages.add_image')
 def add(request):
     ImageForm = get_image_form()
 
@@ -119,7 +119,7 @@ def add(request):
     })
 
 
-@login_required
+@permission_required('verdantimages.add_image')
 def search(request):
     Image = get_image_model()
     images = []
