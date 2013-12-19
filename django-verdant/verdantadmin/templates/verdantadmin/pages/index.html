@@ -39,8 +39,19 @@
 {% block extra_js %}
     <script type="text/javascript">
         {% if ordering == 'ord' %}
+            function setOrder(){
+                $('#order').val($('.listing tbody').sortable('toArray'));
+            }
+
             $(function() {
                 var reorderCount = 0;
+                var orderform = $('#page-reorder-form');
+
+                orderform.submit(function() {
+                    setOrder();
+                    return true;
+                });
+
                 $('.listing tbody').sortable({
                     cursor: "move", 
                     containment: "parent", 
@@ -54,22 +65,17 @@
                     stop: function(){
                         $(this).parent().removeClass('sorting');
 
-                        var orderform = $('#page-reorder-form');
-                        $('#order').val($('.listing tbody').sortable("serialize", {key: "page"}));
+                        setOrder();
+
                         //submit the form silently
                         $.post(orderform.attr('action'), orderform.serialize(), function(){
                             reorderCount++;
-                            $('.messages').empty().append('<ul><li class="success">Pages have been reordered successfully '+ ((reorderCount>1) ? '(' + reorderCount +' times)': '')+'</li></ul>')
+                            addMessage('success', 'Pages have been reordered successfully ' + ((reorderCount>1) ? '(' + reorderCount +' times)': ''))
                         })
 
                     }
                 });
                 $('.listing tbody').disableSelection();
-
-                $('#page-reorder-form').submit(function() {
-                    $('#order').val($('.listing tbody').sortable('toArray'));
-                    return true;
-                });
             })
         {% endif %}
     </script>

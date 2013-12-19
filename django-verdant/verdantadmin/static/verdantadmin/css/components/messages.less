@@ -2,22 +2,25 @@
     position:relative;
     margin-left:-15px;
     z-index:5;
-
-    &:before{
-        content: "";
-        height: 0;
-        width: 0;
-        display: block;
-        position: absolute;
-        bottom: -15px;
-        left: 0;
-        border-top: 15px solid #000;
-        border-left: 15px solid transparent;
-    }
+    top:-100px;
+    max-height:0;
 
     ul{
         .unlist();
         padding-left:10px;
+        position:relative;
+
+        &:before{
+            content: "";
+            height: 0;
+            width: 0;
+            display: block;
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            border-top: 15px solid #000;
+            border-left: 15px solid transparent;
+        }
     }
     li{
         .nice-padding;
@@ -34,4 +37,19 @@
     .success{
         background-color:@color-teal-dark;
     }
+}
+.ready .messages{
+    .transition-immediate(~"top 0.5s ease, max-height 1.2s ease");
+    top:0px;
+    max-height:100px;
+}
+.messages.new{
+    .transition-immediate(none);
+    top:-100px;
+    max-height:0px;
+}
+.messages.appear{
+    .transition-immediate(~"top 0.5s ease, max-height 1.2s ease");
+    top:0;
+    max-height:100px;
 }

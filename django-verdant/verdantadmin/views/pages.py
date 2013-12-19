@@ -275,12 +275,7 @@ def reorder(request, parent_page_id=None):
 
     if request.POST:
         try:
-            if request.is_ajax():
-                idlist = request.POST['order'].split('&')
-            else:
-                idlist =  request.POST['order'].split(',')
-
-            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in idlist]
+            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
         except:
             # Invalid
             messages.error(request, "Could not reorder (invalid request)")
