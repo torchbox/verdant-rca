@@ -85,6 +85,14 @@ class AbstractImage(models.Model, TagSearchable):
 class Image(AbstractImage):
     pass
 
+    class Meta:
+        permissions = (
+            ('add_image', "Can add image"),
+            ('change_image', "Can change image"),
+            ('delete_image', "Can delete image"),
+        )
+
+
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Image)
 def image_delete(sender, instance, **kwargs):
