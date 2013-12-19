@@ -15,19 +15,22 @@
 @color-teal: #43b1b0;
 @color-teal-darker: darken(@color-teal, 10%);
 @color-teal-dark: #246060;
-@color-grey: #666;
-@color-grey-light:#CCC;
-@color-grey-lighter:lighten(@color-grey-light, 10%);
-@color-grey-dark: #333;
 @color-red: #f7474e;
 @color-orange:#e9b04d;
 @color-green: #00FF00;
 
-@color-thead-bg: lighten(@color-grey, 58%);
-@color-header-bg: @color-thead-bg;
-@color-fieldset-hover: @color-thead-bg;
-@color-input-border: @color-grey-light;
-@color-input-border-focus: darken(@color-input-border, 25%);
+/* greys, darker to lighter */
+@color-grey-1: #333333;
+@color-grey-1-1: #404040;
+@color-grey-2: #666666;
+@color-grey-3: #d9d9d9;
+@color-grey-4: #e6e6e6;
+@color-grey-5: #fafafa;
+
+@color-thead-bg: @color-grey-5;
+@color-header-bg: @color-grey-5;
+@color-fieldset-hover: @color-grey-5;
+@color-input-border: @color-grey-3;
 @color-input-focus: #f4fcfc;
 @color-input-error-bg: #feedee;
 @color-button: @color-teal;
@@ -39,10 +42,9 @@
 @color-link: @color-teal;
 @color-link-hover: darken(@color-button, 8%);
 
-@color-text-base: #555;
-@color-text-input: #333;
-@color-text-grey: @color-grey;
-@color-text-help: lighten(@color-grey, 30%);
+@color-text-base: @color-grey-2;
+@color-text-input: @color-grey-1;
+
 
 @thumbnail-width:130px;
 

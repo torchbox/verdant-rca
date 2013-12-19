@@ -44,7 +44,7 @@ h1{
     line-height:1.3em;
     font-size:1.5em;
     text-transform:uppercase;
-    color:@color-grey;
+    color:@color-grey-2;
     font-weight:700;
 
     span{
@@ -61,7 +61,7 @@ h2{
     font-size:1.3em;
     font-family:Open Sans;
     font-weight:600;
-    color:lighten(@color-grey, 15%);
+    color:@color-grey-2;
 
     .page-explorer &{
         text-transform:none;
@@ -85,7 +85,7 @@ code{
 kbd{
     .border-radius(3px);
     font-family:Open Sans, Arial, sans-serif;
-    border:1px solid @color-grey;
+    border:1px solid @color-grey-2;
     border-color:rgba(0,0,0,0.2);
     padding:0.3em 0.5em;
 }
@@ -102,7 +102,7 @@ img{
 .nav-wrapper{
     .box-shadow(inset -2px 0px 10px 0px rgba(0, 0, 0, 0.5));
     position:relative;
-    background: @color-grey-dark;
+    background: @color-grey-1;
     margin-left: -100%;
     width: 80%;
     float: left;
@@ -136,7 +136,7 @@ img{
         .box-shadow(0px 0px 10px 5px rgba(255, 255, 255, 0.5));
         cursor:pointer;
         position:fixed;
-        background: @color-grey-dark;
+        background: @color-grey-1;
         width:40px;
         opacity:0.8;
 
@@ -170,7 +170,7 @@ img{
             position:relative;
 
             &.selected{
-                background-color:@color-grey-dark;
+                background-color:@color-grey-1;
             }
 
             .menu-snippets &.menu-snippets,
@@ -222,7 +222,7 @@ img{
             }
             font-size:0.8em;
             padding:0.2em 1.2em;
-            background-color:darken(@color-grey, 15%);
+            background-color:@color-grey-1-1;
         }
         .more{
             border:0;
@@ -247,7 +247,7 @@ img{
     float: right;
     position: relative;
     background-color:white;
-    border-bottom:1px solid @color-grey-lighter;
+    border-bottom:1px solid @color-grey-4;
 }
     .content{
         .row();
@@ -282,7 +282,7 @@ header{
     padding-top:5em;
     padding-bottom:1em;
     background-color:@color-header-bg;
-    border-bottom:1px solid @color-grey-lighter;
+    border-bottom:1px solid @color-grey-4;
     margin-bottom:2em;
 
     h1, h2{
@@ -312,7 +312,7 @@ header{
 
 footer{
     .row();
-    background: @color-grey-dark;
+    background: @color-grey-1;
     background: rgba(0,0,0,0.7);
     position:fixed;
     bottom:0;
@@ -356,14 +356,14 @@ footer{
 ::-webkit-scrollbar {
     height: 10px;
     width: 10px;
-    background: @color-grey-dark;
+    background: @color-grey-1;
 }
 ::-webkit-scrollbar-thumb {
-    background: @color-grey;
+    background: @color-grey-2;
     -webkit-border-radius: 1ex;
 }
 ::-webkit-scrollbar-corner {
-    background: @color-grey-dark;
+    background: @color-grey-1;
 }
 
 
@@ -388,7 +388,7 @@ footer, .logo{
     li {
         display: block;
         float: left;
-        background: lighten(@color-grey-lighter, 5%);
+        background: @color-grey-3;
         padding: 0.5em 1em 0.5em 2em;
         position: relative;
         margin: 0 4px 4px 0; 
@@ -400,7 +400,7 @@ footer, .logo{
         line-height:1.5em;
 
         a{
-            color:@color-grey;
+            color:@color-grey-2;
             display:block;
             max-width:25em;
             white-space: nowrap;
@@ -415,7 +415,7 @@ footer, .logo{
             border-bottom: 1.3em solid transparent;
         }
         &:after {            
-            border-left: 1em solid lighten(@color-grey-lighter, 5%);
+            border-left: 1em solid @color-grey-3;
             position: absolute; right: -0.9em; top: 0;
             z-index: 1;
         }
@@ -527,7 +527,7 @@ footer, .logo{
         }
         .footer{
             padding-top:1em;
-            background-color:@color-grey-dark;
+            background-color:@color-grey-1;
             position:fixed;
             width:@menu-width - 7;
             bottom:0;
@@ -545,8 +545,8 @@ footer, .logo{
                 border-bottom:1px solid rgba(200,200,200,0.1);
             }
             &:before{
-                color:@color-grey;
-                border: 2px solid @color-grey;
+                color:@color-grey-2;
+                border: 2px solid @color-grey-2;
             }
             &:hover{
                 .box-shadow(0px 0px 6px 0px rgba(0,0,0,1));

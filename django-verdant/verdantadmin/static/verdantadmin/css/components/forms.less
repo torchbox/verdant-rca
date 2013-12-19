@@ -99,8 +99,8 @@ input[type=radio]:before{
     line-height: 1.1em;
     padding: 4px;
     background-color: white;
-    color:@color-grey-lighter;
-    border: 1px solid @color-grey-lighter;
+    color:@color-grey-4;
+    border: 1px solid @color-grey-4;
 }
 input[type=radio]:checked:before{
     content:"K";
@@ -127,7 +127,7 @@ input[type=checkbox]:before{
     width:20px;
     height:20px;
     background-color:white;
-    border:1px solid lighten(@color-grey, 50%);
+    border:1px solid @color-grey-4;
     color:#EEE;
 }
 input[type=checkbox]:checked:before{
@@ -218,7 +218,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     margin:0 0 0.5em 0;
 }
 .help{
-    color:@color-grey;
+    color:@color-grey-2;
     opacity:0;
 }
 
@@ -447,7 +447,7 @@ ul.inline li:first-child, li.inline:first-child{
     .ui-icon-close:before{
         font-family:verdant;
         display:block;
-        color:@color-grey-light;
+        color:@color-grey-3;
         content:"g";
     }
     .ui-icon-close:hover:before{
@@ -466,7 +466,7 @@ ul.inline li:first-child, li.inline:first-child{
     &.full-width{
         .nice-padding();
         background-color:@color-header-bg;
-        border-bottom:1px solid @color-grey-lighter;
+        border-bottom:1px solid @color-grey-4;
     }
 
     .fields{
@@ -485,7 +485,7 @@ ul.inline li:first-child, li.inline:first-child{
             font-family:verdant;
             content:"f";
             font-size:25px;
-            color:@color-grey-light;
+            color:@color-grey-3;
         }
     }
     .submit{
