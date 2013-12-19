@@ -216,7 +216,7 @@ img{
             }
         }
 
-        .more a{
+        .more > a{
             &:before{
                 margin-right:0.4em;
             }
@@ -224,13 +224,16 @@ img{
             padding:0.2em 1.2em;
             background-color:darken(@color-grey, 15%);
         }
+        .more{
+            border:0;
+        }
 
         .avatar{
             display:none;
         }
     }
 
-    .js .nav-main .more ~ li{
+    .js .nav-main .more ul{
         display:none;       
     }
 

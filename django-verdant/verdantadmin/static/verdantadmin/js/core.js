@@ -87,7 +87,7 @@ $(function(){
     })
 
     $(".nav-main .more a").bind('click keydown', function(){
-        $(this).parent().nextAll().stop().toggle('fast');
+        $(this).parent().find('ul').toggle('fast');
         return false;
     });
 })

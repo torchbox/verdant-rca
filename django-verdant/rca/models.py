@@ -41,7 +41,7 @@ import hashlib
 
 from rca_signage.constants import SCREEN_CHOICES
 
-# TODO: find a nicer way to do this. The following line is  presumptuous and dangerous. It adds "description" as a meta property of a class, used to describe a content type/snippet to a user so can make a choice of one type over another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
+# TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
 # RCA defines its own custom image class to replace verdantimages.Image,
