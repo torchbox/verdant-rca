@@ -18,7 +18,7 @@ def home(request):
 
     total_images = get_image_model().objects.count()
     total_documents = Document.objects.count()
-    total_pages = Page.objects.count()
+    total_pages = Page.objects.count() - 1  # subtract 1 because the root node is not a real page
 
     return render(request, "verdantadmin/home.html", {
         'total_pages': total_pages,
