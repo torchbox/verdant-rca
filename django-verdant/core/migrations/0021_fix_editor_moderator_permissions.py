@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
@@ -9,17 +9,17 @@ class Migration(DataMigration):
     def forwards(self, orm):
         page_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
             model='page', app_label='core')
-        add_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=page_content_type, codename='add_page', defaults=dict(name=u'Can add page'))
-        change_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=page_content_type, codename='change_page', defaults=dict(name=u'Can change page'))
-        delete_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=page_content_type, codename='delete_page', defaults=dict(name=u'Can delete page'))
+        add_permission = orm['auth.permission'].objects.get(
+            content_type=page_content_type, codename='add_page')
+        change_permission = orm['auth.permission'].objects.get(
+            content_type=page_content_type, codename='change_page')
+        delete_permission = orm['auth.permission'].objects.get(
+            content_type=page_content_type, codename='delete_page')
 
-        publish_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=page_content_type, codename='publish_page', defaults=dict(name=u'Can publish page'))
-        unpublish_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=page_content_type, codename='unpublish_page', defaults=dict(name=u'Can unpublish page'))
+        publish_permission = orm['auth.permission'].objects.get(
+            content_type=page_content_type, codename='publish_page')
+        unpublish_permission = orm['auth.permission'].objects.get(
+            content_type=page_content_type, codename='unpublish_page')
 
         editors_group, created = orm['auth.group'].objects.get_or_create(name='Editors')
         editors_group.permissions = [add_permission, change_permission, delete_permission]
@@ -49,7 +49,7 @@ class Migration(DataMigration):
             'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
+            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -57,7 +57,7 @@ class Migration(DataMigration):
             'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
+            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
         u'contenttypes.contenttype': {
@@ -80,7 +80,8 @@ class Migration(DataMigration):
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'url_path': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'core.pagerevision': {
             'Meta': {'object_name': 'PageRevision'},
@@ -88,6 +89,7 @@ class Migration(DataMigration):
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['core.Page']"}),
+            'submitted_for_moderation': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'})
         },
         u'core.site': {
@@ -115,21 +117,8 @@ class Migration(DataMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'width': ('django.db.models.fields.IntegerField', [], {}),
             'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
-        },
-        u'taggit.tag': {
-            'Meta': {'object_name': 'Tag'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '100'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '100'})
-        },
-        u'taggit.taggeditem': {
-            'Meta': {'object_name': 'TaggedItem'},
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_tagged_items'", 'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
-            'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         }
     }
 
-    complete_apps = ['auth', 'core']
+    complete_apps = ['core']
     symmetrical = True

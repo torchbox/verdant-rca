@@ -12,7 +12,7 @@
                 
                 {% if self.date %}
                     <dd>Date</dd>
-                    <dt>{{ self.date }}</dt>
+                    <dt>{{ self.date|date:"j F Y" }}</dt>
                 {% endif %}
 
                 {% if self.area %}
