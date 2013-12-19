@@ -86,7 +86,7 @@ $(function(){
         }
     })
 
-    $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
+    $(".nav-main .more a").bind('click keydown', function(){
         $(this).parent().nextAll().stop().toggle('fast');
         return false;
     });

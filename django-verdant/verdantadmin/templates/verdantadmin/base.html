@@ -44,7 +44,7 @@
                     </li>
                     <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
 
-                    <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
+                    <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}" class="icon icon-redirect">Redirects</a></li>
 
                     {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
                     {% for name, title in verdantadmin_tab_urls %}
