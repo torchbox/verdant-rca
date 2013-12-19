@@ -23,7 +23,7 @@
                            
                             <small class="col6" style="text-align:right">
                                 {{ content_type|meta_description }}
-                                <a href="{% url 'verdantadmin_pages_type_use' content_type.app_label content_type.model %}" class="nolink">View all {{ content_type.name|title }} pages </a>
+                                <a href="{% url 'verdantadmin_pages_type_use' content_type.app_label content_type.model %}" class="nolink">Pages using {{ content_type.name|title }}</a>
                             </small>
                             
                         </div>
