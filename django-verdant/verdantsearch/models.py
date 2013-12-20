@@ -57,11 +57,20 @@ class SearchTerms(models.Model):
 
     @staticmethod
     def normalise_terms(terms):
-        return terms.lower()
+        # Convert terms to lowercase
+        terms = terms.lower()
+
+        # Strip punctuation characters
+        terms = ''.join([c for c in terms if c not in string.punctuation])
+
+        # Remove double spaces
+        ' '.join(terms.split())
+
+        return terms
 
 
 class SearchTermsDailyHits(models.Model):
-    terms = models.ForeignKey(SearchTerms, related_name='daily_hits')
+    terms = models.ForeignKey(SearchTerms, db_index=True, related_name='daily_hits')
     date = models.DateField()
     hits = models.IntegerField(default=0)
 
@@ -76,6 +85,9 @@ class EditorsPick(models.Model):
     page = models.ForeignKey('core.Page')
     sort_order = models.IntegerField(default=0)
     description = models.TextField()
+
+    class Meta:
+        ordering = ('sort_order', )
 
 
 # Used for tests
