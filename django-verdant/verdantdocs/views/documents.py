@@ -21,7 +21,7 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            documents = Document.search(q, results_per_page=2, page=p)
+            documents = Document.search(q, results_per_page=20, page=p)
         else:
             documents = Document.objects.order_by('-created_at')
     else:
@@ -29,7 +29,7 @@ def index(request):
         form = SearchForm()
 
     if not is_searching:
-        paginator = Paginator(documents, 3)
+        paginator = Paginator(documents, 20)
 
         try:
             documents = paginator.page(p)
