@@ -5,9 +5,10 @@ from verdantsearch import models
 
 @login_required
 def index(request):
-    searchterms_list = models.SearchTerms.objects.all()
+    # Select only search terms with editors picks
+    searchterms_list = models.SearchTerms.objects.filter(editors_picks__isnull=False).distinct()
     return render(request, 'verdantsearch/editorspicks/index.html', {
-        'searchterms_list': searchterms_list
+        'searchterms_list': searchterms_list,
     })
 
 
@@ -18,17 +19,10 @@ def add(request):
 
 
 @login_required
-def edit(request, searchterms_id):
-    searchterms = get_object_or_404(models.SearchTerms, pk=searchterms_id)
+def edit(request, searchterms_urlified):
+    searchterms_terms = models.SearchTerms._deurlify_terms(searchterms_urlified)
+    searchterms = get_object_or_404(models.SearchTerms, terms=searchterms_terms)
 
     return render(request, 'verdantsearch/editorspicks/edit.html', {
-        'searchterms': searchterms,
-    })
-
-@login_required
-def delete(request, searchterms_id):
-    searchterms = get_object_or_404(models.SearchTerms, pk=searchterms_id)
-
-    return render(request, 'verdantsearch/editorspicks/confirm_delete.html', {
         'searchterms': searchterms,
     })

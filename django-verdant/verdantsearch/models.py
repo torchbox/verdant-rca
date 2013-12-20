@@ -48,6 +48,10 @@ class SearchTerms(models.Model):
         # Add to past hits and return
         return daily_hits_hits + self.past_hits
 
+    @property
+    def urlify_terms(self):
+        return self._urlify_terms(self.terms)
+
     @classmethod
     def get(cls, terms):
         return cls.objects.get_or_create(terms=cls.normalise_terms(terms))[0]
@@ -68,6 +72,14 @@ class SearchTerms(models.Model):
         ' '.join(terms.split())
 
         return terms
+
+    @staticmethod
+    def _urlify_terms(terms):
+        return terms.replace(' ', '-')
+
+    @staticmethod
+    def _deurlify_terms(terms):
+        return terms.replace('-', ' ')
 
 
 class SearchTermsDailyHits(models.Model):

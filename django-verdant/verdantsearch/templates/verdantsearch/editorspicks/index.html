@@ -1,5 +1,5 @@
 {% extends "verdantadmin/base.html" %}
-{% block titletag %}Editors Picks{% endblock %}
+{% block titletag %}Search Terms{% endblock %}
 {% block bodyclass %}page-explorer{% endblock %}
 
 {% block content %}
@@ -9,7 +9,7 @@
                 <h1>Editors Picks</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantsearch_editorspicks_add' %}" class="button icon icon-plus-inverse">Add editors pick</a>
+                <a href="{% url 'verdantsearch_editorspicks_add' %}" class="button icon icon-plus-inverse">Add new editors pick</a>
             </div>
         </div>
     </header>
@@ -22,7 +22,8 @@
         <thead>
             <tr>
                 <th class="title">Terms</th>
-                <th>Pages</th>
+                <th>Editors picks</th>
+                <th>Views (past week)</th>
             </tr>
         </thead>
         <tbody>
@@ -30,13 +31,16 @@
                 {% for searchterms in searchterms_list %}
                     <tr>
                         <td class="title">
-                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" title="Edit this pick">{{ searchterms.terms }}</a></h2>
+                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" title="Edit this pick">{{ searchterms.terms }}</a></h2>
                         </td>
                         <td>
-                            {% for page in searchterms.picks.all %}
-                                <a href="{% url 'verdantadmin_pages_edit' page.id %}" class="nolink">{{ page.title }}</a>{% if not forloop.last %}, {% endif %}
+                            {% for editors_pick in searchterms.editors_picks.all %}
+                                <a href="{% url 'verdantadmin_pages_edit' editors_pick.page.id %}" class="nolink">{{ editors_pick.page.title }}</a>{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                None
                             {% endfor %}
                         </td>
+                        <td>{{ searchterms.past_week_hits }}</td>
                     </tr>
                 {% endfor %}
             {% else %}

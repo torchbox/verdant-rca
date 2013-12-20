@@ -5,14 +5,20 @@
         <h1>Editing <span>{{ searchterms.terms }}</span></h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" method="POST">
+    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" method="POST">
         {% csrf_token %}
 
         {% comment %}FORM HERE{% endcomment %}
 
         <div class="nice-padding">
             <input type="submit" value="Save" />
-            <a href="{% url 'verdantsearch_editorspicks_delete' searchterms.id %}" class="button button-secondary no">Delete this editors pick</a>
         </div>
     </form>
+{% endblock %}
+
+{% block extra_css %}
+    {% include "verdantadmin/pages/_editor_css.html" %}
+{% endblock %}
+{% block extra_js %}
+    {% include "verdantadmin/pages/_editor_js.html" %}
 {% endblock %}

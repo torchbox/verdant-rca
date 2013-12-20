@@ -7,11 +7,18 @@
 
     <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
         {% csrf_token %}
-        
+
         {% comment %}FORM HERE{% endcomment %}
 
         <div class="nice-padding">
             <input type="submit" value="Save" />
         </div>
     </form>
+{% endblock %}
+
+{% block extra_css %}
+    {% include "verdantadmin/pages/_editor_css.html" %}
+{% endblock %}
+{% block extra_js %}
+    {% include "verdantadmin/pages/_editor_js.html" %}
 {% endblock %}
