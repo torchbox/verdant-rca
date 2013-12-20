@@ -1,14 +1,16 @@
 .messages{
     position:relative;
-    margin-left:-15px;
+    
     z-index:5;
-    top:-100px;
-    max-height:0;
+    
+    background-color:@color-grey-5;
 
     ul{
         .unlist();
+        margin-left:-15px;
         padding-left:10px;
         position:relative;
+        top:-100px;
 
         &:before{
             content: "";
@@ -38,18 +40,15 @@
         background-color:@color-teal-dark;
     }
 }
-.ready .messages{
+.ready .messages ul{
     .transition-immediate(~"top 0.5s ease, max-height 1.2s ease");
     top:0px;
-    max-height:100px;
 }
-.messages.new{
+.messages.new ul{
     .transition-immediate(none);
     top:-100px;
-    max-height:0px;
 }
-.messages.appear{
+.messages.appear ul{
     .transition-immediate(~"top 0.5s ease, max-height 1.2s ease");
     top:0;
-    max-height:100px;
 }
