@@ -17,8 +17,6 @@ function ModalWorkflow(opts) {
     $('body > .modal').remove();
 
     var container = $('<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">\n    <div class="modal-dialog">\n        <div class="modal-content">\n            <button type="button" class="close icon text-replace icon-cross" data-dismiss="modal" aria-hidden="true">&times;</button>\n            <div class="modal-body"></div>\n        </div><!-- /.modal-content -->\n    </div><!-- /.modal-dialog -->\n</div>');
-    $('body').append(container);
-    container.modal();
 
     self.body = container.find('.modal-body');
 
@@ -59,6 +57,9 @@ function ModalWorkflow(opts) {
         if (body.onload) {
             body.onload(self);
         }
+        // once body has loaded, append modal to DOM and run modal prog enhancements
+        $('body').append(container);
+        container.modal();
     };
 
     self.respond = function(responseType) {
