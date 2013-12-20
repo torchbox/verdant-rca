@@ -12,20 +12,22 @@
             <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
             <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
 
-            {% if editors_picks %}
-                <h3>Editors picks</h3>
-                <ul>
-                {% for editors_pick in search_terms_obj.editors_picks.all %}
-                    <li>
-                        <h4>{{ editors_pick.page.title }}</h4>
-                        <p>{{ editors_pick.description }}</p>
-                    </li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+            {% with search_terms_obj.editors_picks.all as editors_picks %}
+                {% if editors_picks %}
+                    <h3>Editors picks</h3>
+                    <ul>
+                    {% for editors_pick in editors_picks %}
+                        <li>
+                            <h4>{{ editors_pick.page.title }}</h4>
+                            <p>{{ editors_pick.description }}</p>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
 
             {% include "rca/includes/search_listing.html" %}
-            
+
         {% else %}
             <h2>Sorry, nothing was found for &quot;{{ query_string }}&quot;</h2>
         {% endif %}
