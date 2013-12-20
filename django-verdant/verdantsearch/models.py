@@ -4,6 +4,7 @@ from core.models import Page
 from indexed import Indexed
 from searcher import Searcher
 import datetime
+import string
 
 
 class SearchTerms(models.Model):
