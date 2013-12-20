@@ -8,7 +8,9 @@
     <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" method="POST">
         {% csrf_token %}
 
-        {% comment %}FORM HERE{% endcomment %}
+        <ul>
+            {{ editors_pick_formset.as_ul }}
+        </ul>
 
         <div class="nice-padding">
             <input type="submit" value="Save" />
