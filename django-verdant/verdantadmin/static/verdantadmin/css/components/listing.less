@@ -74,6 +74,12 @@ ul.listing{
             margin-left:-@grid-gutter-width * 2;
         }
     }
+
+    &.full-width td:first-child,
+    &.full-width th:first-child{
+        .push-padding(@grid-content-indent);
+    }
+
     &.full-width{
         margin-bottom:-3em; /* this negates the padding added to the bottom of .content */
     }
@@ -140,8 +146,7 @@ ul.listing{
     .index {
         background-color:@color-header-bg;
         .title h2{
-            font-size:1.2em;
-            
+            font-size:1.2em; 
         }
         a{
             color:auto;
@@ -150,8 +155,6 @@ ul.listing{
 
 
     /* specific columns */
-
-
     .bulk{
         padding-right:0;
 
@@ -188,16 +191,6 @@ ul.listing{
                 }
             }
         }
-    }
-
-    .parent{
-        
-    }
-    .type{
-        
-    }
-    .status{
-        
     }
 
     .actions{
@@ -430,15 +423,9 @@ ul.listing{
             a{opacity:1;}
         }
     }
-    table.listing.full-width td:first-child,
-    table.listing.full-width th:first-child{
-        .push-padding(@grid-content-indent);
-    }
-}
-
-@media screen and (min-width: @breakpoint-desktop-small){
    
 }
+
 
 /* Transitions */
 .listing {

@@ -95,6 +95,22 @@ img{
     height:auto;
 }
 
+.browsermessage{
+    background-color:@color-red;
+    color:white;
+    padding:1em 2em;
+    margin:0;
+    position:relative;
+    left:0;
+    top:0;
+    right:0;
+
+    a{
+        color:white;
+        text-decoration:underline;
+    }
+}
+
 .wrapper{
     .clearfix();
 }
@@ -132,7 +148,7 @@ img{
     }
 
     #nav-toggle{
-        .push(0.5);
+        .push(0.65);
         .box-shadow(0px 0px 10px 5px rgba(255, 255, 255, 0.5));
         cursor:pointer;
         position:fixed;
@@ -251,6 +267,7 @@ img{
 }
     .content{
         .row();
+        border-top:40px solid @color-grey-5; /* this top border provides space for the floating logo to toggle the menu */
         padding-bottom:3em;
     }
 
@@ -279,7 +296,7 @@ body.nav-open #nav-toggle{
 
 header{
     .nice-padding();
-    padding-top:5em;
+    padding-top:2em;
     padding-bottom:1em;
     background-color: @color-grey-5;
     border-bottom:1px solid @color-grey-4;
@@ -288,7 +305,12 @@ header{
     h1, h2{
         margin:0;
     }
+
+    .left{
+        float:left;
+    }
     .right{
+        float:right;
         text-align:right;
     }
 
@@ -497,6 +519,9 @@ footer, .logo{
         margin-left:@menu-width;
     }
 
+    .browsermessage{
+        margin:0 0 0 -150px;
+    }
     .nav-wrapper, .content-wrapper{
         -webkit-transform:none;
         transform:none;
@@ -509,6 +534,12 @@ footer, .logo{
         height:100%;
         width:@menu-width;
         margin-left:-@menu-width;
+    }
+
+    .content{
+        border-top:0;
+        background-color:none;
+        padding-top:0;
     }
 
     .inner{ /* inner only serves a purpose to position content */

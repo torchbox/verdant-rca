@@ -6,6 +6,7 @@
     {% else %}
         <h2>Latest images</h2>
     {% endif %}
+    
     <ul class="listing horiz images chooser">
         {% for image in images %}
             <li>
@@ -17,19 +18,5 @@
         {% endfor %}
     </ul>
 
-    <div class="pagination">
-        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
-        <ul>
-            <li class="prev">
-                {% if images.has_previous %}
-                    <a href="#" data-page="{{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
-                {% endif %}
-            </li>
-            <li class="next">
-                {% if images.has_next %}
-                    <a href="#" data-page="{{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
-                {% endif %}
-            </li>
-        </ul>
-    </div>
+    {% include "verdantadmin/shared/pagination_nav.html" with items=images is_ajax=1 %}
 {% endif %}

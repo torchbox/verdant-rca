@@ -137,19 +137,26 @@ input[type=checkbox]:checked:before{
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 2.2em;
+    padding:0.6em 1.2em;
     border:none;
     background-color: @color-button;
     color:white;
     text-decoration:none;
     text-transform:uppercase;
-    font-size:0.95em;
+    font-size:1em;
     white-space: nowrap;
     position:relative;
     -webkit-font-smoothing: auto;
     vertical-align: middle;
     line-height:1em;
     display:inline-block;
+
+    &.icon:before{
+        font-size:1.5em;
+    }
+    &.icon.text-replace:before{
+        font-size:auto;
+    }
 
     &.button-small{
         font-size:0.85em;
@@ -200,6 +207,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     /* special consideration for buttons with icons in them, to make them smaller */
     &.icon{
         padding:1em 2.4em;
+        padding:0.6em 1.2em;
     }
 
     + input[type=submit],
@@ -523,5 +531,16 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
 .chooser {
     .unchosen:before, .chosen:before{
         .transition(opacity 0.3s ease);
+    }
+}
+
+@media screen and (min-width: @breakpoint-mobile){
+    input[type=submit], input[type=reset], input[type=button], .button, button{
+        font-size:0.95em;
+        padding:1.3em 2.2em;
+
+        &.icon{
+            padding:1em 2.4em;
+        }
     }
 }

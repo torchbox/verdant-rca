@@ -6,6 +6,7 @@
     {% else %}
         <h2>Latest images</h2>
     {% endif %}
+
     <ul class="listing horiz images">
         {% for image in images %}
             <li>
@@ -17,32 +18,11 @@
         {% endfor %}
     </ul>
 
-    <div class="pagination">
-        <p>Page {{ images.number }} of {{ images.paginator.num_pages }}.</p>
-        <ul>
-            <li class="prev">
-                {% if images.has_previous %}
-                    {% if is_searching %}
-                        <a href="{% url 'verdantimages_index' %}?q={{ search_query|urlencode }}&amp;p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
-                    {% else %}
-                        <a href="{% url 'verdantimages_index' %}?p={{ images.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
-                    {% endif %}
-                {% endif %}
-            </li>
-            <li class="next">
-                {% if images.has_next %}
-                    {% if is_searching %}
-                        <a href="{% url 'verdantimages_index' %}?q={{ search_query|urlencode }}&amp;p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
-                    {% else %}
-                        <a href="{% url 'verdantimages_index' %}?p={{ images.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
-                    {% endif %}
-                {% endif %}
-            </li>
-        </ul>
-    </div>
+    {% include "verdantadmin/shared/pagination_nav.html" with items=images is_searching=is_searching search_query=search_query linkurl="verdantimages_index" %}
+
 {% else %}
     {% if is_searching %}
-        <p>Sorry, no images match <em>"{{ search_query }}"</em></p>
+        <p>Sorry, no images match "<em>{{ search_query }}</em>"</p>
     {% else %}
         <p>You've not uploaded any images. Why not <a href="{% url 'verdantimages_add_image' %}">add one now</a>?</p>
     {% endif %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
 from verdantdocs.models import Document
@@ -9,15 +10,48 @@ from verdantadmin.forms import SearchForm
 
 @login_required
 def index(request):
-    documents = Document.objects.order_by('-created_at')[:12]
-    form = SearchForm()
 
-    return render(request, "verdantdocs/documents/index.html", {
-        'documents': documents,
-        'form': form,
-        'popular_tags': Document.popular_tags(),
-        'is_searching': False,
-    })
+    q = None
+    p = request.GET.get("p", 1)
+    is_searching = False
+    
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+            is_searching = True
+            documents = Document.search(q, results_per_page=2, page=p)
+        else:
+            documents = Document.objects.order_by('-created_at')
+    else:
+        documents = Document.objects.order_by('-created_at')
+        form = SearchForm()
+
+    if not is_searching:
+        paginator = Paginator(documents, 3)
+
+        try:
+            documents = paginator.page(p)
+        except PageNotAnInteger:
+            documents = paginator.page(1)
+        except EmptyPage:
+            documents = paginator.page(paginator.num_pages)
+
+    if request.is_ajax():
+        return render(request, "verdantdocs/documents/results.html", {
+            'documents': documents,
+            'is_searching': is_searching,
+            'search_query': q,
+        })
+    else:
+        return render(request, "verdantdocs/documents/index.html", {
+            'form': form,
+            'documents': documents,
+            'popular_tags': Document.popular_tags(),
+            'is_searching': is_searching,
+            'search_query': q,
+        })
 
 
 @login_required
@@ -81,17 +115,23 @@ def delete(request, document_id):
 @login_required
 def search(request):
     documents = []
+    q = None
+    is_searching = False
+
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             q = form.cleaned_data['q']
-            documents = Document.search(q, prefetch_tags=True)
+
+            is_searching = True
+            documents = Document.search(q, results_per_page=20, prefetch_tags=True)
     else:
         form = SearchForm()
 
     if request.is_ajax():
-        return render(request, "verdantdocs/documents/search-results.html", {
+        return render(request, "verdantdocs/documents/results.html", {
             'documents': documents,
+            'is_searching': is_searching,
             'search_query': q
         })
     else:
