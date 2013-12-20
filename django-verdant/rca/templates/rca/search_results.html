@@ -12,13 +12,14 @@
             <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
             <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
 
-            This search has been done {{ search_terms_obj.total_hits }} times ({{ search_terms_obj.today_hits }} today).
-
             {% if editors_picks %}
                 <h3>Editors picks</h3>
                 <ul>
                 {% for editors_pick in search_terms_obj.editors_picks.all %}
-                    <li>{{ editors_pick.title }}</li>
+                    <li>
+                        <h4>{{ editors_pick.page.title }}</h4>
+                        <p>{{ editors_pick.description }}</p>
+                    </li>
                 {% endfor %}
                 </ul>
             {% endif %}
