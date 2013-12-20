@@ -9,7 +9,6 @@ import string
 
 class SearchTerms(models.Model):
     terms = models.CharField(max_length=255, unique=True)
-    past_hits = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         # Normalise terms
@@ -39,14 +38,6 @@ class SearchTerms(models.Model):
     def today_hits(self):
         today = timezone.now().date()
         return self.get_hits_since(today)
-
-    @property
-    def total_hits(self):
-        # Get number of hits in daily hits records
-        daily_hits_hits = self.daily_hits.aggregate(models.Sum('hits'))['hits__sum']
-
-        # Add to past hits and return
-        return daily_hits_hits + self.past_hits
 
     @property
     def urlify_terms(self):
