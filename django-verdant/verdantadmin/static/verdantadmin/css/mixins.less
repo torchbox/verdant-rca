@@ -29,6 +29,12 @@
         transition: @transition;
     }
 }
+.transition-immediate(@transition){
+    -webkit-transition: @transition;
+    -moz-transition: @transition;
+    -o-transition: @transition;
+    transition: @transition;
+}
 
 .notransition() {
     -webkit-transition: none !important;

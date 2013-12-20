@@ -1,3 +1,7 @@
+<html>
+<head>
+</head>
+<body>
 <div class="swatch">
   <div class="outer">
     <div class="shadow" style="border:1px solid #448e8d;background-color:#52adac;">
@@ -70,3 +74,32 @@
   </div>
   <div class="caption"><h3>Help text</h3>HEX: #7a7a7a<br />RGB: 122, 122, 122</div>
 </div>
+
+
+<style>
+  div{
+    padding:20px;
+  }
+</style>
+
+<div style="background-color:#333333">
+  #333333
+  <div style="background-color:#404040">
+    #404040
+    <div style="background-color:#666666">
+      #666666
+      <div style="background-color:#d9d9d9">
+        #d9d9d9
+        <div style="background-color:#e6e6e6">
+          #e6e6e6
+          <div style="background-color:#fafafa">
+            #fafafa
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+</div>
+</div>
+</body>
+</html>
