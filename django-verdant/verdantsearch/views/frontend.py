@@ -15,11 +15,11 @@ def search(request):
     if query_string != "":
         search_results = models.Page.search_frontend(query_string)
 
-        # Editors picks
-        try:
-            editors_picks = SearchTerms.get_picks_for_terms(query_string)
-        except SearchTerms.DoesNotExist:
-            editors_picks = []
+        # Get search terms
+        search_terms_obj = SearchTerms.get(query_string)
+
+        # Add hit
+        search_terms_obj.add_hit()
 
         # Pagination
         paginator = Paginator(search_results, 10)
@@ -33,7 +33,7 @@ def search(request):
         else:
             search_results = None
     else:
-        editors_picks = []
+        search_terms_obj = None
         search_results = None
 
     # Render
@@ -41,7 +41,7 @@ def search(request):
         template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE_AJAX", "verdantsearch/search_results.html")
     else:
         template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search_results.html")
-    return render(request, template_name, dict(query_string=query_string, search_results=search_results, is_ajax=request.is_ajax(), editors_picks=editors_picks))
+    return render(request, template_name, dict(query_string=query_string, search_results=search_results, is_ajax=request.is_ajax(), search_terms_obj=search_terms_obj))
 
 
 def suggest(request):
