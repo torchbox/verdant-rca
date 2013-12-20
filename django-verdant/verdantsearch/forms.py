@@ -9,7 +9,12 @@ class SearchTermsForm(forms.ModelForm):
 
 
 class EditorsPickForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EditorsPickForm, self).__init__(*args, **kwargs)
+        self.fields['page'].widget = forms.HiddenInput()
+
     class Meta:
         model = models.EditorsPick
 
-EditorsPickFormSet = inlineformset_factory(models.SearchTerms, models.EditorsPick, can_order=True, can_delete=True, extra=0)
+
+EditorsPickFormSet = inlineformset_factory(models.SearchTerms, models.EditorsPick, form=EditorsPickForm, can_order=True, can_delete=True, extra=1)

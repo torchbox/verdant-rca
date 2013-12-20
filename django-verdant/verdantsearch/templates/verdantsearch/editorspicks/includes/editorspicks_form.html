@@ -1,0 +1,18 @@
+<li id="inline_child_{{ form.prefix }}">
+    <ul class="controls">
+        <li class="icon text-replace teal icon-arrow-up-big inline-child-move-up" id="{{ form.prefix }}-move-up">Move up</li>
+        <li class="icon text-replace teal icon-arrow-down-big inline-child-move-down" id="{{ form.prefix }}-move-down">Move down</li>
+        <li class="icon text-replace teal icon-cross" id="{{ form.DELETE.id_for_label }}-button">Delete</li>
+    </ul>
+
+    <fieldset>
+        <legend>Editors pick</legend>
+        <ul class="fields">
+            <li class="model_choice_field">{% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page only %}</li>
+            <li class="char_field">
+                <label for="{{ form.description.id_for_label }}">Description:</label>
+                {{ form.description }}
+            </li>
+        </ul>
+    </fieldset>
+</li>

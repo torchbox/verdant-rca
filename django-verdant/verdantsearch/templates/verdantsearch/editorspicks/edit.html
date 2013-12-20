@@ -8,8 +8,11 @@
     <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" method="POST">
         {% csrf_token %}
 
-        <ul>
-            {{ editors_pick_formset.as_ul }}
+        <ul class="objects">
+            <li class="object">
+                <h2>Editors picks</h2>
+                {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
+            </li>
         </ul>
 
         <div class="nice-padding">
@@ -23,4 +26,8 @@
 {% endblock %}
 {% block extra_js %}
     {% include "verdantadmin/pages/_editor_js.html" %}
+
+    <script type="text/javascript">
+        {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only  %}
+    </script>
 {% endblock %}

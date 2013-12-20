@@ -8,9 +8,24 @@
     <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
         {% csrf_token %}
 
-        <ul>
-            {{ searchterms_form.as_ul }}
-            {{ editors_pick_formset.as_ul }}
+        <ul class="objects">
+            <li class="object">
+                <h2>Search Terms</h2>
+                <fieldset>
+                    <legend>Search Terms</legend>
+                    <ul class="fields">
+                        <li class="char_field">
+                            <div class="field">
+                                {{ searchterms_form.terms }}
+                            </div>
+                        </li>
+                    </ul>
+                </fieldset>
+            </li>
+            <li class="object">
+                <h2>Editors picks</h2>
+                {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
+            </li>
         </ul>
 
         <div class="nice-padding">
@@ -24,4 +39,8 @@
 {% endblock %}
 {% block extra_js %}
     {% include "verdantadmin/pages/_editor_js.html" %}
+
+    <script type="text/javascript">
+        {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only  %}
+    </script>
 {% endblock %}
