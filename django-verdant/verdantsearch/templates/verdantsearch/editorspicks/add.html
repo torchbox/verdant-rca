@@ -15,9 +15,7 @@
                     <legend>Search Terms</legend>
                     <ul class="fields">
                         <li class="char_field">
-                            <div class="field">
-                                {{ searchterms_form.terms }}
-                            </div>
+                            {% include "verdantsearch/searchterms/chooser_field.html" with field=searchterms_form.terms only %}
                         </li>
                     </ul>
                 </fieldset>
@@ -41,6 +39,11 @@
     {% include "verdantadmin/pages/_editor_js.html" %}
 
     <script type="text/javascript">
-        {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only  %}
+        {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only %}
+        {% include "verdantsearch/searchterms/chooser_field.js" only %}
+
+        (function() {
+            createSearchTermsChooser('{{ searchterms_form.terms.auto_id }}');
+        })();
     </script>
 {% endblock %}

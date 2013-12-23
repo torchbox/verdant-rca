@@ -1,0 +1,7 @@
+{% extends "verdantadmin/edit_handlers/field_panel_field.html" %}
+
+{% block form_field %}
+    {{ field }}
+
+   <input id="{{ field.auto_id }}-chooser" type="button" class="searchterms-chooser" value="Choose from popular search terms">
+{% endblock %}

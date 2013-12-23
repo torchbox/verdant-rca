@@ -1,0 +1,43 @@
+<table class="listing full-width">
+    <col />
+    <col width="40%"/>
+    <col />
+    <thead>
+        <tr>
+            <th class="title">Terms</th>
+            <th>Views (past week)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if searchterms_list %}
+            {% for searchterms in searchterms_list %}
+                <tr>
+                    <td class="title">
+                        <h2><a class="choose-searchterms" href="#{{ searchterms.id }}" data-id="{{ searchterms.id }}" data-terms="{{ searchterms.terms }}">{{ searchterms.terms }}</a></h2>
+                    </td>
+                    <td>{{ searchterms.past_week_hits }}</td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr><td colspan="3" class="no-results-message"><p>No results found</p></td></tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% if searchterms_list %}
+    <div class="pagination">
+        <p>Page {{ searchterms_list.number }} of {{ searchterms_list.paginator.num_pages }}.</p>
+        <ul>
+            <li class="prev">
+                {% if searchterms_list.has_previous %}
+                    <a href="#" data-page="{{ searchterms_list.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
+                {% endif %}
+            </li>
+            <li class="next">
+                {% if searchterms_list.has_next %}
+                    <a href="#" data-page="{{ searchterms_list.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+{% endif %}
