@@ -31,7 +31,7 @@
                 {% for searchterms in searchterms_list %}
                     <tr>
                         <td class="title">
-                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" title="Edit this pick">{{ searchterms.terms }}</a></h2>
+                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" title="Edit this pick">{{ searchterms.terms }}</a></h2>
                         </td>
                         <td>
                             {% for editors_pick in searchterms.editors_picks.all %}

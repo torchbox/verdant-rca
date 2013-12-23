@@ -5,7 +5,7 @@
         <h1>Editing <span>{{ searchterms.terms }}</span></h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.urlify_terms %}" method="POST">
+    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" method="POST">
         {% csrf_token %}
 
         <ul class="objects">

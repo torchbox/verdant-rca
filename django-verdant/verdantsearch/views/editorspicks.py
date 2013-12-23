@@ -14,8 +14,25 @@ def index(request):
 
 @login_required
 def add(request):
-    searchterms_form = forms.SearchTermsForm()
-    editors_pick_formset = forms.EditorsPickFormSet()
+    if request.POST:
+        # Get search terms
+        searchterms_form = forms.SearchTermsForm(request.POST)
+        if searchterms_form.is_valid():
+            searchterms = models.SearchTerms.get(searchterms_form['terms'].value())
+
+            # Save editors picks
+            editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=searchterms)
+
+            if editors_pick_formset.is_valid():
+                editors_pick_formset.save()
+
+                return redirect('verdantsearch_editorspicks_index')
+
+        else:
+            editors_pick_formset = forms.EditorsPickFormSet()
+    else:
+        searchterms_form = forms.SearchTermsForm()
+        editors_pick_formset = forms.EditorsPickFormSet()
 
     return render(request, 'verdantsearch/editorspicks/add.html', {
         'searchterms_form': searchterms_form,
@@ -24,9 +41,8 @@ def add(request):
 
 
 @login_required
-def edit(request, searchterms_urlified):
-    searchterms_terms = models.SearchTerms._deurlify_terms(searchterms_urlified)
-    searchterms = get_object_or_404(models.SearchTerms, terms=searchterms_terms)
+def edit(request, searchterms_id):
+    searchterms = get_object_or_404(models.SearchTerms, id=searchterms_id)
 
     if request.POST:
         editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=searchterms)
@@ -35,8 +51,6 @@ def edit(request, searchterms_urlified):
             editors_pick_formset.save()
 
             return redirect('verdantsearch_editorspicks_index')
-        else:
-            print editors_pick_formset.errors
     else:
         editors_pick_formset = forms.EditorsPickFormSet(instance=searchterms)
 

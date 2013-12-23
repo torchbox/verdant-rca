@@ -29,6 +29,9 @@ class EditorsPickFormSet(EditorsPickFormSetBase):
         form.fields['DELETE'].widget = forms.HiddenInput()
         form.fields['ORDER'].widget = forms.HiddenInput()
 
+        # Remove terms field
+        del form.fields['terms']
+
     def save(self, commit=True):
         super(EditorsPickFormSet, self).save(commit=False)
 

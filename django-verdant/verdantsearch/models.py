@@ -39,10 +39,6 @@ class SearchTerms(models.Model):
         today = timezone.now().date()
         return self.get_hits_since(today)
 
-    @property
-    def urlify_terms(self):
-        return self._urlify_terms(self.terms)
-
     @classmethod
     def get(cls, terms):
         return cls.objects.get_or_create(terms=cls.normalise_terms(terms))[0]
@@ -63,14 +59,6 @@ class SearchTerms(models.Model):
         ' '.join(terms.split())
 
         return terms
-
-    @staticmethod
-    def _urlify_terms(terms):
-        return terms.replace(' ', '-')
-
-    @staticmethod
-    def _deurlify_terms(terms):
-        return terms.replace('-', ' ')
 
 
 class SearchTermsDailyHits(models.Model):
