@@ -31,13 +31,10 @@ class EditorsPickFormSet(EditorsPickFormSetBase):
         # Remove terms field
         del form.fields['terms']
 
-    def save(self, commit=True):
-        super(EditorsPickFormSet, self).save(commit=False)
-
+    def save(self, *args, **kwargs):
         # Set sort_order
         for i, form in enumerate(self.ordered_forms):
+            print "HELLO"
             form.instance.sort_order = i
 
-        # Save
-        if commit:
-            super(EditorsPickFormSet, self).save(commit=True)
+        super(EditorsPickFormSet, self).save(*args, **kwargs)
