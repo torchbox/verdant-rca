@@ -15,22 +15,41 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'verdantsearch', ['SearchTerms'])
 
-        # Adding M2M table for field picks on 'SearchTerms'
-        m2m_table_name = db.shorten_name(u'verdantsearch_searchterms_picks')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('searchterms', models.ForeignKey(orm[u'verdantsearch.searchterms'], null=False)),
-            ('page', models.ForeignKey(orm[u'core.page'], null=False))
+        # Adding model 'SearchTermsDailyHits'
+        db.create_table(u'verdantsearch_searchtermsdailyhits', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('terms', self.gf('django.db.models.fields.related.ForeignKey')(related_name='daily_hits', to=orm['verdantsearch.SearchTerms'])),
+            ('date', self.gf('django.db.models.fields.DateField')()),
+            ('hits', self.gf('django.db.models.fields.IntegerField')(default=0)),
         ))
-        db.create_unique(m2m_table_name, ['searchterms_id', 'page_id'])
+        db.send_create_signal(u'verdantsearch', ['SearchTermsDailyHits'])
+
+        # Adding unique constraint on 'SearchTermsDailyHits', fields ['terms', 'date']
+        db.create_unique(u'verdantsearch_searchtermsdailyhits', ['terms_id', 'date'])
+
+        # Adding model 'EditorsPick'
+        db.create_table(u'verdantsearch_editorspick', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('terms', self.gf('django.db.models.fields.related.ForeignKey')(related_name='editors_picks', to=orm['verdantsearch.SearchTerms'])),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Page'])),
+            ('sort_order', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
+        ))
+        db.send_create_signal(u'verdantsearch', ['EditorsPick'])
 
 
     def backwards(self, orm):
+        # Removing unique constraint on 'SearchTermsDailyHits', fields ['terms', 'date']
+        db.delete_unique(u'verdantsearch_searchtermsdailyhits', ['terms_id', 'date'])
+
         # Deleting model 'SearchTerms'
         db.delete_table(u'verdantsearch_searchterms')
 
-        # Removing M2M table for field picks on 'SearchTerms'
-        db.delete_table(db.shorten_name(u'verdantsearch_searchterms_picks'))
+        # Deleting model 'SearchTermsDailyHits'
+        db.delete_table(u'verdantsearch_searchtermsdailyhits')
+
+        # Deleting model 'EditorsPick'
+        db.delete_table(u'verdantsearch_editorspick')
 
 
     models = {
@@ -75,11 +94,25 @@ class Migration(SchemaMigration):
             'width': ('django.db.models.fields.IntegerField', [], {}),
             'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
+        u'verdantsearch.editorspick': {
+            'Meta': {'ordering': "('sort_order',)", 'object_name': 'EditorsPick'},
+            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Page']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'terms': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'editors_picks'", 'to': u"orm['verdantsearch.SearchTerms']"})
+        },
         u'verdantsearch.searchterms': {
             'Meta': {'object_name': 'SearchTerms'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'picks': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['core.Page']", 'null': 'True', 'blank': 'True'}),
             'terms': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
+        },
+        u'verdantsearch.searchtermsdailyhits': {
+            'Meta': {'unique_together': "(('terms', 'date'),)", 'object_name': 'SearchTermsDailyHits'},
+            'date': ('django.db.models.fields.DateField', [], {}),
+            'hits': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'terms': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'daily_hits'", 'to': u"orm['verdantsearch.SearchTerms']"})
         },
         u'verdantsearch.searchtest': {
             'Meta': {'object_name': 'SearchTest'},
