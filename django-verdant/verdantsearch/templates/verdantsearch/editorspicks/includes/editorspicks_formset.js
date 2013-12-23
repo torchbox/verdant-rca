@@ -14,7 +14,7 @@
 
         {% for form in formset.initial_forms %}
             createPageChooser(fixPrefix('id_{{ formset.prefix }}-{{ forloop.counter0 }}-page'), 'core.page', null);
-            panel.initChildControls('id_{{ formset.prefix }}-{{ forloop.counter0 }}');
+            panel.initChildControls('{{ formset.prefix }}-{{ forloop.counter0 }}');
         {% endfor %}
 
         panel.updateMoveButtonDisabledStates();
