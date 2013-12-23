@@ -40,6 +40,13 @@ class SearchTerms(models.Model):
         return self.get_hits_since(today)
 
     @classmethod
+    def garbage_collect(cls):
+        """
+        Deletes all SearchTerms records that have no daily hits or editors picks
+        """
+        cls.objects.filter(daily_hits__isnull=True, editors_picks__isnull=True).delete()
+
+    @classmethod
     def get(cls, terms):
         return cls.objects.get_or_create(terms=cls.normalise_terms(terms))[0]
 
@@ -65,6 +72,15 @@ class SearchTermsDailyHits(models.Model):
     terms = models.ForeignKey(SearchTerms, db_index=True, related_name='daily_hits')
     date = models.DateField()
     hits = models.IntegerField(default=0)
+
+    @classmethod
+    def garbage_collect(cls, max_age=30):
+        """
+        Deletes all SearchTermsDailyHits records that are older than max_age days
+        """
+        min_date = timezone.now().date() - datetime.timedelta(days=7)
+
+        cls.objects.filter(date__lt=min_date).delete()
 
     class Meta:
         unique_together = (
