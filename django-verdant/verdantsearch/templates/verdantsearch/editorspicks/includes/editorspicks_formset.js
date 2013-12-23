@@ -8,9 +8,15 @@
             canOrder: true,
 
             onAdd: function(fixPrefix) {
-                createPageChooser(fixPrefix('id_editors_picks-__prefix__-page'), 'core.Page', null);
+                createPageChooser(fixPrefix('id_{{ formset.prefix }}-__prefix__-page'), 'core.page', null);
             }
         });
+
+        {% for form in formset.initial_forms %}
+            createPageChooser(fixPrefix('id_{{ formset.prefix }}-{{ forloop.counter0 }}-page'), 'core.page', null);
+            panel.initChildControls('id_{{ formset.prefix }}-{{ forloop.counter0 }}');
+        {% endfor %}
+
         panel.updateMoveButtonDisabledStates();
     })();
 {% endwith %}

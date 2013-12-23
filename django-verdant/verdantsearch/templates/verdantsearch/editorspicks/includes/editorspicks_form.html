@@ -8,7 +8,13 @@
     <fieldset>
         <legend>Editors pick</legend>
         <ul class="fields">
-            <li class="model_choice_field">{% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page only %}</li>
+            <li class="model_choice_field">
+                {% if form.instance.page %}
+                    {% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page page=form.instance.page is_chosen=True only %}
+                {% else %}
+                    {% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page is_chosen=False only %}
+                {% endif %}
+        </li>
             <li class="char_field">
                 <label for="{{ form.description.id_for_label }}">Description:</label>
                 {{ form.description }}

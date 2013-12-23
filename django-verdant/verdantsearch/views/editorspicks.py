@@ -30,6 +30,9 @@ def edit(request, searchterms_urlified):
 
     editors_pick_formset = forms.EditorsPickFormSet(instance=searchterms)
 
+    # The form number for the extra form will be set client-side
+    editors_pick_formset.extra_forms[0].prefix = 'editors_picks-__prefix__'
+
     return render(request, 'verdantsearch/editorspicks/edit.html', {
         'editors_pick_formset': editors_pick_formset,
         'searchterms': searchterms,
