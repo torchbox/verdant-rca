@@ -3,9 +3,8 @@ from django.forms.models import inlineformset_factory
 import models
 
 
-class SearchTermsForm(forms.ModelForm):
-    class Meta:
-        model = models.SearchTerms
+class SearchTermsForm(forms.Form):
+    terms = forms.CharField(required=True)
 
 
 class EditorsPickForm(forms.ModelForm):
