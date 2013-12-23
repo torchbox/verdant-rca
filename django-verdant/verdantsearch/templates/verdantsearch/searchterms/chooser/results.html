@@ -24,20 +24,4 @@
     </tbody>
 </table>
 
-{% if searchterms_list %}
-    <div class="pagination">
-        <p>Page {{ searchterms_list.number }} of {{ searchterms_list.paginator.num_pages }}.</p>
-        <ul>
-            <li class="prev">
-                {% if searchterms_list.has_previous %}
-                    <a href="#" data-page="{{ searchterms_list.previous_page_number }}" class="icon icon-arrow-left">Previous</a>
-                {% endif %}
-            </li>
-            <li class="next">
-                {% if searchterms_list.has_next %}
-                    <a href="#" data-page="{{ searchterms_list.next_page_number }}" class="icon icon-arrow-right-after">Next</a>
-                {% endif %}
-            </li>
-        </ul>
-    </div>
-{% endif %}
+{% include "verdantadmin/shared/pagination_nav.html" with items=searchterms_list is_ajax=1 %}
