@@ -42,16 +42,17 @@
                         {% endif %}
                         <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
                     </li>
-                    <li class="more"><a href="#" class="icon icon-arrow-down">More</a></li>
-
-                    <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}">Redirects</a></li>
-
-                    <li class="menu-editorspicks"><a href="{% url 'verdantsearch_editorspicks_index' %}">Editors Picks</a></li>
-
-                    {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
-                    {% for name, title in verdantadmin_tab_urls %}
-                        <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
-                    {% endfor %}
+                    <li class="more">
+                        <a href="#" class="icon icon-arrow-down">More</a>
+                        <ul>
+                            <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}" class="icon icon-redirect">Redirects</a></li>
+                            <li class="menu-editorspicks"><a href="{% url 'verdantsearch_editorspicks_index' %}">Editors Picks</a></li>
+                            {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
+                            {% for name, title in verdantadmin_tab_urls %}
+                                <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 </ul>
             </nav>
         </div>
@@ -65,15 +66,16 @@
 
     <div class="content-wrapper">
         <div class="content">
-            {% if messages %}
-                <div class="messages">
+            {# Always show messages div so it can be appended to by JS #}
+            <div class="messages">
+                {% if messages %}
                     <ul>
                         {% for message in messages %}
                             <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                         {% endfor %}
                     </ul>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
 
             {% block content %}{% endblock %}
         </div>

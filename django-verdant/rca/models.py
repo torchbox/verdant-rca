@@ -41,7 +41,7 @@ import hashlib
 
 from rca_signage.constants import SCREEN_CHOICES
 
-# TODO: find a nicer way to do this. The following line is  presumptuous and dangerous. It adds "description" as a meta property of a class, used to describe a content type/snippet to a user so can make a choice of one type over another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
+# TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
 # RCA defines its own custom image class to replace verdantimages.Image,
@@ -2625,7 +2625,7 @@ class StaffPageRole(Orderable):
     school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, blank=True, choices=PROGRAMME_CHOICES)
     area = models.CharField(max_length=255, blank=True, choices=AREA_CHOICES)
-    email = models.EmailField(max_length=255)
+    email = models.EmailField(max_length=255, blank=True)
 
     panels = [
         FieldPanel('title'),
@@ -2669,7 +2669,7 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -3698,7 +3698,8 @@ class DonationPage(Page, SocialFields):
                     logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
         else:
-            form = DonationForm()
+            towards = request.GET.get('to')
+            form = DonationForm(initial={'donation_for': towards})
 
         return render(request, self.template, {
             'self': self,
