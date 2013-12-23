@@ -52,7 +52,7 @@ class SearchTerms(models.Model):
 
     @classmethod
     def get_most_popular(cls, date_since=None):
-        return cls.objects.all() # TODO: Return search terms in order of popularity
+        return cls.objects.filter(daily_hits__isnull=False).annotate(hits=models.Sum('daily_hits__hits')).distinct().order_by('-hits')
 
     @staticmethod
     def normalise_terms(terms):
