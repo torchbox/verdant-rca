@@ -95,7 +95,7 @@ $(function(){
         }
     })
 
-    $(".nav-main .more a").bind('click keydown', function(){
+    $(".nav-main .more > a").bind('click keydown', function(){
         $(this).parent().find('ul').toggle('fast');
         return false;
     });
