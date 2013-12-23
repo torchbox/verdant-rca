@@ -87,8 +87,8 @@ class SearchTermsDailyHits(models.Model):
 class EditorsPick(models.Model):
     terms = models.ForeignKey(SearchTerms, db_index=True, related_name='editors_picks')
     page = models.ForeignKey('core.Page')
-    sort_order = models.IntegerField(default=0)
-    description = models.TextField()
+    sort_order = models.IntegerField(null=True, blank=True, editable=False)
+    description = models.TextField(blank=True)
 
     class Meta:
         ordering = ('sort_order', )

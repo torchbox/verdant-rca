@@ -28,10 +28,17 @@ def edit(request, searchterms_urlified):
     searchterms_terms = models.SearchTerms._deurlify_terms(searchterms_urlified)
     searchterms = get_object_or_404(models.SearchTerms, terms=searchterms_terms)
 
-    editors_pick_formset = forms.EditorsPickFormSet(instance=searchterms)
+    if request.POST:
+        editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=searchterms)
 
-    # The form number for the extra form will be set client-side
-    editors_pick_formset.extra_forms[0].prefix = 'editors_picks-__prefix__'
+        if editors_pick_formset.is_valid():
+            editors_pick_formset.save()
+
+            return redirect('verdantsearch_editorspicks_index')
+        else:
+            print editors_pick_formset.errors
+    else:
+        editors_pick_formset = forms.EditorsPickFormSet(instance=searchterms)
 
     return render(request, 'verdantsearch/editorspicks/edit.html', {
         'editors_pick_formset': editors_pick_formset,
