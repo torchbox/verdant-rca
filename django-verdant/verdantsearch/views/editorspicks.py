@@ -27,7 +27,6 @@ def add(request):
                 editors_pick_formset.save()
 
                 return redirect('verdantsearch_editorspicks_index')
-
         else:
             editors_pick_formset = forms.EditorsPickFormSet()
     else:
