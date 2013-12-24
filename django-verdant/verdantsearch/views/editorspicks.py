@@ -57,3 +57,15 @@ def edit(request, searchterms_id):
         'editors_pick_formset': editors_pick_formset,
         'searchterms': searchterms,
     })
+
+@login_required
+def delete(request, searchterms_id):
+    searchterms = get_object_or_404(models.SearchTerms, id=searchterms_id)
+
+    if request.POST:
+        searchterms.editors_picks.all().delete()
+        return redirect('verdantsearch_editorspicks_index')
+
+    return render(request, 'verdantsearch/editorspicks/confirm_delete.html', {
+        'searchterms': searchterms,
+    })
