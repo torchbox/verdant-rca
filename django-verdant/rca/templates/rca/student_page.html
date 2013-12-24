@@ -10,7 +10,7 @@
 
     {% tabdeck %}
 
-        {% if parent_is_researchstudentindex %}
+        {% if self.is_researchstudent %}
             <!-- links and ids added by javascript -->
             {% tab "Research Work" %}
                 {% include "rca/includes/modules/carousel.html" %}

@@ -3016,15 +3016,16 @@ class StudentPage(Page, SocialFields):
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
-    search_name = 'Student'
+    @property
+    def is_researchstudent(self):
+        return self.get_parent().content_type.model_class() == ResearchStudentIndex
 
-    def serve(self, request):
-        parent_is_researchstudentindex = self.get_parent().content_type.model_class() == ResearchStudentIndex
-
-        return render(request, self.template, {
-            'self': self,
-            'parent_is_researchstudentindex': parent_is_researchstudentindex,
-        })
+    @property
+    def search_name(self):
+        if self.is_researchstudent:
+            return 'Research Student'
+        else:
+            return 'Student'
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
