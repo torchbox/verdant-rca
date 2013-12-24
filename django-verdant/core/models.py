@@ -170,6 +170,8 @@ class Page(MP_Node, ClusterableModel, Indexed):
     title_search_backend = Searcher(['title'])
     title_search_frontend = Searcher(['title'], filters=dict(live=True))
 
+    search_name = None
+
     def __init__(self, *args, **kwargs):
         super(Page, self).__init__(*args, **kwargs)
         if not self.id and not self.content_type_id:
