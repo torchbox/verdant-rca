@@ -58,6 +58,7 @@ def edit(request, searchterms_id):
         'searchterms': searchterms,
     })
 
+
 @login_required
 def delete(request, searchterms_id):
     searchterms = get_object_or_404(models.SearchTerms, id=searchterms_id)
