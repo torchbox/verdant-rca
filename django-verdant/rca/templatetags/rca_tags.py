@@ -146,10 +146,6 @@ def innovation_rca_related(context, person):
         'person': person,
     }
 
-@register.assignment_tag()
-def get_innovationrca_projects(person):
-    return InnovationRCAProject.objects.filter(live=True, creator__person=person).order_by('?')
-
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
 def rca_now_latest(context, exclude=None, count=4):
     rcanow = RcaNowPage.objects.filter(live=True)
