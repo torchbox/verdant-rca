@@ -1948,7 +1948,15 @@ class StandardPage(Page, SocialFields):
 
     indexed_fields = ('intro', 'body')
 
-    search_name = None
+    @property
+    def search_name(self):
+        if self.related_programme:
+            return self.get_related_programme_display()
+
+        if self.related_school:
+            return self.get_related_school_display()
+
+        return None
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
