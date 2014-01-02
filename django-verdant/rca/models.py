@@ -200,7 +200,7 @@ WORK_THEME_CHOICES = (
     ('imageandlanguage', 'Image and Language')
 )
 
-INNOVATIONRCA_PROJECT_TYPE_CHOICES = (
+INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
     ('startup', 'Startup'),
     ('fellowship', 'Fellowship'),
 )
@@ -3784,7 +3784,7 @@ class InnovationRCAProject(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     show_on_homepage = models.BooleanField()
-    project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPE_CHOICES)
+    project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES)
     project_ended = models.BooleanField(default=False)
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
@@ -3854,14 +3854,22 @@ class InnovationRCAIndex(Page, SocialFields):
     def serve(self, request):
         # Get list of live projects
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        print projects
 
         # Apply filters
-        project_type = request.GET.get('project_type')
-        project_ended = request.GET.get('project_ended')
+        project_type = request.GET.get('project_type', None)
+        project_ended = request.GET.get('project_ended', None)
+
+        if project_ended == 'yes':
+            project_ended = True
+        elif project_ended == 'no':
+            project_ended = False
+        else:
+            project_ended = None
 
         if project_type:
             projects = projects.filter(project_type=project_type)
-        if project_ended:
+        if project_ended is not None:
             projects = projects.filter(project_ended=project_ended)
 
         # Pagination
@@ -3876,7 +3884,7 @@ class InnovationRCAIndex(Page, SocialFields):
 
         # Find template
         if request.is_ajax():
-            template = "rca/includes/research_listing.html"
+            template = "rca/includes/innovation_rca_listing.html"
         else:
             template = self.template
 
