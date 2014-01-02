@@ -14,7 +14,6 @@
                     {% include "verdantsearch/queries/chooser_field.html" with field=query_form.query_string only %}   
                 </li>
                 <li>
-                    <h2>Editors picks</h2>
                     {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
                 </li>
                 <li><input type="submit" value="Save" /></li>
