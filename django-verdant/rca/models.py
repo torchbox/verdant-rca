@@ -1943,6 +1943,8 @@ class StandardPage(Page, SocialFields):
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
 
     indexed_fields = ('intro', 'body')
 
@@ -1979,7 +1981,12 @@ StandardPage.promote_panels = [
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    MultiFieldPanel([
+        FieldPanel('related_school'),
+        FieldPanel('related_programme'),
+    ], 'Related pages'),
 ]
 
 
