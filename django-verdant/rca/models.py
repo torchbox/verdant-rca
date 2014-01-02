@@ -200,6 +200,10 @@ WORK_THEME_CHOICES = (
     ('imageandlanguage', 'Image and Language')
 )
 
+INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
+    ('startup', 'Startup'),
+    ('fellowship', 'Fellowship'),
+)
 
 SCHOOL_CHOICES = (
     ('schoolofarchitecture', 'School of Architecture'),
@@ -356,6 +360,7 @@ QUALIFICATION_CHOICES = (
     ('mphil', 'MPhil'),
     ('phd', 'PhD'),
     ('researchstudent', 'Research Student'),
+    ('innovationrca-fellow', 'InnovationRCA Fellow'),
 )
 
 RESEARCH_TYPES_CHOICES = (
@@ -670,6 +675,7 @@ SchoolPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -862,6 +868,7 @@ ProgrammePage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -950,6 +957,7 @@ NewsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1077,6 +1085,7 @@ NewsItem.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1150,6 +1159,7 @@ PressReleaseIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1223,6 +1233,7 @@ PressRelease.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1489,6 +1500,7 @@ EventItem.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1614,6 +1626,7 @@ EventIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1687,6 +1700,7 @@ TalksIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1762,6 +1776,7 @@ ReviewsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1862,6 +1877,7 @@ ReviewPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1938,10 +1954,20 @@ class StandardPage(Page, SocialFields):
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
 
     indexed_fields = ('intro', 'body')
 
-    search_name = None
+    @property
+    def search_name(self):
+        if self.related_programme:
+            return self.get_related_programme_display()
+
+        if self.related_school:
+            return self.get_related_school_display()
+
+        return None
 
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1969,12 +1995,18 @@ StandardPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    MultiFieldPanel([
+        FieldPanel('related_school'),
+        FieldPanel('related_programme'),
+    ], 'Related pages'),
 ]
 
 
@@ -2163,6 +2195,7 @@ StandardIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2339,6 +2372,7 @@ HomePage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2407,6 +2441,7 @@ JobPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2463,6 +2498,7 @@ JobsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2559,6 +2595,7 @@ AlumniIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2606,6 +2643,7 @@ AlumniPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2738,6 +2776,7 @@ StaffPage.promote_panels = [
         FieldPanel('show_on_programme_page'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2826,6 +2865,7 @@ StaffIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2903,6 +2943,7 @@ ResearchStudentIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3022,6 +3063,9 @@ class StudentPage(Page, SocialFields):
 
     @property
     def search_name(self):
+        if self.degree_qualification == 'innovationrca-fellow':
+            return 'InnovationRCA Fellow'
+
         if self.is_researchstudent:
             return 'Research Student'
         else:
@@ -3074,6 +3118,7 @@ StudentPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3130,6 +3175,7 @@ RcaNowPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3210,6 +3256,7 @@ RcaNowIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3299,6 +3346,7 @@ ResearchItem.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3425,6 +3473,7 @@ ResearchInnovationPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3509,6 +3558,7 @@ CurrentResearchPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3622,6 +3672,7 @@ GalleryPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3644,6 +3695,7 @@ ContactUsPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3737,10 +3789,187 @@ DonationPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks')
+]
+
+
+# == InnovationRCA Project page ==
+
+class InnovationRCAProjectCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.InnovationRCAProject', related_name='carousel_items')
+
+class InnovationRCAProjectCreator(Orderable):
+    page = ParentalKey('rca.InnovationRCAProject', related_name='creator')
+    person = models.ForeignKey('core.Page', null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+
+    panels=[
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
+    ]
+
+class InnovationRCAProjectLink(Orderable):
+    page = ParentalKey('rca.InnovationRCAProject', related_name='links')
+    link = models.URLField()
+    link_text = models.CharField(max_length=255)
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class InnovationRCAProject(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True)
+    ref = models.BooleanField(default=False, blank=True)
+    year = models.CharField(max_length=4)
+    description = RichTextField()
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    show_on_homepage = models.BooleanField()
+    project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES)
+    project_ended = models.BooleanField(default=False)
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
+
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_type_display')
+
+    search_name = 'InnovationRCA Project'
+
+    def get_related_news(self, count=4):
+        return NewsItem.get_related(
+            area='research',
+            programmes=([self.programme] if self.programme else None),
+            schools=([self.school] if self.school else None),
+            count=count,
+        )
+
+    class Meta:
+        verbose_name = "InnovationRCA Project"
+
+InnovationRCAProject.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
+    InlinePanel(InnovationRCAProject, 'carousel_items', label="Carousel content"),
+    InlinePanel(InnovationRCAProject, 'creator', label="Creator"),
+    FieldPanel('ref'),
+    FieldPanel('year'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('project_type'),
+    FieldPanel('project_ended'),
+    FieldPanel('description'),
+    InlinePanel(InnovationRCAProject, 'links', label="Links"),
+    FieldPanel('twitter_feed'),
+]
+
+InnovationRCAProject.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
+
+# == InnovationRCA Index page ==
+
+class InnovationRCAIndexAd(Orderable):
+    page = ParentalKey('rca.InnovationRCAIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class InnovationRCAIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+
+    indexed = False
+
+    def serve(self, request):
+        # Get list of live projects
+        projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+
+        # Apply filters
+        project_type = request.GET.get('project_type', None)
+        current_past = request.GET.get('current_past', None)
+
+        if current_past == 'past':
+            project_ended = True
+        elif current_past == 'current':
+            project_ended = False
+        else:
+            project_ended = None
+
+        if project_type:
+            projects = projects.filter(project_type=project_type)
+        if project_ended is not None:
+            projects = projects.filter(project_ended=project_ended)
+
+        # Pagination
+        page = request.GET.get('page')
+        paginator = Paginator(projects, 8)  # Show 8 projects per page
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            projects = paginator.page(1)
+        except EmptyPage:
+            projects = paginator.page(paginator.num_pages)
+
+        # Find template
+        if request.is_ajax():
+            template = "rca/includes/innovation_rca_listing.html"
+        else:
+            template = self.template
+
+        # Render
+        return render(request, template, {
+            'self': self,
+            'projects': projects,
+        })
+
+    class Meta:
+        verbose_name = "InnovationRCA Index"
+
+InnovationRCAIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(InnovationRCAIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+InnovationRCAIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
 ]

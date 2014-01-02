@@ -1,4 +1,4 @@
-from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES
+from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES, INNOVATIONRCA_PROJECT_TYPES_CHOICES
 from datetime import date
 
 
@@ -21,6 +21,7 @@ def global_vars(request):
         'global_work_themes': WORK_THEME_CHOICES,
         'global_work_types': WORK_TYPES_CHOICES,
         'global_staff_types': STAFF_TYPES_CHOICES,
+        'global_innovationrca_project_types': INNOVATIONRCA_PROJECT_TYPES_CHOICES,
         'global_events_index_url': '/news-and-events/events/',
         'global_news_index_url': '/news-and-events/news/',
         'global_default_twitter_handle': "RCAevents",
