@@ -99,8 +99,8 @@ input[type=radio]:before{
     line-height: 1.1em;
     padding: 4px;
     background-color: white;
-    color:@color-grey-lighter;
-    border: 1px solid @color-grey-lighter;
+    color:@color-grey-4;
+    border: 1px solid @color-grey-4;
 }
 input[type=radio]:checked:before{
     content:"K";
@@ -127,7 +127,7 @@ input[type=checkbox]:before{
     width:20px;
     height:20px;
     background-color:white;
-    border:1px solid lighten(@color-grey, 50%);
+    border:1px solid @color-grey-4;
     color:#EEE;
 }
 input[type=checkbox]:checked:before{
@@ -137,19 +137,26 @@ input[type=checkbox]:checked:before{
 input[type=submit], input[type=reset], input[type=button], .button, button{
     .border-radius(2px);
     width:auto;
-    padding:1.3em 2.2em;
+    padding:0.6em 1.2em;
     border:none;
     background-color: @color-button;
     color:white;
     text-decoration:none;
     text-transform:uppercase;
-    font-size:0.95em;
+    font-size:1em;
     white-space: nowrap;
     position:relative;
     -webkit-font-smoothing: auto;
     vertical-align: middle;
     line-height:1em;
     display:inline-block;
+
+    &.icon:before{
+        font-size:1.5em;
+    }
+    &.icon.text-replace:before{
+        font-size:auto;
+    }
 
     &.button-small{
         font-size:0.85em;
@@ -200,6 +207,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     /* special consideration for buttons with icons in them, to make them smaller */
     &.icon{
         padding:1em 2.4em;
+        padding:0.6em 1.2em;
     }
 
     + input[type=submit],
@@ -218,7 +226,7 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     margin:0 0 0.5em 0;
 }
 .help{
-    color:@color-grey;
+    color:@color-grey-2;
     opacity:0;
 }
 
@@ -447,7 +455,7 @@ ul.inline li:first-child, li.inline:first-child{
     .ui-icon-close:before{
         font-family:verdant;
         display:block;
-        color:@color-grey-light;
+        color:@color-grey-3;
         content:"g";
     }
     .ui-icon-close:hover:before{
@@ -466,7 +474,7 @@ ul.inline li:first-child, li.inline:first-child{
     &.full-width{
         .nice-padding();
         background-color:@color-header-bg;
-        border-bottom:1px solid @color-grey-lighter;
+        border-bottom:1px solid @color-grey-4;
     }
 
     .fields{
@@ -485,7 +493,7 @@ ul.inline li:first-child, li.inline:first-child{
             font-family:verdant;
             content:"f";
             font-size:25px;
-            color:@color-grey-light;
+            color:@color-grey-3;
         }
     }
     .submit{
@@ -523,5 +531,16 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
 .chooser {
     .unchosen:before, .chosen:before{
         .transition(opacity 0.3s ease);
+    }
+}
+
+@media screen and (min-width: @breakpoint-mobile){
+    input[type=submit], input[type=reset], input[type=button], .button, button{
+        font-size:0.95em;
+        padding:1.3em 2.2em;
+
+        &.icon{
+            padding:1em 2.4em;
+        }
     }
 }

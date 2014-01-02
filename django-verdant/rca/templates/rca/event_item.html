@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-    <span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.audience }}</a></span>
+    <span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.get_audience_display }}</a></span>
     <h1 class="h1">{{ self.title }}</h1>
 
     <section class="event-info row">
@@ -20,7 +20,10 @@
                         {{ date.date_from|date:"j F Y" }}{% if date.date_to %} to {{ date.date_to|date:"j F Y" }}{% endif %}
                         {% if date.time_from %} &#124;
                             <span>{{ date.time_from|time_display }}{% if date.time_to %} &#150; {{ date.time_to|time_display }}{% endif %}</span>
+                        {% elif date.time_other %} &#124;
+                            <span>{{ date.time_other }}</span>
                         {% endif %}
+
                     </h3>
                 {% endfor %}
             {% endif %}

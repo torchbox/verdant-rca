@@ -4,12 +4,19 @@ function(modal) {
             modal.loadUrl(this.href);
             return false;
         });
+
+        $('.pagination a', context).click(function() {
+            var page = this.getAttribute("data-page");
+            setPage(page);
+            return false;
+        });
     };
 
-    function search () {
+    var searchUrl = $('form.document-search', modal.body).attr('action');
+    function search() {
         $.ajax({
-            url: "{%url 'verdantdocs_chooser' %}",
-            data: {q: "" + $('#id_q').val() + ""},
+            url: searchUrl,
+            data: {q: $('#id_q').val()},
             success: function(data, status) {
                 $('#search-results').html(data);
                 ajaxifyLinks($('#search-results'));
@@ -17,6 +24,24 @@ function(modal) {
         });
         return false;
     };
+    function setPage(page) {
+
+        if($('#id_q').val().length){
+            dataObj = {q: $('#id_q').val(), p: page};
+        }else{
+            dataObj = {p: page};
+        }
+
+        $.ajax({
+            url: searchUrl,
+            data: dataObj,
+            success: function(data, status) {
+                $('#search-results').html(data);
+                ajaxifyLinks($('#search-results'));
+            }
+        });
+        return false;
+    }
 
     ajaxifyLinks(modal.body);
 

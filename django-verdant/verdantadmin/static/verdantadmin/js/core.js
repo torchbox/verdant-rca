@@ -1,3 +1,12 @@
+/* generic function for adding a message to message area through JS alone */
+function addMessage(status,text){
+    $('.messages').addClass('new').empty().append('<ul><li class="' + status + '">' + text + '</li></ul>');
+    var addMsgTimeout = setTimeout(function(){
+        $('.messages').addClass('appear');
+        clearTimeout(addMsgTimeout);
+    }, 100)
+}
+
 $(function(){
     // Add class to the body from which transitions may be hung so they don't appear to transition as the page loads
     $('body').addClass('ready'); 
@@ -86,8 +95,8 @@ $(function(){
         }
     })
 
-    $(".nav-main .more").nextAll().hide().end().find("a").click(function(){
-        $(this).parent().nextAll().stop().toggle('fast');
+    $(".nav-main .more > a").bind('click keydown', function(){
+        $(this).parent().find('ul').toggle('fast');
         return false;
     });
 })
