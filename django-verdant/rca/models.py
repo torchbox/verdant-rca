@@ -675,6 +675,7 @@ SchoolPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -867,6 +868,7 @@ ProgrammePage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -955,6 +957,7 @@ NewsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1082,6 +1085,7 @@ NewsItem.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1155,6 +1159,7 @@ PressReleaseIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1228,6 +1233,7 @@ PressRelease.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1494,6 +1500,7 @@ EventItem.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1619,6 +1626,7 @@ EventIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1692,6 +1700,7 @@ TalksIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1767,6 +1776,7 @@ ReviewsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1867,6 +1877,7 @@ ReviewPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1984,6 +1995,7 @@ StandardPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2183,6 +2195,7 @@ StandardIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2359,6 +2372,7 @@ HomePage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2427,6 +2441,7 @@ JobPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2483,6 +2498,7 @@ JobsIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2579,6 +2595,7 @@ AlumniIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2626,6 +2643,7 @@ AlumniPage.promote_panels = [
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
         FieldPanel('listing_intro'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2758,6 +2776,7 @@ StaffPage.promote_panels = [
         FieldPanel('show_on_programme_page'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2846,6 +2865,7 @@ StaffIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -2923,6 +2943,7 @@ ResearchStudentIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3097,6 +3118,7 @@ StudentPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3153,6 +3175,7 @@ RcaNowPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3233,6 +3256,7 @@ RcaNowIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3322,6 +3346,7 @@ ResearchItem.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3448,6 +3473,7 @@ ResearchInnovationPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3532,6 +3558,7 @@ CurrentResearchPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3645,6 +3672,7 @@ GalleryPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3667,6 +3695,7 @@ ContactUsPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3760,6 +3789,7 @@ DonationPage.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3848,6 +3878,7 @@ InnovationRCAProject.promote_panels = [
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -3934,6 +3965,7 @@ InnovationRCAIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
