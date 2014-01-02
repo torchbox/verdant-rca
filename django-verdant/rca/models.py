@@ -3858,11 +3858,11 @@ class InnovationRCAIndex(Page, SocialFields):
 
         # Apply filters
         project_type = request.GET.get('project_type', None)
-        project_ended = request.GET.get('project_ended', None)
+        current_past = request.GET.get('current_past', None)
 
-        if project_ended == 'yes':
+        if current_past == 'past':
             project_ended = True
-        elif project_ended == 'no':
+        elif current_past == 'current':
             project_ended = False
         else:
             project_ended = None
