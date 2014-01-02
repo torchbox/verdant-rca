@@ -79,7 +79,7 @@ class EditorsPick(models.Model):
     page = models.ForeignKey('core.Page')
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
     description = models.TextField(blank=True)
-
+    
     class Meta:
         ordering = ('sort_order', )
 

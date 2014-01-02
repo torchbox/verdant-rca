@@ -5,31 +5,22 @@
         <h1>Add editors pick</h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
-        {% csrf_token %}
+    <div class="nice-padding">
+        <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
+            {% csrf_token %}
 
-        <ul class="objects">
-            <li class="object">
-                <h2>Search Terms</h2>
-                <fieldset>
-                    <legend>Search Terms</legend>
-                    <ul class="fields">
-                        <li class="char_field">
-                            {% include "verdantsearch/searchterms/chooser_field.html" with field=searchterms_form.terms only %}
-                        </li>
-                    </ul>
-                </fieldset>
-            </li>
-            <li class="object">
-                <h2>Editors picks</h2>
-                {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
-            </li>
-        </ul>
-
-        <div class="nice-padding">
-            <input type="submit" value="Save" />
-        </div>
-    </form>
+            <ul class="fields">
+                <li>
+                    {% include "verdantsearch/searchterms/chooser_field.html" with field=searchterms_form.terms only %}   
+                </li>
+                <li>
+                    <h2>Editors picks</h2>
+                    {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
+                </li>
+                <li><input type="submit" value="Save" /></li>
+            </ul>
+        </form>
+    </div>
 {% endblock %}
 
 {% block extra_css %}

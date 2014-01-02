@@ -1,4 +1,4 @@
-<table class="listing full-width">
+<table class="listing chooser">
     <col />
     <col width="40%"/>
     <col />
@@ -11,7 +11,7 @@
     <tbody>
         {% if searchterms_list %}
             {% for searchterms in searchterms_list %}
-                <tr>
+                <tr class="can-choose">
                     <td class="title">
                         <h2><a class="choose-searchterms" href="#{{ searchterms.id }}" data-id="{{ searchterms.id }}" data-terms="{{ searchterms.terms }}">{{ searchterms.terms }}</a></h2>
                     </td>

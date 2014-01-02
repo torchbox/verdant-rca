@@ -5,20 +5,19 @@
         <h1>Editing <span>{{ searchterms.terms }}</span></h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" method="POST">
+    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" method="POST" class="nice-padding">
         {% csrf_token %}
 
-        <ul class="objects">
-            <li class="object">
+        <ul class="fields">
+            <li>
                 <h2>Editors picks</h2>
                 {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
             </li>
+            <li>
+                <input type="submit" value="Save" />
+                <a href="{% url 'verdantsearch_editorspicks_delete' searchterms.id %}" class="button button-secondary no">Delete</a>
+            </li>
         </ul>
-
-        <div class="nice-padding">
-            <input type="submit" value="Save" />
-            <a href="{% url 'verdantsearch_editorspicks_delete' searchterms.id %}" class="button button-secondary no">Delete</a>
-        </div>
     </form>
 {% endblock %}
 

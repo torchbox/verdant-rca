@@ -18,6 +18,8 @@ fieldset{
     /* position:relative; See if we can get away without this */
 }
 
+
+
 legend{
     .visuallyhidden();
 }
@@ -219,6 +221,78 @@ input[type=submit], input[type=reset], input[type=button], .button, button{
     }
 }
 
+/* multiple-item forms where groups of fields can be added */
+.multiple {
+
+
+    > li{
+        position:relative;
+        border-bottom: 1px solid @color-input-border;
+    
+        &:first-child fieldset{
+            padding-top:0;
+        }
+    }
+
+    /* styles applied to an element as it is being reordered */
+    &.moving{
+        position:relative;
+    }
+    li.moving{
+        position:absolute;
+        width:100%;
+    }
+
+    /* Object controls */
+    .controls{
+        position:absolute;
+        right:0;
+        top:2em;
+        text-transform:uppercase;
+        color:@color-grey-2;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        overflow:hidden;
+        line-height:0em;
+        
+        li{
+            background-color: @color-grey-3;
+            display:inline-block;
+            cursor:pointer;
+        }
+        .icon{
+            padding:0.3em;
+        }
+        .icon:before{
+            vertical-align:middle;
+            line-height:2em;
+        }
+        .icon:hover{
+            background-color:@color-teal;
+
+            &:before{
+                color:white;
+            }
+        }
+        .disabled{
+            display:none;
+        }
+    }
+    > li:first-child .controls{
+        top:0;
+    }
+}
+
+/* wrapper around add button for mutliple objects */
+p.add{
+    font-weight:700;
+    cursor:pointer;
+    margin-top:0;
+    margin-bottom:0;
+    padding-top:2.5em;
+    padding-bottom:2em;
+}
+
 /* Other text */
 .help, .error-message{
     font-size:0.85em;
@@ -301,11 +375,14 @@ ul.inline li:first-child, li.inline:first-child{
 }
 
 
-/* TODO this chooser style has been made more generic based on two identical methods for choosing pages and images that were previously included in their own less files in each app directory (and since deleted). It would be best if an admin "theme" (to use a drupal term) provided all the design for a UI in a single place, but should that be a series of overrides to the css provided from an app? If so, perhaps those two previous less files should be re-instated and then overriden here? hmm. */
+/* TODO this chooser style has been made more generic based on two identical methods for choosing pages and images that were previously included in their own less files in each app directory (and since deleted). It would be best if an admin "theme" provided all the design for a UI in a single place, but should that be a series of overrides to the css provided from an app? If so, perhaps those two previous less files should be re-instated and then overriden here? hmm. */
 
 .chooser {
     /* We show the 'chosen' state...*/
 
+    input[type=text]{
+        margin-bottom:1em;
+    }
     .chosen {
         display: block;
     }
