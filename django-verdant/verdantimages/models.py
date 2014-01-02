@@ -40,6 +40,7 @@ class AbstractImage(models.Model, TagSearchable):
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by_user = models.ForeignKey('auth.User', null=True, blank=True)
 
     tags = TaggableManager(help_text=None, blank=True)
 
@@ -78,6 +79,16 @@ class AbstractImage(models.Model, TagSearchable):
         # from the title. Subclasses might provide a separate alt field, and
         # override this
         return self.title
+
+    def is_editable_by_user(self, user):
+        if user.has_perm('verdantimages.change_image'):
+            # user has global permission to change images
+            return True
+        elif user.has_perm('verdantimages.add_image') and self.uploaded_by_user == user:
+            # user has image add permission, which also implicitly provides permission to edit their own images
+            return True
+        else:
+            return False
 
     class Meta:
         abstract=True

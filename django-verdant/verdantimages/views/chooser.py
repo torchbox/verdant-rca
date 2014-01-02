@@ -107,10 +107,11 @@ def chooser_upload(request):
     ImageForm = get_image_form()
 
     if request.POST:
-        form = ImageForm(request.POST, request.FILES)
+        image = Image(uploaded_by_user=request.user)
+        form = ImageForm(request.POST, request.FILES, instance=image)
 
         if form.is_valid():
-            image = form.save()
+            form.save()
             if request.GET.get('select_format'):
                 form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
                 return render_modal_workflow(
