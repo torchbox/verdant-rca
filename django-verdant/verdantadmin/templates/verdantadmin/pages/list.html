@@ -179,7 +179,7 @@
                 </tr>
             {% endfor %}
         {% else %}
-            <tr><td colspan="3" class="no-results-message"><p>No pages have been created here.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
+            <tr><td colspan="3" class="no-results-message"><p>No pages have been created.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
         {% endif %}
     </tbody>
 </table>
