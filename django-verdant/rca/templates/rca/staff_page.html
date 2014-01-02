@@ -253,6 +253,12 @@
             {# research students: #}
             {% research_students_feed staff_page=self %}
         {% endtab %}<!-- end research tab-->
+
+        <!-- INNOVATIONRCA WORK TAB -->
+        <!-- links and ids added by javascript -->
+        {% tab "InnovationRCA work" %}
+            {% innovationrca_projects person=self %}
+        {% endtab %}<!-- end innovationrca work tab-->
     {% endtabdeck %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
