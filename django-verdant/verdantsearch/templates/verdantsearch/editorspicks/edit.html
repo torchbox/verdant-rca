@@ -9,8 +9,7 @@
         {% csrf_token %}
 
         <ul class="fields">
-            <li>
-               
+            <li> 
                 {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
             </li>
             <li>
