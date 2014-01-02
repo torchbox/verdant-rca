@@ -17,7 +17,16 @@ class TagSearchable(Indexed):
             'analyzer': 'edgengram_analyzer',
             'boost': 10,
         },
+        'get_tags': {
+            'type': 'string',
+            'analyzer': 'edgengram_analyzer',
+            'boost': 10,
+        },
     }
+
+    @property
+    def get_tags(self):
+        return ' '.join([tag.name for tag in self.tags.all()])
 
     @classmethod
     def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
