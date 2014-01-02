@@ -150,6 +150,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
     show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    search_description = models.TextField(blank=True)
     # End RCA-specific fields
 
     indexed_fields = {
