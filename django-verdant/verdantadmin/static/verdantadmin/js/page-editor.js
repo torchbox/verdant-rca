@@ -26,7 +26,7 @@ function makeRichTextEditable(id) {
             'hallohr': {},
             'halloreundo': {},
             'halloverdantimage': {},
-            'halloverdantmedia': {},
+            'halloverdantembeds': {},
             'halloverdantlink': {},
             'halloverdantdoclink': {},
         }

@@ -84,11 +84,11 @@ class MediaEmbedHandler(object):
         Given a dict of attributes from the <embed> tag, return the real HTML
         representation.
         """
-        from verdantmedia import format
+        from verdantembeds import format
         if for_editor:
-            return format.media_to_editor_html(attrs['url'])
+            return format.embed_to_editor_html(attrs['url'])
         else:
-            return format.media_to_frontend_html(attrs['url'])
+            return format.embed_to_frontend_html(attrs['url'])
 
 
 class PageLinkHandler(object):
