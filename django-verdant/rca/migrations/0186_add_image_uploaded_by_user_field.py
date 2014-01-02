@@ -66,6 +66,7 @@ class Migration(SchemaMigration):
             'live': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
             'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
+            'search_description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
@@ -393,6 +394,66 @@ class Migration(SchemaMigration):
             'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('cluster.fields.ParentalKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.HomePage']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'rca.innovationrcaindex': {
+            'Meta': {'object_name': 'InnovationRCAIndex', '_ormbases': [u'core.Page']},
+            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
+            'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+        },
+        u'rca.innovationrcaindexad': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'InnovationRCAIndexAd'},
+            'ad': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['rca.Advert']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'manual_adverts'", 'to': u"orm['rca.InnovationRCAIndex']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'rca.innovationrcaproject': {
+            'Meta': {'object_name': 'InnovationRCAProject', '_ormbases': [u'core.Page']},
+            'description': ('core.fields.RichTextField', [], {}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'programme': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'project_ended': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'project_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'random_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'ref': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
+            'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'show_on_homepage': ('django.db.models.fields.BooleanField', [], {}),
+            'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
+            'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'subtitle': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'year': ('django.db.models.fields.CharField', [], {'max_length': '4'})
+        },
+        u'rca.innovationrcaprojectcarouselitem': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'InnovationRCAProjectCarouselItem'},
+            'embedly_url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
+            'link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
+            'link_page': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['core.Page']"}),
+            'overlay_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'carousel_items'", 'to': u"orm['rca.InnovationRCAProject']"}),
+            'poster_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'rca.innovationrcaprojectcreator': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'InnovationRCAProjectCreator'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'manual_person_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'creator'", 'to': u"orm['rca.InnovationRCAProject']"}),
+            'person': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
+        },
+        u'rca.innovationrcaprojectlink': {
+            'Meta': {'ordering': "['sort_order']", 'object_name': 'InnovationRCAProjectLink'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'link': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
+            'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'page': ('cluster.fields.ParentalKey', [], {'related_name': "'links'", 'to': u"orm['rca.InnovationRCAProject']"}),
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },
         u'rca.jobpage': {
@@ -1234,6 +1295,8 @@ class Migration(SchemaMigration):
             'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
             'middle_column_body': ('core.fields.RichTextField', [], {'blank': 'True'}),
             u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'related_programme': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
+            'related_school': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_on_homepage': ('django.db.models.fields.BooleanField', [], {}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
