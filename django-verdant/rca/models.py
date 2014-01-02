@@ -3854,7 +3854,6 @@ class InnovationRCAIndex(Page, SocialFields):
     def serve(self, request):
         # Get list of live projects
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
-        print projects
 
         # Apply filters
         project_type = request.GET.get('project_type', None)
