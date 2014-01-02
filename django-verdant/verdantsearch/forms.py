@@ -17,6 +17,10 @@ class EditorsPickForm(forms.ModelForm):
     class Meta:
         model = models.EditorsPick
 
+        widgets = {
+            'description': forms.Textarea(attrs=dict(rows=3)),
+        }
+
 
 EditorsPickFormSetBase = inlineformset_factory(models.SearchTerms, models.EditorsPick, form=EditorsPickForm, can_order=True, can_delete=True, extra=0)
 
