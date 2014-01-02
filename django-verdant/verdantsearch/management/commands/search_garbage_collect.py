@@ -9,7 +9,7 @@ class Command(NoArgsCommand):
         models.SearchTermsDailyHits.garbage_collect()
         print "Done"
 
-        # Clean search search terms
+        # Clean search terms
         print "Cleaning search terms records... ",
         models.SearchTerms.garbage_collect()
         print "Done"
