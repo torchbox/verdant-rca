@@ -21,23 +21,9 @@ class SearchTerms(models.Model):
         daily_hits.hits = models.F('hits') + 1
         daily_hits.save()
 
-    def get_hits_since(self, since_date):
-        return self.daily_hits.filter(date__gte=since_date).aggregate(models.Sum('hits'))['hits__sum']
-
     @property
-    def past_month_hits(self):
-        today = timezone.now().date()
-        return self.get_hits_since(today - datetime.timedelta(days=30))
-
-    @property
-    def past_week_hits(self):
-        today = timezone.now().date()
-        return self.get_hits_since(today - datetime.timedelta(days=7))
-
-    @property
-    def today_hits(self):
-        today = timezone.now().date()
-        return self.get_hits_since(today)
+    def hits(self):
+        return self.daily_hits.aggregate(models.Sum('hits'))['hits__sum']
 
     @classmethod
     def garbage_collect(cls):
@@ -52,7 +38,7 @@ class SearchTerms(models.Model):
 
     @classmethod
     def get_most_popular(cls, date_since=None):
-        return cls.objects.filter(daily_hits__isnull=False).annotate(hits=models.Sum('daily_hits__hits')).distinct().order_by('-hits')
+        return cls.objects.filter(daily_hits__isnull=False).annotate(terms_hits=models.Sum('daily_hits__hits')).distinct().order_by('-terms_hits')
 
     @staticmethod
     def normalise_terms(terms):
@@ -74,9 +60,9 @@ class SearchTermsDailyHits(models.Model):
     hits = models.IntegerField(default=0)
 
     @classmethod
-    def garbage_collect(cls, max_age=30):
+    def garbage_collect(cls):
         """
-        Deletes all SearchTermsDailyHits records that are older than max_age days
+        Deletes all SearchTermsDailyHits records that are older than 7 days
         """
         min_date = timezone.now().date() - datetime.timedelta(days=7)
 
