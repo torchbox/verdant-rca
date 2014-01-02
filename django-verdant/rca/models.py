@@ -3027,6 +3027,9 @@ class StudentPage(Page, SocialFields):
 
     @property
     def search_name(self):
+        if self.degree_qualification == 'innovationrca-fellow':
+            return 'InnovationRCA Fellow'
+
         if self.is_researchstudent:
             return 'Research Student'
         else:
