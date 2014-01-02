@@ -254,11 +254,15 @@
             {% research_students_feed staff_page=self %}
         {% endtab %}<!-- end research tab-->
 
-        <!-- INNOVATIONRCA WORK TAB -->
-        <!-- links and ids added by javascript -->
-        {% tab "InnovationRCA work" %}
-            {% innovationrca_projects person=self %}
-        {% endtab %}<!-- end innovationrca work tab-->
+
+        {% get_innovationrca_projects self as innovationrca_projects %}
+        {% if innovationrca_projects %}
+            <!-- INNOVATIONRCA WORK TAB -->
+            <!-- links and ids added by javascript -->
+            {% tab "InnovationRCA work" %}
+                {% include "rca/includes/modules/innovation_rca_projects.html" with projects=innovationrca_projects %}
+            {% endtab %}<!-- end innovationrca work tab-->
+        {% endif %}
     {% endtabdeck %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
