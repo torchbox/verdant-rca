@@ -136,6 +136,16 @@ def research_related(context, programme="", person="", school="", exclude=None):
         'school': school
     }
 
+@register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
+def innovation_rca_related(context, person):
+    projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
+
+    return {
+        'projects': projects.order_by('?'),
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'person': person,
+    }
+
 @register.assignment_tag()
 def get_innovationrca_projects(person):
     return InnovationRCAProject.objects.filter(live=True, creator__person=person).order_by('?')
