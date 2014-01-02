@@ -360,6 +360,7 @@ QUALIFICATION_CHOICES = (
     ('mphil', 'MPhil'),
     ('phd', 'PhD'),
     ('researchstudent', 'Research Student'),
+    ('innovationrca-fellow', 'InnovationRCA Fellow'),
 )
 
 RESEARCH_TYPES_CHOICES = (
