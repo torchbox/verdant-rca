@@ -1,15 +1,15 @@
-function createSearchTermsChooser(id) {
+function createQueryChooser(id) {
     var chooserElement = $('#' + id + '-chooser');
     var input = $('#' + id);
 
     chooserElement.click(function() {
-        var initialUrl = '{% url "verdantsearch_searchterms_chooser" %}';
+        var initialUrl = '{% url "verdantsearch_queries_chooser" %}';
 
         ModalWorkflow({
             'url': initialUrl,
             'responses': {
-                'searchtermsChosen': function(searchTermsData) {
-                    input.val(searchTermsData.terms);
+                'queryChosen': function(queryData) {
+                    input.val(queryData.querystring);
                 }
             }
         });

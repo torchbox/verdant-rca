@@ -3,8 +3,8 @@ from django.forms.models import inlineformset_factory
 import models
 
 
-class SearchTermsForm(forms.Form):
-    terms = forms.CharField(required=True)
+class QueryForm(forms.Form):
+    query_string = forms.CharField(required=True)
 
 
 class EditorsPickForm(forms.ModelForm):
@@ -22,7 +22,7 @@ class EditorsPickForm(forms.ModelForm):
         }
 
 
-EditorsPickFormSetBase = inlineformset_factory(models.SearchTerms, models.EditorsPick, form=EditorsPickForm, can_order=True, can_delete=True, extra=0)
+EditorsPickFormSetBase = inlineformset_factory(models.Query, models.EditorsPick, form=EditorsPickForm, can_order=True, can_delete=True, extra=0)
 
 class EditorsPickFormSet(EditorsPickFormSetBase):
     def add_fields(self, form, *args, **kwargs):
@@ -32,13 +32,12 @@ class EditorsPickFormSet(EditorsPickFormSetBase):
         form.fields['DELETE'].widget = forms.HiddenInput()
         form.fields['ORDER'].widget = forms.HiddenInput()
 
-        # Remove terms field
-        del form.fields['terms']
+        # Remove query field
+        del form.fields['query']
 
     def save(self, *args, **kwargs):
         # Set sort_order
         for i, form in enumerate(self.ordered_forms):
-            print "HELLO"
             form.instance.sort_order = i
 
         super(EditorsPickFormSet, self).save(*args, **kwargs)

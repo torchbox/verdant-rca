@@ -7,6 +7,6 @@ urlpatterns = patterns("verdantsearch.views",
     url(r"^editorspicks/(\d+)/$", "editorspicks.edit", name="verdantsearch_editorspicks_edit"),
     url(r"^editorspicks/(\d+)/delete/$", "editorspicks.delete", name="verdantsearch_editorspicks_delete"),
 
-    url(r"^searchterms/chooser/$", "searchterms.chooser", name="verdantsearch_searchterms_chooser"),
-    url(r"^searchterms/chooser/results/$", "searchterms.chooserresults", name="verdantsearch_searchterms_chooserresults"),
+    url(r"^queries/chooser/$", "queries.chooser", name="verdantsearch_queries_chooser"),
+    url(r"^queries/chooser/results/$", "queries.chooserresults", name="verdantsearch_queries_chooserresults"),
 )

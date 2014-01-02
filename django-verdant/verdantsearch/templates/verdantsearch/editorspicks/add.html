@@ -11,7 +11,7 @@
 
             <ul class="fields">
                 <li>
-                    {% include "verdantsearch/searchterms/chooser_field.html" with field=searchterms_form.terms only %}   
+                    {% include "verdantsearch/queries/chooser_field.html" with field=query_form.query_string only %}   
                 </li>
                 <li>
                     <h2>Editors picks</h2>
@@ -31,10 +31,10 @@
 
     <script type="text/javascript">
         {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only %}
-        {% include "verdantsearch/searchterms/chooser_field.js" only %}
+        {% include "verdantsearch/queries/chooser_field.js" only %}
 
         (function() {
-            createSearchTermsChooser('{{ searchterms_form.terms.auto_id }}');
+            createQueryChooser('{{ query_form.query_string.auto_id }}');
         })();
     </script>
 {% endblock %}

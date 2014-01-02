@@ -9,13 +9,13 @@
         </tr>
     </thead>
     <tbody>
-        {% if searchterms_list %}
-            {% for searchterms in searchterms_list %}
+        {% if queries %}
+            {% for query in queries %}
                 <tr class="can-choose">
                     <td class="title">
-                        <h2><a class="choose-searchterms" href="#{{ searchterms.id }}" data-id="{{ searchterms.id }}" data-terms="{{ searchterms.terms }}">{{ searchterms.terms }}</a></h2>
+                        <h2><a class="choose-query" href="#{{ query.id }}" data-id="{{ query.id }}" data-querystring="{{ query.query_string }}">{{ query.query_string }}</a></h2>
                     </td>
-                    <td>{{ searchterms.hits }}</td>
+                    <td>{{ query.hits }}</td>
                 </tr>
             {% endfor %}
         {% else %}
@@ -24,4 +24,4 @@
     </tbody>
 </table>
 
-{% include "verdantadmin/shared/pagination_nav.html" with items=searchterms_list is_ajax=1 %}
+{% include "verdantadmin/shared/pagination_nav.html" with items=queries is_ajax=1 %}

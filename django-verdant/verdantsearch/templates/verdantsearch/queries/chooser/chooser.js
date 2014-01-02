@@ -12,14 +12,14 @@ function(modal) {
         });
     }
 
-    var searchUrl = $('form.searchterms-search', modal.body).attr('action');
+    var searchUrl = $('form.query-search', modal.body).attr('action');
     function search() {
         $.ajax({
             url: searchUrl,
             data: {q: $('#id_q').val()},
             success: function(data, status) {
-                $('#searchterms-results').html(data);
-                ajaxifyLinks($('#searchterms-results'));
+                $('#query-results').html(data);
+                ajaxifyLinks($('#query-results'));
             }
         });
         return false;
@@ -36,8 +36,8 @@ function(modal) {
             url: searchUrl,
             data: dataObj,
             success: function(data, status) {
-                $('#searchterms-results').html(data);
-                ajaxifyLinks($('#searchterms-results'));
+                $('#query-results').html(data);
+                ajaxifyLinks($('#query-results'));
             }
         });
         return false;
@@ -45,10 +45,10 @@ function(modal) {
 
     ajaxifyLinks(modal.body);
 
-    $('form.searchterms-search', modal.body).submit(search);
+    $('form.query-search', modal.body).submit(search);
 
-    $('a.choose-searchterms', modal.body).click(function() {
-        modal.respond('searchtermsChosen', $(this).data());
+    $('a.choose-query', modal.body).click(function() {
+        modal.respond('queryChosen', $(this).data());
         modal.close();
 
         return false;

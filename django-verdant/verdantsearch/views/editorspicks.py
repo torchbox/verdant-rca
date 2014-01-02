@@ -5,23 +5,23 @@ from verdantsearch import models, forms
 
 @login_required
 def index(request):
-    # Select only search terms with editors picks
-    searchterms_list = models.SearchTerms.objects.filter(editors_picks__isnull=False).distinct()
+    # Select only queries with editors picks
+    queries = models.Query.objects.filter(editors_picks__isnull=False).distinct()
     return render(request, 'verdantsearch/editorspicks/index.html', {
-        'searchterms_list': searchterms_list,
+        'queries': queries,
     })
 
 
 @login_required
 def add(request):
     if request.POST:
-        # Get search terms
-        searchterms_form = forms.SearchTermsForm(request.POST)
-        if searchterms_form.is_valid():
-            searchterms = models.SearchTerms.get(searchterms_form['terms'].value())
+        # Get queries
+        query_form = forms.QueryForm(request.POST)
+        if query_form.is_valid():
+            query = models.Query.get(query_form['query_string'].value())
 
             # Save editors picks
-            editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=searchterms)
+            editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
 
             if editors_pick_formset.is_valid():
                 editors_pick_formset.save()
@@ -30,43 +30,43 @@ def add(request):
         else:
             editors_pick_formset = forms.EditorsPickFormSet()
     else:
-        searchterms_form = forms.SearchTermsForm()
+        query_form = forms.QueryForm()
         editors_pick_formset = forms.EditorsPickFormSet()
 
     return render(request, 'verdantsearch/editorspicks/add.html', {
-        'searchterms_form': searchterms_form,
+        'query_form': query_form,
         'editors_pick_formset': editors_pick_formset,
     })
 
 
 @login_required
-def edit(request, searchterms_id):
-    searchterms = get_object_or_404(models.SearchTerms, id=searchterms_id)
+def edit(request, query_id):
+    query = get_object_or_404(models.Query, id=query_id)
 
     if request.POST:
-        editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=searchterms)
+        editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
 
         if editors_pick_formset.is_valid():
             editors_pick_formset.save()
 
             return redirect('verdantsearch_editorspicks_index')
     else:
-        editors_pick_formset = forms.EditorsPickFormSet(instance=searchterms)
+        editors_pick_formset = forms.EditorsPickFormSet(instance=query)
 
     return render(request, 'verdantsearch/editorspicks/edit.html', {
         'editors_pick_formset': editors_pick_formset,
-        'searchterms': searchterms,
+        'query': query,
     })
 
 
 @login_required
-def delete(request, searchterms_id):
-    searchterms = get_object_or_404(models.SearchTerms, id=searchterms_id)
+def delete(request, query_id):
+    query = get_object_or_404(models.Query, id=query_id)
 
     if request.POST:
-        searchterms.editors_picks.all().delete()
+        query.editors_picks.all().delete()
         return redirect('verdantsearch_editorspicks_index')
 
     return render(request, 'verdantsearch/editorspicks/confirm_delete.html', {
-        'searchterms': searchterms,
+        'query': query,
     })

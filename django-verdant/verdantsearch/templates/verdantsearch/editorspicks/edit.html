@@ -1,11 +1,11 @@
 {% extends "verdantadmin/base.html" %}
-{% block titletag %}Editing {{ searchterms.terms }}{% endblock %}
+{% block titletag %}Editing {{ query.query_string }}{% endblock %}
 {% block content %}
     <header>
-        <h1>Editing <span>{{ searchterms.terms }}</span></h1>
+        <h1>Editing <span>{{ query.query_string }}</span></h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_edit' searchterms.id %}" method="POST" class="nice-padding">
+    <form action="{% url 'verdantsearch_editorspicks_edit' query.id %}" method="POST" class="nice-padding">
         {% csrf_token %}
 
         <ul class="fields">
@@ -15,7 +15,7 @@
             </li>
             <li>
                 <input type="submit" value="Save" />
-                <a href="{% url 'verdantsearch_editorspicks_delete' searchterms.id %}" class="button button-secondary no">Delete</a>
+                <a href="{% url 'verdantsearch_editorspicks_delete' query.id %}" class="button button-secondary no">Delete</a>
             </li>
         </ul>
     </form>

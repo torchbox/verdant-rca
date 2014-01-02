@@ -6,10 +6,10 @@ class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         # Clean daily hits
         print "Cleaning daily hits records... ",
-        models.SearchTermsDailyHits.garbage_collect()
+        models.QueryDailyHits.garbage_collect()
         print "Done"
 
-        # Clean search terms
-        print "Cleaning search terms records... ",
-        models.SearchTerms.garbage_collect()
+        # Clean queries
+        print "Cleaning query records... ",
+        models.Query.garbage_collect()
         print "Done"

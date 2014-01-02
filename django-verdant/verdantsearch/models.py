@@ -7,17 +7,17 @@ import datetime
 import string
 
 
-class SearchTerms(models.Model):
-    terms = models.CharField(max_length=255, unique=True)
+class Query(models.Model):
+    query_string = models.CharField(max_length=255, unique=True)
 
     def save(self, *args, **kwargs):
-        # Normalise terms
-        self.terms = self.normalise_terms(self.terms)
+        # Normalise query string
+        self.query_string = self.normalise_query_string(self.query_string)
 
-        super(SearchTerms, self).save(*args, **kwargs)
+        super(Query, self).save(*args, **kwargs)
 
     def add_hit(self):
-        daily_hits, created = SearchTermsDailyHits.objects.get_or_create(terms=self, date=timezone.now().date())
+        daily_hits, created = QueryDailyHits.objects.get_or_create(query=self, date=timezone.now().date())
         daily_hits.hits = models.F('hits') + 1
         daily_hits.save()
 
@@ -28,41 +28,41 @@ class SearchTerms(models.Model):
     @classmethod
     def garbage_collect(cls):
         """
-        Deletes all SearchTerms records that have no daily hits or editors picks
+        Deletes all Query records that have no daily hits or editors picks
         """
         cls.objects.filter(daily_hits__isnull=True, editors_picks__isnull=True).delete()
 
     @classmethod
-    def get(cls, terms):
-        return cls.objects.get_or_create(terms=cls.normalise_terms(terms))[0]
+    def get(cls, query_string):
+        return cls.objects.get_or_create(query_string=cls.normalise_query_string(query_string))[0]
 
     @classmethod
     def get_most_popular(cls, date_since=None):
-        return cls.objects.filter(daily_hits__isnull=False).annotate(terms_hits=models.Sum('daily_hits__hits')).distinct().order_by('-terms_hits')
+        return cls.objects.filter(daily_hits__isnull=False).annotate(_hits=models.Sum('daily_hits__hits')).distinct().order_by('-_hits')
 
     @staticmethod
-    def normalise_terms(terms):
-        # Convert terms to lowercase
-        terms = terms.lower()
+    def normalise_query_string(query_string):
+        # Convert query_string to lowercase
+        query_string = query_string.lower()
 
         # Strip punctuation characters
-        terms = ''.join([c for c in terms if c not in string.punctuation])
+        query_string = ''.join([c for c in query_string if c not in string.punctuation])
 
         # Remove double spaces
-        ' '.join(terms.split())
+        ' '.join(query_string.split())
 
-        return terms
+        return query_string
 
 
-class SearchTermsDailyHits(models.Model):
-    terms = models.ForeignKey(SearchTerms, db_index=True, related_name='daily_hits')
+class QueryDailyHits(models.Model):
+    query = models.ForeignKey(Query, db_index=True, related_name='daily_hits')
     date = models.DateField()
     hits = models.IntegerField(default=0)
 
     @classmethod
     def garbage_collect(cls):
         """
-        Deletes all SearchTermsDailyHits records that are older than 7 days
+        Deletes all QueryDailyHits records that are older than 7 days
         """
         min_date = timezone.now().date() - datetime.timedelta(days=7)
 
@@ -70,12 +70,12 @@ class SearchTermsDailyHits(models.Model):
 
     class Meta:
         unique_together = (
-            ('terms', 'date'),
+            ('query', 'date'),
         )
 
 
 class EditorsPick(models.Model):
-    terms = models.ForeignKey(SearchTerms, db_index=True, related_name='editors_picks')
+    query = models.ForeignKey(Query, db_index=True, related_name='editors_picks')
     page = models.ForeignKey('core.Page')
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
     description = models.TextField(blank=True)

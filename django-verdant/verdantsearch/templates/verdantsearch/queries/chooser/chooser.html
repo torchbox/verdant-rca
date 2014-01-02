@@ -2,7 +2,7 @@
     <h1>Popular search terms</h1>
 </header>
 
-<form class="searchterms-search search-bar full-width" action="{% url 'verdantsearch_searchterms_chooserresults' %}" method="GET" autocomplete="off">
+<form class="query-search search-bar full-width" action="{% url 'verdantsearch_queries_chooserresults' %}" method="GET" autocomplete="off">
     <ul class="fields">
         {% for field in searchform %}
             {% include "verdantadmin/shared/field_as_li.html" with field=field %}
@@ -11,7 +11,7 @@
     </ul>
 </form>
 <div class="nice-padding">
-    <div id="searchterms-results">
-        {% include "verdantsearch/searchterms/chooser/results.html" %}
+    <div id="query-results">
+        {% include "verdantsearch/queries/chooser/results.html" %}
     </div>
 </div>
