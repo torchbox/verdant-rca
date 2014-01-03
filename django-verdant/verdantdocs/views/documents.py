@@ -57,9 +57,10 @@ def index(request):
 @login_required
 def add(request):
     if request.POST:
-        form = DocumentForm(request.POST, request.FILES)
+        doc = Document(uploaded_by_user=request.user)
+        form = DocumentForm(request.POST, request.FILES, instance=doc)
         if form.is_valid():
-            doc = form.save()
+            form.save()
             messages.success(request, "Document '%s' added." % doc.title)
             return redirect('verdantdocs_index')
         else:

@@ -86,10 +86,11 @@ def document_chosen(request, document_id):
 @login_required
 def chooser_upload(request):
     if request.POST:
-        form = DocumentForm(request.POST, request.FILES)
+        document = Document(uploaded_by_user=request.user)
+        form = DocumentForm(request.POST, request.FILES, instance=document)
 
         if form.is_valid():
-            document = form.save()
+            form.save()
             document_json = json.dumps({'id': document.id, 'title': document.title})
             return render_modal_workflow(
                 request, None, 'verdantdocs/chooser/document_chosen.js',

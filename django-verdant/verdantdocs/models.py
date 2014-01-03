@@ -14,6 +14,7 @@ class Document(models.Model, TagSearchable):
     title = models.CharField(max_length=255)
     file = models.FileField(upload_to='documents')
     created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by_user = models.ForeignKey('auth.User', null=True, blank=True, editable=False)
 
     tags = TaggableManager(help_text=None, blank=True)
 
