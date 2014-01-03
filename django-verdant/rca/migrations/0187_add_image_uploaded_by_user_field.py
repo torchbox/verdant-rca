@@ -419,14 +419,13 @@ class Migration(SchemaMigration):
             'project_ended': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'project_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'random_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            'ref': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'school': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_on_homepage': ('django.db.models.fields.BooleanField', [], {}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'subtitle': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'year': ('django.db.models.fields.CharField', [], {'max_length': '4'})
+            'year': ('django.db.models.fields.CharField', [], {'max_length': '4', 'blank': 'True'})
         },
         u'rca.innovationrcaprojectcarouselitem': {
             'Meta': {'ordering': "['sort_order']", 'object_name': 'InnovationRCAProjectCarouselItem'},
