@@ -1,25 +1,27 @@
-<header>
-<h1>Choose a document</h1>
+<header class="merged tab-merged">
+    <h1>Choose a document</h1>
 </header>
 
-<div class="row row-flush nice-padding">
-    <div class="col6">
-        <h2>Search</h2>
-        <form class="document-search" action="{% url 'verdantdocs_chooser' %}" method="GET">
+<ul class="tab-nav merged">
+    <li><a href="#search" class="active">Search</a></li>
+    <li><a href="#upload">Upload</a></li>
+</ul>
+
+<div class="tab-content">
+    <section id="search" class="active nice-padding">
+        <form class="document-search search-bar" action="{% url 'verdantdocs_chooser' %}" method="GET">
             <ul class="fields">
                 {% for field in searchform %}
                     {% include "verdantadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
-                <li><input type="submit" value="Search" /></li>
+                <li class="submit"><input type="submit" value="Search" /></li>
             </ul>
         </form>
         <div id="search-results" class="listing documents">
-            {% include "verdantdocs/chooser/search_results.html" %}
+            {% include "verdantdocs/chooser/results.html" %}
         </div>
-    </div>
-
-    <div class="col6">
-        <h2>Or upload a new one</h2>
+    </section>
+    <section id="upload" class="nice-padding">
         <form class="document-upload" action="{% url 'verdantdocs_chooser_upload' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <ul class="fields">
@@ -29,5 +31,5 @@
                 <li><input type="submit" value="Save" /></li>
             </ul>
         </form>
-    </div>
+    </section>
 </div>

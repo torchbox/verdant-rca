@@ -43,7 +43,7 @@
                                 {% endif %}
 
                                 <div class="content">
-                                    <h3 class="h6">{{ carouselitem.image.title }}</h3>
+                                    <h3 class="h6"><i>{{ carouselitem.image.title }}</i></h3>
                                     <p class="a0">{{ item.title }}</p>
                                     <p class="a1">{{ item.get_school_display }}</p>
                                     <p class="a2">Work</p>
@@ -58,7 +58,7 @@
                         <a href="{% pageurl item %}">
                             <div class="image">{% image item.specific.feed_image width-464 %}</div>
                             <div class="content">
-                                <h3 class="h6"><i>{{ item.title }}</i></h3>
+                                <h3 class="h6">{{ item.title }}</h3>
                                 {% if item.author %}
                                     <p class="a0">{{ item.author }}</p>
                                 {% endif %}

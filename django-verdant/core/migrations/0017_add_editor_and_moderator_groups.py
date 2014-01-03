@@ -25,7 +25,7 @@ class Migration(DataMigration):
         editors_group.permissions = [add_permission, change_permission, delete_permission]
 
         moderators_group, created = orm['auth.group'].objects.get_or_create(name='Moderators')
-        editors_group.permissions = [add_permission, change_permission, delete_permission, publish_permission, unpublish_permission]
+        moderators_group.permissions = [add_permission, change_permission, delete_permission, publish_permission, unpublish_permission]
 
     def backwards(self, orm):
         "Write your backwards methods here."

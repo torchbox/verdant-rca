@@ -5,7 +5,7 @@
     <script>
         $('#id_q').on('input', function() {
             clearTimeout($.data(this, 'timer'));
-            var wait = setTimeout(search, 50);
+            var wait = setTimeout(search, 200);
             $(this).data('timer', wait);
         });
         $('a.suggested-tag').click(function() {
@@ -13,12 +13,21 @@
             search();
             return false;
         })
+
+        var search_current_index = 0;
+        var search_next_index = 0;
+
         function search () {
+            search_next_index++;
+            var index = search_next_index;
             $.ajax({
-                url: "{%url 'verdantdocs_search' %}",
-                data: {q: "" + $('#id_q').val() + ""},
+                url: "{%url 'verdantdocs_index' %}",
+                data: {q: $('#id_q').val()},
                 success: function(data, status) {
-                    $('#document-results').html(data);
+                    if (index > search_current_index) {
+                        search_current_index = index;
+                        $('#document-results').html(data);
+                    }
                 },
             });
         };
@@ -36,39 +45,27 @@
             </div>
         </div>
     </header>
-    <form class="search-bar full-width" action="{% url 'verdantdocs_search' %}" method="get">
+
+    <form class="search-bar full-width" action="{% url 'verdantdocs_index' %}" method="get">
         <ul class="fields">
             {% for field in form %}
                 {% include "verdantadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
             <li class="submit"><input type="submit" value="Search" /></li>
             {% if popular_tags %}
-                <li class="popular-tags">
+                <li class="taglist">
                     <h3>Popular tags</h3>
                     {% for tag in popular_tags %}
-                        <a class="suggested-tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>{% if not forloop.last %}{% endif %}
+                        <a class="suggested-tag tag" href="{% url 'verdantdocs_search' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
                     {% endfor %}
                 </li>
             {% endif %}
         </ul>
     </form>
+
     <div class="nice-padding">
         <div id="document-results" class="documents">
-            {% if is_searching %}
-                {% if documents %}
-                    <h2>{{ documents|length }} match{{ documents|pluralize:"es" }}</h2>
-                    {% include "verdantdocs/documents/list.html" %}
-                {% else %}
-                    <p>Sorry, no documents match "<em>{{ search_query }}</em>"
-                {% endif %}
-            {% else %}
-                <h2>Latest added documents</h2>
-                {% if documents %}
-                    {% include "verdantdocs/documents/list.html" %}
-                {% else %}
-                    <p>You haven't uploaded any documents. Why not <a href="{% url 'verdantdocs_add_document' %}">upload one now</a>?</p>
-                {% endif %}
-            {% endif %}
+            {% include "verdantdocs/documents/results.html" %}
         </div>
     </div>
 {% endblock %}

@@ -207,3 +207,31 @@ class ChildFormsetTest(TestCase):
         self.assertEqual('Ringo Starr', BandMember.objects.get(id=ringo_id).name)
         self.assertTrue(BandMember.objects.filter(name='George Harrison').exists())
         self.assertFalse(BandMember.objects.filter(name='John Lennon').exists())
+
+    def test_child_updates_without_ids(self):
+        john = BandMember(name='John Lennon')
+        beatles = Band(name='The Beatles', members=[
+            john
+        ])
+        beatles.save()
+        john_id = john.id
+
+        paul = BandMember(name='Paul McCartney')
+        beatles.members.add(paul)
+
+        BandMembersFormset = childformset_factory(Band, BandMember, extra=3)
+        band_members_formset = BandMembersFormset({
+            'form-TOTAL_FORMS': 2,
+            'form-INITIAL_FORMS': 2,
+            'form-MAX_NUM_FORMS': 1000,
+
+            'form-0-name': 'John Lennon',
+            'form-0-id': john_id,
+
+            'form-1-name': 'Paul McCartney',  # NB no way to know programmatically that this form corresponds to the 'paul' object
+            'form-1-id': '',
+        }, instance=beatles)
+
+        self.assertTrue(band_members_formset.is_valid())
+        band_members_formset.save(commit=False)
+        self.assertEqual(2, beatles.members.count())

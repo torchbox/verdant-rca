@@ -64,6 +64,7 @@ class DonationForm(forms.Form):
 
     donation_for = forms.ChoiceField(label="Please direct my gift towards", required=True, choices=(
             ("scholarships", "Scholarships"),
+            ("storm_thorgerson_scholarship", "Storm Thorgerson Scholarship"),
             ("college_greatest_need", "College’s greatest need"),
     ))
     class_year = forms.CharField(label="Class year", required=False, max_length=255)

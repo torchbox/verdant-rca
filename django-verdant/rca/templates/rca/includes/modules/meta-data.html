@@ -12,7 +12,7 @@
                 
                 {% if self.date %}
                     <dd>Date</dd>
-                    <dt>{{ self.date }}</dt>
+                    <dt>{{ self.date|date:"j F Y" }}</dt>
                 {% endif %}
 
                 {% if self.area %}
@@ -197,6 +197,58 @@
                     {% endif %}
                 {% endwith %}
                 
+            {% endif %}
+
+            {% if showInnovationRCAMeta %}
+
+                {% with self.creator.all as creators %}
+                    {% if creators %}
+                        <dd>creator{% if creators|length > 1 %}s{% endif %}</dd>
+                        <dt>
+                            <ul>
+                                {% for creator in creators %}
+                                    <li>
+                                        {% if creator.person %}
+                                            <a href='{% pageurl creator.person %}'>
+                                                {{ creator.person.title }}
+                                            </a>
+                                        {% elif creator.manual_person_name %}
+                                            {{ creator.manual_person_name }}
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
+                <dd>Year</dd>
+                <dt>{{ self.year }}</dt>
+
+                <dd>School</dd>
+                <dt>{{ self.get_school_display }}</dt>
+
+                <dd>Type</dd>
+                <dt>{{ self.get_project_type_display }}</dt>
+
+                {% if self.programme %}
+                    <dd>Programme</dd>
+                    <dt>{{ self.get_programme_display }}</dt>
+                {% endif %}
+
+                {% with self.links.all as links %}
+                    {% if links %}
+                        <dd>Links</dd>
+                        <dt>
+                            <ul>
+                                {% for link in links %}
+                                <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </dt>
+                    {% endif %}
+                {% endwith %}
+
             {% endif %}
 
         </dl>

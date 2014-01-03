@@ -10,7 +10,7 @@
 
     {% tabdeck %}
 
-        {% if parent_is_researchstudentindex %}
+        {% if self.is_researchstudent %}
             <!-- links and ids added by javascript -->
             {% tab "Research Work" %}
                 {% include "rca/includes/modules/carousel.html" %}
@@ -55,7 +55,7 @@
 
                         {% if self.degree_qualification or self.degree_subject %}
                             <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.degree_qualification %}{{ self.get_degree_qualification_display }} {% endif %}{% if self.degree_subject %}{{ self.get_degree_subject_display }}{% endif %}{% if self.degree_year %}, {{ self.degree_year }}{% endif %}</p>
+                            <p class="h7">{% if self.degree_qualification %}{{ self.get_degree_qualification_display }} {% endif %}{% if self.degree_subject %}{{ self.get_degree_subject_display }}{% endif %}{% if self.degree_year %}, {{ self.degree_year }}{% endif %}{% if self.graduation_year %}&ndash;{{ self.graduation_year }}{% endif %}</p>
                         {% endif %}
 
                         {% if self.specialism %}
@@ -204,7 +204,9 @@
 
                     <!-- rca now -->
                     {% rca_now_related author=self.title %}
-                        
+
+                    <!-- innovation rca -->
+                    {% innovation_rca_related person=self %}
                 </div>
             </div>
         {% endtab %}

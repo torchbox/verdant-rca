@@ -10,7 +10,6 @@ from verdantadmin.forms import SearchForm
 @login_required
 def index(request):
     Image = get_image_model()
-    form = SearchForm()
 
     q = None
     p = request.GET.get("p", 1)
@@ -126,6 +125,7 @@ def search(request):
     images = []
     q = None
     is_searching = False
+    
     if 'q' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():

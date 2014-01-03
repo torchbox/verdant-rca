@@ -136,6 +136,16 @@ def research_related(context, programme="", person="", school="", exclude=None):
         'school': school
     }
 
+@register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
+def innovation_rca_related(context, person):
+    projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
+
+    return {
+        'projects': projects.order_by('?'),
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+        'person': person,
+    }
+
 @register.inclusion_tag('rca/tags/rca_now_latest.html', takes_context=True)
 def rca_now_latest(context, exclude=None, count=4):
     rcanow = RcaNowPage.objects.filter(live=True)
@@ -471,18 +481,6 @@ def time_display(time):
 
     # Join and return
     return "".join([hour_string, minute_string, pm_string])
-
-
-@register.filter
-def search_content_type(result):
-    model = result.content_type.model_class()
-    if hasattr(model, "search_name"):
-        if model.search_name is None:
-            return ""
-        else:
-            return model.search_name
-    else:
-        return model.__name__
 
 
 @register.tag

@@ -1,6 +1,0 @@
-{% if documents %}
-    <h2>{{ documents|length }} match{{ documents|pluralize:"es" }}</h2>
-    {% include "verdantdocs/documents/list.html" %}
-{% else %}
-    <p>Sorry, no documents match "<em>{{ search_query }}</em>"
-{% endif %}

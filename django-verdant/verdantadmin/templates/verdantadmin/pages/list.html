@@ -42,17 +42,17 @@
                                 <li><a href="{{ parent_page.url }}" target="_blank">View live</a></li>
                             {% endif %}
                             <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
-                            {% if perms.core.can_unpublish_page or parent_page.has_unpublished_subtree %}
+                            {% if perms.core.unpublish_page or parent_page.has_unpublished_subtree %}
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
                             {% endif %}
-                            {% if parent_page.live and perms.core.can_unpublish_page %}
+                            {% if parent_page.live and perms.core.unpublish_page %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}">Unpublish</a></li>
                             {% endif %}
                         </ul>
                     {% endif %}
                 </td>
                 <td class="type">{{ parent_page.content_type|title }}</td>
-                <td class="status"><span class="status-tag {{ parent_page.status_string }}">{{ parent_page.status_string|capfirst }}</span></td>
+                <td class="status"><span class="status-tag {% if parent_page.status_string != "draft" %}primary{% endif %}">{{ parent_page.status_string|capfirst }}</span></td>
                 <td></td>
             </tr>
             <tr class="divider"><td colspan="100%">Child pages</td></tr>
@@ -142,10 +142,10 @@
                                     <li><a href="{{ page.url }}" target="_blank">View live</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
-                                {% if perms.core.can_unpublish_page or page.has_unpublished_subtree %}
+                                {% if perms.core.unpublish_page or page.has_unpublished_subtree %}
                                     <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                 {% endif %}
-                                {% if page.live and perms.core.can_unpublish_page %}
+                                {% if page.live and perms.core.unpublish_page %}
                                     <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
                                 {% endif %}
                                 <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add child page</a></li>
@@ -156,7 +156,7 @@
                         <td class="parent"><a href="{% url 'verdantadmin_explore' page.get_parent.id %}">{{ page.get_parent.title }}</a></td>
                     {% endif %}
                     <td class="type">{{ page.content_type|title }}</td>
-                    <td class="status"><span class="status-tag {{ page.status_string }}">{{ page.status_string }}</span></td>
+                    <td class="status"><span class="status-tag {% if page.status_string != "draft" %}primary{% endif %}">{{ page.status_string }}</span></td>
                     <td class="{% if allow_navigation %}{% if choosing %}{% if page.can_descend %} children{% endif%}{% elif moving %}{% if page.can_descend %} children{% endif%}{% elif allow_navigation and page.is_navigable %} children{% else %}no-children{% endif %}{% endif %}">
                         {% if allow_navigation %}
                             {% if moving %}
