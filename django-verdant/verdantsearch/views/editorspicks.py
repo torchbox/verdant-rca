@@ -12,7 +12,7 @@ def index(request):
     })
 
 
-def save_editorspicks(query, editors_pick_formset):
+def save_editorspicks(query, new_query, editors_pick_formset):
     # Set sort_order
     for i, form in enumerate(editors_pick_formset.ordered_forms):
         form.instance.sort_order = i
@@ -20,6 +20,10 @@ def save_editorspicks(query, editors_pick_formset):
     # Save
     if editors_pick_formset.is_valid():
         editors_pick_formset.save()
+
+        # If query was changed, move all editors picks to the new query
+        if query != new_query:
+            query.editors_picks.update(query=new_query)
 
         return True
     else:
@@ -29,7 +33,7 @@ def save_editorspicks(query, editors_pick_formset):
 @login_required
 def add(request):
     if request.POST:
-        # Get queries
+        # Get query
         query_form = forms.QueryForm(request.POST)
         if query_form.is_valid():
             query = models.Query.get(query_form['query_string'].value())
@@ -37,7 +41,7 @@ def add(request):
             # Save editors picks
             editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
 
-            if save_editorspicks(query, editors_pick_formset):
+            if save_editorspicks(query, query, editors_pick_formset):
                 return redirect('verdantsearch_editorspicks_index')
         else:
             editors_pick_formset = forms.EditorsPickFormSet()
@@ -56,14 +60,22 @@ def edit(request, query_id):
     query = get_object_or_404(models.Query, id=query_id)
 
     if request.POST:
-        editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
+        # Get query
+        query_form = forms.QueryForm(request.POST)
+        if query_form.is_valid():
+            new_query = models.Query.get(query_form['query_string'].value())
 
-        if save_editorspicks(query, editors_pick_formset):
-            return redirect('verdantsearch_editorspicks_index')
+            # Save editors picks
+            editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
+
+            if save_editorspicks(query, new_query, editors_pick_formset):
+                return redirect('verdantsearch_editorspicks_index')
     else:
+        query_form = forms.QueryForm(initial=dict(query_string=query.query_string))
         editors_pick_formset = forms.EditorsPickFormSet(instance=query)
 
     return render(request, 'verdantsearch/editorspicks/edit.html', {
+        'query_form': query_form,
         'editors_pick_formset': editors_pick_formset,
         'query': query,
     })

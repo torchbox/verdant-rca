@@ -9,6 +9,9 @@
         {% csrf_token %}
 
         <ul class="fields">
+            <li>
+                {% include "verdantsearch/queries/chooser_field.html" with field=query_form.query_string only %}   
+            </li>
             <li> 
                 {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
             </li>
@@ -28,5 +31,10 @@
 
     <script type="text/javascript">
         {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only  %}
+        {% include "verdantsearch/queries/chooser_field.js" only %}
+
+        (function() {
+            createQueryChooser('{{ query_form.query_string.auto_id }}');
+        })();
     </script>
 {% endblock %}
