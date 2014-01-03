@@ -4,7 +4,7 @@ import models
 
 
 class QueryForm(forms.Form):
-    query_string = forms.CharField(required=True)
+    query_string = forms.CharField(label='Terms', required=True)
 
 
 class EditorsPickForm(forms.ModelForm):
