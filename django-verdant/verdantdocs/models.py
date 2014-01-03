@@ -29,6 +29,16 @@ class Document(models.Model, TagSearchable):
     def url(self):
         return reverse('verdantdocs_serve', args=[self.id, self.filename])
 
+    def is_editable_by_user(self, user):
+        if user.has_perm('verdantdocs.change_document'):
+            # user has global permission to change documents
+            return True
+        elif user.has_perm('verdantdocs.add_document') and self.uploaded_by_user == user:
+            # user has document add permission, which also implicitly provides permission to edit their own documents
+            return True
+        else:
+            return False
+
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Document)
 def image_delete(sender, instance, **kwargs):

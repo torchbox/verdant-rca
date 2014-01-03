@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import PermissionDenied
 
 from verdantdocs.models import Document
 from verdantdocs.forms import DocumentForm
@@ -73,9 +74,13 @@ def add(request):
     })
 
 
-@permission_required('verdantdocs.add_document')
+@login_required  # more specific permission tests are applied within the view
 def edit(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
+
+    if not doc.is_editable_by_user(request.user):
+        raise PermissionDenied
+
     if request.POST:
         original_file = doc.file
         form = DocumentForm(request.POST, request.FILES, instance=doc)
@@ -99,9 +104,12 @@ def edit(request, document_id):
     })
 
 
-@permission_required('verdantdocs.add_document')
+@login_required  # more specific permission tests are applied within the view
 def delete(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
+
+    if not doc.is_editable_by_user(request.user):
+        raise PermissionDenied
 
     if request.POST:
         doc.delete()
