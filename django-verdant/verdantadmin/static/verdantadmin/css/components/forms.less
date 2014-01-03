@@ -379,9 +379,12 @@ ul.inline li:first-child, li.inline:first-child{
 
 .chooser {
     /* We show the 'chosen' state...*/
+    .clearfix();
 
     input[type=text]{
-        margin-bottom:1em;
+        float:left;
+        width:50%;
+        margin-right:1em;
     }
     .chosen {
         display: block;

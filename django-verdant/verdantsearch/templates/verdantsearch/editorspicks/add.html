@@ -5,19 +5,25 @@
         <h1>Add editors pick</h1>
     </header>
 
-    <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST" class="nice-padding">
-        {% csrf_token %}
+    <div class="nice-padding">
+        <p>Editors picks are a means of recommending specific pages that might not organically come high up the results. E.g recommending your primary donation page for a user searching with a less common term like "<em>giving</em>".</p>
 
-        <ul class="fields">
-            <li>
-                {% include "verdantsearch/queries/chooser_field.html" with field=query_form.query_string only %}   
-            </li>
-            <li>
-                {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
-            </li>
-            <li><input type="submit" value="Save" /></li>
-        </ul>
-    </form>
+        <p>The "Search term(s)/phrase" field below must contain the full and exact search for which you wish to provide recommended results, <em>including</em> any misspellings. To help, you can choose from search terms that have been popular with users of your site.</p>
+
+        <form action="{% url 'verdantsearch_editorspicks_add' %}" method="POST">
+            {% csrf_token %}
+
+            <ul class="fields">
+                <li>
+                    {% include "verdantsearch/queries/chooser_field.html" with field=query_form.query_string only %}   
+                </li>
+                <li>
+                    {% include "verdantsearch/editorspicks/includes/editorspicks_formset.html" with formset=editors_pick_formset only %}
+                </li>
+                <li><input type="submit" value="Save" /></li>
+            </ul>
+        </form>
+    </div>
 {% endblock %}
 
 {% block extra_css %}
