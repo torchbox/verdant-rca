@@ -23,7 +23,7 @@ def save_editorspicks(query, new_query, editors_pick_formset):
 
         # If query was changed, move all editors picks to the new query
         if query != new_query:
-            query.editors_picks.update(query=new_query)
+            editors_pick_formset.get_queryset().update(query=new_query)
 
         return True
     else:
