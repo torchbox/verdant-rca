@@ -3826,10 +3826,9 @@ class InnovationRCAProjectLink(Orderable):
 
 class InnovationRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True)
-    ref = models.BooleanField(default=False, blank=True)
-    year = models.CharField(max_length=4)
+    year = models.CharField(max_length=4, blank=True)
     description = RichTextField()
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     show_on_homepage = models.BooleanField()
