@@ -22,7 +22,11 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            images = Image.search(q, results_per_page=20, page=p)
+            if not request.user.has_perm('verdantimages.change_image'):
+                # restrict to the user's own images
+                images = Image.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
+            else:
+                images = Image.search(q, results_per_page=20, page=p)
         else:
             images = Image.objects.order_by('-created_at')
             if not request.user.has_perm('verdantimages.change_image'):

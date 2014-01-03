@@ -44,6 +44,15 @@ class AbstractImage(models.Model, TagSearchable):
 
     tags = TaggableManager(help_text=None, blank=True)
 
+    indexed_fields = {
+        'uploaded_by_user_id': {
+            'type': 'integer',
+            'store': 'yes',
+            'indexed': 'no',
+            'boost': 0,
+        },
+    }
+
     def __unicode__(self):
         return self.title
 
