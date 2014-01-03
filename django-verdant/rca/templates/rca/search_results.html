@@ -14,7 +14,7 @@
             
             <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
 
-            {% with search_terms_obj.editors_picks.all as editors_picks %}
+            {% with query.editors_picks.all as editors_picks %}
                 {% if editors_picks %}
                     <h3 class="module-title">Recommended result{{ editors_picks.count|pluralize }}</h3>
                     <ul class="picks">
