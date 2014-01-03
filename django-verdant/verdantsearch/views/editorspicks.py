@@ -12,6 +12,20 @@ def index(request):
     })
 
 
+def save_editorspicks(query, editors_pick_formset):
+    # Set sort_order
+    for i, form in enumerate(editors_pick_formset.ordered_forms):
+        form.instance.sort_order = i
+
+    # Save
+    if editors_pick_formset.is_valid():
+        editors_pick_formset.save()
+
+        return True
+    else:
+        return False
+
+
 @login_required
 def add(request):
     if request.POST:
@@ -23,9 +37,7 @@ def add(request):
             # Save editors picks
             editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
 
-            if editors_pick_formset.is_valid():
-                editors_pick_formset.save()
-
+            if save_editorspicks(query, editors_pick_formset):
                 return redirect('verdantsearch_editorspicks_index')
         else:
             editors_pick_formset = forms.EditorsPickFormSet()
@@ -46,9 +58,7 @@ def edit(request, query_id):
     if request.POST:
         editors_pick_formset = forms.EditorsPickFormSet(request.POST, instance=query)
 
-        if editors_pick_formset.is_valid():
-            editors_pick_formset.save()
-
+        if save_editorspicks(query, editors_pick_formset):
             return redirect('verdantsearch_editorspicks_index')
     else:
         editors_pick_formset = forms.EditorsPickFormSet(instance=query)

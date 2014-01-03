@@ -34,10 +34,3 @@ class EditorsPickFormSet(EditorsPickFormSetBase):
 
         # Remove query field
         del form.fields['query']
-
-    def save(self, *args, **kwargs):
-        # Set sort_order
-        for i, form in enumerate(self.ordered_forms):
-            form.instance.sort_order = i
-
-        super(EditorsPickFormSet, self).save(*args, **kwargs)
