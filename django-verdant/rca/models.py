@@ -3862,7 +3862,6 @@ InnovationRCAProject.content_panels = [
     FieldPanel('subtitle'),
     InlinePanel(InnovationRCAProject, 'carousel_items', label="Carousel content"),
     InlinePanel(InnovationRCAProject, 'creator', label="Creator"),
-    FieldPanel('ref'),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
