@@ -1,7 +1,0 @@
-{% load rca_tags %}
-
-<h1 class="h1 major">
-	{% for word in self.title|title_split %}
-    	<span class="{% cycle 'dark-grey' 'medium-grey' 'charcoal' 'medium-grey' 'light-grey' %}">{{ word }}</span>
-	{% endfor %}
-</h1>

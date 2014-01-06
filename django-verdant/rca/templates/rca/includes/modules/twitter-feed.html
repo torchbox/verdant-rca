@@ -1,9 +1,0 @@
-{% comment %}
-	Populated via javascript.
-	TODO: set username dynamically
-{% endcomment %}
-
-<section class="twitter-feed module">
-	<h2><a href="http://twitter.com/{{ self.twitter_feed|default:global_default_twitter_handle}}">@{{ self.twitter_feed|default:global_default_twitter_handle }} twitter</a></h2>
-	<div class="twitter-feed-items" data-twitter-feed="{{ self.twitter_feed|default:global_default_twitter_handle }}"></div>
-</section>

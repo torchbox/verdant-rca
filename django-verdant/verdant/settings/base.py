@@ -12,7 +12,6 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Verdant RCA errors', 'verdant-rca-errors@torchbox.com'),
 )
 
 MANAGERS = ADMINS
@@ -172,10 +171,6 @@ INSTALLED_APPS = (
     'verdantsearch',
     'verdantusers',
     'verdantredirects',
-
-    'donations',
-    'rca',
-    'rca_signage',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
@@ -249,18 +244,6 @@ CACHES = {
         }
     }
 }
-
-# VERDANT SETTINGS
-
-# Override the Image class used by verdantimages with a custom one
-VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
-
-# Override the search results template for verdantsearch
-VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
-
-VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
-
-VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 
 # CELERY SETTINGS
 
