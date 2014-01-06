@@ -5,8 +5,10 @@ from django.utils.text import capfirst
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 
 from verdantsnippets.models import get_snippet_content_types
+from verdantsnippets.permissions import user_can_edit_snippet_type
 from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==
@@ -64,6 +66,7 @@ def index(request):
             content_type
         )
         for content_type in get_snippet_content_types()
+        if user_can_edit_snippet_type(request.user, content_type)
     ]
     return render(request, 'verdantsnippets/snippets/index.html', {
         'snippet_types': snippet_types,
@@ -73,6 +76,9 @@ def index(request):
 @login_required
 def list(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    if not user_can_edit_snippet_type(request.user, content_type):
+        raise PermissionDenied
+
     model = content_type.model_class()
     snippet_type_name, snippet_type_name_plural = get_snippet_type_name(content_type)
 
@@ -89,6 +95,9 @@ def list(request, content_type_app_name, content_type_model_name):
 @login_required
 def create(request, content_type_app_name, content_type_model_name):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    if not user_can_edit_snippet_type(request.user, content_type):
+        raise PermissionDenied
+
     model = content_type.model_class()
     snippet_type_name = get_snippet_type_name(content_type)[0]
 
@@ -123,6 +132,9 @@ def create(request, content_type_app_name, content_type_model_name):
 @login_required
 def edit(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    if not user_can_edit_snippet_type(request.user, content_type):
+        raise PermissionDenied
+
     model = content_type.model_class()
     snippet_type_name = get_snippet_type_name(content_type)[0]
 
@@ -159,6 +171,9 @@ def edit(request, content_type_app_name, content_type_model_name, id):
 @login_required
 def delete(request, content_type_app_name, content_type_model_name, id):
     content_type = get_content_type_from_url_params(content_type_app_name, content_type_model_name)
+    if not user_can_edit_snippet_type(request.user, content_type):
+        raise PermissionDenied
+
     model = content_type.model_class()
     snippet_type_name = get_snippet_type_name(content_type)[0]
 
