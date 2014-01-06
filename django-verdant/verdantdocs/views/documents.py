@@ -22,11 +22,21 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            documents = Document.search(q, results_per_page=20, page=p)
+            if not request.user.has_perm('verdantdocs.change_document'):
+                # restrict to the user's own documents
+                documents = Document.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
+            else:
+                documents = Document.search(q, results_per_page=20, page=p)
         else:
             documents = Document.objects.order_by('-created_at')
+            if not request.user.has_perm('verdantdocs.change_document'):
+                # restrict to the user's own documents
+                documents = documents.filter(uploaded_by_user=request.user)
     else:
         documents = Document.objects.order_by('-created_at')
+        if not request.user.has_perm('verdantdocs.change_document'):
+            # restrict to the user's own documents
+            documents = documents.filter(uploaded_by_user=request.user)
         form = SearchForm()
 
     if not is_searching:
