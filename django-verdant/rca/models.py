@@ -432,6 +432,9 @@ class Advert(models.Model):
 
     class Meta:
         description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
+        permissions = (
+            ("change_advert", "Can edit adverts"),
+        )
 
     def __unicode__(self):
         return self.text
@@ -463,6 +466,9 @@ class CustomContentModule(models.Model):
 
     class Meta:
         description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
+        permissions = (
+            ("change_customcontentmodule", "Can edit custom content modules"),
+        )
 
     def __unicode__(self):
         return self.title
@@ -489,6 +495,9 @@ class ReusableTextSnippet(models.Model):
 
     class Meta:
         description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
+        permissions = (
+            ("change_reusabletextsnippet", "Can edit reusable text snippets"),
+        )
 
     def __unicode__(self):
         return self.name
@@ -526,6 +535,9 @@ class ContactSnippet(models.Model):
 
     class Meta:
         description = "Displayed in main body. Usable on standard index page only. "
+        permissions = (
+            ("change_contactsnippet", "Can edit contact snippets"),
+        )
 
     def __unicode__(self):
         return self.title
