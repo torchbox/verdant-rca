@@ -21,8 +21,7 @@ def get_snippet_type_name(content_type):
     )
 
 def get_snippet_type_description(content_type):
-    """ e.g. given the 'advert' content type, return ('Advert', 'Adverts') """
-    # why oh why is this so convoluted?
+    """ return the meta description of the class associated with the given content type """
     opts = content_type.model_class()._meta
     try:
         return force_text(opts.description)
