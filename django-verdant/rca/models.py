@@ -3153,6 +3153,9 @@ class RcaNowPage(Page, SocialFields):
 
     search_name = 'RCA Now'
 
+    class Meta:
+        verbose_name = 'RCA Now Page'
+
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
@@ -3239,6 +3242,9 @@ class RcaNowIndex(Page, SocialFields):
                 'self': self,
                 'rca_now_items': rca_now_items
             })
+
+    class Meta:
+        verbose_name = 'RCA Now Index'
 
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
