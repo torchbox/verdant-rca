@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 import json
 
@@ -12,7 +12,11 @@ from verdantadmin.forms import SearchForm
 
 @login_required
 def chooser(request):
-    uploadform = DocumentForm()
+    if request.user.has_perm('verdantdocs.add_document'):
+        uploadform = DocumentForm()
+    else:
+        uploadform = None
+
     documents = []
     
     q = None
@@ -83,7 +87,7 @@ def document_chosen(request, document_id):
     )
 
 
-@login_required
+@permission_required('verdantdocs.add_document')
 def chooser_upload(request):
     if request.POST:
         document = Document(uploaded_by_user=request.user)
