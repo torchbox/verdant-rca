@@ -38,17 +38,18 @@
             {% endif %}
             <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
         </li>
-        <li class="more">
-            <a href="#" class="icon icon-arrow-down">More</a>
-            <ul>
-                <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}" class="icon icon-redirect">Redirects</a></li>
-                {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
-                {% for name, title in verdantadmin_tab_urls %}
-                    <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-
+        {% if user.is_superuser %} {# for now, 'More' links will be superuser-only #}
+            <li class="more">
+                <a href="#" class="icon icon-arrow-down">More</a>
+                <ul>
+                    <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}" class="icon icon-redirect">Redirects</a></li>
+                    {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
+                    {% for name, title in verdantadmin_tab_urls %}
+                        <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
      
     </ul>
 </nav>
