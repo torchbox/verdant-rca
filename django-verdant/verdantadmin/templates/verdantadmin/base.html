@@ -29,7 +29,9 @@
                     {% if perms.verdantimages.add_image %}
                         <li class="menu-images"><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
                     {% endif %}
-                    <li class="menu-documents"><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
+                    {% if perms.verdantdocs.add_document %}
+                        <li class="menu-documents"><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
+                    {% endif %}
                     <li class="menu-snippets"><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
                     {% if perms.auth %}
                         <li class="menu-users"><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
