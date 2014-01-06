@@ -378,6 +378,12 @@ class Page(MP_Node, ClusterableModel, Indexed):
         """
         return Page.objects.filter(content_type__in=cls.allowed_parent_page_types())
 
+    @classmethod
+    def get_verbose_name(cls):
+        # This is similar to doing cls._meta.verbose_name.title()
+        # except this doesn't convert any characters to lowercase
+        return ' '.join([word[0].upper() + word[1:] for word in cls._meta.verbose_name.split()])
+
     @property
     def status_string(self):
         if not self.live:
