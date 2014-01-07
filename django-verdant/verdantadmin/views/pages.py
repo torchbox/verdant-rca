@@ -282,8 +282,19 @@ def reorder(request, parent_page_id=None):
             return redirect('verdantadmin_explore', parent_page.id)
 
         # Reorder
-        for page in pages_ordered:
-            page.move(parent_page, pos='last-child')
+        first_page = pages_ordered[0]
+        print first_page.title
+        other_pages = pages_ordered[1:]
+        print other_pages[:4]
+
+        # Move first page to beginning
+        first_page.move(parent_page, pos='first-child')
+        previous_page = first_page
+
+        # Move other pages
+        for page in other_pages:
+            page.move(previous_page, pos='right')
+            previous_page = page
 
         # Success message
         messages.success(request, "Pages have been reordered")
