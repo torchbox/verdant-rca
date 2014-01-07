@@ -11,12 +11,11 @@
         {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.description %}
         {% include "rca/includes/modules/meta-data.html" with showInnovationRCAMeta="true" %}
     </section>
-    <!-- research -->
-    {% if self.programme %}
-        {% research_related programme=self.programme exclude=self %}
-    {% elif self.school %}
-        {% research_related school=self.school exclude=self %}
-    {% endif %}
+    <!-- innovation rca projects -->
+    <div id="listing">
+        {% include "rca/includes/innovation_rca_listing.html" %}
+    </div>
+
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}

@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import PermissionDenied
 
 from verdantdocs.models import Document
 from verdantdocs.forms import DocumentForm
 from verdantadmin.forms import SearchForm
 
 
-@login_required
+@permission_required('verdantdocs.add_document')
 def index(request):
 
     q = None
@@ -21,11 +22,21 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            documents = Document.search(q, results_per_page=20, page=p)
+            if not request.user.has_perm('verdantdocs.change_document'):
+                # restrict to the user's own documents
+                documents = Document.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
+            else:
+                documents = Document.search(q, results_per_page=20, page=p)
         else:
             documents = Document.objects.order_by('-created_at')
+            if not request.user.has_perm('verdantdocs.change_document'):
+                # restrict to the user's own documents
+                documents = documents.filter(uploaded_by_user=request.user)
     else:
         documents = Document.objects.order_by('-created_at')
+        if not request.user.has_perm('verdantdocs.change_document'):
+            # restrict to the user's own documents
+            documents = documents.filter(uploaded_by_user=request.user)
         form = SearchForm()
 
     if not is_searching:
@@ -54,12 +65,13 @@ def index(request):
         })
 
 
-@login_required
+@permission_required('verdantdocs.add_document')
 def add(request):
     if request.POST:
-        form = DocumentForm(request.POST, request.FILES)
+        doc = Document(uploaded_by_user=request.user)
+        form = DocumentForm(request.POST, request.FILES, instance=doc)
         if form.is_valid():
-            doc = form.save()
+            form.save()
             messages.success(request, "Document '%s' added." % doc.title)
             return redirect('verdantdocs_index')
         else:
@@ -72,9 +84,13 @@ def add(request):
     })
 
 
-@login_required
+@login_required  # more specific permission tests are applied within the view
 def edit(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
+
+    if not doc.is_editable_by_user(request.user):
+        raise PermissionDenied
+
     if request.POST:
         original_file = doc.file
         form = DocumentForm(request.POST, request.FILES, instance=doc)
@@ -98,9 +114,12 @@ def edit(request, document_id):
     })
 
 
-@login_required
+@login_required  # more specific permission tests are applied within the view
 def delete(request, document_id):
     doc = get_object_or_404(Document, id=document_id)
+
+    if not doc.is_editable_by_user(request.user):
+        raise PermissionDenied
 
     if request.POST:
         doc.delete()
@@ -112,7 +131,7 @@ def delete(request, document_id):
     })
 
 
-@login_required
+@permission_required('verdantdocs.add_document')
 def search(request):
     documents = []
     q = None

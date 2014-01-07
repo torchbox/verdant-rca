@@ -29,12 +29,12 @@ class TagSearchable(Indexed):
         return ' '.join([tag.name for tag in self.tags.all()])
 
     @classmethod
-    def search(cls, q, results_per_page=None, page=1, prefetch_tags=False):
+    def search(cls, q, results_per_page=None, page=1, prefetch_tags=False, filters={}):
         # Run search query
         if prefetch_tags:
-            results = Search().search(q, cls, prefetch_related=['tagged_items__tag'])
+            results = Search().search(q, cls, prefetch_related=['tagged_items__tag'], filters=filters)
         else:
-            results = Search().search(q, cls)
+            results = Search().search(q, cls, filters=filters)
 
         # If results_per_page is set, return a paginator
         if results_per_page is not None:

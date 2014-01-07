@@ -14,11 +14,9 @@
         {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
     </section>
     <!-- research -->
-    {% if self.programme %}
-        {% research_related programme=self.programme exclude=self %}
-    {% elif self.school %}
-        {% research_related school=self.school exclude=self %}
-    {% endif %}
+    <div id="listing">
+        {% include "rca/includes/research_listing.html" %}
+    </div>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}

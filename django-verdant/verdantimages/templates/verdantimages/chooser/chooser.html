@@ -4,10 +4,12 @@
     <h1>Choose an image</h1>
 </header>
 
-<ul class="tab-nav merged">
-    <li><a href="#search" class="active">Search</a></li>
-    <li><a href="#upload">Upload</a></li>
-</ul>
+{% if uploadform %}
+    <ul class="tab-nav merged">
+        <li><a href="#search" class="active">Search</a></li>
+        <li><a href="#upload">Upload</a></li>
+    </ul>
+{% endif %}
 
 <div class="tab-content">
     <section id="search" class="active nice-padding">
@@ -31,15 +33,17 @@
             {% include "verdantimages/chooser/results.html" %}
         </div>
     </section>
-    <section id="upload" class="nice-padding">
-        <form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <ul class="fields">
-                {% for field in uploadform %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
-                <li><input type="submit" value="Upload" /></li>
-            </ul>
-        </form>
-    </section>
+    {% if uploadform %}
+        <section id="upload" class="nice-padding">
+            <form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <ul class="fields">
+                    {% for field in uploadform %}
+                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                    {% endfor %}
+                    <li><input type="submit" value="Upload" /></li>
+                </ul>
+            </form>
+        </section>
+    {% endif %}
 </div>
