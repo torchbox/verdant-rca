@@ -99,4 +99,13 @@ $(function(){
         $(this).parent().find('ul').toggle('fast');
         return false;
     });
+
+    $('#menu-search input').bind('focus', function(){
+        $('#menu-search').addClass('focussed');  
+    }).bind('blur', function(){
+        $('#menu-search').removeClass('focussed');
+    })
+    $('#menu-search').bind('focus click', function(){
+        $(this).addClass('focussed');
+    })
 })

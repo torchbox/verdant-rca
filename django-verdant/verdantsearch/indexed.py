@@ -3,9 +3,9 @@ from django.db import models
 
 class Indexed(object):
     @classmethod
-    def indexed_get_parent(cls):
+    def indexed_get_parent(cls, require_model=True):
         for base in cls.__bases__:
-            if issubclass(base, Indexed) and issubclass(base, models.Model):
+            if issubclass(base, Indexed) and (issubclass(base, models.Model) or require_model == False):
                 return base
 
     @classmethod
@@ -45,7 +45,7 @@ class Indexed(object):
             raise ValueError()
 
         # Get indexed fields for parent class
-        parent = cls.indexed_get_parent()
+        parent = cls.indexed_get_parent(require_model=False)
         if parent:
             # Add parent fields into this list
             parent_indexed_fields = parent.indexed_get_indexed_fields()
