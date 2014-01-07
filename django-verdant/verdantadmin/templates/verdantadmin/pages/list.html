@@ -35,6 +35,7 @@
                         <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
                         <ul class="actions">
                             <li><a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button button-small icon white icon-plus-inverse">Add child page</a></li>
+                            <li><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">Edit</a></li>
                             {% if parent_page.has_unpublished_changes %}
                                 <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank">View draft</a></li>
                             {% endif %}
@@ -135,6 +136,7 @@
                         </h2>
                         {% if not moving and not choosing %}
                             <ul class="actions">
+                                <li><a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">Edit</a></li>
                                 {% if page.has_unpublished_changes %}
                                     <li><a href="{% url 'verdantadmin_pages_view_draft' page.id %}" target="_blank">View draft</a></li>
                                 {% endif %}
