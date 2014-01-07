@@ -143,6 +143,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     live = models.BooleanField(default=True, editable=False)
     has_unpublished_changes = models.BooleanField(default=False, editable=False)
     url_path = models.CharField(max_length=255, blank=True, editable=False)
+    owner = models.ForeignKey('auth.User', null=True, blank=True, editable=False, related_name='owned_pages')
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
