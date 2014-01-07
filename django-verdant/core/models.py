@@ -522,3 +522,14 @@ class PageRevision(models.Model):
         page.save()
         self.submitted_for_moderation = False
         page.revisions.update(submitted_for_moderation=False)
+
+PAGE_PERMISSION_TYPE_CHOICES = [
+    ('add', 'Add'),
+    ('edit', 'Edit'),
+    ('publish', 'Publish'),
+]
+
+class GroupPagePermission(models.Model):
+    group = models.ForeignKey('auth.group', related_name='page_permissions')
+    page = models.ForeignKey('Page', related_name='group_permissions')
+    permission_type = models.CharField(max_length=20, choices=PAGE_PERMISSION_TYPE_CHOICES)
