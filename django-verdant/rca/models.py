@@ -2900,6 +2900,9 @@ class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed_fields = ('intro', )
+    search_name = None
+
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
