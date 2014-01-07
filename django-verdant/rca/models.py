@@ -432,6 +432,9 @@ class Advert(models.Model):
 
     class Meta:
         description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
+        permissions = (
+            ("change_advert", "Can edit adverts"),
+        )
 
     def __unicode__(self):
         return self.text
@@ -463,6 +466,9 @@ class CustomContentModule(models.Model):
 
     class Meta:
         description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
+        permissions = (
+            ("change_customcontentmodule", "Can edit custom content modules"),
+        )
 
     def __unicode__(self):
         return self.title
@@ -489,6 +495,9 @@ class ReusableTextSnippet(models.Model):
 
     class Meta:
         description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
+        permissions = (
+            ("change_reusabletextsnippet", "Can edit reusable text snippets"),
+        )
 
     def __unicode__(self):
         return self.name
@@ -526,6 +535,9 @@ class ContactSnippet(models.Model):
 
     class Meta:
         description = "Displayed in main body. Usable on standard index page only. "
+        permissions = (
+            ("change_contactsnippet", "Can edit contact snippets"),
+        )
 
     def __unicode__(self):
         return self.title
@@ -2888,6 +2900,9 @@ class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed_fields = ('intro', )
+    search_name = None
+
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
@@ -3153,6 +3168,9 @@ class RcaNowPage(Page, SocialFields):
 
     search_name = 'RCA Now'
 
+    class Meta:
+        verbose_name = 'RCA Now Page'
+
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
@@ -3240,6 +3258,9 @@ class RcaNowIndex(Page, SocialFields):
                 'rca_now_items': rca_now_items
             })
 
+    class Meta:
+        verbose_name = 'RCA Now Index'
+
 RcaNowIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -3309,6 +3330,37 @@ class ResearchItem(Page, SocialFields):
     indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
     search_name = 'Research'
+
+    def serve(self, request):
+        # Get related research
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
+        if self.programme:
+            research_items = research_items.filter(programme=self.programme)
+        else:
+            research_items = research_items.filter(school=self.school)
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
@@ -3840,6 +3892,37 @@ class InnovationRCAProject(Page, SocialFields):
 
     search_name = 'InnovationRCA Project'
 
+    def serve(self, request):
+        # Get related research
+        projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        if self.programme:
+            projects = projects.filter(programme=self.programme)
+        elif self.school:
+            projects = projects.filter(school=self.school)
+
+        paginator = Paginator(projects, 4)
+
+        page = request.GET.get('page')
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            projects = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            projects = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/innovation_rca_listing.html", {
+                'self': self,
+                'projects': projects
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects
+            })
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area='research',
@@ -3856,7 +3939,6 @@ InnovationRCAProject.content_panels = [
     FieldPanel('subtitle'),
     InlinePanel(InnovationRCAProject, 'carousel_items', label="Carousel content"),
     InlinePanel(InnovationRCAProject, 'creator', label="Creator"),
-    FieldPanel('ref'),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),

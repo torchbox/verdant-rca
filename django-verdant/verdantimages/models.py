@@ -40,8 +40,18 @@ class AbstractImage(models.Model, TagSearchable):
     width = models.IntegerField(editable=False)
     height = models.IntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    uploaded_by_user = models.ForeignKey('auth.User', null=True, blank=True, editable=False)
 
     tags = TaggableManager(help_text=None, blank=True)
+
+    indexed_fields = {
+        'uploaded_by_user_id': {
+            'type': 'integer',
+            'store': 'yes',
+            'indexed': 'no',
+            'boost': 0,
+        },
+    }
 
     def __unicode__(self):
         return self.title
@@ -79,11 +89,29 @@ class AbstractImage(models.Model, TagSearchable):
         # override this
         return self.title
 
+    def is_editable_by_user(self, user):
+        if user.has_perm('verdantimages.change_image'):
+            # user has global permission to change images
+            return True
+        elif user.has_perm('verdantimages.add_image') and self.uploaded_by_user == user:
+            # user has image add permission, which also implicitly provides permission to edit their own images
+            return True
+        else:
+            return False
+
     class Meta:
         abstract=True
 
 class Image(AbstractImage):
     pass
+
+    class Meta:
+        permissions = (
+            ('add_image', "Can add image"),
+            ('change_image', "Can change image"),
+            ('delete_image', "Can delete image"),
+        )
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=Image)

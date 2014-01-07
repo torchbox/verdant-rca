@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required, login_required
+from django.core.exceptions import PermissionDenied
 
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form
 from verdantadmin.forms import SearchForm
 
-@login_required
+@permission_required('verdantimages.add_image')
 def index(request):
     Image = get_image_model()
 
@@ -21,11 +22,21 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            images = Image.search(q, results_per_page=20, page=p)
+            if not request.user.has_perm('verdantimages.change_image'):
+                # restrict to the user's own images
+                images = Image.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
+            else:
+                images = Image.search(q, results_per_page=20, page=p)
         else:
             images = Image.objects.order_by('-created_at')
+            if not request.user.has_perm('verdantimages.change_image'):
+                # restrict to the user's own images
+                images = images.filter(uploaded_by_user=request.user)
     else:
         images = Image.objects.order_by('-created_at')
+        if not request.user.has_perm('verdantimages.change_image'):
+            # restrict to the user's own images
+            images = images.filter(uploaded_by_user=request.user)
         form = SearchForm()
 
     if not is_searching:
@@ -54,12 +65,15 @@ def index(request):
         })
 
 
-@login_required
+@login_required  # more specific permission tests are applied within the view
 def edit(request, image_id):
     Image = get_image_model()
     ImageForm = get_image_form()
 
     image = get_object_or_404(Image, id=image_id)
+
+    if not image.is_editable_by_user(request.user):
+        raise PermissionDenied
 
     if request.POST:
         original_file = image.file
@@ -85,9 +99,12 @@ def edit(request, image_id):
     })
 
 
-@login_required
+@login_required  # more specific permission tests are applied within the view
 def delete(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
+
+    if not image.is_editable_by_user(request.user):
+        raise PermissionDenied
 
     if request.POST:
         image.delete()
@@ -99,14 +116,16 @@ def delete(request, image_id):
     })
 
 
-@login_required
+@permission_required('verdantimages.add_image')
 def add(request):
     ImageForm = get_image_form()
+    ImageModel = get_image_model()
 
     if request.POST:
-        form = ImageForm(request.POST, request.FILES)
+        image = ImageModel(uploaded_by_user=request.user)
+        form = ImageForm(request.POST, request.FILES, instance=image)
         if form.is_valid():
-            image = form.save()
+            form.save()
             messages.success(request, "Image '%s' added." % image.title)
             return redirect('verdantimages_index')
         else:
@@ -119,7 +138,7 @@ def add(request):
     })
 
 
-@login_required
+@permission_required('verdantimages.add_image')
 def search(request):
     Image = get_image_model()
     images = []
