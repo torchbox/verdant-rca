@@ -13,9 +13,9 @@
     </section>
     <!-- research -->
     {% if self.programme %}
-        {% research_related programme=self.programme exclude=self %}
+        {% innovation_rca_related programme=self.programme exclude=self %}
     {% elif self.school %}
-        {% research_related school=self.school exclude=self %}
+        {% innovation_rca_related school=self.school exclude=self %}
     {% endif %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
