@@ -34,9 +34,9 @@ def get_filter_string(base, **kwargs):
     return filter_string
 
 FILTER_BASE = '(sAMAccountName=%(user)s)'
-FILTER_SUPER_PUBLISHERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Super-Publishers,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
-FILTER_PUBLISHERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Publishers,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
-FILTER_CONTRIBUTERS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Contributors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_ADMINS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Administrators,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_MODS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Moderators,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_EDITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Editors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
 FILTER_VISITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Visitors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
 
 # Roles
@@ -52,9 +52,9 @@ STUDENTS_DN = 'OU=Students,DC=rca,DC=ac,DC=uk'
 # Search
 AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
     # Staff
-    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_SUPER_PUBLISHERS, role=ROLE_ADMIN),
-    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_PUBLISHERS, role=ROLE_MOD),
-    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_CONTRIBUTERS, role=ROLE_EDITOR),
+    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_ADMINS, role=ROLE_ADMIN),
+    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_MODS, role=ROLE_MOD),
+    LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_EDITORS, role=ROLE_EDITOR),
     #LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_VISITORS, role=ROLE_USER),
 
     # Students
