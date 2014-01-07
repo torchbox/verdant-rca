@@ -3331,6 +3331,37 @@ class ResearchItem(Page, SocialFields):
 
     search_name = 'Research'
 
+    def serve(self, request):
+        # Get related research
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
+        if self.programme:
+            research_items = research_items.filter(programme=self.programme)
+        else:
+            research_items = research_items.filter(school=self.school)
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
+
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             area='research',
