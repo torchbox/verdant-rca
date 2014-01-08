@@ -2900,6 +2900,9 @@ class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
 
+    indexed_fields = ('intro', )
+    search_name = None
+
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
@@ -3327,6 +3330,37 @@ class ResearchItem(Page, SocialFields):
     indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
     search_name = 'Research'
+
+    def serve(self, request):
+        # Get related research
+        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
+        if self.programme:
+            research_items = research_items.filter(programme=self.programme)
+        else:
+            research_items = research_items.filter(school=self.school)
+
+        paginator = Paginator(research_items, 4)
+
+        page = request.GET.get('page')
+        try:
+            research_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            research_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            research_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/research_listing.html", {
+                'self': self,
+                'research_items': research_items
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'research_items': research_items
+            })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
@@ -3857,6 +3891,37 @@ class InnovationRCAProject(Page, SocialFields):
     indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_type_display')
 
     search_name = 'InnovationRCA Project'
+
+    def serve(self, request):
+        # Get related research
+        projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        if self.programme:
+            projects = projects.filter(programme=self.programme)
+        elif self.school:
+            projects = projects.filter(school=self.school)
+
+        paginator = Paginator(projects, 4)
+
+        page = request.GET.get('page')
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            projects = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            projects = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/innovation_rca_listing.html", {
+                'self': self,
+                'projects': projects
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects
+            })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(

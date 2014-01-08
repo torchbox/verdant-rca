@@ -1,8 +1,9 @@
 {% extends "verdantadmin/base.html" %}
-{% block titletag %}Where do you want to create a {{ content_type.name|title }}{% endblock %}
+{% block titletag %}Where do you want to create a {{ content_type.model_class.get_verbose_name }}{% endblock %}
 {% block content %}
+
     <header class="nice-padding">
-        <h1>Where do you want to create this {{ content_type.name|title }}?</h1>
+        <h1>Where do you want to create this {{ content_type.model_class.get_verbose_name|title }}?</h1>
     </header>
     <ul>
         {% for page in parent_pages %}

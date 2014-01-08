@@ -22,8 +22,13 @@ from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
-from verdantsearch import register_signal_handlers
-register_signal_handlers()
+
+# Signal handlers
+from verdantsearch import register_signal_handlers as verdantsearch_register_signal_handlers
+verdantsearch_register_signal_handlers()
+
+from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_register_signal_handlers
+rca_ldap_register_signal_handlers()
 
 
 urlpatterns = patterns('',

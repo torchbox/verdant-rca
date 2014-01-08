@@ -137,9 +137,15 @@ def research_related(context, programme="", person="", school="", exclude=None):
     }
 
 @register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
-def innovation_rca_related(context, person):
-    projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
-
+def innovation_rca_related(context, programme="", person="", school="", exclude=None):
+    if programme:
+        projects = InnovationRCAProject.objects.filter(live=True, programme=programme)
+    elif person:
+        projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
+    elif school:
+        projects = InnovationRCAProject.objects.filter(live=True, school=school)
+    if exclude:
+        projects = projects.exclude(id=exclude.id)
     return {
         'projects': projects.order_by('?'),
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template

@@ -12,7 +12,7 @@ from donations.forms import DonationForm
 from donations.mail_admins import mail_exception
 from django.conf import settings
 from donations.csv_unicode import UnicodeWriter
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 
 # stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -49,7 +49,7 @@ from django.contrib.auth.decorators import login_required
 #     })
 
 
-@login_required
+@permission_required('donations.download_donations')
 def export(request, include_all=False):
     stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -196,6 +196,6 @@ def export(request, include_all=False):
     return response
 
 
-@login_required
+@permission_required('donations.download_donations')
 def verdantadmin(request, title=None):
     return render(request, 'donations/verdantadmin.html', {})
