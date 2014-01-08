@@ -417,6 +417,23 @@ class Page(MP_Node, ClusterableModel, Indexed):
         new_self.save()
         new_self._update_descendant_url_paths(old_url_path, new_url_path)
 
+    def permissions_for_user(self, user):
+        """
+        Return a set of permission type strings (see PAGE_PERMISSION_TYPE_CHOICES)
+        that a user has over this page. Permissions set on a page propagate to all children,
+        and are cumulative (a 'lesser' permission deeper in the tree does not revoke one higher up)
+        """
+        if not user.is_active:
+            # Inactive users have no permission
+            return set()
+
+        if user.is_superuser:
+            # superusers have all permissions
+            return set(name for name, label in PAGE_PERMISSION_TYPE_CHOICES)
+
+        ancestors_and_self = list(self.get_ancestors()) + [self]
+        permissions = GroupPagePermission.objects.filter(group__user=user, page__in=ancestors_and_self)
+        return set(permissions.values_list('permission_type', flat=True))
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
