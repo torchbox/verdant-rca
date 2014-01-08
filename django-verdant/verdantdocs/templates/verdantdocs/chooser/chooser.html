@@ -2,10 +2,12 @@
     <h1>Choose a document</h1>
 </header>
 
-<ul class="tab-nav merged">
-    <li><a href="#search" class="active">Search</a></li>
-    <li><a href="#upload">Upload</a></li>
-</ul>
+{% if uploadform %}
+    <ul class="tab-nav merged">
+        <li><a href="#search" class="active">Search</a></li>
+        <li><a href="#upload">Upload</a></li>
+    </ul>
+{% endif %}
 
 <div class="tab-content">
     <section id="search" class="active nice-padding">
@@ -21,15 +23,17 @@
             {% include "verdantdocs/chooser/results.html" %}
         </div>
     </section>
-    <section id="upload" class="nice-padding">
-        <form class="document-upload" action="{% url 'verdantdocs_chooser_upload' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <ul class="fields">
-                {% for field in uploadform %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-                {% endfor %}
-                <li><input type="submit" value="Save" /></li>
-            </ul>
-        </form>
-    </section>
+    {% if uploadform %}
+        <section id="upload" class="nice-padding">
+            <form class="document-upload" action="{% url 'verdantdocs_chooser_upload' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <ul class="fields">
+                    {% for field in uploadform %}
+                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                    {% endfor %}
+                    <li><input type="submit" value="Save" /></li>
+                </ul>
+            </form>
+        </section>
+    {% endif %}
 </div>

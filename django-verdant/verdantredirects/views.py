@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import permission_required
 from verdantadmin.edit_handlers import ObjectList
 
 import models
@@ -10,7 +10,7 @@ import forms
 
 REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)
 
-@login_required
+@permission_required('verdantredirects.change_redirect')
 def index(request):
     print request.get_full_path()
     # Get redirects
@@ -22,7 +22,7 @@ def index(request):
     })
 
 
-@login_required
+@permission_required('verdantredirects.change_redirect')
 def edit(request, redirect_id):
     theredirect = get_object_or_404(models.Redirect, id=redirect_id)
 
@@ -46,7 +46,7 @@ def edit(request, redirect_id):
     })
 
 
-@login_required
+@permission_required('verdantredirects.change_redirect')
 def delete(request, redirect_id):
     theredirect = get_object_or_404(models.Redirect, id=redirect_id)
 
@@ -60,7 +60,7 @@ def delete(request, redirect_id):
     })
 
 
-@login_required
+@permission_required('verdantredirects.change_redirect')
 def add(request):
     theredirect = models.Redirect()
 

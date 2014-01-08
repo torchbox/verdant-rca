@@ -47,18 +47,11 @@ def suggest(request):
         # Get list of suggestions
         suggestions = []
         for result in search_results:
-            model = result.content_type.model_class()
-            if hasattr(model, "search_name"):
-                if model.search_name is None:
-                    content_type = ""
-                else:
-                    content_type = model.search_name
-            else:
-                content_type = model.__name__
+            search_name = result.specific.search_name
 
             suggestions.append({
                 "label": result.title,
-                "type": content_type,
+                "type": search_name if search_name else '',
                 "url": result.url,
             })
 

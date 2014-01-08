@@ -50,7 +50,7 @@ def select_type(request):
         SELECT DISTINCT content_type_id AS id FROM core_page
     """)
 
-    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name.lower())
     page_types = set()
     for content_type in existing_page_types:
         allowed_subpage_types = content_type.model_class().clean_subpage_types()
@@ -69,8 +69,8 @@ def select_type(request):
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
 
-    page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name)
-    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name)
+    page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name.lower())
+    all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name.lower())
 
     return render(request, 'verdantadmin/pages/add_subpage.html', {
         'parent_page': parent_page,

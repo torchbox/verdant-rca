@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 import json
 
@@ -31,8 +31,12 @@ def get_image_json(image):
 @login_required
 def chooser(request):
     Image = get_image_model()
-    ImageForm = get_image_form()
-    uploadform = ImageForm()
+
+    if request.user.has_perm('verdantimages.add_image'):
+        ImageForm = get_image_form()
+        uploadform = ImageForm()
+    else:
+        uploadform = None
 
     q = None
     if 'q' in request.GET or 'p' in request.GET:
@@ -101,16 +105,17 @@ def image_chosen(request, image_id):
     )
 
 
-@login_required
+@permission_required('verdantimages.add_image')
 def chooser_upload(request):
     Image = get_image_model()
     ImageForm = get_image_form()
 
     if request.POST:
-        form = ImageForm(request.POST, request.FILES)
+        image = Image(uploaded_by_user=request.user)
+        form = ImageForm(request.POST, request.FILES, instance=image)
 
         if form.is_valid():
-            image = form.save()
+            form.save()
             if request.GET.get('select_format'):
                 form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
                 return render_modal_workflow(

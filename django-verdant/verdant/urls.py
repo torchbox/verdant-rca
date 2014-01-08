@@ -8,7 +8,7 @@ import os.path
 from core import urls as verdant_urls
 from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
-from verdantmedia import urls as verdantmedia_urls
+from verdantembeds import urls as verdantembeds_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
@@ -22,8 +22,13 @@ from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
-from verdantsearch import register_signal_handlers
-register_signal_handlers()
+
+# Signal handlers
+from verdantsearch import register_signal_handlers as verdantsearch_register_signal_handlers
+verdantsearch_register_signal_handlers()
+
+from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_register_signal_handlers
+rca_ldap_register_signal_handlers()
 
 
 urlpatterns = patterns('',
@@ -39,7 +44,7 @@ urlpatterns = patterns('',
     # TODO: some way of getting verdantimages to register itself within verdant so that we
     # don't have to define it separately here
     url(r'^admin/images/', include(verdantimages_urls)),
-    url(r'^admin/media/', include(verdantmedia_urls)),
+    url(r'^admin/embeds/', include(verdantembeds_urls)),
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),

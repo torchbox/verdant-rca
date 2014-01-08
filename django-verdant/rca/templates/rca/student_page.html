@@ -10,7 +10,7 @@
 
     {% tabdeck %}
 
-        {% if parent_is_researchstudentindex %}
+        {% if self.is_researchstudent %}
             <!-- links and ids added by javascript -->
             {% tab "Research Work" %}
                 {% include "rca/includes/modules/carousel.html" %}
@@ -204,7 +204,9 @@
 
                     <!-- rca now -->
                     {% rca_now_related author=self.title %}
-                        
+
+                    <!-- innovation rca -->
+                    {% innovation_rca_related person=self %}
                 </div>
             </div>
         {% endtab %}

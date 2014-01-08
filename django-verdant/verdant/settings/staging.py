@@ -11,6 +11,20 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+
+# LDAP
+from rca_ldap.settings import *
+
+AUTH_LDAP_BIND_DN = ''
+AUTH_LDAP_BIND_PASSWORD = ''
+AUTH_LDAP_SERVER_URI = 'ldaps://194.80.196.3:636'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_auth_ldap.backend.LDAPBackend',
+)
+
+
 try:
 	from .local import *
 except ImportError:
