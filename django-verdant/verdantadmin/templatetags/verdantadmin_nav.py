@@ -37,6 +37,6 @@ def get_verdantadmin_tab_urls():
 def main_nav(context):
     return {
         'perms': context['perms'],
-        'user': context['user'],
-        'can_edit_snippets': user_can_edit_snippets(context['user']),
+        'request': context['request'],
+        'can_edit_snippets': user_can_edit_snippets(context['request'].user),
     }
