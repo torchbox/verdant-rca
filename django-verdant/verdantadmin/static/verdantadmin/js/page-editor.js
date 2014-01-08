@@ -112,12 +112,16 @@ function initTagField(id, autocompleteUrl) {
     });
 }
 
-
 function InlinePanel(opts) {
     var self = {};
 
     self.setHasContent = function(){
-        self.formsUl.parent().addClass('has-content')
+        console.log($('> li:visible', self.formsUl));
+        if($('li:visible', self.formsUl).length){
+            self.formsUl.parent().removeClass('empty');
+        }else{
+            self.formsUl.parent().addClass('empty');
+        }
     };
 
     self.initChildControls = function (prefix) {
@@ -132,7 +136,8 @@ function InlinePanel(opts) {
             $('#' + deleteInputId).val('1');
             $('#' + childId).fadeOut(function() {
                 self.updateMoveButtonDisabledStates();
-            });
+                self.setHasContent();
+            });            
         });
         if (opts.canOrder) {
             $('#' + prefix + '-move-up').click(function() {

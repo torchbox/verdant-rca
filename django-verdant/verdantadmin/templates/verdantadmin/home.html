@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <header class="merged">
+    <header class="merged nice-padding">
         {% if user.email %}
             <div class="col1">
                 <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
@@ -31,7 +31,7 @@
         </ul>
     </section>
 
-    <div class="nice-padding row-flush">
+    <div class="nice-padding">
         <section>
 
             {% if page_revisions_for_moderation %}

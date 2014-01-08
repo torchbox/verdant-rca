@@ -1,4 +1,4 @@
-<form class="search-bar full-width" action="{% url 'verdantadmin_choose_page' %}?{{ querystring }}" method="get">
+<form class="search-bar full-width nice-padding" action="{% url 'verdantadmin_choose_page' %}?{{ querystring }}" method="get">
     <ul class="fields">
         {% for field in search_form %}
             {% include "verdantadmin/shared/field_as_li.html" with field=field %}
