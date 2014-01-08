@@ -134,7 +134,7 @@ function InlinePanel(opts) {
         $('#' + deleteInputId + '-button').click(function() {
             /* set 'deleted' form field to true */
             $('#' + deleteInputId).val('1');
-            $('#' + childId).fadeOut(function() {
+            $('#' + childId).slideUp(function() {
                 self.updateMoveButtonDisabledStates();
                 self.setHasContent();
             });            
