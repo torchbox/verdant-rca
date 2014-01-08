@@ -14,24 +14,10 @@
         </ul>
     </header>
    
-    <form id="page-reorder-form" action="{% url 'verdantadmin_pages_reorder' parent_page.id %}" method="POST">
+    <form id="page-reorder-form">
         {% csrf_token %}
-        <input type="hidden" name="order" id="order" />
 
         {% include "verdantadmin/pages/list.html" with sortable=1 allow_navigation=1 full_width=1 parent_page=parent_page orderable=1 %} 
-
-        {% comment %}
-            {# Commented out as this is now done with ajax #}
-            {% if ordering == 'ord' %}
-                <footer>
-                    <ul>
-                        <li class="actions">
-                            <input type="submit" value="Save order" class="button" />
-                        </li>
-                    </ul>
-                </footer>
-            {% endif %}
-        {% endcomment %}
     </form>
 
 {% endblock %}
@@ -39,18 +25,9 @@
 {% block extra_js %}
     <script type="text/javascript">
         {% if ordering == 'ord' %}
-            function setOrder(){
-                $('#order').val($('.listing tbody').sortable('toArray'));
-            }
-
             $(function() {
                 var reorderCount = 0;
                 var orderform = $('#page-reorder-form');
-
-                orderform.submit(function() {
-                    setOrder();
-                    return true;
-                });
 
                 $('.listing tbody').sortable({
                     cursor: "move", 
@@ -62,17 +39,26 @@
                     start: function(){
                         $(this).parent().addClass('sorting');
                     },
-                    stop: function(){
+                    stop: function(event, ui){
                         $(this).parent().removeClass('sorting');
 
-                        setOrder();
+                        // Work out what page moved and where it moved to
+                        var movedElement = ui.item[0];
+                        var movedPageId = movedElement.id.substring(5);
+                        var newPosition = $(movedElement).prevAll().length;
 
-                        //submit the form silently
-                        $.post(orderform.attr('action'), orderform.serialize(), function(){
-                            reorderCount++;
-                            addMessage('success', 'Pages have been reordered successfully ' + ((reorderCount>1) ? '(' + reorderCount +' times)': ''))
+                        // Build url
+                        // TODO: Find better way to inject movedPageId
+                        var url = "{% url 'verdantadmin_pages_move_confirm' '999999' parent_page.id %}".replace('999999', movedPageId);
+                        url += '?position=' + newPosition;
+
+                        // Get CSRF token
+                        var CSRFToken = $('input[name="csrfmiddlewaretoken"]', orderform).val();
+
+                        // Post
+                        $.post(url, {csrfmiddlewaretoken: CSRFToken}, function(){
+                            addMessage('success', '"' + $(movedElement).data('page-title') + '" has been moved successfully.')
                         })
-
                     }
                 });
                 $('.listing tbody').disableSelection();

@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -265,43 +265,6 @@ def edit(request, page_id):
     })
 
 @login_required
-def reorder(request, parent_page_id=None):
-    if parent_page_id:
-        parent_page = get_object_or_404(Page, id=parent_page_id)
-    else:
-        parent_page = Page.get_first_root_node()
-
-    pages = parent_page.get_children()
-
-    if request.POST:
-        try:
-            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
-        except:
-            # Invalid
-            messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_explore', parent_page.id)
-
-        # Reorder
-        first_page = pages_ordered[0]
-        print first_page.title
-        other_pages = pages_ordered[1:]
-        print other_pages[:4]
-
-        # Move first page to beginning
-        first_page.move(parent_page, pos='first-child')
-        previous_page = first_page
-
-        # Move other pages
-        for page in other_pages:
-            page.move(previous_page, pos='right')
-            previous_page = page
-
-        # Success message
-        messages.success(request, "Pages have been reordered")
-
-    return redirect('verdantadmin_explore', parent_page.id)
-
-@login_required
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
 
@@ -450,10 +413,30 @@ def move_confirm(request, page_to_move_id, destination_id):
 
     if request.POST:
         try:
-            page_to_move.move(destination, pos='last-child')
+            # Get position parameter
+            position = request.GET.get('position', None)
 
-            messages.success(request, "Page '%s' moved." % page_to_move.title)
-            return redirect('verdantadmin_explore', destination.id)
+            # Find page thats already in this position
+            position_page = None
+            if position is not None:
+                try:
+                    position_page = destination.get_children()[int(position)]
+                except IndexError:
+                    pass # No page in this position
+
+            # Move page
+            if position_page:
+                # Move page into this position
+                page_to_move.move(position_page, pos='left')
+            else:
+                # Move page to end
+                page_to_move.move(destination, pos='last-child')
+
+            if request.is_ajax():
+                return HttpResponse('')
+            else:
+                messages.success(request, "Page '%s' moved." % page_to_move.title)
+                return redirect('verdantadmin_explore', destination.id)
         except InvalidMoveToDescendant:
             messages.error(request, "You cannot move this page into itself.")
             return redirect('verdantadmin_pages_move', page_to_move.id)
