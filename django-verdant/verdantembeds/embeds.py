@@ -14,9 +14,9 @@ def get_embed(url, max_width=None):
     # Call embedly API
     client = Embedly(key=settings.EMBEDLY_KEY)
     if max_width is not None:
-        oembed = client.oembed(url, maxwidth=max_width)
+        oembed = client.oembed(url, maxwidth=max_width, better="false")
     else:
-        oembed = client.oembed(url)
+        oembed = client.oembed(url, better="false")
 
     # Check for error
     if oembed.error:
