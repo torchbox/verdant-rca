@@ -47,10 +47,17 @@
                         var movedPageId = movedElement.id.substring(5);
                         var newPosition = $(movedElement).prevAll().length;
 
+                        // If position is last element, don't set position variable
+                        if ($(movedElement).nextAll().length == 0) {
+                            newPosition = null;
+                        }
+
                         // Build url
                         // TODO: Find better way to inject movedPageId
                         var url = "{% url 'verdantadmin_pages_move_confirm' '999999' parent_page.id %}".replace('999999', movedPageId);
-                        url += '?position=' + newPosition;
+                        if (newPosition != null) {
+                            url += '?position=' + newPosition;
+                        }
 
                         // Get CSRF token
                         var CSRFToken = $('input[name="csrfmiddlewaretoken"]', orderform).val();
