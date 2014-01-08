@@ -17,4 +17,3 @@ class Command(NoArgsCommand):
         cursor = connection.cursor()
         for model in randomised_models:
             cursor.execute('UPDATE ' + model._meta.db_table + ' SET random_order = floor(100000*RANDOM());')
-        transaction.commit_unless_managed()
