@@ -312,6 +312,8 @@ def preview_on_edit(request, page_id):
         # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
         # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
         # as a front-end GET request
+
+        request.META.pop('HTTP_X_REQUESTED_WITH', None)  # Make this request appear to the page's serve method as a non-ajax one, as they will often implement custom behaviour for XHR
         response = page.serve(request)
 
         response['X-Verdant-Preview'] = 'ok'
