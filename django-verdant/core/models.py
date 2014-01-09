@@ -424,10 +424,6 @@ class Page(MP_Node, ClusterableModel, Indexed):
         user_perms = UserPagePermissionsProxy(user)
         return user_perms.for_page(self)
 
-    def user_can_create_subpage(self, user):
-        permissions = self.permissions_for_user(user)
-        return ('add' in permissions) or ('edit' in permissions) or ('publish' in permissions)
-
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
     # or are a non-leaf type (indicating that they *could* have children),
@@ -570,7 +566,7 @@ class PagePermissionTester(object):
                 if self.page.path.startswith(perm.page.path)
             )
 
-    def can_create_subpage(self):
+    def can_add_subpage(self):
         if not self.user.is_active:
             return False
         return self.user.is_superuser or ('add' in self.permissions)
@@ -578,4 +574,58 @@ class PagePermissionTester(object):
     def can_edit(self):
         if not self.user.is_active:
             return False
+        if self.page.is_root():  # root node is not a page and can never be edited, even by superusers
+            return False
         return self.user.is_superuser or ('edit' in self.permissions) or ('add' in self.permissions and self.page.owner_id == self.user.id)
+
+    def can_delete(self):
+        if not self.user.is_active:
+            return False
+        if self.page.is_root():  # root node is not a page and can never be deleted, even by superusers
+            return False
+
+        if self.user.is_superuser or ('publish' in self.permissions):
+            # Users with publish permission can unpublish any pages that need to be unpublished to achieve deletion
+            return True
+
+        elif 'edit' in self.permissions:
+            # user can only delete if there are no live pages in this subtree
+            return (not self.page.live) and (not self.get_descendants().filter(live=True).exists())
+
+        elif 'add' in self.permissions:
+            # user can only delete if all pages in this subtree are unpublished and owned by this user
+            return (
+                (not self.page.live)
+                and (self.page.owner_id == self.user.id)
+                and (not self.page.get_descendants().exclude(live=False, owner=self.user).exists())
+            )
+
+        else:
+            return False
+
+    def can_unpublish(self):
+        if not self.user.is_active:
+            return False
+        if (not self.page.live) or self.page.is_root():
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_publish(self):
+        if not self.user.is_active:
+            return False
+        if self.page.is_root():
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_publish_subpage(self):
+        """
+        Niggly special case for creating and publishing a page in one go.
+        Differs from can_publish in that we want to be able to publish subpages of root, but not
+        to be able to publish root itself
+        """
+        if not self.user.is_active:
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)

@@ -6,7 +6,7 @@ from django.template import RequestContext
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
@@ -68,7 +68,7 @@ def select_type(request):
 @login_required
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
-    if not parent_page.permissions_for_user(request.user).can_create_subpage():
+    if not parent_page.permissions_for_user(request.user).can_add_subpage():
         raise PermissionDenied
 
     page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name.lower())
@@ -133,7 +133,8 @@ def content_type_use(request, content_type_app_name, content_type_model_name):
 @login_required
 def create(request, content_type_app_name, content_type_model_name, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
-    if not parent_page.permissions_for_user(request.user).can_create_subpage():
+    parent_page_perms = parent_page.permissions_for_user(request.user)
+    if not parent_page_perms.can_add_subpage():
         raise PermissionDenied
 
     try:
@@ -169,7 +170,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and parent_page_perms.can_publish_subpage()
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -208,6 +209,9 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 def edit(request, page_id):
     latest_revision = get_object_or_404(Page, id=page_id).get_latest_revision()
     page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
+    page_perms = page.permissions_for_user(request.user)
+    if not page_perms.can_edit():
+        raise PermissionDenied
 
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
@@ -218,7 +222,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and page_perms.can_publish()
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -297,18 +301,8 @@ def reorder(request, parent_page_id=None):
 @login_required
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
-
-    if not request.user.has_perm('core.unpublish_page'):
-        # they should only be able to delete this page if this page is unpublished, AND it has no
-        # published children
-        if page.live:
-            parent_id = page.get_parent().id
-            messages.error(request, "You do not have permission to delete this page, because it is live on the site.")
-            return redirect('verdantadmin_explore', parent_id)
-        elif page.get_descendants().filter(live=True).exists():
-            parent_id = page.get_parent().id
-            messages.error(request, "You do not have permission to delete this page, because it has subpages that are live on the site.")
-            return redirect('verdantadmin_explore', parent_id)
+    if not page.permissions_for_user(request.user).can_delete():
+        raise PermissionDenied
 
     if request.POST:
         parent_id = page.get_parent().id
@@ -397,9 +391,11 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
-@permission_required('core.unpublish_page')
+@login_required
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
+    if not page.permissions_for_user(request.user).can_unpublish():
+        raise PermissionDenied
 
     if request.POST:
         parent_id = page.get_parent().id
@@ -514,9 +510,12 @@ def search(request):
         })
 
 
-@permission_required('core.publish_page')
+@login_required
 def approve_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
@@ -527,9 +526,12 @@ def approve_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.publish_page')
+@login_required
 def reject_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
@@ -541,9 +543,12 @@ def reject_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.publish_page')
+@login_required
 def preview_for_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
