@@ -395,6 +395,29 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
+def preview_placeholder(request):
+    """
+    The HTML of a previewed page is written to the destination browser window using document.write.
+    This overwrites any previous content in the window, while keeping its URL intact. This in turn
+    means that any content we insert that happens to trigger an HTTP request, such as an image or
+    stylesheet tag, will report that original URL as its referrer.
+
+    In Webkit browsers, a new window opened with window.open('', 'window_name') will have a location
+    of 'about:blank', causing it to omit the Referer header on those HTTP requests. This means that
+    any third-party font services that use the Referer header for access control will refuse to
+    serve us.
+
+    So, instead, we need to open the window on some arbitrary URL on our domain. (Provided that's
+    also the same domain as our editor JS code, the browser security model will happily allow us to
+    document.write over the page in question.)
+
+    This, my friends, is that arbitrary URL.
+
+    Since we're going to this trouble, we'll also take the opportunity to display a spinner on the
+    placeholder page, providing some much-needed visual feedback.
+    """
+    return render(request, 'verdantadmin/pages/preview_placeholder.html')
+
 @permission_required('core.unpublish_page')
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
