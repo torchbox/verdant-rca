@@ -264,7 +264,7 @@ $(function() {
 
     /* Set up behaviour of preview button */
     $('#action-preview').click(function() {
-        var previewWindow = window.open('', $(this).data('windowname'));
+        var previewWindow = window.open($(this).data('placeholder'), $(this).data('windowname'));
         $.post(
             $(this).data('action'),
             $('#page-edit-form').serialize(),
