@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.template.loader import render_to_string
 from django.template import RequestContext
 
@@ -68,6 +68,8 @@ def select_type(request):
 @login_required
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
+    if not parent_page.permissions_for_user(request.user).can_create_subpage():
+        raise PermissionDenied
 
     page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name.lower())
     all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name.lower())
@@ -131,6 +133,8 @@ def content_type_use(request, content_type_app_name, content_type_model_name):
 @login_required
 def create(request, content_type_app_name, content_type_model_name, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
+    if not parent_page.permissions_for_user(request.user).can_create_subpage():
+        raise PermissionDenied
 
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)

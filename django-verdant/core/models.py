@@ -419,21 +419,14 @@ class Page(MP_Node, ClusterableModel, Indexed):
 
     def permissions_for_user(self, user):
         """
-        Return a set of permission type strings (see PAGE_PERMISSION_TYPE_CHOICES)
-        that a user has over this page. Permissions set on a page propagate to all children,
-        and are cumulative (a 'lesser' permission deeper in the tree does not revoke one higher up)
+        Return a PagePermissionsTester object defining what actions the user can perform on this page
         """
-        if not user.is_active:
-            # Inactive users have no permission
-            return set()
+        user_perms = UserPagePermissionsProxy(user)
+        return user_perms.for_page(self)
 
-        if user.is_superuser:
-            # superusers have all permissions
-            return set(name for name, label in PAGE_PERMISSION_TYPE_CHOICES)
-
-        ancestors_and_self = list(self.get_ancestors()) + [self]
-        permissions = GroupPagePermission.objects.filter(group__user=user, page__in=ancestors_and_self)
-        return set(permissions.values_list('permission_type', flat=True))
+    def user_can_create_subpage(self, user):
+        permissions = self.permissions_for_user(user)
+        return ('add' in permissions) or ('edit' in permissions) or ('publish' in permissions)
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
@@ -550,3 +543,39 @@ class GroupPagePermission(models.Model):
     group = models.ForeignKey('auth.group', related_name='page_permissions')
     page = models.ForeignKey('Page', related_name='group_permissions')
     permission_type = models.CharField(max_length=20, choices=PAGE_PERMISSION_TYPE_CHOICES)
+
+
+class UserPagePermissionsProxy(object):
+    """Helper object that encapsulates all the page permission rules that this user has
+    across the page hierarchy."""
+    def __init__(self, user):
+        self.user = user
+
+        if user.is_active and not user.is_superuser:
+            self.permissions = GroupPagePermission.objects.filter(group__user=self.user).select_related('page')
+
+    def for_page(self, page):
+        """Return a PagePermissionTester object that can be used to query whether this user has
+        permission to perform specific tasks on the given page"""
+        return PagePermissionTester(self, page)
+
+class PagePermissionTester(object):
+    def __init__(self, user_perms, page):
+        self.user = user_perms.user
+        self.page = page
+
+        if self.user.is_active and not self.user.is_superuser:
+            self.permissions = set(
+                perm.permission_type for perm in user_perms.permissions
+                if self.page.path.startswith(perm.page.path)
+            )
+
+    def can_create_subpage(self):
+        if not self.user.is_active:
+            return False
+        return self.user.is_superuser or ('add' in self.permissions)
+
+    def can_edit(self):
+        if not self.user.is_active:
+            return False
+        return self.user.is_superuser or ('edit' in self.permissions) or ('add' in self.permissions and self.page.owner_id == self.user.id)
