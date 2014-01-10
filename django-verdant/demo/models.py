@@ -61,12 +61,12 @@ class LinkFields(models.Model):
 
 class CarouselItemFields(LinkFields):
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    overlay_text = models.CharField(max_length=255, blank=True)
     embed_url = models.URLField("Embed URL", blank=True)
+    caption = models.CharField(max_length=255, blank=True)
 
     panels = [
         ImageChooserPanel('image'),
-        FieldPanel('overlay_text'),
+        FieldPanel('caption'),
         FieldPanel('embed_url'),
         MultiFieldPanel(LinkFields.panels, "Link"),
     ]
