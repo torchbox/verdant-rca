@@ -35,50 +35,52 @@ class Page(PageBase):
         abstract = True
 
 
-class CarouselItemFields(models.Model):
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    overlay_text = models.CharField(max_length=255, blank=True)
-    embed_url = models.URLField("Embed URL", blank=True)
+class LinkFields(models.Model):
     link_external = models.URLField("External link", blank=True)
     link_page = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
 
     @property
-    def get_link(self):
+    def link(self):
         if self.link_page:
             return self.link_page.url
+        elif self.link_document:
+            return self.link_document.url
         else:
             return self.link_external
 
     panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('overlay_text'),
-        FieldPanel('embed_url'),
         FieldPanel('link_external'),
         PageChooserPanel('link_page'),
+        DocumentChooserPanel('link_document'),
     ]
 
     class Meta:
         abstract = True
 
 
-class RelatedLinksFields(models.Model):
-    title = models.CharField(max_length=255, help_text="Link title")
-    link_external = models.URLField("External link", blank=True)
-    link_page = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
-    link_document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+class CarouselItemFields(LinkFields):
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    overlay_text = models.CharField(max_length=255, blank=True)
+    embed_url = models.URLField("Embed URL", blank=True)
 
-    @property
-    def get_link(self):
-        if self.link_page:
-            return self.link_page.url
-        else:
-            return self.link_external
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('overlay_text'),
+        FieldPanel('embed_url'),
+        MultiFieldPanel(LinkFields.panels, "Link"),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+class RelatedLinksFields(LinkFields):
+    title = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
         FieldPanel('title'),
-        FieldPanel('link_external'),
-        PageChooserPanel('link_page'),
-        DocumentChooserPanel('link_document'),
+        MultiFieldPanel(LinkFields.panels, "Link"),
     ]
 
     class Meta:
@@ -300,20 +302,17 @@ class EventPageDatesAndTimes(Orderable):
         FieldPanel('time_other'),
     ]
 
-class EventPageSpeaker(Orderable):
+class EventPageSpeaker(Orderable, LinkFields):
     page = ParentalKey('demo.EventPage', related_name='speakers')
     first_name = models.CharField("Name", max_length=255, blank=True)
     last_name = models.CharField("Surname", max_length=255, blank=True)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    link_external = models.URLField("External link", blank=True)
-    link_page = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
 
     panels = [
         FieldPanel('first_name'),
         FieldPanel('last_name'),
         ImageChooserPanel('image'),
-        FieldPanel('link_external'),
-        PageChooserPanel('link_page'),
+        MultiFieldPanel(LinkFields.panels, "Link"),
     ]
 
 class EventPage(Page):
