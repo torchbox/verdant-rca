@@ -22,9 +22,12 @@ class Page(PageBase):
     show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
     meta_description = models.TextField(blank=True)
 
+    is_abstract = True
+
     promote_panels = [
         FieldPanel('slug'),
         FieldPanel('seo_title'),
+        FieldPanel('show_in_menus'),
         FieldPanel('meta_description'),
     ]
 
@@ -115,6 +118,9 @@ class HomePageRelatedLink(Orderable, RelatedLinksFields):
 
 class HomePage(Page):
     body = RichTextField(blank=True)
+
+    class Meta:
+        verbose_name = "Homepage"
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -284,7 +290,7 @@ class EventDatesAndTimes(Orderable):
     date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
     time_from = models.TimeField("Start time", null=True, blank=True)
     time_to = models.TimeField("End time", null=True, blank=True)
-    time_other = models.CharField("Time other", max_length=255, blank=True, help_text='Use this field to give additional information about start and end times')
+    time_other = models.CharField("Time other", max_length=255, blank=True, help_text="Use this field to give additional information about start and end times")
 
     panels = [
         FieldPanel('date_from'),
