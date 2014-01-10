@@ -51,39 +51,6 @@ function insertRichTextDeleteControl(elem) {
     })
 }
 
-
-function createPageChooser(id, pageType, openAtParentId) {
-    var chooserElement = $('#' + id + '-chooser');
-    var pageTitle = chooserElement.find('.title');
-    var input = $('#' + id);
-
-    $('.action-choose', chooserElement).click(function() {
-        var initialUrl = '/admin/choose-page/';
-        /* TODO: don't hard-code this URL, as it may be changed in urls.py */
-        if (openAtParentId) {
-            initialUrl += openAtParentId + '/';
-        }
-        ModalWorkflow({
-            'url': initialUrl,
-            'urlParams': {'page_type': pageType},
-            'responses': {
-                'pageChosen': function(pageData) {
-                    input.val(pageData.id);
-                    openAtParentId = pageData.parentId;
-                    pageTitle.text(pageData.title);
-                    chooserElement.removeClass('blank');
-                }
-            }
-        });
-    });
-
-    $('.action-clear', chooserElement).click(function() {
-        input.val('');
-        openAtParentId = null;
-        chooserElement.addClass('blank');
-    });
-}
-
 function initDateChoosers(context) {
     $('input.friendly_date', context).datepicker({
         dateFormat: 'd M yy', constrainInput: false, /* showOn: 'button', */ firstDay: 1
@@ -189,8 +156,8 @@ function InlinePanel(opts) {
         if (opts.canOrder) {
             forms = self.formsUl.children('li:visible');
             forms.each(function(i) {
-                $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0);
-                $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1);
+                $('ul.controls .inline-child-move-up', this).toggleClass('disabled', i == 0).toggleClass('enabled', i != 0);
+                $('ul.controls .inline-child-move-down', this).toggleClass('disabled', i == forms.length - 1).toggleClass('enabled', i != forms.length - 1);
             });
         }
     }
@@ -276,7 +243,7 @@ $(function() {
 
     /* Set up behaviour of preview button */
     $('#action-preview').click(function() {
-        var previewWindow = window.open('', $(this).data('windowname'));
+        var previewWindow = window.open($(this).data('placeholder'), $(this).data('windowname'));
         $.post(
             $(this).data('action'),
             $('#page-edit-form').serialize(),

@@ -11,6 +11,8 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+# BASE_URL required for notification emails
+BASE_URL = 'http://rca-staging.torchboxapps.com'
 
 # LDAP
 from rca_ldap.settings import *

@@ -1,0 +1,15 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block titletag %}Delete {{ query.query_string }}{% endblock %}
+{% block content %}
+
+    {% include "verdantadmin/shared/header.html" with title="Delete" subtitle=query.query_string %}
+
+    <div class="nice-padding">       
+        <p>Are you sure you want to delete all editors picks for this search term?</p>
+        <form action="{% url 'verdantsearch_editorspicks_delete' query.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Yes, delete" class="serious" />
+        </form>
+    </div>
+{% endblock %}

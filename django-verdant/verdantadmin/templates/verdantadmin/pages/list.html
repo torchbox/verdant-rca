@@ -116,7 +116,7 @@
     <tbody>
         {% if pages %}
             {% for page in pages %}
-                <tr {% if ordering == "ord" %}id="page_{{ page.id }}"{% endif %} class="{% if not page.live %} inactive{% endif %}{% if moving and page.can_choose %} can-choose{% elif choosing and page.can_choose %} can-choose{% else %} cant-choose{% endif %}">
+                <tr {% if ordering == "ord" %}id="page_{{ page.id }}" data-page-title="{{ page.title }}"{% endif %} class="{% if not page.live %} inactive{% endif %}{% if moving and page.can_choose %} can-choose{% elif choosing and page.can_choose %} can-choose{% else %} cant-choose{% endif %}">
                     {% if orderable %}
                         <td class="ord">{% if ordering == "ord" %}<div class="handle icon icon-grip text-replace">Drag</div>{% endif %}</td>
                     {% endif %}
@@ -181,7 +181,7 @@
                 </tr>
             {% endfor %}
         {% else %}
-            <tr><td colspan="3" class="no-results-message"><p>No pages have been created here.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
+            <tr><td colspan="3" class="no-results-message"><p>No pages have been created.{% if parent_page %} Why not <a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}">add one</a>?{% endif %}</td></tr>
         {% endif %}
     </tbody>
 </table>

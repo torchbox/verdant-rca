@@ -1,0 +1,41 @@
+{% extends "verdantadmin/base.html" %}
+{% block titletag %}Search Terms{% endblock %}
+{% block bodyclass %}page-explorer{% endblock %}
+
+{% block content %}
+    {% include "verdantadmin/shared/header.html" with title="Editor's search picks" add_link="verdantsearch_editorspicks_add" add_text="Add new editor's pick" %}
+
+    <table class="listing full-width">
+        <col />
+        <col width="40%"/>
+        <col />
+        <thead>
+            <tr>
+                <th class="title">Search term(s)</th>
+                <th>Editors picks</th>
+                <th>Views (past week)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if queries %}
+                {% for query in queries %}
+                    <tr>
+                        <td class="title">
+                            <h2><a href="{% url 'verdantsearch_editorspicks_edit' query.id %}" title="Edit this pick">{{ query.query_string }}</a></h2>
+                        </td>
+                        <td>
+                            {% for editors_pick in query.editors_picks.all %}
+                                <a href="{% url 'verdantadmin_pages_edit' editors_pick.page.id %}" class="nolink">{{ editors_pick.page.title }}</a>{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                None
+                            {% endfor %}
+                        </td>
+                        <td>{{ query.hits }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="3" class="no-results-message"><p>No editors picks have been added. Why not <a href="{% url 'verdantsearch_editorspicks_add' %}">add one</a>?</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

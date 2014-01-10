@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from core import models
-from verdantsearch import Search
+from verdantsearch import Search, Query
 import json
 
 
@@ -14,6 +14,12 @@ def search(request):
     # Search
     if query_string != "":
         search_results = models.Page.search_frontend(query_string)
+
+        # Get query object
+        query = Query.get(query_string)
+
+        # Add hit
+        query.add_hit()
 
         # Pagination
         paginator = Paginator(search_results, 10)
@@ -27,6 +33,7 @@ def search(request):
         else:
             search_results = None
     else:
+        query = None
         search_results = None
 
     # Render
@@ -34,7 +41,7 @@ def search(request):
         template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE_AJAX", "verdantsearch/search_results.html")
     else:
         template_name = getattr(settings, "VERDANTSEARCH_RESULTS_TEMPLATE", "verdantsearch/search_results.html")
-    return render(request, template_name, dict(query_string=query_string, search_results=search_results, is_ajax=request.is_ajax()))
+    return render(request, template_name, dict(query_string=query_string, search_results=search_results, is_ajax=request.is_ajax(), query=query))
 
 
 def suggest(request):
