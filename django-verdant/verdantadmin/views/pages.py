@@ -411,7 +411,8 @@ def unpublish(request, page_id):
 @login_required
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
-    if not page_to_move.permissions_for_user(request.user).can_move():
+    page_perms = page_to_move.permissions_for_user(request.user)
+    if not page_perms.can_move():
         raise PermissionDenied
 
     if viewed_page_id:
@@ -419,14 +420,16 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     else:
         viewed_page = Page.get_first_root_node()
 
+    viewed_page.can_choose = page_perms.can_move_to(viewed_page)
+
     child_pages = []
-    for page in viewed_page.get_children():
+    for target in viewed_page.get_children():
         # can't move the page into itself or its descendants
-        page.can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+        target.can_choose = page_perms.can_move_to(target)
 
-        page.can_descend = page.can_choose and page.get_children_count()
+        target.can_descend = not(target == page_to_move or target.is_child_of(page_to_move)) and target.get_children_count()
 
-        child_pages.append(page)
+        child_pages.append(target)
 
     return render(request, 'verdantadmin/pages/move_choose_destination.html', {
         'page_to_move': page_to_move,
@@ -437,24 +440,17 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
 @login_required
 def move_confirm(request, page_to_move_id, destination_id):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
-    if not page_to_move.permissions_for_user(request.user).can_move():
-        raise PermissionDenied
     destination = get_object_or_404(Page, id=destination_id)
+    if not page_to_move.permissions_for_user(request.user).can_move_to(destination):
+        raise PermissionDenied
 
     if request.POST:
-        try:
-            page_to_move.move(destination, pos='last-child')
+        # any invalid moves *should* be caught by the permission check above,
+        # so don't bother to catch InvalidMoveToDescendant
+        page_to_move.move(destination, pos='last-child')
 
-            messages.success(request, "Page '%s' moved." % page_to_move.title)
-            return redirect('verdantadmin_explore', destination.id)
-        except InvalidMoveToDescendant:
-            messages.error(request, "You cannot move this page into itself.")
-            return redirect('verdantadmin_pages_move', page_to_move.id)
-
-    else:
-        if page_to_move == destination or destination.is_descendant_of(page_to_move):
-            messages.error(request, "You cannot move this page into itself.")
-            return redirect('verdantadmin_pages_move', page_to_move.id)
+        messages.success(request, "Page '%s' moved." % page_to_move.title)
+        return redirect('verdantadmin_explore', destination.id)
 
     return render(request, 'verdantadmin/pages/confirm_move.html', {
         'page_to_move': page_to_move,

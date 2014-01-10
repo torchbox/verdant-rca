@@ -587,6 +587,7 @@ class UserPagePermissionsProxy(object):
 class PagePermissionTester(object):
     def __init__(self, user_perms, page):
         self.user = user_perms.user
+        self.user_perms = user_perms
         self.page = page
 
         if self.user.is_active and not self.user.is_superuser:
@@ -619,7 +620,7 @@ class PagePermissionTester(object):
 
         elif 'edit' in self.permissions:
             # user can only delete if there are no live pages in this subtree
-            return (not self.page.live) and (not self.get_descendants().filter(live=True).exists())
+            return (not self.page.live) and (not self.page.get_descendants().filter(live=True).exists())
 
         elif 'add' in self.permissions:
             # user can only delete if all pages in this subtree are unpublished and owned by this user
@@ -666,3 +667,32 @@ class PagePermissionTester(object):
         (Further constraints will then apply on where it can be moved *to*.)
         """
         return self.can_delete()
+
+    def can_move_to(self, destination):
+        # reject the logically impossible cases first
+        if self.page == destination or destination.is_child_of(self.page):
+            return False
+
+        # and shortcut the trivial 'everything' / 'nothing' permissions
+        if not self.user.is_active:
+            return False
+        if self.user.is_superuser:
+            return True
+
+        # check that the page can be moved at all
+        if not self.can_move():
+            return False
+
+        # Inspect permissions on the destination
+        destination_perms = self.user_perms.for_page(destination)
+
+        # we always need at least add permission in the target
+        if 'add' not in destination_perms.permissions:
+            return False
+
+        if self.page.live or self.page.get_descendants().filter(live=True).exists():
+            # moving this page will entail publishing within the destination section
+            return ('publish' in destination_perms.permissions)
+        else:
+            # no publishing required, so the already-tested 'add' permission is sufficient
+            return True

@@ -27,10 +27,15 @@
         {% endif %}
         {% if parent_page %}
             {% page_permissions parent_page as parent_page_perms %}
-            <tr class="index {% if not parent_page.live %} inactive{% endif %} can-choose">
+            {# in 'moving' mode, we require parent_page.can_choose to be true for the can-choose class to be added. In other modes, can-choose is added regardless. TODO: check if this really makes sense! #}
+            <tr class="index {% if not parent_page.live %} inactive{% endif %} {% if moving %}{% if parent_page.can_choose %}can-choose{% endif %}{% else %}can-choose{% endif %}">
                 <td class="title" {% if orderable %}colspan="2"{% endif %}>
                     {% if moving %}
-                        <h2><a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id parent_page.id %}">{{ parent_page.title }}</a></h2>
+                        {% if parent_page.can_choose %}
+                            <h2><a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id parent_page.id %}">{{ parent_page.title }}</a></h2>
+                        {% else %}
+                            <h2>{{ parent_page.title }}</h2>
+                        {% endif %}
                     {% elif choosing %}
                         <h2><a class="choose-page" href="#{{ parent_page.id }}" data-id="{{ parent_page.id }}" data-title="{{ parent_page.title }}" data-url="{{ parent_page.url }}">{{ parent_page.title }}</a></h2>
                     {% else %}
@@ -132,14 +137,18 @@
                     {% endif %}
                     <td class="title">
                         <h2>
-                            {% if moving and page.can_choose %}
-                                <a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id page.id %}">{{ page.title }}</a>
-                            {% elif moving %}
-                                {{ page.title }}
-                            {% elif choosing and page.can_choose %}
-                                <a class="choose-page" href="#{{ page.id }}" data-id="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}">{{ page.title }}</a>
+                            {% if moving %}
+                                {% if page.can_choose %}
+                                    <a href="{% url 'verdantadmin_pages_move_confirm' page_to_move.id page.id %}">{{ page.title }}</a>
+                                {% else %}
+                                    {{ page.title }}
+                                {% endif %}
                             {% elif choosing %}
-                                {{ page.title }}
+                                {% if page.can_choose %}
+                                    <a class="choose-page" href="#{{ page.id }}" data-id="{{ page.id }}" data-title="{{ page.title }}" data-url="{{ page.url }}">{{ page.title }}</a>
+                                {% else %}
+                                    {{ page.title }}
+                                {% endif %}
                             {% else %}
                                 {% if page_perms.can_edit %}
                                     <a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a>
