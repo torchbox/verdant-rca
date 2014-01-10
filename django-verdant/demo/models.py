@@ -284,7 +284,7 @@ class EventPageCarouselItem(Orderable, CarouselItemFields):
 class EventPageRelatedLink(Orderable, RelatedLinksFields):
     page = ParentalKey('demo.EventPage', related_name='related_links')
 
-class EventDatesAndTimes(Orderable):
+class EventPageDatesAndTimes(Orderable):
     page = ParentalKey('demo.EventPage', related_name='dates_and_times')
     date_from = models.DateField("Start date")
     date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
