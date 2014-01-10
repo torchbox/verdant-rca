@@ -1,0 +1,11 @@
+{% extends "demo/base.html" %}
+
+{% block content %}
+  <h2>{{ self.title }}</h2>
+
+  <h3>Body</h3>
+  {{ self.body|safe }}
+
+  <h3>Related links</h3>
+  {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
+{% endblock %}

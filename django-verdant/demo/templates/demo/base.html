@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{% block title %}{% if self %}{{ self.title }}{% endif %}{% endblock %}{% block title_suffix %} | Wagtail Demo{% endblock %}</title>
+  </head>
+  <body>
+    <h1>Wagtail Demo</h1>
+
+    {% block content %}
+
+    {% endblock %}
+  </body>
+</html>

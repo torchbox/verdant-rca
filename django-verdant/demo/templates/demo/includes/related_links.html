@@ -1,0 +1,7 @@
+<ul>
+  {% for related_link in related_links %}
+    <li><a href="{{ related_link.link }}">{{ related_link.title }}</a></li>
+  {% empty %}
+    <li>No related links found</li>
+  {% endfor %}
+</ul>
