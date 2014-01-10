@@ -1,9 +1,8 @@
 {% extends "verdantadmin/base.html" %}
 {% block titletag %}Editing {{ redirect.title }}{% endblock %}
 {% block content %}
-    <header class="nice-padding">
-        <h1>Editing <span>{{ redirect.title }}</span></h1>
-    </header>
+
+    {% include "verdantadmin/shared/header.html" with title="Editing" subtitle=redirect.title %}
 
     <form action="{% url 'verdantredirects_edit_redirect' redirect.id %}" method="POST">
         {% csrf_token %}
@@ -14,6 +13,7 @@
             <a href="{% url 'verdantredirects_delete_redirect' redirect.id %}" class="button button-secondary no">Delete redirect</a>
         </div>
     </form>
+    
 {% endblock %}
 
 {% block extra_css %}

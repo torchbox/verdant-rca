@@ -3,9 +3,8 @@
 {% block bodyclass %}menu-explorer{% endblock %}
 
 {% block content %}
-    <header class="nice-padding">
-        <h1>Delete <span>{{ page.title }}</span></h1>
-    </header>
+
+	{% include "verdantadmin/shared/header.html" with title="Delete" subtitle=page.title %}
 
     <div class="nice-padding">
 	    <p>Are you sure you want to delete this page? {% if descendant_count %}This will also delete {{ descendant_count }} subpage{{ descendant_count|pluralize }}.{% endif %}</p>
@@ -17,4 +16,5 @@
 	        <input type="submit" value="Delete it" class="serious {% if page.live %}button-secondary{% endif %}"> {% if page.live %}<a href="{% url 'verdantadmin_pages_unpublish' page.id %}" class="button">Unpublish it</a>{% endif %}
 	    </form>
 	</div>
+	
 {% endblock %}

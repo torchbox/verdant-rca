@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 
 class SearchForm(forms.Form):
-    q = forms.CharField(label="Search term")
+    q = forms.CharField(label="Search term", widget=forms.TextInput(attrs={'placeholder': 'Search'}))
 
 
 class ExternalLinkChooserForm(forms.Form):

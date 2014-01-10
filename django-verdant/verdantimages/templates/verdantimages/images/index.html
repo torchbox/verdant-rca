@@ -38,37 +38,13 @@
 {% endblock %}
 
 {% block content %}
-    <header class="nice-padding">
-        <div class="row row-flush">
-            <div class="left col9">
-                <h1>Images</h1>
-            </div>
-            <div class="right col3">
-                <a href="{% url 'verdantimages_add_image' %}" class="button bicolor icon icon-plus">Add an image</a>
-            </div>
-        </div>
-    </header>
 
-    <form class="search-bar full-width nice-padding" action="{% url 'verdantimages_index' %}" method="get">
-        <ul class="fields">
-            {% for field in form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
-            {% endfor %}
-            <li class="submit"><input type="submit" value="Search" /></li>
-            {% if popular_tags %}
-                <li class="taglist">
-                    <h3>Popular tags</h3>
-                    {% for tag in popular_tags %}
-                        <a class="suggested-tag tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
-                    {% endfor %}
-                </li>
-            {% endif %}
-        </ul>
-    </form>
+    {% include "verdantadmin/shared/header.html" with title="Images" add_link="verdantimages_add_image" add_text="Add an image" search_url="verdantimages_index" %}
 
     <div class="nice-padding">
         <div id="image-results">
             {% include "verdantimages/images/results.html" %}
         </div>
     </div>
+    
 {% endblock %}

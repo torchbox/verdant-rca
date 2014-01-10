@@ -4,9 +4,9 @@
 {% block bodyclass %}menu-images{% endblock %}
 
 {% block content %}
-    <header class="nice-padding">
-        <h1>Delete image</h1>
-    </header>
+
+    {% include "verdantadmin/shared/header.html" with title="Delete image" %}
+
     <div class="row row-flush nice-padding">
         <div class="col6">
             {% image image max-800x600 %}
@@ -19,4 +19,5 @@
 		    </form>
 		</div>
 	</div>
+    
 {% endblock %}
