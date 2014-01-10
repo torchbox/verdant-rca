@@ -170,6 +170,8 @@ INSTALLED_APPS = (
     'verdantsearch',
     'verdantusers',
     'verdantredirects',
+
+    'demo',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
