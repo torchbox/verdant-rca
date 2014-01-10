@@ -66,8 +66,8 @@ class CarouselItemFields(LinkFields):
 
     panels = [
         ImageChooserPanel('image'),
-        FieldPanel('caption'),
         FieldPanel('embed_url'),
+        FieldPanel('caption'),
         MultiFieldPanel(LinkFields.panels, "Link"),
     ]
 
@@ -75,7 +75,7 @@ class CarouselItemFields(LinkFields):
         abstract = True
 
 
-class RelatedLinksFields(LinkFields):
+class RelatedLinkFields(LinkFields):
     title = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -115,7 +115,7 @@ class ContactFields(models.Model):
 class HomePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('demo.HomePage', related_name='carousel_items')
 
-class HomePageRelatedLink(Orderable, RelatedLinksFields):
+class HomePageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.HomePage', related_name='related_links')
 
 class HomePage(Page):
@@ -155,7 +155,7 @@ StandardIndexPage.promote_panels = [
 class StandardPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('demo.StandardPage', related_name='carousel_items')
 
-class StandardPageRelatedLink(Orderable, RelatedLinksFields):
+class StandardPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.StandardPage', related_name='related_links')
 
 class StandardPage(Page):
@@ -177,7 +177,7 @@ StandardPage.promote_panels = [
 
 # Blog index page
 
-class BlogIndexPageRelatedLink(Orderable, RelatedLinksFields):
+class BlogIndexPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.BlogIndexPage', related_name='related_links')
 
 class BlogIndexPage(Page):
@@ -199,7 +199,7 @@ BlogIndexPage.promote_panels = [
 class BlogPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('demo.BlogPage', related_name='carousel_items')
 
-class BlogPageRelatedLink(Orderable, RelatedLinksFields):
+class BlogPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.BlogPage', related_name='related_links')
 
 class BlogPage(Page):
@@ -219,7 +219,7 @@ BlogPage.promote_panels = [
 
 # Person page
 
-class PersonPageRelatedLink(Orderable, RelatedLinksFields):
+class PersonPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.PersonPage', related_name='related_links')
 
 class PersonPage(Page, ContactFields):
@@ -261,7 +261,7 @@ ContactPage.promote_panels = [
 
 # Event index page
 
-class EventIndexPageRelatedLink(Orderable, RelatedLinksFields):
+class EventIndexPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.EventIndexPage', related_name='related_links')
 
 class EventIndexPage(Page):
@@ -283,7 +283,7 @@ EventIndexPage.promote_panels = [
 class EventPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('demo.EventPage', related_name='carousel_items')
 
-class EventPageRelatedLink(Orderable, RelatedLinksFields):
+class EventPageRelatedLink(Orderable, RelatedLinkFields):
     page = ParentalKey('demo.EventPage', related_name='related_links')
 
 class EventPageDatesAndTimes(Orderable):
