@@ -3084,7 +3084,7 @@ class StudentPage(Page, SocialFields):
         if self.is_researchstudent:
             return 'Research Student'
         else:
-            return 'Student'
+            return self.get_degree_qualification_display() + " Graduate"
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
