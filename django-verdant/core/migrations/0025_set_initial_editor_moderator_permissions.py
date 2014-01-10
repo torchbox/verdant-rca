@@ -12,7 +12,17 @@ class Migration(DataMigration):
         root_page = orm['core.Page'].objects.get(depth=1)
 
         orm['core.GroupPagePermission'].objects.create(
+            group=moderators_group, page=root_page, permission_type='add'
+        )
+        orm['core.GroupPagePermission'].objects.create(
+            group=moderators_group, page=root_page, permission_type='edit'
+        )
+        orm['core.GroupPagePermission'].objects.create(
             group=moderators_group, page=root_page, permission_type='publish'
+        )
+
+        orm['core.GroupPagePermission'].objects.create(
+            group=editors_group, page=root_page, permission_type='add'
         )
         orm['core.GroupPagePermission'].objects.create(
             group=editors_group, page=root_page, permission_type='edit'
