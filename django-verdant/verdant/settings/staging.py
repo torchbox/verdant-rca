@@ -11,6 +11,10 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+# BASE_URL required for notification emails
+BASE_URL = 'http://rca-staging.torchboxapps.com'
+
+
 try:
 	from .local import *
 except ImportError:
