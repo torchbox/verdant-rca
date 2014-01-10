@@ -57,7 +57,7 @@ def index(request):
         })
     else:
         return render(request, "verdantdocs/documents/index.html", {
-            'form': form,
+            'search_form': form,
             'documents': documents,
             'popular_tags': Document.popular_tags(),
             'is_searching': is_searching,
