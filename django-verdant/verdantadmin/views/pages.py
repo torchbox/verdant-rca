@@ -411,6 +411,8 @@ def unpublish(request, page_id):
 @login_required
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    if not page_to_move.permissions_for_user(request.user).can_move():
+        raise PermissionDenied
 
     if viewed_page_id:
         viewed_page = get_object_or_404(Page, id=viewed_page_id)
@@ -435,6 +437,8 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
 @login_required
 def move_confirm(request, page_to_move_id, destination_id):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    if not page_to_move.permissions_for_user(request.user).can_move():
+        raise PermissionDenied
     destination = get_object_or_404(Page, id=destination_id)
 
     if request.POST:

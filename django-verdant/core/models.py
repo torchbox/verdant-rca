@@ -658,3 +658,11 @@ class PagePermissionTester(object):
             return False
 
         return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_move(self):
+        """
+        Moving a page should be logically equivalent to deleting and re-adding it (and all its children).
+        As such, the permission test for 'can this be moved at all?' should be the same as for deletion.
+        (Further constraints will then apply on where it can be moved *to*.)
+        """
+        return self.can_delete()

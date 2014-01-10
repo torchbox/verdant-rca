@@ -49,7 +49,9 @@
                             {% if parent_page.live and not parent_page.is_root %}
                                 <li><a href="{{ parent_page.url }}" target="_blank">View live</a></li>
                             {% endif %}
-                            <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
+                            {% if parent_page_perms.can_move %}
+                                <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
+                            {% endif %}
                             {% if parent_page_perms.can_delete %}
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
                             {% endif %}
@@ -154,7 +156,9 @@
                                 {% if page.live %}
                                     <li><a href="{{ page.url }}" target="_blank">View live</a></li>
                                 {% endif %}
-                                <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
+                                {% if page_perms.can_move %}
+                                    <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
+                                {% endif %}
                                 {% if page_perms.can_delete %}
                                     <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                 {% endif %}
