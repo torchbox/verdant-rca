@@ -1,5 +1,5 @@
 from django.db import models, connection, transaction
-from django.db.models import get_model
+from django.db.models import get_model, Q
 from django.http import Http404
 from django.shortcuts import render
 from django.core.cache import cache
@@ -555,6 +555,29 @@ class UserPagePermissionsProxy(object):
 
         if user.is_active and not user.is_superuser:
             self.permissions = GroupPagePermission.objects.filter(group__user=self.user).select_related('page')
+
+    def revisions_for_moderation(self):
+        """Return a queryset of page revisions awaiting moderation that this user has publish permission on"""
+
+        # Deal with the trivial cases first...
+        if not self.user.is_active:
+            return PageRevision.objects.none()
+        if self.user.is_superuser:
+            return PageRevision.submitted_revisions.all()
+
+        # get the list of pages for which they have direct publish permission (i.e. they can publish any page within this subtree)
+        publishable_pages = [perm.page for perm in self.permissions if perm.permission_type == 'publish']
+        if not publishable_pages:
+            return PageRevision.objects.none()
+
+        # compile a filter expression to apply to the PageRevision.submitted_revisions manager:
+        # return only those pages whose paths start with one of the publishable_pages paths
+        only_my_sections = Q(page__path__startswith=publishable_pages[0].path)
+        for page in publishable_pages[1:]:
+            only_my_sections = only_my_sections | Q(page__path__startswith=page.path)
+
+        # return the filtered queryset
+        return PageRevision.submitted_revisions.filter(only_my_sections)
 
     def for_page(self, page):
         """Return a PagePermissionTester object that can be used to query whether this user has
