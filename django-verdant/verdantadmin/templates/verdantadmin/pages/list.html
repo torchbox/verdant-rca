@@ -27,8 +27,7 @@
         {% endif %}
         {% if parent_page %}
             {% page_permissions parent_page as parent_page_perms %}
-            {# in 'moving' mode, we require parent_page.can_choose to be true for the can-choose class to be added. In other modes, can-choose is added regardless. TODO: check if this really makes sense! #}
-            <tr class="index {% if not parent_page.live %} inactive{% endif %} {% if moving %}{% if parent_page.can_choose %}can-choose{% endif %}{% else %}can-choose{% endif %}">
+            <tr class="index {% if not parent_page.live %} inactive{% endif %} {% if moving or choosing %}{% if parent_page.can_choose %}can-choose{% endif %}{% endif %}">
                 <td class="title" {% if orderable %}colspan="2"{% endif %}>
                     {% if moving %}
                         {% if parent_page.can_choose %}
@@ -37,7 +36,11 @@
                             <h2>{{ parent_page.title }}</h2>
                         {% endif %}
                     {% elif choosing %}
-                        <h2><a class="choose-page" href="#{{ parent_page.id }}" data-id="{{ parent_page.id }}" data-title="{{ parent_page.title }}" data-url="{{ parent_page.url }}">{{ parent_page.title }}</a></h2>
+                        {% if parent_page.can_choose %}
+                            <h2><a class="choose-page" href="#{{ parent_page.id }}" data-id="{{ parent_page.id }}" data-title="{{ parent_page.title }}" data-url="{{ parent_page.url }}">{{ parent_page.title }}</a></h2>
+                        {% else %}
+                            <h2>{{ parent_page.title }}</h2>
+                        {% endif %}
                     {% else %}
                         {% if parent_page_perms.can_edit %}
                             <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
