@@ -183,6 +183,11 @@ class BlogIndexPageRelatedLink(Orderable, RelatedLinkFields):
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
 
+    @property
+    def blogs(self):
+        # Get list of blog pages that are descentands of this page
+        return BlogPage.objects.filter(live=True, path__startswith=self.path)
+
 BlogIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -267,6 +272,11 @@ class EventIndexPageRelatedLink(Orderable, RelatedLinkFields):
 class EventIndexPage(Page):
     intro = RichTextField(blank=True)
 
+    @property
+    def events(self):
+        # Get list of event pages that are descentands of this page
+        return EventPage.objects.filter(live=True, path__startswith=self.path)
+
 EventIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -307,6 +317,10 @@ class EventPageSpeaker(Orderable, LinkFields):
     first_name = models.CharField("Name", max_length=255, blank=True)
     last_name = models.CharField("Surname", max_length=255, blank=True)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    @property
+    def name_display(self):
+        return self.first_name + " " + self.last_name
 
     panels = [
         FieldPanel('first_name'),
