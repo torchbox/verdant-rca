@@ -47,19 +47,6 @@
         }
     }    
 
-    .multiple > li{
-        border-bottom: 1px dashed @color-input-border;
-    }
-
-    /* styles applied to an element as it is being reordered */
-    .multiple.moving{
-        position:relative;
-    }
-    .multiple li.moving{
-        position:absolute;
-        width:100%;
-    }
-
     .preview{
         padding-top:1em;
         padding-bottom:0.5em;
@@ -70,7 +57,6 @@
             display:none; /* The field label is used instead */
         }
     }
-
 
     /* Special full-width, one-off fields i.e a single text or textarea input */
     .full{
@@ -128,7 +114,6 @@
         }
     }
 
-   
     .object > h2, .single-field label{
         -webkit-font-smoothing: auto;
         .border-radius(2px);
@@ -151,46 +136,17 @@
         padding-top:2em;
     }
 
-    /* wrapper around add button for mutliple objects */
-    p.add{
-        font-weight:700;
-        cursor:pointer;
-        margin-top:0;
-        margin-bottom:0;
-        padding-top:2.5em;
-        padding-bottom:2em;
+    .multiple > li{
+        border-bottom: 1px dashed @color-input-border;
     }
 
-    /* Object controls */
-    .controls{
-        position:absolute;
-        right:@grid-gutter-width/2;
-        text-transform:uppercase;
-        color:@color-grey-2;
-        
-        li{
-            background-color: @color-grey-3;
-            display:inline-block;
-            cursor:pointer;
-        }
-        .icon{
-            padding:0.3em;
-        }
-        .icon:before{
-            vertical-align:middle;
-            line-height:2em;
-        }
-        .icon:hover{
-            background-color:@color-teal;
-
-            &:before{
-                color:white;
-            }
-        }
-        .disabled{
-            display:none;
-        }
+    .multiple .controls{
+        top:auto;
+        -webkit-border-radius: 0 0 3px 3px;
+        border-radius: 0 0 3px 3px;
     }
+
+    
 }
 
 @media screen and (min-width: @breakpoint-mobile){
