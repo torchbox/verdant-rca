@@ -1,4 +1,6 @@
 {% extends "verdantadmin/base.html" %}
+{% load page_permissions %}
+
 {% block titletag %}Editing {{ page.title }}{% endblock %}
 {% block bodyclass %}menu-explorer  page-editor{% endblock %}
 
@@ -25,6 +27,7 @@
         {% csrf_token %}
         {{ edit_handler.render_form_content }}
     
+        {% page_permissions page as page_perms %}
         <footer>
             <ul>
                 <li class="actions">
@@ -32,12 +35,13 @@
                         <input type="submit" value="Save draft" class="button" />
                         <div class="dropdown-toggle icon icon-arrow-up"></div>
                         <ul role="menu">
-                            {% if page.live and perms.core.unpublish_page %}
+                            {% if page_perms.can_unpublish %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
-                            {% elif perms.core.unpublish_page or page.has_unpublished_subtree %}
+                            {% endif %}
+                            {% if page_perms.can_delete %}
                                 <li><a href="{% url 'verdantadmin_pages_delete' page.id %}" class="shortcut">Delete</a></li>
                             {% endif %}
-                            {% if perms.core.publish_page %}
+                            {% if page_perms.can_publish %}
                                 <li><input type="submit" name="action-publish" value="Publish" class="button" /></li>
                             {% endif %}
                             <li><input type="submit" name="action-submit" value="Submit for moderation" class="button" /></li>

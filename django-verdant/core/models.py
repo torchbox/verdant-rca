@@ -520,6 +520,12 @@ class PageRevision(models.Model):
         # by path
         obj.set_url_path(self.page.get_parent())
 
+        # also copy over other properties which are meaningful for the page as a whole, not a
+        # specific revision of it
+        obj.live = self.page.live
+        obj.has_unpublished_changes = self.page.has_unpublished_changes
+        obj.owner = self.page.owner
+
         return obj
 
     def publish(self):
