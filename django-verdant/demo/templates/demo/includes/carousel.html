@@ -1,0 +1,19 @@
+{% load image_tags embed_filters %}
+
+<ul>
+  {% for carousel_item in carousel_items %}
+    <li>
+      {% if carousel_item.embed_link %}
+        <!-- Poster image -->
+        {% image carousel_item.image max-320x200 %}
+
+        {{ carousel_item.embed_link|embed }}
+      {% else %}
+        {% image carousel_item.image max-320x200 %}
+      {% endif %}
+      <a href="{{ carousel_item.link }}">{{ carousel_item.caption }}</a>
+    </li>
+  {% empty %}
+    <li>No carousel items found</li>
+  {% endfor %}
+</ul>
