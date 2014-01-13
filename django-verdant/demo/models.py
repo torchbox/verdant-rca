@@ -31,6 +31,9 @@ class Page(PageBase):
         FieldPanel('meta_description'),
     ]
 
+    indexed_fields = ('seo_title', 'meta_description')
+    search_name = "Page"
+
     class Meta:
         abstract = True
 
@@ -121,6 +124,9 @@ class HomePageRelatedLink(Orderable, RelatedLinkFields):
 class HomePage(Page):
     body = RichTextField(blank=True)
 
+    indexed_fields = ('body', )
+    search_name = "Homepage"
+
     class Meta:
         verbose_name = "Homepage"
 
@@ -139,7 +145,9 @@ HomePage.promote_panels = [
 # Standard index page
 
 class StandardIndexPage(Page):
-    pass # No additional fields required
+    # No additional fields required
+
+    search_name = None
 
 StandardIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -162,6 +170,9 @@ class StandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
 
+    indexed_fields = ('intro', 'body', )
+    search_name = None
+
 StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -182,6 +193,9 @@ class BlogIndexPageRelatedLink(Orderable, RelatedLinkFields):
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
+
+    indexed_fields = ('intro', )
+    search_name = "Blog"
 
     @property
     def blogs(self):
@@ -210,6 +224,9 @@ class BlogPageRelatedLink(Orderable, RelatedLinkFields):
 class BlogPage(Page):
     body = RichTextField()
 
+    indexed_fields = ('body', )
+    search_name = "Blog Entry"
+
 BlogPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
@@ -234,6 +251,9 @@ class PersonPage(Page, ContactFields):
     biography = RichTextField(blank=True)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
+    indexed_fields = ('first_name', 'last_name', 'intro', 'biography')
+    search_name = "Person"
+
 PersonPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('first_name'),
@@ -255,6 +275,9 @@ PersonPage.promote_panels = [
 class ContactPage(Page, ContactFields):
     body = RichTextField(blank=True)
 
+    indexed_fields = ('body', )
+    search_name = "Contact information"
+
 ContactPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
@@ -273,6 +296,9 @@ class EventIndexPageRelatedLink(Orderable, RelatedLinkFields):
 
 class EventIndexPage(Page):
     intro = RichTextField(blank=True)
+
+    indexed_fields = ('intro', )
+    search_name = "Event index"
 
     @property
     def events(self):
@@ -339,6 +365,9 @@ class EventPage(Page):
     specific_directions_link = models.URLField(blank=True)
     cost = RichTextField(blank=True)
     signup_link = models.URLField(blank=True)
+
+    indexed_fields = ('get_audience_display', 'location', 'body')
+    search_name = "Event"
 
 EventPage.content_panels = [
     FieldPanel('title', classname="full title"),
