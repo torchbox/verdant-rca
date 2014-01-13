@@ -1,10 +1,11 @@
 from django.db import models, connection, transaction
-from django.db.models import get_model
+from django.db.models import get_model, Q
 from django.http import Http404
 from django.shortcuts import render
 from django.core.cache import cache
 
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Group
 from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
 from verdantsearch import Indexed, Searcher
@@ -143,6 +144,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     live = models.BooleanField(default=True, editable=False)
     has_unpublished_changes = models.BooleanField(default=False, editable=False)
     url_path = models.CharField(max_length=255, blank=True, editable=False)
+    owner = models.ForeignKey('auth.User', null=True, blank=True, editable=False, related_name='owned_pages')
 
     # RCA-specific fields
     # TODO: decide on the best way of implementing site-specific but site-global fields,
@@ -416,6 +418,12 @@ class Page(MP_Node, ClusterableModel, Indexed):
         new_self.save()
         new_self._update_descendant_url_paths(old_url_path, new_url_path)
 
+    def permissions_for_user(self, user):
+        """
+        Return a PagePermissionsTester object defining what actions the user can perform on this page
+        """
+        user_perms = UserPagePermissionsProxy(user)
+        return user_perms.for_page(self)
 
 def get_navigation_menu_items():
     # Get all pages that appear in the navigation menu: ones which have children,
@@ -513,6 +521,12 @@ class PageRevision(models.Model):
         # by path
         obj.set_url_path(self.page.get_parent())
 
+        # also copy over other properties which are meaningful for the page as a whole, not a
+        # specific revision of it
+        obj.live = self.page.live
+        obj.has_unpublished_changes = self.page.has_unpublished_changes
+        obj.owner = self.page.owner
+
         return obj
 
     def publish(self):
@@ -521,3 +535,172 @@ class PageRevision(models.Model):
         page.save()
         self.submitted_for_moderation = False
         page.revisions.update(submitted_for_moderation=False)
+
+PAGE_PERMISSION_TYPE_CHOICES = [
+    ('add', 'Add'),
+    ('edit', 'Edit'),
+    ('publish', 'Publish'),
+]
+
+class GroupPagePermission(models.Model):
+    group = models.ForeignKey(Group, related_name='page_permissions')
+    page = models.ForeignKey('Page', related_name='group_permissions')
+    permission_type = models.CharField(max_length=20, choices=PAGE_PERMISSION_TYPE_CHOICES)
+
+
+class UserPagePermissionsProxy(object):
+    """Helper object that encapsulates all the page permission rules that this user has
+    across the page hierarchy."""
+    def __init__(self, user):
+        self.user = user
+
+        if user.is_active and not user.is_superuser:
+            self.permissions = GroupPagePermission.objects.filter(group__user=self.user).select_related('page')
+
+    def revisions_for_moderation(self):
+        """Return a queryset of page revisions awaiting moderation that this user has publish permission on"""
+
+        # Deal with the trivial cases first...
+        if not self.user.is_active:
+            return PageRevision.objects.none()
+        if self.user.is_superuser:
+            return PageRevision.submitted_revisions.all()
+
+        # get the list of pages for which they have direct publish permission (i.e. they can publish any page within this subtree)
+        publishable_pages = [perm.page for perm in self.permissions if perm.permission_type == 'publish']
+        if not publishable_pages:
+            return PageRevision.objects.none()
+
+        # compile a filter expression to apply to the PageRevision.submitted_revisions manager:
+        # return only those pages whose paths start with one of the publishable_pages paths
+        only_my_sections = Q(page__path__startswith=publishable_pages[0].path)
+        for page in publishable_pages[1:]:
+            only_my_sections = only_my_sections | Q(page__path__startswith=page.path)
+
+        # return the filtered queryset
+        return PageRevision.submitted_revisions.filter(only_my_sections)
+
+    def for_page(self, page):
+        """Return a PagePermissionTester object that can be used to query whether this user has
+        permission to perform specific tasks on the given page"""
+        return PagePermissionTester(self, page)
+
+class PagePermissionTester(object):
+    def __init__(self, user_perms, page):
+        self.user = user_perms.user
+        self.user_perms = user_perms
+        self.page = page
+
+        if self.user.is_active and not self.user.is_superuser:
+            self.permissions = set(
+                perm.permission_type for perm in user_perms.permissions
+                if self.page.path.startswith(perm.page.path)
+            )
+
+    def can_add_subpage(self):
+        if not self.user.is_active:
+            return False
+        return self.user.is_superuser or ('add' in self.permissions)
+
+    def can_edit(self):
+        if not self.user.is_active:
+            return False
+        if self.page.is_root():  # root node is not a page and can never be edited, even by superusers
+            return False
+        return self.user.is_superuser or ('edit' in self.permissions) or ('add' in self.permissions and self.page.owner_id == self.user.id)
+
+    def can_delete(self):
+        if not self.user.is_active:
+            return False
+        if self.page.is_root():  # root node is not a page and can never be deleted, even by superusers
+            return False
+
+        if self.user.is_superuser or ('publish' in self.permissions):
+            # Users with publish permission can unpublish any pages that need to be unpublished to achieve deletion
+            return True
+
+        elif 'edit' in self.permissions:
+            # user can only delete if there are no live pages in this subtree
+            return (not self.page.live) and (not self.page.get_descendants().filter(live=True).exists())
+
+        elif 'add' in self.permissions:
+            # user can only delete if all pages in this subtree are unpublished and owned by this user
+            return (
+                (not self.page.live)
+                and (self.page.owner_id == self.user.id)
+                and (not self.page.get_descendants().exclude(live=False, owner=self.user).exists())
+            )
+
+        else:
+            return False
+
+    def can_unpublish(self):
+        if not self.user.is_active:
+            return False
+        if (not self.page.live) or self.page.is_root():
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_publish(self):
+        if not self.user.is_active:
+            return False
+        if self.page.is_root():
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_publish_subpage(self):
+        """
+        Niggly special case for creating and publishing a page in one go.
+        Differs from can_publish in that we want to be able to publish subpages of root, but not
+        to be able to publish root itself
+        """
+        if not self.user.is_active:
+            return False
+
+        return self.user.is_superuser or ('publish' in self.permissions)
+
+    def can_reorder_children(self):
+        """
+        Keep reorder permissions the same as publishing, since it immediately affects published pages
+        (and the use-cases for a non-admin needing to do it are fairly obscure...)
+        """
+        return self.can_publish_subpage()
+
+    def can_move(self):
+        """
+        Moving a page should be logically equivalent to deleting and re-adding it (and all its children).
+        As such, the permission test for 'can this be moved at all?' should be the same as for deletion.
+        (Further constraints will then apply on where it can be moved *to*.)
+        """
+        return self.can_delete()
+
+    def can_move_to(self, destination):
+        # reject the logically impossible cases first
+        if self.page == destination or destination.is_child_of(self.page):
+            return False
+
+        # and shortcut the trivial 'everything' / 'nothing' permissions
+        if not self.user.is_active:
+            return False
+        if self.user.is_superuser:
+            return True
+
+        # check that the page can be moved at all
+        if not self.can_move():
+            return False
+
+        # Inspect permissions on the destination
+        destination_perms = self.user_perms.for_page(destination)
+
+        # we always need at least add permission in the target
+        if 'add' not in destination_perms.permissions:
+            return False
+
+        if self.page.live or self.page.get_descendants().filter(live=True).exists():
+            # moving this page will entail publishing within the destination section
+            return ('publish' in destination_perms.permissions)
+        else:
+            # no publishing required, so the already-tested 'add' permission is sufficient
+            return True
