@@ -1,3 +1,5 @@
+{% load demo_tags %}
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -5,6 +7,11 @@
   </head>
   <body>
     <h1>Wagtail Demo</h1>
+
+    {% block menu %}
+      {% get_site_root as site_root %}
+      {% include "demo/includes/menu.html" with self=site_root only %}
+    {% endblock %}
 
     {% block search_box %}
       {% include "demo/includes/search_box.html" only %}
