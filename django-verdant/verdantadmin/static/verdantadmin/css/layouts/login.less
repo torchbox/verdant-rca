@@ -10,6 +10,9 @@ body{
     margin-left: 0px;
     height:100%;
 }
+.wrapper{
+    max-width:none;
+}
 h1{
     .nice-padding();
     font-weight:300;
@@ -56,6 +59,9 @@ input[type=checkbox]:before{
     background-color:#333;
     color:#555;
     border:1px solid #555;
+}
+.fields{
+    max-width:100%;
 }
 .fields li.full{
     position:relative;
@@ -163,7 +169,7 @@ input[type=checkbox]:before{
         margin-left: 80px;
         margin-left: -25px;
         top: 50%;
-        margin-top: -25px;
+        margin-top: -18px;
     }
     .full input{
         padding-left:15%;
@@ -171,5 +177,11 @@ input[type=checkbox]:before{
 
     .messages li{
         padding-left:11%;
+    }
+}
+
+@media screen and (min-width: @breakpoint-mobile){
+    body, .wrapper{
+        background-color:@color-grey-1;
     }
 }
