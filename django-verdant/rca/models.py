@@ -3084,7 +3084,7 @@ class StudentPage(Page, SocialFields):
         if self.is_researchstudent:
             return 'Research Student'
         else:
-            return 'Student'
+            return self.get_degree_qualification_display() + " Graduate"
 
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3646,6 +3646,11 @@ class GalleryPage(Page, SocialFields):
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
+        # Get default year
+        if not year:
+            # The default_year is the latest year with a student inside it
+            year = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent").aggregate(models.Max('degree_year'))['degree_year__max']
+
         gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent")
         if programme:
             gallery_items = gallery_items.filter(programme=programme)
@@ -3694,6 +3699,7 @@ class GalleryPage(Page, SocialFields):
                 'self': self,
                 'gallery_items': gallery_items,
                 'related_programmes': related_programmes,
+                'selected_year': year,
             })
         else:
             return render(request, self.template, {
@@ -3701,10 +3707,7 @@ class GalleryPage(Page, SocialFields):
                 'gallery_items': gallery_items,
                 'related_programmes': related_programmes,
                 'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
-                # on first page load the current year needs to appear in the url for the next page
-                # but we can't change the value on the request.GET dictionary, which is used to render that url
-                # so just append it to that url if the year filter wasn't defined already
-                'default_year': ('&year=%d' % date.today().year) if not year else '',
+                'selected_year': year,
             })
 
 GalleryPage.content_panels = [

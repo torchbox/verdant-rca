@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError
 from django.template.loader import render_to_string
@@ -14,6 +14,8 @@ from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from verdantadmin import tasks
+
 
 @login_required
 def index(request, parent_page_id=None):
@@ -182,6 +184,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -239,6 +242,7 @@ def edit(request, page_id):
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -263,32 +267,6 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
         'errors_debug': errors_debug,
     })
-
-@login_required
-def reorder(request, parent_page_id=None):
-    if parent_page_id:
-        parent_page = get_object_or_404(Page, id=parent_page_id)
-    else:
-        parent_page = Page.get_first_root_node()
-
-    pages = parent_page.get_children()
-
-    if request.POST:
-        try:
-            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
-        except:
-            # Invalid
-            messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_explore', parent_page.id)
-
-        # Reorder
-        for page in pages_ordered:
-            page.move(parent_page, pos='last-child')
-
-        # Success message
-        messages.success(request, "Pages have been reordered")
-
-    return redirect('verdantadmin_explore', parent_page.id)
 
 @login_required
 def delete(request, page_id):
@@ -464,10 +442,30 @@ def move_confirm(request, page_to_move_id, destination_id):
 
     if request.POST:
         try:
-            page_to_move.move(destination, pos='last-child')
+            # Get position parameter
+            position = request.GET.get('position', None)
 
-            messages.success(request, "Page '%s' moved." % page_to_move.title)
-            return redirect('verdantadmin_explore', destination.id)
+            # Find page thats already in this position
+            position_page = None
+            if position is not None:
+                try:
+                    position_page = destination.get_children()[int(position)]
+                except IndexError:
+                    pass # No page in this position
+
+            # Move page
+            if position_page:
+                # Move page into this position
+                page_to_move.move(position_page, pos='left')
+            else:
+                # Move page to end
+                page_to_move.move(destination, pos='last-child')
+
+            if request.is_ajax():
+                return HttpResponse('')
+            else:
+                messages.success(request, "Page '%s' moved." % page_to_move.title)
+                return redirect('verdantadmin_explore', destination.id)
         except InvalidMoveToDescendant:
             messages.error(request, "You cannot move this page into itself.")
             return redirect('verdantadmin_pages_move', page_to_move.id)
@@ -545,6 +543,7 @@ def approve_moderation(request, revision_id):
     if request.POST:
         revision.publish()
         messages.success(request, "Page '%s' published." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'approved', request.user.id)
 
     return redirect('verdantadmin_home')
 
@@ -559,6 +558,7 @@ def reject_moderation(request, revision_id):
         revision.submitted_for_moderation = False
         revision.save(update_fields=['submitted_for_moderation'])
         messages.success(request, "Page '%s' rejected for publication." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'rejected', request.user.id)
 
     return redirect('verdantadmin_home')
 
