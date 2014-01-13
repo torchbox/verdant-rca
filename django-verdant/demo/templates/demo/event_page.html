@@ -3,14 +3,15 @@
 {% block content %}
   <h2>{{ self.title }}</h2>
 
+  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+
+  {{ self.body|safe }}
+
   <h3>Audience</h3>
   {{ self.get_audience_display }}
 
   <h3>Location</h3>
   {{ self.location }}
-
-  <h3>Body</h3>
-  {{ self.body|safe }}
 
   <h3>Speakers</h3>
   <ul>

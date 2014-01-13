@@ -3,7 +3,8 @@
 {% block content %}
   <h2>{{ self.title }}</h2>
 
-  <h3>Body</h3>
+  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+
   {{ self.body|safe }}
 
   <h3>Related links</h3>

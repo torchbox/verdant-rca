@@ -236,6 +236,8 @@ class PersonPage(Page, ContactFields):
 
 PersonPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('first_name'),
+    FieldPanel('last_name'),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     ImageChooserPanel('image'),

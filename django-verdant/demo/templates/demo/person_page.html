@@ -3,6 +3,14 @@
 {% block content %}
   <h2>{{ self.title }}</h2>
 
+  {{ self.intro|safe }}
+
+  <h3>Biography</h3>
+  {{ self.biography|safe }}
+
+  <h3>Contact</h3>
+  {% include "demo/includes/contact.html" with contact=self only %}
+
   <h3>Related links</h3>
   {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}
