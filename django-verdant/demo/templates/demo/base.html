@@ -6,6 +6,10 @@
   <body>
     <h1>Wagtail Demo</h1>
 
+    {% block search_box %}
+      {% include "demo/includes/search_box.html" only %}
+    {% endblock %}
+
     {% block content %}
 
     {% endblock %}

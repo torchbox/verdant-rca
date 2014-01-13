@@ -249,6 +249,8 @@ CACHES = {
 # VERDANT SETTINGS
 VERDANT_SITE_NAME = 'Wagtail demo'
 
+VERDANTSEARCH_RESULTS_TEMPLATE = 'demo/search_results.html'
+
 # CELERY SETTINGS
 
 # Use separate queues on each host if uploads should be processed by celery
