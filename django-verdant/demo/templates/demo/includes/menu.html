@@ -2,11 +2,9 @@
 <ul>
   {% with "demo/includes/menu.html" as menu_template %}
     {% for child in self.get_children %}
-      {% with child.specific as child_specific %}
-        {% if child_specific.show_in_menus %}
-          <li>{% include menu_template with self=child_specific only %}</li>
-        {% endif %}
-      {% endwith %}
+      {% if child.specific.show_in_menus %}
+        <li>{% include menu_template with self=child only %}</li>
+      {% endif %}
     {% endfor %}
   {% endwith %}
 </ul>
