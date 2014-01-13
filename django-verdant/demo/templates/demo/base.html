@@ -1,4 +1,4 @@
-{% load demo_tags %}
+{% load demo_tags cache %}
 
 <!DOCTYPE html>
 <html>
@@ -9,8 +9,10 @@
     <h1>Wagtail Demo</h1>
 
     {% block menu %}
-      {% get_site_root as site_root %}
-      {% include "demo/includes/menu.html" with self=site_root only %}
+      {% cache 500 menu %}
+        {% get_site_root as site_root %}
+        {% include "demo/includes/menu.html" with self=site_root only %}
+      {% endcache %}
     {% endblock %}
 
     {% block search_box %}
