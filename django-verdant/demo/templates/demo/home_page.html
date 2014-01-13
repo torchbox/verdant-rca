@@ -3,4 +3,6 @@
 
 {% block content %}
   <h2>{{ self.title }}</h2>
+
+  {{ body|safe }}
 {% endblock %}
