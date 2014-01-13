@@ -279,6 +279,9 @@ def reorder(request, parent_page_id=None):
     else:
         parent_page = Page.get_first_root_node()
 
+    if not parent_page.permissions_for_user(request.user).can_reorder_children():
+        raise PermissionDenied
+
     pages = parent_page.get_children()
 
     if request.POST:

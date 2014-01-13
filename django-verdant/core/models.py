@@ -660,6 +660,13 @@ class PagePermissionTester(object):
 
         return self.user.is_superuser or ('publish' in self.permissions)
 
+    def can_reorder_children(self):
+        """
+        Keep reorder permissions the same as publishing, since it immediately affects published pages
+        (and the use-cases for a non-admin needing to do it are fairly obscure...)
+        """
+        return self.can_publish_subpage()
+
     def can_move(self):
         """
         Moving a page should be logically equivalent to deleting and re-adding it (and all its children).
