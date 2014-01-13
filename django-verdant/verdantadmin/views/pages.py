@@ -448,6 +448,28 @@ def move_confirm(request, page_to_move_id, destination_id):
         raise PermissionDenied
 
     if request.POST:
+        # any invalid moves *should* be caught by the permission check above,
+        # so don't bother to catch InvalidMoveToDescendant
+
+        page_to_move.move(destination, pos='last-child')
+
+        messages.success(request, "Page '%s' moved." % page_to_move.title)
+        return redirect('verdantadmin_explore', destination.id)
+
+    return render(request, 'verdantadmin/pages/confirm_move.html', {
+        'page_to_move': page_to_move,
+        'destination': destination,
+    })
+
+@login_required
+def set_page_position(request, page_to_move_id):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    parent_page = page_to_move.get_parent()
+
+    if not parent_page.permissions_for_user(request.user).can_reorder_children():
+        raise PermissionDenied
+
+    if request.POST:
         # Get position parameter
         position = request.GET.get('position', None)
 
@@ -455,7 +477,7 @@ def move_confirm(request, page_to_move_id, destination_id):
         position_page = None
         if position is not None:
             try:
-                position_page = destination.get_children()[int(position)]
+                position_page = parent_page.get_children()[int(position)]
             except IndexError:
                 pass # No page in this position
 
@@ -463,24 +485,15 @@ def move_confirm(request, page_to_move_id, destination_id):
 
         # any invalid moves *should* be caught by the permission check above,
         # so don't bother to catch InvalidMoveToDescendant
+
         if position_page:
             # Move page into this position
             page_to_move.move(position_page, pos='left')
         else:
             # Move page to end
-            page_to_move.move(destination, pos='last-child')
+            page_to_move.move(parent_page, pos='last-child')
 
-        if request.is_ajax():
-            return HttpResponse('')
-        else:
-            messages.success(request, "Page '%s' moved." % page_to_move.title)
-            return redirect('verdantadmin_explore', destination.id)
-
-    return render(request, 'verdantadmin/pages/confirm_move.html', {
-        'page_to_move': page_to_move,
-        'destination': destination,
-    })
-
+    return HttpResponse('')
 
 PAGE_EDIT_HANDLERS = {}
 def get_page_edit_handler(page_class):

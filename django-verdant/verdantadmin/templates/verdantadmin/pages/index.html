@@ -56,7 +56,7 @@
 
                         // Build url
                         // TODO: Find better way to inject movedPageId
-                        var url = "{% url 'verdantadmin_pages_move_confirm' '999999' parent_page.id %}".replace('999999', movedPageId);
+                        var url = "{% url 'verdantadmin_pages_set_page_position' '999999' %}".replace('999999', movedPageId);
                         if (newPosition != null) {
                             url += '?position=' + newPosition;
                         }
