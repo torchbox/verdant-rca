@@ -1,4 +1,4 @@
-{{ self }}
+<a href="{{ self.url }}">{{ self }}</a>
 <ul>
   {% with "demo/includes/menu.html" as menu_template %}
     {% for child in self.get_children %}
