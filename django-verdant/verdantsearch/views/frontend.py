@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from core import models
-from verdantsearch import Search, Query
+from verdantsearch import Search
+from verdantsearch.models import Query
 import json
 
 
