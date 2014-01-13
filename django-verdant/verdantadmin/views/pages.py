@@ -1,12 +1,12 @@
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.template.loader import render_to_string
 from django.template import RequestContext
 
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
@@ -70,6 +70,8 @@ def select_type(request):
 @login_required
 def add_subpage(request, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
+    if not parent_page.permissions_for_user(request.user).can_add_subpage():
+        raise PermissionDenied
 
     page_types = sorted([ContentType.objects.get_for_model(model_class) for model_class in parent_page.clean_subpage_types()], key=lambda pagetype: pagetype.name.lower())
     all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name.lower())
@@ -133,6 +135,9 @@ def content_type_use(request, content_type_app_name, content_type_model_name):
 @login_required
 def create(request, content_type_app_name, content_type_model_name, parent_page_id):
     parent_page = get_object_or_404(Page, id=parent_page_id).specific
+    parent_page_perms = parent_page.permissions_for_user(request.user)
+    if not parent_page_perms.can_add_subpage():
+        raise PermissionDenied
 
     try:
         content_type = ContentType.objects.get_by_natural_key(content_type_app_name, content_type_model_name)
@@ -149,7 +154,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
     #     messages.error(request, "Sorry, you do not have access to create a page of type '%s' here." % content_type.name)
     #     return redirect('verdantadmin_pages_select_type')
 
-    page = page_class()
+    page = page_class(owner=request.user)
     edit_handler_class = get_page_edit_handler(page_class)
     form_class = edit_handler_class.get_form_class(page_class)
 
@@ -167,7 +172,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
         if form.is_valid():
             page = form.save(commit=False)  # don't save yet, as we need treebeard to assign tree params
 
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and parent_page_perms.can_publish_subpage()
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -207,6 +212,9 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
 def edit(request, page_id):
     latest_revision = get_object_or_404(Page, id=page_id).get_latest_revision()
     page = get_object_or_404(Page, id=page_id).get_latest_revision_as_page()
+    page_perms = page.permissions_for_user(request.user)
+    if not page_perms.can_edit():
+        raise PermissionDenied
 
     edit_handler_class = get_page_edit_handler(page.__class__)
     form_class = edit_handler_class.get_form_class(page.__class__)
@@ -217,7 +225,7 @@ def edit(request, page_id):
         form = form_class(request.POST, request.FILES, instance=page)
 
         if form.is_valid():
-            is_publishing = bool(request.POST.get('action-publish')) and request.user.has_perm('core.publish_page')
+            is_publishing = bool(request.POST.get('action-publish')) and page_perms.can_publish()
             is_submitting = bool(request.POST.get('action-submit'))
 
             if is_publishing:
@@ -271,18 +279,8 @@ def edit(request, page_id):
 @login_required
 def delete(request, page_id):
     page = get_object_or_404(Page, id=page_id)
-
-    if not request.user.has_perm('core.unpublish_page'):
-        # they should only be able to delete this page if this page is unpublished, AND it has no
-        # published children
-        if page.live:
-            parent_id = page.get_parent().id
-            messages.error(request, "You do not have permission to delete this page, because it is live on the site.")
-            return redirect('verdantadmin_explore', parent_id)
-        elif page.get_descendants().filter(live=True).exists():
-            parent_id = page.get_parent().id
-            messages.error(request, "You do not have permission to delete this page, because it has subpages that are live on the site.")
-            return redirect('verdantadmin_explore', parent_id)
+    if not page.permissions_for_user(request.user).can_delete():
+        raise PermissionDenied
 
     if request.POST:
         parent_id = page.get_parent().id
@@ -396,9 +394,11 @@ def preview_placeholder(request):
     """
     return render(request, 'verdantadmin/pages/preview_placeholder.html')
 
-@permission_required('core.unpublish_page')
+@login_required
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
+    if not page.permissions_for_user(request.user).can_unpublish():
+        raise PermissionDenied
 
     if request.POST:
         parent_id = page.get_parent().id
@@ -414,20 +414,25 @@ def unpublish(request, page_id):
 @login_required
 def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    page_perms = page_to_move.permissions_for_user(request.user)
+    if not page_perms.can_move():
+        raise PermissionDenied
 
     if viewed_page_id:
         viewed_page = get_object_or_404(Page, id=viewed_page_id)
     else:
         viewed_page = Page.get_first_root_node()
 
+    viewed_page.can_choose = page_perms.can_move_to(viewed_page)
+
     child_pages = []
-    for page in viewed_page.get_children():
+    for target in viewed_page.get_children():
         # can't move the page into itself or its descendants
-        page.can_choose = not(page == page_to_move or page.is_child_of(page_to_move))
+        target.can_choose = page_perms.can_move_to(target)
 
-        page.can_descend = page.can_choose and page.get_children_count()
+        target.can_descend = not(target == page_to_move or target.is_child_of(page_to_move)) and target.get_children_count()
 
-        child_pages.append(page)
+        child_pages.append(target)
 
     return render(request, 'verdantadmin/pages/move_choose_destination.html', {
         'page_to_move': page_to_move,
@@ -439,47 +444,56 @@ def move_choose_destination(request, page_to_move_id, viewed_page_id=None):
 def move_confirm(request, page_to_move_id, destination_id):
     page_to_move = get_object_or_404(Page, id=page_to_move_id)
     destination = get_object_or_404(Page, id=destination_id)
+    if not page_to_move.permissions_for_user(request.user).can_move_to(destination):
+        raise PermissionDenied
 
     if request.POST:
-        try:
-            # Get position parameter
-            position = request.GET.get('position', None)
+        # any invalid moves *should* be caught by the permission check above,
+        # so don't bother to catch InvalidMoveToDescendant
 
-            # Find page thats already in this position
-            position_page = None
-            if position is not None:
-                try:
-                    position_page = destination.get_children()[int(position)]
-                except IndexError:
-                    pass # No page in this position
+        page_to_move.move(destination, pos='last-child')
 
-            # Move page
-            if position_page:
-                # Move page into this position
-                page_to_move.move(position_page, pos='left')
-            else:
-                # Move page to end
-                page_to_move.move(destination, pos='last-child')
-
-            if request.is_ajax():
-                return HttpResponse('')
-            else:
-                messages.success(request, "Page '%s' moved." % page_to_move.title)
-                return redirect('verdantadmin_explore', destination.id)
-        except InvalidMoveToDescendant:
-            messages.error(request, "You cannot move this page into itself.")
-            return redirect('verdantadmin_pages_move', page_to_move.id)
-
-    else:
-        if page_to_move == destination or destination.is_descendant_of(page_to_move):
-            messages.error(request, "You cannot move this page into itself.")
-            return redirect('verdantadmin_pages_move', page_to_move.id)
+        messages.success(request, "Page '%s' moved." % page_to_move.title)
+        return redirect('verdantadmin_explore', destination.id)
 
     return render(request, 'verdantadmin/pages/confirm_move.html', {
         'page_to_move': page_to_move,
         'destination': destination,
     })
 
+@login_required
+def set_page_position(request, page_to_move_id):
+    page_to_move = get_object_or_404(Page, id=page_to_move_id)
+    parent_page = page_to_move.get_parent()
+
+    if not parent_page.permissions_for_user(request.user).can_reorder_children():
+        raise PermissionDenied
+
+    if request.POST:
+        # Get position parameter
+        position = request.GET.get('position', None)
+
+        # Find page thats already in this position
+        position_page = None
+        if position is not None:
+            try:
+                position_page = parent_page.get_children()[int(position)]
+            except IndexError:
+                pass # No page in this position
+
+        # Move page
+
+        # any invalid moves *should* be caught by the permission check above,
+        # so don't bother to catch InvalidMoveToDescendant
+
+        if position_page:
+            # Move page into this position
+            page_to_move.move(position_page, pos='left')
+        else:
+            # Move page to end
+            page_to_move.move(parent_page, pos='last-child')
+
+    return HttpResponse('')
 
 PAGE_EDIT_HANDLERS = {}
 def get_page_edit_handler(page_class):
@@ -533,9 +547,12 @@ def search(request):
         })
 
 
-@permission_required('core.publish_page')
+@login_required
 def approve_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
@@ -547,9 +564,12 @@ def approve_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.publish_page')
+@login_required
 def reject_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
@@ -562,9 +582,12 @@ def reject_moderation(request, revision_id):
 
     return redirect('verdantadmin_home')
 
-@permission_required('core.publish_page')
+@login_required
 def preview_for_moderation(request, revision_id):
     revision = get_object_or_404(PageRevision, id=revision_id)
+    if not revision.page.permissions_for_user(request.user).can_publish():
+        raise PermissionDenied
+
     if not revision.submitted_for_moderation:
         messages.error(request, "The page '%s' is not currently awaiting moderation." % revision.page.title)
         return redirect('verdantadmin_home')
