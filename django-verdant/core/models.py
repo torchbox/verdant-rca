@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.core.cache import cache
 
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Group
 from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
 from verdantsearch import Indexed, Searcher
@@ -542,7 +543,7 @@ PAGE_PERMISSION_TYPE_CHOICES = [
 ]
 
 class GroupPagePermission(models.Model):
-    group = models.ForeignKey('auth.group', related_name='page_permissions')
+    group = models.ForeignKey(Group, related_name='page_permissions')
     page = models.ForeignKey('Page', related_name='group_permissions')
     permission_type = models.CharField(max_length=20, choices=PAGE_PERMISSION_TYPE_CHOICES)
 

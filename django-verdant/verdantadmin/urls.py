@@ -21,8 +21,9 @@ urlpatterns += patterns('verdantadmin.views',
     url(r'^pages/usage/(\w+)/(\w+)/$', 'pages.content_type_use', name='verdantadmin_pages_type_use'),
 
     url(r'^pages/(\d+)/edit/$', 'pages.edit', name='verdantadmin_pages_edit'),
-    url(r'^pages/(\d+)/reorder/$', 'pages.reorder', name='verdantadmin_pages_reorder'),
     url(r'^pages/(\d+)/edit/preview/$', 'pages.preview_on_edit', name='verdantadmin_pages_preview_on_edit'),
+
+    url(r'^pages/preview_placeholder/$', 'pages.preview_placeholder', name='verdantadmin_pages_preview_placeholder'),
 
     url(r'^pages/(\d+)/view_draft/$', 'pages.view_draft', name='verdantadmin_pages_view_draft'),
     url(r'^pages/(\d+)/add_subpage/$', 'pages.add_subpage', name='verdantadmin_pages_add_subpage'),

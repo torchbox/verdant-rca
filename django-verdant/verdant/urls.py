@@ -12,7 +12,7 @@ from verdantembeds import urls as verdantembeds_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
 from verdantdocs import urls as verdantdocs_urls
 from verdantsnippets import urls as verdantsnippets_urls
-from verdantsearch import urls as verdantsearch_urls
+from verdantsearch.urls import frontend as verdantsearch_frontend_urls, admin as verdantsearch_admin_urls
 from verdantusers import urls as verdantusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
@@ -22,8 +22,13 @@ from twitter import urls as twitter_urls
 
 admin.autodiscover()
 
-from verdantsearch import register_signal_handlers
-register_signal_handlers()
+
+# Signal handlers
+from verdantsearch import register_signal_handlers as verdantsearch_register_signal_handlers
+verdantsearch_register_signal_handlers()
+
+from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_register_signal_handlers
+rca_ldap_register_signal_handlers()
 
 
 urlpatterns = patterns('',
@@ -42,10 +47,11 @@ urlpatterns = patterns('',
     url(r'^admin/embeds/', include(verdantembeds_urls)),
     url(r'^admin/documents/', include(verdantdocs_admin_urls)),
     url(r'^admin/snippets/', include(verdantsnippets_urls)),
+    url(r'^admin/search/', include(verdantsearch_admin_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),
     url(r'^admin/redirects/', include(verdantredirects_urls)),
     url(r'^admin/', include(verdantadmin_urls)),
-    url(r'^search/', include(verdantsearch_urls)),
+    url(r'^search/', include(verdantsearch_frontend_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),
 

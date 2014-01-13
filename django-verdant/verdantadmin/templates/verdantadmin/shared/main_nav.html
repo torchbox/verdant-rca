@@ -3,18 +3,7 @@
     <ul>
         <li class="menu-explorer"><a href="#" class="icon icon-folder-open-inverse dl-trigger">Explorer</a></li>
         <li class="menu-search">
-            <!-- <a href="{% url 'verdantadmin_pages_search' %}" id="menu-search-toggle" class="icon icon-search">Search</a> -->
-            <form id="menu-search" action="{% url 'verdantadmin_pages_search' %}" method="get">
-                <ul class="fields">
-                    <li class="char_field">
-                        <div class="field icon icon-search">
-                            <label for="id_q">Search</label>
-                            <input id="id_q" name="q" type="text" placeholder="Search" />
-                        </div>
-                    </li>
-                    <li class="submit"><input type="submit" value="Search" /></li>
-                </ul>
-            </form>
+            <a href="{% url 'verdantadmin_pages_search' %}" id="menu-search-toggle" class="icon icon-search">Search</a>
         </li>
         {% if perms.verdantimages.add_image %}
             <li class="menu-images"><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
@@ -33,16 +22,17 @@
             <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
         {% endcomment %}
         <li class="footer">
-            {% if user.email %}
-                <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+            {% if request.user.email %}
+                <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url request.user.email %}" /></a></div>
             {% endif %}
             <a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>
         </li>
-        {% if user.is_superuser %} {# for now, 'More' links will be superuser-only #}
+        {% if request.user.is_superuser %} {# for now, 'More' links will be superuser-only #}
             <li class="more">
                 <a href="#" class="icon icon-arrow-down">More</a>
                 <ul>
                     <li class="menu-redirects"><a href="{% url 'verdantredirects_index' %}" class="icon icon-redirect">Redirects</a></li>
+                    <li class="menu-editorspicks"><a href="{% url 'verdantsearch_editorspicks_index' %}">Editors Picks</a></li>
                     {% get_verdantadmin_tab_urls as verdantadmin_tab_urls %}
                     {% for name, title in verdantadmin_tab_urls %}
                         <li class="menu-{{ title|slugify }}"><a href="{% url name %}" class="icon icon-{{name}}">{{ title }}</a></li>

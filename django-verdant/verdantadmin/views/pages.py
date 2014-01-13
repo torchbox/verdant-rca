@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.template.loader import render_to_string
@@ -14,6 +14,8 @@ from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from verdantadmin import tasks
+
 
 @login_required
 def index(request, parent_page_id=None):
@@ -187,6 +189,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -247,6 +250,7 @@ def edit(request, page_id):
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -271,35 +275,6 @@ def edit(request, page_id):
         'edit_handler': edit_handler,
         'errors_debug': errors_debug,
     })
-
-@login_required
-def reorder(request, parent_page_id=None):
-    if parent_page_id:
-        parent_page = get_object_or_404(Page, id=parent_page_id)
-    else:
-        parent_page = Page.get_first_root_node()
-
-    if not parent_page.permissions_for_user(request.user).can_reorder_children():
-        raise PermissionDenied
-
-    pages = parent_page.get_children()
-
-    if request.POST:
-        try:
-            pages_ordered = [Page.objects.get(id=int(page[5:])) for page in request.POST['order'].split(',')]
-        except:
-            # Invalid
-            messages.error(request, "Could not reorder (invalid request)")
-            return redirect('verdantadmin_explore', parent_page.id)
-
-        # Reorder
-        for page in pages_ordered:
-            page.move(parent_page, pos='last-child')
-
-        # Success message
-        messages.success(request, "Pages have been reordered")
-
-    return redirect('verdantadmin_explore', parent_page.id)
 
 @login_required
 def delete(request, page_id):
@@ -339,6 +314,8 @@ def preview_on_edit(request, page_id):
         # FIXME: passing the original request to page.serve is dodgy (particularly if page.serve has
         # special treatment of POSTs). Ought to construct one that more or less matches what would be sent
         # as a front-end GET request
+
+        request.META.pop('HTTP_X_REQUESTED_WITH', None)  # Make this request appear to the page's serve method as a non-ajax one, as they will often implement custom behaviour for XHR
         response = page.serve(request)
 
         response['X-Verdant-Preview'] = 'ok'
@@ -394,6 +371,29 @@ def preview_on_create(request, content_type_app_name, content_type_model_name, p
         response['X-Verdant-Preview'] = 'error'
         return response
 
+def preview_placeholder(request):
+    """
+    The HTML of a previewed page is written to the destination browser window using document.write.
+    This overwrites any previous content in the window, while keeping its URL intact. This in turn
+    means that any content we insert that happens to trigger an HTTP request, such as an image or
+    stylesheet tag, will report that original URL as its referrer.
+
+    In Webkit browsers, a new window opened with window.open('', 'window_name') will have a location
+    of 'about:blank', causing it to omit the Referer header on those HTTP requests. This means that
+    any third-party font services that use the Referer header for access control will refuse to
+    serve us.
+
+    So, instead, we need to open the window on some arbitrary URL on our domain. (Provided that's
+    also the same domain as our editor JS code, the browser security model will happily allow us to
+    document.write over the page in question.)
+
+    This, my friends, is that arbitrary URL.
+
+    Since we're going to this trouble, we'll also take the opportunity to display a spinner on the
+    placeholder page, providing some much-needed visual feedback.
+    """
+    return render(request, 'verdantadmin/pages/preview_placeholder.html')
+
 @login_required
 def unpublish(request, page_id):
     page = get_object_or_404(Page, id=page_id)
@@ -448,12 +448,33 @@ def move_confirm(request, page_to_move_id, destination_id):
         raise PermissionDenied
 
     if request.POST:
+        # Get position parameter
+        position = request.GET.get('position', None)
+
+        # Find page thats already in this position
+        position_page = None
+        if position is not None:
+            try:
+                position_page = destination.get_children()[int(position)]
+            except IndexError:
+                pass # No page in this position
+
+        # Move page
+
         # any invalid moves *should* be caught by the permission check above,
         # so don't bother to catch InvalidMoveToDescendant
-        page_to_move.move(destination, pos='last-child')
+        if position_page:
+            # Move page into this position
+            page_to_move.move(position_page, pos='left')
+        else:
+            # Move page to end
+            page_to_move.move(destination, pos='last-child')
 
-        messages.success(request, "Page '%s' moved." % page_to_move.title)
-        return redirect('verdantadmin_explore', destination.id)
+        if request.is_ajax():
+            return HttpResponse('')
+        else:
+            messages.success(request, "Page '%s' moved." % page_to_move.title)
+            return redirect('verdantadmin_explore', destination.id)
 
     return render(request, 'verdantadmin/pages/confirm_move.html', {
         'page_to_move': page_to_move,
@@ -526,6 +547,7 @@ def approve_moderation(request, revision_id):
     if request.POST:
         revision.publish()
         messages.success(request, "Page '%s' published." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'approved', request.user.id)
 
     return redirect('verdantadmin_home')
 
@@ -543,6 +565,7 @@ def reject_moderation(request, revision_id):
         revision.submitted_for_moderation = False
         revision.save(update_fields=['submitted_for_moderation'])
         messages.success(request, "Page '%s' rejected for publication." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'rejected', request.user.id)
 
     return redirect('verdantadmin_home')
 
