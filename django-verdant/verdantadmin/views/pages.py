@@ -14,6 +14,8 @@ from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from verdantadmin import tasks
+
 
 @login_required
 def index(request, parent_page_id=None):
@@ -182,6 +184,7 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' created." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -239,6 +242,7 @@ def edit(request, page_id):
                 messages.success(request, "Page '%s' published." % page.title)
             elif is_submitting:
                 messages.success(request, "Page '%s' submitted for moderation." % page.title)
+                tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
             return redirect('verdantadmin_explore', page.get_parent().id)
@@ -539,6 +543,7 @@ def approve_moderation(request, revision_id):
     if request.POST:
         revision.publish()
         messages.success(request, "Page '%s' published." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'approved', request.user.id)
 
     return redirect('verdantadmin_home')
 
@@ -553,6 +558,7 @@ def reject_moderation(request, revision_id):
         revision.submitted_for_moderation = False
         revision.save(update_fields=['submitted_for_moderation'])
         messages.success(request, "Page '%s' rejected for publication." % revision.page.title)
+        tasks.send_notification.delay(revision.id, 'rejected', request.user.id)
 
     return redirect('verdantadmin_home')
 

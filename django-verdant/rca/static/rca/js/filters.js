@@ -72,17 +72,4 @@ $(function(){
 		$(this).parent().closest('li').removeClass('expanded');
 		return false;
 	});
-
-	// if there's a year selector than select the current one on page load
-	var $yearLabel = $("#filters").find("li.filter").find("label[for=degree_year]");
-	if($yearLabel.length){
-		var year = "" + new Date().getFullYear();
-		$yearLabel
-			.text(year)
-			.addClass("active")
-			.next("select").val(year)
-			.parent().find("li[data-val=" + year + "]").addClass("selected")
-			.siblings().removeClass("selected");
-		applyFilters("degree_year");
-	}
 });
