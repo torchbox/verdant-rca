@@ -3,6 +3,8 @@ from django.core import urlresolvers
 
 from core.models import get_navigation_menu_items
 
+from verdantsnippets.permissions import user_can_edit_snippets  # TODO: reorganise into pluggable architecture so that verdantsnippets registers its own menu item
+
 register = template.Library()
 
 
@@ -29,3 +31,12 @@ def get_verdantadmin_tab_urls():
         in resolver.reverse_dict.items()
         if isinstance(key, basestring) and key.startswith('verdantadmin_tab_')
     ]
+
+
+@register.inclusion_tag('verdantadmin/shared/main_nav.html', takes_context=True)
+def main_nav(context):
+    return {
+        'perms': context['perms'],
+        'request': context['request'],
+        'can_edit_snippets': user_can_edit_snippets(context['request'].user),
+    }

@@ -15,6 +15,22 @@ BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
 CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 VERDANTSEARCH_ES_URLS = ['http://rca1.dh.bytemark.co.uk:9200']
 
+# BASE_URL required for notification emails
+BASE_URL = 'http://www.rca.ac.uk'
+
+# LDAP
+from rca_ldap.settings import *
+
+AUTH_LDAP_BIND_DN = ''
+AUTH_LDAP_BIND_PASSWORD = ''
+AUTH_LDAP_SERVER_URI = 'ldaps://194.80.196.3:636'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'django_auth_ldap.backend.LDAPBackend',
+)
+
+
 try:
 	from .local import *
 except ImportError:
