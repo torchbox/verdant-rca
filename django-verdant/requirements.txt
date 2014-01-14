@@ -43,6 +43,7 @@ redis==2.9.0
 requests==2.2.0
 simplejson==3.3.1
 six==1.5.2
+sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
