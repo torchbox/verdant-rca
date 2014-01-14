@@ -24,6 +24,7 @@ def rca_now_index(request):
     pages = RcaNowPage.objects.filter(owner=request.user)
     return render(request, 'rca/admin/rca_now_index.html', {
         'rca_now_index': index_page,
+        'hide_actions': ('move', 'add_subpage'),
         'pages': pages,
     })
 
@@ -55,4 +56,5 @@ def student_page_index(request):
     else:
         return render(request, 'rca/admin/select_student_page.html', {
             'pages': pages,
+            'hide_actions': ('move', 'add_subpage'),
         })
