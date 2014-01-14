@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import Page as PageBase, Orderable
+from core.models import Page, Orderable
 from core.fields import RichTextField
 from cluster.fields import ParentalKey
 
@@ -16,27 +16,16 @@ EVENT_AUDIENCE_CHOICES = (
 )
 
 
-# Some abstract classes that define common fields
-class Page(PageBase):
-    seo_title = models.CharField("Page title", max_length=255, blank=True, help_text="Optional. 'Search Engine Friendly' title. This will appear at the top of the browser window.")
-    show_in_menus = models.BooleanField(default=False, help_text="Whether a link to this page will appear in automatically generated menus")
-    meta_description = models.TextField(blank=True)
+COMMON_PANELS = (
+    FieldPanel('slug'),
+    FieldPanel('seo_title'),
+    FieldPanel('show_in_menus'),
+    ImageChooserPanel('feed_image'),
+    FieldPanel('search_description'),
+)
 
-    is_abstract = True
 
-    promote_panels = [
-        FieldPanel('slug'),
-        FieldPanel('seo_title'),
-        FieldPanel('show_in_menus'),
-        FieldPanel('meta_description'),
-    ]
-
-    indexed_fields = ('seo_title', 'meta_description')
-    search_name = "Page"
-
-    class Meta:
-        abstract = True
-
+# A couple of abstract classes that contain commonly used fields
 
 class LinkFields(models.Model):
     link_external = models.URLField("External link", blank=True)
@@ -56,34 +45,6 @@ class LinkFields(models.Model):
         FieldPanel('link_external'),
         PageChooserPanel('link_page'),
         DocumentChooserPanel('link_document'),
-    ]
-
-    class Meta:
-        abstract = True
-
-
-class CarouselItemFields(LinkFields):
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    embed_url = models.URLField("Embed URL", blank=True)
-    caption = models.CharField(max_length=255, blank=True)
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('embed_url'),
-        FieldPanel('caption'),
-        MultiFieldPanel(LinkFields.panels, "Link"),
-    ]
-
-    class Meta:
-        abstract = True
-
-
-class RelatedLinkFields(LinkFields):
-    title = models.CharField(max_length=255, help_text="Link title")
-
-    panels = [
-        FieldPanel('title'),
-        MultiFieldPanel(LinkFields.panels, "Link"),
     ]
 
     class Meta:
@@ -113,82 +74,133 @@ class ContactFields(models.Model):
         abstract = True
 
 
+# Carousel items
+
+class CarouselItem(LinkFields):
+    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    embed_url = models.URLField("Embed URL", blank=True)
+    caption = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('embed_url'),
+        FieldPanel('caption'),
+        MultiFieldPanel(LinkFields.panels, "Link"),
+    ]
+
+    class Meta:
+        abstract = True
+
+
+# Related links
+
+class RelatedLink(LinkFields):
+    title = models.CharField(max_length=255, help_text="Link title")
+
+    panels = [
+        FieldPanel('title'),
+        MultiFieldPanel(LinkFields.panels, "Link"),
+    ]
+
+    class Meta:
+        abstract = True
+
+
 # Home Page
 
-class HomePageCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('demo.HomePage', related_name='carousel_items')
+class HomePageCarouselItem(Orderable, CarouselItem):
+    page = ParentalKey('demo.DemoHomePage', related_name='carousel_items')
 
-class HomePageRelatedLink(Orderable, RelatedLinkFields):
-    page = ParentalKey('demo.HomePage', related_name='related_links')
+class HomePageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('demo.DemoHomePage', related_name='related_links')
 
-class HomePage(Page):
+# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA HomePage
+class DemoHomePage(Page):
     body = RichTextField(blank=True)
 
     indexed_fields = ('body', )
     search_name = "Homepage"
 
-    class Meta:
-        verbose_name = "Homepage"
+    # TODO: Remove this after prefix is put right
+    template = 'demo/home_page.html'
 
-HomePage.content_panels = [
+    class Meta:
+        #verbose_name = "Homepage"
+        verbose_name = "DEMO Homepage"
+
+DemoHomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
-    InlinePanel(HomePage, 'carousel_items', label="Carousel items"),
-    InlinePanel(HomePage, 'related_links', label="Related links"),
+    InlinePanel(DemoHomePage, 'carousel_items', label="Carousel items"),
+    InlinePanel(DemoHomePage, 'related_links', label="Related links"),
 ]
 
-HomePage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+DemoHomePage.promote_panels = [
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Standard index page
 
-class StandardIndexPage(Page):
+# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardIndexPage
+class DemoStandardIndexPage(Page):
     # No additional fields required
 
     search_name = None
 
-StandardIndexPage.content_panels = [
+    # TODO: Remove this after prefix is put right
+    template = 'demo/standard_index_page.html'
+
+    class Meta:
+        verbose_name = "DEMO Standard Index Page"
+
+DemoStandardIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
 ]
 
-StandardIndexPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+DemoStandardIndexPage.promote_panels = [
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Standard page
 
-class StandardPageCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('demo.StandardPage', related_name='carousel_items')
+class StandardPageCarouselItem(Orderable, CarouselItem):
+    page = ParentalKey('demo.DemoStandardPage', related_name='carousel_items')
 
-class StandardPageRelatedLink(Orderable, RelatedLinkFields):
-    page = ParentalKey('demo.StandardPage', related_name='related_links')
+class StandardPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('demo.DemoStandardPage', related_name='related_links')
 
-class StandardPage(Page):
+# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardPage
+class DemoStandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
 
     indexed_fields = ('intro', 'body', )
     search_name = None
 
-StandardPage.content_panels = [
+    # TODO: Remove this after prefix is put right
+    template = 'demo/standard_page.html'
+
+    class Meta:
+        verbose_name = "DEMO Standard Page"
+
+DemoStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardPage, 'carousel_items', label="Carousel items"),
-    InlinePanel(StandardPage, 'related_links', label="Related links"),
+    InlinePanel(DemoStandardPage, 'carousel_items', label="Carousel items"),
+    InlinePanel(DemoStandardPage, 'related_links', label="Related links"),
 ]
 
-StandardPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+DemoStandardPage.promote_panels = [
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Blog index page
 
-class BlogIndexPageRelatedLink(Orderable, RelatedLinkFields):
+class BlogIndexPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.BlogIndexPage', related_name='related_links')
 
 class BlogIndexPage(Page):
@@ -202,6 +214,9 @@ class BlogIndexPage(Page):
         # Get list of blog pages that are descentands of this page
         return BlogPage.objects.filter(live=True, path__startswith=self.path)
 
+    class Meta:
+        verbose_name = "DEMO Blog Index Page"
+
 BlogIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -209,16 +224,16 @@ BlogIndexPage.content_panels = [
 ]
 
 BlogIndexPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Blog page
 
-class BlogPageCarouselItem(Orderable, CarouselItemFields):
+class BlogPageCarouselItem(Orderable, CarouselItem):
     page = ParentalKey('demo.BlogPage', related_name='carousel_items')
 
-class BlogPageRelatedLink(Orderable, RelatedLinkFields):
+class BlogPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.BlogPage', related_name='related_links')
 
 class BlogPage(Page):
@@ -226,6 +241,9 @@ class BlogPage(Page):
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
+
+    class Meta:
+        verbose_name = "DEMO Blog Page"
 
 BlogPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -235,13 +253,13 @@ BlogPage.content_panels = [
 ]
 
 BlogPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Person page
 
-class PersonPageRelatedLink(Orderable, RelatedLinkFields):
+class PersonPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.PersonPage', related_name='related_links')
 
 class PersonPage(Page, ContactFields):
@@ -253,6 +271,9 @@ class PersonPage(Page, ContactFields):
 
     indexed_fields = ('first_name', 'last_name', 'intro', 'biography')
     search_name = "Person"
+
+    class Meta:
+        verbose_name = "DEMO Person Page"
 
 PersonPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -266,7 +287,7 @@ PersonPage.content_panels = [
 ]
 
 PersonPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
@@ -278,6 +299,9 @@ class ContactPage(Page, ContactFields):
     indexed_fields = ('body', )
     search_name = "Contact information"
 
+    class Meta:
+        verbose_name = "DEMO Contact Page"
+
 ContactPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
@@ -285,13 +309,13 @@ ContactPage.content_panels = [
 ]
 
 ContactPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Event index page
 
-class EventIndexPageRelatedLink(Orderable, RelatedLinkFields):
+class EventIndexPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.EventIndexPage', related_name='related_links')
 
 class EventIndexPage(Page):
@@ -305,6 +329,9 @@ class EventIndexPage(Page):
         # Get list of event pages that are descentands of this page
         return EventPage.objects.filter(live=True, path__startswith=self.path)
 
+    class Meta:
+        verbose_name = "DEMO Event Index Page"
+
 EventIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -312,16 +339,16 @@ EventIndexPage.content_panels = [
 ]
 
 EventIndexPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
 
 # Event page
 
-class EventPageCarouselItem(Orderable, CarouselItemFields):
+class EventPageCarouselItem(Orderable, CarouselItem):
     page = ParentalKey('demo.EventPage', related_name='carousel_items')
 
-class EventPageRelatedLink(Orderable, RelatedLinkFields):
+class EventPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.EventPage', related_name='related_links')
 
 class EventPageDatesAndTimes(Orderable):
@@ -369,6 +396,9 @@ class EventPage(Page):
     indexed_fields = ('get_audience_display', 'location', 'body')
     search_name = "Event"
 
+    class Meta:
+        verbose_name = "DEMO Event Page"
+
 EventPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('audience'),
@@ -387,5 +417,5 @@ EventPage.content_panels = [
 ]
 
 EventPage.promote_panels = [
-    MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
