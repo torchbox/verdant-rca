@@ -47,4 +47,7 @@ urlpatterns += patterns('verdantadmin.views',
     url(r'^choose-email-link/$', 'chooser.email_link', name='verdantadmin_choose_page_email_link'),
 
     url(r'^tag-autocomplete/$', 'tags.autocomplete', name='verdantadmin_tag_autocomplete'),
+
+    url(r'^account/$', 'account.account', name='verdantadmin_account'),
+    url(r'^account/change_password/$', 'account.change_password', name='verdantadmin_account_change_password'),
 )

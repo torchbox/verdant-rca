@@ -1,0 +1,11 @@
+{% extends "verdantadmin/base.html" %}
+
+{% block content %}
+    <header>
+        <h1>Account</h1>
+    </header>
+
+    <div class="nice-padding">
+        <a href="{% url 'verdantadmin_account_change_password' %}" class="button button-primary">Change password</a>
+    </div>
+{% endblock %}
