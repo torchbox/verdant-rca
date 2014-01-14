@@ -1745,8 +1745,8 @@ class ReviewsIndex(Page, SocialFields):
 
     def serve(self, request):
         reviews = ReviewPage.objects.filter(live=True)
-
         reviews = reviews.distinct()
+        reviews = reviews.order_by('-date')
 
         page = request.GET.get('page')
 
@@ -1856,6 +1856,7 @@ class ReviewPage(Page, SocialFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
+    date = models.DateField(null=True, blank=True)
     author = models.CharField(max_length=255, blank=True)
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
@@ -1868,6 +1869,7 @@ ReviewPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('strapline', classname="full"),
     FieldPanel('author'),
+    FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
