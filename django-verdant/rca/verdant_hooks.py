@@ -12,9 +12,12 @@ def construct_main_menu(request, menu_items):
         # assigning menu_items[:] will modify the list passed in
         menu_items[:] = [item for item in menu_items if item.name not in ('explorer', 'search')]
 
-        # insert RCA Now item in place
+        # insert student page and RCA Now items in place
         menu_items.append(
-            MenuItem('RCA Now', reverse('rca_now_editor_index'), classnames='icon icon-doc-full-inverse', order=100)
+            MenuItem('My page', reverse('student_page_editor_index'), classnames='icon icon-user', order=100)
+        )
+        menu_items.append(
+            MenuItem('RCA Now', reverse('rca_now_editor_index'), classnames='icon icon-doc-full-inverse', order=101)
         )
 
 hooks.register('construct_main_menu', construct_main_menu)
