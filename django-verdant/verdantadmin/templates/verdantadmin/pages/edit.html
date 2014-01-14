@@ -1,4 +1,5 @@
 {% extends "verdantadmin/base.html" %}
+{% load gravatar %}
 {% block titletag %}Editing {{ page.title }}{% endblock %}
 {% block bodyclass %}menu-explorer  page-editor{% endblock %}
 
@@ -49,15 +50,17 @@
 
                 </li>
                 <li class="meta">
-                   
-                    <span class="modified">
+                    <p class="modified">
                         {% if page.get_latest_revision %}
                             Last modified: {{ page.get_latest_revision.created_at }}
                             {% if page.get_latest_revision.user %}
                                 by {{ page.get_latest_revision.user.get_full_name|default:page.get_latest_revision.user.username }}
+                                {% if request.user.email %}
+                                    <span class="avatar small icon icon-user"><img src="{% gravatar_url page.get_latest_revision.user.email 25 %}" /></span>
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    </span>
+                    </p>
                 </li>
             </ul>
         </footer>
