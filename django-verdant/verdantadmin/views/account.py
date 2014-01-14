@@ -8,8 +8,6 @@ def account(request):
 
 
 def change_password(request):
-    form = SetPasswordForm(request.user)
-
     if request.POST:
         form = SetPasswordForm(request.user, request.POST)
 
