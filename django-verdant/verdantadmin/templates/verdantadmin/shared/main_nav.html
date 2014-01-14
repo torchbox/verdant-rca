@@ -1,22 +1,10 @@
 {% load gravatar verdantadmin_nav %}
 <nav class="nav-main">
     <ul>
-        <li class="menu-explorer"><a href="#" class="icon icon-folder-open-inverse dl-trigger">Explorer</a></li>
-        <li class="menu-search">
-            <a href="{% url 'verdantadmin_pages_search' %}" id="menu-search-toggle" class="icon icon-search">Search</a>
-        </li>
-        {% if perms.verdantimages.add_image %}
-            <li class="menu-images"><a href="{% url 'verdantimages_index' %}" class="icon icon-image">Images</a></li>
-        {% endif %}
-        {% if perms.verdantdocs.add_document %}
-            <li class="menu-documents"><a href="{% url 'verdantdocs_index' %}" class="icon icon-doc-full-inverse">Documents</a></li>
-        {% endif %}
-        {% if can_edit_snippets %}
-            <li class="menu-snippets"><a href="{% url 'verdantsnippets_index' %}" class="icon icon-snippet">Snippets</a></li>
-        {% endif %}
-        {% if perms.auth %}
-            <li class="menu-users"><a href="{% url 'verdantusers_index' %}" class="icon icon-user">Users</a></li>
-        {% endif %}
+        {% for menu_item in menu_items %}
+            {{ menu_item.render_html }}
+        {% endfor %}
+
         {% comment %}
             {# TODO: make this work #}
             <li><a href="{% url 'verdantadmin_pages_select_type' %}" class="icon teal icon-plus-inverse">New page</a></li>
