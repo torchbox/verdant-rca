@@ -8,16 +8,23 @@ def account(request):
 
 
 def change_password(request):
-    if request.POST:
-        form = SetPasswordForm(request.user, request.POST)
+    can_change_password = request.user.has_usable_password()
 
-        if form.is_valid():
-            form.save()
+    if can_change_password:
+        if request.POST:
+            form = SetPasswordForm(request.user, request.POST)
 
-            messages.success(request, "Your password has been changed successfully!")
-            return redirect('verdantadmin_account')
+            if form.is_valid():
+                form.save()
+
+                messages.success(request, "Your password has been changed successfully!")
+                return redirect('verdantadmin_account')
+        else:
+            form = SetPasswordForm(request.user)
     else:
-        form = SetPasswordForm(request.user)
+        form = None
+
     return render(request, 'verdantadmin/account/change_password.html', {
         'form': form,
+        'can_change_password': can_change_password,
     })
