@@ -15,8 +15,9 @@ BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
 CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 VERDANTSEARCH_ES_URLS = ['http://rca1.dh.bytemark.co.uk:9200']
 
-# BASE_URL required for notification emails
+# BASE_URL and VERDANTADMIN_NOTIFICATION_FROM_EMAIL required for notification emails
 BASE_URL = 'http://www.rca.ac.uk'
+VERDANTADMIN_NOTIFICATION_FROM_EMAIL = 'publications@rca.ac.uk'
 
 # LDAP
 from rca_ldap.settings import *
