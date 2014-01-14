@@ -4,6 +4,7 @@ from django.core import urlresolvers
 from core.models import get_navigation_menu_items
 
 from verdantadmin import hooks
+from verdantadmin.menu import MenuItem
 from verdantsnippets.permissions import user_can_edit_snippets  # TODO: reorganise into pluggable architecture so that verdantsnippets registers its own menu item
 
 register = template.Library()
@@ -36,12 +37,37 @@ def get_verdantadmin_tab_urls():
 
 @register.inclusion_tag('verdantadmin/shared/main_nav.html', takes_context=True)
 def main_nav(context):
-    menu_items = []
+    menu_items = [
+        MenuItem('Explorer', '#', classnames='icon icon-folder-open-inverse dl-trigger', order=100),
+        MenuItem('Search', urlresolvers.reverse('verdantadmin_pages_search'), classnames='icon icon-search', order=200),
+    ]
+
+    request = context['request']
+    user = request.user
+
+    if user.has_perm('verdantimages.add_image'):
+        menu_items.append(
+            MenuItem('Images', urlresolvers.reverse('verdantimages_index'), classnames='icon icon-image', order=300)
+        )
+    if user.has_perm('verdantdocs.add_document'):
+        menu_items.append(
+            MenuItem('Documents', urlresolvers.reverse('verdantdocs_index'), classnames='icon icon-doc-full-inverse', order=400)
+        )
+
+    if user_can_edit_snippets(user):
+        menu_items.append(
+            MenuItem('Snippets', urlresolvers.reverse('verdantsnippets_index'), classnames='icon icon-snippet', order=500)
+        )
+
+    if user.has_module_perms('auth'):
+        menu_items.append(
+            MenuItem('Users', urlresolvers.reverse('verdantusers_index'), classnames='icon icon-user', order=600)
+        )
+
     for fn in hooks.get_hooks('construct_main_menu'):
-        fn(menu_items)
+        fn(request, menu_items)
 
     return {
-        'perms': context['perms'],
-        'request': context['request'],
-        'can_edit_snippets': user_can_edit_snippets(context['request'].user),
+        'menu_items': sorted(menu_items, key=lambda i: i.order),
+        'request': request,
     }
