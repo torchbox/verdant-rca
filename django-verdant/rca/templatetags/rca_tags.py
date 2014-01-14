@@ -30,14 +30,17 @@ def upcoming_events(context, exclude=None, count=3):
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
 def news_carousel(context, area="", programme="", school="", count=5):
     if area:
-        news_items = NewsItem.objects.filter(live=True, area=area)[:count]
+        news_items = NewsItem.objects.filter(live=True, area=area)
     elif programme:
-        news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)[:count]
+        news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)
     elif school:
-        news_items = NewsItem.objects.filter(live=True, related_schools__school=school)[:count]
+        news_items = NewsItem.objects.filter(live=True, related_schools__school=school)
     else:
         # neither programme nor area specified - return no results
         news_items = NewsItem.objects.none()
+
+    # Order by reverse date and truncate
+    news_items = news_items.order_by('-date')[:count]
 
     return {
         'news_items': news_items,
