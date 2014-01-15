@@ -1,0 +1,39 @@
+{% extends "verdantadmin/skeleton.html" %}
+{% load compress %}
+{% block titletag %}Reset password{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}verdantadmin/css/layouts/login.less" type="text/less" />
+    {% endcompress %}
+{% endblock %}
+
+{% block furniture %}
+    <form method="post">
+        {% csrf_token %}
+        <h1>Reset your password</h1>
+
+        <p>Please type your email address into the box below</p>
+
+        {% if form.errors %}
+            <div class="messages">
+                <ul>
+                    <li class="error">No user account was found with this email address. Please try again.</li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <ul class="fields">
+            <li class="full">
+                <div class="field">
+                    {{ form.email.label_tag }}
+                    {{ form.email }}
+                </div>
+            </li>
+            <li>
+                <input type="submit" value="Reset password"/>
+            </li>
+        </ul>
+    </form>
+{% endblock %}
