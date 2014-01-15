@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from core.models import Page, PageRevision, UserPagePermissionsProxy
 from verdantimages.models import get_image_model
 from verdantdocs.models import Document
+from verdantadmin import hooks
 
 # Panels for the homepage
 class SiteSummaryPanel(object):
@@ -59,6 +60,9 @@ def home(request):
         PagesForModerationPanel(request),
         RecentEditsPanel(request),
     ]
+
+    for fn in hooks.get_hooks('construct_homepage_panels'):
+        fn(request, panels)
 
     return render(request, "verdantadmin/home.html", {
         'site_name': settings.VERDANT_SITE_NAME,

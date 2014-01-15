@@ -35,3 +35,10 @@ def redirect_student_after_edit(request, page):
 hooks.register('after_create_page', redirect_student_after_edit)
 hooks.register('after_edit_page', redirect_student_after_edit)
 hooks.register('after_delete_page', redirect_student_after_edit)
+
+def construct_homepage_panels(request, panels):
+    if user_is_student(request.user):
+        # remove site_summary panel.
+        # assigning panels[:] will modify the list passed in
+        panels[:] = [p for p in panels if p.name != 'site_summary']
+hooks.register('construct_homepage_panels', construct_homepage_panels)
