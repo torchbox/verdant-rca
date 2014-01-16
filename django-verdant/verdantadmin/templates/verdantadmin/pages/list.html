@@ -42,28 +42,28 @@
                             <h2>{{ parent_page.title }}</h2>
                         {% endif %}
                     {% else %}
-                        {% if parent_page_perms.can_edit %}
+                        {% if parent_page_perms.can_edit and 'edit' not in hide_actions|default:'' %}
                             <h2><a href="{% url 'verdantadmin_pages_edit' parent_page.id %}">{{ parent_page.title }}</a></h2>
                         {% else %}
                             <h2>{{ parent_page.title }}</h2>
                         {% endif %}
                         <ul class="actions">
-                            {% if parent_page_perms.can_add_subpage %}
+                            {% if parent_page_perms.can_add_subpage and 'add_subpage' not in hide_actions|default:'' %}
                                 <li><a href="{% url 'verdantadmin_pages_add_subpage' parent_page.id %}" class="button button-small icon white icon-plus-inverse">Add child page</a></li>
                             {% endif %}
-                            {% if parent_page.has_unpublished_changes %}
+                            {% if parent_page.has_unpublished_changes and 'view_draft' not in hide_actions|default:'' %}
                                 <li><a href="{% url 'verdantadmin_pages_view_draft' parent_page.id %}" target="_blank">View draft</a></li>
                             {% endif %}
-                            {% if parent_page.live and not parent_page.is_root %}
+                            {% if parent_page.live and not parent_page.is_root and 'view_live' not in hide_actions|default:'' %}
                                 <li><a href="{{ parent_page.url }}" target="_blank">View live</a></li>
                             {% endif %}
-                            {% if parent_page_perms.can_move %}
+                            {% if parent_page_perms.can_move and 'move' not in hide_actions|default:'' %}
                                 <li><a href="{% url 'verdantadmin_pages_move' parent_page.id %}">Move</a></li>
                             {% endif %}
-                            {% if parent_page_perms.can_delete %}
+                            {% if parent_page_perms.can_delete and 'delete' not in hide_actions|default:'' %}
                                 <li><a href="{% url 'verdantadmin_pages_delete' parent_page.id %}">Delete</a></li>
                             {% endif %}
-                            {% if parent_page_perms.can_unpublish %}
+                            {% if parent_page_perms.can_unpublish and 'unpublish' not in hide_actions|default:'' %}
                                 <li><a href="{% url 'verdantadmin_pages_unpublish' parent_page.id %}">Unpublish</a></li>
                             {% endif %}
                         </ul>
@@ -153,7 +153,7 @@
                                     {{ page.title }}
                                 {% endif %}
                             {% else %}
-                                {% if page_perms.can_edit %}
+                                {% if page_perms.can_edit and 'edit' not in hide_actions|default:'' %}
                                     <a href="{% url 'verdantadmin_pages_edit' page.id %}" title="Edit this page">{{ page.title }}</a>
                                 {% else %}
                                     {{ page.title }}
@@ -162,22 +162,22 @@
                         </h2>
                         {% if not moving and not choosing %}
                             <ul class="actions">
-                                {% if page.has_unpublished_changes %}
+                                {% if page.has_unpublished_changes and 'view_draft' not in hide_actions|default:'' %}
                                     <li><a href="{% url 'verdantadmin_pages_view_draft' page.id %}" target="_blank">View draft</a></li>
                                 {% endif %}
-                                {% if page.live %}
+                                {% if page.live and 'view_live' not in hide_actions|default:'' %}
                                     <li><a href="{{ page.url }}" target="_blank">View live</a></li>
                                 {% endif %}
-                                {% if page_perms.can_move %}
+                                {% if page_perms.can_move and 'move' not in hide_actions|default:'' %}
                                     <li><a href="{% url 'verdantadmin_pages_move' page.id %}">Move</a></li>
                                 {% endif %}
-                                {% if page_perms.can_delete %}
+                                {% if page_perms.can_delete and 'delete' not in hide_actions|default:'' %}
                                     <li><a href="{% url 'verdantadmin_pages_delete' page.id %}">Delete</a></li>
                                 {% endif %}
-                                {% if page_perms.can_unpublish %}
+                                {% if page_perms.can_unpublish and 'unpublish' not in hide_actions|default:'' %}
                                     <li><a href="{% url 'verdantadmin_pages_unpublish' page.id %}">Unpublish</a></li>
                                 {% endif %}
-                                {% if page_perms.can_add_subpage %}
+                                {% if page_perms.can_add_subpage and 'add_subpage' not in hide_actions|default:'' %}
                                     <li><a href="{% url 'verdantadmin_pages_add_subpage' page.id %}">Add child page</a></li>
                                 {% endif %}
                             </ul>
