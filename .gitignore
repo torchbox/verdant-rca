@@ -7,4 +7,5 @@
 /django-verdant/celerybeat*
 
 /static/rca/site/assets/css/*.css
+*/_build
 
