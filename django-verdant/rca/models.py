@@ -131,6 +131,7 @@ AREA_CHOICES = (
     ('sustainrca', 'SustainRCA'),
     ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
+    ('drawingstudio', 'Drawing Studio'),
 )
 
 EVENT_AUDIENCE_CHOICES = (
