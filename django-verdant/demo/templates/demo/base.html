@@ -1,26 +1,93 @@
-{% load demo_tags cache %}
+{% load demo_tags cache compress static %}
 
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>{% block title %}{% if self %}{{ self.title }}{% endif %}{% endblock %}{% block title_suffix %} | Wagtail Demo{% endblock %}</title>
-  </head>
-  <body>
-    <h1>Wagtail Demo</h1>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    {% block menu %}
-      {% cache 500 menu %}
-        {% get_site_root as site_root %}
-        {% include "demo/includes/menu.html" with self=site_root only %}
-      {% endcache %}
-    {% endblock %}
+        <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Wagtail Demo{% endblock %}</title>
 
-    {% block search_box %}
-      {% include "demo/includes/search_box.html" only %}
-    {% endblock %}
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% block content %}
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    {% endblock %}
-  </body>
+        {% block css %} {# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            
+            {# External stylesheets #}
+            <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+
+            {% compress css %}
+                {# Vendor stylesheets stored locally #}
+                <link rel="stylesheet" href="{% static "demo/css/vendor/normalize.css" %}" />
+                <link rel="stylesheet" href="{% static "demo/css/vendor/fontello.css" %}">
+
+                {# Custom stylesheets #}
+                <link rel="stylesheet" type="text/less" href="{% static "demo/css/main.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "demo/css/medium.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "demo/css/large.less" %}" />
+
+            {% endcompress %}
+
+            {% block extra_css %}{% endblock %} {# Override this block in individual templates in order to add stylesheets on a template by template basis #}
+        {% endblock %}
+
+        {# Modernizr needs to be called in the head #}
+        <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+
+        {# Add your google analylics snippet here #}
+        <script type="text/javascript">
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', 'UA-xxxxxxx-x']);
+              _gaq.push(['_trackPageview']);
+
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
+        </script>
+
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}"> {# Override this block to set custom body classes on a template by template basis #}
+        <h1>Wagtail Demo</h1>
+
+        {% block menu %}
+            {% cache 500 menu %}
+                {% get_site_root as site_root %}
+                {% include "demo/includes/menu.html" with self=site_root only %}
+            {% endcache %}
+        {% endblock %}
+
+        {% block search_box %}
+            {% include "demo/includes/search_box.html" only %}
+        {% endblock %}
+
+        {% block content %}
+
+        {% endblock %}
+
+        {% block js %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+            <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+            <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
+            <script src="https://js.stripe.com/v2/"></script>
+
+            <script type="text/javascript">
+                var domainroot = "{{ request.site.hostname }}";
+            </script>
+
+            {% compress js %}
+                {# Custom javasdcript #}
+                <script src="{% static "demo/js/main.js" %}"></script>
+            {% endcompress %}
+
+            {# Custom javasdcript #}
+            {% block extra_js %}{% endblock %} {# Override this block in individual templates in order to add javascript on a template by template basis #}
+        {% endblock %}
+    </body>
 </html>
