@@ -89,12 +89,6 @@ $(function(){
         })
     });
 
-    $('.listing tbody td').click(function(e){
-        if(e.which == 1){
-            document.location.href = $(this).parent().find('.title a').attr("href")
-        }
-    })
-
     $(".nav-main .more > a").bind('click keydown', function(){
         $(this).parent().find('ul').toggle('fast');
         return false;

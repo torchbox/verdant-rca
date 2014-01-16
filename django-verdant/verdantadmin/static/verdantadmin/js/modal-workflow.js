@@ -48,9 +48,7 @@ function ModalWorkflow(opts) {
     };
 
     self.loadResponseText = function(responseText) {
-        console.log(responseText)
         var response = eval('(' + responseText + ')');
-        console.log(response);
         self.loadBody(response);
     };
 

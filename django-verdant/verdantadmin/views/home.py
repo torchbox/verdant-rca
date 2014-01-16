@@ -2,16 +2,14 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
-from core.models import Page, PageRevision
+from core.models import Page, PageRevision, UserPagePermissionsProxy
 from verdantimages.models import get_image_model
 from verdantdocs.models import Document
 
 @login_required
 def home(request):
-    if request.user.has_perm('core.publish_page'):
-        page_revisions_for_moderation = PageRevision.submitted_revisions.select_related('page', 'user').order_by('-created_at')
-    else:
-        page_revisions_for_moderation = PageRevision.objects.none()
+    user_perms = UserPagePermissionsProxy(request.user)
+    page_revisions_for_moderation = user_perms.revisions_for_moderation().select_related('page', 'user').order_by('-created_at')
 
     # Last n edited pages
     last_edits = PageRevision.objects.filter(user=request.user).order_by('-created_at')[:5]
