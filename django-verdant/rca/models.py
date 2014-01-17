@@ -214,6 +214,13 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
+    ('schoolofappliedart', 'School of Applied Art'),
+    ('schoolofarchitecturedesign', 'School of Architecture & Design'),
+    ('schoolofcommunications', 'School of Communications'),
+    ('schooloffashiontextiles', 'School of Fashion & Textiles'),
+    ('schoolofdesignforproduction', 'School of Design for Production'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
+    ('rectorate', 'Rectorate'),
 )
 
 ALL_PROGRAMMES = tuple(sorted([
@@ -290,17 +297,17 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2009': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2008': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2007': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
+        'schoolofcommunications': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
