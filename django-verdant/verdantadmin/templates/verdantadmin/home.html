@@ -22,8 +22,12 @@
         </div>
     </header>
 
-    {% for panel in panels %}
-        {{ panel.render }}
-    {% endfor %}
+    {% if panels %}
+        {% for panel in panels %}
+            {{ panel.render }}
+        {% endfor %}
+    {% else %}
+        <p>This is your dashboard on which helpful information about content you've created will be displayed.</p>
+    {% endif %}
 
 {% endblock %}
