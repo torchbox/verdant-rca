@@ -10,35 +10,36 @@
 {% endblock %}
 
 {% block furniture %}
-    <form method="post">
-        {% csrf_token %}
-        <h1>Set your new password</h1>
+    <div class="content-wrapper">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Set your new password</h1>
 
-        {% if form.errors %}
-            <div class="messages">
-                <ul>
-                    <li class="error">The passwords do not match. Please try again.</li>
-                </ul>
-            </div>
-        {% endif %}
+            {% if form.errors %}
+                <div class="messages">
+                    <ul>
+                        <li class="error">The passwords do not match. Please try again.</li>
+                    </ul>
+                </div>
+            {% endif %}
 
-
-        <ul class="fields">
-            <li class="full">
-              <div class="field icon icon-password">
-                  {{ form.new_password1.label_tag }}
-                  {{ form.new_password1 }}
-              </div>
-            </li>
-            <li class="full">
-              <div class="field icon icon-password">
-                  {{ form.new_password2.label_tag }}
-                  {{ form.new_password2 }}
-              </div>
-            </li>
-            <li>
-                <input type="submit" value="Reset password"/>
-            </li>
-        </ul>
-    </form>
+            <ul class="fields">
+                <li>
+                  <div class="field">
+                      {{ form.new_password1.label_tag }}
+                      {{ form.new_password1 }}
+                  </div>
+                </li>
+                <li>
+                  <div class="field">
+                      {{ form.new_password2.label_tag }}
+                      {{ form.new_password2 }}
+                  </div>
+                </li>
+                <li class="submit">
+                    <input type="submit" value="Reset password"/>
+                </li>
+            </ul>
+        </form>
+    </div>
 {% endblock %}

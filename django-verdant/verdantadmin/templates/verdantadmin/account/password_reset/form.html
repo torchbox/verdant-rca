@@ -10,32 +10,34 @@
 {% endblock %}
 
 {% block furniture %}
-    <form method="post">
-        {% csrf_token %}
-        <h1>Reset your password</h1>
+    <div class="content-wrapper">
+        <form method="post">
+            {% csrf_token %}
+            <h1>Reset your password</h1>
 
-        <p>Please type your email address into the box below</p>
+            <p>Enter your email address in the box below</p>
 
-        {% if form.non_field_errors %}
-            <div class="messages">
-                <ul>
-                    {% for error in form.non_field_errors %}
-                        <li class="error">{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <ul class="fields">
-            <li class="full">
-                <div class="field">
-                    {{ form.email.label_tag }}
-                    {{ form.email }}
+            {% if form.non_field_errors %}
+                <div class="messages">
+                    <ul>
+                        {% for error in form.non_field_errors %}
+                            <li class="error">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
-            </li>
-            <li>
-                <input type="submit" value="Reset password"/>
-            </li>
-        </ul>
-    </form>
+            {% endif %}
+
+            <ul class="fields">
+                <li>
+                    <div class="field">
+                        {{ form.email.label_tag }}
+                        {{ form.email }}
+                    </div>
+                </li>
+                <li class="submit">
+                    <input type="submit" value="Reset password"/>
+                </li>
+            </ul>
+        </form>
+    </div>
 {% endblock %}

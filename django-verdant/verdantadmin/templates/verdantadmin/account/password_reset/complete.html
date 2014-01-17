@@ -10,9 +10,8 @@
 {% endblock %}
 
 {% block furniture %}
-    <form> {% comment %} FIXME: Needed to add a form here in order for the style to work. {% endcomment %}
+    <div class="content-wrapper">
         <h1>Password change successful</h1>
-
-        <a href="{% url 'django.contrib.auth.views.login' %}" class="button button-primary">Login</a>
-    </form>
+        <p><a href="{% url 'django.contrib.auth.views.login' %}" class="button button-primary">Login</a></p>
+    </div>
 {% endblock %}
