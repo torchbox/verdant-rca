@@ -145,6 +145,7 @@ EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
     ('collegewide', 'College-wide'),
+    ('senior-common-room', 'Senior Common Room'),
     ('other', 'Other/External (enter below)')
 )
 
