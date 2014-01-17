@@ -145,6 +145,7 @@ EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
     ('collegewide', 'College-wide'),
+    ('senior-common-room', 'Senior Common Room'),
     ('other', 'Other/External (enter below)')
 )
 
@@ -220,9 +221,10 @@ SCHOOL_CHOICES = (
     ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
+    ('innovationrca', 'InnovationRCA'),
 )
 
-ALL_PROGRAMMES = (
+ALL_PROGRAMMES = tuple(sorted([
     ('fashionwomenswear', 'Fashion Womenswear'),
     ('textiles', 'Textiles'),
     ('ceramicsglass', 'Ceramics & Glass'),
@@ -251,7 +253,7 @@ ALL_PROGRAMMES = (
     ('conservation', 'Conservation'),
     ('vehicledesign', 'Vehicle Design'),
     ('communicationartdesign', 'Communication Art & Design'),
-)
+], key=lambda programme: programme[0])) # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
 SCHOOL_PROGRAMME_MAP = {
@@ -262,18 +264,14 @@ SCHOOL_PROGRAMME_MAP = {
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-        'helenhamlyn': [],
-        'rectorate': [],
     },
     '2013': {
-        'schoolofarchitecture': ['architecture', 'interiordesign'],
-        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofarchitecture': ['architecture'],
+        'schoolofcommunication': ['animation', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-        'helenhamlyn': [],
-        'rectorate': [],
     },
     '2012': {
         'schoolofarchitecture': ['architecture', 'animation'],
@@ -285,7 +283,7 @@ SCHOOL_PROGRAMME_MAP = {
     },
     '2011': {
         'schoolofarchitecture': ['architecture', 'animation'],
-        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
@@ -293,35 +291,24 @@ SCHOOL_PROGRAMME_MAP = {
     },
     '2010': {
         'schoolofarchitecture': ['architecture', 'animation'],
-        'schoolofcommunication': ['animation', 'visualcommunication'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2009': {
-        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
-        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
-        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
-        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2008': {
-        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
-        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
-        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
-        'schoolofdesignforproduction': ['innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2007': {
-        'schoolofappliedart': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery'],
-        'schoolofarchitecturedesign': ['architecture', 'designinteractions', 'designproducts', 'industrialdesignengineering', 'vehicledesign'],
         'schoolofcommunications': ['animation', 'communicationartdesign'],
-        'schooloffashiontextiles': ['fashionmenswear', 'fashionwomenswear', 'textiles'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
@@ -4034,7 +4021,7 @@ class InnovationRCAIndex(Page, SocialFields):
         })
 
     class Meta:
-        verbose_name = "InnovationRCA Index"
+        verbose_name = "InnovationRCA Project Index"
 
 InnovationRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
