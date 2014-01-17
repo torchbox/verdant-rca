@@ -13,7 +13,7 @@
     <header class="merged">
         {% if user.email %}
             <div class="col1">
-                <div class="avatar icon icon-user"><a href="http://gravatar.com" title="Change or set your Gravatar"><img src="{% gravatar_url user.email %}" /></a></div>
+                <div class="avatar icon icon-user"><a href="{% url 'verdantadmin_account' %}" title="Account settings"><img src="{% gravatar_url user.email %}" /></a></div>
             </div>
         {% endif %}
         <div class="col10">
