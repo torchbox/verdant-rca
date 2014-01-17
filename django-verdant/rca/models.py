@@ -221,6 +221,7 @@ SCHOOL_CHOICES = (
     ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
+    ('innovationrca', 'InnovationRCA'),
 )
 
 ALL_PROGRAMMES = (
