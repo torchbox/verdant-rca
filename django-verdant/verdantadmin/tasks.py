@@ -30,8 +30,6 @@ def send_notification(page_revision_id, notification, excluded_user_id):
     # Get revision
     revision = PageRevision.objects.get(id=page_revision_id)
 
-    send_mail('Entered send_notification', '', 'karl@torchbox.com', ['karl@torchbox.com'])
-
     # Get list of recipients
     if notification == 'submitted':
         # Get list of publishers
@@ -48,8 +46,6 @@ def send_notification(page_revision_id, notification, excluded_user_id):
         if recipient.email and recipient.id != excluded_user_id
     ]
 
-    send_mail('Got email addresses', repr(email_addresses), 'karl@torchbox.com', ['karl@torchbox.com'])
-
     # Return if there are no email addresses
     if not email_addresses:
         return
@@ -60,8 +56,6 @@ def send_notification(page_revision_id, notification, excluded_user_id):
     email_subject = rendered_template[0]
     email_content = '\n'.join(rendered_template[1:])
 
-    send_mail('Rendered template', repr(rendered_template), 'karl@torchbox.com', ['karl@torchbox.com'])
-
     # Get from email
     if hasattr(settings, 'VERDANTADMIN_NOTIFICATION_FROM_EMAIL'):
         from_email = settings.VERDANTADMIN_NOTIFICATION_FROM_EMAIL
@@ -69,8 +63,6 @@ def send_notification(page_revision_id, notification, excluded_user_id):
         from_email = settings.DEFAULT_FROM_EMAIL
     else:
         from_email = 'webmaster@localhost'
-
-    send_mail('Sending email', repr((email_subject, email_content, from_email, email_addresses)), 'karl@torchbox.com', ['karl@torchbox.com'])
 
     # Send email
     send_mail(email_subject, email_content, from_email, email_addresses)
