@@ -208,10 +208,14 @@ class Search(object):
     def search(self, query_string, model, fields=None, filters={}, prefetch_related=[]):
         # Model must be a descendant of Indexed and be a django model
         if not issubclass(model, Indexed) or not issubclass(model, models.Model):
-            return None
+            return []
 
         # Clean up query string
         query_string = "".join([c for c in query_string if c not in string.punctuation])
+
+        # Check that theres still a query string after the clean up
+        if not query_string:
+            return []
 
         # Query
         if fields:
