@@ -16,10 +16,12 @@
 
         <p>Please type your email address into the box below</p>
 
-        {% if form.errors %}
+        {% if form.non_field_errors %}
             <div class="messages">
                 <ul>
-                    <li class="error">Please type a valid email.</li>
+                    {% for error in form.non_field_errors %}
+                        <li class="error">{{ error }}</li>
+                    {% endfor %}
                 </ul>
             </div>
         {% endif %}

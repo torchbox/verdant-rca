@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from verdantadmin.forms import LoginForm
+from verdantadmin.forms import LoginForm, PasswordResetForm
 
 urlpatterns = patterns('django.contrib.auth.views',
     url(r'^login/$', 'login', {'template_name': 'verdantadmin/login.html', 'authentication_form': LoginForm}),
@@ -10,6 +10,7 @@ urlpatterns = patterns('django.contrib.auth.views',
         'template_name': 'verdantadmin/account/password_reset/form.html',
         'email_template_name': 'verdantadmin/account/password_reset/email.txt',
         'subject_template_name': 'verdantadmin/account/password_reset/email_subject.txt',
+        'password_reset_form': PasswordResetForm,
     }, name='password_reset'),
     url(r'^password_reset/done/$', 'password_reset_done', {'template_name': 'verdantadmin/account/password_reset/done.html'}, name='password_reset_done'),
     url(r'^password_reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
