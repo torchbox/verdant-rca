@@ -4035,7 +4035,7 @@ class InnovationRCAIndex(Page, SocialFields):
         })
 
     class Meta:
-        verbose_name = "InnovationRCA Index"
+        verbose_name = "InnovationRCA Project Index"
 
 InnovationRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
