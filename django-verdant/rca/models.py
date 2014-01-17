@@ -274,7 +274,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2012': {
-        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofarchitecture': ['architecture'],
         'schoolofcommunication': ['animation', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
@@ -282,7 +282,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2011': {
-        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofarchitecture': ['architecture'],
         'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
@@ -290,7 +290,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2010': {
-        'schoolofarchitecture': ['architecture', 'animation'],
+        'schoolofarchitecture': ['architecture'],
         'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
