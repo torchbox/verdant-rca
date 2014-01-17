@@ -23,7 +23,7 @@ class Format(object):
             image, alt_text, self.editor_attributes(image, alt_text)
         )
 
-    def image_to_html(self, image, alt_text, extra_attributes):
+    def image_to_html(self, image, alt_text, extra_attributes=''):
         rendition = image.get_rendition(self.filter_spec)
 
         if self.classnames:
