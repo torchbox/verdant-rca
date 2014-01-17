@@ -6,7 +6,26 @@
     </header>
 
     <div class="nice-padding">
-        <a href="http://gravatar.com" class="button button-primary">Change gravatar</a>
-        <a href="{% url 'verdantadmin_account_change_password' %}" class="button button-primary">Change password</a>
+        <ul class="listing">
+            <li class="row row-flush">
+                <div class="col6">
+                    <a href="http://gravatar.com" class="button button-primary">Set gravatar</a>
+                </div>
+
+                <small class="col6" style="text-align:right">
+                    Your avatar image is provided by Gravatar, a third party "universal avatar" system. If you don't already have a gravatar account.
+                </small>
+                
+            </li>
+            <li class="row row-flush">
+                <div class="col6">
+                    <a href="{% url 'verdantadmin_account_change_password' %}" class="button button-primary">Change password</a>
+                </div>
+
+                <small class="col6" style="text-align:right">
+                    Change the password you use to log in.
+                </small>
+            </li>
+        </ul>
     </div>
 {% endblock %}
