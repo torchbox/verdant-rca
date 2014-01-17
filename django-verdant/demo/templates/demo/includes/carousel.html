@@ -3,11 +3,10 @@
 <ul class="bxslider">
   {% for carousel_item in carousel_items %}
     <li>
-      {% if carousel_item.embed_link %}
+      {% if carousel_item.embed_url %}
         <!-- Poster image -->
         {% image carousel_item.image max-320x200 %}
-
-        {{ carousel_item.embed_link|embed }}
+        {{ carousel_item.embed_url|embedly:500 }} {# Requires an embedly key to be stored in verdant/settings/local.py #}
       {% else %}
         {% image carousel_item.image max-320x200 %}
       {% endif %}
@@ -17,3 +16,5 @@
     <li>No carousel items found</li>
   {% endfor %}
 </ul>
+
+{# {% image self.photo max-640x480 as imagedata %} #}

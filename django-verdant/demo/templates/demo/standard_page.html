@@ -4,13 +4,13 @@
 {% block content %}
   <h2>{{ self.title }}</h2>
 
-  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+  {{ self.intro|richtext }}
 
-  {{ self.intro|safe }}
+  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
 
   <h3>Body</h3>
   <div class="body-content">
-  {{ self.body|safe }}
+  {{ self.body|richtext }}
   </div>
 
   <h3>Related links</h3>

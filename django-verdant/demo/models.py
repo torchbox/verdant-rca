@@ -188,8 +188,8 @@ class DemoStandardPage(Page):
 DemoStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    FieldPanel('body', classname="full"),
     InlinePanel(DemoStandardPage, 'carousel_items', label="Carousel items"),
+    FieldPanel('body', classname="full"),
     InlinePanel(DemoStandardPage, 'related_links', label="Related links"),
 ]
 
