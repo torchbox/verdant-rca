@@ -337,18 +337,6 @@ assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.va
 
 YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
 
-SCHOOL_CHOICES_MAP = dict(SCHOOL_CHOICES)
-
-# A list of all schools that are mentioned in SCHOOL_PROGRAMME_MAP
-SHOW_SCHOOLS = tuple(
-    (school_slug, SCHOOL_CHOICES_MAP[school_slug])
-    for school_slug in {
-        school for school in mapping
-        for year, mapping
-        in SCHOOL_PROGRAMME_MAP.items()
-    }
-)
-
 SUBJECT_CHOICES = ALL_PROGRAMMES + (
     ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
     ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
