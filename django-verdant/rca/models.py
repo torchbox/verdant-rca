@@ -223,7 +223,7 @@ SCHOOL_CHOICES = (
     ('rectorate', 'Rectorate'),
 )
 
-ALL_PROGRAMMES = (
+ALL_PROGRAMMES = tuple(sorted([
     ('fashionwomenswear', 'Fashion Womenswear'),
     ('textiles', 'Textiles'),
     ('ceramicsglass', 'Ceramics & Glass'),
@@ -252,7 +252,7 @@ ALL_PROGRAMMES = (
     ('conservation', 'Conservation'),
     ('vehicledesign', 'Vehicle Design'),
     ('communicationartdesign', 'Communication Art & Design'),
-)
+], key=lambda programme: programme[0])) # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
 SCHOOL_PROGRAMME_MAP = {
