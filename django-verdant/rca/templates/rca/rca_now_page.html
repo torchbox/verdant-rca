@@ -8,7 +8,38 @@
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
         {% include "rca/includes/modules/body-text.html" with showTitle="true" body=self.body%}
-        {% include "rca/includes/modules/meta-data.html" with showRCANowMeta="true" %}
+
+        {# Meta data #}
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    {% if self.author %}
+                        <dd>By</dd>
+                        <dt>{{ self.author }}</dt>
+                    {% endif %}
+
+                    <dd>Date</dd>
+                    <dt>{{ self.date|date:"j F Y" }}</dt>
+
+                    <dd>Programme</dd>
+                    <dt>{{ self.get_programme_display }}</dt>
+
+                    {% if self.tags.all.count > 0 %}
+                        <dd>Tags</dd>
+                        <dt>
+                            {% with self.tags.all as tags %}
+                                {% for tag in tags %}
+                                    {{ tag }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                        </dt>
+                    {% endif %}
+                </dl>
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
     </section>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
@@ -17,7 +48,3 @@
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showRCANow="true" %}
 {% endblock %}
-
-<!-- TODOs:
-- tags
--->

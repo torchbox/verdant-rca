@@ -61,32 +61,6 @@
 
             {% endif %}
 
-            {% if showRCANowMeta %}
-
-                {% if self.author %}
-                    <dd>By</dd>
-                    <dt>{{ self.author }}</dt>
-                {% endif %}
-
-                <dd>Date</dd>
-                <dt>{{ self.date|date:"j F Y" }}</dt>
-
-                <dd>Programme</dd>
-                <dt>{{ self.get_programme_display }}</dt>
-
-                {% if self.tags.all.count > 0 %}
-                    <dd>Tags</dd>
-                    <dt>
-                        {% with self.tags.all as tags %}
-                            {% for tag in tags %}
-                                {{ tag }}{% if not forloop.last %},{% endif %}
-                            {% endfor %}
-                        {% endwith %}
-                    </dt>
-                {% endif %}
-
-            {% endif %}
-
             {% if showStudentMeta %}
                 {% if self.work_location %}
                     <dd>Location</dd>
