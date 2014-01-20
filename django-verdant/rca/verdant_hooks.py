@@ -17,10 +17,10 @@ def construct_main_menu(request, menu_items):
 
         # insert student page and RCA Now items in place
         menu_items.append(
-            MenuItem('My page', reverse('student_page_editor_index'), classnames='icon icon-user', order=100)
+            MenuItem('Profile', reverse('student_page_editor_index'), classnames='icon icon-user', order=100)
         )
         menu_items.append(
-            MenuItem('RCA Now', reverse('rca_now_editor_index'), classnames='icon icon-doc-full-inverse', order=101)
+            MenuItem('Posts', reverse('rca_now_editor_index'), classnames='icon icon-doc-full-inverse', order=101)
         )
 hooks.register('construct_main_menu', construct_main_menu)
 
