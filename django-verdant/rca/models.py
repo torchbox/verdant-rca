@@ -8,6 +8,7 @@ from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
@@ -3088,6 +3089,13 @@ class StudentPage(Page, SocialFields):
         else:
             return self.get_degree_qualification_display() + " Graduate"
 
+    @property
+    def work_tab_title(self):
+        if self.is_researchstudent:
+            return "Research Work"
+        else:
+            return "Show RCA Work"
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
@@ -3144,6 +3152,13 @@ StudentPage.promote_panels = [
     ], 'Social networks')
 ]
 
+# When a user logs in, check for any StudentPages that have no owner but have an email address
+# matching this user, and reassign them to be owned by this user
+@receiver(user_logged_in)
+def reassign_student_pages(sender, request, user, **kwargs):
+    StudentPage.objects.filter(owner__isnull=True, email__email__iexact=user.email).update(owner=user)
+
+
 # == RCA Now page ==
 
 class RcaNowPagePageCarouselItem(Orderable, CarouselItemFields):
@@ -3172,6 +3187,15 @@ class RcaNowPage(Page, SocialFields):
 
     class Meta:
         verbose_name = 'RCA Now Page'
+
+    def author_profile_page(self):
+        """Return the profile page for the author of this post, if one exists (and is live)"""
+        if self.owner:
+            try:
+                return StudentPage.objects.filter(live=True, owner=self.owner)[0]
+            except IndexError:
+                return None
+
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),

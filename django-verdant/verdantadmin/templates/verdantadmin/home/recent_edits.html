@@ -1,6 +1,6 @@
-<div class="nice-padding row-flush">
-    <section>
-        {% if last_edits %}
+{% if last_edits %}
+    <div class="panel nice-padding row-flush">{# TODO try moving these classes onto the section tag #}
+        <section>
             <h2>Your most recent edits</h2>
             <table class="listing">
                 <col />
@@ -28,6 +28,6 @@
                     {% endfor %}
                 </tbody>
             </table>
-        {% endif %}
-    </section>
-</div>
+        </section>
+    </div>
+{% endif %}
