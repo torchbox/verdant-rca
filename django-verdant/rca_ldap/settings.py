@@ -43,6 +43,7 @@ FILTER_VISITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Visitors,OU=Me
 ROLE_ADMIN  = dict(superuser=True, groups=[])
 ROLE_MOD    = dict(superuser=False, groups=['Moderators'])
 ROLE_EDITOR = dict(superuser=False, groups=['Editors'])
+ROLE_STUDENT = dict(superuser=False, groups=['Students'])
 ROLE_USER   = dict(superuser=False, groups=[])
 
 # Distinguished names
@@ -58,5 +59,5 @@ AUTH_LDAP_USER_SEARCH = LDAPSearchUnion(
     #LDAPSearchRCA(STAFF_DN, ldap.SCOPE_SUBTREE, FILTER_VISITORS, role=ROLE_USER),
 
     # Students
-    LDAPSearchRCA(STUDENTS_DN, ldap.SCOPE_SUBTREE, FILTER_BASE, role=ROLE_USER),
+    LDAPSearchRCA(STUDENTS_DN, ldap.SCOPE_SUBTREE, FILTER_BASE, role=ROLE_STUDENT),
 )

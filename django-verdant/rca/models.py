@@ -3063,7 +3063,7 @@ class StudentPage(Page, SocialFields):
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
-    work_awards = models.CharField(max_length=255, blank=True)
+    work_awards = models.CharField(max_length=255, blank=True, verbose_name='Show RCA work awards')
     funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -3117,22 +3117,24 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, 'phone', label="Phone"),
     InlinePanel(StudentPage, 'website', label="Website"),
     FieldPanel('student_twitter_feed'),
+    FieldPanel('twitter_feed'),
     InlinePanel(StudentPage, 'degrees', label="Previous degrees"),
     InlinePanel(StudentPage, 'exhibitions', label="Exhibition"),
     InlinePanel(StudentPage, 'experiences', label="Experience"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    FieldPanel('funding'),
     InlinePanel(StudentPage, 'awards', label="Awards"),
     FieldPanel('statement', classname="full"),
     InlinePanel(StudentPage, 'carousel_items', label="Carousel content"),
-    FieldPanel('work_description', classname="full"),
-    FieldPanel('work_type'),
-    FieldPanel('work_location'),
-    FieldPanel('funding'),
-    InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
-    InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
-    InlinePanel(StudentPage, 'publications', label="Publications"),
-    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    MultiFieldPanel([
+        FieldPanel('work_description', classname="full"),
+        FieldPanel('work_type'),
+        FieldPanel('work_location'),
+    ], 'Show RCA work'),
+    InlinePanel(StudentPage, 'collaborators', label="Show RCA work collaborator"),
+    InlinePanel(StudentPage, 'sponsor', label="Show RCA work sponsor"),
     FieldPanel('work_awards'),
-    FieldPanel('twitter_feed'),
 ]
 
 StudentPage.promote_panels = [
