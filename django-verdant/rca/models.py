@@ -3094,6 +3094,8 @@ class StudentPage(Page, SocialFields):
     def work_tab_title(self):
         if self.is_researchstudent:
             return "Research Work"
+        elif self.get_parent().content_type.model_class() == RcaNowIndex:
+            return "RCA Now"
         else:
             return "Show RCA Work"
 
