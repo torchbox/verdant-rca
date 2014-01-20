@@ -8,6 +8,7 @@ from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
@@ -3151,6 +3152,13 @@ StudentPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks')
 ]
+
+# When a user logs in, check for any StudentPages that have no owner but have an email address
+# matching this user, and reassign them to be owned by this user
+@receiver(user_logged_in)
+def reassign_student_pages(sender, request, user, **kwargs):
+    StudentPage.objects.filter(owner__isnull=True, email__email__iexact=user.email).update(owner=user)
+
 
 # == RCA Now page ==
 
