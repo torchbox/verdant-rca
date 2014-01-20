@@ -263,6 +263,8 @@ VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 
 # CELERY SETTINGS
+import djcelery
+djcelery.setup_loader()
 
 # Use separate queues on each host if uploads should be processed by celery
 # import socket
