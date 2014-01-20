@@ -3089,6 +3089,13 @@ class StudentPage(Page, SocialFields):
         else:
             return self.get_degree_qualification_display() + " Graduate"
 
+    @property
+    def work_tab_title(self):
+        if self.is_researchstudent:
+            return "Research Work"
+        else:
+            return "Show RCA Work"
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
