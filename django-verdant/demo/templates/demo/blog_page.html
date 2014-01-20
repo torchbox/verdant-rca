@@ -1,12 +1,12 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-  <h2>{{ self.title }}</h2>
+	<h2>{{ self.title }}</h2>
 
-  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+	{% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
 
-  {{ self.body|safe }}
+	{{ self.body|safe }}
 
-  <h3>Related links</h3>
-  {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
+	<h3>Related links</h3>
+	{% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

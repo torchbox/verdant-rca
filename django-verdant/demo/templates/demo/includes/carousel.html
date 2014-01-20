@@ -1,20 +1,23 @@
 {% load image_tags embed_filters %}
 
-<ul class="bxslider">
-  {% for carousel_item in carousel_items %}
-    <li>
-      {% if carousel_item.embed_url %}
-        <!-- Poster image -->
-        {% image carousel_item.image max-320x200 %}
-        {{ carousel_item.embed_url|embedly:500 }} {# Requires an embedly key to be stored in verdant/settings/local.py #}
-      {% else %}
-        {% image carousel_item.image max-320x200 %}
-      {% endif %}
-      <a href="{{ carousel_item.link }}">{{ carousel_item.caption }}</a>
-    </li>
-  {% empty %}
-    <li>No carousel items found</li>
-  {% endfor %}
-</ul>
 
-{# {% image self.photo max-640x480 as imagedata %} #}
+{% if carousel_items %}
+    <ul class="bxslider">
+        {% for carousel_item in carousel_items %}
+            <li>
+                <a href="{{ carousel_item.link }}">
+                    {% if carousel_item.embed_url %}
+                    {# Poster image - first store image as a variable in order to construct an image tag with a class applied #}
+                    <!--{% image carousel_item.image width-500 as posterimagedata %}
+                    <img src="{{ posterimagedata.url }}" width="{{ posterimagedata.width }}" height="{{ posterimagedata.height }}" alt="{{ posterimagedata.alt }}" class="poster" />-->
+                    {# Embedded vido - requires an embedly key to be stored in verdant/settings/local.py #}
+                        {{ carousel_item.embed_url|embedly:500 }}
+                    {% else %}
+                        {% image carousel_item.image width-500 as carouselimagedata %}
+                        <img src="{{ carouselimagedata.url }}" width="{{ carouselimagedata.width }}" height="{{ carouselimagedata.height }}" alt="{{ carouselimagedata.alt }}" title="{{ carousel_item.caption }}" />
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

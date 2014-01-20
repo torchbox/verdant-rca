@@ -1,19 +1,19 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-  <h2>{{ self.title }}</h2>
+    <h2>{{ self.title }}</h2>
 
-  {{ self.intro|safe }}
+    {{ self.intro|safe }}
 
-  <h3>Events</h3>
-  <ul>
+    <h3>Events</h3>
+    <ul>
     {% for event in self.events %}
-      <li><a href="{{ event.url }}">{{ event.title }}</a></li>
+        <li><a href="{{ event.url }}">{{ event.title }}</a></li>
     {% empty %}
-      <li>No events found</li>
+        <li>No events found</li>
     {% endfor %}
-  </ul>
+    </ul>
 
-  <h3>Related links</h3>
-  {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
+    <h3>Related links</h3>
+    {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

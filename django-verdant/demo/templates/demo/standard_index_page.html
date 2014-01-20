@@ -1,14 +1,14 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-  <h2>{{ self.title }}</h2>
+	<h2>{{ self.title }}</h2>
 
-  <h3>Child pages</h3>
-  <ul>
-    {% for child_page in self.get_children %}
-      <li><a href="{{ child_page.url }}">{{ child_page.title }}</a></li>
-    {% empty %}
-      <li>No child pages found</li>
-    {% endfor %}
-  </ul>
+	<h3>Child pages</h3>
+	<ul>
+	{% for child_page in self.get_children %}
+		<li><a href="{{ child_page.url }}">{{ child_page.title }}</a></li>
+	{% empty %}
+		<li>No child pages found</li>
+	{% endfor %}
+	</ul>
 {% endblock %}

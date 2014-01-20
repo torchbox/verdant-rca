@@ -3,32 +3,32 @@
 {% block title %}Search{% if search_results %} Results{% endif %}{% endblock %}
 
 {% block search_box %}
-  {% include "demo/includes/search_box.html" with query_string=query_string only %}
+    {% include "demo/includes/search_box.html" with query_string=query_string only %}
 {% endblock %}
 
 {% block content %}
-  <h2>Search{% if search_results %} Results{% endif %}</h2>
+    <h2>Search{% if search_results %} Results{% endif %}</h2>
 
-  {% with query.editors_picks.all as editors_picks %}
+    {% with query.editors_picks.all as editors_picks %}
     {% if editors_picks %}
-      <h3>Editors picks</h3>
-      <ul>
-        {% for editors_pick in editors_picks %}
-          <li>
-            <h4><a href="{{ editors_pick.page.url }}">{{ editors_pick.page.title }}</a></h4>
+        <h3>Editors picks</h3>
+        <ul>
+            {% for editors_pick in editors_picks %}
+            <li>
+                <h4><a href="{{ editors_pick.page.url }}">{{ editors_pick.page.title }}</a></h4>
             <p>{{ editors_pick.description }}</p>
           </li>
         {% endfor %}
-      </ul>
+        </ul>
     {% endif %}
-  {% endwith %}
+    {% endwith %}
 
-  <h3>Results</h3>
-  <ul>
+    <h3>Results</h3>
+    <ul>
     {% for result in search_results %}
-      <li><a href="{{ result.specific.url }}">{{ result.specific }}</a></li>
+        <li><a href="{{ result.specific.url }}">{{ result.specific }}</a></li>
     {% empty %}
-      <li>No results</li>
+        <li>No results</li>
     {% endfor %}
-  </ul>
+    </ul>
 {% endblock %}

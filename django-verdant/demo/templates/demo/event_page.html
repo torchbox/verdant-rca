@@ -1,31 +1,31 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-  <h2>{{ self.title }}</h2>
+    <h2>{{ self.title }}</h2>
 
-  {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+    {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
 
   {{ self.body|safe }}
 
-  <h3>Audience</h3>
-  {{ self.get_audience_display }}
+    <h3>Audience</h3>
+    {{ self.get_audience_display }}
 
-  <h3>Location</h3>
-  {{ self.location }}
+    <h3>Location</h3>
+    {{ self.location }}
 
-  <h3>Speakers</h3>
-  <ul>
+    <h3>Speakers</h3>
+    <ul>
     {% for speaker in self.speakers.all %}
-      {% if speaker.link %}
-        <li><a href="{{ speaker.link }}">{{ speaker.name_display }}</a></li>
-      {% else %}
-        <li>{{ speaker.name_display }}</li>
-      {% endif %}
+        {% if speaker.link %}
+            <li><a href="{{ speaker.link }}">{{ speaker.name_display }}</a></li>
+        {% else %}
+            <li>{{ speaker.name_display }}</li>
+        {% endif %}
     {% empty %}
-      <li>No speakers found</li>
+        <li>No speakers found</li>
     {% endfor %}
-  </ul>
+    </ul>
 
-  <h3>Related links</h3>
-  {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
+    <h3>Related links</h3>
+    {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}
