@@ -3181,6 +3181,15 @@ class RcaNowPage(Page, SocialFields):
     class Meta:
         verbose_name = 'RCA Now Page'
 
+    def author_profile_page(self):
+        """Return the profile page for the author of this post, if one exists (and is live)"""
+        if self.owner:
+            try:
+                return StudentPage.objects.filter(live=True, owner=self.owner)[0]
+            except IndexError:
+                return None
+
+
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),

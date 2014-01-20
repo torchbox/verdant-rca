@@ -1,4 +1,5 @@
 {% extends "rca/base.html" %}
+{% load pageurl %}
 
 {% block body_class %}
     type-rcanow
@@ -13,10 +14,15 @@
         <section class="four">
             <div class="meta-data">
                 <dl>
-                    {% if self.author %}
-                        <dd>By</dd>
-                        <dt>{{ self.author }}</dt>
-                    {% endif %}
+                    {% with self.author_profile_page as author_profile_page %}
+                        {% if author_profile_page %}
+                            <dd>By</dd>
+                            <dt><a href="{% pageurl author_profile_page %}">{{ author_profile_page.title }}</a></dt>
+                        {% elif self.author %}
+                            <dd>By</dd>
+                            <dt>{{ self.author }}</dt>
+                        {% endif %}
+                    {% endwith %}
 
                     <dd>Date</dd>
                     <dt>{{ self.date|date:"j F Y" }}</dt>
