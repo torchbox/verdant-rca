@@ -11,7 +11,9 @@ TEMPLATE_LOADERS = (
     )),
 )
 
-# BASE_URL and VERDANTADMIN_NOTIFICATION_FROM_EMAIL required for notification emails
+DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
+
+# BASE_URL required for notification emails
 BASE_URL = 'http://rca-staging.torchboxapps.com'
 VERDANTADMIN_NOTIFICATION_FROM_EMAIL = 'karl@torchbox.com'
 
