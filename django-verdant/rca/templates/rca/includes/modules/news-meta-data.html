@@ -1,0 +1,62 @@
+<section class="four">
+    <div class="meta-data">
+        <dl>
+            {% if self.author %}
+                <dd>Writer</dd>
+                <dt>{{ self.author }}</dt>
+            {% endif %}
+            
+            {% if self.date %}
+                <dd>Date</dd>
+                <dt>{{ self.date|date:"j F Y" }}</dt>
+            {% endif %}
+
+            {% if self.area %}
+                <dd>Area</dd>
+                <dt>{{ self.get_area_display }}</dt>
+            {% endif %}
+
+            {% with self.related_schools.all as related_schools %}
+                {% if related_schools %}
+                    <dd>From</dd>
+                    <dt>
+                        <ul>
+                             {% for school in related_schools %}
+                                <li>{{ school.get_school_display }}</li>
+                            {% endfor %}
+                        </ul>
+                    </dt>
+                {% endif %}
+            {% endwith %}
+
+            {% with self.related_programmes.all as related_programmes %}
+                {% if related_programmes %}
+                    <dd>Programme</dd>
+                    <dt>
+                        <ul>
+                             {% for programme in related_programmes %}
+                                <li>{{ programme.get_programme_display }}</li>
+                            {% endfor %}
+                        </ul>
+                    </dt>
+                {% endif %}
+            {% endwith %} 
+            
+            {% with self.related_links.all as related_links %}
+                {% if related_links %}
+                    <dd>Links</dd>
+                    <dt>
+                        <ul>
+                            {% for link in related_links %}
+                            <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </dt>
+                {% endif %}
+            {% endwith %}
+        </dl>
+    </div>
+    <div class="single">
+        {% include "rca/includes/modules/share-button.html" %}
+    </div>
+</section>
