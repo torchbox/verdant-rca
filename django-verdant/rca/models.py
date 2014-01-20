@@ -8,6 +8,7 @@ from itertools import chain
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
@@ -3062,7 +3063,7 @@ class StudentPage(Page, SocialFields):
     work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
-    work_awards = models.CharField(max_length=255, blank=True)
+    work_awards = models.CharField(max_length=255, blank=True, verbose_name='Show RCA work awards')
     funding = models.CharField(max_length=255, blank=True)
     student_twitter_feed = models.CharField(max_length=255, blank=True, help_text="Enter Twitter handle without @ symbol.")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -3088,6 +3089,15 @@ class StudentPage(Page, SocialFields):
         else:
             return self.get_degree_qualification_display() + " Graduate"
 
+    @property
+    def work_tab_title(self):
+        if self.is_researchstudent:
+            return "Research Work"
+        elif self.get_parent().content_type.model_class() == RcaNowIndex:
+            return "RCA Now"
+        else:
+            return "Show RCA Work"
+
 StudentPage.content_panels = [
     FieldPanel('title', classname="full title"),
     MultiFieldPanel([
@@ -3107,22 +3117,24 @@ StudentPage.content_panels = [
     InlinePanel(StudentPage, 'phone', label="Phone"),
     InlinePanel(StudentPage, 'website', label="Website"),
     FieldPanel('student_twitter_feed'),
+    FieldPanel('twitter_feed'),
     InlinePanel(StudentPage, 'degrees', label="Previous degrees"),
     InlinePanel(StudentPage, 'exhibitions', label="Exhibition"),
     InlinePanel(StudentPage, 'experiences', label="Experience"),
+    InlinePanel(StudentPage, 'publications', label="Publications"),
+    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    FieldPanel('funding'),
     InlinePanel(StudentPage, 'awards', label="Awards"),
     FieldPanel('statement', classname="full"),
     InlinePanel(StudentPage, 'carousel_items', label="Carousel content"),
-    FieldPanel('work_description', classname="full"),
-    FieldPanel('work_type'),
-    FieldPanel('work_location'),
-    FieldPanel('funding'),
-    InlinePanel(StudentPage, 'collaborators', label="Work collaborator"),
-    InlinePanel(StudentPage, 'sponsor', label="Work sponsor"),
-    InlinePanel(StudentPage, 'publications', label="Publications"),
-    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    MultiFieldPanel([
+        FieldPanel('work_description', classname="full"),
+        FieldPanel('work_type'),
+        FieldPanel('work_location'),
+    ], 'Show RCA work'),
+    InlinePanel(StudentPage, 'collaborators', label="Show RCA work collaborator"),
+    InlinePanel(StudentPage, 'sponsor', label="Show RCA work sponsor"),
     FieldPanel('work_awards'),
-    FieldPanel('twitter_feed'),
 ]
 
 StudentPage.promote_panels = [
@@ -3143,6 +3155,13 @@ StudentPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks')
 ]
+
+# When a user logs in, check for any StudentPages that have no owner but have an email address
+# matching this user, and reassign them to be owned by this user
+@receiver(user_logged_in)
+def reassign_student_pages(sender, request, user, **kwargs):
+    StudentPage.objects.filter(owner__isnull=True, email__email__iexact=user.email).update(owner=user)
+
 
 # == RCA Now page ==
 
@@ -3172,6 +3191,15 @@ class RcaNowPage(Page, SocialFields):
 
     class Meta:
         verbose_name = 'RCA Now Page'
+
+    def author_profile_page(self):
+        """Return the profile page for the author of this post, if one exists (and is live)"""
+        if self.owner:
+            try:
+                return StudentPage.objects.filter(live=True, owner=self.owner)[0]
+            except IndexError:
+                return None
+
 
 RcaNowPage.content_panels = [
     InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),

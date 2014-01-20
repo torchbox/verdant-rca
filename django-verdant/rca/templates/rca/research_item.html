@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load rca_tags %}
+{% load rca_tags pageurl %}
 
 {% block body_class %}
     type-research
@@ -11,7 +11,70 @@
     {% include "rca/includes/modules/carousel.html" %}
     <section class="row">
         {% include "rca/includes/modules/body-text.html" with showIntro="true" body=self.description %}
-        {% include "rca/includes/modules/meta-data.html" with showResearchMeta="true" %}
+
+        {# meta data #}
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    {% with self.creator.all as creators %}
+                        {% if creators %}
+                            <dd>creator{% if creators|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for creator in creators %}
+                                        <li>
+                                            {% if creator.person %}
+                                                <a href='{% pageurl creator.person %}'>
+                                                    {{ creator.person.title }}
+                                                </a>
+                                            {% elif creator.manual_person_name %}
+                                                {{ creator.manual_person_name }}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    <dd>Year</dd>
+                    <dt>{{ self.year }}</dt>
+
+                    <dd>School</dd>
+                    <dt>{{ self.get_school_display }}</dt>
+
+                    <dd>Type</dd>
+                    <dt>{{ self.get_work_type_display }}</dt>
+
+                    {% if self.theme %}
+                        <dd>Theme</dd>
+                        <dt>{{ self.get_theme_display }}</dt>
+                    {% endif %}
+
+                    {% if self.programme %}
+                        <dd>Programme</dd>
+                        <dt>{{ self.get_programme_display }}</dt>
+                    {% endif %}
+
+                    {% with self.links.all as links %}
+                        {% if links %}
+                            <dd>Links</dd>
+                            <dt>
+                                <ul>
+                                    {% for link in links %}
+                                    <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                </dl>
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
     </section>
     <!-- research -->
     <div id="listing">
