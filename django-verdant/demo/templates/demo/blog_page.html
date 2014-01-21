@@ -1,12 +1,22 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-	<h2>{{ self.title }}</h2>
 
 	{% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
 
-	{{ self.body|safe }}
+	{% include "demo/includes/body.html" with body=self.body only %}
 
-	<h3>Related links</h3>
+	{% if self.tags.all.count > 0 %}
+		<h3>Tags</h3>
+		<p>
+        {% with self.tags.all as tags %}
+            {% for tag in tags %}
+                <button class="btn btn-primary" type="button">{{ tag }}</button>
+            {% endfor %}
+        {% endwith %}
+    	</p>
+	{% endif %}
+
 	{% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
+
 {% endblock %}

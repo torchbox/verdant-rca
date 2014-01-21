@@ -1,19 +1,22 @@
 {% extends "demo/base.html" %}
+{% load pageurl %}
 
 {% block content %}
-    <h2>{{ self.title }}</h2>
 
-    {{ self.intro|safe }}
+    {% include "demo/includes/intro.html" with intro=self.intro only %}
 
-    <h3>Blogs</h3>
-    <ul>
-    {% for blog in self.blogs %}
-        <li><a href="{{ blog.url }}">{{ blog.title }}</a></li>
-    {% empty %}
-        <li>No blogs found</li>
-    {% endfor %}
-    </ul>
+    <div class="list-group">
+        {% for blog in self.blogs %}
+            <a class="list-group-item" href="{% pageurl blog %}">
+                <h4 class="list-group-item-heading">{{ blog.title }}</h4>
+                {% if blog.search_description %}
+                    <p class="list-group-item-text">{{ blog.search_description }}</p>
+                {% endif %}
+            </a>
+        {% empty %}
+            No blogs found
+        {% endfor %}
+    </div>
 
-    <h3>Related links</h3>
     {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

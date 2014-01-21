@@ -9,6 +9,9 @@ from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 
+from cluster.tags import ClusterTaggableManager
+from taggit.models import TaggedItemBase
+
 
 EVENT_AUDIENCE_CHOICES = (
     ('public', "Public"),
@@ -250,8 +253,12 @@ class BlogPageCarouselItem(Orderable, CarouselItem):
 class BlogPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.BlogPage', related_name='related_links')
 
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey('demo.BlogPage', related_name='tagged_items')
+
 class BlogPage(Page):
     body = RichTextField()
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
@@ -268,6 +275,7 @@ BlogPage.content_panels = [
 
 BlogPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    FieldPanel('tags'),
 ]
 
 

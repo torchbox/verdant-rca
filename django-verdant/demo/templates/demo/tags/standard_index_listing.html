@@ -4,8 +4,8 @@
         {% for page in pages %}
             <a class="list-group-item" href="{% pageurl page %}">
                 <h4 class="list-group-item-heading">{{ page.title }}</h4>
-                {% if page.listing_intro %}
-                    <p class="list-group-item-text">{{ page.listing_intro }}</p>
+                {% if page.search_description %}
+                    <p class="list-group-item-text">{{ page.search_description }}</p>
                 {% endif %}
             </a>
         {% empty %}
