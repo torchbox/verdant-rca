@@ -72,7 +72,7 @@ $(function(){
 			if (!selected_programme) {
 				$("#filters").find("li.filter").find("label[for=programme]").each(function() {
 					$(this).removeClass('active');
-					$(this).html("Programme");
+					$(this).html("Programme"); // TODO: Find a better way to pull this value through
 				});
 			}
 
