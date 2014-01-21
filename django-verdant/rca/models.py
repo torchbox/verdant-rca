@@ -3675,12 +3675,12 @@ class GalleryPage(Page, SocialFields):
 
     def serve(self, request):
         # Get all possible gallery items
-        all_gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
 
         # Get list of years with gallery items
         years = [
             values['degree_year']
-            for values in all_gallery_items.order_by('-degree_year').distinct('degree_year').values('degree_year')
+            for values in gallery_items.order_by('-degree_year').distinct('degree_year').values('degree_year')
         ]
         latest_year = years[0] if years else '2013'
 
@@ -3694,7 +3694,6 @@ class GalleryPage(Page, SocialFields):
             year = latest_year
 
         # Apply filters
-        gallery_items = all_gallery_items
         if school:
             gallery_items = gallery_items.filter(school=school)
         if year:
@@ -3708,7 +3707,16 @@ class GalleryPage(Page, SocialFields):
 
         # Apply programme filter
         if programme:
-            gallery_items = gallery_items.filter(programme=programme)
+            # Only apply programme filter if there are gallery pages with this programme
+            # Reason: If a programme is chosen, and the user changes to a different school/year,
+            # there may be no results displayed (as the programme might not exist in the new school/year.
+            # This check automatically unsets the programme in this case.
+            gallery_items_programme = gallery_items.filter(programme=programme)
+
+            if gallery_items_programme.exists():
+                gallery_items = gallery_items_programme
+            else:
+                programme = None
 
         # Randomly order gallery items
         gallery_items = gallery_items.order_by('random_order')
@@ -3735,6 +3743,7 @@ class GalleryPage(Page, SocialFields):
             'gallery_items': gallery_items,
             'related_programmes': json.dumps(related_programmes),
             'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
+            'selected_programme': programme if programme else '',
             'selected_year': year,
             'years': years,
         })

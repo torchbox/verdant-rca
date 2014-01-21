@@ -67,6 +67,15 @@ $(function(){
 			$.each(["school", "degree_year"], function(){
 				applyFilters(this, showAll, showAllFor);
 			});
+
+			// If programme was automatically deselected, update the filter
+			if (!selected_programme) {
+				$("#filters").find("li.filter").find("label[for=programme]").each(function() {
+					$(this).removeClass('active');
+					$(this).html("Programme");
+				});
+			}
+
 			alignGallery(); // defined in site.js
 		});
 		$(this).parent().closest('li').removeClass('expanded');
