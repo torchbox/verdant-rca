@@ -105,6 +105,11 @@ class RelatedLink(LinkFields):
     class Meta:
         abstract = True
 
+# Editorial page
+# This adds some common fields such as listing intro which are shared across more than one page type.
+# It allows the tag for the listing page to query several different page types and return their listing_intro
+class EditorialPage(Page):
+    listing_intro = models.CharField(max_length=100, help_text='Used only on listing pages', blank=True)
 
 # Home Page
 
@@ -182,6 +187,7 @@ class StandardPageRelatedLink(Orderable, RelatedLink):
 class DemoStandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
+    listing_intro = models.CharField(max_length=100, help_text='Used only on listing pages', blank=True)
 
     indexed_fields = ('intro', 'body', )
     search_name = None
@@ -202,6 +208,7 @@ DemoStandardPage.content_panels = [
 
 DemoStandardPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    FieldPanel('listing_intro'),
 ]
 
 

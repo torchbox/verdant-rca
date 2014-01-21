@@ -1,0 +1,15 @@
+{% load pageurl %}
+{% if pages %}
+    <div class="list-group">
+        {% for page in pages %}
+            <a class="list-group-item" href="{% pageurl page %}">
+                <h4 class="list-group-item-heading">{{ page.title }}</h4>
+                {% if page.listing_intro %}
+                    <p class="list-group-item-text">{{ page.listing_intro }}</p>
+                {% endif %}
+            </a>
+        {% empty %}
+            No child pages found
+        {% endfor %}
+    </div>
+{% endif %}

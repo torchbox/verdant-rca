@@ -46,3 +46,11 @@ def secondary_menu(context, calling_page=None):
         'pages': pages,
         'request': context['request'],  #required by the {% pageurl %} tag that we want to use within this template
     }
+# To do: make relevant pages extend EditorialPage so that we can show the listing intro too
+@register.inclusion_tag('demo/tags/standard_index_listing.html', takes_context=True)
+def standard_index_listing(context, calling_page):
+    pages = Page.objects.filter(path__startswith=calling_page.path).filter(depth=calling_page.depth+1).filter(live=True)
+    return {
+        'pages': pages,
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }

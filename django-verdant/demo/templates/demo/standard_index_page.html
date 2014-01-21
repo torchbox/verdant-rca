@@ -1,21 +1,11 @@
 {% extends "demo/base.html" %}
-{% load pageurl %}
+{% load pageurl demo_tags %}
 
 {% block content %}
-	<div class="page-header">
-		<h2>{{ self.title }}</h2>
-	</div>
 
 	{% include "demo/includes/intro.html" with intro=self.intro only %}
 
-	<h3>Child pages</h3>
-	<ul>
-	{% for child_page in self.get_children %}
-		<li><a href="{% pageurl child %}">{{ child_page.title }}</a></li>
-	{% empty %}
-		<li>No child pages found</li>
-	{% endfor %}
-	</ul>
+	{% standard_index_listing calling_page=self %}
 
 	{% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}
