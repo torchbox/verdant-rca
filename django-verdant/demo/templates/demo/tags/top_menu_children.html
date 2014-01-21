@@ -1,0 +1,9 @@
+{% load demo_tags pageurl %}
+
+<ul class="dropdown-menu">
+    {# Include link to parent because the parent link is a drop down #}
+    <li><a href="{{ parent.url }}">{{ parent.title }}</a></li>
+    {% for child in menuitems_children %}
+        <li><a href="{{ child.url }}">{{ child.title }}</a></li>
+    {% endfor %}
+</ul>
