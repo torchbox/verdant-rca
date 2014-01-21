@@ -21,7 +21,7 @@ def top_menu(context, parent):
 		menuitem.show_dropdown = has_menu_children(menuitem)
 	return {
     	'menuitems': menuitems,
-    	'request': context['request'],
+    	'request': context['request'], #required by the {% pageurl %} tag that we want to use within this template
     }
 
 @register.inclusion_tag('demo/tags/top_menu_children.html', takes_context=True)
@@ -30,5 +30,18 @@ def top_menu_children(context, parent):
 	return {
 		'parent': parent,
     	'menuitems_children': menuitems_children,
-    	'request': context['request'],
+    	'request': context['request'], #required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('demo/tags/secondary_menu.html', takes_context=True)
+def secondary_menu(context, calling_page=None):
+    if calling_page:
+        pages = calling_page.get_children().filter(live=True, show_in_menus=True)
+
+        # If no children, get siblings instead
+        if len(pages) == 0:
+            pages = calling_page.get_other_siblings().filter(live=True, show_in_menus=True)
+    return {
+        'pages': pages,
+        'request': context['request'],  #required by the {% pageurl %} tag that we want to use within this template
     }

@@ -142,9 +142,14 @@ DemoHomePage.promote_panels = [
 
 # Standard index page
 
+class StandardIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('demo.DemoStandardIndexPage', related_name='related_links')
+
 # TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardIndexPage
 class DemoStandardIndexPage(Page):
-    # No additional fields required
+    intro = RichTextField(blank=True)
+
+    indexed_fields = ('intro', )
 
     search_name = None
 
@@ -156,6 +161,8 @@ class DemoStandardIndexPage(Page):
 
 DemoStandardIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(DemoStandardIndexPage, 'related_links', label="Related links"),
 ]
 
 DemoStandardIndexPage.promote_panels = [
