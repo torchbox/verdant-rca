@@ -6,7 +6,7 @@ $(function(){
 	function filterProgrammes() {
 		$("#filters li.filter > label[for=programme]").each(function() {
 			// If programme was automatically deselected, reset the filter
-			if (!selected_programme) {
+			if (!filters_context.selected_programme) {
 				$(this).removeClass('active');
 				$(this).html("Programme"); // TODO: Find a better way to pull this value through
 			}
@@ -18,7 +18,7 @@ $(function(){
 			$parent.find("li[data-val]").hide();
 
 			// Show filter options in related_programmes
-			$.each(related_programmes, function(){
+			$.each(filters_context.related_programmes, function(){
 				$parent.find("li[data-val=" + this + "]").show();
 			});
 
@@ -49,7 +49,7 @@ $(function(){
 	function filterSchools(){
 		$("#filters li.filter > label[for=school]").each(function() {
 			// If school was automatically deselected, reset the filter
-			if (!selected_school) {
+			if (!filters_context.selected_school) {
 				$(this).removeClass('active');
 				$(this).html("School"); // TODO: Find a better way to pull this value through
 			}
@@ -61,7 +61,7 @@ $(function(){
 			$parent.find("li[data-val]").hide();
 
 			// Show filter options in related_schools
-			$.each(related_schools, function(){
+			$.each(filters_context.related_schools, function(){
 				$parent.find("li[data-val=" + this + "]").show();
 			});
 
