@@ -3,42 +3,47 @@
 
 $(function(){
 
-	function applyFilters(school_or_year, showAll, showAllFor){
-		var $parent = $("#filters").find("li.filter").find("label[for=programme]").parent();
-		if($("#filters").find("li.filter").find("label.active[for=" + school_or_year + "]").length){
+	function filterProgrammes() {
+		$("#filters li.filter > label[for=programme]").each(function() {
+			// If programme was automatically deselected, reset the filter
+			if (!selected_programme) {
+				$(this).removeClass('active');
+				$(this).html("Programme"); // TODO: Find a better way to pull this value through
+			}
+
+			// Get parent (li.filter)
+			var $parent = $(this).parent();
+
+			// Hide add filter options
 			$parent.find("li[data-val]").hide();
+
+			// Show filter options in related_programmes
 			$.each(related_programmes, function(){
 				$parent.find("li[data-val=" + this + "]").show();
 			});
-			if(!related_programmes.length){
-				$parent.find("li[data-val!='']").hide();
-			}
+
+			// Show the ALL filter option
 			$parent.find("li[data-val='']").show();
-		}
 
-		if(showAll) if((showAllFor == "programme") || (showAllFor == school_or_year)){
-			$parent.find("li[data-val]").show();
-		}
+			// Find number of programes that are visible
+			var visibleProgrammes = $parent.find("li").filter(function(){
+				return $(this).css("display") != "none";
+			}).length;
 
-		// adjust dropdown width / columns for programmes
-		var visibleProgrammes = $parent.find("li").filter(function(){
-			return $(this).css("display") != "none";
-		}).length;
-		if(visibleProgrammes < 8){
-			$("#filters div[data-id=programme]").css("width", "101%")
-			.closest("li.filter.three-cols").removeClass("three-cols");
-		}
-		if(visibleProgrammes > 8){
-			$("#filters div[data-id=programme]").css("width", "201%")
-			.closest("li.filter.three-cols").removeClass("three-cols");
-		}
-		if(visibleProgrammes > 16){
-			$("#filters div[data-id=programme]").css("width", "301%")
-			.closest("li.filter").addClass("three-cols");
-		}
-		if(school_or_year == "degree_year"){
-			filterSchools();
-		}
+			// Adjust number of columns to show 8 options per column
+			if(visibleProgrammes <= 8){
+				$("#filters div[data-id=programme]").css("width", "101%")
+				.closest("li.filter.three-cols").removeClass("three-cols");
+			}
+			if(visibleProgrammes > 8){
+				$("#filters div[data-id=programme]").css("width", "201%")
+				.closest("li.filter.three-cols").removeClass("three-cols");
+			}
+			if(visibleProgrammes > 16){
+				$("#filters div[data-id=programme]").css("width", "301%")
+				.closest("li.filter").addClass("three-cols");
+			}
+		});
 	}
 
 	function filterSchools(){
@@ -61,21 +66,9 @@ $(function(){
 	}
 
 	$('#filters .options li').click(function() {
-		var showAll = !$(this).data("val");
-		var showAllFor = $(this).parent().data("id");
 		$('#listing').load(current_page, $('#filters').serialize(), function(){
-			$.each(["school", "degree_year"], function(){
-				applyFilters(this, showAll, showAllFor);
-			});
-
-			// If programme was automatically deselected, update the filter
-			if (!selected_programme) {
-				$("#filters").find("li.filter").find("label[for=programme]").each(function() {
-					$(this).removeClass('active');
-					$(this).html("Programme"); // TODO: Find a better way to pull this value through
-				});
-			}
-
+			filterProgrammes();
+			filterSchools();
 			alignGallery(); // defined in site.js
 		});
 		$(this).parent().closest('li').removeClass('expanded');
