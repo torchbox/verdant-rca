@@ -44,7 +44,7 @@
 	                <select id="degree_year" name="degree_year">
 	                    <option value="">All years</option>
 	                    {% for year in years %}
-	                    	<option value="{{ year }}" {% if selected_year == year %}selected="selected"{% endif %}>{{ year }}</option>
+	                    	<option value="{{ year }}" {% if request.GET.year == year %}selected="selected"{% endif %}>{{ year }}</option>
 						{% endfor %}
 	                </select>
 	            </li>
@@ -79,10 +79,7 @@
 		//global var for rca_now_index set here so that it can be used by the script being called
 		var current_page = window.location.pathname;
 
-        var related_programmes = {{related_programmes|safe}};
-        var selected_programme = '{{ selected_programme|safe }}';
-
-        var SCHOOL_PROGRAMME_MAP = {{SCHOOL_PROGRAMME_MAP|safe}}
+    var filters_context = {{ filters_context|safe }};
 	</script>
 	<script src="/static/rca/js/utils.js"></script>
 	<script src="/static/rca/js/filters.js"></script>
