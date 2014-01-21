@@ -40,6 +40,8 @@ import stripe
 
 import hashlib
 
+import json
+
 from rca_signage.constants import SCREEN_CHOICES
 
 # TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
@@ -3672,73 +3674,70 @@ class GalleryPage(Page, SocialFields):
     search_name = 'Gallery'
 
     def serve(self, request):
+        # Get all possible gallery items
+        all_gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
+
+        # Get list of years with gallery items
+        years = [
+            values['degree_year']
+            for values in all_gallery_items.order_by('-degree_year').distinct('degree_year').values('degree_year')
+        ]
+        latest_year = years[0] if years else '2013'
+
+        # Get filter parameters
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         year = request.GET.get('degree_year')
 
-        # Get default year
-        if not year:
-            # The default_year is the latest year with a student inside it
-            year = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent").aggregate(models.Max('degree_year'))['degree_year__max']
+        # If this is the initial hit to this page, automatically set year to latest year
+        if not request.is_ajax() and not programme and not school and not year:
+            year = latest_year
 
-        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification="researchstudent")
-        if programme:
-            gallery_items = gallery_items.filter(programme=programme)
+        # Apply filters
+        gallery_items = all_gallery_items
         if school:
             gallery_items = gallery_items.filter(school=school)
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
 
-        if not request.is_ajax() and not programme and not school and not year:
-            gallery_items = gallery_items.filter(degree_year=date.today().year)
+        # Get list of related programmes
+        related_programmes = [
+            values['programme']
+            for values in gallery_items.order_by('programme').distinct('programme').values('programme')
+        ]
 
+        # Apply programme filter
+        if programme:
+            gallery_items = gallery_items.filter(programme=programme)
+
+        # Randomly order gallery items
         gallery_items = gallery_items.order_by('random_order')
 
-        if year:
-            if school:
-                related_programmes = SCHOOL_PROGRAMME_MAP[year].get(school, [])
-            else:
-                # get all programmes from all schools in the year specified
-                related_programmes = sum(SCHOOL_PROGRAMME_MAP[year].values(), [])
-        else:
-            if school:
-                # get all programmes from in this school in all years
-                related_programmes = set()
-                for _year, mapping in SCHOOL_PROGRAMME_MAP.items():
-                    if school in mapping:
-                        related_programmes |= set(mapping.get(school, []))
-                related_programmes = list(related_programmes)
-            else:
-                # show all programmes for current year
-                related_programmes = sum(SCHOOL_PROGRAMME_MAP[str(date.today().year)].values(), [])
-
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
-
         try:
             gallery_items = paginator.page(page)
         except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
             gallery_items = paginator.page(1)
         except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
             gallery_items = paginator.page(paginator.num_pages)
 
+        # Get template
         if request.is_ajax():
-            return render(request, "rca/includes/gallery_listing.html", {
-                'self': self,
-                'gallery_items': gallery_items,
-                'related_programmes': related_programmes,
-                'selected_year': year,
-            })
+            template = 'rca/includes/gallery_listing.html'
         else:
-            return render(request, self.template, {
-                'self': self,
-                'gallery_items': gallery_items,
-                'related_programmes': related_programmes,
-                'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
-                'selected_year': year,
-            })
+            template = self.template
+
+        # Render response
+        return render(request, template, {
+            'self': self,
+            'gallery_items': gallery_items,
+            'related_programmes': json.dumps(related_programmes),
+            'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
+            'selected_year': year,
+            'years': years,
+        })
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
