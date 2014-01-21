@@ -33,10 +33,9 @@
 {% endif %}
 
 <script type="text/javascript">
-    {% if related_programmes %}
-        var related_programmes = {{related_programmes|safe}};
-    {% else %}
-        var related_programmes = [];
-    {% endif %}
+    var related_programmes = {{ related_programmes|safe }};
     var selected_programme = '{{ selected_programme|safe }}';
+
+    var related_schools = {{ related_schools|safe }};
+    var selected_school = '{{ selected_school|safe }}';
 </script>

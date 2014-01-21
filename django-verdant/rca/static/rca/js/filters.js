@@ -14,7 +14,7 @@ $(function(){
 			// Get parent (li.filter)
 			var $parent = $(this).parent();
 
-			// Hide add filter options
+			// Hide all filter options
 			$parent.find("li[data-val]").hide();
 
 			// Show filter options in related_programmes
@@ -47,21 +47,26 @@ $(function(){
 	}
 
 	function filterSchools(){
-		var year = $("#degree_year").val();
-		if(year){
-			var schools = Object.keys(SCHOOL_PROGRAMME_MAP[year]);
-		}
-		$("#filters li.filter [data-id=school] li[data-val]").each(function(){
-			var $this = $(this);
-			if($this.data("val")){
-				$this.hide();
+		$("#filters li.filter > label[for=school]").each(function() {
+			// If school was automatically deselected, reset the filter
+			if (!selected_school) {
+				$(this).removeClass('active');
+				$(this).html("School"); // TODO: Find a better way to pull this value through
 			}
-			if(year && schools.indexOf($this.data("val")) != -1){
-				$this.show();
-			}
-			if(!year){
-				$this.show();
-			}
+
+			// Get parent (li.filter)
+			var $parent = $(this).parent();
+
+			// Hide all filter options
+			$parent.find("li[data-val]").hide();
+
+			// Show filter options in related_schools
+			$.each(related_schools, function(){
+				$parent.find("li[data-val=" + this + "]").show();
+			});
+
+			// Show the ALL filter option
+			$parent.find("li[data-val='']").show();
 		});
 	}
 

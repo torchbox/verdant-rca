@@ -3685,19 +3685,36 @@ class GalleryPage(Page, SocialFields):
         latest_year = years[0] if years else '2013'
 
         # Get filter parameters
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
         year = request.GET.get('degree_year')
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
 
         # If this is the initial hit to this page, automatically set year to latest year
         if not request.is_ajax() and not programme and not school and not year:
             year = latest_year
 
-        # Apply filters
-        if school:
-            gallery_items = gallery_items.filter(school=school)
+        # Apply year filter
         if year:
             gallery_items = gallery_items.filter(degree_year=year)
+
+        # Get list of related schools
+        related_schools = [
+            values['school']
+            for values in gallery_items.order_by('school').distinct('school').values('school')
+        ]
+
+        # Apply school filter
+        if school:
+            # Only apply school filter if there are gallery pages with this school
+            # Reason: If a school is chosen, and the user changes to a different year,
+            # there may be no results displayed (as the school might not exist in the new year).
+            # This check automatically unsets the school in this case.
+            gallery_items_school = gallery_items.filter(school=school)
+
+            if gallery_items_school.exists():
+                gallery_items = gallery_items_school
+            else:
+                school = None
 
         # Get list of related programmes
         related_programmes = [
@@ -3709,7 +3726,7 @@ class GalleryPage(Page, SocialFields):
         if programme:
             # Only apply programme filter if there are gallery pages with this programme
             # Reason: If a programme is chosen, and the user changes to a different school/year,
-            # there may be no results displayed (as the programme might not exist in the new school/year.
+            # there may be no results displayed (as the programme might not exist in the new school/year).
             # This check automatically unsets the programme in this case.
             gallery_items_programme = gallery_items.filter(programme=programme)
 
@@ -3741,11 +3758,12 @@ class GalleryPage(Page, SocialFields):
         return render(request, template, {
             'self': self,
             'gallery_items': gallery_items,
+            'related_schools': json.dumps(related_schools),
+            'selected_school': school if school else '',
             'related_programmes': json.dumps(related_programmes),
-            'SCHOOL_PROGRAMME_MAP': SCHOOL_PROGRAMME_MAP,
             'selected_programme': programme if programme else '',
-            'selected_year': year,
             'years': years,
+            'selected_year': year,
         })
 
 GalleryPage.content_panels = [
