@@ -2,7 +2,11 @@
 {% load pageurl %}
 
 {% block content %}
-	<h2>{{ self.title }}</h2>
+	<div class="page-header">
+		<h2>{{ self.title }}</h2>
+	</div>
+
+	{% include "demo/includes/intro.html" with intro=self.intro only %}
 
 	<h3>Child pages</h3>
 	<ul>
@@ -12,4 +16,6 @@
 		<li>No child pages found</li>
 	{% endfor %}
 	</ul>
+
+	{% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

@@ -15,11 +15,12 @@ def has_menu_children(page):
 		return False;
 
 @register.inclusion_tag('demo/tags/top_menu.html', takes_context=True)
-def top_menu(context, parent):
+def top_menu(context, parent, calling_page=None):
 	menuitems = parent.get_children().filter(live=True, show_in_menus=True)
 	for menuitem in menuitems:
 		menuitem.show_dropdown = has_menu_children(menuitem)
 	return {
+		'calling_page': calling_page,
     	'menuitems': menuitems,
     	'request': context['request'], #required by the {% pageurl %} tag that we want to use within this template
     }

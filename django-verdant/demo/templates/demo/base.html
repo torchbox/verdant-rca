@@ -58,10 +58,8 @@
     <body class="{% block body_class %}{% endblock %}"> {# Override this block to set custom body classes on a template by template basis #}
 
         {% block menu %}
-            {% cache 500 menu %}
-                {% get_site_root as site_root %}
-                {% top_menu parent=site_root %}
-            {% endcache %}
+            {% get_site_root as site_root %}
+            {% top_menu parent=site_root calling_page=self %}
         {% endblock %}
 
         <div class="container theme-showcase">
