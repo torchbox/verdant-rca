@@ -8,6 +8,9 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
+# Add django-cluster, which lives alongside PROJECT_ROOT (until it gets released as a standalone project)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
