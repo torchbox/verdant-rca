@@ -10,7 +10,7 @@
 
         <title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Wagtail Demo{% endblock %}</title>
 
-        <meta name="description" content="">
+        <meta name="description" content="{% if self.search_description %}{{ self.search_description }}{% endif %}">
 
         {% block css %} {# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
             

@@ -14,6 +14,8 @@ def has_menu_children(page):
 	else:
 		return False;
 
+# Retrieves the top menu items - the immediate children of the calling page
+# The has_menu_children method is necessary because the bootstrap menu requires a dropdown class to be applied to a parent
 @register.inclusion_tag('demo/tags/top_menu.html', takes_context=True)
 def top_menu(context, parent, calling_page=None):
 	menuitems = parent.get_children().filter(live=True, show_in_menus=True)
@@ -25,6 +27,7 @@ def top_menu(context, parent, calling_page=None):
     	'request': context['request'], #required by the {% pageurl %} tag that we want to use within this template
     }
 
+#Retrieves the children of the top menu items for the drop downs
 @register.inclusion_tag('demo/tags/top_menu_children.html', takes_context=True)
 def top_menu_children(context, parent):
 	menuitems_children = parent.get_children().filter(live=True, show_in_menus=True)
@@ -34,8 +37,10 @@ def top_menu_children(context, parent):
     	'request': context['request'], #required by the {% pageurl %} tag that we want to use within this template
     }
 
+#Retrieves the secondary links for the 'also in this section' links - either the children or siblings of the current page
 @register.inclusion_tag('demo/tags/secondary_menu.html', takes_context=True)
 def secondary_menu(context, calling_page=None):
+    pages = []
     if calling_page:
         pages = calling_page.get_children().filter(live=True, show_in_menus=True)
 
@@ -46,10 +51,11 @@ def secondary_menu(context, calling_page=None):
         'pages': pages,
         'request': context['request'],  #required by the {% pageurl %} tag that we want to use within this template
     }
-# To do: make relevant pages extend EditorialPage so that we can show the listing intro too
+
+#Retrieves all live pages which are children of the calling page - for standard index listing
 @register.inclusion_tag('demo/tags/standard_index_listing.html', takes_context=True)
 def standard_index_listing(context, calling_page):
-    pages = Page.objects.filter(path__startswith=calling_page.path).filter(depth=calling_page.depth+1).filter(live=True)
+    pages = calling_page.get_children().filter(live=True)
     return {
         'pages': pages,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template

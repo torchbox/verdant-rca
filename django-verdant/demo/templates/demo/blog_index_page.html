@@ -6,6 +6,8 @@
     {% include "demo/includes/intro.html" with intro=self.intro only %}
 
     <div class="list-group">
+        {# Uses blogs method defined in models.py - allows for paging if required #}
+        {# See also standard index for creating a listing with a tag #}
         {% for blog in self.blogs %}
             <a class="list-group-item" href="{% pageurl blog %}">
                 <h4 class="list-group-item-heading">{{ blog.title }}</h4>
