@@ -1,0 +1,20 @@
+{% load pageurl image_tags %}
+{% if people %}
+    <div class="page-header"><h3>People</h3></div>
+    <div class="list-group people">
+        {% for person in people %}
+            <a class="list-group-item" href="{% pageurl person %}">
+                <h4 class="list-group-item-heading"> {{ person.first_name }} {{ person.last_name }}</h4>
+                {% if person.image %}
+                    {% image person.image width-200 as photo %}
+                {% endif %}
+                {% if person.search_description %}
+                    <p class="list-group-item-text">
+                        <img src="{{ photo.url }}" width="{{ photo.width }}" height="{{ photo.height }}" alt="{{ photo.alt }}" class="img-thumbnail" />
+                        {{ person.search_description }}
+                    </p>
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
+{% endif %}

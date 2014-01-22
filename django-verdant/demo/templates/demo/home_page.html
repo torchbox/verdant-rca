@@ -1,8 +1,13 @@
 {% extends "demo/base.html" %}
+{% load demo_tags %}
 
 
 {% block content %}
-	<h2>{{ self.title }}</h2>
 
-	{{ body|safe }}
+	{% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+
+	{% include "demo/includes/body.html" with body=self.body only %}
+
+	{% person_listing %}
+
 {% endblock %}

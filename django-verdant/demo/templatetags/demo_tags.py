@@ -60,3 +60,12 @@ def standard_index_listing(context, calling_page):
         'pages': pages,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
+#Person feed for home page
+@register.inclusion_tag('demo/tags/person_listing.html', takes_context=True)
+def person_listing(context, count=5):
+    people = PersonPage.objects.filter(live=True)
+    return {
+        'people': people[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
