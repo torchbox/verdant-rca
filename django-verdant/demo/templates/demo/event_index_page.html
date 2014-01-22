@@ -1,11 +1,9 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-    <h2>{{ self.title }}</h2>
 
-    {{ self.intro|safe }}
+    {% include "demo/includes/intro.html" with intro=self.intro only %}
 
-    <h3>Events</h3>
     <ul>
     {% for event in self.events %}
         <li><a href="{{ event.url }}">{{ event.title }}</a></li>
@@ -14,6 +12,5 @@
     {% endfor %}
     </ul>
 
-    <h3>Related links</h3>
     {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

@@ -7,14 +7,12 @@
 	{% include "demo/includes/body.html" with body=self.body only %}
 
 	{% if self.tags.all.count > 0 %}
-		<h3>Tags</h3>
-		<p>
+		<div class="page-header"><h3>Tags</h3></div>
         {% with self.tags.all as tags %}
             {% for tag in tags %}
                 <button class="btn btn-primary" type="button">{{ tag }}</button>
             {% endfor %}
         {% endwith %}
-    	</p>
 	{% endif %}
 
 	{% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}

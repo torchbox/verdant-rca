@@ -415,9 +415,10 @@ class EventPage(Page):
 
 EventPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(EventPage, 'carousel_items', label="Carousel items"),
     FieldPanel('audience'),
     FieldPanel('location'),
-    FieldPanel('body', classname="full"),
     InlinePanel(EventPage, 'speakers', label="Speakers"),
     InlinePanel(EventPage, 'dates_and_times', label="Dates and times"),
     MultiFieldPanel([
@@ -426,7 +427,7 @@ EventPage.content_panels = [
     ], 'Specific directions'),
     FieldPanel('cost'),
     FieldPanel('signup_link'),
-    InlinePanel(EventPage, 'carousel_items', label="Carousel items"),
+
     InlinePanel(EventPage, 'related_links', label="Related links"),
 ]
 

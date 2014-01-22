@@ -1,10 +1,9 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-	<h2>{{ self.title }}</h2>
 
-	{{ self.body|safe }}
+	{% include "demo/includes/body.html" with body=self.body only %}
 
-	<h3>Contact</h3>
 	{% include "demo/includes/contact.html" with contact=self only %}
+	
 {% endblock %}
