@@ -14,7 +14,7 @@ from core.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from verdantadmin import tasks
+from verdantadmin import tasks, hooks
 
 
 @login_required
@@ -192,6 +192,12 @@ def create(request, content_type_app_name, content_type_model_name, parent_page_
                 tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' created." % page.title)
+
+            for fn in hooks.get_hooks('after_create_page'):
+                result = fn(request, page)
+                if hasattr(result, 'status_code'):
+                    return result
+
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             messages.error(request, "The page could not be created due to errors.")
@@ -253,6 +259,12 @@ def edit(request, page_id):
                 tasks.send_notification.delay(page.get_latest_revision().id, 'submitted', request.user.id)
             else:
                 messages.success(request, "Page '%s' updated." % page.title)
+
+            for fn in hooks.get_hooks('after_edit_page'):
+                result = fn(request, page)
+                if hasattr(result, 'status_code'):
+                    return result
+
             return redirect('verdantadmin_explore', page.get_parent().id)
         else:
             messages.error(request, "The page could not be saved due to validation errors")
@@ -286,6 +298,12 @@ def delete(request, page_id):
         parent_id = page.get_parent().id
         page.delete()
         messages.success(request, "Page '%s' deleted." % page.title)
+
+        for fn in hooks.get_hooks('after_delete_page'):
+            result = fn(request, page)
+            if hasattr(result, 'status_code'):
+                return result
+
         return redirect('verdantadmin_explore', parent_id)
 
     return render(request, 'verdantadmin/pages/confirm_delete.html', {

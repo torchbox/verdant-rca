@@ -12,7 +12,6 @@ REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)
 
 @permission_required('verdantredirects.change_redirect')
 def index(request):
-    print request.get_full_path()
     # Get redirects
     redirects = models.Redirect.get_for_site(site=request.site)
 

@@ -8,6 +8,14 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
+# Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
+
+# Add dependencies django-cluster and django-treebeard, which live alongside PROJECT_ROOT
+# (until they get released as a standalone project / merged upstream respectively)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -267,6 +275,8 @@ VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 VERDANTSEARCH_RESULTS_TEMPLATE = 'demo/search_results.html'
 
 # CELERY SETTINGS
+import djcelery
+djcelery.setup_loader()
 
 # Use separate queues on each host if uploads should be processed by celery
 # import socket
