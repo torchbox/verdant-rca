@@ -422,7 +422,7 @@ class EventPage(Page):
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255)
     body = RichTextField(blank=True)
-    cost = RichTextField(blank=True)
+    cost = models.CharField(max_length=255)
     signup_link = models.URLField(blank=True)
 
     indexed_fields = ('get_audience_display', 'location', 'body')
@@ -437,14 +437,13 @@ EventPage.content_panels = [
     FieldPanel('date_to'),
     FieldPanel('time_from'),
     FieldPanel('time_to'),
-    FieldPanel('body', classname="full"),
-    InlinePanel(EventPage, 'carousel_items', label="Carousel items"),
-    FieldPanel('audience'),
     FieldPanel('location'),
-    InlinePanel(EventPage, 'speakers', label="Speakers"),
+    FieldPanel('audience'),
     FieldPanel('cost'),
     FieldPanel('signup_link'),
-
+    InlinePanel(EventPage, 'carousel_items', label="Carousel items"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(EventPage, 'speakers', label="Speakers"),
     InlinePanel(EventPage, 'related_links', label="Related links"),
 ]
 

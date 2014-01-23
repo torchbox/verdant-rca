@@ -78,3 +78,37 @@ def person_listing(context, count=5):
 #         'blogs': blogs[:count],
 #         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
 #     }
+
+# Format times e.g. on event page
+@register.filter
+def time_display(time):
+    # Get hour and minute from time object
+    hour = time.hour
+    minute = time.minute
+
+    # Convert to 12 hour format
+    if hour >= 12:
+        pm = True
+        hour -=12
+    else:
+        pm = False
+    if hour == 0:
+        hour = 12
+
+    # Hour string
+    hour_string = str(hour)
+
+    # Minute string
+    if minute != 0:
+        minute_string = "." + str(minute)
+    else:
+        minute_string = ""
+
+    # PM string
+    if pm:
+        pm_string = "pm"
+    else:
+        pm_string = "am"
+
+    # Join and return
+    return "".join([hour_string, minute_string, pm_string])
