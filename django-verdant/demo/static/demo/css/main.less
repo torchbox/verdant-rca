@@ -32,16 +32,18 @@
 	}
 }
 
-/* List styling to allow images */
-.people img {
-	float: left;
-	margin-right: 2%;
-}
-.people a.list-group-item {
+/* List styling for images */
+
+a.list-group-item {
 	clear: both;
 	width: 100%;
 	overflow: hidden;
-}
-.people .list-group-item-text {
-	float: left;
+
+	.list-group-item-text {
+		float: left;
+		img {
+			float: left;
+			margin-right: 2%;
+		}
+	}
 }

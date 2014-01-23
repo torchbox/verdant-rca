@@ -17,11 +17,15 @@
                 <h4 class="list-group-item-heading">{{ blog.title }}</h4>
                 <strong>{{ blog.date|date:"j F Y" }}</strong>
                 {% if blog.search_description or blog.feed_image %}
-                    {% if blog.feed_image %}
+                    <p class="list-group-item-text">
+                        {% if blog.feed_image %}
                             {% image blog.feed_image width-200 as blog_image %}
                             <img src="{{ blog_image.url }}" width="{{ blog_image.width }}" height="{{ blog_image.height }}" alt="{{ blog_image.alt }}" class="img-thumbnail" />
                         {% endif %}
-                    <p class="list-group-item-text">{{ blog.search_description }}</p>
+                        {% if blog.search_description %}
+                            {{ blog.search_description }}
+                        {% endif %}
+                    </p>
                 {% endif %}
             </a>
         {% empty %}

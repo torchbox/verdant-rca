@@ -1,16 +1,35 @@
 {% extends "demo/base.html" %}
+{% load pageurl image_tags %}
 
 {% block content %}
 
     {% include "demo/includes/intro.html" with intro=self.intro only %}
 
-    <ul>
-    {% for event in self.events %}
-        <li><a href="{{ event.url }}">{{ event.title }}</a></li>
-    {% empty %}
-        <li>No events found</li>
-    {% endfor %}
-    </ul>
+    {% with self.events.all as events %}
+        {% if events %}    
+            <div class="list-group">
+                {% for event in events %}
+                    <a class="list-group-item" href="{% pageurl event %}">
+                        <h4 class="list-group-item-heading">{{ event.title }}</h4>
+                        <strong>{{ event.date_from|date:"j F Y" }}{% if event.date_to %} to {{ event.date_to|date:"j F Y" }}{% endif %}</strong>
+                        {% if event.search_description or event.feed_image %}
+                            <p class="list-group-item-text">
+                                {% if event.feed_image %}
+                                    {% image event.feed_image width-200 as event_image %}
+                                    <img src="{{ event_image.url }}" width="{{ event_image.width }}" height="{{ event_image.height }}" alt="{{ event_image.alt }}" class="img-thumbnail" />
+                                {% endif %}
+                                {% if event.search_description %}
+                                    {{ event.search_description }}
+                                {% endif %}
+                            </p>
+                        {% endif %}
+                    </a>
+                {% empty %}
+                    <li>No events found</li>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
 {% endblock %}

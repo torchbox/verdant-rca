@@ -16,6 +16,8 @@ from django.shortcuts import render
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+from datetime import date
+
 
 EVENT_AUDIENCE_CHOICES = (
     ('public', "Public"),
@@ -373,7 +375,10 @@ class EventIndexPage(Page):
     @property
     def events(self):
         # Get list of event pages that are descentands of this page
-        return EventPage.objects.filter(live=True, path__startswith=self.path)
+        events = EventPage.objects.filter(live=True, path__startswith=self.path)
+        #Filter events list to get ones that are either running now or start in the future
+        events = events.filter(date_from__gte=date.today())
+        return events
 
     class Meta:
         verbose_name = "DEMO Event Index Page"
