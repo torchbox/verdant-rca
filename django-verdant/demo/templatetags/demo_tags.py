@@ -69,3 +69,12 @@ def person_listing(context, count=5):
         'people': people[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
+#Blog feed for home page
+# @register.inclusion_tag('demo/tags/blog_listing.html', takes_context=True)
+# def blog_listing(context, count=5):
+#     blogs = BlogPage.objects.filter(live=True)
+#     return {
+#         'blogs': blogs[:count],
+#         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+#     }

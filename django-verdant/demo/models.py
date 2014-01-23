@@ -12,6 +12,10 @@ from verdantsnippets.edit_handlers import SnippetChooserPanel
 from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
+from django.shortcuts import render
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 
 EVENT_AUDIENCE_CHOICES = (
     ('public', "Public"),
@@ -218,10 +222,36 @@ class BlogIndexPage(Page):
     indexed_fields = ('intro', )
     search_name = "Blog"
 
-    @property
-    def blogs(self):
-        # Get list of blog pages that are descentands of this page
-        return BlogPage.objects.filter(live=True, path__startswith=self.path)
+    def serve(self, request):
+        # Return list of blog pages that are descentands of this page
+        blogs = BlogPage.objects.filter(live=True, path__startswith=self.path)
+
+        #filter by tag
+        tag = request.GET.get('tag')
+    
+        if tag:
+             blogs = blogs.filter(tags__name=tag)
+
+        #order by most recent date first
+        blogs = blogs.distinct().order_by('-date')
+
+        #filter by page
+        page = request.GET.get('page')
+        paginator = Paginator(blogs, 10)  # Show 10 blogs per page
+
+        try:
+            blogs = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            blogs = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            blogs = paginator.page(paginator.num_pages)
+        
+        return render(request, self.template, {
+            'self': self,
+            'blogs': blogs,
+        })
 
     class Meta:
         verbose_name = "DEMO Blog Index Page"
@@ -251,6 +281,7 @@ class BlogPageTag(TaggedItemBase):
 class BlogPage(Page):
     body = RichTextField()
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
+    date = models.DateField("Post date")
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
@@ -260,6 +291,7 @@ class BlogPage(Page):
 
 BlogPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('date'),
     FieldPanel('body', classname="full"),
     InlinePanel(BlogPage, 'carousel_items', label="Carousel items"),
     InlinePanel(BlogPage, 'related_links', label="Related links"),
@@ -365,22 +397,6 @@ class EventPageCarouselItem(Orderable, CarouselItem):
 class EventPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('demo.EventPage', related_name='related_links')
 
-class EventPageDatesAndTimes(Orderable):
-    page = ParentalKey('demo.EventPage', related_name='dates_and_times')
-    date_from = models.DateField("Start date")
-    date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
-    time_from = models.TimeField("Start time", null=True, blank=True)
-    time_to = models.TimeField("End time", null=True, blank=True)
-    time_other = models.CharField("Time other", max_length=255, blank=True, help_text="Use this field to give additional information about start and end times")
-
-    panels = [
-        FieldPanel('date_from'),
-        FieldPanel('date_to'),
-        FieldPanel('time_from'),
-        FieldPanel('time_to'),
-        FieldPanel('time_other'),
-    ]
-
 class EventPageSpeaker(Orderable, LinkFields):
     page = ParentalKey('demo.EventPage', related_name='speakers')
     first_name = models.CharField("Name", max_length=255, blank=True)
@@ -399,11 +415,13 @@ class EventPageSpeaker(Orderable, LinkFields):
     ]
 
 class EventPage(Page):
+    date_from = models.DateField("Start date")
+    date_to = models.DateField("End date", null=True, blank=True, help_text="Not required if event is on a single day")
+    time_from = models.TimeField("Start time", null=True, blank=True)
+    time_to = models.TimeField("End time", null=True, blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
     location = models.CharField(max_length=255)
     body = RichTextField(blank=True)
-    specific_directions = models.TextField(blank=True)
-    specific_directions_link = models.URLField(blank=True)
     cost = RichTextField(blank=True)
     signup_link = models.URLField(blank=True)
 
@@ -415,16 +433,15 @@ class EventPage(Page):
 
 EventPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    FieldPanel('date_from'),
+    FieldPanel('date_to'),
+    FieldPanel('time_from'),
+    FieldPanel('time_to'),
     FieldPanel('body', classname="full"),
     InlinePanel(EventPage, 'carousel_items', label="Carousel items"),
     FieldPanel('audience'),
     FieldPanel('location'),
     InlinePanel(EventPage, 'speakers', label="Speakers"),
-    InlinePanel(EventPage, 'dates_and_times', label="Dates and times"),
-    MultiFieldPanel([
-        FieldPanel('specific_directions'),
-        FieldPanel('specific_directions_link'),
-    ], 'Specific directions'),
     FieldPanel('cost'),
     FieldPanel('signup_link'),
 

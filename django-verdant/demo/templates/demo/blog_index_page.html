@@ -1,23 +1,50 @@
 {% extends "demo/base.html" %}
-{% load pageurl %}
+{% load pageurl image_tags %}
 
 {% block content %}
 
     {% include "demo/includes/intro.html" with intro=self.intro only %}
 
+    {% if request.GET.tag|length %}
+        <h4>Showing posts tagged as {{ request.GET.tag|safe }} <a href="{{ global_blogs_index_url }}">Show all</a></h4>
+    {% endif %}
+
     <div class="list-group">
-        {# Uses blogs method defined in models.py - allows for paging if required #}
+        {# Uses serve method defined in models.py - allows for paging if required #}
         {# See also standard index for creating a listing with a tag #}
-        {% for blog in self.blogs %}
+        {% for blog in blogs %}
             <a class="list-group-item" href="{% pageurl blog %}">
                 <h4 class="list-group-item-heading">{{ blog.title }}</h4>
-                {% if blog.search_description %}
+                <strong>{{ blog.date|date:"j F Y" }}</strong>
+                {% if blog.search_description or blog.feed_image %}
+                    {% if blog.feed_image %}
+                            {% image blog.feed_image width-200 as blog_image %}
+                            <img src="{{ blog_image.url }}" width="{{ blog_image.width }}" height="{{ blog_image.height }}" alt="{{ blog_image.alt }}" class="img-thumbnail" />
+                        {% endif %}
                     <p class="list-group-item-text">{{ blog.search_description }}</p>
                 {% endif %}
             </a>
         {% empty %}
             No blogs found
         {% endfor %}
+    </div>
+
+    {# Pagination - uses django.core.paginator #}
+    {# Append any other url query string variables to the next and previous links - allows tag to be passed through #}
+    <div class="row">
+        <div class="col-sm-4">
+            {% if blogs.has_previous %}
+                <a href="?page={{ blogs.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a>
+            {% endif %}
+        </div>
+        <div class="col-sm-4">
+            Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}
+        </div>
+        <div class="col-sm-4">
+            {% if blogs.has_next %}
+                <a href="?page={{ blogs.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a>
+            {% endif %}
+        </div>
     </div>
 
     {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
