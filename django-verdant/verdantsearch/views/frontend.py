@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from core import models
+from wagtail.wagtailcore import models
 from verdantsearch import Search
 from verdantsearch.models import Query
 import json

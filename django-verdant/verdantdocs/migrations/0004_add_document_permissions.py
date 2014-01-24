@@ -6,10 +6,6 @@ from django.db import models
 
 class Migration(DataMigration):
 
-    depends_on = (
-        ('core', '0021_fix_editor_moderator_permissions'),
-    )
-
     def forwards(self, orm):
         document_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
             model='document', app_label='verdantdocs')

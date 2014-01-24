@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from core.models import Page
+from wagtail.wagtailcore.models import Page
 from indexed import Indexed
 from searcher import Searcher
 import datetime
@@ -76,7 +76,7 @@ class QueryDailyHits(models.Model):
 
 class EditorsPick(models.Model):
     query = models.ForeignKey(Query, db_index=True, related_name='editors_picks')
-    page = models.ForeignKey('core.Page')
+    page = models.ForeignKey('wagtailcore.Page')
     sort_order = models.IntegerField(null=True, blank=True, editable=False)
     description = models.TextField(blank=True)
     

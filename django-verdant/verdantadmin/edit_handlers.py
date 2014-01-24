@@ -10,9 +10,9 @@ from django.core.urlresolvers import reverse
 
 import copy
 
-from core.models import Page
-from core.util import camelcase_to_underscore
-from core.fields import RichTextArea
+from wagtail.wagtailcore.models import Page
+from wagtail.wagtailcore.util import camelcase_to_underscore
+from wagtail.wagtailcore.fields import RichTextArea
 from cluster.forms import ClusterForm, ClusterFormMetaclass
 from taggit.forms import TagWidget
 
@@ -524,7 +524,7 @@ class BasePageChooserPanel(BaseChooserPanel):
                 cls._target_content_type = ContentType.objects.get_for_model(page_type)
             else:
                 # TODO: infer the content type by introspection on the foreign key
-                cls._target_content_type = ContentType.objects.get_by_natural_key('core', 'page')
+                cls._target_content_type = ContentType.objects.get_by_natural_key('wagtailcore', 'page')
 
         return cls._target_content_type
 
@@ -630,7 +630,7 @@ def InlinePanel(base_model, relation_name, panels=None, label='', help_text=''):
     })
 
 
-# Now that we've defined EditHandlers, we can set up core.Page to have some.
+# Now that we've defined EditHandlers, we can set up wagtailcore.Page to have some.
 Page.content_panels = [
     FieldPanel('title'),
     FieldPanel('slug'),

@@ -2,7 +2,7 @@ from django.http import Http404
 
 
 def serve(request, path):
-    # we need a valid Site object corresponding to this request (set in core.middleware.SiteMiddleware)
+    # we need a valid Site object corresponding to this request (set in wagtail.wagtailcore.middleware.SiteMiddleware)
     # in order to proceed
     if not request.site:
         raise Http404

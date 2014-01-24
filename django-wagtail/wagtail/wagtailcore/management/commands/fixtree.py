@@ -1,7 +1,7 @@
 from django.core.management.base import NoArgsCommand
 from django.core.exceptions import ObjectDoesNotExist
 
-from core.models import Page
+from wagtail.wagtailcore.models import Page
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):

@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.conf import settings
 import os.path
 
-from core import urls as verdant_urls
+from wagtail.wagtailcore import urls as verdant_urls
 from verdantadmin import urls as verdantadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantembeds import urls as verdantembeds_urls

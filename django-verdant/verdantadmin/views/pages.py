@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 
 from treebeard.exceptions import InvalidMoveToDescendant
 
-from core.models import Page, PageRevision, get_page_types
+from wagtail.wagtailcore.models import Page, PageRevision, get_page_types
 from verdantadmin.edit_handlers import TabbedInterface, ObjectList
 from verdantadmin.forms import SearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -49,7 +49,7 @@ def index(request, parent_page_id=None):
 def select_type(request):
     # Get the list of page types that can be created within the pages that currently exist
     existing_page_types = ContentType.objects.raw("""
-        SELECT DISTINCT content_type_id AS id FROM core_page
+        SELECT DISTINCT content_type_id AS id FROM wagtailcore_page
     """)
 
     all_page_types = sorted(get_page_types(), key=lambda pagetype: pagetype.name.lower())

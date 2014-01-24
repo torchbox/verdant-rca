@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
         # Adding model 'RelatedLink'
         db.create_table(u'rca_relatedlink', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_links', to=orm['core.Page'])),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_links', to=orm['wagtailcore.Page'])),
             ('url', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('link_text', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('image', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['verdantimages.Image'])),
@@ -45,7 +45,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -61,17 +61,17 @@ class Migration(SchemaMigration):
             'mugshot': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantimages.Image']"})
         },
         u'rca.authorsindex': {
-            'Meta': {'object_name': 'AuthorsIndex', '_ormbases': [u'core.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'AuthorsIndex', '_ormbases': [u'wagtailcore.page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'rca.editorialpage': {
-            'Meta': {'object_name': 'EditorialPage', '_ormbases': [u'core.Page']},
-            'body': ('core.fields.RichTextField', [], {}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'EditorialPage', '_ormbases': [u'wagtailcore.page']},
+            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'rca.newsindex': {
-            'Meta': {'object_name': 'NewsIndex', '_ormbases': [u'core.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'NewsIndex', '_ormbases': [u'wagtailcore.page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'rca.newsitem': {
             'Meta': {'object_name': 'NewsItem', '_ormbases': [u'rca.EditorialPage']},
@@ -84,7 +84,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantimages.Image']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['wagtailcore.Page']"}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'})
         },
         u'verdantimages.image': {
