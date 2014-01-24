@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	/* Initialise bxSlider */
 	$('.bxslider').bxSlider({
   		captions: true
   	});

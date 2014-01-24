@@ -1,5 +1,4 @@
 {% extends "demo/base.html" %}
-{% load pageurl image_tags %}
 
 {% block content %}
 
@@ -13,21 +12,7 @@
         {# Uses serve method defined in models.py - allows for paging if required #}
         {# See also standard index for creating a listing with a tag #}
         {% for blog in blogs %}
-            <a class="list-group-item" href="{% pageurl blog %}">
-                <h4 class="list-group-item-heading">{{ blog.title }}</h4>
-                <strong>{{ blog.date|date:"j F Y" }}</strong>
-                {% if blog.search_description or blog.feed_image %}
-                    <p class="list-group-item-text">
-                        {% if blog.feed_image %}
-                            {% image blog.feed_image width-200 as blog_image %}
-                            <img src="{{ blog_image.url }}" width="{{ blog_image.width }}" height="{{ blog_image.height }}" alt="{{ blog_image.alt }}" class="img-thumbnail" />
-                        {% endif %}
-                        {% if blog.search_description %}
-                            {{ blog.search_description }}
-                        {% endif %}
-                    </p>
-                {% endif %}
-            </a>
+            {% include "demo/includes/blog_list_item.html" %}
         {% empty %}
             No blogs found
         {% endfor %}

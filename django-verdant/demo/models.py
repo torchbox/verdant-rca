@@ -8,6 +8,7 @@ from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
+from verdantsnippets.models import register_snippet
 
 from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
@@ -112,6 +113,32 @@ class RelatedLink(LinkFields):
 
     class Meta:
         abstract = True
+
+# == Snippet: Advert ==
+
+# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA HomePage
+class DemoAdvert(models.Model):
+    page = models.ForeignKey('core.Page', related_name='demo_adverts', null=True, blank=True)
+    url = models.URLField(null=True, blank=True)
+    text = models.CharField(max_length=255)
+
+    panels = [
+        PageChooserPanel('page'),
+        FieldPanel('url'),
+        FieldPanel('text'),
+    ]
+
+    class Meta:
+        description = "Reusable advert snippet"
+
+    def __unicode__(self):
+        return self.text
+
+register_snippet(DemoAdvert)
+
+class AdvertPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='demo_advert_placements')
+    advert = models.ForeignKey('demo.DemoAdvert', related_name='+')
 
 # Home Page
 
@@ -387,6 +414,8 @@ class EventIndexPage(Page):
         events = EventPage.objects.filter(live=True, path__startswith=self.path)
         #Filter events list to get ones that are either running now or start in the future
         events = events.filter(date_from__gte=date.today())
+        #order by date
+        events = events.order_by('date_from')
         return events
 
     class Meta:

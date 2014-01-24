@@ -26,8 +26,6 @@
                 {# Custom stylesheets #}
                 {# Less compilation relies on django compressor #}
                 <link rel="stylesheet" type="text/less" href="{% static "demo/css/main.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "demo/css/medium.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "demo/css/large.less" %}" />
 
             {% endcompress %}
 
@@ -83,6 +81,11 @@
 
             {% block secondary_menu %}
                 {% secondary_menu calling_page=self %}
+            {% endblock %}
+
+            {% block adverts %}
+                {# Uses a snippet - allows adverts to appear on every page #}
+                {% adverts %}
             {% endblock %}
 
         </div>

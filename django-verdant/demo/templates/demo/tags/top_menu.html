@@ -12,7 +12,7 @@
                 <span class="icon-bar"></span>
             </button>
             {# Link to home page #}
-            <a href="{{ site_root.url }}" class="navbar-brand">{{ site_root.title }}</a>
+            <a href="{% pageurl site_root %}" class="navbar-brand">{{ site_root.title }}</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
