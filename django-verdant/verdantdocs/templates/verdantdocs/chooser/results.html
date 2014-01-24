@@ -7,7 +7,7 @@
 
     {% include "verdantdocs/documents/list.html" with choosing=1 %}
 
-    {% include "verdantadmin/shared/pagination_nav.html" with items=documents is_ajax=1 %}
+    {% include "wagtailadmin/shared/pagination_nav.html" with items=documents is_ajax=1 %}
 {% else %}
     <p>Sorry, no documents match "<em>{{ search_query }}</em>"
 {% endif %}

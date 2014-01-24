@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}My student pages{% endblock %}
 
 {% block content %}
@@ -8,7 +8,7 @@
 
     <div class="nice-padding row-flush">
         <div id="page-results">
-            {% include "verdantadmin/pages/list.html" with show_parent=0 allow_navigation=0 %}
+            {% include "wagtailadmin/pages/list.html" with show_parent=0 allow_navigation=0 %}
         </div>
     </div>
 {% endblock %}

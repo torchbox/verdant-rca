@@ -37,11 +37,11 @@ def student_page_index(request):
         index_page = find_rca_now_index_page(request.user)
 
         # Redirect to the interface for adding a StudentPage in this section
-        return redirect('verdantadmin_pages_create', 'rca', 'studentpage', index_page.id)
+        return redirect('wagtailadmin_pages_create', 'rca', 'studentpage', index_page.id)
 
     elif len(pages) == 1:
         # redirect them to edit their existing student page
-        return redirect('verdantadmin_pages_edit', pages[0].id)
+        return redirect('wagtailadmin_pages_edit', pages[0].id)
 
     else:
         return render(request, 'rca/admin/select_student_page.html', {

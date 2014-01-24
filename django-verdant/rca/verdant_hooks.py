@@ -1,5 +1,5 @@
-from verdantadmin import hooks
-from verdantadmin.menu import MenuItem
+from wagtail.wagtailadmin import hooks
+from wagtail.wagtailadmin.menu import MenuItem
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
@@ -31,7 +31,7 @@ def redirect_student_after_edit(request, page):
         if page.content_type == ContentType.objects.get_for_model(RcaNowPage):
             return redirect('rca_now_editor_index')
         else:
-            return redirect('verdantadmin_home')
+            return redirect('wagtailadmin_home')
 hooks.register('after_create_page', redirect_student_after_edit)
 hooks.register('after_edit_page', redirect_student_after_edit)
 hooks.register('after_delete_page', redirect_student_after_edit)

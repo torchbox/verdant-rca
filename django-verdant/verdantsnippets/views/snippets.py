@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 
 from verdantsnippets.models import get_snippet_content_types
 from verdantsnippets.permissions import user_can_edit_snippet_type
-from verdantadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
+from wagtail.wagtailadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==
 

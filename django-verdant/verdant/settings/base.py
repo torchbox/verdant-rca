@@ -172,7 +172,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'wagtail.wagtailcore',
-    'verdantadmin',
+    'wagtail.wagtailadmin',
     'verdantimages',
     'verdantembeds',
     'verdantdocs',
@@ -217,7 +217,7 @@ COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'verdantadmin_home'
+LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

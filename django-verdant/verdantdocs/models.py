@@ -7,7 +7,7 @@ import os.path
 
 from taggit.managers import TaggableManager
 
-from verdantadmin.taggable import TagSearchable
+from wagtail.wagtailadmin.taggable import TagSearchable
 
 
 class Document(models.Model, TagSearchable):

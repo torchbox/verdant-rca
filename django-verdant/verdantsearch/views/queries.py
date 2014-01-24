@@ -2,8 +2,8 @@ from django.shortcuts import get_object_or_404, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
-from verdantadmin.modal_workflow import render_modal_workflow
-from verdantadmin.forms import SearchForm
+from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
+from wagtail.wagtailadmin.forms import SearchForm
 from verdantsearch import models
 
 

@@ -18,7 +18,7 @@
         {% endfor %}
     </ul>
 
-    {% include "verdantadmin/shared/pagination_nav.html" with items=images is_searching=is_searching search_query=search_query linkurl="verdantimages_index" %}
+    {% include "wagtailadmin/shared/pagination_nav.html" with items=images is_searching=is_searching search_query=search_query linkurl="verdantimages_index" %}
 
 {% else %}
     {% if is_searching %}

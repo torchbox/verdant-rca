@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}Redirects{% endblock %}
 {% block bodyclass %}page-explorer{% endblock %}
 
@@ -34,7 +34,7 @@
                         </td>
                         <td>
                             {% if redirect.redirect_page %}
-                                <a href="{% url 'verdantadmin_pages_edit' redirect.redirect_page.id %}" class="nolink">{{ redirect.redirect_page.title }}</a>
+                                <a href="{% url 'wagtailadmin_pages_edit' redirect.redirect_page.id %}" class="nolink">{{ redirect.redirect_page.title }}</a>
                             {% else %}
                                 {{ redirect.link }}
                             {% endif %}

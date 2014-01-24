@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}Search Terms{% endblock %}
 {% block bodyclass %}page-explorer{% endblock %}
 
@@ -35,7 +35,7 @@
                         </td>
                         <td>
                             {% for editors_pick in query.editors_picks.all %}
-                                <a href="{% url 'verdantadmin_pages_edit' editors_pick.page.id %}" class="nolink">{{ editors_pick.page.title }}</a>{% if not forloop.last %}, {% endif %}
+                                <a href="{% url 'wagtailadmin_pages_edit' editors_pick.page.id %}" class="nolink">{{ editors_pick.page.title }}</a>{% if not forloop.last %}, {% endif %}
                             {% empty %}
                                 None
                             {% endfor %}
