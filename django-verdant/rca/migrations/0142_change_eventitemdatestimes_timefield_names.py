@@ -47,7 +47,6 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'feed_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'has_unpublished_changes': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'live': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
