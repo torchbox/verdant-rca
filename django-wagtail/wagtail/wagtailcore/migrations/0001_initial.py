@@ -8,13 +8,68 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # rename field 'Page.feed_image' to 'Page.feed_image_core'
-        db.rename_column(u'core_page', 'feed_image_id', 'feed_image_core_id')
+        # Adding model 'Site'
+        db.create_table(u'wagtailcore_site', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('hostname', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, db_index=True)),
+            ('port', self.gf('django.db.models.fields.IntegerField')(default=80)),
+            ('root_page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='sites_rooted_here', to=orm['wagtailcore.Page'])),
+            ('is_default_site', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'wagtailcore', ['Site'])
+
+        # Adding model 'Page'
+        db.create_table(u'wagtailcore_page', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('path', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
+            ('depth', self.gf('django.db.models.fields.PositiveIntegerField')()),
+            ('numchild', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=50)),
+            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(related_name='pages', to=orm['contenttypes.ContentType'])),
+            ('live', self.gf('django.db.models.fields.BooleanField')(default=True)),
+            ('has_unpublished_changes', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('url_path', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='owned_pages', null=True, to=orm['auth.User'])),
+            ('seo_title', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('show_in_menus', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('search_description', self.gf('django.db.models.fields.TextField')(blank=True)),
+        ))
+        db.send_create_signal(u'wagtailcore', ['Page'])
+
+        # Adding model 'PageRevision'
+        db.create_table(u'wagtailcore_pagerevision', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='revisions', to=orm['wagtailcore.Page'])),
+            ('submitted_for_moderation', self.gf('django.db.models.fields.BooleanField')(default=False)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+            ('content_json', self.gf('django.db.models.fields.TextField')()),
+        ))
+        db.send_create_signal(u'wagtailcore', ['PageRevision'])
+
+        # Adding model 'GroupPagePermission'
+        db.create_table(u'wagtailcore_grouppagepermission', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('group', self.gf('django.db.models.fields.related.ForeignKey')(related_name='page_permissions', to=orm['auth.Group'])),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='group_permissions', to=orm['wagtailcore.Page'])),
+            ('permission_type', self.gf('django.db.models.fields.CharField')(max_length=20)),
+        ))
+        db.send_create_signal(u'wagtailcore', ['GroupPagePermission'])
 
 
     def backwards(self, orm):
-        # rename field 'Page.feed_image_core' to 'Page.feed_image'
-        db.rename_column(u'core_page', 'feed_image_core_id', 'feed_image_id')
+        # Deleting model 'Site'
+        db.delete_table(u'wagtailcore_site')
+
+        # Deleting model 'Page'
+        db.delete_table(u'wagtailcore_page')
+
+        # Deleting model 'PageRevision'
+        db.delete_table(u'wagtailcore_pagerevision')
+
+        # Deleting model 'GroupPagePermission'
+        db.delete_table(u'wagtailcore_grouppagepermission')
 
 
     models = {
@@ -54,18 +109,17 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.grouppagepermission': {
+        u'wagtailcore.grouppagepermission': {
             'Meta': {'object_name': 'GroupPagePermission'},
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'page_permissions'", 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_permissions'", 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_permissions'", 'to': u"orm['wagtailcore.Page']"}),
             'permission_type': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'feed_image_core': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'has_unpublished_changes': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'live': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
@@ -79,42 +133,23 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url_path': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
-        u'core.pagerevision': {
+        u'wagtailcore.pagerevision': {
             'Meta': {'object_name': 'PageRevision'},
             'content_json': ('django.db.models.fields.TextField', [], {}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['wagtailcore.Page']"}),
             'submitted_for_moderation': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'})
         },
-        u'core.site': {
+        u'wagtailcore.site': {
             'Meta': {'object_name': 'Site'},
             'hostname': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_default_site': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'port': ('django.db.models.fields.IntegerField', [], {'default': '80'}),
-            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['core.Page']"})
-        },
-        u'rca.rcaimage': {
-            'Meta': {'object_name': 'RcaImage'},
-            'alt': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'creator': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'dimensions': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'eprint_docid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'height': ('django.db.models.fields.IntegerField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'medium': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'permission': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'photographer': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'rca_content_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'uploaded_by_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'width': ('django.db.models.fields.IntegerField', [], {}),
-            'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['wagtailcore.Page']"})
         }
     }
 
-    complete_apps = ['core']
+    complete_apps = ['wagtailcore']

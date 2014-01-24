@@ -322,7 +322,7 @@ def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True)
     depth_filter = 'AND depth <= %s' % (max_depth + 2) if max_depth else ''
 
     pages = Page.objects.raw("""
-        SELECT * FROM core_page
+        SELECT * FROM wagtailcore_page
         WHERE depth = 2
         OR (
         live = True
@@ -341,7 +341,7 @@ def get_site_nav(max_depth=2, must_have_children=False, only_in_menu_pages=True)
     #     tree_node = (page, children)
     #     where 'children' is a list of tree_nodes.
     # Algorithm:
-    # Similar to the core.models.get_navigation_menu_items() function, maintain
+    # Similar to the wagtailcore.models.get_navigation_menu_items() function, maintain
     # a list that tells us, for each depth level, the last page we saw at that
     # depth level.  Since our page list is ordered by path, we know that
     # whenever we see a page at depth d, its parent, _if_included_, must be the

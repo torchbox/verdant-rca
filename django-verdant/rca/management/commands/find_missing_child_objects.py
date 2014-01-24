@@ -1,5 +1,5 @@
 from django.core.management.base import NoArgsCommand
-from core.models import get_page_types
+from wagtail.wagtailcore.models import get_page_types
 import json
 
 class Command(NoArgsCommand):

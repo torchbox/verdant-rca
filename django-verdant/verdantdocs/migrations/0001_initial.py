@@ -7,6 +7,10 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Document'
         db.create_table(u'verdantdocs_document', (
