@@ -29,7 +29,6 @@ COMMON_PANELS = (
     FieldPanel('slug'),
     FieldPanel('seo_title'),
     FieldPanel('show_in_menus'),
-    ImageChooserPanel('feed_image'),
     FieldPanel('search_description'),
 )
 
@@ -156,6 +155,7 @@ class StandardIndexPageRelatedLink(Orderable, RelatedLink):
 # TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardIndexPage
 class DemoStandardIndexPage(Page):
     intro = RichTextField(blank=True)
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', )
 
@@ -175,6 +175,7 @@ DemoStandardIndexPage.content_panels = [
 
 DemoStandardIndexPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
 ]
 
 
@@ -190,6 +191,7 @@ class StandardPageRelatedLink(Orderable, RelatedLink):
 class DemoStandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', 'body', )
     search_name = None
@@ -210,6 +212,7 @@ DemoStandardPage.content_panels = [
 
 DemoStandardPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
 ]
 
 
@@ -284,6 +287,7 @@ class BlogPage(Page):
     body = RichTextField()
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     date = models.DateField("Post date")
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
@@ -301,6 +305,7 @@ BlogPage.content_panels = [
 
 BlogPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
     FieldPanel('tags'),
 ]
 
@@ -316,6 +321,7 @@ class PersonPage(Page, ContactFields):
     intro = RichTextField(blank=True)
     biography = RichTextField(blank=True)
     image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('first_name', 'last_name', 'intro', 'biography')
     search_name = "Person"
@@ -336,6 +342,7 @@ PersonPage.content_panels = [
 
 PersonPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
 ]
 
 
@@ -343,6 +350,7 @@ PersonPage.promote_panels = [
 
 class ContactPage(Page, ContactFields):
     body = RichTextField(blank=True)
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('body', )
     search_name = "Contact information"
@@ -358,6 +366,7 @@ ContactPage.content_panels = [
 
 ContactPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
 ]
 
 
@@ -429,6 +438,7 @@ class EventPage(Page):
     body = RichTextField(blank=True)
     cost = models.CharField(max_length=255)
     signup_link = models.URLField(blank=True)
+    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_audience_display', 'location', 'body')
     search_name = "Event"
@@ -454,4 +464,5 @@ EventPage.content_panels = [
 
 EventPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
+    ImageChooserPanel('feed_image'),
 ]
