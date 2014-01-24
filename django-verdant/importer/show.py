@@ -16,7 +16,7 @@ from rca.models import (
         StudentPageWorkSponsor,
         RcaImage,
         )
-from core.models import (
+from wagtail.wagtailcore.models import (
         Page,
         )
 import markdown

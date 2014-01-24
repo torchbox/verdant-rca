@@ -31,6 +31,23 @@ def deploy_staging():
         with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.staging")
 
+@roles('staging')
+def deploy_staging_wagtailsepcore():
+    """Perform the first step of wagtail separation (core) on staging"""
+    with cd('/usr/local/django/verdant-rca/'):
+        with settings(sudo_user='verdant-rca'):
+            sudo("git pull")
+            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtailcore.sql")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.staging --noinput")
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.staging")
+
+        sudo("supervisorctl restart verdant-rca")
+        sudo("supervisorctl restart rca-celeryd")
+        sudo("supervisorctl restart rca-celerybeat")
+
+        with settings(sudo_user='verdant-rca'):
+            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.staging")
+
 
 @roles('production')
 def deploy():

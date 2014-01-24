@@ -3,7 +3,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from core.models import UserPagePermissionsProxy
+from wagtail.wagtailcore.models import UserPagePermissionsProxy
 
 from rca.models import RcaNowPage, RcaNowIndex, StudentPage
 

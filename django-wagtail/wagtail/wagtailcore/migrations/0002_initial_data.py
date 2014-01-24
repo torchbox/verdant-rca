@@ -7,29 +7,52 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        editors_group, created = orm['auth.group'].objects.get_or_create(name='Editors')
-        moderators_group, created = orm['auth.group'].objects.get_or_create(name='Moderators')
-        root_page = orm['core.Page'].objects.get(depth=1)
+        page_content_type, created = orm['contenttypes.contenttype'].objects.get_or_create(
+            model='page', app_label='wagtailcore', defaults={'name': 'page'})
 
-        orm['core.GroupPagePermission'].objects.create(
-            group=moderators_group, page=root_page, permission_type='add'
-        )
-        orm['core.GroupPagePermission'].objects.create(
-            group=moderators_group, page=root_page, permission_type='edit'
-        )
-        orm['core.GroupPagePermission'].objects.create(
-            group=moderators_group, page=root_page, permission_type='publish'
+        root = orm['wagtailcore.page'].objects.create(
+            title="Root",
+            slug='root',
+            content_type=page_content_type,
+            path='0001',
+            depth=1,
+            numchild=1,
+            url_path='/',
         )
 
-        orm['core.GroupPagePermission'].objects.create(
-            group=editors_group, page=root_page, permission_type='add'
+        homepage = orm['wagtailcore.page'].objects.create(
+            title="Welcome to your new Verdant site!",
+            slug='home',
+            content_type=page_content_type,
+            path='00010001',
+            depth=2,
+            numchild=0,
+            url_path='/home/',
         )
-        orm['core.GroupPagePermission'].objects.create(
-            group=editors_group, page=root_page, permission_type='edit'
-        )
+
+        orm['wagtailcore.site'].objects.create(
+            hostname='localhost', root_page=homepage, is_default_site=True)
+
+        editors_group = orm['auth.group'].objects.create(name='Editors')
+        moderators_group = orm['auth.group'].objects.create(name='Moderators')
+
+        orm['wagtailcore.grouppagepermission'].objects.create(
+            group=moderators_group, page=root, permission_type='add')
+        orm['wagtailcore.grouppagepermission'].objects.create(
+            group=moderators_group, page=root, permission_type='edit')
+        orm['wagtailcore.grouppagepermission'].objects.create(
+            group=moderators_group, page=root, permission_type='publish')
+
+        orm['wagtailcore.grouppagepermission'].objects.create(
+            group=editors_group, page=root, permission_type='add')
+        orm['wagtailcore.grouppagepermission'].objects.create(
+            group=editors_group, page=root, permission_type='edit')
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        orm['auth.group'].objects.filter(name__in=('Editors', 'Moderators')).delete()
+        orm['wagtailcore.site'].objects.all().delete()
+        orm['wagtailcore.page'].objects.all().delete()
 
     models = {
         u'auth.group': {
@@ -68,18 +91,17 @@ class Migration(DataMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.grouppagepermission': {
+        u'wagtailcore.grouppagepermission': {
             'Meta': {'object_name': 'GroupPagePermission'},
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'page_permissions'", 'to': u"orm['auth.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_permissions'", 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_permissions'", 'to': u"orm['wagtailcore.Page']"}),
             'permission_type': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'feed_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'has_unpublished_changes': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'live': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
@@ -93,43 +115,24 @@ class Migration(DataMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url_path': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
-        u'core.pagerevision': {
+        u'wagtailcore.pagerevision': {
             'Meta': {'object_name': 'PageRevision'},
             'content_json': ('django.db.models.fields.TextField', [], {}),
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'revisions'", 'to': u"orm['wagtailcore.Page']"}),
             'submitted_for_moderation': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'})
         },
-        u'core.site': {
+        u'wagtailcore.site': {
             'Meta': {'object_name': 'Site'},
             'hostname': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_default_site': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'port': ('django.db.models.fields.IntegerField', [], {'default': '80'}),
-            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['core.Page']"})
-        },
-        u'rca.rcaimage': {
-            'Meta': {'object_name': 'RcaImage'},
-            'alt': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'creator': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'dimensions': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'eprint_docid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'height': ('django.db.models.fields.IntegerField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'medium': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'permission': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'photographer': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'rca_content_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'uploaded_by_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'width': ('django.db.models.fields.IntegerField', [], {}),
-            'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
+            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['wagtailcore.Page']"})
         }
     }
 
-    complete_apps = ['core']
+    complete_apps = ['wagtailcore']
     symmetrical = True

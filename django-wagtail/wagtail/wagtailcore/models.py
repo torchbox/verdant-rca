@@ -10,7 +10,7 @@ from treebeard.mp_tree import MP_Node
 from cluster.models import ClusterableModel
 from verdantsearch import Indexed, Searcher
 
-from core.util import camelcase_to_underscore
+from wagtail.wagtailcore.util import camelcase_to_underscore
 
 
 class SiteManager(models.Manager):
@@ -229,7 +229,7 @@ class Page(MP_Node, ClusterableModel, Indexed):
     def _update_descendant_url_paths(self, old_url_path, new_url_path):
         cursor = connection.cursor()
         cursor.execute("""
-            UPDATE core_page
+            UPDATE wagtailcore_page
             SET url_path = %s || substring(url_path from %s)
             WHERE path LIKE %s AND id <> %s
         """, [new_url_path, len(old_url_path) + 1, self.path + '%', self.id])
@@ -427,13 +427,13 @@ def get_navigation_menu_items():
     navigable_content_type_ids = get_navigable_page_content_type_ids()
     if navigable_content_type_ids:
         pages = Page.objects.raw("""
-            SELECT * FROM core_page
+            SELECT * FROM wagtailcore_page
             WHERE numchild > 0 OR content_type_id IN %s OR depth = 2
             ORDER BY path
         """, [tuple(navigable_content_type_ids)])
     else:
         pages = Page.objects.raw("""
-            SELECT * FROM core_page
+            SELECT * FROM wagtailcore_page
             WHERE numchild > 0 OR depth = 2
             ORDER BY path
         """)

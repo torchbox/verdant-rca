@@ -1,5 +1,5 @@
 from django import template
-from core.models import UserPagePermissionsProxy
+from wagtail.wagtailcore.models import UserPagePermissionsProxy
 
 register = template.Library()
 

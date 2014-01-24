@@ -4,7 +4,7 @@ from django.http import Http404
 from django.utils.http import urlencode
 from django.contrib.auth.decorators import login_required
 
-from core.models import Page
+from wagtail.wagtailcore.models import Page
 from verdantadmin.modal_workflow import render_modal_workflow
 from verdantadmin.forms import SearchForm, ExternalLinkChooserForm, ExternalLinkChooserWithLinkTextForm, EmailLinkChooserForm, EmailLinkChooserWithLinkTextForm
 
@@ -18,7 +18,7 @@ def get_querystring(request):
 
 @login_required
 def browse(request, parent_page_id=None):
-    page_type = request.GET.get('page_type') or 'core.page'
+    page_type = request.GET.get('page_type') or 'wagtailcore.page'
     content_type_app_name, content_type_model_name = page_type.split('.')
 
     q = None

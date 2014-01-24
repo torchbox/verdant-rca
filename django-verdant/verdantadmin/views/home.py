@@ -4,7 +4,7 @@ from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 
-from core.models import Page, PageRevision, UserPagePermissionsProxy
+from wagtail.wagtailcore.models import Page, PageRevision, UserPagePermissionsProxy
 from verdantimages.models import get_image_model
 from verdantdocs.models import Document
 from verdantadmin import hooks

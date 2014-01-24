@@ -27,7 +27,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -40,7 +40,7 @@ class Migration(SchemaMigration):
         u'rca.advert': {
             'Meta': {'object_name': 'Advert'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'adverts'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'adverts'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'show_globally': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'})
@@ -49,14 +49,14 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'AdvertPlacement'},
             'advert': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['rca.Advert']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'advert_placements'", 'to': u"orm['core.Page']"})
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'advert_placements'", 'to': u"orm['wagtailcore.Page']"})
         },
         u'rca.alumnipage': {
-            'Meta': {'object_name': 'AlumniPage', '_ormbases': [u'core.Page']},
-            'biography': ('core.fields.RichTextField', [], {}),
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            'Meta': {'object_name': 'AlumniPage', '_ormbases': [u'wagtailcore.page']},
+            'biography': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -67,17 +67,17 @@ class Migration(SchemaMigration):
             'year': ('django.db.models.fields.CharField', [], {'max_length': '4', 'blank': 'True'})
         },
         u'rca.contactuspage': {
-            'Meta': {'object_name': 'ContactUsPage', '_ormbases': [u'core.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'ContactUsPage', '_ormbases': [u'wagtailcore.page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.currentresearchpage': {
-            'Meta': {'object_name': 'CurrentResearchPage', '_ormbases': [u'core.Page']},
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'CurrentResearchPage', '_ormbases': [u'wagtailcore.page']},
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -85,9 +85,9 @@ class Migration(SchemaMigration):
             'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.eventindex': {
-            'Meta': {'object_name': 'EventIndex', '_ormbases': [u'core.Page']},
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'EventIndex', '_ormbases': [u'wagtailcore.page']},
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -97,22 +97,22 @@ class Migration(SchemaMigration):
         u'rca.eventindexrelatedlink': {
             'Meta': {'object_name': 'EventIndexRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.EventIndex']"})
         },
         u'rca.eventitem': {
-            'Meta': {'object_name': 'EventItem', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'EventItem', '_ormbases': [u'wagtailcore.page']},
             'audience': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'body': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            'cost': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            'cost': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
             'external_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'external_link_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'gallery': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'location': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'location_other': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'show_on_homepage': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -160,40 +160,40 @@ class Migration(SchemaMigration):
             'surname': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         u'rca.gallerypage': {
-            'Meta': {'object_name': 'GalleryPage', '_ormbases': [u'core.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'GalleryPage', '_ormbases': [u'wagtailcore.page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.homepage': {
-            'Meta': {'object_name': 'HomePage', '_ormbases': [u'core.Page']},
-            'news_item_1': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'news_item_2': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'Meta': {'object_name': 'HomePage', '_ormbases': [u'wagtailcore.page']},
+            'news_item_1': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'news_item_2': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'packery_news': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'packery_rcanow': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'packery_staff': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'packery_standard': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'packery_student_work': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'packery_tweets': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.jobpage': {
-            'Meta': {'object_name': 'JobPage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'JobPage', '_ormbases': [u'wagtailcore.page']},
             'campus': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'closing_date': ('django.db.models.fields.DateField', [], {}),
-            'description': ('core.fields.RichTextField', [], {}),
+            'description': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
             'download_info': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
             'grade': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'interview_date': ('django.db.models.fields.DateField', [], {'blank': 'True'}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'other_department': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'ref_number': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'required_hours': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -207,9 +207,9 @@ class Migration(SchemaMigration):
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.jobsindex': {
-            'Meta': {'object_name': 'JobsIndex', '_ormbases': [u'core.Page']},
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'JobsIndex', '_ormbases': [u'wagtailcore.page']},
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -219,14 +219,14 @@ class Migration(SchemaMigration):
         u'rca.jobsindexrelatedlink': {
             'Meta': {'object_name': 'JobsIndexRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.JobsIndex']"})
         },
         u'rca.newsindex': {
-            'Meta': {'object_name': 'NewsIndex', '_ormbases': [u'core.Page']},
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'NewsIndex', '_ormbases': [u'wagtailcore.page']},
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -234,14 +234,14 @@ class Migration(SchemaMigration):
             'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.newsitem': {
-            'Meta': {'object_name': 'NewsItem', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'NewsItem', '_ormbases': [u'wagtailcore.page']},
             'area': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'author': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'body': ('core.fields.RichTextField', [], {}),
+            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
             'date': ('django.db.models.fields.DateField', [], {}),
-            'intro': ('core.fields.RichTextField', [], {}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'show_on_homepage': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -286,17 +286,17 @@ class Migration(SchemaMigration):
             'text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.programmepage': {
-            'Meta': {'object_name': 'ProgrammePage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'ProgrammePage', '_ormbases': [u'wagtailcore.page']},
             'background_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'download_document_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'download_document_url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'facilities_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
-            'facilities_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'facilities_text': ('core.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
+            'facilities_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'facilities_text': ('wagtail.wagtailcore.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
             'head_of_programme': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.StaffPage']"}),
-            'head_of_programme_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'head_of_programme_statement': ('core.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'head_of_programme_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'head_of_programme_statement': ('wagtail.wagtailcore.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'programme_video': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'programme_video_poster_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -326,7 +326,7 @@ class Migration(SchemaMigration):
         u'rca.programmepagerelatedlink': {
             'Meta': {'object_name': 'ProgrammePageRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.ProgrammePage']"})
         },
@@ -334,10 +334,10 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'ProgrammePageStudentStory'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'student_stories'", 'to': u"orm['rca.ProgrammePage']"}),
-            'text': ('core.fields.RichTextField', [], {})
+            'text': ('wagtail.wagtailcore.fields.RichTextField', [], {})
         },
         u'rca.rcaimage': {
             'Meta': {'object_name': 'RcaImage'},
@@ -356,9 +356,9 @@ class Migration(SchemaMigration):
             'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca.rcanowindex': {
-            'Meta': {'object_name': 'RcaNowIndex', '_ormbases': [u'core.Page']},
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'RcaNowIndex', '_ormbases': [u'wagtailcore.page']},
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -368,16 +368,16 @@ class Migration(SchemaMigration):
         u'rca.rcanowindexrelatedlink': {
             'Meta': {'object_name': 'RcaNowIndexRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.RcaNowIndex']"})
         },
         u'rca.rcanowpage': {
-            'Meta': {'object_name': 'RcaNowPage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'RcaNowPage', '_ormbases': [u'wagtailcore.page']},
             'area': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'author': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'body': ('core.fields.RichTextField', [], {}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -407,16 +407,16 @@ class Migration(SchemaMigration):
             'width': ('django.db.models.fields.IntegerField', [], {})
         },
         u'rca.researchinnovationpage': {
-            'Meta': {'object_name': 'ResearchInnovationPage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'ResearchInnovationPage', '_ormbases': [u'wagtailcore.page']},
             'background_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'contact_address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'contact_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'contact_link_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'contact_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            'intro_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            'intro_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'news_carousel_area': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -449,13 +449,13 @@ class Migration(SchemaMigration):
         u'rca.researchinnovationpagecurrentresearch': {
             'Meta': {'object_name': 'ResearchInnovationPageCurrentResearch'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'current_research'", 'to': u"orm['rca.ResearchInnovationPage']"})
         },
         u'rca.researchinnovationpagerelatedlink': {
             'Meta': {'object_name': 'ResearchInnovationPageRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.ResearchInnovationPage']"})
         },
@@ -469,9 +469,9 @@ class Migration(SchemaMigration):
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
         u'rca.researchitem': {
-            'Meta': {'object_name': 'ResearchItem', '_ormbases': [u'core.Page']},
-            'description': ('core.fields.RichTextField', [], {}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'ResearchItem', '_ormbases': [u'wagtailcore.page']},
+            'description': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'ref': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'research_type': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
@@ -501,7 +501,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'manual_person_name': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'creator'", 'to': u"orm['rca.ResearchItem']"}),
-            'person': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"})
+            'person': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"})
         },
         u'rca.researchitemlink': {
             'Meta': {'object_name': 'ResearchItemLink'},
@@ -511,19 +511,19 @@ class Migration(SchemaMigration):
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'links'", 'to': u"orm['rca.ResearchItem']"})
         },
         u'rca.schoolpage': {
-            'Meta': {'object_name': 'SchoolPage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'SchoolPage', '_ormbases': [u'wagtailcore.page']},
             'background_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'contact_address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'contact_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'contact_link_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'contact_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'head_of_research': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.StaffPage']"}),
-            'head_of_research_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'head_of_research_statement': ('core.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
+            'head_of_research_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'head_of_research_statement': ('wagtail.wagtailcore.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
             'head_of_school': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.StaffPage']"}),
-            'head_of_school_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'head_of_school_statement': ('core.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'head_of_school_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'head_of_school_statement': ('wagtail.wagtailcore.fields.RichTextField', [], {'null': 'True', 'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -550,20 +550,20 @@ class Migration(SchemaMigration):
         u'rca.schoolpagerelatedlink': {
             'Meta': {'object_name': 'SchoolPageRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.SchoolPage']"})
         },
         u'rca.staffpage': {
-            'Meta': {'object_name': 'StaffPage', '_ormbases': [u'core.Page']},
-            'biography': ('core.fields.RichTextField', [], {}),
-            'intro': ('core.fields.RichTextField', [], {}),
+            'Meta': {'object_name': 'StaffPage', '_ormbases': [u'wagtailcore.page']},
+            'biography': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
-            'practice': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'practice': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
             'practice_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
-            'research_interests': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            'research_interests': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
             'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
@@ -580,7 +580,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'link': ('django.db.models.fields.URLField', [], {'max_length': '200'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'collaborations'", 'to': u"orm['rca.StaffPage']"}),
-            'text': ('core.fields.RichTextField', [], {'blank': 'True'}),
+            'text': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         u'rca.staffpagepublicationexhibition': {
@@ -602,16 +602,16 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
         u'rca.standardindex': {
-            'Meta': {'object_name': 'StandardIndex', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'StandardIndex', '_ormbases': [u'wagtailcore.page']},
             'background_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'contact_address': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'contact_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             'contact_link_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'contact_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            'intro_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            'intro_link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'news_carousel_area': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -644,7 +644,7 @@ class Migration(SchemaMigration):
         u'rca.standardindexrelatedlink': {
             'Meta': {'object_name': 'StandardIndexRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.StandardIndex']"})
         },
@@ -658,10 +658,10 @@ class Migration(SchemaMigration):
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'})
         },
         u'rca.standardpage': {
-            'Meta': {'object_name': 'StandardPage', '_ormbases': [u'core.Page']},
-            'body': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            'intro': ('core.fields.RichTextField', [], {'blank': 'True'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            'Meta': {'object_name': 'StandardPage', '_ormbases': [u'wagtailcore.page']},
+            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            'intro': ('wagtail.wagtailcore.fields.RichTextField', [], {'blank': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
@@ -688,16 +688,16 @@ class Migration(SchemaMigration):
         u'rca.standardpagerelatedlink': {
             'Meta': {'object_name': 'StandardPageRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
+            'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.StandardPage']"})
         },
         u'rca.studentpage': {
-            'Meta': {'object_name': 'StudentPage', '_ormbases': [u'core.Page']},
+            'Meta': {'object_name': 'StudentPage', '_ormbases': [u'wagtailcore.page']},
             'degree_qualification': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'degree_subject': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'degree_year': ('django.db.models.fields.IntegerField', [], {'max_length': '255'}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'}),
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
             'profile_image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['rca.RcaImage']"}),
             'programme': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'project_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -707,7 +707,7 @@ class Migration(SchemaMigration):
             'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['rca.RcaImage']"}),
             'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'specialism': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'statement': ('core.fields.RichTextField', [], {}),
+            'statement': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
             'twitter_feed': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'work_awards': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'work_description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
