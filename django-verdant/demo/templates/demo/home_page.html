@@ -3,15 +3,13 @@
 
 
 {% block content %}
+    {% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
 
-	{% include "demo/includes/carousel.html" with carousel_items=self.carousel_items.all only %}
+    {% include "demo/includes/body.html" with body=self.body only %}
 
-	{% include "demo/includes/body.html" with body=self.body only %}
+    {% person_listing_homepage %}
 
-	{% person_listing_homepage %}
+    {% blog_listing_homepage %}
 
-	{% blog_listing_homepage %}
-
-	{% event_listing_homepage %}
-
+    {% event_listing_homepage %}
 {% endblock %}

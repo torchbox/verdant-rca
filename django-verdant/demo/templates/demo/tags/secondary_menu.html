@@ -10,9 +10,9 @@
                 </div>
                 <div class="panel-body">
                     <ul>
-                    {% for page in pages %}
-                        <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
-                    {% endfor %}
+                        {% for page in pages %}
+                            <li><a href="{% pageurl page %}">{{ page.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>

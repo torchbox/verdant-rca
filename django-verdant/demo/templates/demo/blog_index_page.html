@@ -1,7 +1,6 @@
 {% extends "demo/base.html" %}
 
 {% block content %}
-
     {% include "demo/includes/intro.html" with intro=self.intro only %}
 
     {% if request.GET.tag|length %}
@@ -23,7 +22,7 @@
     <div class="row">
         <div class="col-sm-4">
             {% if blogs.has_previous %}
-                <a href="?page={{ blogs.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a>
+                <a href="?page={{ blogs.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&amp;{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Previous</a>
             {% endif %}
         </div>
         <div class="col-sm-4">
@@ -31,7 +30,7 @@
         </div>
         <div class="col-sm-4">
             {% if blogs.has_next %}
-                <a href="?page={{ blogs.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a>
+                <a href="?page={{ blogs.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&amp;{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a>
             {% endif %}
         </div>
     </div>

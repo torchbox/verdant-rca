@@ -2,7 +2,6 @@
 {% load demo_tags image_tags pageurl %}
 
 {% block content %}
-
     <div class="well">
         <p><strong>
             {{ self.date_from|date:"j F Y" }}{% if self.date_to %} to {{ self.date_to|date:"j F Y" }}{% endif %}
@@ -56,5 +55,4 @@
 
 
     {% include "demo/includes/related_links.html" with related_links=self.related_links.all only %}
-
 {% endblock %}
