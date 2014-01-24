@@ -68,6 +68,23 @@ def deploy():
                 run("supervisorctl restart rca-celerybeat")
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.production")
 
+@roles('production')
+def deploy_live_wagtailsepcore():
+    """Perform the first step of wagtail separation (core) on production. NB: DB updates (separation_scripts/wagtailcore.sql) need to be done immediately beforehand"""
+    with cd('/usr/local/django/verdant-rca/'):
+        with settings(sudo_user='verdant-rca'):
+            sudo("git pull")
+
+            if env['host'] == MIGRATION_SERVER:
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.production --noinput")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.production")
+
+            run("supervisorctl restart verdant-rca")
+            run("supervisorctl restart rca-celeryd")
+            if env['host'] == MIGRATION_SERVER:
+                run("supervisorctl restart rca-celerybeat")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.production")
+
 @roles('squid')
 def clear_cache():
     run('squidclient -p 80 -m PURGE http://www.rca.ac.uk')
