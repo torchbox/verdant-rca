@@ -3,7 +3,7 @@
 
 <a class="list-group-item" href="{% pageurl blog %}">
     <h4 class="list-group-item-heading">{{ blog.title }}</h4>
-    <strong>{{ blog.date|date:"j F Y" }}</strong>
+    <p><strong>{{ blog.date|date:"j F Y" }}</strong></p>
     {% if blog.search_description or blog.feed_image %}
         <p class="list-group-item-text">
             {% if blog.feed_image %}

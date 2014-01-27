@@ -2,7 +2,7 @@
 {% load pageurl image_tags %}
 <a class="list-group-item" href="{% pageurl event %}">
     <h4 class="list-group-item-heading">{{ event.title }}</h4>
-    <strong>{{ event.date_from|date:"j F Y" }}{% if event.date_to %} to {{ event.date_to|date:"j F Y" }}{% endif %}</strong>
+    <p><strong>{{ event.date_from|date:"j F Y" }}{% if event.date_to %} to {{ event.date_to|date:"j F Y" }}{% endif %}</strong></p>
     {% if event.search_description or event.feed_image %}
         <p class="list-group-item-text">
             {% if event.feed_image %}
