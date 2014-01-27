@@ -36,13 +36,13 @@ class Document(models.Model, TagSearchable):
 
     @property
     def url(self):
-        return reverse('verdantdocs_serve', args=[self.id, self.filename])
+        return reverse('wagtaildocs_serve', args=[self.id, self.filename])
 
     def is_editable_by_user(self, user):
-        if user.has_perm('verdantdocs.change_document'):
+        if user.has_perm('wagtaildocs.change_document'):
             # user has global permission to change documents
             return True
-        elif user.has_perm('verdantdocs.add_document') and self.uploaded_by_user == user:
+        elif user.has_perm('wagtaildocs.add_document') and self.uploaded_by_user == user:
             # user has document add permission, which also implicitly provides permission to edit their own documents
             return True
         else:

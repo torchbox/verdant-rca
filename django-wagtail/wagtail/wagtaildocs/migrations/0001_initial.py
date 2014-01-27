@@ -1,29 +1,32 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
+
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
 
     def forwards(self, orm):
-        document_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
-            model='document', app_label='verdantdocs')
-        add_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=document_content_type, codename='add_document', defaults=dict(name=u'Can add document'))
-        change_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=document_content_type, codename='change_document', defaults=dict(name=u'Can change document'))
-        delete_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=document_content_type, codename='delete_document', defaults=dict(name=u'Can delete document'))
+        # Adding model 'Document'
+        db.create_table(u'wagtaildocs_document', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('uploaded_by_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+        ))
+        db.send_create_signal(u'wagtaildocs', ['Document'])
 
-        editors_group, created = orm['auth.group'].objects.get_or_create(name='Editors')
-        editors_group.permissions.add(add_permission, change_permission, delete_permission)
-
-        moderators_group, created = orm['auth.group'].objects.get_or_create(name='Moderators')
-        moderators_group.permissions.add(add_permission, change_permission, delete_permission)
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Deleting model 'Document'
+        db.delete_table(u'wagtaildocs_document')
+
 
     models = {
         u'auth.group': {
@@ -62,7 +65,7 @@ class Migration(DataMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
@@ -72,5 +75,4 @@ class Migration(DataMigration):
         }
     }
 
-    complete_apps = ['verdantdocs']
-    symmetrical = True
+    complete_apps = ['wagtaildocs']
