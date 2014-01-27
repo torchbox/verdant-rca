@@ -10,7 +10,7 @@ $(function() {
                     // If filter was automatically deselected, reset the filter
                     if (!filter['current_value']) {
                         $(this).removeClass('active');
-                        $(this).html(filter['name']); // TODO: Find a better way to pull this value through
+                        $(this).html($(this).data('originalLabel'));
                     }
 
                     // Get parent (li.filter)
