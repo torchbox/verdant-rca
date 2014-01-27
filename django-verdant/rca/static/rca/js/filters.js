@@ -7,14 +7,24 @@ $(function() {
             // Run filters
             $(filters).each(function(idx, filter) {
                 $('#filters li.filter > label[for=' + filter['name'] + ']').each(function() {
-                    // If filter was automatically deselected, reset the filter
-                    if (!filter['current_value']) {
-                        $(this).removeClass('active');
-                        $(this).html($(this).data('originalLabel'));
-                    }
-
                     // Get parent (li.filter)
                     var $parent = $(this).parent();
+
+                    // If filter was automatically deselected, reset the filter
+                    if (!filter['current_value']) {
+                        // Deactivate filter
+                        $(this).removeClass('active');
+
+                        // Reset filter label
+                        $(this).html($(this).data('originalLabel'));
+
+                        // Clear select box value
+                        $parent.find('select').val('');
+
+                        // Set ALL filter option as the selected option
+                        $parent.find('li[data-val].selected').removeClass('selected');
+                        $parent.find('li[data-val=""]').addClass('selected');
+                    }
 
                     // Hide all filter options
                     $parent.find('li[data-val]').hide();
