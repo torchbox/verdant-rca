@@ -28,7 +28,7 @@ class Migration(SchemaMigration):
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('sort_order', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
-            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Page'])),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['wagtailcore.Page'])),
         ))
         db.send_create_signal(u'verdantsearch', ['EditorsPick'])
 

@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 
 from verdantdocs.models import Document
 from verdantdocs.forms import DocumentForm
-from verdantadmin.forms import SearchForm
+from wagtail.wagtailadmin.forms import SearchForm
 
 
 @permission_required('verdantdocs.add_document')

@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
         db.create_table(u'verdantsearch_editorspick', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('query', self.gf('django.db.models.fields.related.ForeignKey')(related_name='editors_picks', to=orm['verdantsearch.Query'])),
-            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Page'])),
+            ('page', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['wagtailcore.Page'])),
             ('sort_order', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
@@ -60,7 +60,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -99,7 +99,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "('sort_order',)", 'object_name': 'EditorsPick'},
             'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'page': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Page']"}),
+            'page': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['wagtailcore.Page']"}),
             'query': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'editors_picks'", 'to': u"orm['verdantsearch.Query']"}),
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'})
         },

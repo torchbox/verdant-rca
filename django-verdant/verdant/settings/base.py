@@ -8,6 +8,14 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
+# Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
+
+# Add dependencies django-cluster and django-treebeard, which live alongside PROJECT_ROOT
+# (until they get released as a standalone project / merged upstream respectively)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -115,7 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'core.middleware.SiteMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
 
     'verdantredirects.middleware.RedirectMiddleware',
 
@@ -163,8 +171,8 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
-    'core',
-    'verdantadmin',
+    'wagtail.wagtailcore',
+    'wagtail.wagtailadmin',
     'verdantimages',
     'verdantembeds',
     'verdantdocs',
@@ -209,7 +217,7 @@ COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'verdantadmin_home'
+LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

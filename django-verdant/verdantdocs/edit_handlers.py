@@ -1,4 +1,4 @@
-from verdantadmin.edit_handlers import BaseChooserPanel
+from wagtail.wagtailadmin.edit_handlers import BaseChooserPanel
 
 class BaseDocumentChooserPanel(BaseChooserPanel):
     field_template = "verdantdocs/edit_handlers/document_chooser_panel.html"

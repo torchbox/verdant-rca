@@ -7,14 +7,18 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Redirect'
         db.create_table(u'verdantredirects_redirect', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('old_path', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, db_index=True)),
-            ('site', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='redirects', null=True, to=orm['core.Site'])),
+            ('site', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='redirects', null=True, to=orm['wagtailcore.Site'])),
             ('is_permanent', self.gf('django.db.models.fields.BooleanField')(default=True)),
-            ('redirect_page', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['core.Page'])),
+            ('redirect_page', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtailcore.Page'])),
             ('redirect_link', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
         ))
         db.send_create_signal(u'verdantredirects', ['Redirect'])
@@ -33,7 +37,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -49,13 +53,13 @@ class Migration(SchemaMigration):
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'url_path': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
-        u'core.site': {
+        u'wagtailcore.site': {
             'Meta': {'object_name': 'Site'},
             'hostname': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_default_site': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'port': ('django.db.models.fields.IntegerField', [], {'default': '80'}),
-            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['core.Page']"})
+            'root_page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'sites_rooted_here'", 'to': u"orm['wagtailcore.Page']"})
         },
         u'rca.rcaimage': {
             'Meta': {'object_name': 'RcaImage'},
@@ -94,8 +98,8 @@ class Migration(SchemaMigration):
             'is_permanent': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'old_path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
             'redirect_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
-            'redirect_page': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['core.Page']"}),
-            'site': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirects'", 'null': 'True', 'to': u"orm['core.Site']"})
+            'redirect_page': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailcore.Page']"}),
+            'site': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'redirects'", 'null': 'True', 'to': u"orm['wagtailcore.Site']"})
         }
     }
 

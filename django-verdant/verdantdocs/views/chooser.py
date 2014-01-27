@@ -4,10 +4,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 import json
 
-from verdantadmin.modal_workflow import render_modal_workflow
+from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
 from verdantdocs.models import Document
 from verdantdocs.forms import DocumentForm
-from verdantadmin.forms import SearchForm
+from wagtail.wagtailadmin.forms import SearchForm
 
 
 @login_required

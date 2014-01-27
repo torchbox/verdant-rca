@@ -10,13 +10,13 @@
         <ul class="fields">
             <li class="model_choice_field">
                 {% if form.instance.page %}
-                    {% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page page=form.instance.page is_chosen=True only %}
+                    {% include "wagtailadmin/edit_handlers/page_chooser_panel.html" with field=form.page page=form.instance.page is_chosen=True only %}
                 {% else %}
-                    {% include "verdantadmin/edit_handlers/page_chooser_panel.html" with field=form.page is_chosen=False only %}
+                    {% include "wagtailadmin/edit_handlers/page_chooser_panel.html" with field=form.page is_chosen=False only %}
                 {% endif %}
             </li>
             <li class="char_field">
-                {% include "verdantadmin/edit_handlers/field_panel_field.html" with field=form.description only %}
+                {% include "wagtailadmin/edit_handlers/field_panel_field.html" with field=form.description only %}
             </li>
         </ul>
 

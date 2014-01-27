@@ -20,11 +20,11 @@ from django.shortcuts import render
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 
-from core.models import Page, Orderable
-from core.fields import RichTextField
+from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.fields import RichTextField
 from cluster.fields import ParentalKey
 
-from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
 from verdantdocs.edit_handlers import DocumentChooserPanel
@@ -392,7 +392,7 @@ class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     overlay_text = models.CharField(max_length=255, blank=True)
     link = models.URLField("External link", blank=True)
-    link_page = models.ForeignKey('core.Page', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
+    link_page = models.ForeignKey(Page, on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     embedly_url = models.URLField('Vimeo URL', blank=True)
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
@@ -419,7 +419,7 @@ class CarouselItemFields(models.Model):
 # == Snippet: Advert ==
 
 class Advert(models.Model):
-    page = models.ForeignKey('core.Page', related_name='adverts', null=True, blank=True)
+    page = models.ForeignKey(Page, related_name='adverts', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     text = models.CharField(max_length=255, help_text="bold text")
     plain_text = models.CharField(max_length=255, blank=True)
@@ -445,14 +445,14 @@ class Advert(models.Model):
 register_snippet(Advert)
 
 class AdvertPlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='advert_placements')
+    page = ParentalKey(Page, related_name='advert_placements')
     advert = models.ForeignKey('rca.Advert', related_name='+')
 
 # == Snippet: Custom Content Module ==
 
 class CustomContentModuleBlock(Orderable):
     content_module = ParentalKey('rca.CustomContentModule', related_name='blocks')
-    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     item_title = models.CharField(max_length=255)
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image for the module block")
     text = models.CharField(max_length=255, blank=True)
@@ -484,7 +484,7 @@ CustomContentModule.panels = [
 register_snippet(CustomContentModule)
 
 class CustomeContentModulePlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='custom_content_module_placements')
+    page = ParentalKey(Page, related_name='custom_content_module_placements')
     custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+')
 
 # == Snippet: Reusable rich text field ==
@@ -508,7 +508,7 @@ class ReusableTextSnippet(models.Model):
 register_snippet(ReusableTextSnippet)
 
 class ReusableTextSnippetPlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='reusable_text_snippet_placements')
+    page = ParentalKey(Page, related_name='reusable_text_snippet_placements')
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+')
 
 # == Snippet: Contacts ==
@@ -559,7 +559,7 @@ ContactSnippet.panels = [
 register_snippet(ContactSnippet)
 
 class ContactSnippetPlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='contact_snippet_placements')
+    page = ParentalKey(Page, related_name='contact_snippet_placements')
     contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+')
 
 # == School page ==
@@ -595,7 +595,7 @@ class SchoolPageContactEmail(Orderable):
 
 class SchoolPageRelatedLink(Orderable):
     page = ParentalKey('rca.SchoolPage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -617,7 +617,7 @@ class SchoolPage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_school_statement = RichTextField(null=True, blank=True)
-    head_of_school_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    head_of_school_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
@@ -625,7 +625,8 @@ class SchoolPage(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     head_of_research_statement = RichTextField(null=True, blank=True)
-    head_of_research_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    head_of_research_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_school_display', )
 
@@ -719,7 +720,7 @@ class ProgrammePageManualStaffFeed(Orderable):
 
 class ProgrammePageRelatedLink(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -770,7 +771,7 @@ class ProgrammePageStudentStory(Orderable):
     name = models.CharField(max_length=255)
     text = RichTextField()
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     panels = [
         FieldPanel('name'),
@@ -793,7 +794,7 @@ class ProgrammePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="This is my help text")
     head_of_programme_statement = RichTextField(null=True, blank=True, help_text="This is my content this is my content this is my content")
-    head_of_programme_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    head_of_programme_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     programme_video = models.CharField(max_length=255, blank=True)
     programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -806,7 +807,8 @@ class ProgrammePage(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    facilities_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_programme_display', 'get_school_display')
 
@@ -909,6 +911,7 @@ class NewsIndexAd(Orderable):
 class NewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     subpage_types = ['NewsItem']
 
     indexed_fields = ('intro', )
@@ -1017,6 +1020,7 @@ class NewsItem(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     indexed_fields = ('intro', 'body')
@@ -1061,12 +1065,12 @@ class NewsItem(Page, SocialFields):
                 CASE WHEN rca_newsitem.area = %s THEN 100 ELSE 0 END
                 + (
                     SELECT COUNT(*) FROM rca_newsitemrelatedprogramme
-                    WHERE rca_newsitemrelatedprogramme.page_id=core_page.id
+                    WHERE rca_newsitemrelatedprogramme.page_id=wagtailcore_page.id
                         AND rca_newsitemrelatedprogramme.programme IN %s
                 ) * 10
                 + (
                     SELECT COUNT(*) FROM rca_newsitemrelatedschool
-                    WHERE rca_newsitemrelatedschool.page_id=core_page.id
+                    WHERE rca_newsitemrelatedschool.page_id=wagtailcore_page.id
                         AND rca_newsitemrelatedschool.school IN %s
                 ) * 1
             """},
@@ -1125,6 +1129,7 @@ class PressReleaseIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -1219,6 +1224,7 @@ class PressRelease(Page, SocialFields):
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     indexed_fields = ('intro', 'body')
@@ -1267,7 +1273,7 @@ class EventItemSpeaker(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
-    link_page = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link_page = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     link = models.URLField(blank=True)
 
     panels=[
@@ -1341,21 +1347,21 @@ class EventItemDatesTimes(Orderable):
 class FutureEventItemManager(models.Manager):
     def get_query_set(self):
         return super(FutureEventItemManager, self).get_query_set().extra(
-            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
+            where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
 class FutureNotCurrentEventItemManager(models.Manager):
     def get_query_set(self):
         return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
-            where=["core_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
+            where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
         )
 
 class PastEventItemManager(models.Manager):
     def get_query_set(self):
         return super(PastEventItemManager, self).get_query_set().extra(
-            where=["core_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
+            where=["wagtailcore_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
@@ -1380,6 +1386,7 @@ class EventItem(Page, SocialFields):
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
     objects = models.Manager()
@@ -1535,7 +1542,7 @@ EventItem.promote_panels = [
 
 class EventIndexRelatedLink(Orderable):
     page = ParentalKey('rca.EventIndex', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -1555,6 +1562,7 @@ class EventIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -1664,6 +1672,7 @@ class TalksIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -1740,6 +1749,7 @@ class ReviewsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -1807,7 +1817,7 @@ class ReviewPageCarouselItem(Orderable, CarouselItemFields):
 
 class ReviewPageRelatedLink(Orderable):
     page = ParentalKey('rca.ReviewPage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -1862,6 +1872,7 @@ class ReviewPage(Page, SocialFields):
     author = models.CharField(max_length=255, blank=True)
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('body', 'strapline', 'author')
 
@@ -1909,7 +1920,7 @@ class StandardPageCarouselItem(Orderable, CarouselItemFields):
 
 class StandardPageRelatedLink(Orderable):
     page = ParentalKey('rca.StandardPage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -1972,6 +1983,7 @@ class StandardPage(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -2034,7 +2046,7 @@ class StandardIndexCarouselItem(Orderable, CarouselItemFields):
 class StandardIndexTeaser(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='teasers')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     title = models.CharField(max_length=255, blank=True)
     text = models.CharField(max_length=255, blank=True)
 
@@ -2057,7 +2069,7 @@ class StandardIndexStaffFeed(Orderable):
 
 class StandardIndexRelatedLink(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -2119,7 +2131,7 @@ class StandardIndexContactSnippet(Orderable):
 
 class StandardIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
     body = RichTextField(blank=True)
     teasers_title = models.CharField(max_length=255, blank=True)
@@ -2133,6 +2145,7 @@ class StandardIndex(Page, SocialFields):
     staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     show_events_feed = models.BooleanField(default=False)
     events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', ' strapline', 'body')
 
@@ -2236,7 +2249,7 @@ class HomePageAd(Orderable):
 
 class HomePageRelatedLink(Orderable):
     page = ParentalKey('rca.HomePage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -2260,6 +2273,7 @@ class HomePage(Page, SocialFields):
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     def future_events(self):
         return EventItem.future_objects.filter(live=True, path__startswith=self.path)
@@ -2424,6 +2438,7 @@ class JobPage(Page, SocialFields):
     download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_programme_display', 'get_school_display', 'other_department', 'get_campus_display', 'description')
 
@@ -2471,7 +2486,7 @@ JobPage.promote_panels = [
 
 class JobsIndexRelatedLink(Orderable):
     page = ParentalKey('rca.JobsIndex', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -2491,6 +2506,7 @@ class JobsIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -2529,7 +2545,7 @@ JobsIndex.promote_panels = [
 
 class AlumniIndexRelatedLink(Orderable):
     page = ParentalKey('rca.AlumniIndex', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -2549,6 +2565,7 @@ class AlumniIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -2635,6 +2652,7 @@ class AlumniPage(Page, SocialFields):
     biography = RichTextField()
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'intro', 'biography')
 
@@ -2746,6 +2764,7 @@ class StaffPage(Page, SocialFields):
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text='Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically.')
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_school_display', 'get_staff_type_display', 'intro', 'biography')
 
@@ -2817,6 +2836,7 @@ class StaffIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed = False
 
@@ -2903,6 +2923,7 @@ class ResearchStudentIndexAd(Orderable):
 class ResearchStudentIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', )
     search_name = None
@@ -3054,7 +3075,7 @@ class StudentPage(Page, SocialFields):
     degree_qualification = models.CharField(max_length=255, choices=QUALIFICATION_CHOICES)
     degree_subject = models.CharField(max_length=255, choices=SUBJECT_CHOICES)
     degree_year = models.CharField(max_length=4, blank=True)
-    graduation_year = models.CharField(max_length=4, blank=True, help_text="This field should only be filled in for student's who's courses are more than 1 year. Should be filled in after graduation.")
+    graduation_year = models.CharField(max_length=4, blank=True, help_text="This field should only be filled in for students whose courses are more than 1 year. Should be filled in after graduation.")
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
     statement = RichTextField(blank=True)
@@ -3070,6 +3091,7 @@ class StudentPage(Page, SocialFields):
     last_name = models.CharField(max_length=255)
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('get_school_display', 'get_programme_display', 'statement')
 
@@ -3180,6 +3202,7 @@ class RcaNowPage(Page, SocialFields):
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
@@ -3240,6 +3263,7 @@ class RcaNowIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -3319,7 +3343,7 @@ class ResearchItemCarouselItem(Orderable, CarouselItemFields):
 
 class ResearchItemCreator(Orderable):
     page = ParentalKey('rca.ResearchItem', related_name='creator')
-    person = models.ForeignKey('core.Page', null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
     manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
     panels=[
@@ -3352,6 +3376,7 @@ class ResearchItem(Page, SocialFields):
     eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
     show_on_homepage = models.BooleanField()
     random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_work_type_display', 'work_type_other', 'get_theme_display')
 
@@ -3456,7 +3481,7 @@ class ResearchInnovationPageTeaser(Orderable):
 
 class ResearchInnovationPageRelatedLink(Orderable):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -3482,7 +3507,7 @@ class ResearchInnovationPageContactEmail(Orderable):
 
 class ResearchInnovationPageCurrentResearch(Orderable):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='current_research')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
 
     panels = [
         PageChooserPanel('link'),
@@ -3502,7 +3527,7 @@ class ResearchInnovationPageAd(Orderable):
 
 class ResearchInnovationPage(Page, SocialFields):
     intro = RichTextField(blank=True)
-    intro_link = models.ForeignKey('core.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     teasers_title = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
@@ -3511,6 +3536,7 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', )
 
@@ -3573,6 +3599,7 @@ class CurrentResearchPageAd(Orderable):
 class CurrentResearchPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed = False
 
@@ -3652,7 +3679,7 @@ CurrentResearchPage.promote_panels = [
 
 class GalleryPageRelatedLink(Orderable):
     page = ParentalKey('rca.GalleryPage', related_name='related_links')
-    link = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
     link_text = models.CharField(max_length=255, help_text="Link title")
 
     panels = [
@@ -3665,6 +3692,7 @@ class GalleryPage(Page, SocialFields):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -3754,7 +3782,7 @@ GalleryPage.promote_panels = [
 # == Contact Us page ==
 
 class ContactUsPage(Page, SocialFields):
-    pass
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
 ContactUsPage.promote_panels = [
     MultiFieldPanel([
@@ -3779,7 +3807,7 @@ ContactUsPage.promote_panels = [
 
 
 class DonationPage(Page, SocialFields):
-    redirect_to_when_done = models.ForeignKey('core.Page', null=True, blank=False, on_delete=models.PROTECT, related_name='+')
+    redirect_to_when_done = models.ForeignKey(Page, null=True, blank=False, on_delete=models.PROTECT, related_name='+')
     payment_description = models.CharField(max_length=255, blank=True, help_text="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages.")
 
     # fields copied from StandrdPage
@@ -3788,6 +3816,7 @@ class DonationPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', 'body')
 
@@ -3876,7 +3905,7 @@ class InnovationRCAProjectCarouselItem(Orderable, CarouselItemFields):
 
 class InnovationRCAProjectCreator(Orderable):
     page = ParentalKey('rca.InnovationRCAProject', related_name='creator')
-    person = models.ForeignKey('core.Page', null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
     manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
     panels=[
@@ -3905,6 +3934,7 @@ class InnovationRCAProject(Page, SocialFields):
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES)
     project_ended = models.BooleanField(default=False)
     random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_type_display')
 
@@ -4000,6 +4030,7 @@ class InnovationRCAIndexAd(Orderable):
 class InnovationRCAIndex(Page, SocialFields):
     intro = RichTextField(blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed = False
 

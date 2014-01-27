@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form
-from verdantadmin.forms import SearchForm
+from wagtail.wagtailadmin.forms import SearchForm
 
 @permission_required('verdantimages.add_image')
 def index(request):

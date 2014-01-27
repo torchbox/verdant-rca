@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}Editing {{ snippet_type_name}} - {{ instance }}{% endblock %}
 {% block bodyclass %}menu-snippets{% endblock %}
 {% block content %}
@@ -29,8 +29,8 @@
 {% endblock %}
 
 {% block extra_css %}
-    {% include "verdantadmin/pages/_editor_css.html" %}
+    {% include "wagtailadmin/pages/_editor_css.html" %}
 {% endblock %}
 {% block extra_js %}
-    {% include "verdantadmin/pages/_editor_js.html" %}
+    {% include "wagtailadmin/pages/_editor_js.html" %}
 {% endblock %}

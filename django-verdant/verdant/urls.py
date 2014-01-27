@@ -5,8 +5,8 @@ from django.contrib import admin
 from django.conf import settings
 import os.path
 
-from core import urls as verdant_urls
-from verdantadmin import urls as verdantadmin_urls
+from wagtail.wagtailcore import urls as verdant_urls
+from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantembeds import urls as verdantembeds_urls
 from verdantdocs import admin_urls as verdantdocs_admin_urls
@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     url(r'^admin/search/', include(verdantsearch_admin_urls)),
     url(r'^admin/users/', include(verdantusers_urls)),
     url(r'^admin/redirects/', include(verdantredirects_urls)),
-    url(r'^admin/', include(verdantadmin_urls)),
+    url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^search/', include(verdantsearch_frontend_urls)),
 
     url(r'^documents/', include(verdantdocs_urls)),

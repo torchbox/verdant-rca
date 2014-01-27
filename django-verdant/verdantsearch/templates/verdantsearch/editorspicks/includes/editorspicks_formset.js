@@ -7,12 +7,12 @@
         canOrder: true,
 
         onAdd: function(fixPrefix) {
-            createPageChooser(fixPrefix('id_{{ formset.prefix }}-__prefix__-page'), 'core.page', null);
+            createPageChooser(fixPrefix('id_{{ formset.prefix }}-__prefix__-page'), 'wagtailcore.page', null);
         }
     });
 
     {% for form in formset.forms %}
-        createPageChooser(fixPrefix('id_{{ formset.prefix }}-{{ forloop.counter0 }}-page'), 'core.page', null);
+        createPageChooser(fixPrefix('id_{{ formset.prefix }}-{{ forloop.counter0 }}-page'), 'wagtailcore.page', null);
         panel.initChildControls('{{ formset.prefix }}-{{ forloop.counter0 }}');
     {% endfor %}
 
