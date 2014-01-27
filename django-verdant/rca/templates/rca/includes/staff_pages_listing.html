@@ -49,9 +49,5 @@
 {% endif %}
 
 <script type="text/javascript">
-    {% if related_programmes %}
-        var related_programmes = {{related_programmes|safe}};
-    {% else %}
-        var related_programmes = [];
-    {% endif %}
+    var filters_context = {{ filters_context|safe }};
 </script>

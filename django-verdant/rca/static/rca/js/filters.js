@@ -3,70 +3,77 @@
 
 $(function(){
 
-	function applyFilters(school_or_year, showAll, showAllFor){
-		var $parent = $("#filters").find("li.filter").find("label[for=programme]").parent();
-		if($("#filters").find("li.filter").find("label.active[for=" + school_or_year + "]").length){
+	function filterProgrammes() {
+		$("#filters li.filter > label[for=programme]").each(function() {
+			// If programme was automatically deselected, reset the filter
+			if (!filters_context.selected_programme) {
+				$(this).removeClass('active');
+				$(this).html("Programme"); // TODO: Find a better way to pull this value through
+			}
+
+			// Get parent (li.filter)
+			var $parent = $(this).parent();
+
+			// Hide all filter options
 			$parent.find("li[data-val]").hide();
-			$.each(related_programmes, function(){
+
+			// Show filter options in related_programmes
+			$.each(filters_context.related_programmes, function(){
 				$parent.find("li[data-val=" + this + "]").show();
 			});
-			if(!related_programmes.length){
-				$parent.find("li[data-val!='']").hide();
-			}
+
+			// Show the ALL filter option
 			$parent.find("li[data-val='']").show();
-		}
 
-		if(showAll) if((showAllFor == "programme") || (showAllFor == school_or_year)){
-			$parent.find("li[data-val]").show();
-		}
+			// Find number of programes that are visible
+			var visibleProgrammes = $parent.find("li").filter(function(){
+				return $(this).css("display") != "none";
+			}).length;
 
-		// adjust dropdown width / columns for programmes
-		var visibleProgrammes = $parent.find("li").filter(function(){
-			return $(this).css("display") != "none";
-		}).length;
-		if(visibleProgrammes < 8){
-			$("#filters div[data-id=programme]").css("width", "101%")
-			.closest("li.filter.three-cols").removeClass("three-cols");
-		}
-		if(visibleProgrammes > 8){
-			$("#filters div[data-id=programme]").css("width", "201%")
-			.closest("li.filter.three-cols").removeClass("three-cols");
-		}
-		if(visibleProgrammes > 16){
-			$("#filters div[data-id=programme]").css("width", "301%")
-			.closest("li.filter").addClass("three-cols");
-		}
-		if(school_or_year == "degree_year"){
-			filterSchools();
-		}
-	}
-
-	function filterSchools(){
-		var year = $("#degree_year").val();
-		if(year){
-			var schools = Object.keys(SCHOOL_PROGRAMME_MAP[year]);
-		}
-		$("#filters li.filter [data-id=school] li[data-val]").each(function(){
-			var $this = $(this);
-			if($this.data("val")){
-				$this.hide();
+			// Adjust number of columns to show 8 options per column
+			if(visibleProgrammes <= 8){
+				$("#filters div[data-id=programme]").css("width", "101%")
+				.closest("li.filter.three-cols").removeClass("three-cols");
 			}
-			if(year && schools.indexOf($this.data("val")) != -1){
-				$this.show();
+			if(visibleProgrammes > 8){
+				$("#filters div[data-id=programme]").css("width", "201%")
+				.closest("li.filter.three-cols").removeClass("three-cols");
 			}
-			if(!year){
-				$this.show();
+			if(visibleProgrammes > 16){
+				$("#filters div[data-id=programme]").css("width", "301%")
+				.closest("li.filter").addClass("three-cols");
 			}
 		});
 	}
 
-	$('#filters .options li').click(function() {
-		var showAll = !$(this).data("val");
-		var showAllFor = $(this).parent().data("id");
-		$('#listing').load(current_page, $('#filters').serialize(), function(){
-			$.each(["school", "degree_year"], function(){
-				applyFilters(this, showAll, showAllFor);
+	function filterSchools(){
+		$("#filters li.filter > label[for=school]").each(function() {
+			// If school was automatically deselected, reset the filter
+			if (!filters_context.selected_school) {
+				$(this).removeClass('active');
+				$(this).html("School"); // TODO: Find a better way to pull this value through
+			}
+
+			// Get parent (li.filter)
+			var $parent = $(this).parent();
+
+			// Hide all filter options
+			$parent.find("li[data-val]").hide();
+
+			// Show filter options in related_schools
+			$.each(filters_context.related_schools, function(){
+				$parent.find("li[data-val=" + this + "]").show();
 			});
+
+			// Show the ALL filter option
+			$parent.find("li[data-val='']").show();
+		});
+	}
+
+	$('#filters .options li').click(function() {
+		$('#listing').load(current_page, $('#filters').serialize(), function(){
+			filterProgrammes();
+			filterSchools();
 			alignGallery(); // defined in site.js
 		});
 		$(this).parent().closest('li').removeClass('expanded');
