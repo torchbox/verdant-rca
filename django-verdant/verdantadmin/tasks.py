@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.conf import settings
 from celery.decorators import task
-from core.models import PageRevision
+from wagtail.wagtailcore.models import PageRevision
 
 
 from django.contrib.auth.models import Permission
@@ -33,7 +33,7 @@ def send_notification(page_revision_id, notification, excluded_user_id):
     # Get list of recipients
     if notification == 'submitted':
         # Get list of publishers
-        recipients = users_with_permission('core.publish_page')
+        recipients = users_with_permission('wagtailcore.publish_page')
     elif notification == 'approved' or notification == 'rejected':
         # Get submitter
        recipients = [revision.user]

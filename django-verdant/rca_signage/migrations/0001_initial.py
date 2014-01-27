@@ -6,11 +6,14 @@ from django.db import models
 
 
 class Migration(SchemaMigration):
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
 
     def forwards(self, orm):
         # Adding model 'ScreenIndex'
         db.create_table(u'rca_signage_screenindex', (
-            (u'page_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['core.Page'], unique=True, primary_key=True)),
+            (u'page_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['wagtailcore.Page'], unique=True, primary_key=True)),
         ))
         db.send_create_signal(u'rca_signage', ['ScreenIndex'])
 
@@ -28,7 +31,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'core.page': {
+        u'wagtailcore.page': {
             'Meta': {'object_name': 'Page'},
             'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
             'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
@@ -62,8 +65,8 @@ class Migration(SchemaMigration):
             'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         u'rca_signage.screenindex': {
-            'Meta': {'object_name': 'ScreenIndex', '_ormbases': [u'core.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['core.Page']", 'unique': 'True', 'primary_key': 'True'})
+            'Meta': {'object_name': 'ScreenIndex', '_ormbases': [u'wagtailcore.page']},
+            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'})
         },
         u'taggit.tag': {
             'Meta': {'object_name': 'Tag'},

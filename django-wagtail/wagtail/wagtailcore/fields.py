@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import Textarea
 from south.modelsinspector import add_introspection_rules
 
-from core.rich_text import DbWhitelister, expand_db_html
+from wagtail.wagtailcore.rich_text import DbWhitelister, expand_db_html
 
 class RichTextArea(Textarea):
     def get_panel(self):
@@ -29,4 +29,4 @@ class RichTextField(models.TextField):
         defaults.update(kwargs)
         return super(RichTextField, self).formfield(**defaults)
 
-add_introspection_rules([], ["^core\.fields\.RichTextField"])
+add_introspection_rules([], ["^wagtail\.wagtailcore\.fields\.RichTextField"])

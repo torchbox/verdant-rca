@@ -2,7 +2,7 @@
 
 from lxml import etree as ET
 from rca.models import StudentPage, StudentPageCarouselItem, StudentPageContactsEmail, StudentPageContactsWebsite, RcaImage, ResearchItem, ResearchItemCarouselItem, ResearchItemCreator, ResearchInnovationPageCurrentResearch
-from core.models import Page
+from wagtail.wagtailcore.models import Page
 from django.utils.dateparse import parse_date
 from django.core.files import File
 from importer.import_utils import richtext_from_elem, text_from_elem, make_slug, check_length

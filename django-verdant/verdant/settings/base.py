@@ -123,7 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'core.middleware.SiteMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
 
     'verdantredirects.middleware.RedirectMiddleware',
 
@@ -172,7 +172,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
-    'core',
+    'wagtail.wagtailcore',
     'verdantadmin',
     'verdantimages',
     'verdantembeds',

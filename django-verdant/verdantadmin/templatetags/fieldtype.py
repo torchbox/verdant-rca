@@ -1,6 +1,6 @@
 from django import template
 
-from core.util import camelcase_to_underscore
+from wagtail.wagtailcore.util import camelcase_to_underscore
 
 register = template.Library()
 
