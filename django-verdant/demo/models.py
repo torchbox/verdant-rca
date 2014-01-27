@@ -1,6 +1,6 @@
 from django.db import models
-from core.models import Page, Orderable
-from core.fields import RichTextField
+from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.fields import RichTextField
 from cluster.fields import ParentalKey
 
 from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
@@ -38,7 +38,7 @@ COMMON_PANELS = (
 
 class LinkFields(models.Model):
     link_external = models.URLField("External link", blank=True)
-    link_page = models.ForeignKey('core.Page', null=True, blank=True, related_name='+')
+    link_page = models.ForeignKey('wagtailcore.Page', null=True, blank=True, related_name='+')
     link_document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
 
     @property
@@ -118,12 +118,11 @@ class RelatedLink(LinkFields):
 # Advert Snippet
 
 class AdvertPlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='demo_advert_placements')
-    advert = models.ForeignKey('demo.DemoAdvert', related_name='+')
+    page = ParentalKey('wagtailcore.Page', related_name='advert_placements')
+    advert = models.ForeignKey('demo.Advert', related_name='+')
 
-# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA Advert
-class DemoAdvert(models.Model):
-    page = models.ForeignKey('core.Page', related_name='demo_adverts', null=True, blank=True)
+class Advert(models.Model):
+    page = models.ForeignKey('wagtailcore.Page', related_name='adverts', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
     text = models.CharField(max_length=255)
 
@@ -136,42 +135,34 @@ class DemoAdvert(models.Model):
     def __unicode__(self):
         return self.text
 
-    class Meta:
-        description = "Reusable advert snippet"
-
-register_snippet(DemoAdvert)
+register_snippet(Advert)
 
 
 # Home Page
 
 class HomePageCarouselItem(Orderable, CarouselItem):
-    page = ParentalKey('demo.DemoHomePage', related_name='carousel_items')
+    page = ParentalKey('demo.HomePage', related_name='carousel_items')
 
 class HomePageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('demo.DemoHomePage', related_name='related_links')
+    page = ParentalKey('demo.HomePage', related_name='related_links')
 
-# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA HomePage
-class DemoHomePage(Page):
+class HomePage(Page):
     body = RichTextField(blank=True)
 
     indexed_fields = ('body', )
     search_name = "Homepage"
 
-    # TODO: Remove this after prefix is put right
-    template = 'demo/home_page.html'
-
     class Meta:
-        #verbose_name = "Homepage"
-        verbose_name = "DEMO Homepage"
+        verbose_name = "Homepage"
 
-DemoHomePage.content_panels = [
+HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
-    InlinePanel(DemoHomePage, 'carousel_items', label="Carousel items"),
-    InlinePanel(DemoHomePage, 'related_links', label="Related links"),
+    InlinePanel(HomePage, 'carousel_items', label="Carousel items"),
+    InlinePanel(HomePage, 'related_links', label="Related links"),
 ]
 
-DemoHomePage.promote_panels = [
+HomePage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
 ]
 
@@ -179,29 +170,22 @@ DemoHomePage.promote_panels = [
 # Standard index page
 
 class StandardIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('demo.DemoStandardIndexPage', related_name='related_links')
+    page = ParentalKey('demo.StandardIndexPage', related_name='related_links')
 
-# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardIndexPage
-class DemoStandardIndexPage(Page):
+class StandardIndexPage(Page):
     intro = RichTextField(blank=True)
     feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', )
     search_name = None
 
-    # TODO: Remove this after prefix is put right
-    template = 'demo/standard_index_page.html'
-
-    class Meta:
-        verbose_name = "DEMO Standard Index Page"
-
-DemoStandardIndexPage.content_panels = [
+StandardIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(DemoStandardIndexPage, 'related_links', label="Related links"),
+    InlinePanel(StandardIndexPage, 'related_links', label="Related links"),
 ]
 
-DemoStandardIndexPage.promote_panels = [
+StandardIndexPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
     ImageChooserPanel('feed_image'),
 ]
@@ -210,13 +194,12 @@ DemoStandardIndexPage.promote_panels = [
 # Standard page
 
 class StandardPageCarouselItem(Orderable, CarouselItem):
-    page = ParentalKey('demo.DemoStandardPage', related_name='carousel_items')
+    page = ParentalKey('demo.StandardPage', related_name='carousel_items')
 
 class StandardPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('demo.DemoStandardPage', related_name='related_links')
+    page = ParentalKey('demo.StandardPage', related_name='related_links')
 
-# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA StandardPage
-class DemoStandardPage(Page):
+class StandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
     feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
@@ -224,21 +207,15 @@ class DemoStandardPage(Page):
     indexed_fields = ('intro', 'body', )
     search_name = None
 
-    # TODO: Remove this after prefix is put right
-    template = 'demo/standard_page.html'
-
-    class Meta:
-        verbose_name = "DEMO Standard Page"
-
-DemoStandardPage.content_panels = [
+StandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(DemoStandardPage, 'carousel_items', label="Carousel items"),
+    InlinePanel(StandardPage, 'carousel_items', label="Carousel items"),
     FieldPanel('body', classname="full"),
-    InlinePanel(DemoStandardPage, 'related_links', label="Related links"),
+    InlinePanel(StandardPage, 'related_links', label="Related links"),
 ]
 
-DemoStandardPage.promote_panels = [
+StandardPage.promote_panels = [
     MultiFieldPanel(COMMON_PANELS, "Common page configuration"),
     ImageChooserPanel('feed_image'),
 ]
@@ -282,9 +259,6 @@ class BlogIndexPage(Page):
             'blogs': blogs,
         })
 
-    class Meta:
-        verbose_name = "DEMO Blog Index Page"
-
 BlogIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
@@ -315,9 +289,6 @@ class BlogPage(Page):
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
-
-    class Meta:
-        verbose_name = "DEMO Blog Page"
 
 BlogPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -350,9 +321,6 @@ class PersonPage(Page, ContactFields):
     indexed_fields = ('first_name', 'last_name', 'intro', 'biography')
     search_name = "Person"
 
-    class Meta:
-        verbose_name = "DEMO Person Page"
-
 PersonPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('first_name'),
@@ -378,9 +346,6 @@ class ContactPage(Page, ContactFields):
 
     indexed_fields = ('body', )
     search_name = "Contact information"
-
-    class Meta:
-        verbose_name = "DEMO Contact Page"
 
 ContactPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -417,9 +382,6 @@ class EventIndexPage(Page):
         events = events.order_by('date_from')
 
         return events
-
-    class Meta:
-        verbose_name = "DEMO Event Index Page"
 
 EventIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -471,9 +433,6 @@ class EventPage(Page):
 
     indexed_fields = ('get_audience_display', 'location', 'body')
     search_name = "Event"
-
-    class Meta:
-        verbose_name = "DEMO Event Page"
 
 EventPage.content_panels = [
     FieldPanel('title', classname="full title"),

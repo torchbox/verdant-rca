@@ -17,7 +17,6 @@ from verdantusers import urls as verdantusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
-from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 
 admin.autodiscover()
@@ -26,9 +25,6 @@ admin.autodiscover()
 # Signal handlers
 from verdantsearch import register_signal_handlers as verdantsearch_register_signal_handlers
 verdantsearch_register_signal_handlers()
-
-from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_register_signal_handlers
-rca_ldap_register_signal_handlers()
 
 
 urlpatterns = patterns('',
@@ -56,9 +52,6 @@ urlpatterns = patterns('',
     url(r'^documents/', include(verdantdocs_urls)),
 
     url(r'^admin/donations/', include(donations_urls)),
-
-    url(r'^app/', include(rca_app_urls)),
-    url(r'^admin/', include(rca_admin_urls)),
 
     url(r'^twitter/', include(twitter_urls)),
 

@@ -133,7 +133,6 @@ MIDDLEWARE_CLASSES = (
 from django.conf import global_settings
 TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
-    'rca.context_processors.global_vars',
     'demo.context_processors.global_vars',
 )
 
@@ -183,8 +182,6 @@ INSTALLED_APPS = (
     'verdantredirects',
 
     'donations',
-    'rca',
-    'rca_signage',
     'demo',
 )
 
@@ -266,11 +263,11 @@ CACHES = {
 #VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for verdantsearch
-VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
+VERDANTSEARCH_RESULTS_TEMPLATE = "demo/search_results.html"
 
-VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
+VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "demo/includes/search_listing.html"
 
-VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
+VERDANT_SITE_NAME = 'Wagtail Demo' #TODO: there's surely a nicer way of doing this?
 
 VERDANTSEARCH_RESULTS_TEMPLATE = 'demo/search_results.html'
 
