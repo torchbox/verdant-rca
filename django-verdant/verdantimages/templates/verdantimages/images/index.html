@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% load image_tags ellipsistrim %}
 
 {% block titletag %}Images{% endblock %}
@@ -52,7 +52,7 @@
     <form class="search-bar full-width" action="{% url 'verdantimages_index' %}" method="get">
         <ul class="fields">
             {% for field in form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
             <li class="submit"><input type="submit" value="Search" /></li>
             {% if popular_tags %}

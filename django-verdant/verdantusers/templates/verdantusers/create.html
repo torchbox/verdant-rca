@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% load image_tags %}
 {% block titletag %}Add user{% endblock %}
 {% block bodyclass %}menu-users{% endblock %}
@@ -17,20 +17,20 @@
             {% csrf_token %}
             <section id="account" class="active nice-padding">
                 <ul class="fields">
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.username %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.email %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.first_name %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.last_name %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.password1 %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.password2 %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.username %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.email %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.first_name %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.last_name %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.password1 %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.password2 %}
                     
                     <li><a href="#roles" class="button lowpriority tab-toggle icon icon-arrow-right-after" />Roles</a></li>
                 </ul>
             </section>
             <section id="roles" class="nice-padding">
                 <ul class="fields">
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.is_superuser %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=form.groups %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.is_superuser %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=form.groups %}
                     <li><input type="submit" value="Add user" /></li>
                 </ul>
             </section>

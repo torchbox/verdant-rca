@@ -14,7 +14,7 @@
         <form class="document-search search-bar" action="{% url 'verdantdocs_chooser' %}" method="GET">
             <ul class="fields">
                 {% for field in searchform %}
-                    {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                    {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
                 {% endfor %}
                 <li class="submit"><input type="submit" value="Search" /></li>
             </ul>
@@ -29,7 +29,7 @@
                 {% csrf_token %}
                 <ul class="fields">
                     {% for field in uploadform %}
-                        {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                        {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
                     {% endfor %}
                     <li><input type="submit" value="Save" /></li>
                 </ul>

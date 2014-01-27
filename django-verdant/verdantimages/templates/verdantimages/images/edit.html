@@ -1,13 +1,13 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% load image_tags %}
 {% block titletag %}Editing image {{ image.title }}{% endblock %}
 {% block bodyclass %}menu-images{% endblock %}
 {% block extra_css %}
-    {% include "verdantadmin/shared/tag_field_css.html" %}
+    {% include "wagtailadmin/shared/tag_field_css.html" %}
 {% endblock %}
 
 {% block extra_js %}
-    {% include "verdantadmin/shared/tag_field_js.html" %}
+    {% include "wagtailadmin/shared/tag_field_js.html" %}
 {% endblock %}
 
 {% block content %}
@@ -25,7 +25,7 @@
                         {% if field.name == 'file' %}
                             {% include "verdantimages/images/_file_field.html" %}
                         {% else %}
-                            {% include "verdantadmin/shared/field_as_li.html" %}
+                            {% include "wagtailadmin/shared/field_as_li.html" %}
                         {% endif %}
 
                     {% endfor %}

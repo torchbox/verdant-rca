@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}Documents{% endblock %}
 {% block bodyclass %}menu-documents{% endblock %}
 {% block extra_js %}
@@ -49,7 +49,7 @@
     <form class="search-bar full-width" action="{% url 'verdantdocs_index' %}" method="get">
         <ul class="fields">
             {% for field in form %}
-                {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+                {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
             {% endfor %}
             <li class="submit"><input type="submit" value="Search" /></li>
             {% if popular_tags %}

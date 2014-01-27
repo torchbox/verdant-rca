@@ -7,9 +7,9 @@
 
     {% include "verdantdocs/documents/list.html" %}
 
-	{% include "verdantadmin/shared/pagination_nav.html" with items=documents is_searching=is_searching linkurl="verdantdocs_index" %}
+    {% include "wagtailadmin/shared/pagination_nav.html" with items=documents is_searching=is_searching linkurl="verdantdocs_index" %}
 {% else %}
- 	{% if is_searching %}
+    {% if is_searching %}
          <p>Sorry, no documents match "<em>{{ search_query }}</em>"
     {% else %}
         <p>You haven't uploaded any documents. Why not <a href="{% url 'verdantdocs_add_document' %}">upload one now</a>?</p>

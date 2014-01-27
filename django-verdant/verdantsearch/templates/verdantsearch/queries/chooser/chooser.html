@@ -5,7 +5,7 @@
 <form class="query-search search-bar full-width" action="{% url 'verdantsearch_queries_chooserresults' %}" method="GET" autocomplete="off">
     <ul class="fields">
         {% for field in searchform %}
-            {% include "verdantadmin/shared/field_as_li.html" with field=field %}
+            {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
         {% endfor %}
         <li class="submit"><input type="submit" value="Search" /></li>
     </ul>

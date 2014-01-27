@@ -1,4 +1,4 @@
-from verdantadmin.edit_handlers import BaseChooserPanel
+from wagtail.wagtailadmin.edit_handlers import BaseChooserPanel
 
 class BaseImageChooserPanel(BaseChooserPanel):
     field_template = "verdantimages/edit_handlers/image_chooser_panel.html"

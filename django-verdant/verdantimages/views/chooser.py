@@ -4,10 +4,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 
 import json
 
-from verdantadmin.modal_workflow import render_modal_workflow
+from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
 from verdantimages.models import get_image_model
 from verdantimages.forms import get_image_form, ImageInsertionForm
-from verdantadmin.forms import SearchForm
+from wagtail.wagtailadmin.forms import SearchForm
 from verdantimages.formats import get_image_format
 
 
