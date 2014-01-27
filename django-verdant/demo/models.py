@@ -114,9 +114,14 @@ class RelatedLink(LinkFields):
     class Meta:
         abstract = True
 
-# == Snippet: Advert ==
 
-# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA HomePage
+# Advert Snippet
+
+class AdvertPlacement(models.Model):
+    page = ParentalKey('core.Page', related_name='demo_advert_placements')
+    advert = models.ForeignKey('demo.DemoAdvert', related_name='+')
+
+# TODO: Remove the "Demo" prefix. This was added to avoid a name clash with RCA Advert
 class DemoAdvert(models.Model):
     page = models.ForeignKey('core.Page', related_name='demo_adverts', null=True, blank=True)
     url = models.URLField(null=True, blank=True)
@@ -128,17 +133,14 @@ class DemoAdvert(models.Model):
         FieldPanel('text'),
     ]
 
-    class Meta:
-        description = "Reusable advert snippet"
-
     def __unicode__(self):
         return self.text
 
+    class Meta:
+        description = "Reusable advert snippet"
+
 register_snippet(DemoAdvert)
 
-class AdvertPlacement(models.Model):
-    page = ParentalKey('core.Page', related_name='demo_advert_placements')
-    advert = models.ForeignKey('demo.DemoAdvert', related_name='+')
 
 # Home Page
 
@@ -185,7 +187,6 @@ class DemoStandardIndexPage(Page):
     feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', )
-
     search_name = None
 
     # TODO: Remove this after prefix is put right
@@ -255,31 +256,27 @@ class BlogIndexPage(Page):
     search_name = "Blog"
 
     def serve(self, request):
-        # Return list of blog pages that are descentands of this page
+        # Return list of blog pages that are descendants of this page
         blogs = BlogPage.objects.filter(live=True, path__startswith=self.path)
 
-        #filter by tag
+        # Filter by tag
         tag = request.GET.get('tag')
-    
         if tag:
              blogs = blogs.filter(tags__name=tag)
 
-        #order by most recent date first
+        # Order by most recent date first
         blogs = blogs.distinct().order_by('-date')
 
-        #filter by page
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(blogs, 10)  # Show 10 blogs per page
-
         try:
             blogs = paginator.page(page)
         except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
             blogs = paginator.page(1)
         except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
             blogs = paginator.page(paginator.num_pages)
-        
+
         return render(request, self.template, {
             'self': self,
             'blogs': blogs,
@@ -410,12 +407,15 @@ class EventIndexPage(Page):
 
     @property
     def events(self):
-        # Get list of event pages that are descentands of this page
+        # Get list of event pages that are descendants of this page
         events = EventPage.objects.filter(live=True, path__startswith=self.path)
-        #Filter events list to get ones that are either running now or start in the future
+
+        # Filter events list to get ones that are either running now or start in the future
         events = events.filter(date_from__gte=date.today())
-        #order by date
+
+        # Order by date
         events = events.order_by('date_from')
+
         return events
 
     class Meta:

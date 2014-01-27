@@ -1,6 +1,6 @@
 {% if related_links %}
     <div class="page-header"></div>
-	<div class="row">
+    <div class="row">
         <div class="col-sm-4">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -8,10 +8,10 @@
                 </div>
                 <div class="panel-body">
                     <ul>
-    				{% for related_link in related_links %}
-    					<li><a href="{{ related_link.link }}">{{ related_link.title }}</a></li>
-    				{% endfor %}
-    				</ul>
+                    {% for related_link in related_links %}
+                        <li><a href="{{ related_link.link }}">{{ related_link.title }}</a></li>
+                    {% endfor %}
+                    </ul>
                 </div>
             </div>
         </div>
