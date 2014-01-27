@@ -5,14 +5,14 @@ from django.contrib.auth.decorators import login_required, permission_required
 import json
 
 from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
-from verdantdocs.models import Document
-from verdantdocs.forms import DocumentForm
+from wagtail.wagtaildocs.models import Document
+from wagtail.wagtaildocs.forms import DocumentForm
 from wagtail.wagtailadmin.forms import SearchForm
 
 
 @login_required
 def chooser(request):
-    if request.user.has_perm('verdantdocs.add_document'):
+    if request.user.has_perm('wagtaildocs.add_document'):
         uploadform = DocumentForm()
     else:
         uploadform = None
@@ -48,7 +48,7 @@ def chooser(request):
             
             is_searching = False
 
-        return render(request, "verdantdocs/chooser/results.html", {
+        return render(request, "wagtaildocs/chooser/results.html", {
             'documents': documents,
             'search_query': q,
             'is_searching': is_searching,
@@ -67,7 +67,7 @@ def chooser(request):
         except EmptyPage:
             documents = paginator.page(paginator.num_pages)
 
-    return render_modal_workflow(request, 'verdantdocs/chooser/chooser.html', 'verdantdocs/chooser/chooser.js', {
+    return render_modal_workflow(request, 'wagtaildocs/chooser/chooser.html', 'wagtaildocs/chooser/chooser.js', {
         'documents': documents, 
         'uploadform': uploadform, 
         'searchform': searchform,
@@ -82,12 +82,12 @@ def document_chosen(request, document_id):
     document_json = json.dumps({'id': document.id, 'title': document.title})
 
     return render_modal_workflow(
-        request, None, 'verdantdocs/chooser/document_chosen.js',
+        request, None, 'wagtaildocs/chooser/document_chosen.js',
         {'document_json': document_json}
     )
 
 
-@permission_required('verdantdocs.add_document')
+@permission_required('wagtaildocs.add_document')
 def chooser_upload(request):
     if request.POST:
         document = Document(uploaded_by_user=request.user)
@@ -97,7 +97,7 @@ def chooser_upload(request):
             form.save()
             document_json = json.dumps({'id': document.id, 'title': document.title})
             return render_modal_workflow(
-                request, None, 'verdantdocs/chooser/document_chosen.js',
+                request, None, 'wagtaildocs/chooser/document_chosen.js',
                 {'document_json': document_json}
             )
     else:
@@ -106,6 +106,6 @@ def chooser_upload(request):
     documents = Document.objects.order_by('title')
 
     return render_modal_workflow(
-        request, 'verdantdocs/chooser/chooser.html', 'verdantdocs/chooser/chooser.js',
+        request, 'wagtaildocs/chooser/chooser.html', 'wagtaildocs/chooser/chooser.js',
         {'documents': documents, 'uploadform': form}
     )

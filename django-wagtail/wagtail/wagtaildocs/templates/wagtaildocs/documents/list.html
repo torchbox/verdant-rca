@@ -14,9 +14,9 @@
             <tr>
                 <td class="title">
                     {% if choosing %}
-                        <h2><a href="{% url 'verdantdocs_document_chosen' doc.id %}" class="document-choice">{{ doc.title }}</a></h2>
+                        <h2><a href="{% url 'wagtaildocs_document_chosen' doc.id %}" class="document-choice">{{ doc.title }}</a></h2>
                     {% else %}
-                        <h2><a href="{% url 'verdantdocs_edit_document' doc.id %}">{{ doc.title }}</a></h2>
+                        <h2><a href="{% url 'wagtaildocs_edit_document' doc.id %}">{{ doc.title }}</a></h2>
                     {% endif %}
                 </td>
                 <td><a href="{{ doc.url }}" class="nolink">{{ doc.filename }}</a></td>

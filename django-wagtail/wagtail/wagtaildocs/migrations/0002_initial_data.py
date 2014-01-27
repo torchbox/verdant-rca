@@ -1,23 +1,37 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding field 'Document.uploaded_by_user'
-        db.add_column(u'verdantdocs_document', 'uploaded_by_user',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True),
-                      keep_default=False)
+        document_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
+            model='document', app_label='wagtaildocs', defaults={'name': 'document'})
+        add_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=document_content_type, codename='add_document', defaults=dict(name=u'Can add document'))
+        change_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=document_content_type, codename='change_document', defaults=dict(name=u'Can change document'))
+        delete_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=document_content_type, codename='delete_document', defaults=dict(name=u'Can delete document'))
 
+        editors_group = orm['auth.group'].objects.get(name='Editors')
+        editors_group.permissions.add(add_permission, change_permission, delete_permission)
+
+        moderators_group = orm['auth.group'].objects.get(name='Moderators')
+        moderators_group.permissions.add(add_permission, change_permission, delete_permission)
 
     def backwards(self, orm):
-        # Deleting field 'Document.uploaded_by_user'
-        db.delete_column(u'verdantdocs_document', 'uploaded_by_user_id')
+        document_content_type = orm['contenttypes.ContentType'].objects.get(
+            model='document', app_label='wagtaildocs')
+        document_permissions = orm['auth.permission'].objects.filter(content_type=document_content_type)
 
+        editors_group = orm['auth.group'].objects.get(name='Editors')
+        editors_group.permissions.remove(*document_permissions)
+
+        moderators_group = orm['auth.group'].objects.get(name='Moderators')
+        moderators_group.permissions.remove(*document_permissions)
 
     models = {
         u'auth.group': {
@@ -56,7 +70,7 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
@@ -66,4 +80,5 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['verdantdocs']
+    complete_apps = ['wagtaildocs']
+    symmetrical = True

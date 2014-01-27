@@ -16,17 +16,17 @@
     </header>
 
     <div class="nice-padding">
-        <form action="{% url 'verdantdocs_edit_document' document.id %}" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'wagtaildocs_edit_document' document.id %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <ul class="fields">
                 {% for field in form %}
                     {% if field.name == 'file' %}
-                        {% include "verdantdocs/documents/_file_field.html" %}
+                        {% include "wagtaildocs/documents/_file_field.html" %}
                     {% else %}
                         {% include "wagtailadmin/shared/field_as_li.html" %}
                     {% endif %}
                 {% endfor %}
-                <li><input type="submit" value="Save" /> <a href="{% url 'verdantdocs_delete_document' document.id %}" class="button button-secondary no">Delete document</a></li>
+                <li><input type="submit" value="Save" /> <a href="{% url 'wagtaildocs_delete_document' document.id %}" class="button button-secondary no">Delete document</a></li>
             </ul>
         </form>
 

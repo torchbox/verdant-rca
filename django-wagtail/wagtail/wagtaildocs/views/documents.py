@@ -4,12 +4,12 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 
-from verdantdocs.models import Document
-from verdantdocs.forms import DocumentForm
+from wagtail.wagtaildocs.models import Document
+from wagtail.wagtaildocs.forms import DocumentForm
 from wagtail.wagtailadmin.forms import SearchForm
 
 
-@permission_required('verdantdocs.add_document')
+@permission_required('wagtaildocs.add_document')
 def index(request):
 
     q = None
@@ -22,19 +22,19 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            if not request.user.has_perm('verdantdocs.change_document'):
+            if not request.user.has_perm('wagtaildocs.change_document'):
                 # restrict to the user's own documents
                 documents = Document.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
             else:
                 documents = Document.search(q, results_per_page=20, page=p)
         else:
             documents = Document.objects.order_by('-created_at')
-            if not request.user.has_perm('verdantdocs.change_document'):
+            if not request.user.has_perm('wagtaildocs.change_document'):
                 # restrict to the user's own documents
                 documents = documents.filter(uploaded_by_user=request.user)
     else:
         documents = Document.objects.order_by('-created_at')
-        if not request.user.has_perm('verdantdocs.change_document'):
+        if not request.user.has_perm('wagtaildocs.change_document'):
             # restrict to the user's own documents
             documents = documents.filter(uploaded_by_user=request.user)
         form = SearchForm()
@@ -50,13 +50,13 @@ def index(request):
             documents = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, "verdantdocs/documents/results.html", {
+        return render(request, "wagtaildocs/documents/results.html", {
             'documents': documents,
             'is_searching': is_searching,
             'search_query': q,
         })
     else:
-        return render(request, "verdantdocs/documents/index.html", {
+        return render(request, "wagtaildocs/documents/index.html", {
             'form': form,
             'documents': documents,
             'popular_tags': Document.popular_tags(),
@@ -65,7 +65,7 @@ def index(request):
         })
 
 
-@permission_required('verdantdocs.add_document')
+@permission_required('wagtaildocs.add_document')
 def add(request):
     if request.POST:
         doc = Document(uploaded_by_user=request.user)
@@ -73,13 +73,13 @@ def add(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Document '%s' added." % doc.title)
-            return redirect('verdantdocs_index')
+            return redirect('wagtaildocs_index')
         else:
             messages.error(request, "The document could not be saved due to errors.")
     else:
         form = DocumentForm()
 
-    return render(request, "verdantdocs/documents/add.html", {
+    return render(request, "wagtaildocs/documents/add.html", {
         'form': form,
     })
 
@@ -102,13 +102,13 @@ def edit(request, document_id):
                 original_file.storage.delete(original_file.name)
             doc = form.save()
             messages.success(request, "Document '%s' updated" % doc.title)
-            return redirect('verdantdocs_index')
+            return redirect('wagtaildocs_index')
         else:
             messages.error(request, "The document could not be saved due to errors.")
     else:
         form = DocumentForm(instance=doc)
 
-    return render(request, "verdantdocs/documents/edit.html", {
+    return render(request, "wagtaildocs/documents/edit.html", {
         'document': doc,
         'form': form,
     })
@@ -124,14 +124,14 @@ def delete(request, document_id):
     if request.POST:
         doc.delete()
         messages.success(request, "Document '%s' deleted." % doc.title)
-        return redirect('verdantdocs_index')
+        return redirect('wagtaildocs_index')
 
-    return render(request, "verdantdocs/documents/confirm_delete.html", {
+    return render(request, "wagtaildocs/documents/confirm_delete.html", {
         'document': doc,
     })
 
 
-@permission_required('verdantdocs.add_document')
+@permission_required('wagtaildocs.add_document')
 def search(request):
     documents = []
     q = None
@@ -148,13 +148,13 @@ def search(request):
         form = SearchForm()
 
     if request.is_ajax():
-        return render(request, "verdantdocs/documents/results.html", {
+        return render(request, "wagtaildocs/documents/results.html", {
             'documents': documents,
             'is_searching': is_searching,
             'search_query': q
         })
     else:
-        return render(request, "verdantdocs/documents/index.html", {
+        return render(request, "wagtaildocs/documents/index.html", {
             'form': form,
             'documents': documents,
             'is_searching': True,
