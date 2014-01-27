@@ -40,7 +40,7 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_school_programme_filters
+from rca.filters import run_school_programme_filters, run_filters
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
@@ -3700,34 +3700,23 @@ class GalleryPage(Page, SocialFields):
     search_name = 'Gallery'
 
     def serve(self, request):
-        # Get all possible gallery items
-        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
-
-        # Get list of years with gallery items
-        years = [
-            values['degree_year']
-            for values in gallery_items.order_by('-degree_year').distinct('degree_year').values('degree_year')
-        ]
-        latest_year = years[0] if years else '2013'
-
         # Get filter parameters
         year = request.GET.get('degree_year')
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        # If this is the initial hit to this page, automatically set year to latest year
-        if not request.is_ajax() and not programme and not school and not year:
-            year = latest_year
+        # Get all possible gallery items
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
 
-        # Apply year filter
-        if year:
-            gallery_items = gallery_items.filter(degree_year=year)
-
-        # Run school and programme filters
-        gallery_items, filters = run_school_programme_filters(gallery_items, school, programme)
+        # Run filters
+        gallery_items, filters = run_filters(gallery_items, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+            ('degree_year', 'degree_year', year),
+        ])
 
         # Randomly order gallery items
-        gallery_items = gallery_items.order_by('random_order')
+        gallery_items = gallery_items.order_by('-degree_year', 'random_order')
 
         # Pagination
         page = request.GET.get('page')
@@ -3750,7 +3739,7 @@ class GalleryPage(Page, SocialFields):
             'self': self,
             'gallery_items': gallery_items,
             'filters': json.dumps(filters),
-            'years': years,
+            'years': reversed(sorted(filters[2]['options'])),
             'selected_year': year,
         })
 
