@@ -11,7 +11,7 @@
             {% for name, description, content_type in snippet_types %}
                 <li>
                     <div class="row row-flush">
-                        <a href="{% url 'verdantsnippets_list' content_type.app_label content_type.model %}" class="col6">
+                        <a href="{% url 'wagtailsnippets_list' content_type.app_label content_type.model %}" class="col6">
                             {{ name|capfirst }} 
                         </a>
                         <small class="col6">{{ description }}</small>

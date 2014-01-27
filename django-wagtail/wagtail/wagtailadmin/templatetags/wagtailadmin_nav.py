@@ -5,7 +5,7 @@ from wagtail.wagtailcore.models import get_navigation_menu_items
 
 from wagtail.wagtailadmin import hooks
 from wagtail.wagtailadmin.menu import MenuItem
-from verdantsnippets.permissions import user_can_edit_snippets  # TODO: reorganise into pluggable architecture so that verdantsnippets registers its own menu item
+from wagtail.wagtailsnippets.permissions import user_can_edit_snippets  # TODO: reorganise into pluggable architecture so that wagtailsnippets registers its own menu item
 
 register = template.Library()
 
@@ -56,12 +56,12 @@ def main_nav(context):
 
     if user_can_edit_snippets(user):
         menu_items.append(
-            MenuItem('Snippets', urlresolvers.reverse('verdantsnippets_index'), classnames='icon icon-snippet', order=500)
+            MenuItem('Snippets', urlresolvers.reverse('wagtailsnippets_index'), classnames='icon icon-snippet', order=500)
         )
 
     if user.has_module_perms('auth'):
         menu_items.append(
-            MenuItem('Users', urlresolvers.reverse('verdantusers_index'), classnames='icon icon-user', order=600)
+            MenuItem('Users', urlresolvers.reverse('wagtailusers_index'), classnames='icon icon-user', order=600)
         )
 
     for fn in hooks.get_hooks('construct_main_menu'):

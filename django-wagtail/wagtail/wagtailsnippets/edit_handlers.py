@@ -7,7 +7,7 @@ from wagtail.wagtailadmin.edit_handlers import BaseChooserPanel
 
 
 class BaseSnippetChooserPanel(BaseChooserPanel):
-    field_template = "verdantsnippets/edit_handlers/snippet_chooser_panel.html"
+    field_template = "wagtailsnippets/edit_handlers/snippet_chooser_panel.html"
     object_type_name = 'item'
 
     _content_type = None

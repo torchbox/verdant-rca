@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Permission
-from verdantsnippets.models import get_snippet_content_types
+from wagtail.wagtailsnippets.models import get_snippet_content_types
 
 def user_can_edit_snippet_type(user, content_type):
     """ true if user has any permission related to this content type """

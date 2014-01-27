@@ -174,11 +174,11 @@ INSTALLED_APPS = (
     'wagtail.wagtailcore',
     'wagtail.wagtailadmin',
     'wagtail.wagtaildocs',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtailusers',
     'verdantimages',
     'verdantembeds',
-    'verdantsnippets',
     'verdantsearch',
-    'verdantusers',
     'verdantredirects',
 
     'donations',

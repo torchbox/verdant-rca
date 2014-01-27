@@ -11,9 +11,9 @@ from verdantimages import urls as verdantimages_urls
 from verdantembeds import urls as verdantembeds_urls
 from wagtail.wagtaildocs import admin_urls as wagtaildocs_admin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
-from verdantsnippets import urls as verdantsnippets_urls
+from wagtail.wagtailsnippets import urls as wagtailsnippets_urls
 from verdantsearch.urls import frontend as verdantsearch_frontend_urls, admin as verdantsearch_admin_urls
-from verdantusers import urls as verdantusers_urls
+from wagtail.wagtailusers import urls as wagtailusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
@@ -46,9 +46,9 @@ urlpatterns = patterns('',
     url(r'^admin/images/', include(verdantimages_urls)),
     url(r'^admin/embeds/', include(verdantembeds_urls)),
     url(r'^admin/documents/', include(wagtaildocs_admin_urls)),
-    url(r'^admin/snippets/', include(verdantsnippets_urls)),
+    url(r'^admin/snippets/', include(wagtailsnippets_urls)),
     url(r'^admin/search/', include(verdantsearch_admin_urls)),
-    url(r'^admin/users/', include(verdantusers_urls)),
+    url(r'^admin/users/', include(wagtailusers_urls)),
     url(r'^admin/redirects/', include(verdantredirects_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^search/', include(verdantsearch_frontend_urls)),

@@ -8,7 +8,7 @@
                 <h1>Users</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantusers_create' %}" class="button icon icon-plus-inverse">Add a user</a>
+                <a href="{% url 'wagtailusers_create' %}" class="button icon icon-plus-inverse">Add a user</a>
             </div>
         </div>
     </header>
@@ -25,7 +25,7 @@
             {% for user in users %}
                 <tr>
                     <td class="title">
-                        <h2><a href="{% url 'verdantusers_edit' user.id %}">{{ user.get_full_name|default:user.username }}</a></h2>
+                        <h2><a href="{% url 'wagtailusers_edit' user.id %}">{{ user.get_full_name|default:user.username }}</a></h2>
                     </td>
                     <td class="username">{{ user.username }}</td>
                     <td class="level">{% if user.is_superuser %}Admin{% endif %}</td>

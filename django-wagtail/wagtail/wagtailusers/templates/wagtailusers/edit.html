@@ -12,7 +12,7 @@
         <li><a href="#roles">Roles</a></li>
     </ul>   
 
-    <form action="{% url 'verdantusers_edit' user.id %}" method="POST">
+    <form action="{% url 'wagtailusers_edit' user.id %}" method="POST">
         <div class="tab-content">
             {% csrf_token %}
 
