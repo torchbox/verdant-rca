@@ -8,7 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     depends_on = (
-        ("verdantdocs", "0001_initial"),
+        ("wagtaildocs", "0002_initial_data"),
     )
 
     def forwards(self, orm):
@@ -16,7 +16,7 @@ class Migration(SchemaMigration):
         db.create_table(u'rca_relateddocument', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_documents', to=orm['wagtailcore.Page'])),
-            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['verdantdocs.Document'])),
+            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtaildocs.Document'])),
         ))
         db.send_create_signal(u'rca', ['RelatedDocument'])
 
@@ -117,7 +117,7 @@ class Migration(SchemaMigration):
         },
         u'rca.relateddocument': {
             'Meta': {'object_name': 'RelatedDocument'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_documents'", 'to': u"orm['wagtailcore.Page']"})
         },
@@ -146,7 +146,7 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

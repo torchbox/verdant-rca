@@ -86,7 +86,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'JobPage.download_info'
         db.add_column(u'rca_jobpage', 'download_info',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['verdantdocs.Document']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtaildocs.Document']),
                       keep_default=False)
 
         # Adding field 'JobPage.listing_intro'
@@ -280,7 +280,7 @@ class Migration(SchemaMigration):
             'campus': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'closing_date': ('django.db.models.fields.DateField', [], {}),
             'description': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
-            'download_info': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'download_info': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             'grade': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'interview_date': ('django.db.models.fields.DateField', [], {'blank': 'True'}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
@@ -638,7 +638,7 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),

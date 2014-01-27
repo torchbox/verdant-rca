@@ -27,7 +27,7 @@ from cluster.fields import ParentalKey
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from verdantimages.edit_handlers import ImageChooserPanel
 from verdantimages.models import AbstractImage, AbstractRendition
-from verdantdocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from verdantsnippets.edit_handlers import SnippetChooserPanel
 from verdantsnippets.models import register_snippet
 
@@ -756,7 +756,7 @@ class ProgrammePageOurSites(Orderable):
 
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
@@ -1838,7 +1838,7 @@ class ReviewPageQuotation(Orderable):
 
 class ReviewPageRelatedDocument(Orderable):
     page = ParentalKey('rca.ReviewPage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     document_name = models.CharField(max_length=255)
 
     panels = [
@@ -1941,7 +1941,7 @@ class StandardPageQuotation(Orderable):
 
 class StandardPageRelatedDocument(Orderable):
     page = ParentalKey('rca.StandardPage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     document_name = models.CharField(max_length=255)
 
     panels = [
@@ -2434,7 +2434,7 @@ class JobPage(Page, SocialFields):
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)
     description = RichTextField()
-    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    download_info = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")

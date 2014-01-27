@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse
 
-from verdantdocs.models import Document
+from wagtail.wagtaildocs.models import Document
 
 def serve(request, document_id, document_filename):
     doc = get_object_or_404(Document, id=document_id)

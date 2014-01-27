@@ -173,9 +173,9 @@ INSTALLED_APPS = (
 
     'wagtail.wagtailcore',
     'wagtail.wagtailadmin',
+    'wagtail.wagtaildocs',
     'verdantimages',
     'verdantembeds',
-    'verdantdocs',
     'verdantsnippets',
     'verdantsearch',
     'verdantusers',
