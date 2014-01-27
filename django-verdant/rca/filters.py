@@ -26,10 +26,3 @@ def run_filters(queryset, filters):
         filters_out.append(dict(name=name, current_value=current_value, options=options))
 
     return queryset, filters_out
-
-
-def run_school_programme_filters(queryset, school, programme, school_field='school', programme_field='programme'):
-    return run_filters(queryset, [
-        ('school', school_field, school),
-        ('programme', programme_field, programme),
-    ])

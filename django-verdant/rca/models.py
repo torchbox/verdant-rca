@@ -40,7 +40,7 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_school_programme_filters, run_filters
+from rca.filters import run_filters
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
@@ -926,11 +926,12 @@ class NewsIndex(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, path__startswith=self.path)
 
-        if area:
-            news = news.filter(area=area)
-
         # Run school and programme filters
-        news, filters = run_school_programme_filters(news, school, programme, school_field='related_schools__school', programme_field='related_programmes__programme')
+        news, filters = run_filters(news, [
+            ('school', 'related_schools__school', school),
+            ('programme', 'related_programmes__programme', programme),
+            ('area', 'area', area)
+        ])
 
         news = news.distinct().order_by('-date')
 
@@ -1589,17 +1590,14 @@ class EventIndex(Page, SocialFields):
         else:
             events = self.future_events()
 
-        if school == 'all':
-            school = ''
-        if location and location != '':
-            events = events.filter(location=location)
-        if area and area != 'all':
-            events = events.filter(related_areas__area=area)
-        if audience and audience != '':
-            events = events.filter(audience=audience)
-
-        # Run school and programme filters
-        events, filters = run_school_programme_filters(events, school, programme, school_field='related_schools__school', programme_field='related_programmes__programme')
+        # Run filters
+        events, filters = run_filters(events, [
+            ('school', 'related_schools__school', school),
+            ('programme', 'related_programmes__programme', programme),
+            ('location', 'location', location),
+            ('area', 'related_areas__area', area),
+            ('audience', 'audience', audience),
+        ])
 
         events = events.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
         if period== 'past':
@@ -2578,15 +2576,13 @@ class AlumniIndex(Page, SocialFields):
 
         alumni_pages = AlumniPage.objects.filter(live=True)
 
-        if school and school != '':
-            alumni_pages = alumni_pages.filter(school=school)
-        if programme and programme != '':
-            alumni_pages = alumni_pages.filter(programme=programme)
+        # Run school and programme filters
+        alumni_pages, filters = run_filters(alumni_pages, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         alumni_pages = alumni_pages.order_by('random_order')
-
-        # Run school and programme filters
-        alumni_pages, filters = run_school_programme_filters(alumni_pages, school, programme)
 
         page = request.GET.get('page')
         paginator = Paginator(alumni_pages, 11)
@@ -2849,13 +2845,13 @@ class StaffIndex(Page, SocialFields):
 
         staff_pages = StaffPage.objects.filter(live=True)
 
-        if staff_type and staff_type != '':
-            staff_pages = staff_pages.filter(staff_type=staff_type)
-        if area and area != '':
-            staff_pages = staff_pages.filter(roles__area=area)
-
-        # Run school and programme filters
-        staff_pages, filters = run_school_programme_filters(staff_pages, school, programme, school_field='roles__school', programme_field='roles__programme')
+        # Run filters
+        staff_pages, filters = run_filters(staff_pages, [
+            ('school', 'roles__school', school),
+            ('programme', 'roles__programme', programme),
+            ('staff_type', 'staff_type', staff_type),
+            ('area', 'roles__area', area),
+        ])
 
         staff_pages = staff_pages.order_by('-random_order')
 
@@ -2936,7 +2932,10 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
 
         # Run school and programme filters
-        research_students, filters = run_school_programme_filters(research_students, school, programme)
+        research_students, filters = run_filters(research_students, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         research_students = research_students.distinct()
 
@@ -3281,7 +3280,10 @@ class RcaNowIndex(Page, SocialFields):
             rca_now_items = rca_now_items.filter(area=area)
 
         # Run school and programme filters
-        rca_now_items, filters = run_school_programme_filters(rca_now_items, school, programme)
+        rca_now_items, filters = run_filters(rca_now_items, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         rca_now_items = rca_now_items.order_by('-date')
 
@@ -3612,15 +3614,13 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
 
-        if research_type:
-            research_items = research_items.filter(research_type=research_type)
-        if theme:
-            research_items = research_items.filter(theme=theme)
-        if work_type:
-            research_items = research_items.filter(work_type=work_type)
-
-        # Run school and programme filters
-        research_items, filters = run_school_programme_filters(research_items, school, None)
+        # Run filters
+        research_items, filters = run_filters(research_items, [
+            ('research_type', 'research_type', research_type),
+            ('school', 'school', school),
+            ('theme', 'theme', theme),
+            ('work_type', 'work_type', work_type),
+        ])
 
         research_items.order_by('-year')
 
