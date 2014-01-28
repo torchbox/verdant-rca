@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}RCA Now{% endblock %}
 
 {% block content %}
@@ -8,7 +8,7 @@
                 <h1>RCA Now</h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}" class="button icon icon-plus-inverse">Add a page</a>
+                <a href="{% url 'wagtailadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}" class="button icon icon-plus-inverse">Add a page</a>
             </div>
         </div>
     </header>
@@ -16,10 +16,10 @@
     <div class="nice-padding row-flush">
         {% if pages %}
             <div id="page-results">
-                {% include "verdantadmin/pages/list.html" with show_parent=0 allow_navigation=0 %}
+                {% include "wagtailadmin/pages/list.html" with show_parent=0 allow_navigation=0 %}
             </div>
         {% else %}
-            <p>You have not created any RCA Now pages yet. Why not <a href="{% url 'verdantadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}">add one</a>?</p>
+            <p>You have not created any RCA Now pages yet. Why not <a href="{% url 'wagtailadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}">add one</a>?</p>
         {% endif %}
     </div>
 {% endblock %}

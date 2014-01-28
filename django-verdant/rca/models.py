@@ -24,12 +24,12 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
 from cluster.fields import ParentalKey
 
-from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
-from verdantimages.edit_handlers import ImageChooserPanel
-from verdantimages.models import AbstractImage, AbstractRendition
-from verdantdocs.edit_handlers import DocumentChooserPanel
-from verdantsnippets.edit_handlers import SnippetChooserPanel
-from verdantsnippets.models import register_snippet
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
+from wagtail.wagtailsnippets.models import register_snippet
 
 from cluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
@@ -48,7 +48,7 @@ from rca_signage.constants import SCREEN_CHOICES
 # TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
-# RCA defines its own custom image class to replace verdantimages.Image,
+# RCA defines its own custom image class to replace wagtailimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
     alt = models.CharField(max_length=255, blank=True)
@@ -759,7 +759,7 @@ class ProgrammePageOurSites(Orderable):
 
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     text = models.CharField(max_length=255, blank=True)
 
     panels = [
@@ -1838,7 +1838,7 @@ class ReviewPageQuotation(Orderable):
 
 class ReviewPageRelatedDocument(Orderable):
     page = ParentalKey('rca.ReviewPage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     document_name = models.CharField(max_length=255)
 
     panels = [
@@ -1941,7 +1941,7 @@ class StandardPageQuotation(Orderable):
 
 class StandardPageRelatedDocument(Orderable):
     page = ParentalKey('rca.StandardPage', related_name='documents')
-    document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
     document_name = models.CharField(max_length=255)
 
     panels = [
@@ -2434,7 +2434,7 @@ class JobPage(Page, SocialFields):
     ref_number = models.CharField(max_length=255, blank=True)
     grade = models.CharField(max_length=255, blank=True)
     description = RichTextField()
-    download_info = models.ForeignKey('verdantdocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    download_info = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     listing_intro = models.CharField(max_length=255, help_text='Used only on pages listing jobs', blank=True)
     show_on_homepage = models.BooleanField()
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")

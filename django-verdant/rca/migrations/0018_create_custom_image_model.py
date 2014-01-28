@@ -7,7 +7,7 @@ from django.db import models
 
 class Migration(SchemaMigration):
     depends_on = (
-        ("verdantimages", "0002_rename_format_to_filter"),
+        ("wagtailimages", "0002_initial_data"),
     )
 
     def forwards(self, orm):
@@ -28,8 +28,8 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'rca', ['RcaImage'])
 
-        # copy image data from verdantimages.Image into rca.RcaImage
-        for image in orm['verdantimages.Image'].objects.order_by('id'):
+        # copy image data from wagtailimages.Image into rca.RcaImage
+        for image in orm['wagtailimages.Image'].objects.order_by('id'):
             orm['rca.RcaImage'].objects.create(
                 id=image.id, title=image.title, file=image.file, width=image.width, height=image.height
             )
@@ -38,7 +38,7 @@ class Migration(SchemaMigration):
         # Adding model 'RcaRendition'
         db.create_table(u'rca_rcarendition', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('filter', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['verdantimages.Filter'])),
+            ('filter', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['wagtailimages.Filter'])),
             ('file', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
             ('width', self.gf('django.db.models.fields.IntegerField')()),
             ('height', self.gf('django.db.models.fields.IntegerField')()),
@@ -140,88 +140,88 @@ class Migration(SchemaMigration):
 
 
         # Changing field 'StandardPageCarouselItem.image'
-        db.alter_column(u'rca_standardpagecarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_standardpagecarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'StandardPageCarouselItem.poster_image'
-        db.alter_column(u'rca_standardpagecarouselitem', 'poster_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_standardpagecarouselitem', 'poster_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'EventItemCarouselItem.image'
-        db.alter_column(u'rca_eventitemcarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_eventitemcarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'StudentPage.social_image'
-        db.alter_column(u'rca_studentpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_studentpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'RelatedLink.image'
-        db.alter_column(u'rca_relatedlink', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_relatedlink', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'JobPage.social_image'
-        db.alter_column(u'rca_jobpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_jobpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'EventItem.social_image'
-        db.alter_column(u'rca_eventitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_eventitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ResearchInnovationPage.social_image'
-        db.alter_column(u'rca_researchinnovationpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_researchinnovationpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'NewsItem.social_image'
-        db.alter_column(u'rca_newsitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_newsitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'AuthorPage.mugshot'
-        db.alter_column(u'rca_authorpage', 'mugshot_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_authorpage', 'mugshot_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'HomePage.social_image'
-        db.alter_column(u'rca_homepage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_homepage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ResearchItem.social_image'
-        db.alter_column(u'rca_researchitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_researchitem', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ContactUsPage.social_image'
-        db.alter_column(u'rca_contactuspage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_contactuspage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'StandardPage.social_image'
-        db.alter_column(u'rca_standardpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_standardpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'StandardIndex.social_image'
-        db.alter_column(u'rca_standardindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_standardindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'JobsIndex.social_image'
-        db.alter_column(u'rca_jobsindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_jobsindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ProgrammePageOurSites.image'
-        db.alter_column(u'rca_programmepageoursites', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_programmepageoursites', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'GalleryPage.social_image'
-        db.alter_column(u'rca_gallerypage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_gallerypage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'NewsItemCarouselItem.image'
-        db.alter_column(u'rca_newsitemcarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_newsitemcarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'NewsItemCarouselItem.poster_image'
-        db.alter_column(u'rca_newsitemcarouselitem', 'poster_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_newsitemcarouselitem', 'poster_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'RcaNowPage.social_image'
-        db.alter_column(u'rca_rcanowpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_rcanowpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'CurrentResearchPage.social_image'
-        db.alter_column(u'rca_currentresearchpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_currentresearchpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ProgrammePageCarouselItem.image'
-        db.alter_column(u'rca_programmepagecarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_programmepagecarouselitem', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'StaffPage.social_image'
-        db.alter_column(u'rca_staffpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_staffpage', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'RcaNowIndex.social_image'
-        db.alter_column(u'rca_rcanowindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_rcanowindex', 'social_image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'EventItemSpeaker.image'
-        db.alter_column(u'rca_eventitemspeaker', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_eventitemspeaker', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ProgrammePageStudentStory.image'
-        db.alter_column(u'rca_programmepagestudentstory', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_programmepagestudentstory', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
         # Changing field 'ProgrammePageFacilities.image'
-        db.alter_column(u'rca_programmepagefacilities', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['verdantimages.Image']))
+        db.alter_column(u'rca_programmepagefacilities', 'image_id', self.gf('django.db.models.fields.related.ForeignKey')(null=True, to=orm['wagtailimages.Image']))
 
     models = {
         u'contenttypes.contenttype': {
@@ -445,7 +445,7 @@ class Migration(SchemaMigration):
         u'rca.rcarendition': {
             'Meta': {'object_name': 'RcaRendition'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['verdantimages.Filter']"}),
+            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['wagtailimages.Filter']"}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['rca.RcaImage']"}),
@@ -453,7 +453,7 @@ class Migration(SchemaMigration):
         },
         u'rca.relateddocument': {
             'Meta': {'object_name': 'RelatedDocument'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_documents'", 'to': u"orm['wagtailcore.Page']"})
         },
@@ -542,18 +542,18 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
-        u'verdantimages.filter': {
+        u'wagtailimages.filter': {
             'Meta': {'object_name': 'Filter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'spec': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
         },
-        u'verdantimages.image': {
+        u'wagtailimages.image': {
             'Meta': {'object_name': 'Image'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
             'height': ('django.db.models.fields.IntegerField', [], {}),

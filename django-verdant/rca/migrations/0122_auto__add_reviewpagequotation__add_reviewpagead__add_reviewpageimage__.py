@@ -65,7 +65,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('sort_order', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('page', self.gf('cluster.fields.ParentalKey')(related_name='documents', to=orm['rca.ReviewPage'])),
-            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['verdantdocs.Document'])),
+            ('document', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtaildocs.Document'])),
             ('document_name', self.gf('django.db.models.fields.CharField')(max_length=255)),
         ))
         db.send_create_signal(u'rca', ['ReviewPageRelatedDocument'])
@@ -338,7 +338,7 @@ class Migration(SchemaMigration):
             'campus': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'closing_date': ('django.db.models.fields.DateField', [], {}),
             'description': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
-            'download_info': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'download_info': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             'grade': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
             'interview_date': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'listing_intro': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
@@ -439,7 +439,7 @@ class Migration(SchemaMigration):
         },
         u'rca.programmedocuments': {
             'Meta': {'ordering': "['sort_order']", 'object_name': 'ProgrammeDocuments'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('cluster.fields.ParentalKey', [], {'related_name': "'documents'", 'to': u"orm['rca.ProgrammePage']"}),
             'sort_order': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
@@ -580,7 +580,7 @@ class Migration(SchemaMigration):
         u'rca.rcarendition': {
             'Meta': {'unique_together': "(('image', 'filter'),)", 'object_name': 'RcaRendition'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['verdantimages.Filter']"}),
+            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['wagtailimages.Filter']"}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['rca.RcaImage']"}),
@@ -752,7 +752,7 @@ class Migration(SchemaMigration):
         },
         u'rca.reviewpagerelateddocument': {
             'Meta': {'ordering': "['sort_order']", 'object_name': 'ReviewPageRelatedDocument'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             'document_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('cluster.fields.ParentalKey', [], {'related_name': "'documents'", 'to': u"orm['rca.ReviewPage']"}),
@@ -1033,7 +1033,7 @@ class Migration(SchemaMigration):
         },
         u'rca.standardpagerelateddocument': {
             'Meta': {'ordering': "['sort_order']", 'object_name': 'StandardPageRelatedDocument'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             'document_name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('cluster.fields.ParentalKey', [], {'related_name': "'documents'", 'to': u"orm['rca.StandardPage']"}),
@@ -1159,14 +1159,14 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'})
         },
-        u'verdantimages.filter': {
+        u'wagtailimages.filter': {
             'Meta': {'object_name': 'Filter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'spec': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})

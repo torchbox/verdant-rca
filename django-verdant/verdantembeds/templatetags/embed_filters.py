@@ -8,7 +8,7 @@ register = template.Library()
 
 
 @register.filter
-def embedly(url, max_width=None):
+def embed(url, max_width=None):
     embed = get_embed(url, max_width=max_width)
     if embed is not None:
         return mark_safe(embed.html)
@@ -17,5 +17,5 @@ def embedly(url, max_width=None):
 
 
 @register.filter
-def embed(url):
-    return embedly(url)
+def embedly(url, max_width=None):
+    return embed(url, max_width)

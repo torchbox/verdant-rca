@@ -1,18 +1,17 @@
 from django.utils.html import escape
 
-from bs4 import BeautifulSoup
 import re  # parsing HTML with regexes LIKE A BOSS.
 
 from wagtail.wagtailcore.whitelist import Whitelister
 from wagtail.wagtailcore.models import Page
 
-# FIXME: we don't really want to import verdantimages within core.
+# FIXME: we don't really want to import wagtailimages within core.
 # For that matter, we probably don't want core to be concerned about translating
 # HTML for the benefit of the hallo.js editor...
-from verdantimages.models import get_image_model
-from verdantimages.formats import get_image_format
+from wagtail.wagtailimages.models import get_image_model
+from wagtail.wagtailimages.formats import get_image_format
 
-from verdantdocs.models import Document
+from wagtail.wagtaildocs.models import Document
 
 # Define a set of 'embed handlers' and 'link handlers'. These handle the translation
 # of 'special' HTML elements in rich text - ones which we do not want to include

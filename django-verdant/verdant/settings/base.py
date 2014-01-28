@@ -172,13 +172,13 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 
     'wagtail.wagtailcore',
-    'verdantadmin',
-    'verdantimages',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtaildocs',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtailusers',
+    'wagtail.wagtailimages',
     'verdantembeds',
-    'verdantdocs',
-    'verdantsnippets',
     'verdantsearch',
-    'verdantusers',
     'verdantredirects',
 
     'donations',
@@ -217,7 +217,7 @@ COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'verdantadmin_home'
+LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -260,8 +260,8 @@ CACHES = {
 
 # VERDANT SETTINGS
 
-# Override the Image class used by verdantimages with a custom one
-VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+# Override the Image class used by wagtailimages with a custom one
+WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for verdantsearch
 VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
