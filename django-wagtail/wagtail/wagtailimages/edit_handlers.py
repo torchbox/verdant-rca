@@ -1,7 +1,7 @@
 from wagtail.wagtailadmin.edit_handlers import BaseChooserPanel
 
 class BaseImageChooserPanel(BaseChooserPanel):
-    field_template = "verdantimages/edit_handlers/image_chooser_panel.html"
+    field_template = "wagtailimages/edit_handlers/image_chooser_panel.html"
     object_type_name = "image"
     js_function_name = "createImageChooser"
 

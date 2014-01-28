@@ -25,8 +25,8 @@ from wagtail.wagtailcore.fields import RichTextField
 from cluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
-from verdantimages.edit_handlers import ImageChooserPanel
-from verdantimages.models import AbstractImage, AbstractRendition
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
@@ -47,7 +47,7 @@ from rca_signage.constants import SCREEN_CHOICES
 # TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
-# RCA defines its own custom image class to replace verdantimages.Image,
+# RCA defines its own custom image class to replace wagtailimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
     alt = models.CharField(max_length=255, blank=True)

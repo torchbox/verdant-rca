@@ -13,7 +13,7 @@
 
 <div class="tab-content">
     <section id="search" class="active nice-padding">
-        <form class="image-search search-bar" action="{% url 'verdantimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET" autocomplete="off">
+        <form class="image-search search-bar" action="{% url 'wagtailimages_chooser' %}{% if will_select_format %}?select_format=true{% endif %}" method="GET" autocomplete="off">
             <ul class="fields">
                 {% for field in searchform %}
                     {% include "wagtailadmin/shared/field_as_li.html" with field=field %}
@@ -23,19 +23,19 @@
                     <li class="taglist">
                         <h3>Popular tags</h3>
                         {% for tag in popular_tags %}
-                            <a class="suggested-tag tag" href="{% url 'verdantimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
+                            <a class="suggested-tag tag" href="{% url 'wagtailimages_search_image' %}?q={{ tag.name|urlencode }}">{{ tag.name }}</a>
                         {% endfor %}
                     </li>
                 {% endif %}
             </ul>
         </form>
         <div id="image-results">
-            {% include "verdantimages/chooser/results.html" %}
+            {% include "wagtailimages/chooser/results.html" %}
         </div>
     </section>
     {% if uploadform %}
         <section id="upload" class="nice-padding">
-            <form class="image-upload" action="{% url 'verdantimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
+            <form class="image-upload" action="{% url 'wagtailimages_chooser_upload' %}{% if will_select_format %}?select_format=true{% endif %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul class="fields">
                     {% for field in uploadform %}

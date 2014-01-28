@@ -7,7 +7,7 @@ import os.path
 
 from wagtail.wagtailcore import urls as verdant_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from verdantimages import urls as verdantimages_urls
+from wagtail.wagtailimages import urls as wagtailimages_urls
 from verdantembeds import urls as verdantembeds_urls
 from wagtail.wagtaildocs import admin_urls as wagtaildocs_admin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
@@ -41,9 +41,9 @@ urlpatterns = patterns('',
 
     url(r'^django-admin/', include(admin.site.urls)),
 
-    # TODO: some way of getting verdantimages to register itself within verdant so that we
+    # TODO: some way of getting wagtailimages to register itself within wagtailadmin so that we
     # don't have to define it separately here
-    url(r'^admin/images/', include(verdantimages_urls)),
+    url(r'^admin/images/', include(wagtailimages_urls)),
     url(r'^admin/embeds/', include(verdantembeds_urls)),
     url(r'^admin/documents/', include(wagtaildocs_admin_urls)),
     url(r'^admin/snippets/', include(wagtailsnippets_urls)),

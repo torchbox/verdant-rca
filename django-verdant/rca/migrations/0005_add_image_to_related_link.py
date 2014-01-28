@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'NewsItemRelatedLink.image'
         db.add_column(u'rca_newsitemrelatedlink', 'image',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['verdantimages.Image']),
+                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtailimages.Image']),
                       keep_default=False)
 
 
@@ -49,17 +49,17 @@ class Migration(SchemaMigration):
         u'rca.newsitem': {
             'Meta': {'object_name': 'NewsItem', '_ormbases': [u'rca.EditorialPage']},
             u'editorialpage_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['rca.EditorialPage']", 'unique': 'True', 'primary_key': 'True'}),
-            'lead_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantimages.Image']"})
+            'lead_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailimages.Image']"})
         },
         u'rca.newsitemrelatedlink': {
             'Meta': {'object_name': 'NewsItemRelatedLink'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantimages.Image']"}),
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtailimages.Image']"}),
             'link_text': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'news_item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_links'", 'to': u"orm['rca.NewsItem']"}),
             'url': ('django.db.models.fields.URLField', [], {'max_length': '200'})
         },
-        u'verdantimages.image': {
+        u'wagtailimages.image': {
             'Meta': {'object_name': 'Image'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
