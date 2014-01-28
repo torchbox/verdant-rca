@@ -176,7 +176,7 @@ INSTALLED_APPS = (
     'wagtail.wagtaildocs',
     'wagtail.wagtailsnippets',
     'wagtail.wagtailusers',
-    'verdantimages',
+    'wagtail.wagtailimages',
     'verdantembeds',
     'verdantsearch',
     'verdantredirects',
@@ -260,8 +260,8 @@ CACHES = {
 
 # VERDANT SETTINGS
 
-# Override the Image class used by verdantimages with a custom one
-VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+# Override the Image class used by wagtailimages with a custom one
+WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for verdantsearch
 VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"

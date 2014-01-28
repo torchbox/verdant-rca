@@ -10,7 +10,7 @@
     <ul class="listing horiz images chooser">
         {% for image in images %}
             <li>
-                <a class="image-choice" href="{% if will_select_format %}{% url 'verdantimages_chooser_select_format' image.id %}{% else %}{% url 'verdantimages_image_chosen' image.id %}{% endif %}">
+                <a class="image-choice" href="{% if will_select_format %}{% url 'wagtailimages_chooser_select_format' image.id %}{% else %}{% url 'wagtailimages_image_chosen' image.id %}{% endif %}">
                     <div class="image">{% image image max-165x165 %}</div>
                     <h3>{{ image.title|ellipsistrim:60 }}</h3>
                 </a>

@@ -1,29 +1,64 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import DataMigration
+from south.v2 import SchemaMigration
 from django.db import models
 
-class Migration(DataMigration):
+
+class Migration(SchemaMigration):
+
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
 
     def forwards(self, orm):
-        image_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
-            model='image', app_label='verdantimages')
-        add_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=image_content_type, codename='add_image', defaults=dict(name=u'Can add image'))
-        change_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=image_content_type, codename='change_image', defaults=dict(name=u'Can change image'))
-        delete_permission, created = orm['auth.permission'].objects.get_or_create(
-            content_type=image_content_type, codename='delete_image', defaults=dict(name=u'Can delete image'))
+        # Adding model 'Image'
+        db.create_table(u'wagtailimages_image', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('file', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('width', self.gf('django.db.models.fields.IntegerField')()),
+            ('height', self.gf('django.db.models.fields.IntegerField')()),
+            ('created_at', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('uploaded_by_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True)),
+        ))
+        db.send_create_signal(u'wagtailimages', ['Image'])
 
-        editors_group, created = orm['auth.group'].objects.get_or_create(name='Editors')
-        editors_group.permissions.add(add_permission, change_permission, delete_permission)
+        # Adding model 'Filter'
+        db.create_table(u'wagtailimages_filter', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('spec', self.gf('django.db.models.fields.CharField')(max_length=255, db_index=True)),
+        ))
+        db.send_create_signal(u'wagtailimages', ['Filter'])
 
-        moderators_group, created = orm['auth.group'].objects.get_or_create(name='Moderators')
-        moderators_group.permissions.add(add_permission, change_permission, delete_permission)
+        # Adding model 'Rendition'
+        db.create_table(u'wagtailimages_rendition', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('filter', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', to=orm['wagtailimages.Filter'])),
+            ('file', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+            ('width', self.gf('django.db.models.fields.IntegerField')()),
+            ('height', self.gf('django.db.models.fields.IntegerField')()),
+            ('image', self.gf('django.db.models.fields.related.ForeignKey')(related_name='renditions', to=orm['wagtailimages.Image'])),
+        ))
+        db.send_create_signal(u'wagtailimages', ['Rendition'])
+
+        # Adding unique constraint on 'Rendition', fields ['image', 'filter']
+        db.create_unique(u'wagtailimages_rendition', ['image_id', 'filter_id'])
+
 
     def backwards(self, orm):
-        "Write your backwards methods here."
+        # Removing unique constraint on 'Rendition', fields ['image', 'filter']
+        db.delete_unique(u'wagtailimages_rendition', ['image_id', 'filter_id'])
+
+        # Deleting model 'Image'
+        db.delete_table(u'wagtailimages_image')
+
+        # Deleting model 'Filter'
+        db.delete_table(u'wagtailimages_filter')
+
+        # Deleting model 'Rendition'
+        db.delete_table(u'wagtailimages_rendition')
+
 
     models = {
         u'auth.group': {
@@ -62,30 +97,30 @@ class Migration(DataMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'verdantimages.filter': {
+        u'wagtailimages.filter': {
             'Meta': {'object_name': 'Filter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'spec': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
         },
-        u'verdantimages.image': {
+        u'wagtailimages.image': {
             'Meta': {'object_name': 'Image'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'uploaded_by_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'width': ('django.db.models.fields.IntegerField', [], {})
         },
-        u'verdantimages.rendition': {
+        u'wagtailimages.rendition': {
             'Meta': {'unique_together': "(('image', 'filter'),)", 'object_name': 'Rendition'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['verdantimages.Filter']"}),
+            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['wagtailimages.Filter']"}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['verdantimages.Image']"}),
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['wagtailimages.Image']"}),
             'width': ('django.db.models.fields.IntegerField', [], {})
         }
     }
 
-    complete_apps = ['auth', 'verdantimages']
-    symmetrical = True
+    complete_apps = ['wagtailimages']

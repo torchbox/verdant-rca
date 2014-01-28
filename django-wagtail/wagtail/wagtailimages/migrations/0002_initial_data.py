@@ -1,23 +1,29 @@
 # -*- coding: utf-8 -*-
 from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding field 'Image.uploaded_by_user'
-        db.add_column(u'verdantimages_image', 'uploaded_by_user',
-                      self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'], null=True, blank=True),
-                      keep_default=False)
+        image_content_type, created = orm['contenttypes.ContentType'].objects.get_or_create(
+            model='image', app_label='wagtailimages', defaults={'name': 'image'})
+        add_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=image_content_type, codename='add_image', defaults=dict(name=u'Can add image'))
+        change_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=image_content_type, codename='change_image', defaults=dict(name=u'Can change image'))
+        delete_permission, created = orm['auth.permission'].objects.get_or_create(
+            content_type=image_content_type, codename='delete_image', defaults=dict(name=u'Can delete image'))
 
+        editors_group = orm['auth.group'].objects.get(name='Editors')
+        editors_group.permissions.add(add_permission, change_permission, delete_permission)
+
+        moderators_group = orm['auth.group'].objects.get(name='Moderators')
+        moderators_group.permissions.add(add_permission, change_permission, delete_permission)
 
     def backwards(self, orm):
-        # Deleting field 'Image.uploaded_by_user'
-        db.delete_column(u'verdantimages_image', 'uploaded_by_user_id')
-
+        "Write your backwards methods here."
 
     models = {
         u'auth.group': {
@@ -56,12 +62,12 @@ class Migration(SchemaMigration):
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
-        u'verdantimages.filter': {
+        u'wagtailimages.filter': {
             'Meta': {'object_name': 'Filter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'spec': ('django.db.models.fields.CharField', [], {'max_length': '255', 'db_index': 'True'})
         },
-        u'verdantimages.image': {
+        u'wagtailimages.image': {
             'Meta': {'object_name': 'Image'},
             'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
@@ -71,15 +77,16 @@ class Migration(SchemaMigration):
             'uploaded_by_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
             'width': ('django.db.models.fields.IntegerField', [], {})
         },
-        u'verdantimages.rendition': {
+        u'wagtailimages.rendition': {
             'Meta': {'unique_together': "(('image', 'filter'),)", 'object_name': 'Rendition'},
             'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['verdantimages.Filter']"}),
+            'filter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'+'", 'to': u"orm['wagtailimages.Filter']"}),
             'height': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['verdantimages.Image']"}),
+            'image': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'renditions'", 'to': u"orm['wagtailimages.Image']"}),
             'width': ('django.db.models.fields.IntegerField', [], {})
         }
     }
 
-    complete_apps = ['verdantimages']
+    complete_apps = ['wagtailimages']
+    symmetrical = True

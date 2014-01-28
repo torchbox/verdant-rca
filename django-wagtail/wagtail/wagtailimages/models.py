@@ -13,7 +13,7 @@ import os.path
 from taggit.managers import TaggableManager
 
 from wagtail.wagtailadmin.taggable import TagSearchable
-from verdantimages import image_ops
+from wagtail.wagtailimages import image_ops
 
 
 class AbstractImage(models.Model, TagSearchable):
@@ -90,10 +90,10 @@ class AbstractImage(models.Model, TagSearchable):
         return self.title
 
     def is_editable_by_user(self, user):
-        if user.has_perm('verdantimages.change_image'):
+        if user.has_perm('wagtailimages.change_image'):
             # user has global permission to change images
             return True
-        elif user.has_perm('verdantimages.add_image') and self.uploaded_by_user == user:
+        elif user.has_perm('wagtailimages.add_image') and self.uploaded_by_user == user:
             # user has image add permission, which also implicitly provides permission to edit their own images
             return True
         else:
@@ -125,15 +125,15 @@ def get_image_model():
     from django.db.models import get_model
 
     try:
-        app_label, model_name = settings.VERDANTIMAGES_IMAGE_MODEL.split('.')
+        app_label, model_name = settings.WAGTAILIMAGES_IMAGE_MODEL.split('.')
     except AttributeError:
         return Image
     except ValueError:
-        raise ImproperlyConfigured("VERDANTIMAGES_IMAGE_MODEL must be of the form 'app_label.model_name'")
+        raise ImproperlyConfigured("WAGTAILIMAGES_IMAGE_MODEL must be of the form 'app_label.model_name'")
 
     image_model = get_model(app_label, model_name)
     if image_model is None:
-        raise ImproperlyConfigured("VERDANTIMAGES_IMAGE_MODEL refers to model '%s' that has not been installed" % settings.VERDANTIMAGES_IMAGE_MODEL)
+        raise ImproperlyConfigured("WAGTAILIMAGES_IMAGE_MODEL refers to model '%s' that has not been installed" % settings.WAGTAILIMAGES_IMAGE_MODEL)
     return image_model
 
 
