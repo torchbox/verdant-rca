@@ -197,5 +197,5 @@ def export(request, include_all=False):
 
 
 @permission_required('donations.download_donations')
-def verdantadmin(request, title=None):
-    return render(request, 'donations/verdantadmin.html', {})
+def wagtailadmin(request, title=None):
+    return render(request, 'donations/wagtailadmin.html', {})

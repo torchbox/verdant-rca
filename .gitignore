@@ -1,10 +1,11 @@
 *.pyc
 .DS_Store
-/django-verdant/.vagrant*
+/.vagrant*
 /django-verdant/static
 /django-verdant/media
 /django-verdant/verdant/settings/local.py
 /django-verdant/celerybeat*
 
 /static/rca/site/assets/css/*.css
+*/_build
 

@@ -8,6 +8,14 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
+# Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
+
+# Add dependencies django-cluster and django-treebeard, which live alongside PROJECT_ROOT
+# (until they get released as a standalone project / merged upstream respectively)
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-cluster'))
+sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -115,7 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'core.middleware.SiteMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
 
     'verdantredirects.middleware.RedirectMiddleware',
 
@@ -163,14 +171,14 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 
-    'core',
-    'verdantadmin',
-    'verdantimages',
+    'wagtail.wagtailcore',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtaildocs',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtailusers',
+    'wagtail.wagtailimages',
     'verdantembeds',
-    'verdantdocs',
-    'verdantsnippets',
     'verdantsearch',
-    'verdantusers',
     'verdantredirects',
 
     'donations',
@@ -209,7 +217,7 @@ COMPRESS_OFFLINE = True
 
 # Auth settings
 LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'verdantadmin_home'
+LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -252,8 +260,8 @@ CACHES = {
 
 # VERDANT SETTINGS
 
-# Override the Image class used by verdantimages with a custom one
-VERDANTIMAGES_IMAGE_MODEL = 'rca.RcaImage'
+# Override the Image class used by wagtailimages with a custom one
+WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for verdantsearch
 VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
@@ -263,6 +271,8 @@ VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 
 # CELERY SETTINGS
+import djcelery
+djcelery.setup_loader()
 
 # Use separate queues on each host if uploads should be processed by celery
 # import socket

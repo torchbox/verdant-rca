@@ -1,0 +1,14 @@
+{% extends "wagtailadmin/base.html" %}
+{% block titletag %}My student pages{% endblock %}
+
+{% block content %}
+    <header>
+        <h1>My student pages</h1>
+    </header>
+
+    <div class="nice-padding row-flush">
+        <div id="page-results">
+            {% include "wagtailadmin/pages/list.html" with show_parent=0 allow_navigation=0 %}
+        </div>
+    </div>
+{% endblock %}

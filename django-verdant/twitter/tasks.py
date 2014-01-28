@@ -63,8 +63,12 @@ class get_tweets_for_all(PeriodicTask):
         random.shuffle(screen_names)
 
         for screen_name in screen_names:
-            for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
-                Tweet.save_from_dict(status)
+            try:
+                for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
+                    Tweet.save_from_dict(status)
+            except tweepy.TweepError:
+                # ignore connection errors which happen a bit too often now that Twitter switched over to ssl only
+                pass
 
             remaining = dict(api.last_response.getheaders()).get("x-rate-limit-remaining")
             if remaining is not None and int(remaining) < 1:

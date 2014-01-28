@@ -1,4 +1,4 @@
-from core.models import Page
+from wagtail.wagtailcore.models import Page
 from rca.models import ResearchItem
 import csv
 

@@ -1,4 +1,4 @@
-{% extends "verdantadmin/base.html" %}
+{% extends "wagtailadmin/base.html" %}
 {% block titletag %}Editing {{ query.query_string }}{% endblock %}
 {% block content %}
     <header>
@@ -24,10 +24,10 @@
 {% endblock %}
 
 {% block extra_css %}
-    {% include "verdantadmin/pages/_editor_css.html" %}
+    {% include "wagtailadmin/pages/_editor_css.html" %}
 {% endblock %}
 {% block extra_js %}
-    {% include "verdantadmin/pages/_editor_js.html" %}
+    {% include "wagtailadmin/pages/_editor_js.html" %}
 
     <script type="text/javascript">
         {% include "verdantsearch/editorspicks/includes/editorspicks_formset.js" with formset=editors_pick_formset only  %}
