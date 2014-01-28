@@ -7,9 +7,13 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
+    depends_on = (
+        ("wagtailcore", "0002_initial_data"),
+    )
+
     def forwards(self, orm):
         # Adding model 'Embed'
-        db.create_table(u'verdantembeds_embed', (
+        db.create_table(u'wagtailembeds_embed', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('url', self.gf('django.db.models.fields.URLField')(max_length=200)),
             ('max_width', self.gf('django.db.models.fields.SmallIntegerField')(null=True, blank=True)),
@@ -21,22 +25,22 @@ class Migration(SchemaMigration):
             ('height', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
             ('last_updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
-        db.send_create_signal(u'verdantembeds', ['Embed'])
+        db.send_create_signal(u'wagtailembeds', ['Embed'])
 
         # Adding unique constraint on 'Embed', fields ['url', 'max_width']
-        db.create_unique(u'verdantembeds_embed', ['url', 'max_width'])
+        db.create_unique(u'wagtailembeds_embed', ['url', 'max_width'])
 
 
     def backwards(self, orm):
         # Removing unique constraint on 'Embed', fields ['url', 'max_width']
-        db.delete_unique(u'verdantembeds_embed', ['url', 'max_width'])
+        db.delete_unique(u'wagtailembeds_embed', ['url', 'max_width'])
 
         # Deleting model 'Embed'
-        db.delete_table(u'verdantembeds_embed')
+        db.delete_table(u'wagtailembeds_embed')
 
 
     models = {
-        u'verdantembeds.embed': {
+        u'wagtailembeds.embed': {
             'Meta': {'unique_together': "(('url', 'max_width'),)", 'object_name': 'Embed'},
             'height': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'html': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
@@ -51,4 +55,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['verdantembeds']
+    complete_apps = ['wagtailembeds']
