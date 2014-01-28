@@ -1,7 +1,7 @@
 import re
 from django import template
 from django.utils.safestring import mark_safe
-from verdantembeds.embeds import get_embed
+from wagtail.wagtailembeds.embeds import get_embed
 
 
 register = template.Library()
