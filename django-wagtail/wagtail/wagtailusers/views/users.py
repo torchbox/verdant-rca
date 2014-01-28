@@ -3,13 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 
-from verdantusers.forms import UserCreationForm, UserEditForm
+from wagtail.wagtailusers.forms import UserCreationForm, UserEditForm
 
 @permission_required('auth.change_user')
 def index(request):
     users = User.objects.order_by('last_name', 'first_name')
 
-    return render(request, 'verdantusers/index.html', {
+    return render(request, 'wagtailusers/index.html', {
         'users': users,
     })
 
@@ -20,13 +20,13 @@ def create(request):
         if form.is_valid():
             user = form.save()
             messages.success(request, "User '%s' created." % user)
-            return redirect('verdantusers_index')
+            return redirect('wagtailusers_index')
         else:
             messages.error(request, "The user could not be created due to errors.")
     else:
         form = UserCreationForm()
 
-    return render(request, 'verdantusers/create.html', {
+    return render(request, 'wagtailusers/create.html', {
         'form': form,
     })
 
@@ -38,13 +38,13 @@ def edit(request, user_id):
         if form.is_valid():
             user = form.save()
             messages.success(request, "User '%s' updated." % user)
-            return redirect('verdantusers_index')
+            return redirect('wagtailusers_index')
         else:
             messages.error(request, "The user could not be saved due to errors.")
     else:
         form = UserEditForm(instance=user)
 
-    return render(request, 'verdantusers/edit.html', {
+    return render(request, 'wagtailusers/edit.html', {
         'user': user,
         'form': form,
     })

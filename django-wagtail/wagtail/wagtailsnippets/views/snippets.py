@@ -7,8 +7,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
-from verdantsnippets.models import get_snippet_content_types
-from verdantsnippets.permissions import user_can_edit_snippet_type
+from wagtail.wagtailsnippets.models import get_snippet_content_types
+from wagtail.wagtailsnippets.permissions import user_can_edit_snippet_type
 from wagtail.wagtailadmin.edit_handlers import ObjectList, extract_panel_definitions_from_model_class
 
 # == Helper functions ==
@@ -68,7 +68,7 @@ def index(request):
         for content_type in get_snippet_content_types()
         if user_can_edit_snippet_type(request.user, content_type)
     ]
-    return render(request, 'verdantsnippets/snippets/index.html', {
+    return render(request, 'wagtailsnippets/snippets/index.html', {
         'snippet_types': snippet_types,
     })
 
@@ -84,7 +84,7 @@ def list(request, content_type_app_name, content_type_model_name):
 
     items = model.objects.all()
 
-    return render(request, 'verdantsnippets/snippets/type_index.html', {
+    return render(request, 'wagtailsnippets/snippets/type_index.html', {
         'content_type': content_type,
         'snippet_type_name': snippet_type_name,
         'snippet_type_name_plural': snippet_type_name_plural,
@@ -115,7 +115,7 @@ def create(request, content_type_app_name, content_type_model_name):
                 request,
                 "%s '%s' created." % (capfirst(get_snippet_type_name(content_type)[0]), instance)
             )
-            return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+            return redirect('wagtailsnippets_list', content_type.app_label, content_type.model)
         else:
             messages.error(request, "The snippet could not be created due to errors.")
             edit_handler = edit_handler_class(instance=instance, form=form)
@@ -123,7 +123,7 @@ def create(request, content_type_app_name, content_type_model_name):
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
 
-    return render(request, 'verdantsnippets/snippets/create.html', {
+    return render(request, 'wagtailsnippets/snippets/create.html', {
         'content_type': content_type,
         'snippet_type_name': snippet_type_name,
         'edit_handler': edit_handler,
@@ -152,7 +152,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
                 request,
                 "%s '%s' updated." % (capfirst(snippet_type_name), instance)
             )
-            return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+            return redirect('wagtailsnippets_list', content_type.app_label, content_type.model)
         else:
             messages.error(request, "The snippet could not be saved due to errors.")
             edit_handler = edit_handler_class(instance=instance, form=form)
@@ -160,7 +160,7 @@ def edit(request, content_type_app_name, content_type_model_name, id):
         form = form_class(instance=instance)
         edit_handler = edit_handler_class(instance=instance, form=form)
 
-    return render(request, 'verdantsnippets/snippets/edit.html', {
+    return render(request, 'wagtailsnippets/snippets/edit.html', {
         'content_type': content_type,
         'snippet_type_name': snippet_type_name,
         'instance': instance,
@@ -185,9 +185,9 @@ def delete(request, content_type_app_name, content_type_model_name, id):
             request,
             "%s '%s' deleted." % (capfirst(snippet_type_name), instance)
         )
-        return redirect('verdantsnippets_list', content_type.app_label, content_type.model)
+        return redirect('wagtailsnippets_list', content_type.app_label, content_type.model)
 
-    return render(request, 'verdantsnippets/snippets/confirm_delete.html', {
+    return render(request, 'wagtailsnippets/snippets/confirm_delete.html', {
         'content_type': content_type,
         'snippet_type_name': snippet_type_name,
         'instance': instance,

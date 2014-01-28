@@ -8,16 +8,16 @@
                 <h1>Snippets <span>{{ snippet_type_name_plural|capfirst }}</span></h1>
             </div>
             <div class="right col3">
-                <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}" class="button icon icon-plus-inverse">Add {{ snippet_type_name }}</a>
+                <a href="{% url 'wagtailsnippets_create' content_type.app_label content_type.model %}" class="button icon icon-plus-inverse">Add {{ snippet_type_name }}</a>
                 {# TODO: figure out a way of saying "Add a/an [foo]" #}
             </div>
         </div>
     </header>
     <div class="nice-padding">
         {% if items %}
-            {% include "verdantsnippets/snippets/list.html" %}
+            {% include "wagtailsnippets/snippets/list.html" %}
         {% else %}
-            <p class="no-results-message">No {{ snippet_type_name_plural }} have been created. Why not <a href="{% url 'verdantsnippets_create' content_type.app_label content_type.model %}">add one</a>?</p>
+            <p class="no-results-message">No {{ snippet_type_name_plural }} have been created. Why not <a href="{% url 'wagtailsnippets_create' content_type.app_label content_type.model %}">add one</a>?</p>
         {% endif %}
     </div>
 {% endblock %}
