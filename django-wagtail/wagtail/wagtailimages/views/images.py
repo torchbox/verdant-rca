@@ -4,11 +4,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.exceptions import PermissionDenied
 
-from verdantimages.models import get_image_model
-from verdantimages.forms import get_image_form
+from wagtail.wagtailimages.models import get_image_model
+from wagtail.wagtailimages.forms import get_image_form
 from wagtail.wagtailadmin.forms import SearchForm
 
-@permission_required('verdantimages.add_image')
+@permission_required('wagtailimages.add_image')
 def index(request):
     Image = get_image_model()
 
@@ -22,19 +22,19 @@ def index(request):
             q = form.cleaned_data['q']
 
             is_searching = True
-            if not request.user.has_perm('verdantimages.change_image'):
+            if not request.user.has_perm('wagtailimages.change_image'):
                 # restrict to the user's own images
                 images = Image.search(q, results_per_page=20, page=p, filters={'uploaded_by_user_id': request.user.id})
             else:
                 images = Image.search(q, results_per_page=20, page=p)
         else:
             images = Image.objects.order_by('-created_at')
-            if not request.user.has_perm('verdantimages.change_image'):
+            if not request.user.has_perm('wagtailimages.change_image'):
                 # restrict to the user's own images
                 images = images.filter(uploaded_by_user=request.user)
     else:
         images = Image.objects.order_by('-created_at')
-        if not request.user.has_perm('verdantimages.change_image'):
+        if not request.user.has_perm('wagtailimages.change_image'):
             # restrict to the user's own images
             images = images.filter(uploaded_by_user=request.user)
         form = SearchForm()
@@ -50,13 +50,13 @@ def index(request):
             images = paginator.page(paginator.num_pages)
 
     if request.is_ajax():
-        return render(request, "verdantimages/images/results.html", {
+        return render(request, "wagtailimages/images/results.html", {
             'images': images,
             'is_searching': is_searching,
             'search_query': q,
         })
     else:
-        return render(request, "verdantimages/images/index.html", {
+        return render(request, "wagtailimages/images/index.html", {
             'form': form,
             'images': images,
             'is_searching': is_searching,
@@ -87,13 +87,13 @@ def edit(request, image_id):
                 image.renditions.all().delete()
             form.save()
             messages.success(request, "Image '%s' updated." % image.title)
-            return redirect('verdantimages_index')
+            return redirect('wagtailimages_index')
         else:
             messages.error(request, "The image could not be saved due to errors.")
     else:
         form = ImageForm(instance=image)
 
-    return render(request, "verdantimages/images/edit.html", {
+    return render(request, "wagtailimages/images/edit.html", {
         'image': image,
         'form': form,
     })
@@ -109,14 +109,14 @@ def delete(request, image_id):
     if request.POST:
         image.delete()
         messages.success(request, "Image '%s' deleted." % image.title)
-        return redirect('verdantimages_index')
+        return redirect('wagtailimages_index')
 
-    return render(request, "verdantimages/images/confirm_delete.html", {
+    return render(request, "wagtailimages/images/confirm_delete.html", {
         'image': image,
     })
 
 
-@permission_required('verdantimages.add_image')
+@permission_required('wagtailimages.add_image')
 def add(request):
     ImageForm = get_image_form()
     ImageModel = get_image_model()
@@ -127,18 +127,18 @@ def add(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Image '%s' added." % image.title)
-            return redirect('verdantimages_index')
+            return redirect('wagtailimages_index')
         else:
             messages.error(request, "The image could not be created due to errors.")
     else:
         form = ImageForm()
 
-    return render(request, "verdantimages/images/add.html", {
+    return render(request, "wagtailimages/images/add.html", {
         'form': form,
     })
 
 
-@permission_required('verdantimages.add_image')
+@permission_required('wagtailimages.add_image')
 def search(request):
     Image = get_image_model()
     images = []
@@ -158,13 +158,13 @@ def search(request):
         form = SearchForm()
 
     if request.is_ajax():
-        return render(request, "verdantimages/images/results.html", {
+        return render(request, "wagtailimages/images/results.html", {
             'images': images,
             'is_searching': is_searching,
             'search_query': q,
         })
     else:
-        return render(request, "verdantimages/images/index.html", {
+        return render(request, "wagtailimages/images/index.html", {
             'form': form,
             'images': images,
             'is_searching': is_searching,

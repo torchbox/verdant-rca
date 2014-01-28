@@ -5,10 +5,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 import json
 
 from wagtail.wagtailadmin.modal_workflow import render_modal_workflow
-from verdantimages.models import get_image_model
-from verdantimages.forms import get_image_form, ImageInsertionForm
+from wagtail.wagtailimages.models import get_image_model
+from wagtail.wagtailimages.forms import get_image_form, ImageInsertionForm
 from wagtail.wagtailadmin.forms import SearchForm
-from verdantimages.formats import get_image_format
+from wagtail.wagtailimages.formats import get_image_format
 
 
 def get_image_json(image):
@@ -32,7 +32,7 @@ def get_image_json(image):
 def chooser(request):
     Image = get_image_model()
 
-    if request.user.has_perm('verdantimages.add_image'):
+    if request.user.has_perm('wagtailimages.add_image'):
         ImageForm = get_image_form()
         uploadform = ImageForm()
     else:
@@ -65,7 +65,7 @@ def chooser(request):
             
             is_searching = False
 
-        return render(request, "verdantimages/chooser/results.html", {
+        return render(request, "wagtailimages/chooser/results.html", {
             'images': images, 
             'is_searching': is_searching,
             'will_select_format': request.GET.get('select_format')
@@ -85,7 +85,7 @@ def chooser(request):
             images = paginator.page(paginator.num_pages)
         
 
-    return render_modal_workflow(request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',{
+    return render_modal_workflow(request, 'wagtailimages/chooser/chooser.html', 'wagtailimages/chooser/chooser.js',{
         'images': images, 
         'uploadform': uploadform, 
         'searchform': searchform,
@@ -100,12 +100,12 @@ def image_chosen(request, image_id):
     image = get_object_or_404(get_image_model(), id=image_id)
 
     return render_modal_workflow(
-        request, None, 'verdantimages/chooser/image_chosen.js',
+        request, None, 'wagtailimages/chooser/image_chosen.js',
         {'image_json': get_image_json(image)}
     )
 
 
-@permission_required('verdantimages.add_image')
+@permission_required('wagtailimages.add_image')
 def chooser_upload(request):
     Image = get_image_model()
     ImageForm = get_image_form()
@@ -119,13 +119,13 @@ def chooser_upload(request):
             if request.GET.get('select_format'):
                 form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
                 return render_modal_workflow(
-                    request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
+                    request, 'wagtailimages/chooser/select_format.html', 'wagtailimages/chooser/select_format.js',
                     {'image': image, 'form': form}
                 )
             else:
                 # not specifying a format; return the image details now
                 return render_modal_workflow(
-                    request, None, 'verdantimages/chooser/image_chosen.js',
+                    request, None, 'wagtailimages/chooser/image_chosen.js',
                     {'image_json': get_image_json(image)}
                 )
     else:
@@ -134,7 +134,7 @@ def chooser_upload(request):
     images = Image.objects.order_by('title')
 
     return render_modal_workflow(
-        request, 'verdantimages/chooser/chooser.html', 'verdantimages/chooser/chooser.js',
+        request, 'wagtailimages/chooser/chooser.html', 'wagtailimages/chooser/chooser.js',
         {'images': images, 'uploadform': form}
     )
 
@@ -165,13 +165,13 @@ def chooser_select_format(request, image_id):
             })
 
             return render_modal_workflow(
-                request, None, 'verdantimages/chooser/image_chosen.js',
+                request, None, 'wagtailimages/chooser/image_chosen.js',
                 {'image_json': image_json}
             )
     else:
         form = ImageInsertionForm(initial={'alt_text': image.default_alt_text})
 
     return render_modal_workflow(
-        request, 'verdantimages/chooser/select_format.html', 'verdantimages/chooser/select_format.js',
+        request, 'wagtailimages/chooser/select_format.html', 'wagtailimages/chooser/select_format.js',
         {'image': image, 'form': form}
     )
