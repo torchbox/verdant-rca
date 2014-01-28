@@ -32,12 +32,12 @@ def deploy_staging():
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.staging")
 
 @roles('staging')
-def deploy_staging_wagtailsepcore():
-    """Perform the first step of wagtail separation (core) on staging"""
+def deploy_staging_wagtailsepdocs():
+    """Perform the second step of wagtail separation (docs) on staging"""
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
-            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtailcore.sql")
+            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtaildocs.sql")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.staging")
 
@@ -69,8 +69,8 @@ def deploy():
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=verdant.settings.production")
 
 @roles('production')
-def deploy_live_wagtailsepcore():
-    """Perform the first step of wagtail separation (core) on production. NB: DB updates (separation_scripts/wagtailcore.sql) need to be done immediately beforehand"""
+def deploy_live_wagtailsepdocs():
+    """Perform the second step of wagtail separation (docs) on production. NB: DB updates (separation_scripts/wagtaildocs.sql) need to be done immediately beforehand"""
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")

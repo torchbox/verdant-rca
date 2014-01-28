@@ -44,7 +44,7 @@ class Migration(SchemaMigration):
 
         # Adding model 'RelatedDocument'
         db.create_table(u'rca_relateddocument', (
-            ('document', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', null=True, to=orm['verdantdocs.Document'], blank=True)),
+            ('document', self.gf('django.db.models.fields.related.ForeignKey')(related_name='+', null=True, to=orm['wagtaildocs.Document'], blank=True)),
             ('page', self.gf('django.db.models.fields.related.ForeignKey')(related_name='related_documents', to=orm['wagtailcore.Page'])),
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
         ))

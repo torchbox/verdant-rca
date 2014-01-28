@@ -278,7 +278,7 @@ class Migration(SchemaMigration):
         },
         u'rca.relateddocument': {
             'Meta': {'object_name': 'RelatedDocument'},
-            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['verdantdocs.Document']"}),
+            'document': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'to': u"orm['wagtaildocs.Document']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'page': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'related_documents'", 'to': u"orm['wagtailcore.Page']"})
         },
@@ -362,7 +362,7 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantdocs.document': {
+        u'wagtaildocs.document': {
             'Meta': {'object_name': 'Document'},
             'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),

@@ -9,11 +9,11 @@ from wagtail.wagtailcore import urls as verdant_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from verdantimages import urls as verdantimages_urls
 from verdantembeds import urls as verdantembeds_urls
-from verdantdocs import admin_urls as verdantdocs_admin_urls
-from verdantdocs import urls as verdantdocs_urls
-from verdantsnippets import urls as verdantsnippets_urls
+from wagtail.wagtaildocs import admin_urls as wagtaildocs_admin_urls
+from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.wagtailsnippets import urls as wagtailsnippets_urls
 from verdantsearch.urls import frontend as verdantsearch_frontend_urls, admin as verdantsearch_admin_urls
-from verdantusers import urls as verdantusers_urls
+from wagtail.wagtailusers import urls as wagtailusers_urls
 from verdantredirects import urls as verdantredirects_urls
 
 from donations import urls as donations_urls
@@ -45,15 +45,15 @@ urlpatterns = patterns('',
     # don't have to define it separately here
     url(r'^admin/images/', include(verdantimages_urls)),
     url(r'^admin/embeds/', include(verdantembeds_urls)),
-    url(r'^admin/documents/', include(verdantdocs_admin_urls)),
-    url(r'^admin/snippets/', include(verdantsnippets_urls)),
+    url(r'^admin/documents/', include(wagtaildocs_admin_urls)),
+    url(r'^admin/snippets/', include(wagtailsnippets_urls)),
     url(r'^admin/search/', include(verdantsearch_admin_urls)),
-    url(r'^admin/users/', include(verdantusers_urls)),
+    url(r'^admin/users/', include(wagtailusers_urls)),
     url(r'^admin/redirects/', include(verdantredirects_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^search/', include(verdantsearch_frontend_urls)),
 
-    url(r'^documents/', include(verdantdocs_urls)),
+    url(r'^documents/', include(wagtaildocs_urls)),
 
     url(r'^admin/donations/', include(donations_urls)),
 
