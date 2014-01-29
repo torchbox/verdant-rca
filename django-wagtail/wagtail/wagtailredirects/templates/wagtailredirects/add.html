@@ -1,17 +1,16 @@
 {% extends "wagtailadmin/base.html" %}
-{% block titletag %}Editing {{ redirect.title }}{% endblock %}
+{% block titletag %}Add redirect{% endblock %}
 {% block content %}
     <header>
-        <h1>Editing <span>{{ redirect.title }}</span></h1>
+        <h1>Add redirect</h1>
     </header>
 
-    <form action="{% url 'verdantredirects_edit_redirect' redirect.id %}" method="POST">
+    <form action="{% url 'wagtailredirects_add_redirect' %}" method="POST">
         {% csrf_token %}
         {{ edit_handler.render_form_content }}
 
         <div class="nice-padding">
             <input type="submit" value="Save" />
-            <a href="{% url 'verdantredirects_delete_redirect' redirect.id %}" class="button button-secondary no">Delete redirect</a>
         </div>
     </form>
 {% endblock %}
