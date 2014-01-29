@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding model 'Redirect'
-        db.create_table(u'verdantredirects_redirect', (
+        db.create_table(u'wagtailredirects_redirect', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('old_path', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, db_index=True)),
             ('site', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='redirects', null=True, to=orm['wagtailcore.Site'])),
@@ -21,12 +21,12 @@ class Migration(SchemaMigration):
             ('redirect_page', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, to=orm['wagtailcore.Page'])),
             ('redirect_link', self.gf('django.db.models.fields.URLField')(max_length=200, blank=True)),
         ))
-        db.send_create_signal(u'verdantredirects', ['Redirect'])
+        db.send_create_signal(u'wagtailredirects', ['Redirect'])
 
 
     def backwards(self, orm):
         # Deleting model 'Redirect'
-        db.delete_table(u'verdantredirects_redirect')
+        db.delete_table(u'wagtailredirects_redirect')
 
 
     models = {
@@ -92,7 +92,7 @@ class Migration(SchemaMigration):
             'object_id': ('django.db.models.fields.IntegerField', [], {'db_index': 'True'}),
             'tag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "u'taggit_taggeditem_items'", 'to': u"orm['taggit.Tag']"})
         },
-        u'verdantredirects.redirect': {
+        u'wagtailredirects.redirect': {
             'Meta': {'object_name': 'Redirect'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_permanent': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
@@ -103,4 +103,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['verdantredirects']
+    complete_apps = ['wagtailredirects']

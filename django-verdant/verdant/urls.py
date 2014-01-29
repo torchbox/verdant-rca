@@ -14,7 +14,7 @@ from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailsnippets import urls as wagtailsnippets_urls
 from verdantsearch.urls import frontend as verdantsearch_frontend_urls, admin as verdantsearch_admin_urls
 from wagtail.wagtailusers import urls as wagtailusers_urls
-from verdantredirects import urls as verdantredirects_urls
+from wagtail.wagtailredirects import urls as wagtailredirects_urls
 
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
@@ -49,7 +49,7 @@ urlpatterns = patterns('',
     url(r'^admin/snippets/', include(wagtailsnippets_urls)),
     url(r'^admin/search/', include(verdantsearch_admin_urls)),
     url(r'^admin/users/', include(wagtailusers_urls)),
-    url(r'^admin/redirects/', include(verdantredirects_urls)),
+    url(r'^admin/redirects/', include(wagtailredirects_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^search/', include(verdantsearch_frontend_urls)),
 
