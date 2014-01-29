@@ -178,7 +178,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailusers',
     'wagtail.wagtailimages',
     'wagtail.wagtailembeds',
-    'verdantsearch',
+    'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
 
     'donations',
@@ -263,10 +263,10 @@ CACHES = {
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
-# Override the search results template for verdantsearch
-VERDANTSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
+# Override the search results template for wagtailsearch
+WAGTAILSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 
-VERDANTSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
+WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
 VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
 
