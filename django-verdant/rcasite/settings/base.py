@@ -1,4 +1,4 @@
-# Django settings for verdant project.
+# Django settings for RCA Wagtail project.
 
 import os
 import sys
@@ -136,10 +136,10 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'rca.context_processors.global_vars',
 )
 
-ROOT_URLCONF = 'verdant.urls'
+ROOT_URLCONF = 'rcasite.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'verdant.wsgi.application'
+WSGI_APPLICATION = 'rcasite.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
