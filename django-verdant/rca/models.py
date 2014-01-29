@@ -2301,8 +2301,6 @@ class HomePage(Page, SocialFields):
 
             exclude = exclude.split(',')
 
-            print exclude
-
             news = news.exclude(id__in=exclude);
             staff = staff.exclude(id__in=exclude);
             student = student.exclude(id__in=exclude);
