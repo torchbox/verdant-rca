@@ -153,7 +153,6 @@ EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
     ('collegewide', 'College-wide'),
-    ('senior-common-room', 'Senior Common Room'),
     ('other', 'Other/External (enter below)')
 )
 
@@ -183,6 +182,7 @@ EVENT_GALLERY_CHOICES = (
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
     ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
+    ('senior-common-room', 'Senior Common Room'),
 )
 
 WORK_TYPES_CHOICES = (
