@@ -137,18 +137,22 @@ AREA_CHOICES = (
     ('drawingstudio', 'Drawing Studio'),
 )
 
+EVENT_AREA_CHOICES = AREA_CHOICES + (
+    ('alumnirca', 'AlumniRCA'),
+)
+
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
     ('openday', 'Open Day'),
     ('rcatalks', 'RCA talks'),
+    ('rcaalumnionly', 'RCA Alumni Only'),
 )
 
 EVENT_LOCATION_CHOICES = (
     ('kensington', 'Kensington'),
     ('battersea', 'Battersea'),
     ('collegewide', 'College-wide'),
-    ('senior-common-room', 'Senior Common Room'),
     ('other', 'Other/External (enter below)')
 )
 
@@ -178,6 +182,7 @@ EVENT_GALLERY_CHOICES = (
     ('sculpturebuilding', 'Sculpture Building'),
     ('testbed1', 'Testbed 1'),
     ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
+    ('senior-common-room', 'Senior Common Room'),
 )
 
 WORK_TYPES_CHOICES = (
@@ -1308,7 +1313,7 @@ class EventItemRelatedProgramme(models.Model):
 
 class EventItemRelatedArea(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True)
 
     panels = [FieldPanel('area')]
 
@@ -1368,7 +1373,7 @@ class PastEventItemManager(models.Manager):
 class EventItem(Page, SocialFields):
     body = RichTextField(blank=True)
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES)
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True)
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES)
     location_other = models.CharField("'Other' location", max_length=255, blank=True)
     specific_directions = models.CharField(max_length=255, blank=True, help_text="Brief, more specific location e.g Go to reception on 2nd floor")
@@ -2144,7 +2149,7 @@ class StandardIndex(Page, SocialFields):
     news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     show_events_feed = models.BooleanField(default=False)
-    events_feed_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    events_feed_area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
     indexed_fields = ('intro', ' strapline', 'body')
