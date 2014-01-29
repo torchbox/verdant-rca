@@ -12,7 +12,7 @@
                 </ul>
             </nav>
         </div>
-        <form class="search" action="{% url 'verdantsearch_search' %}" method="get">
+        <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
             <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
             <input type="submit" value="search" />
         </form>

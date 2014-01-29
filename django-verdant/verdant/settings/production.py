@@ -1,3 +1,5 @@
+import socket
+
 from .base import *
 
 DEBUG = False
@@ -13,9 +15,15 @@ TEMPLATE_LOADERS = (
 
 BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
 CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
-VERDANTSEARCH_ES_URLS = ['http://rca1.dh.bytemark.co.uk:9200']
 
+WAGTAILSEARCH_ES_URLS = ['http://5.153.227.116:9200']
+
+EMAIL_SUBJECT_PREFIX = "[rca-production] "
 DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
+SERVER_EMAIL = "root@%s.dh.bytemark.co.uk" % socket.gethostname().split('.')[0]
+
+MEDIA_ROOT = "/verdant-shared/media/"
+STATIC_ROOT = "/verdant-shared/static/"
 
 # BASE_URL required for notification emails
 BASE_URL = 'http://www.rca.ac.uk'
