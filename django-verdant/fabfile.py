@@ -37,7 +37,7 @@ def deploy_staging_wagtailsep():
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
-            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtailredirects.sql")
+            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtailsearch.sql")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=verdant.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=verdant.settings.staging")
 
