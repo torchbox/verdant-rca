@@ -125,7 +125,7 @@ MIDDLEWARE_CLASSES = (
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
 
-    'verdantredirects.middleware.RedirectMiddleware',
+    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
@@ -179,7 +179,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailimages',
     'wagtail.wagtailembeds',
     'verdantsearch',
-    'verdantredirects',
+    'wagtail.wagtailredirects',
 
     'donations',
     'rca',

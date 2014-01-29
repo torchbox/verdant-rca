@@ -1,5 +1,5 @@
 from data.redirects import REDIRECTS
-from verdantredirects.models import Redirect
+from wagtail.wagtailredirects.models import Redirect
 from wagtail.wagtailcore.models import Site, Page
 
 

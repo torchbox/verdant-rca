@@ -10,18 +10,18 @@ import forms
 
 REDIRECT_EDIT_HANDLER = ObjectList(models.Redirect.content_panels)
 
-@permission_required('verdantredirects.change_redirect')
+@permission_required('wagtailredirects.change_redirect')
 def index(request):
     # Get redirects
     redirects = models.Redirect.get_for_site(site=request.site)
 
     # Render template
-    return render(request, "verdantredirects/index.html", {
+    return render(request, "wagtailredirects/index.html", {
         'redirects': redirects,
     })
 
 
-@permission_required('verdantredirects.change_redirect')
+@permission_required('wagtailredirects.change_redirect')
 def edit(request, redirect_id):
     theredirect = get_object_or_404(models.Redirect, id=redirect_id)
 
@@ -31,7 +31,7 @@ def edit(request, redirect_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Redirect '%s' updated." % theredirect.title)
-            return redirect('verdantredirects_index')
+            return redirect('wagtailredirects_index')
         else:
             messages.error(request, "The redirect could not be saved due to errors.")
             edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
@@ -39,27 +39,27 @@ def edit(request, redirect_id):
         form = form_class(instance=theredirect)
         edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
 
-    return render(request, "verdantredirects/edit.html", {
+    return render(request, "wagtailredirects/edit.html", {
         'redirect': theredirect,
         'edit_handler': edit_handler,
     })
 
 
-@permission_required('verdantredirects.change_redirect')
+@permission_required('wagtailredirects.change_redirect')
 def delete(request, redirect_id):
     theredirect = get_object_or_404(models.Redirect, id=redirect_id)
 
     if request.POST:
         theredirect.delete()
         messages.success(request, "Redirect '%s' deleted." % theredirect.title)
-        return redirect('verdantredirects_index')
+        return redirect('wagtailredirects_index')
 
-    return render(request, "verdantredirects/confirm_delete.html", {
+    return render(request, "wagtailredirects/confirm_delete.html", {
         'redirect': theredirect,
     })
 
 
-@permission_required('verdantredirects.change_redirect')
+@permission_required('wagtailredirects.change_redirect')
 def add(request):
     theredirect = models.Redirect()
 
@@ -72,7 +72,7 @@ def add(request):
             theredirect.save()
 
             messages.success(request, "Redirect '%s' added." % theredirect.title)
-            return redirect('verdantredirects_index')
+            return redirect('wagtailredirects_index')
         else:
             messages.error(request, "The redirect could not be created due to errors.")
             edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
@@ -80,6 +80,6 @@ def add(request):
         form = form_class()
         edit_handler = REDIRECT_EDIT_HANDLER(instance=theredirect, form=form)
 
-    return render(request, "verdantredirects/add.html", {
+    return render(request, "wagtailredirects/add.html", {
         'edit_handler': edit_handler,
     })
