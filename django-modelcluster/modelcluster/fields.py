@@ -9,7 +9,7 @@ except ImportError:
     def add_introspection_rules(*args):
         pass
 
-from cluster.queryset import FakeQuerySet
+from modelcluster.queryset import FakeQuerySet
 
 
 def create_deferring_foreign_related_manager(related, original_manager_cls):
@@ -208,4 +208,4 @@ class ParentalKey(ForeignKey):
         except AttributeError:
             cls._meta.child_relations = [related]
 
-add_introspection_rules([], ["^cluster\.fields\.ParentalKey"])
+add_introspection_rules([], ["^modelcluster\.fields\.ParentalKey"])

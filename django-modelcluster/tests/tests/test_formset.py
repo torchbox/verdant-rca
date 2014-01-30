@@ -1,5 +1,5 @@
 from django.test import TestCase
-from cluster.forms import transientmodelformset_factory, childformset_factory
+from modelcluster.forms import transientmodelformset_factory, childformset_factory
 from tests.models import Band, BandMember
 
 class TransientFormsetTest(TestCase):

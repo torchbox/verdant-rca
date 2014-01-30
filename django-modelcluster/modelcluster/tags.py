@@ -1,7 +1,7 @@
 from taggit.managers import TaggableManager, _TaggableManager
 from taggit.utils import require_instance_manager
 
-from cluster.queryset import FakeQuerySet
+from modelcluster.queryset import FakeQuerySet
 
 try:
     from south.modelsinspector import add_ignored_fields

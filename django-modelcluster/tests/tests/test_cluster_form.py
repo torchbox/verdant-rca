@@ -1,6 +1,6 @@
 from django.test import TestCase
 from tests.models import Band, BandMember, Album
-from cluster.forms import ClusterForm
+from modelcluster.forms import ClusterForm
 from django.forms import Textarea, CharField
 
 import datetime
