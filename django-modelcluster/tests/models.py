@@ -1,10 +1,10 @@
 from django.db import models
 
-from cluster.tags import ClusterTaggableManager
+from modelcluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
-from cluster.fields import ParentalKey
-from cluster.models import ClusterableModel
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 
 
 class Band(ClusterableModel):
