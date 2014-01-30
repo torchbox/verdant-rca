@@ -260,15 +260,17 @@ CACHES = {
 
 # VERDANT SETTINGS
 
+WAGTAIL_SITE_NAME = 'RCA'
+
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for wagtailsearch
 WAGTAILSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
-
 WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
-WAGTAIL_SITE_NAME = 'RCA'
+# RCA uses the old default name of 'verdant' for its search index
+WAGTAILSEARCH_ES_INDEX = 'verdant'
 
 # CELERY SETTINGS
 import djcelery
