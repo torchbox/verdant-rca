@@ -1,6 +1,6 @@
 from django.test import TestCase
 from taggit.models import Tag
-from cluster.forms import ClusterForm
+from modelcluster.forms import ClusterForm
 
 from tests.models import Place, TaggedPlace
 

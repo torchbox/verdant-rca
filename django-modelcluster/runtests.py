@@ -14,7 +14,7 @@ if not settings.configured:
             }
         },
         INSTALLED_APPS=[
-            'cluster',
+            'modelcluster',
 
             'django.contrib.contenttypes',
             'taggit',
