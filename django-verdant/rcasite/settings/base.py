@@ -268,7 +268,7 @@ WAGTAILSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 
 WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
-VERDANT_SITE_NAME = 'RCA' #TODO: there's surely a nicer way of doing this?
+WAGTAIL_SITE_NAME = 'RCA'
 
 # CELERY SETTINGS
 import djcelery
