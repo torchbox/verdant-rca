@@ -31,23 +31,6 @@ def deploy_staging():
         with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
 
-@roles('staging')
-def deploy_staging_wagtailsep():
-    """Perform the second step of wagtail separation (docs) on staging"""
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            sudo("git pull")
-            sudo("psql -Uverdant_rca verdant_rca -f django-verdant/rca/separation_scripts/wagtailsearch.sql")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
-
-        sudo("supervisorctl restart verdant-rca")
-        sudo("supervisorctl restart rca-celeryd")
-        sudo("supervisorctl restart rca-celerybeat")
-
-        with settings(sudo_user='verdant-rca'):
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
-
 
 @roles('production')
 def deploy():
@@ -68,22 +51,6 @@ def deploy():
                 run("supervisorctl restart rca-celerybeat")
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
-@roles('production')
-def deploy_live_wagtailsep():
-    """Perform the second step of wagtail separation (docs) on production. NB: DB updates (separation_scripts/wagtaildocs.sql) need to be done immediately beforehand"""
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            sudo("git pull")
-
-            if env['host'] == MIGRATION_SERVER:
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
-
-            run("supervisorctl restart verdant-rca")
-            run("supervisorctl restart rca-celeryd")
-            if env['host'] == MIGRATION_SERVER:
-                run("supervisorctl restart rca-celerybeat")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 @roles('squid')
 def clear_cache():
