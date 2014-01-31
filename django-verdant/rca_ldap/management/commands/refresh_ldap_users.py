@@ -12,13 +12,16 @@ class Command(NoArgsCommand):
             # Check if user is an LDAP user
             if not user.has_usable_password():
                 # Populate user details
+                print "Refreshing '" + user.username + "' ",
                 if ldap.populate_user(user.username):
+                    print "Success!"
                     # User found and populated
 
                     # Make sure this account is activated
                     user.is_active = True
                     user.save()
                 else:
+                    print "Not found"
                     # User account not found in LDAP
                     # This means that the user either no longer exists
                     # or no longer has privilages to access the CMS
