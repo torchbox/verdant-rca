@@ -37,14 +37,14 @@
     lineinfile: dest=/home/${project_name}/.bashrc regexp="^export WORKON_HOME" line="export WORKON_HOME=${django_root}/virtualenvs"
 
   - name: Create local settings file from template
-    template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/django-verdant/verdant/settings/local.py owner=${project_name} group=djangoapps
+    template: src=files/django/settings/local.py.j2 dest=${django_root}/${project_name}/django-verdant/rcasite/settings/local.py owner=${project_name} group=djangoapps
 
   - name: Create the django database
     sudo_user: ${project_name}
     django_manage: 
       command=syncdb
       app_path=${django_root}/${project_name}/django-verdant
-      settings='verdant.settings.production'
+      settings='rcasite.settings.production'
       pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
       virtualenv=${django_root}/virtualenvs/${project_name}
 
@@ -53,7 +53,7 @@
     django_manage: 
       command=migrate
       app_path=${django_root}/${project_name}/django-verdant
-      settings='verdant.settings.production'
+      settings='rcasite.settings.production'
       pythonpath=/usr/local/django/virtualenvs/verdant-rca/bin/python
       virtualenv=${django_root}/virtualenvs/${project_name}
 

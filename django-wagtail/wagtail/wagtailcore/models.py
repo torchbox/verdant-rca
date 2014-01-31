@@ -7,8 +7,8 @@ from django.core.cache import cache
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Group
 from treebeard.mp_tree import MP_Node
-from cluster.models import ClusterableModel
-from verdantsearch import Indexed, Searcher
+from modelcluster.models import ClusterableModel
+from wagtail.wagtailsearch import Indexed, Searcher
 
 from wagtail.wagtailcore.util import camelcase_to_underscore
 
@@ -50,10 +50,10 @@ class Site(models.Model):
         else:
             return 'http://%s:%d' % (self.hostname, self.port)
 
-    # clear the verdant_site_root_paths cache whenever Site records are updated
+    # clear the wagtail_site_root_paths cache whenever Site records are updated
     def save(self, *args, **kwargs):
         result = super(Site, self).save(*args, **kwargs)
-        cache.delete('verdant_site_root_paths')
+        cache.delete('wagtail_site_root_paths')
         return result
 
     @staticmethod
@@ -62,14 +62,14 @@ class Site(models.Model):
         Return a list of (root_path, root_url) tuples, most specific path first -
         used to translate url_paths into actual URLs with hostnames
         """
-        result = cache.get('verdant_site_root_paths')
+        result = cache.get('wagtail_site_root_paths')
 
         if result is None:
             result = [
                 (site.id, site.root_page.url_path, site.root_url)
                 for site in Site.objects.select_related('root_page').order_by('-root_page__url_path')
             ]
-            cache.set('verdant_site_root_paths', result, 3600)
+            cache.set('wagtail_site_root_paths', result, 3600)
 
         return result
 
@@ -464,7 +464,7 @@ def get_navigation_menu_items():
             # an exception here means that this node is one level deeper than any we've seen so far
             depth_list.append(node)
 
-    # in Verdant, the convention is to have one root node in the db (depth=1); the menu proper
+    # in Wagtail, the convention is to have one root node in the db (depth=1); the menu proper
     # begins with the children of that node (depth=2).
     try:
         root, root_children = depth_list[1]
