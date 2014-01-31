@@ -2,7 +2,7 @@
 /* requires an 'current_page' var to be set before this is called, on the template, to determine the index page to load */
 
 $(function() {
-    $('#filters .options li').click(function() {
+    function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
             // Run filters
             $(filters).each(function(idx, filter) {
@@ -63,6 +63,13 @@ $(function() {
 
             alignGallery(); // Defined in site.js
         });
+    }
+
+    updateFilters();
+
+
+    $('#filters .options li').click(function() {
+        updateFilters();
 
         $(this).parent().closest('li').removeClass('expanded');
 
