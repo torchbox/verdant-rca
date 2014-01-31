@@ -1,8 +1,0 @@
-[production-web]
-#prod-web-server.domain user=root nickname=production-web
-
-[production-db]
-#prod-db-server.domain user=root nickname=production-db
-
-[staging]
-#staging-server.domain user=root nickname=staging

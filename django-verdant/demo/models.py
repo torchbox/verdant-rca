@@ -1,16 +1,16 @@
 from django.db import models
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
-from cluster.fields import ParentalKey
+from modelcluster.fields import ParentalKey
 
-from verdantadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
-from verdantimages.edit_handlers import ImageChooserPanel
-from verdantimages.models import AbstractImage, AbstractRendition
-from verdantdocs.edit_handlers import DocumentChooserPanel
-from verdantsnippets.edit_handlers import SnippetChooserPanel
-from verdantsnippets.models import register_snippet
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
+from wagtail.wagtailsnippets.models import register_snippet
 
-from cluster.tags import ClusterTaggableManager
+from modelcluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
 
 from django.shortcuts import render
@@ -39,7 +39,7 @@ COMMON_PANELS = (
 class LinkFields(models.Model):
     link_external = models.URLField("External link", blank=True)
     link_page = models.ForeignKey('wagtailcore.Page', null=True, blank=True, related_name='+')
-    link_document = models.ForeignKey('verdantdocs.Document', null=True, blank=True, related_name='+')
+    link_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
 
     @property
     def link(self):
@@ -86,7 +86,7 @@ class ContactFields(models.Model):
 # Carousel items
 
 class CarouselItem(LinkFields):
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     embed_url = models.URLField("Embed URL", blank=True)
     caption = models.CharField(max_length=255, blank=True)
 
@@ -174,7 +174,7 @@ class StandardIndexPageRelatedLink(Orderable, RelatedLink):
 
 class StandardIndexPage(Page):
     intro = RichTextField(blank=True)
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', )
     search_name = None
@@ -202,7 +202,7 @@ class StandardPageRelatedLink(Orderable, RelatedLink):
 class StandardPage(Page):
     intro = RichTextField(blank=True)
     body = RichTextField(blank=True)
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('intro', 'body', )
     search_name = None
@@ -285,7 +285,7 @@ class BlogPage(Page):
     body = RichTextField()
     tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     date = models.DateField("Post date")
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('body', )
     search_name = "Blog Entry"
@@ -315,8 +315,8 @@ class PersonPage(Page, ContactFields):
     last_name = models.CharField(max_length=255)
     intro = RichTextField(blank=True)
     biography = RichTextField(blank=True)
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('first_name', 'last_name', 'intro', 'biography')
     search_name = "Person"
@@ -342,7 +342,7 @@ PersonPage.promote_panels = [
 
 class ContactPage(Page, ContactFields):
     body = RichTextField(blank=True)
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('body', )
     search_name = "Contact information"
@@ -406,7 +406,7 @@ class EventPageSpeaker(Orderable, LinkFields):
     page = ParentalKey('demo.EventPage', related_name='speakers')
     first_name = models.CharField("Name", max_length=255, blank=True)
     last_name = models.CharField("Surname", max_length=255, blank=True)
-    image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     @property
     def name_display(self):
@@ -429,7 +429,7 @@ class EventPage(Page):
     body = RichTextField(blank=True)
     cost = models.CharField(max_length=255)
     signup_link = models.URLField(blank=True)
-    feed_image = models.ForeignKey('verdantimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    feed_image = models.ForeignKey('wagtailimages.Image', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     indexed_fields = ('get_audience_display', 'location', 'body')
     search_name = "Event"

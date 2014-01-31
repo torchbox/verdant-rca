@@ -16,9 +16,6 @@ from wagtail.wagtailsearch.urls import frontend as wagtailsearch_frontend_urls, 
 from wagtail.wagtailusers import urls as wagtailusers_urls
 from wagtail.wagtailredirects import urls as wagtailredirects_urls
 
-from donations import urls as donations_urls
-from twitter import urls as twitter_urls
-
 admin.autodiscover()
 
 
@@ -50,10 +47,6 @@ urlpatterns = patterns('',
     url(r'^search/', include(wagtailsearch_frontend_urls)),
 
     url(r'^documents/', include(wagtaildocs_urls)),
-
-    url(r'^admin/donations/', include(donations_urls)),
-
-    url(r'^twitter/', include(twitter_urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism

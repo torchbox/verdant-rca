@@ -20,7 +20,6 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Verdant RCA errors', 'verdant-rca-errors@torchbox.com'),
 )
 
 MANAGERS = ADMINS
@@ -28,7 +27,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'verdant',
+        'NAME': 'wagtail',
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',  # Set to empty string for localhost.
@@ -158,14 +157,12 @@ INSTALLED_APPS = (
     'south',
     'compressor',
     'debug_toolbar',
-    'template_timings_panel',
     'treebeard',
     'taggit',
     'modelcluster',
     'gunicorn',
     'djcelery',
     'kombu.transport.django',
-    'twitter',  # the app used to proxy the Twitter REST API
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -181,31 +178,12 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
 
-    'donations',
     'demo',
 )
 
-EMAIL_SUBJECT_PREFIX = '[verdant] '
+EMAIL_SUBJECT_PREFIX = '[wagtail] '
 
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
-
-# django-debug-toolbar settings
-DEBUG_TOOLBAR_CONFIG = {
-    'INTERCEPT_REDIRECTS': False,
-}
-
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-    'template_timings_panel.panels.TemplateTimings.TemplateTimings',
-)
 
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
@@ -250,7 +228,7 @@ LOGGING = {
 CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': '127.0.0.1:6379:1',
+        'LOCATION': '127.0.0.1:6379',
         'OPTIONS': {
             'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
         }
@@ -260,9 +238,6 @@ CACHES = {
 # WAGTAIL SETTINGS
 
 WAGTAIL_SITE_NAME = 'Wagtail Demo'
-
-# Override the Image class used by wagtailimages with a custom one
-WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 
 # Override the search results template for wagtailsearch
 WAGTAILSEARCH_RESULTS_TEMPLATE = 'demo/search_results.html'
@@ -283,7 +258,3 @@ BROKER_URL = 'redis://'
 CELERY_SEND_TASK_ERROR_EMAILS = True
 
 CELERYD_LOG_COLOR = False
-
-# The scheduler used by this app needs to be defined in the settings.
-# It also contains some additional configuration options, some need to be set in the local settings.
-from twitter.settings import *
