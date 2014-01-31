@@ -10,7 +10,7 @@ class Command(NoArgsCommand):
 
         for user in User.objects.all():
             # Check if user is an LDAP user
-            if user.has_usable_password():
+            if not user.has_usable_password():
                 # Populate user details
                 if ldap.populate_user(user.username):
                     # User found and populated
