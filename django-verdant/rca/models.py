@@ -40,7 +40,8 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_school_programme_filters
+from rca.filters import run_filters
+import json
 
 from rca_signage.constants import SCREEN_CHOICES
 
@@ -930,11 +931,12 @@ class NewsIndex(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, path__startswith=self.path)
 
-        if area:
-            news = news.filter(area=area)
-
         # Run school and programme filters
-        news, filters_context = run_school_programme_filters(news, school, programme, school_field='related_schools__school', programme_field='related_programmes__programme')
+        news, filters = run_filters(news, [
+            ('school', 'related_schools__school', school),
+            ('programme', 'related_programmes__programme', programme),
+            ('area', 'area', area)
+        ])
 
         news = news.distinct().order_by('-date')
 
@@ -953,13 +955,13 @@ class NewsIndex(Page, SocialFields):
             return render(request, "rca/includes/news_listing.html", {
                 'self': self,
                 'news': news,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'news': news,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
 NewsIndex.content_panels = [
@@ -1593,17 +1595,14 @@ class EventIndex(Page, SocialFields):
         else:
             events = self.future_events()
 
-        if school == 'all':
-            school = ''
-        if location and location != '':
-            events = events.filter(location=location)
-        if area and area != 'all':
-            events = events.filter(related_areas__area=area)
-        if audience and audience != '':
-            events = events.filter(audience=audience)
-
-        # Run school and programme filters
-        events, filters_context = run_school_programme_filters(events, school, programme, school_field='related_schools__school', programme_field='related_programmes__programme')
+        # Run filters
+        events, filters = run_filters(events, [
+            ('school', 'related_schools__school', school),
+            ('programme', 'related_programmes__programme', programme),
+            ('location', 'location', location),
+            ('area', 'related_areas__area', area),
+            ('audience', 'audience', audience),
+        ])
 
         events = events.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
         if period== 'past':
@@ -1626,13 +1625,13 @@ class EventIndex(Page, SocialFields):
             return render(request, "rca/includes/events_listing.html", {
                 'self': self,
                 'events': events,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'events': events,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
 EventIndex.content_panels = [
@@ -2580,15 +2579,13 @@ class AlumniIndex(Page, SocialFields):
 
         alumni_pages = AlumniPage.objects.filter(live=True)
 
-        if school and school != '':
-            alumni_pages = alumni_pages.filter(school=school)
-        if programme and programme != '':
-            alumni_pages = alumni_pages.filter(programme=programme)
+        # Run school and programme filters
+        alumni_pages, filters = run_filters(alumni_pages, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         alumni_pages = alumni_pages.order_by('random_order')
-
-        # Run school and programme filters
-        alumni_pages, filters_context = run_school_programme_filters(alumni_pages, school, programme)
 
         page = request.GET.get('page')
         paginator = Paginator(alumni_pages, 11)
@@ -2605,13 +2602,13 @@ class AlumniIndex(Page, SocialFields):
             return render(request, "rca/includes/alumni_pages_listing.html", {
                 'self': self,
                 'alumni_pages': alumni_pages,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'alumni_pages': alumni_pages,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
 
@@ -2851,13 +2848,13 @@ class StaffIndex(Page, SocialFields):
 
         staff_pages = StaffPage.objects.filter(live=True)
 
-        if staff_type and staff_type != '':
-            staff_pages = staff_pages.filter(staff_type=staff_type)
-        if area and area != '':
-            staff_pages = staff_pages.filter(roles__area=area)
-
-        # Run school and programme filters
-        staff_pages, filters_context = run_school_programme_filters(staff_pages, school, programme, school_field='roles__school', programme_field='roles__programme')
+        # Run filters
+        staff_pages, filters = run_filters(staff_pages, [
+            ('school', 'roles__school', school),
+            ('programme', 'roles__programme', programme),
+            ('staff_type', 'staff_type', staff_type),
+            ('area', 'roles__area', area),
+        ])
 
         staff_pages = staff_pages.order_by('-random_order')
 
@@ -2878,13 +2875,13 @@ class StaffIndex(Page, SocialFields):
             return render(request, "rca/includes/staff_pages_listing.html", {
                 'self': self,
                 'staff_pages': staff_pages,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'staff_pages': staff_pages,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
 StaffIndex.content_panels = [
@@ -2938,7 +2935,10 @@ class ResearchStudentIndex(Page, SocialFields):
         research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
 
         # Run school and programme filters
-        research_students, filters_context = run_school_programme_filters(research_students, school, programme)
+        research_students, filters = run_filters(research_students, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         research_students = research_students.distinct()
 
@@ -2957,13 +2957,13 @@ class ResearchStudentIndex(Page, SocialFields):
             return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
                 'research_students': research_students,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'research_students': research_students,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
 
@@ -3283,7 +3283,10 @@ class RcaNowIndex(Page, SocialFields):
             rca_now_items = rca_now_items.filter(area=area)
 
         # Run school and programme filters
-        rca_now_items, filters_context = run_school_programme_filters(rca_now_items, school, programme)
+        rca_now_items, filters = run_filters(rca_now_items, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+        ])
 
         rca_now_items = rca_now_items.order_by('-date')
 
@@ -3302,13 +3305,13 @@ class RcaNowIndex(Page, SocialFields):
             return render(request, "rca/includes/rca_now_listing.html", {
                 'self': self,
                 'rca_now_items': rca_now_items,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'rca_now_items': rca_now_items,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
             })
 
     class Meta:
@@ -3614,15 +3617,13 @@ class CurrentResearchPage(Page, SocialFields):
 
         research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
 
-        if research_type:
-            research_items = research_items.filter(research_type=research_type)
-        if theme:
-            research_items = research_items.filter(theme=theme)
-        if work_type:
-            research_items = research_items.filter(work_type=work_type)
-
-        # Run school and programme filters
-        research_items, filters_context = run_school_programme_filters(research_items, school, None)
+        # Run filters
+        research_items, filters = run_filters(research_items, [
+            ('research_type', 'research_type', research_type),
+            ('school', 'school', school),
+            ('theme', 'theme', theme),
+            ('work_type', 'work_type', work_type),
+        ])
 
         research_items.order_by('-year')
 
@@ -3642,14 +3643,14 @@ class CurrentResearchPage(Page, SocialFields):
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
                 'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'research_items': research_items,
-                'filters_context': filters_context,
+                'filters': json.dumps(filters),
                 'per_page': per_page,
             })
 
@@ -3702,34 +3703,23 @@ class GalleryPage(Page, SocialFields):
     search_name = 'Gallery'
 
     def serve(self, request):
-        # Get all possible gallery items
-        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
-
-        # Get list of years with gallery items
-        years = [
-            values['degree_year']
-            for values in gallery_items.order_by('-degree_year').distinct('degree_year').values('degree_year')
-        ]
-        latest_year = years[0] if years else '2013'
-
         # Get filter parameters
         year = request.GET.get('degree_year')
         school = request.GET.get('school')
         programme = request.GET.get('programme')
 
-        # If this is the initial hit to this page, automatically set year to latest year
-        if not request.is_ajax() and not programme and not school and not year:
-            year = latest_year
+        # Get all possible gallery items
+        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
 
-        # Apply year filter
-        if year:
-            gallery_items = gallery_items.filter(degree_year=year)
-
-        # Run school and programme filters
-        gallery_items, filters_context = run_school_programme_filters(gallery_items, school, programme)
+        # Run filters
+        gallery_items, filters = run_filters(gallery_items, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+            ('degree_year', 'degree_year', year),
+        ])
 
         # Randomly order gallery items
-        gallery_items = gallery_items.order_by('random_order')
+        gallery_items = gallery_items.order_by('-degree_year', 'random_order')
 
         # Pagination
         page = request.GET.get('page')
@@ -3751,8 +3741,8 @@ class GalleryPage(Page, SocialFields):
         return render(request, template, {
             'self': self,
             'gallery_items': gallery_items,
-            'filters_context': filters_context,
-            'years': years,
+            'filters': json.dumps(filters),
+            'years': reversed(sorted(filters[2]['options'])),
             'selected_year': year,
         })
 
