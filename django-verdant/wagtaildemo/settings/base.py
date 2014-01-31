@@ -135,10 +135,10 @@ TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
     'demo.context_processors.global_vars',
 )
 
-ROOT_URLCONF = 'rcasite.urls'
+ROOT_URLCONF = 'wagtaildemo.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'rcasite.wsgi.application'
+WSGI_APPLICATION = 'wagtaildemo.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
