@@ -3,6 +3,9 @@ from django.contrib.auth.models import Group
 
 
 def populate_user_signal_handler(user, ldap_user, **kwargs):
+    # Make sure that this user is converted to an LDAP user
+    user.set_unusable_password()
+
     # Check if role is set
     if 'role' in ldap_user._user_attrs:
         role = ldap_user._user_attrs['role']
