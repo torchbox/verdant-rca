@@ -16,7 +16,7 @@
                             {% include "rca/includes/modules/innovation_rca_project.html" %}
                         </li>
                 {% endfor %}
-                {% if research_items.paginator.count > per_page %}
+                {% if research_items.paginator.num_pages > 1 %}
                     <li class="load-more{% if research_items|length|divisibleby:'4' %} newrow{% endif %}"><a href="#">+</a></li>
                 {% endif %}
             </ul>
