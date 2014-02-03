@@ -212,7 +212,7 @@ WORK_THEME_CHOICES = (
 )
 
 INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
-    ('startup', 'Startup'),
+    ('startup', 'Start-up'),
     ('fellowship', 'Fellowship'),
 )
 
