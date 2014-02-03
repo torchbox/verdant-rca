@@ -3936,6 +3936,7 @@ class InnovationRCAProject(Page, SocialFields):
     def serve(self, request):
         # Get related research
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = projects.filter(project_type=self.project_type)
         if self.programme:
             projects = projects.filter(programme=self.programme)
         elif self.school:
