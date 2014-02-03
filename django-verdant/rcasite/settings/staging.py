@@ -15,6 +15,7 @@ DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
 
 # BASE_URL required for notification emails
 BASE_URL = 'http://rca-staging.torchboxapps.com'
+VERDANTADMIN_NOTIFICATION_FROM_EMAIL = 'karl@torchbox.com'
 
 # LDAP
 from rca_ldap.settings import *

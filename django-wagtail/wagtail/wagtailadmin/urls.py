@@ -1,9 +1,29 @@
 from django.conf.urls import patterns, url
-from wagtail.wagtailadmin.forms import LoginForm
+from django.conf import settings
+from wagtail.wagtailadmin.forms import LoginForm, PasswordResetForm
 
 urlpatterns = patterns('django.contrib.auth.views',
-    url(r'^login/$', 'login', {'template_name': 'wagtailadmin/login.html', 'authentication_form': LoginForm}),
+    url(r'^login/$', 'login', {
+        'template_name': 'wagtailadmin/login.html',
+        'authentication_form': LoginForm,
+        'extra_context': {'show_password_reset': getattr(settings, 'WAGTAIL_PASSWORD_MANAGEMENT_ENABLED', True)},
+    }),
     url(r'^logout/$', 'logout', {'next_page': '/admin/login/'}),
+
+    # Password reset
+    url(r'^password_reset/$', 'password_reset', {
+        'template_name': 'wagtailadmin/account/password_reset/form.html',
+        'email_template_name': 'wagtailadmin/account/password_reset/email.txt',
+        'subject_template_name': 'wagtailadmin/account/password_reset/email_subject.txt',
+        'password_reset_form': PasswordResetForm,
+    }, name='password_reset'),
+    url(r'^password_reset/done/$', 'password_reset_done', {'template_name': 'wagtailadmin/account/password_reset/done.html'}, name='password_reset_done'),
+    url(r'^password_reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'password_reset_confirm',
+        {'template_name': 'wagtailadmin/account/password_reset/confirm.html'},
+        name='password_reset_confirm',
+    ),
+    url(r'^password_reset/complete/$', 'password_reset_complete', {'template_name': 'wagtailadmin/account/password_reset/complete.html'}, name='password_reset_complete'),
 )
 
 urlpatterns += patterns('wagtail.wagtailadmin.views',
@@ -47,4 +67,7 @@ urlpatterns += patterns('wagtail.wagtailadmin.views',
     url(r'^choose-email-link/$', 'chooser.email_link', name='wagtailadmin_choose_page_email_link'),
 
     url(r'^tag-autocomplete/$', 'tags.autocomplete', name='wagtailadmin_tag_autocomplete'),
+
+    url(r'^account/$', 'account.account', name='wagtailadmin_account'),
+    url(r'^account/change_password/$', 'account.change_password', name='wagtailadmin_account_change_password'),
 )

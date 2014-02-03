@@ -273,6 +273,9 @@ WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 # RCA uses the old default name of 'verdant' for its search index
 WAGTAILSEARCH_ES_INDEX = 'verdant'
 
+# Hide password management / recovery options, as RCA uses LDAP instead
+WAGTAIL_PASSWORD_MANAGEMENT_ENABLED = False
+
 # CELERY SETTINGS
 import djcelery
 djcelery.setup_loader()
