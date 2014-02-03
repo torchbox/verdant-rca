@@ -1,6 +1,6 @@
 *.pyc
 .DS_Store
-/.vagrant*
+.vagrant*
 /django-verdant/static
 /django-verdant/media
 /django-verdant/rcasite/settings/local.py
