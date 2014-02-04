@@ -1777,7 +1777,7 @@ class ReviewsIndex(Page, SocialFields):
             reviews = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "rca/includes/news_listing.html", {
+            return render(request, "rca/includes/reviews_listing.html", {
                 'self': self,
                 'reviews': reviews
             })
