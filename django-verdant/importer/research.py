@@ -140,6 +140,14 @@ class ResearchImporter(object):
         # Convert description to HTML
         researchitem_abstract = text_to_html(researchitem_abstract)
 
+        # Subtitle
+        if researchitem_type == 'book_section':
+            researchitem_subtitle = researchitem['book_title']
+        elif researchitem_type == 'conference_item':
+            researchitem_subtitle = researchitem['event_title']
+        else:
+            researchitem_subtitle = ''
+
         # Create researchitem page
         try:
             researchitempage = ResearchItem.objects.get(eprintid=researchitem_eprintid)
@@ -152,6 +160,7 @@ class ResearchImporter(object):
 
         # Set values
         researchitempage.title = researchitem_title
+        researchitempage.subtitle = researchitem_subtitle
         researchitempage.ref = True
         researchitempage.research_type = "staff"
         researchitempage.year = researchitem_year
@@ -171,6 +180,7 @@ class ResearchImporter(object):
         # Update latest revision
         if researchitem_latest_revision is not None:
             researchitem_latest_revision.title = researchitem_title
+            researchitem_latest_revision.subtitle = researchitem_subtitle
             researchitem_latest_revision.ref = True
             researchitem_latest_revision.research_type = "staff"
             researchitem_latest_revision.year = researchitem_year
