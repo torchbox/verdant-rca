@@ -21,7 +21,9 @@
     <section class="nice-padding" style="padding-top:2em;">
         <label>Date range</label>
         <input type="text" id="dateRange" />
-        <a href="{% url 'donations_export' %}"  data-href="{% url 'donations_export' %}" class="button icon icon-download download">Download Gift Aid donations only</a>
-        <a href="{% url 'donations_export_all' %}" data-href="{% url 'donations_export_all' %}" class="button icon icon-download download">Download all donations</a>
+        <p>
+            <a href="{% url 'donations_export' %}"  data-href="{% url 'donations_export' %}" class="button bicolor icon icon-download download">Download Gift Aid donations only</a>
+            <a href="{% url 'donations_export_all' %}" data-href="{% url 'donations_export_all' %}" class="button bicolor icon icon-download download">Download all donations</a>
+        </p>
     </section>
 {% endblock %}
