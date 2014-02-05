@@ -8,9 +8,9 @@
                 From
                 {% if not is_searching %}
                     {% if ordering == "old_path" %}
-                        <a href="{% url 'verdantredirects_index' %}" class="icon icon-arrow-down-after teal"></a>
+                        <a href="{% url 'wagtailredirects_index' %}" class="icon icon-arrow-down-after teal"></a>
                     {% else %}
-                        <a href="{% url 'verdantredirects_index' %}?ordering=old_path" class="icon icon-arrow-down-after"></a>
+                        <a href="{% url 'wagtailredirects_index' %}?ordering=old_path" class="icon icon-arrow-down-after"></a>
                     {% endif %}
                 {% endif %}
             </th>
@@ -22,11 +22,11 @@
         {% for redirect in redirects %}
             <tr>
                 <td class="title">
-                    <h2><a href="{% url 'verdantredirects_edit_redirect' redirect.id %}" title="Edit this redirect">{{ redirect.title }}</a></h2>
+                    <h2><a href="{% url 'wagtailredirects_edit_redirect' redirect.id %}" title="Edit this redirect">{{ redirect.title }}</a></h2>
                 </td>
                 <td>
                     {% if redirect.redirect_page %}
-                        <a href="{% url 'verdantadmin_pages_edit' redirect.redirect_page.id %}" class="nolink">{{ redirect.redirect_page.title }}</a>
+                        <a href="{% url 'wagtailadmin_pages_edit' redirect.redirect_page.id %}" class="nolink">{{ redirect.redirect_page.title }}</a>
                     {% else %}
                         {{ redirect.link }}
                     {% endif %}
