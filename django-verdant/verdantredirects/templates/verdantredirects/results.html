@@ -1,0 +1,15 @@
+{% if redirects %}
+    {% if is_searching %}
+        <h2>{{ redirects|length }} match{{ redirects|pluralize:"es" }}</h2>
+    {% endif %}
+
+    {% include "verdantredirects/list.html" %}
+
+	{% include "verdantadmin/shared/pagination_nav.html" with items=redirects is_searching=is_searching linkurl="verdantredirects_index" %}
+{% else %}
+ 	{% if is_searching %}
+         <p>Sorry, no redirects match "<em>{{ search_query }}</em>"
+    {% else %}
+        <p>No redirects have been created. Why not <a href="{% url 'verdantredirects_add_redirect' %}">add one</a>?</p>
+    {% endif %}
+{% endif %}
