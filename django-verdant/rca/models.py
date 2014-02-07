@@ -2302,7 +2302,7 @@ class HomePage(Page, SocialFields):
         if request.GET.get('exclude'):
             exclude = ','.join([exclude, request.GET.get('exclude')])
 
-        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
