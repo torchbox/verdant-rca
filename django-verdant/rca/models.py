@@ -933,7 +933,7 @@ class NewsIndex(Page, SocialFields):
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        news = NewsItem.objects.filter(live=True, path__startswith=self.path)
+        news = NewsItem.objects.filter(live=True, path__startswith=self.path, show_on_news_index=True)
 
         # Run school and programme filters
         news, filters = run_filters(news, [
@@ -1028,6 +1028,7 @@ class NewsItem(Page, SocialFields):
     intro = RichTextField()
     body = RichTextField()
     show_on_homepage = models.BooleanField()
+    show_on_news_index = models.BooleanField(default=True)
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
@@ -1121,6 +1122,7 @@ NewsItem.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
+    FieldPanel('show_on_news_index'),
     FieldPanel('area'),
     InlinePanel(NewsItem, 'related_schools', label="Related schools"),
     InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
