@@ -70,9 +70,10 @@ class get_tweets_for_all(PeriodicTask):
                 # ignore connection errors which happen a bit too often now that Twitter switched over to ssl only
                 pass
 
-            remaining = dict(api.last_response.getheaders()).get("x-rate-limit-remaining")
-            if remaining is not None and int(remaining) < 1:
-                break
+            if hasattr(api, "last_response"):
+                remaining = dict(api.last_response.getheaders()).get("x-rate-limit-remaining")
+                if remaining is not None and int(remaining) < 1:
+                    break
 
 
 @task
