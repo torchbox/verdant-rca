@@ -19,6 +19,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
+from django.views.decorators.vary import vary_on_headers
 
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
@@ -638,6 +639,7 @@ class SchoolPage(Page, SocialFields):
 
     search_name = 'School'
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
 
@@ -820,6 +822,17 @@ class ProgrammePage(Page, SocialFields):
 
     search_name = 'Programme'
 
+    @property
+    def staff_feed(self):
+        # Get staff from manual feed
+        feed = self.manual_staff_feed.all()
+
+        # Get each staffpage out of the feed
+        feed = [staffpage.staff for staffpage in feed]
+
+        return feed
+
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
 
@@ -924,12 +937,13 @@ class NewsIndex(Page, SocialFields):
 
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        news = NewsItem.objects.filter(live=True, path__startswith=self.path)
+        news = NewsItem.objects.filter(live=True, path__startswith=self.path, show_on_news_index=True)
 
         # Run school and programme filters
         news, filters = run_filters(news, [
@@ -1024,6 +1038,7 @@ class NewsItem(Page, SocialFields):
     intro = RichTextField()
     body = RichTextField()
     show_on_homepage = models.BooleanField()
+    show_on_news_index = models.BooleanField(default=True)
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
@@ -1117,6 +1132,7 @@ NewsItem.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
+    FieldPanel('show_on_news_index'),
     FieldPanel('area'),
     InlinePanel(NewsItem, 'related_schools', label="Related schools"),
     InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
@@ -1142,6 +1158,7 @@ class PressReleaseIndex(Page, SocialFields):
 
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         press_releases = PressRelease.objects.filter(live=True).order_by('-date')
 
@@ -1581,6 +1598,7 @@ class EventIndex(Page, SocialFields):
     def past_events(self):
         return EventItem.past_objects.filter(live=True, path__startswith=self.path)
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
@@ -1682,6 +1700,7 @@ class TalksIndex(Page, SocialFields):
 
     search_page = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
 
@@ -1759,6 +1778,7 @@ class ReviewsIndex(Page, SocialFields):
 
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         reviews = ReviewPage.objects.filter(live=True)
         reviews = reviews.distinct()
@@ -2155,6 +2175,21 @@ class StandardIndex(Page, SocialFields):
 
     search_name = None
 
+    @property
+    def staff_feed(self):
+        # Get staff from manual feed
+        feed = self.manual_staff_feed.all()
+
+        # Get each staffpage out of the feed
+        feed = [staffpage.staff for staffpage in feed]
+
+        # If feed source is set, get staff from that too
+        if self.staff_feed_source:
+            feed = chain(feed, StaffPage.objects.filter(school=self.staff_feed_source))
+
+        return feed
+
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of events
         events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=self.events_feed_area).order_by('start_date')
@@ -2194,7 +2229,7 @@ StandardIndex.content_panels = [
     ],'Introduction'),
     FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
-    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
+    InlinePanel(StandardIndex, 'manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
@@ -2285,6 +2320,7 @@ class HomePage(Page, SocialFields):
     def past_events(self):
         return EventItem.past_objects.filter(live=True, path__startswith=self.path)
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
 
         exclude = ','.join([str(self.news_item_1.id), str(self.news_item_2.id)])
@@ -2292,7 +2328,7 @@ class HomePage(Page, SocialFields):
         if request.GET.get('exclude'):
             exclude = ','.join([exclude, request.GET.get('exclude')])
 
-        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -2573,6 +2609,7 @@ class AlumniIndex(Page, SocialFields):
 
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
@@ -2840,6 +2877,7 @@ class StaffIndex(Page, SocialFields):
 
     indexed = False
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         staff_type = request.GET.get('staff_type')
         school = request.GET.get('school')
@@ -2928,6 +2966,7 @@ class ResearchStudentIndex(Page, SocialFields):
     indexed_fields = ('intro', )
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
@@ -3272,6 +3311,7 @@ class RcaNowIndex(Page, SocialFields):
 
     search_name = None
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
@@ -3388,6 +3428,7 @@ class ResearchItem(Page, SocialFields):
 
     search_name = 'Research'
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get related research
         research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
@@ -3609,6 +3650,7 @@ class CurrentResearchPage(Page, SocialFields):
 
     indexed = False
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         research_type = request.GET.get('research_type')
         school = request.GET.get('school')
@@ -3702,6 +3744,7 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get filter parameters
         year = request.GET.get('degree_year')
@@ -3933,6 +3976,7 @@ class InnovationRCAProject(Page, SocialFields):
 
     search_name = 'InnovationRCA Project'
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get related research
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
@@ -4028,6 +4072,7 @@ class InnovationRCAIndex(Page, SocialFields):
 
     indexed = False
 
+    @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of live projects
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
