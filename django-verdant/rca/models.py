@@ -822,6 +822,16 @@ class ProgrammePage(Page, SocialFields):
 
     search_name = 'Programme'
 
+    @property
+    def staff_feed(self):
+        # Get staff from manual feed
+        feed = self.manual_staff_feed.all()
+
+        # Get each staffpage out of the feed
+        feed = [staffpage.staff for staffpage in feed]
+
+        return feed
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
@@ -2165,6 +2175,20 @@ class StandardIndex(Page, SocialFields):
 
     search_name = None
 
+    @property
+    def staff_feed(self):
+        # Get staff from manual feed
+        feed = self.manual_staff_feed.all()
+
+        # Get each staffpage out of the feed
+        feed = [staffpage.staff for staffpage in feed]
+
+        # If feed source is set, get staff from that too
+        if self.staff_feed_source:
+            feed = chain(feed, StaffPage.objects.filter(school=self.staff_feed_source))
+
+        return feed
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of events
@@ -2205,7 +2229,7 @@ StandardIndex.content_panels = [
     ],'Introduction'),
     FieldPanel('body', classname="full"),
     InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
-    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
+    InlinePanel(StandardIndex, 'manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
     InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
     InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
