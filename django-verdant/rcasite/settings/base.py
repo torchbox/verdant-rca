@@ -270,8 +270,12 @@ WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
 WAGTAILSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
 WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
-# RCA uses the old default name of 'verdant' for its search index
-WAGTAILSEARCH_ES_INDEX = 'verdant'
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+        'INDEX': 'wagtail',
+    },
+}
 
 # Hide password management / recovery options, as RCA uses LDAP instead
 WAGTAIL_PASSWORD_MANAGEMENT_ENABLED = False
