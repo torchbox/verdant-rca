@@ -3,10 +3,14 @@
 $(function(){
     var production_url = "http://www.rca.ac.uk/media/";
     var local_url = media_url;
-    $("img").each(function(){
-         $(this).on("error", function(){
-             this.src = this.src.replace(production_url, local_url);
+    //setTimeout necessary to allow the images to have time to 404 rather
+    //than the request getting cancelled which throws a load of errors to the terminal
+    setTimeout(function(){
+        $("img").each(function(){
+            $(this).on("error", function(){
+                this.src = this.src.replace(production_url, local_url);
+            });
+            this.src = this.src.replace(local_url, production_url);
         });
-        this.src = this.src.replace(local_url, production_url);
-    });
+    },3000);
 });
