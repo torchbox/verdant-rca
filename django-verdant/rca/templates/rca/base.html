@@ -131,7 +131,8 @@
                 {% if DEBUG %}
                     <script type="text/javascript">
                         //set global var for media_url so that it can be used by the script being called
-                        var media_url = "http://{{ request.site.hostname }}:8111{{ MEDIA_URL }}";
+                        var media_url = "http://{{ request.site.hostname }}:{{ request.site.port }}{{ MEDIA_URL }}";
+                        console.log(media_url);
                     </script>
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
