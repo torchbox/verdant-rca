@@ -1628,6 +1628,8 @@ class EventIndex(Page, SocialFields):
         else:
             events = events.order_by('start_date')
 
+        events = events.distinct()
+
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
         try:
