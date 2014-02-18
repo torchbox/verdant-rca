@@ -205,6 +205,11 @@ WORK_TYPES_CHOICES = (
     ('other', 'Other (enter below)'),
 )
 
+SHOW_WORK_TYPE_CHOICES = (
+    ('dissertation', "Dissertation"),
+    ('major-project', "Major project")
+)
+
 WORK_THEME_CHOICES = (
     ('culturesofcurating', 'Cultures of Curating'),
     ('designinnovationandsociety', 'Design, Innovation and Society'),
@@ -3347,7 +3352,7 @@ class NewStudentPage(Page, SocialFields):
 
     # Show details
     show_work_title = models.CharField("Work title", max_length=255, blank=True)
-    show_work_type = models.CharField("Work type", max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
+    show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
     show_in_show = models.BooleanField("In show", default=False)
