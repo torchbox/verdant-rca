@@ -3375,12 +3375,12 @@ class NewStudentPage(Page, SocialFields):
     )
 
     @property
-    def is_researchstudent(self):
+    def is_research_student(self):
         return self.research_school != ''
 
     @property
     def search_name(self):
-        if self.is_researchstudent:
+        if self.is_research_student:
             if self.research_qualification == 'innovationrca-fellow':
                 return "InnovationRCA Fellow"
             else:
@@ -3388,21 +3388,6 @@ class NewStudentPage(Page, SocialFields):
         else:
             return "Graduate"
 
-    @property
-    def work_tab_title(self):
-        if self.is_researchstudent:
-            return "Research Work"
-        elif self.get_parent().content_type.model_class() == RcaNowIndex:
-            return "RCA Now"
-        else:
-            return "Show RCA Work"
-
-    @property # TODO: This should be fixed in the template
-    def carousel_items(self):
-        if self.is_researchstudent:
-            return self.research_carousel_items
-        else:
-            return self.show_carousel_items
 
 NewStudentPage.content_panels = [
     # General details
