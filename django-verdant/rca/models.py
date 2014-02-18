@@ -3323,6 +3323,18 @@ class NewStudentPageResearchSupervisor(Orderable):
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
     supervisor_other = models.CharField(max_length=255, blank=True)
 
+    @property
+    def name(self):
+        if self.supervisor:
+            return self.supervisor.title
+        else:
+            return self.supervisor_other
+
+    @property
+    def link(self):
+        if self.supervisor:
+            return self.supervisor.url
+
     panels = [
         PageChooserPanel('supervisor'),
         FieldPanel('supervisor_other'),
@@ -3377,6 +3389,10 @@ class NewStudentPage(Page, SocialFields):
     @property
     def is_research_student(self):
         return self.research_school != ''
+
+    @property
+    def is_postgraduate(self):
+        return self.postgrad_school != ''
 
     @property
     def search_name(self):

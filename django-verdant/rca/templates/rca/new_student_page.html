@@ -20,23 +20,54 @@
                             <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
                         {% endif %}
                     </li>
-                    <li class="col">
-                        <h3 class="a2">School</h3>
-                        <p class="h7">{{ self.get_postgrad_school_display }}</p>
+                    {% if self.is_postgraduate %}
+                        <li class="col">
+                            <h3 class="a1">Postgrad</h3>
 
-                        {% if self.research_qualification %}
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_postgrad_school_display }}</p>
+
                             <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.research_qualification %}{{ self.get_research_qualification_display }} {% if self.research_start_year %}, {{ self.research_start_year }}{% endif %}{% if self.research_graduation_year %}&ndash;{{ self.research_graduation_year }}{% endif %}{% endif %}</p>
-                        {% endif %}
+                            <p class="h7">{{ self.get_postgrad_programme_display }}{% if self.postgrad_degree_year %}, {{ self.postgrad_degree_year }}{% endif %}</p>
 
-                        {% if self.postgrad_specialism %}
-                            <h3 class="a2 space">Specialism</h3>
-                            <p class="h7">{{ self.postgrad_specialism }}</p>
-                        {% endif %}
+                            {% if self.postgrad_specialism %}
+                                <h3 class="a2 space">Specialism</h3>
+                                <p class="h7">{{ self.postgrad_specialism }}</p>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                    {% if self.is_research_student %}
+                        <li class="col">
+                            <h3 class="a1">Research</h3>
 
-                    </li>
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_research_school_display }}</p>
+
+                            {% if self.research_qualification  %}
+                                <h3 class="a2 space">Programme</h3>
+                                <p class="h7">{% if self.research_qualification %}{{ self.get_research_qualification_display }} {% endif %}{% if self.research_programme %}{{ self.get_research_programme_display }}{% endif %}{% if self.research_start_year %}, {{ self.research_start_year }}{% endif %}{% if self.research_graduation_year %}&ndash;{{ self.research_graduation_year }}{% endif %}</p>
+                            {% endif %}
+
+                            {% if self.research_dissertation_title %}
+                                <h3 class="a2 space">Dissertation title</h3>
+                                <p class="h7">{{ self.research_dissertation_title }}</p>
+                            {% endif %}
+
+                            {% if self.research_supervisors %}
+                                <h3 class="a2 space">Supervisors</h3>
+                                <p class="h7">
+                                    {% for supervisor in self.research_supervisors.all %}
+                                        {% if supervisor.link %}
+                                            <a href="{{ supervisor.link }}">{{ supervisor.name }}</a>
+                                        {% else %}
+                                            {{ supervisor.name }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                            {% endif %}
+                        </li>
+                    {% endif %}
                     <li class="col">
-                        
                         {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
                         
                             <h3 class="a2">Contact</h3>
@@ -62,8 +93,8 @@
                                         {% endfor %}
                                     {% endif %}
                                 {% endwith %}
-                                {% if self.student_twitter_feed %}
-                                    <a href="http://www.twitter.com/{{ self.student_twitter_feed }}">&#64;{{ self.student_twitter_feed }}</a>
+                                {% if self.twitter_handle %}
+                                    <a href="http://www.twitter.com/{{ self.twitter_handle }}">&#64;{{ self.twitter_handle }}</a>
                                 {% endif %}
                             </ul>
                         {% endif %}
