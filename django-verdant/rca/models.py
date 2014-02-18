@@ -3110,8 +3110,12 @@ class StudentPageConference(Orderable):
 class StudentPageSupervisor(Orderable):
     page = ParentalKey('rca.StudentPage', related_name='supervisors')
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor_other = models.CharField(max_length=255, blank=True)
 
-    panels = [PageChooserPanel('supervisor')]
+    panels = [
+        PageChooserPanel('supervisor'),
+        FieldPanel('supervisor_other'),
+    ]
 
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
