@@ -47,24 +47,6 @@
                                 <h3 class="a2 space">Programme</h3>
                                 <p class="h7">{% if self.research_qualification %}{{ self.get_research_qualification_display }} {% endif %}{% if self.research_programme %}{{ self.get_research_programme_display }}{% endif %}{% if self.research_start_year %}, {{ self.research_start_year }}{% endif %}{% if self.research_graduation_year %}&ndash;{{ self.research_graduation_year }}{% endif %}</p>
                             {% endif %}
-
-                            {% if self.research_dissertation_title %}
-                                <h3 class="a2 space">Dissertation title</h3>
-                                <p class="h7">{{ self.research_dissertation_title }}</p>
-                            {% endif %}
-
-                            {% if self.research_supervisors %}
-                                <h3 class="a2 space">Supervisors</h3>
-                                <p class="h7">
-                                    {% for supervisor in self.research_supervisors.all %}
-                                        {% if supervisor.link %}
-                                            <a href="{{ supervisor.link }}">{{ supervisor.name }}</a>
-                                        {% else %}
-                                            {{ supervisor.name }}
-                                        {% endif %}
-                                    {% endfor %}
-                                </p>
-                            {% endif %}
                         </li>
                     {% endif %}
                     <li class="col">
