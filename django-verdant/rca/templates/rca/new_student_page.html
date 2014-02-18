@@ -1,0 +1,275 @@
+{% extends "rca/base.html" %}
+{% load image_tags rich_text rca_tags %}
+
+{% block body_class %}
+    type-student-profile
+{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    {% tabdeck %}
+
+        <!-- links and ids added by javascript -->
+        {% tab self.work_tab_title %}
+            {% include "rca/includes/modules/carousel.html" %}
+            <section class="row">
+                <section class="body-text">
+                    {% if self.work_description %}
+                        {{ self.work_description|richtext }}
+                    {% endif %}
+                </section>
+
+                {# meta data #}
+                <section class="four">
+                    <div class="meta-data">
+                        <dl>
+                            {% if self.work_location %}
+                                <dd>Location</dd>
+                                <dt>{{ self.get_work_location_display }}</dt>
+                            {% endif %}
+
+                            {% with self.show_collaborators.all as collaborators %}
+                                {% if collaborators %}
+                                    <dd>Collaborators</dd>
+                                    <dt>
+                                        <ul>
+                                            {% for collaborator in collaborators %}
+                                            <li>{{ collaborator.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </dt>
+                                {% endif %}
+                            {% endwith %}
+
+                            {% with self.show_awards.all as awards %}
+                                {% if awards %}
+                                    <dd>Awards</dd>
+                                    <dt>
+                                        <ul>
+                                            {% for award in awards %}
+                                            <li>{{ award.award }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </dt>
+                                {% endif %}
+                            {% endwith %}
+
+                            <dd>Programme</dd>
+                            <dt>{{ self.get_postgrad_programme_display }}</dt>
+
+                            {% if self.show_work_type %}
+                                <dd>Work type</dd>
+                                <dt>{{ self.get_show_work_type_display }}</dt>
+                            {% endif %}
+
+                            {% with self.show_sponsor.all as sponsors %}
+                                {% if sponsors %}
+                                    <dd>Sponsors</dd>
+                                    <dt>
+                                        <ul>
+                                            {% for sponsor in sponsors %}
+                                            <li>{{ sponsor.name }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </dt>
+                                {% endif %}
+                            {% endwith %}
+                        </dl>
+                    </div>
+                    <div class="single">
+                        {% include "rca/includes/modules/share-button.html" %}
+                    </div>
+                </section>
+
+            </section>
+        {% endtab %}
+
+        <!-- links and ids added by javascript -->
+        {% tab "Info" class="flush" %}
+            <div class="profile">
+                <ul class="four-cols">
+                    <li class="col first">
+                        {% if self.profile_image %}
+                            {% image self.profile_image width-300 %}
+                        {% else %}
+                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
+                        {% endif %}
+                    </li>
+                    <li class="col">
+                        <h3 class="a2">School</h3>
+                        <p class="h7">{{ self.get_postgrad_school_display }}</p>
+
+                        {% if self.research_qualification %}
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.research_qualification %}{{ self.get_research_qualification_display }} {% if self.research_start_year %}, {{ self.research_start_year }}{% endif %}{% if self.research_graduation_year %}&ndash;{{ self.research_graduation_year }}{% endif %}{% endif %}</p>
+                        {% endif %}
+
+                        {% if self.postgrad_specialism %}
+                            <h3 class="a2 space">Specialism</h3>
+                            <p class="h7">{{ self.postgrad_specialism }}</p>
+                        {% endif %}
+
+                    </li>
+                    <li class="col">
+                        
+                        {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
+                        
+                            <h3 class="a2">Contact</h3>
+                            <ul>
+                                {% with self.emails.all as emails %}
+                                    {% if emails %}
+                                        {% for email in emails %}
+                                            <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                {% with self.phones.all as phone_nos %}
+                                    {% if phone_nos %}
+                                        {% for phone_no in phone_nos %}
+                                            <li>{{ phone_no.phone }}</li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                {% with self.websites.all as websites %}
+                                    {% if websites %}
+                                        {% for website in websites %}
+                                            <li><a href="{{ website.website }}">{{ website.website }}</a></li>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                {% if self.student_twitter_feed %}
+                                    <a href="http://www.twitter.com/{{ self.student_twitter_feed }}">&#64;{{ self.student_twitter_feed }}</a>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                    <li class="col last">
+                    </li>
+                </ul>
+                <div class="divider"></div>
+                <ul class="three-nine-cols">
+                    <li class="col col-3 first">
+                        <div class="row">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </li>
+                    <li class="col col-9 last body-text-style">
+                        {{ self.statement|richtext }}
+                    </li>
+                </ul>
+
+                <!--degrees-->
+                {% with self.previous_degrees.all as degrees %}
+                    {% if degrees %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Degrees</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for degree in degrees %}
+                                    {{ degree.degree }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- experience -->
+                {% with self.experiences.all as experiences %}
+                    {% if experiences %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Experience</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for experience in experiences %}
+                                    {{ experience.experience }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- exhibitions -->
+                {% with self.exhibitions.all as exhibitions %}
+                    {% if exhibitions %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Exhibitions</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for exhibition in exhibitions %}
+                                    {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- conferences -->
+                {% with self.conferences.all as conferences %}
+                    {% if conferences %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Conferences</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for conference in conferences %}
+                                    {{ conference.name }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- publications -->
+                {% with self.publications.all as publications %}
+                    {% if publications %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Publications</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for publication in publications %}
+                                    {{ publication.name }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <div class="inner">
+        
+                    <!-- research -->
+                    {% research_related person=self %}
+
+                    <!-- rca now -->
+                    {% rca_now_related author=self.title %}
+
+                    <!-- innovation rca -->
+                    {% innovation_rca_related person=self %}
+                </div>
+            </div>
+        {% endtab %}
+    {% endtabdeck %}
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% comment %}
+    If the student has some work, show related work for that student, otherwise
+    show related students
+    {% endcomment %}
+    {% if self.carousel_items.all|length > 0 %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudentsWork="true" %}
+    {% else %}
+        {% include "rca/includes/sidebar.html" with showRelatedStudents="true" %}
+    {% endif %}
+{% endblock %}

@@ -3239,31 +3239,31 @@ def reassign_student_pages(sender, request, user, **kwargs):
 # General
 class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
-    degree = models.CharField(max_length=255)
+    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation")
 
     panels = [FieldPanel('degree')]
 
 class NewStudentPageExhibition(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255, blank=True)
+    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include Exhibition title, gallery, city and year")
 
     panels = [FieldPanel('exhibition')]
 
 class NewStudentPageExperience(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='experiences')
-    experience = models.CharField(max_length=255, blank=True)
+    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s)")
 
     panels = [FieldPanel('experience')]
 
 class NewStudentPageContactsEmail(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='emails')
-    email = models.EmailField(max_length=255, blank=True)
+    email = models.EmailField(max_length=255, blank=True, help_text="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
 
     panels = [FieldPanel('email')]
 
 class NewStudentPageContactsPhone(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phones')
-    phone = models.CharField(max_length=255, blank=True)
+    phone = models.CharField(max_length=255, blank=True, help_text="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
 
     panels = [FieldPanel('phone')]
 
@@ -3304,7 +3304,7 @@ class NewStudentPageShowCollaborator(Orderable):
 
 class NewStudentPageShowSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_sponsors')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
 
     panels = [FieldPanel('name')]
 
@@ -3328,10 +3328,10 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     preferred_name = models.CharField(max_length=255, blank=True)
-    profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
-    statement = RichTextField(blank=True)
-    twitter_handle = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
-    funding = models.CharField(max_length=255, blank=True)
+    profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
+    statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
+    twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
+    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
 
@@ -3349,7 +3349,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Work title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
-    show_work_description = RichTextField("Work description", blank=True)
+    show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
     show_in_show = models.BooleanField("In show", default=False)
 
     # Research details
@@ -3357,7 +3357,7 @@ class NewStudentPage(Page, SocialFields):
     research_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     research_start_year = models.CharField("Start year", max_length=4, blank=True)
     research_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
-    research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES)
+    research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
     research_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     research_statement = RichTextField("Statement", blank=True)
     research_in_show = models.BooleanField("In show", default=False)
@@ -3371,7 +3371,7 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def is_researchstudent(self):
-        return self.research_school is not None
+        return self.research_school != ''
 
     @property
     def search_name(self):
@@ -3392,6 +3392,13 @@ class NewStudentPage(Page, SocialFields):
         else:
             return "Show RCA Work"
 
+    @property # TODO: This should be fixed in the template
+    def carousel_items(self):
+        if self.is_researchstudent:
+            return self.research_carousel_items
+        else:
+            return self.show_carousel_items
+
 NewStudentPage.content_panels = [
     # General details
     FieldPanel('title', classname="full title"),
@@ -3407,11 +3414,11 @@ NewStudentPage.content_panels = [
     InlinePanel(NewStudentPage, 'emails', label="Email"),
     InlinePanel(NewStudentPage, 'phones', label="Phone"),
     InlinePanel(NewStudentPage, 'websites', label="Website"),
-    InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degree"),
-    InlinePanel(NewStudentPage, 'exhibitions', label="Exhibition"),
+    InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degrees"),
+    InlinePanel(NewStudentPage, 'exhibitions', label="Exhibitions"),
     InlinePanel(NewStudentPage, 'experiences', label="Experience"),
-    InlinePanel(NewStudentPage, 'publications', label="Publication"),
-    InlinePanel(NewStudentPage, 'conferences', label="Conference"),
+    InlinePanel(NewStudentPage, 'publications', label="Publications"),
+    InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
 
     # Postgrad details
     MultiFieldPanel([
@@ -3424,8 +3431,8 @@ NewStudentPage.content_panels = [
     # Show details
     MultiFieldPanel([
         FieldPanel('show_in_show'),
-        FieldPanel('show_work_title'),
         FieldPanel('show_work_type'),
+        FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
         FieldPanel('show_work_description'),
         InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel item"),
