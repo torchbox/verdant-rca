@@ -569,3 +569,8 @@ class TabNode(template.Node):
         context['tabdeck']['index'] += 1
 
         return header_html + ('<div class="%s">' % classname) + self.nodelist.render(context) + '</div>'
+
+# settings value
+@register.assignment_tag
+def get_debug():
+    return getattr(settings, 'DEBUG', "")
