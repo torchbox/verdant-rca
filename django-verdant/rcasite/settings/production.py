@@ -16,7 +16,13 @@ TEMPLATE_LOADERS = (
 BROKER_URL = 'redis://rca1.dh.bytemark.co.uk'
 CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 
-WAGTAILSEARCH_ES_URLS = ['http://5.153.227.116:9200']
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+        'INDEX': 'wagtail',
+        'URLS': ['http://5.153.227.116:9200'],
+    },
+}
 
 EMAIL_SUBJECT_PREFIX = "[rca-production] "
 DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
