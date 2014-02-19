@@ -1628,6 +1628,8 @@ class EventIndex(Page, SocialFields):
         else:
             events = events.order_by('start_date')
 
+        events = events.distinct()
+
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
         try:
@@ -3108,8 +3110,12 @@ class StudentPageConference(Orderable):
 class StudentPageSupervisor(Orderable):
     page = ParentalKey('rca.StudentPage', related_name='supervisors')
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor_other = models.CharField(max_length=255, blank=True)
 
-    panels = [PageChooserPanel('supervisor')]
+    panels = [
+        PageChooserPanel('supervisor'),
+        FieldPanel('supervisor_other'),
+    ]
 
 class StudentPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
