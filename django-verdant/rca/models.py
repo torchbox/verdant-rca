@@ -3441,9 +3441,9 @@ NewStudentPage.content_panels = [
     InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degrees"),
     InlinePanel(NewStudentPage, 'exhibitions', label="Exhibitions"),
     InlinePanel(NewStudentPage, 'experiences', label="Experience"),
+    InlinePanel(NewStudentPage, 'awards', label="Awards"),
     InlinePanel(NewStudentPage, 'publications', label="Publications"),
     InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
-    InlinePanel(NewStudentPage, 'awards', label="Award"),
 
     # Postgrad details
     MultiFieldPanel([
