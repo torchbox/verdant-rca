@@ -211,6 +211,11 @@ WORK_TYPES_CHOICES = (
     ('other', 'Other (enter below)'),
 )
 
+SHOW_WORK_TYPE_CHOICES = (
+    ('dissertation', "Dissertation"),
+    ('major-project', "Major project")
+)
+
 WORK_THEME_CHOICES = (
     ('culturesofcurating', 'Cultures of Curating'),
     ('designinnovationandsociety', 'Design, Innovation and Society'),
@@ -221,6 +226,9 @@ WORK_THEME_CHOICES = (
 INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
     ('startup', 'Start-up'),
     ('fellowship', 'Fellowship'),
+)
+
+SPECIALISM_CHOICES = (
 )
 
 SCHOOL_CHOICES = (
@@ -3253,6 +3261,275 @@ StudentPage.promote_panels = [
 @receiver(user_logged_in)
 def reassign_student_pages(sender, request, user, **kwargs):
     StudentPage.objects.filter(owner__isnull=True, email__email__iexact=user.email).update(owner=user)
+
+
+# == New Student page ==
+
+# General
+class NewStudentPagePreviousDegree(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
+    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation")
+
+    panels = [FieldPanel('degree')]
+
+class NewStudentPageExhibition(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
+    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include Exhibition title, gallery, city and year")
+
+    panels = [FieldPanel('exhibition')]
+
+class NewStudentPageExperience(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='experiences')
+    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s)")
+
+    panels = [FieldPanel('experience')]
+
+class NewStudentPageContactsEmail(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='emails')
+    email = models.EmailField(max_length=255, blank=True, help_text="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
+
+    panels = [FieldPanel('email')]
+
+class NewStudentPageContactsPhone(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phones')
+    phone = models.CharField(max_length=255, blank=True, help_text="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
+
+    panels = [FieldPanel('phone')]
+
+class NewStudentPageContactsWebsite(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='websites')
+    website = models.URLField(max_length=255, blank=True)
+
+    panels = [FieldPanel('website')]
+
+class NewStudentPagePublication(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='publications')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageConference(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='conferences')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageAwards(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='awards')
+    award = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('award')]
+
+
+# Show
+class NewStudentPageShowCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='show_carousel_items')
+
+class NewStudentPageShowCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='show_collaborators')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageShowSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='show_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+
+    panels = [FieldPanel('name')]
+
+
+# Research
+class NewStudentPageResearchCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_carousel_items')
+
+class NewStudentPageResearchAwards(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_awards')
+    award = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('award')]
+
+class NewStudentPageResearchCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_collaborators')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageResearchSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageResearchSupervisor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor_other = models.CharField(max_length=255, blank=True)
+
+    @property
+    def name(self):
+        if self.supervisor:
+            return self.supervisor.title
+        else:
+            return self.supervisor_other
+
+    @property
+    def link(self):
+        if self.supervisor:
+            return self.supervisor.url
+
+    panels = [
+        PageChooserPanel('supervisor'),
+        FieldPanel('supervisor_other'),
+    ]
+
+class NewStudentPage(Page, SocialFields):
+    # General details
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    preferred_name = models.CharField(max_length=255, blank=True)
+    profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
+    statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
+    twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
+    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    show_on_homepage = models.BooleanField(default=False)
+
+    # Hidden fields
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
+
+    # Postgrad details
+    postgrad_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    postgrad_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    postgrad_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
+    postgrad_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+
+    # Show details
+    show_work_title = models.CharField("Project title", max_length=255, blank=True)
+    show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
+    show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
+    show_in_show = models.BooleanField("In show", default=False)
+
+    # Research details
+    research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    research_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    research_start_year = models.CharField("Start year", max_length=4, blank=True)
+    research_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
+    research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
+    research_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
+    research_statement = RichTextField("Research statement", blank=True)
+    research_in_show = models.BooleanField("In show", default=False)
+
+    indexed_fields = (
+        'first_name', 'last_name', 'preferred_name', 'statement',
+        'get_postgrad_school_display', 'get_postgrad_programme_display', 'postgrad_degree_year', 'get_postgrad_specialism_display',
+        'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
+        'get_research_school_display', 'get_research_programme_display', 'research_graduation_year', 'get_research_qualification_display', 'research_dissertation_title', 'research_statement',
+    )
+
+    @property
+    def is_research_student(self):
+        return self.research_school != ''
+
+    @property
+    def is_postgraduate(self):
+        return self.postgrad_school != ''
+
+    @property
+    def search_name(self):
+        if self.is_research_student:
+            if self.research_qualification == 'innovationrca-fellow':
+                return "InnovationRCA Fellow"
+            else:
+                return "Research Student"
+        else:
+            return "Graduate"
+
+
+NewStudentPage.content_panels = [
+    # General details
+    FieldPanel('title', classname="full title"),
+    MultiFieldPanel([
+        FieldPanel('first_name'),
+        FieldPanel('last_name'),
+        FieldPanel('preferred_name'),
+    ], "Full name"),
+    ImageChooserPanel('profile_image'),
+    FieldPanel('statement', classname="full"),
+    FieldPanel('twitter_handle'),
+    FieldPanel('funding'),
+    InlinePanel(NewStudentPage, 'emails', label="Email"),
+    InlinePanel(NewStudentPage, 'phones', label="Phone"),
+    InlinePanel(NewStudentPage, 'websites', label="Website"),
+    InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degrees"),
+    InlinePanel(NewStudentPage, 'exhibitions', label="Exhibitions"),
+    InlinePanel(NewStudentPage, 'experiences', label="Experience"),
+    InlinePanel(NewStudentPage, 'awards', label="Awards"),
+    InlinePanel(NewStudentPage, 'publications', label="Publications"),
+    InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
+
+    # Postgrad details
+    MultiFieldPanel([
+        FieldPanel('postgrad_school'),
+        FieldPanel('postgrad_programme'),
+        FieldPanel('postgrad_graduation_year'),
+        FieldPanel('postgrad_specialism'),
+    ], "MA details"),
+
+    # Show details
+    MultiFieldPanel([
+        FieldPanel('show_in_show'),
+        FieldPanel('show_work_type'),
+        FieldPanel('show_work_title'),
+        FieldPanel('show_work_location'),
+        FieldPanel('show_work_description'),
+        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
+    ], "MA Show details"),
+
+    # Research details
+    MultiFieldPanel([
+        FieldPanel('research_in_show'),
+        FieldPanel('research_school'),
+        FieldPanel('research_programme'),
+        FieldPanel('research_dissertation_title'),
+        FieldPanel('research_statement'),
+        FieldPanel('research_start_year'),
+        FieldPanel('research_graduation_year'),
+        FieldPanel('research_qualification'),
+        InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
+        InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
+    ], "MPhil/PhD details"),
+]
+
+NewStudentPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
+# When a user logs in, check for any NewStudentPages that have no owner but have an email address
+# matching this user, and reassign them to be owned by this user
+@receiver(user_logged_in)
+def reassign_new_student_pages(sender, request, user, **kwargs):
+    NewStudentPage.objects.filter(owner__isnull=True, emails__email__iexact=user.email).update(owner=user)
 
 
 # == RCA Now page ==
