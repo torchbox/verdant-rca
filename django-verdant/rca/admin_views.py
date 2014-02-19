@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from wagtail.wagtailcore.models import UserPagePermissionsProxy
 
-from rca.models import RcaNowPage, RcaNowIndex, StudentPage
+from rca.models import RcaNowPage, RcaNowIndex, StudentPage, NewStudentPage
 
 def find_rca_now_index_page(user):
     """Look for the RCA Now index page: a page of type RcaNowIndex where this user can add pages"""
@@ -31,13 +31,13 @@ def rca_now_index(request):
 @login_required
 def student_page_index(request):
     # look for StudentPages owned by this user
-    pages = StudentPage.objects.filter(owner=request.user)
+    pages = NewStudentPage.objects.filter(owner=request.user) or StudentPage.objects.filter(owner=request.user)
 
     if not pages:
         index_page = find_rca_now_index_page(request.user)
 
         # Redirect to the interface for adding a StudentPage in this section
-        return redirect('wagtailadmin_pages_create', 'rca', 'studentpage', index_page.id)
+        return redirect('wagtailadmin_pages_create', 'rca', 'newstudentpage', index_page.id)
 
     elif len(pages) == 1:
         # redirect them to edit their existing student page
