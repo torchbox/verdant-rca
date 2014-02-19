@@ -3318,6 +3318,24 @@ class NewStudentPageShowSponsor(Orderable):
 class NewStudentPageResearchCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewStudentPage', related_name='research_carousel_items')
 
+class NewStudentPageResearchAwards(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_awards')
+    award = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('award')]
+
+class NewStudentPageResearchCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_collaborators')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPageResearchSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='research_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+
+    panels = [FieldPanel('name')]
+
 class NewStudentPageResearchSupervisor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='research_supervisors')
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
@@ -3363,7 +3381,7 @@ class NewStudentPage(Page, SocialFields):
     postgrad_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
 
     # Show details
-    show_work_title = models.CharField("Work title", max_length=255, blank=True)
+    show_work_title = models.CharField("Project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
@@ -3432,7 +3450,7 @@ NewStudentPage.content_panels = [
         FieldPanel('postgrad_programme'),
         FieldPanel('postgrad_degree_year'),
         FieldPanel('postgrad_specialism'),
-    ], "Postgraduate details"),
+    ], "MA details"),
 
     # Show details
     MultiFieldPanel([
@@ -3445,7 +3463,7 @@ NewStudentPage.content_panels = [
         InlinePanel(NewStudentPage, 'show_awards', label="Award"),
         InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
-    ], "Show details"),
+    ], "MA Show details"),
 
     # Research details
     MultiFieldPanel([
@@ -3458,8 +3476,11 @@ NewStudentPage.content_panels = [
         FieldPanel('research_qualification'),
         FieldPanel('research_dissertation_title'),
         InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'research_awards', label="Award"),
+        InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
         InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
-    ], "Research details"),
+    ], "MPhil/PhD details"),
 ]
 
 NewStudentPage.promote_panels = [
