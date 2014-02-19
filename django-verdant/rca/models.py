@@ -3449,7 +3449,7 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('postgrad_school'),
         FieldPanel('postgrad_programme'),
-        FieldPanel('postgrad_degree_year'),
+        FieldPanel('postgrad_graduation_year'),
         FieldPanel('postgrad_specialism'),
     ], "MA details"),
 
