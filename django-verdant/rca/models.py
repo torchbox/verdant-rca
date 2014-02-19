@@ -1101,6 +1101,9 @@ class NewsItem(Page, SocialFields):
         if exclude:
             results = results.exclude(id=exclude.id)
 
+        # Only show live results
+        results = results.filter(live=True)
+
         return results.order_by('-score')[:count]
 
 
