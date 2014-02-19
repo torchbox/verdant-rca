@@ -3772,6 +3772,8 @@ class GalleryPage(Page, SocialFields):
 
     indexed_fields = ('intro', 'body')
 
+    template = 'rca/cca_index.html'
+
     search_name = 'Gallery'
 
     @vary_on_headers('X-Requested-With')
