@@ -19,6 +19,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
+from django.utils import timezone
 from django.views.decorators.vary import vary_on_headers
 
 from wagtail.wagtailcore.models import Page, Orderable
@@ -2976,12 +2977,28 @@ class ResearchStudentIndex(Page, SocialFields):
     indexed_fields = ('intro', )
     search_name = None
 
+    def all_students(self):
+        return StudentPage.objects.filter(live=True, path__startswith=self.path)
+
+    def current_students(self):
+        current_year = timezone.now().year
+        return self.all_students().filter(models.Q(graduation_year='') | models.Q(graduation_year__gte=current_year))
+
+    def past_students(self):
+        current_year = timezone.now().year
+        return self.all_students().filter(graduation_year__lt=current_year).exclude(graduation_year='')
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         school = request.GET.get('school')
         programme = request.GET.get('programme')
+        period = request.GET.get('period')
 
-        research_students = StudentPage.objects.filter(live=True, path__startswith=self.path).order_by('random_order')
+        # Get students
+        if period == 'past':
+            research_students = self.past_students()
+        else:
+            research_students = self.current_students()
 
         # Run school and programme filters
         research_students, filters = run_filters(research_students, [
@@ -2989,7 +3006,7 @@ class ResearchStudentIndex(Page, SocialFields):
             ('programme', 'programme', programme),
         ])
 
-        research_students = research_students.distinct()
+        research_students = research_students.distinct().order_by('random_order')
 
         page = request.GET.get('page')
         paginator = Paginator(research_students, 17)  # Show 17 research students per page
@@ -3014,7 +3031,6 @@ class ResearchStudentIndex(Page, SocialFields):
                 'research_students': research_students,
                 'filters': json.dumps(filters),
             })
-
 
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
