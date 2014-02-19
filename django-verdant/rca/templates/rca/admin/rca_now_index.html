@@ -2,13 +2,15 @@
 {% block titletag %}RCA Now{% endblock %}
 
 {% block content %}
-    <header>
-        <div class="row row-flush">
-            <div class="left col9">
-                <h1>RCA Now</h1>
+    <header class="nice-padding">
+        <div class="row">
+            <div class="left">
+                <div class="col">
+                    <h1>RCA Now</h1>
+                </div>
             </div>
-            <div class="right col3">
-                <a href="{% url 'wagtailadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}" class="button icon icon-plus-inverse">Add a page</a>
+            <div class="right">
+                <a href="{% url 'wagtailadmin_pages_create' 'rca' 'rcanowpage' rca_now_index.id %}" class="button bicolor icon icon-plus">Add a page</a>
             </div>
         </div>
     </header>

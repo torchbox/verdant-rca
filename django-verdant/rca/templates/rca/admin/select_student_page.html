@@ -2,9 +2,7 @@
 {% block titletag %}My student pages{% endblock %}
 
 {% block content %}
-    <header>
-        <h1>My student pages</h1>
-    </header>
+	{% include "wagtailadmin/shared/header.html" with title="My student pages" %}
 
     <div class="nice-padding row-flush">
         <div id="page-results">
