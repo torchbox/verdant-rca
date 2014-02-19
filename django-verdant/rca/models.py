@@ -139,6 +139,11 @@ AREA_CHOICES = (
     ('drawingstudio', 'Drawing Studio'),
 )
 
+STAFF_AREA_CHOICES = AREA_CHOICES + (
+    ('performance', "Performance"),
+    ('moving-image', "Moving image"),
+)
+
 EVENT_AREA_CHOICES = AREA_CHOICES + (
     ('alumnirca', 'AlumniRCA'),
 )
@@ -2740,7 +2745,7 @@ class StaffPageRole(Orderable):
     title = models.CharField(max_length=255)
     school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
     programme = models.CharField(max_length=255, blank=True, choices=PROGRAMME_CHOICES)
-    area = models.CharField(max_length=255, blank=True, choices=AREA_CHOICES)
+    area = models.CharField(max_length=255, blank=True, choices=STAFF_AREA_CHOICES)
     email = models.EmailField(max_length=255, blank=True)
 
     panels = [
