@@ -11,53 +11,50 @@
     
     <section class="module search-results">
         {% if search_results %}
-            
             <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
-
-            {% with query.editors_picks.all as editors_picks %}
-                {% if editors_picks %}
-                    <h3 class="module-title">Recommended result{{ editors_picks.count|pluralize }}</h3>
-                    <ul class="picks">
-                        {% for editors_pick in editors_picks %}
-                            <li class="row">
-                                <a href="{{ editors_pick.page.url }}">
-                                    <div class="image">
-                                        {% with editors_pick.page.specific as pick_specific %}
-                                            {% if pick_specific.feed_image %}
-                                                {% image pick_specific.feed_image fill-90x80 %}
-                                            {% else %}
-                                                {% with pick_specific.carousel_items.all as carousel_items %}
-                                                    {% with carousel_items|first as carousel_item %}
-                                                        {% if carousel_item.image %}
-                                                            {% image carousel_item.image fill-90x80 %}
-                                                        {% else %}
-                                                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="200">
-                                                        {% endif %}
-                                                    {% endwith %}
-                                                {% endwith %}
-                                            {% endif %}
-                                        {% endwith %}
-                                    </div>
-                                    <div class="content">
-                                        <h4>{{ editors_pick.page.title }}</h4>
-                                        <p>{{ editors_pick.description }}</p>
-                                    </div>
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-
-                    <h4 class="module-title">Other results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
-                {% else %}
-                    <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
-                {% endif %}
-
-            {% endwith %}
-
-            {% include "rca/includes/search_listing.html" %}
-
         {% else %}
             <h2>Sorry, nothing was found for &quot;{{ query_string }}&quot;</h2>
+        {% endif %}
+
+        {% with query.editors_picks.all as editors_picks %}
+            {% if editors_picks %}
+                <h3 class="module-title">Recommended result{{ editors_picks.count|pluralize }}</h3>
+                <ul class="picks">
+                    {% for editors_pick in editors_picks %}
+                        <li class="row">
+                            <a href="{{ editors_pick.page.url }}">
+                                <div class="image">
+                                    {% with editors_pick.page.specific as pick_specific %}
+                                        {% if pick_specific.feed_image %}
+                                            {% image pick_specific.feed_image fill-90x80 %}
+                                        {% else %}
+                                            {% with pick_specific.carousel_items.all as carousel_items %}
+                                                {% with carousel_items|first as carousel_item %}
+                                                    {% if carousel_item.image %}
+                                                        {% image carousel_item.image fill-90x80 %}
+                                                    {% else %}
+                                                        <img src="/static/rca/images/rca-placeholder-square.jpg" width="200">
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                                <div class="content">
+                                    <h4>{{ editors_pick.page.title }}</h4>
+                                    <p>{{ editors_pick.description }}</p>
+                                </div>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        {% if search_results %}
+            <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
+
+            {% include "rca/includes/search_listing.html" %}
         {% endif %}
     </section>
 
