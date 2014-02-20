@@ -3,7 +3,7 @@
 
 
 {% block content %}
-  <h2>{{ school|title }}</h2>
+  <h2>{% get_school_display school %}</h2>
 
   {{ intro|safe }}
 
@@ -11,7 +11,7 @@
   <ul>
     {% get_school_programmes self school as programmes %}
     {% for programme in programmes %}
-      <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
+      <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
     {% endfor %}
   </ul>
 

@@ -1,5 +1,6 @@
 from django import template
 from rca_show import models
+from rca import models as rca_models
 
 register = template.Library()
 
@@ -22,6 +23,16 @@ def get_programme_url(self, school, programme):
 @register.simple_tag
 def get_student_url(self, student):
     return self.get_student_url(student)
+
+
+@register.simple_tag
+def get_programme_display(programme):
+    return dict(rca_models.ALL_PROGRAMMES)[programme]
+
+
+@register.simple_tag
+def get_school_display(school):
+    return dict(rca_models.SCHOOL_CHOICES)[school]
 
 
 @register.assignment_tag

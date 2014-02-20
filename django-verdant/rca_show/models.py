@@ -86,26 +86,26 @@ class ShowIndexPage(Page, SocialFields):
         })
 
     def serve_school(self, request, school):
-        # Check if school exists
+        # Check if there are students in this school
+        if not self.get_students(school):
+            raise Http404("No students found in this school")
+
         try:
-            school_obj = self.schools.get(school=school)
+            intro = self.schools.get(school=school).intro
         except ShowIndexPageSchool.DoesNotExist:
-            raise Http404("Cannot find school")
+            intro = ''
 
         # Render response
         return render(request, self.school_template, {
             'self': self,
             'school': school,
-            'intro': school_obj.intro,
+            'intro': intro,
         })
 
     def serve_programme(self, request, school, programme):
-        # Get students for this programme
-        students = self.get_students(school, programme)
-
-        # If there are no students, this programme doesn't exist!
-        if not students:
-            raise Http404("No students exist with this programme")
+        # Check if there are students in this programme
+        if not self.get_students(school, programme):
+            raise Http404("No students found in this programme")
 
         # Render response
         return render(request, self.programme_template, {

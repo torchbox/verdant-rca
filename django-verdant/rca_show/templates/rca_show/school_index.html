@@ -10,11 +10,11 @@
     {% get_schools self as schools %}
     {% for school in schools %}
       <li>
-        <b><a href="{% get_school_url self school %}">{{ school }}</a></b>
+        <b><a href="{% get_school_url self school %}">{% get_school_display school %}</a></b>
         <ul>
-          {% get_school_programmes self school as programmes%}
+          {% get_school_programmes self school as programmes %}
           {% for programme in programmes %}
-            <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
+            <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
           {% endfor %}
         </ul>
       </li>
