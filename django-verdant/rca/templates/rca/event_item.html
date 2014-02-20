@@ -33,8 +33,10 @@
             {% if self.location == "other" %}
                 {{ self.location_other }}
             {% else %}
-                {{ self.get_location_display }}
-                {% if self.location_other %} 
+                {{ self.get_location_display }}{% if self.gallery %},
+                    {{ self.get_gallery_display }}
+                {% endif %}
+                {% if self.location_other %}
                     and {{ self.location_other }}
                 {% endif %}
             {% endif %}
