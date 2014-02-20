@@ -185,6 +185,7 @@ INSTALLED_APPS = (
     'rca',
     'rca_signage',
     'rca_ldap',
+    'rca_show',
 )
 
 EMAIL_SUBJECT_PREFIX = '[verdant] '
