@@ -3,12 +3,9 @@
 
 
 {% block content %}
-  <h2>{{ programme|title }}</h2>
-
-  <h3>Students</h3>
+  <a href="{% get_school_index_url self %}">Schools</a>
   <ul>
-    {% get_programme_students self school programme as students %}
-    {% for student in students %}
+    {% for student in self.get_students %}
       <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
     {% endfor %}
   </ul>

@@ -1,0 +1,23 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags %}
+
+
+{% block content %}
+  <h2>Schools</h2>
+
+  <h3>Schools/Programmes</h3>
+  <ul>
+    {% get_schools self as schools %}
+    {% for school in schools %}
+      <li>
+        <b><a href="{% get_school_url self school %}">{{ school }}</a></b>
+        <ul>
+          {% get_school_programmes self school as programmes%}
+          {% for programme in programmes %}
+            <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
+          {% endfor %}
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

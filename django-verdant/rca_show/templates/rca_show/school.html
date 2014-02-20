@@ -3,21 +3,23 @@
 
 
 {% block content %}
-  <h2>{{ school_page.title }}</h2>
+  <h2>{{ school|title }}</h2>
 
-  {{ school_page.body|safe }}
+  {{ intro|safe }}
 
   <h3>Programmes</h3>
   <ul>
-    {% for programme in school_page.get_programmes %}
-      <li><a href="{% programme_url school_page programme %}">{{ programme|title }}</a></li>
+    {% get_school_programmes self school as programmes %}
+    {% for programme in programmes %}
+      <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
     {% endfor %}
   </ul>
 
   <h3>Students</h3>
   <ul>
-    {% for student in school_page.get_students %}
-      <li><a href="{% student_url school_page student %}">{{ student.title }}</a></li>
+    {% get_school_students self school as students %}
+    {% for student in students %}
+      <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
     {% endfor %}
   </ul>
 {% endblock %}
