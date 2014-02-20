@@ -1,0 +1,14 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags %}
+
+
+{% block content %}
+  <h2>{{ programme|title }}</h2>
+
+  <h3>Students</h3>
+  <ul>
+    {% for student in students %}
+      <li><a href="{% student_url school_page student %}">{{ student.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}

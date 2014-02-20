@@ -1,0 +1,23 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags %}
+
+
+{% block content %}
+  <h2>{{ school_page.title }}</h2>
+
+  {{ school_page.body|safe }}
+
+  <h3>Programmes</h3>
+  <ul>
+    {% for programme in school_page.get_programmes %}
+      <li><a href="{% programme_url school_page programme %}">{{ programme|title }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h3>Students</h3>
+  <ul>
+    {% for student in school_page.get_students %}
+      <li><a href="{% student_url school_page student %}">{{ student.title }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
