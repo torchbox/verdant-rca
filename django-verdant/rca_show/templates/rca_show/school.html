@@ -1,25 +1,34 @@
 {% extends 'rca_show/base.html' %}
-{% load show_tags %}
+{% load show_tags rich_text pageurl %}
 
+{% block body_class %}type-school{% endblock %}
+
+{% block logo %}
+    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
+{% endblock %}
 
 {% block content %}
-  <h2>{{ school|title }}</h2>
+    <h2>{{ school|title }}</h2>
 
-  {{ intro|safe }}
+    {{ intro|safe }}
 
-  <h3>Programmes</h3>
-  <ul>
-    {% get_school_programmes self school as programmes %}
-    {% for programme in programmes %}
-      <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
-    {% endfor %}
-  </ul>
+    <h3>Programmes</h3>
+    <ul>
+        {% get_school_programmes self school as programmes %}
+        {% for programme in programmes %}
+            <li><a href="{% get_programme_url self school programme %}">{{ programme|title }}</a></li>
+        {% endfor %}
+    </ul>
 
-  <h3>Students</h3>
-  <ul>
-    {% get_school_students self school as students %}
-    {% for student in students %}
-      <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
-    {% endfor %}
-  </ul>
+    <h3>Students</h3>
+    <ul>
+        {% get_school_students self school as students %}
+        {% for student in students %}
+            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
 {% endblock %}

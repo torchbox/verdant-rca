@@ -1,8 +1,17 @@
 {% extends 'rca_show/base.html' %}
-{% load show_tags %}
+{% load show_tags rich_text pageurl %}
 
+{% block body_class %}type-student{% endblock %}
+
+{% block logo %}
+    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
+{% endblock %}
 
 {% block content %}
   <h2>{{ student.title }}</h2>
 
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
 {% endblock %}
