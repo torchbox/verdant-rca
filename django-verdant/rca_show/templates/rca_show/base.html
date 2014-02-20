@@ -1,9 +1,59 @@
-<html>
-  <head>
-    <title>{{ self.title }}</title>
-  </head>
-  <body>
-    <h1>{{ self.title }}</h1>
-    {% block content %}{% endblock %}
-  </body>
-</html>
+{% extends "rca/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
+
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" />
+    <![endif]-->
+{% endblock %}
+
+{% block logo %}
+    <a href="#" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+{% endblock %}
+
+{% block extra_footer %}
+    <div class="showrca2014-footer full-width-footer">
+        <div class="footer-wrapper">
+            <footer>
+                <ul>
+                    <li>    
+                        <address>
+                            <h2>Kensington Campus</h2>
+                            Royal College of Art<br />
+                            Kensington Gore<br />
+                            London SW7 2EU
+                        </address>
+                    </li>
+                    <!-- <li>
+                        <address>
+                            <h2>Battersea Campus</h2>
+                            15-25 Howie St<br />
+                            London<br />
+                            SW11 4AS
+                        </address>
+                    </li> -->
+                    <li>
+                        <a href="#">Exhibition Maps</a>
+                    </li>
+                    <li>
+                        <a href="#">Contact &amp; Info</a>
+                    </li>
+                    <li>
+                        <a href="#">Show Credits</a>
+                    </li>
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block show_js %}
+    <script src="{% static "rca_show/js/site.js" %}"></script>
+{% endblock %}
