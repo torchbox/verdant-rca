@@ -273,7 +273,7 @@ WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 WAGTAILSEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-        'INDEX': 'wagtail',
+        'INDEX': 'verdant',
     },
 }
 
