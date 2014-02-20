@@ -1,30 +1,57 @@
 {% extends 'rca_show/base.html' %}
-{% load show_tags %}
+{% load show_tags rich_text pageurl %}
 
+{% block body_class %}type-cca-index{% endblock %}
+
+{% block logo %}
+    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
+{% endblock %}
 
 {% block content %}
-  <h2>Index</h2>
+  
+    <h2>Index</h2>
 
-  <h3>Schools/Programmes</h3>
-  <ul>
-    {% for school in self.get_schools %}
-      <li>
-        <b><a href="{{ school.url }}">{{ school }}</a></b>
-        <ul>
-          {% for programme in school.get_programmes %}
-            <li><a href="{% programme_url school programme %}">{{ programme|title }}</a></li>
-          {% endfor %}
-        </ul>
-      </li>
-    {% endfor %}
-  </ul>
+    <h3>Schools/Programmes</h3>
+    <ul>
+        {% for school in self.get_schools %}
+            <li>
+                <b><a href="{{ school.url }}">{{ school }}</a></b>
+                <ul>
+                    {% for programme in school.get_programmes %}
+                        <li><a href="{% programme_url school programme %}">{{ programme|title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
 
-  <h3>Students</h3>
-  <ul>
-    {% for school in self.get_schools %}
-      {% for student in school.get_students %}
-        <li><a href="{% student_url school student %}">{{ student.title }}</a></li>
-      {% endfor %}
-    {% endfor %}
-  </ul>
+    <h3>Students</h3>
+    <ul>
+        {% for school in self.get_schools %}
+            {% for student in school.get_students %}
+                <li><a href="{% student_url school student %}">{{ student.title }}</a></li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+
+    <div id="showrca2014-overlay" class="fade">
+        <div class="logo repos">Logo</div>
+        <div class="date repos">Date</div>
+        <div class="crest">Crest</div>
+        <div class="name">Royal College of Art</div>
+        <div class="intro">
+            Tha what shu' thi gob th'art nesh thee any rooad cack-handed. Eeh ah'll box thi ears tha what t'foot o' our stairs where's tha bin. Appens as maybe ne'ermind ne'ermind face like a slapped arse gerritetten any rooad. Th'art nesh thee gi' o'er bloomin' 'eck bobbar. Big girl's blouse a pint 'o mild soft lad ee by gum. Dahn t'coil oil ne'ermind tha what be reet. Sup wi' 'im th'art nesh thee ey up any rooad ne'ermind chuffin' nora. Face like a slapped arse is that thine. T'foot o' our stairs ne'ermind breadcake where's tha bin will 'e 'eckerslike. Bobbar.
+
+            Tha what tintintin a pint 'o mild mardy bum nobbut a lad. T'foot o' our stairs. Shu' thi gob god's own county aye bloomin' 'eck tha daft apeth tell thi summat for nowt. Shu' thi gob. Ne'ermind ey up face like a slapped arse t'foot o' our stairs. Nobbut a lad where there's muck there's brass breadcake ey up soft southern pansy will 'e 'eckerslike. Ah'll box thi ears ee by gum ah'll learn thi face like a slapped arse. Any rooad th'art nesh thee soft southern pansy. Any rooad where there's muck there's brass where's tha bin. Where there's muck there's brass will 'e 'eckerslike gerritetten is that thine where's tha bin soft southern pansy.
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
+
+{% block extra_js %}
+
 {% endblock %}

@@ -118,11 +118,15 @@
                 </aside>
             </div>
 
+            {% block extra_footer %}{% endblock %}
+
             {% include "rca/includes/footer.html" %}
 
         </div>
 
-        {% block js %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
+        {% block bottom %}{% endblock %}
+
+        {% block js %}
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
@@ -158,9 +162,9 @@
                     </script>
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
+                {% block show_js %}{% endblock %}
+                {% block extra_js %}{% endblock %}
             {% endcompress %}
-
-            {% block extra_js %}{% endblock %}
         {% endblock %}
     </body>
 </html>
