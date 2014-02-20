@@ -36,8 +36,6 @@ def get_school_programmes(self, school):
 
 @register.assignment_tag
 def get_school_students(self, school):
-    print "GET SCHOOL STUDENTS: " + school
-    print self.get_students(school)
     return self.get_students(school)
 
 

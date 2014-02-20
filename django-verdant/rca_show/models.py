@@ -7,21 +7,26 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import StudentPage, SocialFields, SCHOOL_CHOICES
+from rca.models import StudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES
 
 
 class ShowIndexPageSchool(Orderable):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='schools')
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    intro = RichTextField()
+    intro = RichTextField(blank=True)
 
     panels = [FieldPanel('school'), FieldPanel('intro')]
 
 class ShowIndexPage(Page, SocialFields):
     year = models.CharField(max_length=4, blank=True)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
 
     def get_students(self, school=None, programme=None):
-        students = StudentPage.objects.filter(live=True, degree_year=self.year)
+        students = StudentPage.objects.filter(live=True)
+
+        if self.year:
+            students = students.filter(degree_year=self.year)
 
         if school:
             students = students.filter(school=school)
@@ -47,10 +52,16 @@ class ShowIndexPage(Page, SocialFields):
         return self.url + 'schools/'
 
     def get_school_url(self, school):
-        return self.url + school + '/'
+        if not self.school:
+            return self.url + school + '/'
+        else:
+            return self.url
 
     def get_programme_url(self, school, programme):
-        return self.get_school_url(school) + programme + '/'
+        if not self.programme:
+            return self.get_school_url(school) + programme + '/'
+        else:
+            return self.get_school_url(school)
 
     def get_student_url(self, student):
         return self.get_programme_url(student.school, student.programme) + student.slug + '/'
@@ -118,62 +129,50 @@ class ShowIndexPage(Page, SocialFields):
             'student': student,
         })
 
-    def route_programme(self, request, school, programme, path_components):
-        if path_components:
-            # Request is for a student page
-            if len(path_components) != 1:
-                raise Http404("Students cannot have child pages")
-
-            return self.serve_student(request,school,  programme, path_components[0])
-        else:
-            # Request is for a programme page
-            return self.serve_programme(request, school, programme)
-
-    def route_school(self, request, school, path_components):
-        if path_components:
-            # Request is for a programme or student page
-            child_slug = path_components[0]
-            remaining_components = path_components[1:]
-
-            return self.route_programme(request, school, child_slug, remaining_components)
-        else:
-            # Request is for a school page
-            return self.serve_school(request, school)
-
     def route(self, request, path_components):
-        if path_components:
-            # Request is for a child of this page
-            child_slug = path_components[0]
-            remaining_components = path_components[1:]
-
-            # Try school index
-            if not remaining_components and child_slug == 'schools':
+        if self.live:
+            # Check if this is a request for the schools index
+            if not self.school and len(path_components) == 1 and path_components[0] == 'schools':
                 return self.serve_school_index(request)
 
-            # Try school/programme/student
-            try:
-                return self.route_school(request, child_slug, remaining_components)
-            except Http404:
-                pass
+            # Check if this is a request for the landing page
+            if not self.school and not path_components:
+                return self.serve_landing(request)
 
+            # Must be for a school/programme/student find the slugs
+            slugs = []
+            if self.school:
+                slugs.append(self.school)
+                if self.programme:
+                    slugs.append(self.programme)
+            slugs.extend(path_components)
+
+            if len(slugs) == 1:
+                return self.serve_school(request, slugs[0])
+            elif len(slugs) == 2:
+                return self.serve_programme(request, slugs[0], slugs[1])
+            elif len(slugs) == 3:
+                return self.serve_student(request, slugs[0], slugs[1], slugs[2])
+
+        if path_components:
             # Fallback to subpage
+            child_slug = path_components[0]
+            remaining_components = path_components[1:]
             try:
                 subpage = self.get_children().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
-
-            return subpage.specific.route(request, remaining_components)
         else:
-            # Request is for landing page
-            if self.live:
-                return self.serve_landing(request)
-            else:
-                raise Http404
+            raise Http404
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
+    MultiFieldPanel([
+        FieldPanel('school'),
+        FieldPanel('programme'),
+    ], "Scope"),
 ]
 
 ShowIndexPage.promote_panels = [
