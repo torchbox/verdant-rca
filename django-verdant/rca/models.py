@@ -1407,6 +1407,10 @@ class FutureNotCurrentEventItemManager(models.Manager):
         return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
+        ).extra(
+            select={'next_date_from': '(SELECT date_from FROM rca_eventitemdatestimes WHERE page_id=wagtailcore_page.id AND date_from >= %s LIMIT 1)'},
+            select_params=[date.today()],
+            order_by=['next_date_from']
         )
 
 class PastEventItemManager(models.Manager):
