@@ -1385,6 +1385,16 @@ class EventItemDatesTimes(Orderable):
         FieldPanel('time_other'),
     ]
 
+class EventItemExternalLink(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='external_links')
+    link = models.URLField()
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('link'),
+        FieldPanel('text'),
+    ]
+
 class FutureEventItemManager(models.Manager):
     def get_query_set(self):
         return super(FutureEventItemManager, self).get_query_set().extra(
@@ -1418,8 +1428,6 @@ class EventItem(Page, SocialFields):
     special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below")
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
-    external_link = models.URLField(blank=True)
-    external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     middle_column_body = RichTextField(blank=True)
@@ -1429,6 +1437,10 @@ class EventItem(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    # DELETED
+    external_link = models.URLField(blank=True, editable=False)
+    external_link_text = models.CharField(max_length=255, blank=True, editable=False)
 
     objects = models.Manager()
     future_objects = FutureEventItemManager()
@@ -1537,8 +1549,7 @@ EventItem.content_panels = [
         FieldPanel('gallery'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
-        FieldPanel('external_link'),
-        FieldPanel('external_link_text'),
+        InlinePanel(EventItem, 'external_links', label="External links"),
         FieldPanel('middle_column_body')
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
