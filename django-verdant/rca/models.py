@@ -1439,6 +1439,10 @@ class EventItem(Page, SocialFields):
 
     search_name = 'Event'
 
+    @property
+    def next_date_time(self):
+        return self.dates_times.order_by('date_from').filter(date_from__gte=timezone.now().date).first()
+
     def serve(self, request):
         if "format" in request.GET:
             if request.GET['format'] == 'ical':
