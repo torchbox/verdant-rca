@@ -84,4 +84,11 @@ $(function(){
 
         displayShowOverlay();
     }
+
+    $('.jumplist').each(function(){
+        var $this = $(this);
+        $('.toggle', $this).click(function(){
+            $this.toggleClass('open');
+        })
+    });
 });

@@ -1,0 +1,76 @@
+.shownav{
+
+	.jumplist .toggle, a{
+		padding:1em 0;
+		display:block;
+	}
+
+	.jumplist{
+		a{
+			padding:0;
+			display:inline-block;
+		}
+		.toggle{
+			cursor:pointer;
+
+			&:after {
+                .sprite-load-23(
+                    @positionX: -48px,
+                    @positionY: -48px,
+                    @retinaPositionX: -97px,
+                    @retinaPositionY: -97px,
+                    @width: 23px,
+                    @height: 13px
+                );
+                content: "";
+                position: absolute;
+                top: 1.3em; /* Arbitrary. Whatever looks good */
+                right: @spacing-half;
+                visibility: visible; /* override generic nav a style */
+            }
+		}
+		h2, .selected{
+			font-size:1em;
+			margin:0;
+			color:@color-black;
+			font-weight:bold;
+			border-bottom:2px solid @color-black;
+			position:relative;	
+		}
+		.selected, .options{
+			display:none;
+		}
+		&.active{
+			h2{
+				display:none;
+			}
+			.selected{
+				display:block;
+			}
+		}
+		&.open{
+			.toggle{
+				background-color:@color-pink;
+				&:after{
+		            .sprite-load-23(
+		                @positionX: -48px,
+		                @positionY: -12px,
+		                @retinaPositionX: -97px,
+		                @retinaPositionY: -25px,
+		                @width: 23px,
+		                @height: 13px
+		            );
+		        }
+			}
+
+			.options{
+				display:block;
+			}
+		}
+		&:hover{
+			.toggle{
+				background-color:@color-pink;
+			}
+		}
+	}
+}

@@ -8,15 +8,88 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{% get_programme_display programme %}</h2>
+    {% get_programme_students self school programme as students %}
+    {% get_school_programmes self school as programmes %}
+    {% get_school_students self school as students %}
+    {% get_schools self as schools %}
 
-    <h3>Students</h3>
-    <ul>
-        {% get_programme_students self school programme as students %}
+    <section class="shownav">
+        <ul>
+            {% if self.programme %}
+                <li class="jumplist">
+                    <h2 class="toggle">Students</h2>
+                    <div class="selected toggle">Giulia Garbin</div>
+                    <ul class="options">
+                        {% for student in students %}
+                            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="#">Exhibition maps</a>
+                </li>
+                <li>
+                    <a href="#">Info &amp; Contact</a>
+                </li>
+            {% else %}
+                <li class="jumplist active">
+                    <h2 class="toggle">Schools</h2>
+                    <div class="selected toggle">{% get_school_display school %}</div>
+                    <ul class="options">
+                        {% for school in schools %}
+                            <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="jumplist active">
+                    <h2 class="toggle">Programmes</h2>
+                    <div class="selected toggle">{% get_programme_display programme %}</div>
+                    <ul class="options">
+                        {% for programme in programmes %}
+                            <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="jumplist">
+                    <h2 class="toggle">Students</h2>
+                    <div class="selected toggle"></div>
+                    <ul class="options">
+                        {% for student in students %}
+                            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>
+    </section>
+
+    <ul class="gallery">
         {% for student in students %}
-            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+            {% with student.carousel_items.all as carousel_items %}
+                {% with carousel_items|first as carousel_item %}
+                    {% if carousel_item.image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with galleryitem=student gallery_image=carousel_item.image %}
+                    {% elif carousel_item.poster_image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with galleryitem=student gallery_image=carousel_item.poster_image %}
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
         {% endfor %}
     </ul>
+
+
+    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
+    {% if self.programme %}
+        <div id="showrca2014-overlay" class="fade">
+            <div class="logo repos">Logo</div>
+            <div class="date repos">Date</div>
+            <div class="crest">Crest</div>
+            <div class="name">Royal College of Art</div>
+            <div class="intro">
+                {{ self.overlay_intro|richtext }}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block sidebar %}

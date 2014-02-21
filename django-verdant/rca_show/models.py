@@ -21,6 +21,7 @@ class ShowIndexPage(Page, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    overlay_intro = RichTextField(blank=True)
 
     def get_students(self, school=None, programme=None):
         students = StudentPage.objects.filter(live=True)
@@ -87,7 +88,8 @@ class ShowIndexPage(Page, SocialFields):
 
     def serve_school(self, request, school):
         # Check if there are students in this school
-        if not self.get_students(school):
+        students = self.get_students(school)
+        if not students:
             raise Http404("No students found in this school")
 
         try:
@@ -104,7 +106,9 @@ class ShowIndexPage(Page, SocialFields):
 
     def serve_programme(self, request, school, programme):
         # Check if there are students in this programme
-        if not self.get_students(school, programme):
+        students = self.get_students(school, programme)
+
+        if not students:
             raise Http404("No students found in this programme")
 
         # Render response
@@ -172,7 +176,8 @@ ShowIndexPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('school'),
         FieldPanel('programme'),
-    ], "Scope"),
+        FieldPanel('overlay_intro'),
+    ], "Limit page to this school/programme"),
 ]
 
 ShowIndexPage.promote_panels = [

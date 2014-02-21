@@ -3,7 +3,7 @@
 <li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}">
     <a href="{% pageurl galleryitem %}">
         <div class="gallery_image {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}">
-            {% image gallery_image width-600 %}
+            {% image gallery_image height-600 %}
         </div>
         <div class="content">
             <h2 class="h6"><i>{{ gallery_image.title }}</i></h2>
