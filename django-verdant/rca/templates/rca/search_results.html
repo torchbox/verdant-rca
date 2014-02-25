@@ -12,7 +12,7 @@
     <section class="module search-results">
         {% with query.editors_picks.all as editors_picks %}
             {% if search_results or editors_picks %}
-                <h2>Found {{ search_results.paginator.count|add:editors_picks.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
+                <h2>Found {{ search_results.paginator.count|add:editors_picks.count }} result{{ search_results.paginator.count|add:editors_picks.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
             {% endif %}
 
             {% if editors_picks %}
