@@ -10,13 +10,11 @@
     <h1 class="h1 major">Search</h1>
     
     <section class="module search-results">
-        {% if search_results %}
-            <h2>Found {{ search_results.paginator.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
-        {% else %}
-            <h2>Sorry, nothing was found for &quot;{{ query_string }}&quot;</h2>
-        {% endif %}
-
         {% with query.editors_picks.all as editors_picks %}
+            {% if search_results or editors_picks %}
+                <h2>Found {{ search_results.paginator.count|add:editors_picks.count }} result{{ search_results.paginator.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
+            {% endif %}
+
             {% if editors_picks %}
                 <h3 class="module-title">Recommended result{{ editors_picks.count|pluralize }}</h3>
                 <ul class="picks">
@@ -49,13 +47,17 @@
                     {% endfor %}
                 </ul>
             {% endif %}
+
+            {% if not search_results and not editors_picks %}
+                <h2>Sorry, nothing was found for &quot;{{ query_string }}&quot;</h2>
+            {% endif %}
+
+            {% if search_results %}
+                <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
+
+                {% include "rca/includes/search_listing.html" %}
+            {% endif %}
         {% endwith %}
-
-        {% if search_results %}
-            <h4 class="module-title">Results {{ search_results.start_index }} &ndash; {{ search_results.end_index }}</h4>
-
-            {% include "rca/includes/search_listing.html" %}
-        {% endif %}
     </section>
 
     {% include "rca/includes/modules/twitter-feed.html" %}
