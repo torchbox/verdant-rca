@@ -1,7 +1,8 @@
 .shownav{
+	margin:@spacing-two 0;
 
 	.jumplist .toggle, a{
-		padding:1em 0;
+		padding:@grid-gutter-width;
 		display:block;
 	}
 
@@ -14,20 +15,20 @@
 			cursor:pointer;
 
 			&:after {
-                .sprite-load-23(
-                    @positionX: -48px,
-                    @positionY: -48px,
-                    @retinaPositionX: -97px,
-                    @retinaPositionY: -97px,
-                    @width: 23px,
-                    @height: 13px
-                );
-                content: "";
-                position: absolute;
-                top: 1.3em; /* Arbitrary. Whatever looks good */
-                right: @spacing-half;
-                visibility: visible; /* override generic nav a style */
-            }
+				.sprite-load-23(
+					@positionX: -48px,
+					@positionY: -48px,
+					@retinaPositionX: -97px,
+					@retinaPositionY: -97px,
+					@width: 23px,
+					@height: 13px
+				);
+				content: "";
+				position: absolute;
+				top: 1.3em; /* Arbitrary. Whatever looks good */
+				right: @spacing-one;
+				visibility: visible; /* override generic nav a style */
+			}
 		}
 		h2, .selected{
 			font-size:1em;
@@ -36,6 +37,19 @@
 			font-weight:bold;
 			border-bottom:2px solid @color-black;
 			position:relative;	
+		}
+		.options{
+			font-family:@font-family-benton-light;
+            text-transform:uppercase;
+            font-size:0.8em;
+			padding:@spacing-one;
+			position:absolute;
+			z-index:2;
+			background-color:white;
+
+			li{
+				padding:@grid-gutter-width/4 0;
+			}
 		}
 		.selected, .options{
 			display:none;
@@ -52,15 +66,15 @@
 			.toggle{
 				background-color:@color-pink;
 				&:after{
-		            .sprite-load-23(
-		                @positionX: -48px,
-		                @positionY: -12px,
-		                @retinaPositionX: -97px,
-		                @retinaPositionY: -25px,
-		                @width: 23px,
-		                @height: 13px
-		            );
-		        }
+					.sprite-load-23(
+						@positionX: -48px,
+						@positionY: -12px,
+						@retinaPositionX: -97px,
+						@retinaPositionY: -25px,
+						@width: 23px,
+						@height: 13px
+					);
+				}
 			}
 
 			.options{
@@ -71,6 +85,43 @@
 			.toggle{
 				background-color:@color-pink;
 			}
+		}
+	}
+}
+
+.showgallery{
+	.clearfix();
+	
+	li{
+		position:relative;
+		float:left;
+		overflow:hidden;
+	}
+	img{
+		display:block;
+	}
+	.content{
+		.transition(opacity 0.3s ease);
+		opacity:0;
+		position:absolute;
+		top:0;
+		left:0;
+		right:0;
+		bottom:0;
+		background-color:black;
+		background:rgba(0,0,0,0.9);
+		padding:@spacing-half;
+
+		h2{
+			margin-top:0;
+			color:white;
+		}
+		p{
+			margin:0;
+		}
+
+		&:hover{
+			opacity:1;
 		}
 	}
 }

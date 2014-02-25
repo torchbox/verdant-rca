@@ -1,6 +1,7 @@
 @import "../../../../rca/static/rca/css/variables.less";
 @import "../../../../rca/static/rca/css/grid.less";
 @import "../../../../rca/static/rca/css/mixins.less";
+@import "variables.less"; // Show RCA specific variables
 
 @overlay-zindex:5000;
 
@@ -10,6 +11,10 @@
     .transition(opacity 0.5s ease);
 }
 
+body{
+    .clearfix(); /* necessary as immediate children are floated */
+}
+
 body.showoverlay{
     overflow:hidden;
 
@@ -17,6 +22,9 @@ body.showoverlay{
     .events-ads-wrapper{
         opacity:0;
     }
+}
+.page-content{
+    min-height:700px; /* allows for logo in bottom right */
 }
 
 #showrca2014-overlay {
@@ -84,9 +92,41 @@ body.showoverlay{
         right:5%;
         top:50%;
     }
-    .slot-8{
+    .slot-8{    
         right:5%;
         top:60%;
+    }
+}
+
+header {
+    border-bottom:1px solid rgba(125,125,125,0.1);
+
+    .exhibition-date{
+        margin:0;
+        position:absolute;
+        left:50%;
+        top:30px;
+        .font-family-newrail-bold();
+        width:4em;
+        font-size:2em;
+        line-height:1.1em;
+    }
+}
+
+.header-wrapper.affix .exhibition-date{
+    display:none;
+}
+.showsearch {
+    display:none;
+}
+form.search {
+    width:85%;
+    margin-left:0;
+    display:block;
+    height:66px;
+
+    input[type="text"]{
+        font-size:1em;
     }
 }
 
@@ -99,11 +139,15 @@ body.showoverlay{
 }
 
 .showrca2014-footer{
+    footer{
+        padding:1em;
+    }
     ul{
         .unlist();
     }
     ul{
         .row();
+        .row-flush();
     }
     ul li{
         .column(6);
@@ -121,4 +165,33 @@ body.showoverlay{
     display:none !important; // F it!
 }
 
+.prefooter{
+    margin-top:@spacing-two;
+    margin-bottom:@spacing-two;
+
+    .logo-rca{
+        float:left;
+        display:block;
+        text-indent:-2000px;
+        background-image: url('@{path-static-show}images/logo-rca-footer.png');
+        width: 180px;
+        height: 90px;
+        padding:0;
+    }
+
+    .exhibition-name{
+        .transform(rotate(-90deg));
+        .transform-origin(37% 0);
+         .font-family-newrail-bold();
+        float:right;
+        width:9em;
+        font-size:2em;
+    }
+}
+
+.showrca .footer-logo{
+    display:none;
+}
+
 @import "modules.less";
+@import "themes.less";

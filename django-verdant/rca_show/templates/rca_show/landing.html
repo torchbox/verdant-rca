@@ -1,17 +1,34 @@
 {% extends 'rca_show/base.html' %}
 {% load show_tags rich_text pageurl %}
 
-{% block body_class %}type-landing{% endblock %}
-
-{% block logo %}
-    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
-{% endblock %}
+{% block body_class %}showrca type-landing{% endblock %}
 
 {% block content %}
-    <a href="{% get_school_index_url self %}">Schools</a>
-    <ul>
-        {% for student in self.get_students %}
-            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+    <section class="shownav">
+        <ul>
+            <li>
+                <a href="{% get_school_index_url self %}">Schools &amp; Students</a>
+            </li>
+            <li>
+                <a href="#">Exhibition maps</a>
+            </li>
+            <li>
+                <a href="#">Info &amp; Contact</a>
+            </li>
+        </ul>
+    </section>
+
+    <ul class="showgallery">
+        {% for student in self.get_rand_students %}
+            {% with student.carousel_items.all as carousel_items %}
+                {% with carousel_items|first as carousel_item %}
+                    {% if carousel_item.image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                    {% elif carousel_item.poster_image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
         {% endfor %}
     </ul>
 

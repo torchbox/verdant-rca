@@ -15,9 +15,21 @@
 
 {% block logo %}
     <a href="#" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <p class="exhibition-date">6 - 20 March 2014 </p>
+{% endblock %}
+
+{% block top %}
+    <div class="toggleoverlay">toggle overlay</div>
 {% endblock %}
 
 {% block extra_footer %}
+    <div class="prefooter standard-wrapper">
+        <a href="/" class="logo-rca">Royal College of Art</a>
+
+        <a href="/" class="exhibition-name">The Royal College of Art Exhibition</a>
+    </div>
+
+
     <div class="showrca2014-footer full-width-footer">
         <div class="footer-wrapper">
             <footer>
@@ -55,5 +67,19 @@
 {% endblock %}
 
 {% block show_js %}
+    <script>
+        WebFontConfig = { fontdeck: { id: '42490' } };
+
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+
     <script src="{% static "rca_show/js/site.js" %}"></script>
 {% endblock %}

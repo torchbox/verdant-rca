@@ -1,0 +1,32 @@
+@path-theme-static: "/static/rca_show/";
+
+body{
+	background-color:#F7F7F7;
+}
+
+.programme-curatingcontemporaryart{
+	.theme('cca', #ff5857, 236px, 154px);
+}
+
+.theme(@code:"", @colorprimary, @logowidth, @logoheight){
+	.text-theme-@{code}{
+		color:@colorprimary;
+	}
+	.site-name {
+		width:@logowidth;
+		p{
+			background-image:url('@{path-theme-static}images/logo-@{code}.png');
+			width:@logowidth;
+			height:@logoheight;
+		}
+	}
+	.exhibition-date,
+	.exhibition-name{
+		color:@colorprimary;
+	}
+	.shownav .jumplist.open .toggle,
+	.shownav .jumplist:hover .toggle,
+	.showrca2014-footer{
+		background-color:@colorprimary;
+	}
+}

@@ -1,16 +1,13 @@
 {% extends 'rca_show/base.html' %}
 {% load show_tags rich_text pageurl %}
 
-{% block body_class %}type-programme school-{{ school }} programme-{{ programme }}{% endblock %}
-
-{% block logo %}
-    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
-{% endblock %}
+{% block body_class %}showrca type-programme school-{{ school }} programme-{{ programme }}{% endblock %}
 
 {% block content %}
     {% get_programme_students self school programme as students %}
     {% get_school_programmes self school as programmes %}
     {% get_school_students self school as students %}
+    {% get_school_students self school True as rand_students %}
     {% get_schools self as schools %}
 
     <section class="shownav">
@@ -63,14 +60,14 @@
         </ul>
     </section>
 
-    <ul class="gallery">
-        {% for student in students %}
+    <ul class="showgallery">
+        {% for student in rand_students %}
             {% with student.carousel_items.all as carousel_items %}
                 {% with carousel_items|first as carousel_item %}
                     {% if carousel_item.image %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with galleryitem=student gallery_image=carousel_item.image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
                     {% elif carousel_item.poster_image %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with galleryitem=student gallery_image=carousel_item.poster_image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
                     {% endif %}
                 {% endwith %}
             {% endwith %}

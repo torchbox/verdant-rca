@@ -1,3 +1,4 @@
+import random
 from django import template
 from rca_show import models
 from rca import models as rca_models
@@ -46,10 +47,23 @@ def get_school_programmes(self, school):
 
 
 @register.assignment_tag
-def get_school_students(self, school):
-    return self.get_students(school)
+def get_school_students(self, school, random = False):
+
+    if random:
+        return self.get_rand_students(school)
+    else:
+        return self.get_students(school)
 
 
 @register.assignment_tag
-def get_programme_students(self, school, programme):
-    return self.get_students(school, programme)
+def get_programme_students(self, school, programme, random = False):
+
+    if random:
+        return self.get_rand_students(school, programme)
+    else:
+        return self.get_students(school, programme)
+
+
+@register.assignment_tag
+def randsize(rangeStart, rangeEnd):
+    return random.randrange(rangeStart, rangeEnd)

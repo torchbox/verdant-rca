@@ -22,6 +22,7 @@ class ShowIndexPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     overlay_intro = RichTextField(blank=True)
+    exhibition_date = models.CharField(max_length=255, blank=True)
 
     def get_students(self, school=None, programme=None):
         students = StudentPage.objects.filter(live=True)
@@ -36,6 +37,20 @@ class ShowIndexPage(Page, SocialFields):
             students = students.filter(programme=programme)
 
         return students
+
+    def get_rand_students(self, school=None, programme=None):
+        students = StudentPage.objects.filter(live=True) #TODO make this random
+
+        if self.year:
+            students = students.filter(degree_year=self.year)
+
+        if school:
+            students = students.filter(school=school)
+
+        if programme:
+            students = students.filter(programme=programme)
+
+        return students[:20]
 
     def get_student(self, school, programme, slug):
         return self.get_students(school, programme).get(slug=slug)

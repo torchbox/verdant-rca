@@ -45,6 +45,7 @@ function setupOverlay(){
     })
 }
 function displayShowOverlay(){
+    overlay.show();
     $('body').append(overlay);
     var showOverlayTimeout = setTimeout(function(){
         overlay.addClass('in');
@@ -83,6 +84,10 @@ $(function(){
         setupOverlay();
 
         displayShowOverlay();
+
+        $('.toggleoverlay').click(function(){
+            displayShowOverlay();
+        });
     }
 
     $('.jumplist').each(function(){
