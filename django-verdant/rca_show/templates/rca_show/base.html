@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load static %}
+{% load static rich_text %}
 
 {% block extra_css %}
     <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
@@ -15,7 +15,7 @@
 
 {% block logo %}
     <a href="#" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
-    <p class="exhibition-date">6 - 20 March 2014 </p>
+    <p class="exhibition-date">{{ self.exhibition_date }}</p>
 {% endblock %}
 
 {% block top %}
@@ -63,6 +63,20 @@
             </footer>
         </div>
     </div>
+
+    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
+    {% if self.programme %}
+        <div id="showrca2014-overlay" class="fade">
+            <div class="logo repos">Logo</div>
+            <div class="exhibition-date repos">{{ self.exhibition_date }}</div>
+            <div class="exhibition-name">The Royal College of Art Exhibition</div>
+            <div class="intro">
+                {{ self.overlay_intro|richtext }}
+                <div class="crest"></div>
+            </div>
+        </div>
+    {% endif %}
+
 
 {% endblock %}
 

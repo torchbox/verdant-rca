@@ -5,9 +5,8 @@
 
 {% block content %}
     {% get_programme_students self school programme as students %}
+    {% get_programme_students self school programme True as rand_students %}
     {% get_school_programmes self school as programmes %}
-    {% get_school_students self school as students %}
-    {% get_school_students self school True as rand_students %}
     {% get_schools self as schools %}
 
     <section class="shownav">
@@ -73,20 +72,6 @@
             {% endwith %}
         {% endfor %}
     </ul>
-
-
-    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
-    {% if self.programme %}
-        <div id="showrca2014-overlay" class="fade">
-            <div class="logo repos">Logo</div>
-            <div class="date repos">Date</div>
-            <div class="crest">Crest</div>
-            <div class="name">Royal College of Art</div>
-            <div class="intro">
-                {{ self.overlay_intro|richtext }}
-            </div>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block sidebar %}

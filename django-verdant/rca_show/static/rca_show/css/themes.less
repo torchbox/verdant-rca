@@ -1,32 +1,49 @@
-@path-theme-static: "/static/rca_show/";
+@import "../../../../rca/static/rca/css/mixins.less";
+@import "variables.less"; // Show RCA specific variables
 
 body{
-	background-color:#F7F7F7;
+    background-color:#F7F7F7;
 }
 
 .programme-curatingcontemporaryart{
-	.theme('cca', #ff5857, 236px, 154px);
+    .theme('cca', #e0413e, #F9A09F, 180px, 225px);
 }
 
-.theme(@code:"", @colorprimary, @logowidth, @logoheight){
-	.text-theme-@{code}{
-		color:@colorprimary;
-	}
-	.site-name {
-		width:@logowidth;
-		p{
-			background-image:url('@{path-theme-static}images/logo-@{code}.png');
-			width:@logowidth;
-			height:@logoheight;
-		}
-	}
-	.exhibition-date,
-	.exhibition-name{
-		color:@colorprimary;
-	}
-	.shownav .jumplist.open .toggle,
-	.shownav .jumplist:hover .toggle,
-	.showrca2014-footer{
-		background-color:@colorprimary;
-	}
+.theme(@code:"", @colorprimary, @colorsecondary, @logowidth, @logoheight){
+    #showrca2014-overlay {
+        background-color: @colorprimary; /* fallback for ie8 */
+        background-color: fade(@colorprimary, 90%);
+
+        .exhibition-date,
+        .exhibition-name{
+            color:@colorsecondary;
+        }
+
+        .logo{
+            background-image:url('@{path-static-show}images/logo-@{code}.png');
+            background-position:0px -@logoheight;
+            width:@logowidth;
+            height:@logoheight;        
+        }
+    }
+    .text-theme-@{code}{
+        color:@colorprimary;
+    }
+    .site-name {
+        width:@logowidth;
+        p{
+            background-image:url('@{path-static-show}images/logo-@{code}.png');
+            width:@logowidth;
+            height:@logoheight;
+        }
+    }
+    .exhibition-date,
+    .exhibition-name{
+        color:@colorprimary;
+    }
+    .shownav .jumplist.open .toggle,
+    .shownav .jumplist:hover .toggle,
+    .showrca2014-footer{
+        background-color:@colorprimary;
+    }
 }

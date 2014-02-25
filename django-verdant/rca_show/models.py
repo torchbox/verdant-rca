@@ -39,7 +39,7 @@ class ShowIndexPage(Page, SocialFields):
         return students
 
     def get_rand_students(self, school=None, programme=None):
-        students = StudentPage.objects.filter(live=True) #TODO make this random
+        students = StudentPage.objects.filter(live=True).order_by('random_order')
 
         if self.year:
             students = students.filter(degree_year=self.year)
@@ -187,6 +187,7 @@ class ShowIndexPage(Page, SocialFields):
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
+    FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     MultiFieldPanel([
         FieldPanel('school'),

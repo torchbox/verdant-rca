@@ -34,7 +34,7 @@ function setupOverlay(){
         var slot;
 
         if($(this).hasClass('logo')){
-            slot = randSlot([1,3]);
+            slot = randSlot([1,2,3]);
         }else{
             slot = randSlot();
         }
