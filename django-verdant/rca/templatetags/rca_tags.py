@@ -222,6 +222,19 @@ def staff_random(context, exclude=None, programmes=None, count=4):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+@register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
+def staff_related(context, staff_page, count=4):
+    staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
+    # import pdb; pdb.set_trace()
+    if staff_page.programmes:
+        staff = staff.filter(roles__programme__in=staff_page.programmes)
+    elif staff_page.school:
+        staff = staff.filter(school=staff_page.school)
+    return {
+        'staff': staff[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
 def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')

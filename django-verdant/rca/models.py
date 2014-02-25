@@ -2847,7 +2847,7 @@ class StaffPage(Page, SocialFields):
 
     @property
     def programmes(self):
-        return list({role.programme for role in StaffPageRole.objects.filter(page=self)})
+        return list({role.programme for role in StaffPageRole.objects.filter(page=self) if role.programme})
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
