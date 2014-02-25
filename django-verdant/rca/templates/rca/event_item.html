@@ -44,10 +44,16 @@
                     &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>
                 {% endif %}</p>
         {% if self.cost %}{{ self.cost|richtext }}{% endif %}
-        
-        {% if self.external_link and self.external_link_text %}
-            <p><a href="{{ self.external_link }}">{{ self.external_link_text }}</a></p>
-        {% endif %}
+
+        {% for external_link in self.external_links.all %}
+            <p>
+                {% if external_link.text %}
+                    <a href="{{ external_link.link }}">{{ external_link.text }}</a>
+                {% else %}
+                    <a href="{{ external_link.link }}">{{ external_link.link }}</a>
+                {% endif %}
+            </p>
+        {% endfor %}
     </div>
     <div class="col-2">
         {% include "rca/includes/modules/calendar-button.html" with url=self.url %}
