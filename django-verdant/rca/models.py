@@ -138,7 +138,7 @@ AREA_CHOICES = (
     ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
     ('drawingstudio', 'Drawing Studio'),
-    ('alumniRCA'), 'AlumniRCA'),
+    ('alumnirca', 'AlumniRCA'),
 )
 
 STAFF_AREA_CHOICES = AREA_CHOICES + (
