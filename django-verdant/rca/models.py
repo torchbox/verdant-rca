@@ -400,6 +400,14 @@ STAFF_TYPES_CHOICES = (
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
+# Generic fields to opt out of events and twitter blocks
+class OptionalBlockFields(models.Model):
+    exclude_twitter_block = models.BooleanField(default=False)
+    exclude_events_sidebar = models.BooleanField(default=False)
+    exclude_global_adverts = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
@@ -2192,7 +2200,7 @@ class StandardIndexContactSnippet(Orderable):
         SnippetChooserPanel('contact_snippet', ContactSnippet),
     ]
 
-class StandardIndex(Page, SocialFields):
+class StandardIndex(Page, SocialFields, OptionalBlockFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
@@ -2308,7 +2316,13 @@ StandardIndex.promote_panels = [
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    MultiFieldPanel([
+        FieldPanel('exclude_twitter_block'),
+        FieldPanel('exclude_events_sidebar'),
+        FieldPanel('exclude_global_adverts'),
+    ], 'Optional page elements'),
 ]
 
 
