@@ -20,6 +20,7 @@
 /**
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
+ * Lightbox styles............Used when navigating with push-state
  * Typography.................reusable typographical styles
  * Structure..................structure and layout
  * Footer styles..............footer and bottom nav
@@ -41,6 +42,79 @@ body {
 .mobile-menu-wrapper, .mobile-menu-button{
     display: none;
 }
+
+
+/*
+ * Lightbox styles
+ */
+
+body.lightbox-view{
+
+    // need to make header pos:absolute so that it remains above the lightbox background overlay
+    .header-wrapper{
+        z-index: 5002;
+        position: absolute;
+    }
+    .header-wrapper.affix{
+        position: fixed;  // overriding mobile styles, which makes this absolute to bring it in fron of the overlay
+    }
+    .header-wrapper .page-header{
+        // we have to make the whol header opaque, so that the fixed page content won't bleed through
+        // TODO: this is not compatible with background images
+        background: #fff;
+    }
+
+    .mobile-content-wrapper > .page-wrapper{
+        // make the main page content fixed so that it remains in place when scrolling the lightbox
+        position: fixed;
+    }
+
+    .page-overlay {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 5000;
+        /* non-essential styles below */
+        background-color: #FFF;
+        opacity: 0.55;
+    }
+
+    .pjax-wrapper{
+        top: 186px;
+        display: block;
+        position: relative;
+        height: 1400px;  // needs to be changed with javascript once the content is loaded
+        /* non-essential styles below */
+        width: 50%;
+        margin: 0 auto;
+        left: 100px;
+        overflow: visible;
+    }
+        .pjax-wrapper.affix{
+            margin-top: 200px;
+        }
+
+
+        .pjax-content{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 5001;
+            /* non-essential styles below */
+            background: #ccc;
+            border: 10px solid #aaa;
+        }
+
+    .full-width-footer{
+        display: none;
+    }
+}
+
 
 /**
  * $Typography
@@ -169,7 +243,7 @@ nav {
         border-right:1px solid fade(@color-medium-grey, 40%);
         .bold();
         a {
-            padding:9px 45px 8px @grid-gutter-width;
+            padding:9px 45px 5px @grid-gutter-width;
             display: block;
             position: relative;
             &:hover {
@@ -211,7 +285,7 @@ nav {
                 //color: #454545;
             }
         }
-        
+
     }
    nav.open h2{
         &:after{

@@ -23,11 +23,11 @@
         <meta name="twitter:image:src" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}">
 
         <!--facebook opengraph-->
-        <meta property="fb:app_id" content="775982992428351" /> 
-        <meta property="og:type" content="website" /> 
-        <meta property="og:url" content="{{ self.url }}" /> 
+        <meta property="fb:app_id" content="775982992428351" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="{{ self.url }}" />
         <meta property="og:title" content="{{ self.title }}" />
-        <meta property="og:image" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" /> 
+        <meta property="og:image" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" />
         <meta property="og:description" content="{{ self.social_text }}" />
         <meta property="og:site_name" content="Royal College of Art" />
 
@@ -68,7 +68,7 @@
         </script>
     </head>
     <body class="{% block body_class %}{% endblock %}">
-        <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a> 
+        <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a>
         {% wagtailuserbar wagtailuserbarcss %}
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
@@ -82,6 +82,11 @@
 
             <div class="header-wrapper">
                 {% include "rca/includes/header.html" %}
+            </div>
+
+            <div class="page-overlay"></div>
+            <div class="pjax-wrapper">
+                <div class="pjax-content"></div>
             </div>
 
             <div class="page-wrapper">
@@ -122,11 +127,15 @@
                 <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
                 <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script>
                 <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
+                <script src="{% static "rca/js/vendor/history.js/scripts/bundled/html4+html5/jquery.history.js" %}"></script>
+                <script src="{% static "rca/js/vendor/jquery.pjax.js" %}"></script>
                 <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
                 <script src="{% static "rca/js/carousel-news.js" %}"></script>
                 <script src="{% static "rca/js/tweets.js" %}"></script>
                 <script src="{% static "rca/js/site.js" %}"></script>
                 <script src="{% static "rca/js/nav.js" %}"></script>
+                <script src="{% static "rca/js/pushstate.js" %}"></script>
+
                 {% get_debug as DEBUG %}
                 {% if DEBUG %}
                     <script type="text/javascript">

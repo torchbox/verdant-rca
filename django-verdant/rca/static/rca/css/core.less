@@ -22,6 +22,7 @@
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
  * Mobile menu styles.........Only visible in mobile layout
+ * Lightbox styles............Used when navigating with push-state
  * Images & media.............img and other media
  * Links and lists............default styles for links and lists
  * Typography.................reusable typographical styles
@@ -149,6 +150,26 @@ body.show-mobile-menu{
     left: 0;
 }
 
+/*
+ * Lightbox styles
+ */
+
+.page-overlay, .pjax-wrapper {
+    display: none;
+}
+
+body.lightbox-view{
+    .header-wrapper{
+        width: 100%;
+    }
+    .header-wrapper.affix {
+        position: absolute;
+    }
+    .pjax-wrapper{
+        width: 100%;
+        top: 86px;
+    }
+}
 
 /**
  * $Images
@@ -690,7 +711,7 @@ form.search.expanded {
     position:absolute;
     background-color:white;
     z-index:3500;
-    
+
     li{
         border-top:1px solid @color-light-grey;
         &:first{
@@ -1180,7 +1201,7 @@ footer {
         text-indent: -9999px;
         width: 110px;
         height: 47px;
-        
+
         /*@media @media-retina {*/
             background-image: url("@{path-static}images/logo-footer.png");
             background-size:110px 47px;
@@ -1497,7 +1518,7 @@ footer {
         }
         ul li{
             .column(4);
-            
+
             label{
                 font-size:2em;
                 margin:0;
@@ -1555,7 +1576,7 @@ footer {
     }
     .expiration{
         .column(6);
-    } 
+    }
     .cvc{
         clear:both;
         .field{
@@ -1605,7 +1626,7 @@ footer {
     li {
         border-top: 1px solid @color-pale-grey;
         padding:@grid-gutter-width 0;
-        min-height:130px;  
+        min-height:130px;
     }
 
     .picks{

@@ -384,8 +384,8 @@ $(function(){
             // console.log($(document).height());
             // console.log($(window).height());
             if($(document).height()-250 > $(window).height()){
-                $('.header-wrapper, .page-wrapper').affix({
-                    offset: 151
+                $('.header-wrapper, .page-wrapper, .pjax-container').affix({
+                    offset: { top: 151 }
                 });
             }
 
