@@ -36,6 +36,10 @@
     {% students_related_work year=self.degree_year exclude=self %}
 {% endif %}
 
+{% if showRelatedStaff %}
+    {% staff_related self %}
+{% endif %}
+
 {% if showRandomStaff %}
     {% staff_random programmes=self.programmes exclude=self %}
 {% endif %}

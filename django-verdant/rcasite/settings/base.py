@@ -32,8 +32,8 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',  # Set to empty string for localhost.
-        'PORT': '',  # Set to empty string for default.,
-        'CONN_MAX_AGE':600,
+        'PORT': '',  # Set to empty string for default.
+        'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
     }
 }
 
@@ -269,7 +269,7 @@ WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 WAGTAILSEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-        'INDEX': 'wagtail',
+        'INDEX': 'verdant',
     },
 }
 

@@ -6,8 +6,15 @@
             {% for event in events %}
                 <li>
                     <a href="{% pageurl event %}">
-                        <h3>{{ event.start_date|date:"j F" }}{% if event.end_date %} &ndash; {{ event.end_date|date:"j" }}&nbsp;{{ event.end_date|date:"F" }}{% endif %}</h3>
-                        <p>{{ event.title }}</p>
+                        {% with event.next_date_time as next_date_time %}
+                            {% if next_date_time %}
+                                <h3>{{ next_date_time.date_from|date:"j F" }}{% if next_date_time.date_to %} &ndash; {{ next_date_time.date_to|date:"j" }}&nbsp;{{ next_date_time.date_to|date:"F" }}{% endif %}</h3>
+                                <p>{{ event.title }}</p>
+                            {% else %}
+                                <h3>{{ event.start_date|date:"j F" }}{% if event.end_date %} &ndash; {{ event.end_date|date:"j" }}&nbsp;{{ event.end_date|date:"F" }}{% endif %}</h3>
+                                <p>{{ event.title }}</p>
+                            {% endif %}
+                        {% endwith %}
                     </a>
                     {% if event.audience %}<span>{{ event.get_audience_display }}</span>{% endif %}
                 </li>

@@ -18,8 +18,11 @@ CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
+        'BACKEND': 'wagtail.wagtailsearch.backends.db.DBSearch',
+    },
+    'es': {
         'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-        'INDEX': 'wagtail',
+        'INDEX': 'verdant',
         'URLS': ['http://5.153.227.116:9200'],
     },
 }
