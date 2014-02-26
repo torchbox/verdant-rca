@@ -1,5 +1,6 @@
 {% extends "rca/base.html" %}
-{% load static rich_text %}
+{% load show_tags static rich_text pageurl %}
+
 
 {% block extra_css %}
     <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
@@ -23,12 +24,12 @@
 {% endblock %}
 
 {% block extra_footer %}
+    {% secondary_menu self as menuitems %}
+    
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
-
         <a href="/" class="exhibition-name">The Royal College of Art Exhibition</a>
     </div>
-
 
     <div class="showrca2014-footer full-width-footer">
         <div class="footer-wrapper">
@@ -50,15 +51,11 @@
                             SW11 4AS
                         </address>
                     </li> -->
-                    <li>
-                        <a href="#">Exhibition Maps</a>
-                    </li>
-                    <li>
-                        <a href="#">Contact &amp; Info</a>
-                    </li>
-                    <li>
-                        <a href="#">Show Credits</a>
-                    </li>
+                    {% for item in menuitems %}
+                        <li>
+                            <a href="{% pageurl item %}">{{ item.title }}</a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </footer>
         </div>

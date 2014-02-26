@@ -65,3 +65,18 @@ def get_programme_students(self, school, programme, random = False):
 @register.assignment_tag
 def randsize(rangeStart, rangeEnd):
     return random.randrange(rangeStart, rangeEnd)
+
+
+@register.assignment_tag
+def secondary_menu(calling_page=None):
+    pages = []
+    if calling_page:
+        pages = calling_page.get_children().filter(
+            live=True,
+            show_in_menus=True
+        )
+
+        print calling_page.get_children()
+
+    print pages
+    return pages

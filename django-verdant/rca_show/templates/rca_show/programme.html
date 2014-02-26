@@ -1,4 +1,4 @@
-{% extends 'rca_show/base.html' %}
+{% extends "rca_show/base.html" %}
 {% load show_tags rich_text pageurl %}
 
 {% block body_class %}showrca type-programme school-{{ school }} programme-{{ programme }}{% endblock %}
@@ -14,7 +14,7 @@
             {% if self.programme %}
                 <li class="jumplist">
                     <h2 class="toggle">Students</h2>
-                    <div class="selected toggle">Giulia Garbin</div>
+                    <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
                             <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>

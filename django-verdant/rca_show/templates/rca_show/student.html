@@ -4,7 +4,36 @@
 {% block body_class %}showrca type-student school-{{ school }} programme-{{ programme }}{% endblock %}
 
 {% block content %}
-  <h1>{{ student.title }}</h1>
+    {% get_programme_students self school programme as students %}
+    {% secondary_menu self as menuitems %}
+    
+    <section class="shownav">
+        <ul>
+            <li class="jumplist active">
+                <h2 class="toggle">Students</h2>
+                <div class="selected toggle">{{ student.title }}</div>
+                <ul class="options">
+                    {% for student in students %}
+                        <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% for item in menuitems %}
+                <li>
+                    <a href="{% pageurl item %}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <h1>{{ student.title }}</h1>
+
+    <section class="body-text">
+        {% if self.body %}
+            {{ self.body|richtext }}
+        {% endif %}
+    </section>
+
 {% endblock %}
 
 {% block sidebar %}

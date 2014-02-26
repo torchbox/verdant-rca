@@ -9,6 +9,34 @@ from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import StudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES
 
+# Standard page for contacts etc
+
+class ShowStandardPage(Page, SocialFields):
+    body = RichTextField(blank=True)
+
+ShowStandardPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body'),
+]
+
+ShowStandardPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+# Main show index page (which performs school, programme and student layouts)
 
 class ShowIndexPageSchool(Orderable):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='schools')
@@ -106,7 +134,6 @@ class ShowIndexPage(Page, SocialFields):
         students = self.get_students(school)
         if not students:
             raise Http404("No students found in this school")
-
         try:
             intro = self.schools.get(school=school).intro
         except ShowIndexPageSchool.DoesNotExist:
@@ -149,6 +176,8 @@ class ShowIndexPage(Page, SocialFields):
         })
 
     def route(self, request, path_components):
+        request.show_index = self
+
         if self.live:
             # Check if this is a request for the schools index
             if not self.school and len(path_components) == 1 and path_components[0] == 'schools':
@@ -166,12 +195,15 @@ class ShowIndexPage(Page, SocialFields):
                     slugs.append(self.programme)
             slugs.extend(path_components)
 
-            if len(slugs) == 1:
-                return self.serve_school(request, slugs[0])
-            elif len(slugs) == 2:
-                return self.serve_programme(request, slugs[0], slugs[1])
-            elif len(slugs) == 3:
-                return self.serve_student(request, slugs[0], slugs[1], slugs[2])
+            try:
+                if len(slugs) == 1:
+                    return self.serve_school(request, slugs[0])
+                elif len(slugs) == 2:
+                    return self.serve_programme(request, slugs[0], slugs[1])
+                elif len(slugs) == 3:
+                    return self.serve_student(request, slugs[0], slugs[1], slugs[2])
+            except Http404:
+                pass
 
         if path_components:
             # Fallback to subpage
@@ -181,8 +213,12 @@ class ShowIndexPage(Page, SocialFields):
                 subpage = self.get_children().get(slug=child_slug)
             except Page.DoesNotExist:
                 raise Http404
+
+            return subpage.specific.route(request, remaining_components)
         else:
             raise Http404
+
+
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),

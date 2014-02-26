@@ -32,11 +32,10 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': '',
         'HOST': '',  # Set to empty string for localhost.
-        'PORT': '',  # Set to empty string for default.
+        'PORT': '',  # Set to empty string for default.,
+        'CONN_MAX_AGE':600,
     }
 }
-
-CONN_MAX_AGE = 600  # number of seconds database connections should persist for
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -124,10 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
-
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 from django.conf import global_settings
@@ -157,7 +153,6 @@ INSTALLED_APPS = (
 
     'south',
     'compressor',
-    'debug_toolbar',
     'template_timings_panel',
     'treebeard',
     'taggit',
@@ -188,7 +183,7 @@ INSTALLED_APPS = (
     'rca_show',
 )
 
-EMAIL_SUBJECT_PREFIX = '[verdant] '
+EMAIL_SUBJECT_PREFIX = '[wagtail] '
 
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 
@@ -260,7 +255,7 @@ CACHES = {
     }
 }
 
-# VERDANT SETTINGS
+# WAGTAIL SETTINGS
 
 WAGTAIL_SITE_NAME = 'RCA'
 

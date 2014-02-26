@@ -5,6 +5,13 @@
 
 @overlay-zindex:5000;
 
+// set new rail font as globally as possible
+.page-content .inner,
+#showrca2014-overlay,
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
+    .font-family-newrail-medium();
+}
+
 .site-name,
 .events-ads-wrapper,
 header .exhibition-date{
@@ -25,7 +32,11 @@ body.showoverlay{
         opacity:0;
     }
 }
-.page-content{
+i{
+    font-style:normal;
+}
+
+.page-content .inner{
     min-height:700px; /* allows for logo in bottom right */
 }
 
@@ -79,7 +90,6 @@ body.showoverlay{
         width:70%;
         left:5%;
         top:250px; 
-        color:white;       
     }
 }
 
