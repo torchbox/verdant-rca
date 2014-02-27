@@ -10,6 +10,9 @@ body{
 }
 
 .theme(@code:"", @colorprimary, @colorsecondary, @logowidth, @logoheight){
+    a:hover,a:active{
+        color:@colorprimary;
+    }
     #showrca2014-overlay {
         color:@colorsecondary;
         background-color: @colorprimary; /* fallback for ie8 */
@@ -44,7 +47,12 @@ body{
     }
     .shownav .jumplist.open .toggle,
     .shownav .jumplist:hover .toggle,
-    .showrca2014-footer{
+    .showrca2014-footer,
+    .showgallery .content{
         background-color:@colorprimary;
+    }
+
+    .showgallery .content h2{
+        color:@colorsecondary;
     }
 }

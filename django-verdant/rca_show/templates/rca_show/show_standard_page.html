@@ -1,16 +1,29 @@
 {% extends 'rca_show/base.html' %}
 {% load show_tags rich_text pageurl %}
 
-{% block body_class %}showrca type-standard{% endblock %}
+{% block body_class %}{{ block.super }} type-standard{% endblock %}
 
 {% block content %}
-	{% secondary_menu request.show_index as menuitems %}
+    {% get_programme_students request.show_index request.show_index.school request.show_index.programme as students %}
+    {% secondary_menu request.show_index as menuitems %}
 
-	 <section class="shownav">
+     <section class="shownav">
         <ul>
-            <li>
-                <a href="{% get_school_index_url request.show_index %}">Schools &amp; Students</a>
-            </li>
+            {% if request.show_index.programme %}
+                <li class="jumplist">
+                    <h2 class="toggle">Students</h2>
+                    <div class="selected toggle"></div>
+                    <ul class="options">
+                        {% for student in students %}
+                            <li><a href="{% get_student_url request.show_index student %}">{{ student.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% get_school_index_url request.show_index %}">Schools &amp; Students</a>
+                </li>
+            {% endif %}
             {% for item in menuitems %}
                 <li>
                     <a href="{% pageurl item %}">{{ item.title }}</a>
@@ -22,12 +35,10 @@
     <h1>{{ self.title }}</h1>
 
     <section class="body-text">
-        {% if self.work_description %}
-            {{ self.work_description|richtext }}
+        {% if self.body %}
+            {{ self.body|richtext }}
         {% endif %}
     </section>
-
-
 {% endblock %}
 
 {% block sidebar %}

@@ -78,13 +78,18 @@ $(function(){
         }
     });
 
+
+
     overlay = $('#showrca2014-overlay');
 
     if(overlay.length){
         setupOverlay();
 
-        displayShowOverlay();
-
+        if(!$.cookie('showrca2014')){
+            displayShowOverlay();
+            $.cookie('showrca2014', '1', { expires: 1 });
+        }
+        
         $('.toggleoverlay').click(function(){
             displayShowOverlay();
         });

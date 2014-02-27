@@ -41,6 +41,7 @@ i{
 }
 
 #showrca2014-overlay {
+    display:none;
     overflow:auto;
     position: fixed;
     top: 0;
@@ -51,7 +52,7 @@ i{
     .transition(opacity 0.5s ease);
 
     &.fade { opacity:0; }
-    &.in { opacity:1; }
+    &.in { opacity:1; display:block;}
 
     > div{
         position:fixed;
@@ -214,6 +215,11 @@ header {
 
 .showrca .footer-logo{
     display:none;
+}
+
+
+.type-standard .body-text{
+   float:none;
 }
 
 @import "modules.less";

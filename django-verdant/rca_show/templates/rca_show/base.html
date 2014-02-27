@@ -1,6 +1,7 @@
 {% extends "rca/base.html" %}
 {% load show_tags static rich_text pageurl %}
 
+{% block body_class %}showrca school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% endblock %}
 
 {% block extra_css %}
     <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
@@ -15,8 +16,8 @@
 {% endblock %}
 
 {% block logo %}
-    <a href="#" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
-    <p class="exhibition-date">{{ self.exhibition_date }}</p>
+    <a href="{% pageurl request.show_index %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <p class="exhibition-date">{{ request.show_index.exhibition_date }}</p>
 {% endblock %}
 
 {% block top %}
@@ -24,7 +25,7 @@
 {% endblock %}
 
 {% block extra_footer %}
-    {% secondary_menu self as menuitems %}
+    {% secondary_menu request.show_index as menuitems %}
     
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
@@ -62,19 +63,16 @@
     </div>
 
     {# This logic should only be true for programme-scoped pages, e.g CCA show #}
-    {% if self.programme %}
-        <div id="showrca2014-overlay" class="fade">
-            <div class="logo repos">Logo</div>
-            <div class="exhibition-date repos">{{ self.exhibition_date }}</div>
-            <div class="exhibition-name">The Royal College of Art Exhibition</div>
-            <div class="intro">
-                {{ self.overlay_intro|richtext }}
-                <div class="crest"></div>
-            </div>
+
+    <div id="showrca2014-overlay" class="fade">
+        <div class="logo repos">Logo</div>
+        <div class="exhibition-date repos">{{ request.show_index.exhibition_date }}</div>
+        <div class="exhibition-name">The Royal College of Art Exhibition</div>
+        <div class="intro">
+            {{ request.show_index.overlay_intro|richtext }}
+            <div class="crest"></div>
         </div>
-    {% endif %}
-
-
+    </div>
 {% endblock %}
 
 {% block show_js %}
@@ -92,5 +90,6 @@
         })();
     </script>
 
+    <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
     <script src="{% static "rca_show/js/site.js" %}"></script>
 {% endblock %}
