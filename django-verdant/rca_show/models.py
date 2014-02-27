@@ -7,7 +7,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import NewStudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES
+from rca.models import NewStudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP
 
 # Standard page for contacts etc
 
@@ -76,10 +76,13 @@ class ShowIndexPage(Page, SocialFields):
         return [school.school for school in self.schools.all()]
 
     def get_school_programmes(self, school):
-        return [
-            values['postgrad_programme']
-            for values in self.get_students(school).order_by('postgrad_programme').distinct('postgrad_programme').values('postgrad_programme')
-        ]
+        if not self.year in SCHOOL_PROGRAMME_MAP:
+            return None
+
+        if not school in SCHOOL_PROGRAMME_MAP[self.year]:
+            return None
+
+        return SCHOOL_PROGRAMME_MAP[self.year][school]
 
     def get_school_index_url(self):
         return self.url + 'schools/'
@@ -119,10 +122,11 @@ class ShowIndexPage(Page, SocialFields):
         })
 
     def serve_school(self, request, school):
-        # Check if there are students in this school
-        students = self.get_students(school)
-        if not students:
-            raise Http404("No students found in this school")
+        # Check that the school exists
+        if self.get_school_programmes(school) is None:
+            raise Http404("School doesn't exist")
+
+        # Get school intro
         try:
             intro = self.schools.get(school=school).intro
         except ShowIndexPageSchool.DoesNotExist:
@@ -136,11 +140,13 @@ class ShowIndexPage(Page, SocialFields):
         })
 
     def serve_programme(self, request, school, programme):
-        # Check if there are students in this programme
-        students = self.get_students(school, programme)
+        # Check that the school/programme exists
+        programmes = self.get_school_programmes(school)
+        if programmes is None:
+            raise Http404("School doesn't exist")
 
-        if not students:
-            raise Http404("No students found in this programme")
+        if programme not in programmes:
+            raise Http404("Programme doesn't exist")
 
         # Render response
         return render(request, self.programme_template, {
