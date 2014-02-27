@@ -3437,13 +3437,13 @@ class NewStudentPage(Page, SocialFields):
     ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+    ma_in_show = models.BooleanField("In show", default=False)
 
     # Show details
     show_work_title = models.CharField("Project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
-    show_in_show = models.BooleanField("In show", default=False)
 
     # Research details
     research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
@@ -3519,6 +3519,7 @@ NewStudentPage.content_panels = [
 
     # MA details
     MultiFieldPanel([
+        FieldPanel('ma_in_show'),
         FieldPanel('ma_school'),
         FieldPanel('ma_programme'),
         FieldPanel('ma_graduation_year'),
@@ -3527,7 +3528,6 @@ NewStudentPage.content_panels = [
 
     # Show details
     MultiFieldPanel([
-        FieldPanel('show_in_show'),
         FieldPanel('show_work_type'),
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
