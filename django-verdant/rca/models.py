@@ -3432,18 +3432,18 @@ class NewStudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
-    # Postgrad details
-    postgrad_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
-    postgrad_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    postgrad_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
-    postgrad_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+    # MA details
+    ma_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
+    ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+    ma_in_show = models.BooleanField("In show", default=False)
 
     # Show details
     show_work_title = models.CharField("Project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
-    show_in_show = models.BooleanField("In show", default=False)
 
     # Research details
     research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
@@ -3457,7 +3457,7 @@ class NewStudentPage(Page, SocialFields):
 
     indexed_fields = (
         'first_name', 'last_name', 'preferred_name', 'statement',
-        'get_postgrad_school_display', 'get_postgrad_programme_display', 'postgrad_degree_year', 'get_postgrad_specialism_display',
+        'get_ma_school_display', 'get_ma_programme_display', 'ma_degree_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_research_school_display', 'get_research_programme_display', 'research_graduation_year', 'get_research_qualification_display', 'research_dissertation_title', 'research_statement',
     )
@@ -3467,22 +3467,22 @@ class NewStudentPage(Page, SocialFields):
         return self.research_school != ''
 
     @property
-    def is_postgraduate(self):
-        return self.postgrad_school != ''
+    def is_ma_student(self):
+        return self.ma_school != ''
 
     @property
     def school(self):
         if self.is_research_student:
             return self.research_school
-        elif self.is_postgraduate:
-            return self.postgrad_school
+        elif self.is_ma_student:
+            return self.ma_school
 
     @property
     def programme(self):
         if self.is_research_student:
             return self.research_programme
-        elif self.is_postgraduate:
-            return self.postgrad_programme
+        elif self.is_ma_student:
+            return self.ma_programme
 
     @property
     def search_name(self):
@@ -3517,17 +3517,17 @@ NewStudentPage.content_panels = [
     InlinePanel(NewStudentPage, 'publications', label="Publications"),
     InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
 
-    # Postgrad details
+    # MA details
     MultiFieldPanel([
-        FieldPanel('postgrad_school'),
-        FieldPanel('postgrad_programme'),
-        FieldPanel('postgrad_graduation_year'),
-        FieldPanel('postgrad_specialism'),
+        FieldPanel('ma_in_show'),
+        FieldPanel('ma_school'),
+        FieldPanel('ma_programme'),
+        FieldPanel('ma_graduation_year'),
+        FieldPanel('ma_specialism'),
     ], "MA details"),
 
     # Show details
     MultiFieldPanel([
-        FieldPanel('show_in_show'),
         FieldPanel('show_work_type'),
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
