@@ -54,17 +54,17 @@ class ShowIndexPage(Page, SocialFields):
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
-            'show_in_show': True,
+            'ma_in_show': True,
         }
 
         if self.year:
-            filters['postgrad_graduation_year'] = self.year
+            filters['ma_graduation_year'] = self.year
 
         if school:
-            filters['postgrad_school'] = school
+            filters['ma_school'] = school
 
         if programme:
-            filters['postgrad_programme'] = programme
+            filters['ma_programme'] = programme
 
         return models.Q(**filters)
 
