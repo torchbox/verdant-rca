@@ -76,7 +76,4 @@ def secondary_menu(calling_page=None):
             show_in_menus=True
         )
 
-        print calling_page.get_children()
-
-    print pages
     return pages
