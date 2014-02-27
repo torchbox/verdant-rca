@@ -67,18 +67,7 @@ class ShowIndexPage(Page, SocialFields):
         return students
 
     def get_rand_students(self, school=None, programme=None):
-        students = NewStudentPage.objects.filter(live=True).order_by('random_order')
-
-        if self.year:
-            students = students.filter(postgrad_graduation_year=self.year)
-
-        if school:
-            students = students.filter(postgrad_school=school)
-
-        if programme:
-            students = students.filter(postgrad_programme=programme)
-
-        return students[:20]
+        return get_students(school, programme).order_by('random_order')[:20]
 
     def get_student(self, school, programme, slug):
         return self.get_students(school, programme).get(slug=slug)
@@ -217,8 +206,6 @@ class ShowIndexPage(Page, SocialFields):
             return subpage.specific.route(request, remaining_components)
         else:
             raise Http404
-
-
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
