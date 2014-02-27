@@ -6,12 +6,16 @@
 
 <!-- Events -->
 {% if showToday %}
-    {% upcoming_events exclude=self %}
+    {% if self.exclude_events_sidebar != True %}
+        {% upcoming_events exclude=self %}
+    {% endif %}
 {% endif %}
 
 <!-- adverts -->
 {% if showAdverts %}
-    {% sidebar_adverts show_open_days=showOpenDays %}
+        {% if self.exclude_global_adverts != True %}
+            {% sidebar_adverts show_open_days=showOpenDays %}
+        {% endif %}
 {% endif %}
 
 {% if showToday or showAdverts %}

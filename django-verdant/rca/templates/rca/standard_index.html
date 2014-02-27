@@ -131,7 +131,10 @@
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/contact_snippet.html" %}
-    {% include "rca/includes/modules/twitter-feed.html" %}
+    
+    {% if self.exclude_twitter_block != True %}
+        {% include "rca/includes/modules/twitter-feed.html" %}
+    {% endif %}
 
 {% endblock %}
 
