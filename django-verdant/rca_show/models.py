@@ -52,17 +52,43 @@ class ShowIndexPage(Page, SocialFields):
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
 
+    def get_ma_students_q(self, school=None, programme=None):
+        filters = {
+            'show_in_show': True,
+        }
+
+        if self.year:
+            filters['postgrad_graduation_year'] = self.year
+
+        if school:
+            filters['postgrad_school'] = school
+
+        if programme:
+            filters['postgrad_programme'] = programme
+
+        return models.Q(**filters)
+
+    def get_research_students_q(self, school=None, programme=None):
+        filters = {
+            'research_in_show': True,
+        }
+
+        if self.year:
+            filters['research_graduation_year'] = self.year
+
+        if school:
+            filters['research_school'] = school
+
+        if programme:
+            filters['research_programme'] = programme
+
+        return models.Q(**filters)
+
     def get_students(self, school=None, programme=None):
         students = NewStudentPage.objects.filter(live=True)
 
-        if self.year:
-            students = students.filter(postgrad_graduation_year=self.year)
-
-        if school:
-            students = students.filter(postgrad_school=school)
-
-        if programme:
-            students = students.filter(postgrad_programme=programme)
+        # Filter by students in this particular show
+        students = students.filter(self.get_ma_students_q(school, programme) | self.get_research_students_q(school, programme))
 
         return students
 
