@@ -7,7 +7,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import StudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES
+from rca.models import NewStudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES
 
 # Standard page for contacts etc
 
@@ -53,30 +53,30 @@ class ShowIndexPage(Page, SocialFields):
     exhibition_date = models.CharField(max_length=255, blank=True)
 
     def get_students(self, school=None, programme=None):
-        students = StudentPage.objects.filter(live=True)
+        students = NewStudentPage.objects.filter(live=True)
 
         if self.year:
-            students = students.filter(degree_year=self.year)
+            students = students.filter(postgrad_graduation_year=self.year)
 
         if school:
-            students = students.filter(school=school)
+            students = students.filter(postgrad_school=school)
 
         if programme:
-            students = students.filter(programme=programme)
+            students = students.filter(postgrad_programme=programme)
 
         return students
 
     def get_rand_students(self, school=None, programme=None):
-        students = StudentPage.objects.filter(live=True).order_by('random_order')
+        students = NewStudentPage.objects.filter(live=True).order_by('random_order')
 
         if self.year:
-            students = students.filter(degree_year=self.year)
+            students = students.filter(postgrad_graduation_year=self.year)
 
         if school:
-            students = students.filter(school=school)
+            students = students.filter(postgrad_school=school)
 
         if programme:
-            students = students.filter(programme=programme)
+            students = students.filter(postgrad_programme=programme)
 
         return students[:20]
 
@@ -88,8 +88,8 @@ class ShowIndexPage(Page, SocialFields):
 
     def get_school_programmes(self, school):
         return [
-            values['programme']
-            for values in self.get_students(school).order_by('programme').distinct('programme').values('programme')
+            values['postgrad_programme']
+            for values in self.get_students(school).order_by('postgrad_programme').distinct('postgrad_programme').values('postgrad_programme')
         ]
 
     def get_school_index_url(self):
@@ -164,7 +164,7 @@ class ShowIndexPage(Page, SocialFields):
         # Get the student
         try:
             student = self.get_student(school, programme, slug)
-        except StudentPage.DoesNotExist:
+        except NewStudentPage.DoesNotExist:
             raise Http404("Cannot find student")
 
         # Render response
