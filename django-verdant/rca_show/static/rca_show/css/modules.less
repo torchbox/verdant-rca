@@ -1,4 +1,5 @@
 .shownav{
+	position:relative;
 	margin:@spacing-two 0;
 
 	.jumplist .toggle, a{
@@ -34,7 +35,7 @@
 			font-size:1em;
 			margin:0;
 			color:@color-black;
-			font-weight:bold;
+			font-weight:normal;
 			border-bottom:2px solid @color-black;
 			position:relative;	
 		}
@@ -46,6 +47,7 @@
 			position:absolute;
 			z-index:2;
 			background-color:white;
+			width:100%;
 
 			li{
 				padding:@grid-gutter-width/4 0;
@@ -91,11 +93,13 @@
 
 .showgallery{
 	.clearfix();
+	.row-flush();
 	
 	li{
 		position:relative;
 		float:left;
 		overflow:hidden;
+		margin-bottom:@grid-gutter-width;
 	}
 	img{
 		display:block;
@@ -109,7 +113,7 @@
 		right:0;
 		bottom:0;
 		background-color:black;
-		background:rgba(0,0,0,0.9);
+		background-color:rgba(0,0,0,0.9);
 		padding:@spacing-half;
 
 		h2{
@@ -122,6 +126,37 @@
 
 		&:hover{
 			opacity:1;
+		}
+	}
+}
+
+.programme-curatingcontemporaryart .showgallery{
+	li{
+		.column(6);
+	}
+	a{
+		display:block;
+		height:0;
+		position:relative;
+		overflow:hidden;
+		padding-bottom:140%;
+	}
+	img{
+		max-width:none;
+		width:auto;
+		padding-bottom:100%;
+		height:140%;
+	}
+	
+	.content{
+		opacity:1;
+
+		&:hover{
+			opacity:0;
+		}
+
+		h2{
+			word-spacing:300px; 
 		}
 	}
 }

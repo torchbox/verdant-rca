@@ -12,6 +12,10 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
     .font-family-newrail-medium();
 }
 
+h1{
+    .font-family-newrail-bold();
+}
+
 .site-name,
 .events-ads-wrapper,
 header .exhibition-date{
@@ -41,6 +45,7 @@ i{
 }
 
 #showrca2014-overlay {
+    display:none;
     overflow:auto;
     position: fixed;
     top: 0;
@@ -51,7 +56,7 @@ i{
     .transition(opacity 0.5s ease);
 
     &.fade { opacity:0; }
-    &.in { opacity:1; }
+    &.in { opacity:1; display:block;}
 
     > div{
         position:fixed;
@@ -214,6 +219,11 @@ header {
 
 .showrca .footer-logo{
     display:none;
+}
+
+
+.type-standard .body-text{
+   float:none;
 }
 
 @import "modules.less";

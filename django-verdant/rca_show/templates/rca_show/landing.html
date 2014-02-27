@@ -1,7 +1,7 @@
 {% extends 'rca_show/base.html' %}
 {% load show_tags rich_text pageurl %}
 
-{% block body_class %}showrca type-landing{% endblock %}
+{% block body_class %}{{ block.super }} type-landing{% endblock %}
 
 {% block content %}
     {% secondary_menu self as menuitems %}
