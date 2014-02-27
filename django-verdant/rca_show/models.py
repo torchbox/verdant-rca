@@ -67,7 +67,7 @@ class ShowIndexPage(Page, SocialFields):
         return students
 
     def get_rand_students(self, school=None, programme=None):
-        return get_students(school, programme).order_by('random_order')[:20]
+        return self.get_students(school, programme).order_by('random_order')[:20]
 
     def get_student(self, school, programme, slug):
         return self.get_students(school, programme).get(slug=slug)
