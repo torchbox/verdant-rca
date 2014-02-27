@@ -4,8 +4,8 @@
 
 <li class="item {% if randwidth > 300 %}landscape{% else %}portrait{% endif %}" >
     <a href="{% get_student_url self student %}">
-        <div class="gallery_image {% if randwidth > 300 %}landscape{% else %}portrait{% endif %}">
-            <img src="http://instasrc.com/{{randwidth}}x300/architecture" height="300" width="{{randwidth}}" />
+        <div class="gallery-image {% if randwidth > 350 %}landscape{% else %}portrait{% endif %}" data-img="http://instasrc.com/{{randwidth}}x350/architecture">
+            <img src="http://instasrc.com/{{randwidth}}x300/architecture" height="350" width="{{randwidth}}" />
         </div>
         <div class="content">
             <h2 class="h6"><i>{{ student.title }}</i></h2>

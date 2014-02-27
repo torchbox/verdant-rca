@@ -26,7 +26,65 @@
         </ul>
     </section>
 
-    <h1>{{ student.title }}</h1>
+    {% if student.show_in_show %}
+        {% with student.show_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% elif student.research_in_show %}
+        {% with student.research_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% endif %}
+   
+    <h1>
+        {% if student.preferred_name %}
+            {{ student.preferred_name }}
+        {% else %}
+            {{ student.first_name }} {{ student.last_name }}
+        {% endif %}
+    </h1>
+
+    {% if student.phones %}
+        <h2>Phones</h2>
+        {% for phone in student.phones.all %}
+            {{ phone.phone }}
+        {% endfor %}
+    {% endif %}
+
+     {% if student.emails %}
+        <h2>Emails</h2>
+        {% for email in student.emails.all %}
+            {{ email.email }}
+        {% endfor %}
+    {% endif %}
+
+    <h2>Programme</h2>
+    {% if student.show_in_show %}
+        {{ student.postgrad_programme }}
+    {% elif student.research_in_show %}
+        {{ student.research_programme }}
+    {% endif %}
+
+    <h2>Work type</h2>
+    {% if student.show_in_show %}
+        {{ student.show_work_type }}
+    {% elif student.research_in_show %}
+        {{ student.research_dissertation_title }}
+    {% endif %}
+
+    <h2>Work title</h2>
+    {% if student.show_in_show %}
+        {{ student.show_work_title }}
+    {% elif student.research_in_show %}
+        {{ student.research_dissertation_title }}
+    {% endif %}
+
+    <h2>Description</h2>
+    {% if student.show_in_show %}
+        {{ student.show_work_description|richtext }}
+    {% elif student.research_in_show %}
+        {{ student.research_statement|richtext }}
+    {% endif %}
 
     <section class="body-text">
         {% if self.body %}
