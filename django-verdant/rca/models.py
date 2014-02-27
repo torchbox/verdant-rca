@@ -3471,6 +3471,20 @@ class NewStudentPage(Page, SocialFields):
         return self.postgrad_school != ''
 
     @property
+    def school(self):
+        if self.is_research_student:
+            return self.research_school
+        elif self.is_postgraduate:
+            return self.postgrad_school
+
+    @property
+    def programme(self):
+        if self.is_research_student:
+            return self.research_programme
+        elif self.is_postgraduate:
+            return self.postgrad_programme
+
+    @property
     def search_name(self):
         if self.is_research_student:
             if self.research_qualification == 'innovationrca-fellow':
