@@ -126,7 +126,7 @@ class ShowIndexPage(Page, SocialFields):
             return self.get_school_url(school)
 
     def get_student_url(self, student):
-        return self.get_programme_url(student.postgrad_school, student.postgrad_programme) + student.slug + '/'
+        return self.get_programme_url(student.ma_school, student.ma_programme) + student.slug + '/'
 
     # Views
     landing_template = 'rca_show/landing.html'
