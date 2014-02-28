@@ -68,9 +68,9 @@
         <div class="logo repos">Logo</div>
         <div class="exhibition-date repos">{{ request.show_index.exhibition_date }}</div>
         <div class="exhibition-name">The Royal College of Art Exhibition</div>
-        <div class="intro">
+        <div class="intro col-detect">
             {{ request.show_index.overlay_intro|richtext }}
-            <div class="crest"></div>
+            <div class="crest col-detect"></div>
         </div>
     </div>
 {% endblock %}

@@ -78,8 +78,6 @@ $(function(){
         }
     });
 
-
-
     overlay = $('#showrca2014-overlay');
 
     if(overlay.length){
@@ -87,7 +85,7 @@ $(function(){
 
         if(!$.cookie('showrca2014')){
             displayShowOverlay();
-            $.cookie('showrca2014', '1', { expires: 1 });
+            $.cookie('showrca2014', '1', { expires: 0.5 });
         }
         
         $('.toggleoverlay').click(function(){

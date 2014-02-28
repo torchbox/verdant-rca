@@ -130,6 +130,48 @@
 	}
 }
 
+.body-text{
+	h2{
+		border:0;
+		margin-top:0;
+	}
+}
+
+.meta-data{
+	dt{
+		display:none;
+	}
+	dd{
+		.font-family-newrail-medium();
+		text-transform:none;
+		margin-bottom:@spacing-one;
+		color:black;
+	}
+}
+
+.share {
+    text-indent: -9999px;
+    .sprite-load-54(
+        @positionX: -161px,
+        @positionY: -86px,
+        @retinaPositionX: -323px,
+        @retinaPositionY: -172px,
+        @width: 47px,
+        @height: @share-link-height
+    );
+    cursor: pointer;
+    &:hover {
+        .sprite-load-54(
+            @positionX: -161px,
+            @positionY: -158px,
+            @retinaPositionX: -323px,
+            @retinaPositionY: -316px,
+            @width: 47px,
+            @height: @share-link-height
+        );
+    }
+}
+
 .programme-curatingcontemporaryart .showgallery{
 	li{
 		.column(6);

@@ -1,11 +1,10 @@
 {% load pageurl image_tags show_tags %}
 {% image gallery_image width-600 as tmpimage %}
-{% randsize 200 600 as randwidth %}
 
-<li class="item {% if randwidth > 300 %}landscape{% else %}portrait{% endif %}" >
+<li class="item {% if gallery_image.landscape %}landscape{% else %}portrait{% endif %}" >
     <a href="{% get_student_url self student %}">
-        <div class="gallery-image {% if randwidth > 350 %}landscape{% else %}portrait{% endif %}" data-img="http://instasrc.com/{{randwidth}}x350/architecture">
-            <img src="http://instasrc.com/{{randwidth}}x300/architecture" height="350" width="{{randwidth}}" />
+        <div class="gallery-image">
+            {% image gallery_image height-300 %}
         </div>
         <div class="content">
             <h2 class="h6"><i>{{ student.title }}</i></h2>

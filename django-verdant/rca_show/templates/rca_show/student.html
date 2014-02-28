@@ -6,7 +6,7 @@
 {% block content %}
     {% get_programme_students self school programme as students %}
     {% secondary_menu self as menuitems %}
-    
+
     <section class="shownav">
         <ul>
             <li class="jumplist active">
@@ -26,72 +26,81 @@
         </ul>
     </section>
 
-    {% if student.show_in_show %}
+    {% if student.ma_in_show %}
         {% with student.show_carousel_items.all as carousel_items %}
             {% include "rca_show/includes/modules/carousel.html" %}
         {% endwith %}
-    {% elif student.research_in_show %}
+    {% else %}
         {% with student.research_carousel_items.all as carousel_items %}
             {% include "rca_show/includes/modules/carousel.html" %}
         {% endwith %}
     {% endif %}
-   
-    <h1>
-        {% if student.preferred_name %}
-            {{ student.preferred_name }}
-        {% else %}
-            {{ student.first_name }} {{ student.last_name }}
-        {% endif %}
-    </h1>
 
-    {% if student.phones %}
-        <h2>Phones</h2>
-        {% for phone in student.phones.all %}
-            {{ phone.phone }}
-        {% endfor %}
-    {% endif %}
+    <section class="row">
+        <section class="body-text">
+            <h1>
+                {% if student.preferred_name %}
+                    {{ student.preferred_name }}
+                {% else %}
+                    {{ student.first_name }} {{ student.last_name }}
+                {% endif %}
+            </h1>
 
-     {% if student.emails %}
-        <h2>Emails</h2>
-        {% for email in student.emails.all %}
-            {{ email.email }}
-        {% endfor %}
-    {% endif %}
+            <h2>
+                {% if student.ma_in_show %}
+                    {# If user has a work type defined, switch between title of blah , else nothing #}
+                    {% if student.show_work_type %}<span>Title of {{ student.get_show_work_type_display }}:</span>{% endif %}
+                    {{ student.show_work_title }}
+                {% else %}
+                    Title of dissertation: {{ student.research_dissertation_title }}
+                {% endif %}
+            </h2>
 
-    <h2>Programme</h2>
-    {% if student.show_in_show %}
-        {{ student.postgrad_programme }}
-    {% elif student.research_in_show %}
-        {{ student.research_programme }}
-    {% endif %}
+            {% if student.ma_in_show %}
+                {{ student.show_work_description|richtext }}
+            {% else %}
+                {{ student.research_statement|richtext }}
+            {% endif %}
 
-    <h2>Work type</h2>
-    {% if student.show_in_show %}
-        {{ student.show_work_type }}
-    {% elif student.research_in_show %}
-        {{ student.research_dissertation_title }}
-    {% endif %}
+        </section>
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    <dt>Programme</dt>
+                    <dd>
+                        {% if student.ma_in_show %}
+                            {{ student.get_ma_programme_display }}
+                        {% else %}
+                            {{ student.get_research_programme_display }}
+                        {% endif %}
+                    </dd>
+                    
+                    {% if student.phones %}
+                        <dt>Phone</dt>
+                        <dd>            
+                            {% for phone in student.phones.all %}
+                                <div>{{ phone.phone }}</div>
+                            {% endfor %}
+                        </dd>
+                    {% endif %}
 
-    <h2>Work title</h2>
-    {% if student.show_in_show %}
-        {{ student.show_work_title }}
-    {% elif student.research_in_show %}
-        {{ student.research_dissertation_title }}
-    {% endif %}
-
-    <h2>Description</h2>
-    {% if student.show_in_show %}
-        {{ student.show_work_description|richtext }}
-    {% elif student.research_in_show %}
-        {{ student.research_statement|richtext }}
-    {% endif %}
-
-    <section class="body-text">
-        {% if self.body %}
-            {{ self.body|richtext }}
-        {% endif %}
+                    {% if student.emails %}
+                        <dt>Emails</dt>
+                        <dd>
+                            {% for email in student.emails.all %}
+                                <div>{{ email.email }}</div>
+                            {% endfor %}
+                        </dd>
+                    {% endif %}
+                    </dd>
+                </dl>
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
     </section>
-
+   
 {% endblock %}
 
 {% block sidebar %}

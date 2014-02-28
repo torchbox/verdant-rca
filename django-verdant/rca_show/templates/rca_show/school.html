@@ -10,6 +10,7 @@
 {% block content %}
     {% get_school_programmes self school as programmes %}
     {% get_school_students self school as students %}
+    {% get_school_students self school random=True as rand_students %}
     {% get_schools self as schools %}
 
     <section class="shownav">
@@ -47,6 +48,33 @@
     <h1>{% get_school_display school %}</h1>
 
     {{ intro|safe }}
+
+    <ul class="showgallery">
+        {% for student in rand_students %}
+            {% if student.ma_in_show %}
+                {% with student.show_carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                        {% elif carousel_item.poster_image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                        {% endif %}
+                    {% endwith %}
+                {% endwith %}
+            {% else %}
+                {% with student.research_carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                        {% elif carousel_item.poster_image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                        {% endif %}
+                    {% endwith %}
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+
 
 {% endblock %}
 
