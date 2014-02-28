@@ -1,0 +1,25 @@
+<ul class="showgallery">
+    {% for student in rand_students %}
+        {% if student.ma_in_show %}
+            {% with student.show_carousel_items.all as carousel_items %}
+                {% with carousel_items|first as carousel_item %}
+                    {% if carousel_item.image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                    {% else %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
+        {% else %}
+            {% with student.research_carousel_items.all as carousel_items %}
+                {% with carousel_items|first as carousel_item %}
+                    {% if carousel_item.image %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                    {% else %}
+                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
+        {% endif %}
+    {% endfor %}
+</ul>

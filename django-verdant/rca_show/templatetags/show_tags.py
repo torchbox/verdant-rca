@@ -57,6 +57,7 @@ def get_school_students(self, school, random = False):
 @register.assignment_tag
 def get_programme_students(self, school, programme, random = False):
     if random:
+        print self.get_rand_students(school, programme)
         return self.get_rand_students(school, programme)
     else:
         return self.get_students(school, programme)

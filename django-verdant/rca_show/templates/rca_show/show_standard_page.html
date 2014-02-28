@@ -35,10 +35,16 @@
     <h1>{{ self.title }}</h1>
 
     <section class="body-text">
+        <figure class="bodytext-image right" style="width:50%">
+            <div id="map" style="width:100%;height:300px"></div>
+        </figure>
+
         {% if self.body %}
             {{ self.body|richtext }}
         {% endif %}
     </section>
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 {% endblock %}
 
 {% block sidebar %}
@@ -46,5 +52,19 @@
 {% endblock %}
 
 {% block extra_js %}
-
+    
+    <script>
+    function initialize() {
+        var map_canvas = document.getElementById('map');
+        var map_options = {
+          center: new google.maps.LatLng(51.5009686,-0.1792518),
+          zoom: 17,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(map_canvas, map_options);
+    }
+    $(function(){
+        initialize();
+    });
+    </script>
 {% endblock %}
