@@ -19,20 +19,6 @@
  *
  */
 
-.transform(@transform){
-    -webkit-transform: @transform;
-    -moz-transform: @transform;
-    -o-transform: @transform;
-    transform: @transform;
-}
-
-.transform-origin(@origin){
-    -webkit-transform-origin: @origin;
-    -moz-transform-origin: @origin;
-    -o-transform-origin: @origin;
-    transform-origin: @origin;
-}
-
 .transition(@transition){
     -webkit-transition: @transition;
     -moz-transition: @transition;
@@ -150,15 +136,15 @@
 }
 
 .sprite-load-54 (@positionX, @positionY, @retinaPositionX, @retinaPositionY, @width, @height) {
-    background-image: url("@{path-static}images/icons-54-std-2.png");
+    background-image: url("@{path-static}images/icons-54-std.png");
     background-repeat: no-repeat;
     background-position: @positionX @positionY;
     width: @width;
     height: @height;
     @media @media-retina {
-        background-image: url("@{path-static}images/icons-54-std@2x-2.png");
+        background-image: url("@{path-static}images/icons-54-std@2x.png");
         background-position: @retinaPositionX/2 @retinaPositionY/2;
-        background-size:2808/2px 744/2px;
+        background-size:2808/2px 600/2px;
     }
 }
 

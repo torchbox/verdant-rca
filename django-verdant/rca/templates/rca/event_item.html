@@ -2,7 +2,9 @@
 {% load rich_text image_tags %}
 {% load rca_tags %}
 
-{% block body_class %}type-event{% endblock %}
+{% block body_class %}
+    type-event
+{% endblock %}
 
 {% block content %}
     <span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.get_audience_display }}</a></span>
