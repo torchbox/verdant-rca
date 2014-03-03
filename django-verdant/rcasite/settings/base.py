@@ -123,6 +123,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
+
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -183,10 +184,9 @@ INSTALLED_APPS = (
     'rca',
     'rca_signage',
     'rca_ldap',
-    'rca_show',
 )
 
-EMAIL_SUBJECT_PREFIX = '[wagtail] '
+EMAIL_SUBJECT_PREFIX = '[verdant] '
 
 INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
 
@@ -258,7 +258,7 @@ CACHES = {
     }
 }
 
-# WAGTAIL SETTINGS
+# VERDANT SETTINGS
 
 WAGTAIL_SITE_NAME = 'RCA'
 

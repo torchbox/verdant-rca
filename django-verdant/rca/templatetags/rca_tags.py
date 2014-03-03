@@ -535,7 +535,7 @@ class TabDeckNode(template.Node):
         module_title_html = '';
         if self.module_title_expr:
             module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
-        return '<section class="row module tabdeck">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        return '<section class="row module">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
