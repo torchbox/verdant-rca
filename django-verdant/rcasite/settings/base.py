@@ -124,8 +124,6 @@ MIDDLEWARE_CLASSES = (
 
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 from django.conf import global_settings
@@ -155,7 +153,6 @@ INSTALLED_APPS = (
 
     'south',
     'compressor',
-    'debug_toolbar',
     'template_timings_panel',
     'treebeard',
     'taggit',

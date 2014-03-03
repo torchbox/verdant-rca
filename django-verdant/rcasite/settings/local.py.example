@@ -4,6 +4,10 @@
 
 from .dev import *
 
+# Removes the debug toolbar tuple additions made in dev.py. Useful if debug toolbar is slowing down a dev site
+# INSTALLED_APPS = INSTALLED_APPS[:-1]
+# MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:-1]
+
 EMBEDLY_KEY = 'get-one-from-http://embed.ly/'
 
 STRIPE_PUBLISHABLE_KEY = ""
