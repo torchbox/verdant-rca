@@ -4176,15 +4176,22 @@ class DonationPage(Page, SocialFields):
             form = DonationForm(request.POST)
             if form.is_valid():
                 try:
+                    metadata = form.cleaned_data.get('metadata', {})
+
+                    customer = stripe.Customer.create(
+                        card=form.cleaned_data.get('stripe_token'),
+                        email=metadata.get("email", "")
+                    )
+
                     # When exporting the payments from the dashboard
                     # the metadata field is not exported but the description is,
                     # so we duplicate the metadata there as well.
                     charge = stripe.Charge.create(
-                        card=form.cleaned_data.get('stripe_token'),
+                        customer=customer.id,
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
                         currency="gbp",
                         description=self.payment_description,
-                        metadata=form.cleaned_data.get('metadata', {}),
+                        metadata=metadata,
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
