@@ -205,19 +205,21 @@ header {
 }
 
 .exhibition-name{
-    .transform(rotate(-90deg));
-    .transform-origin(37% 0);
-    .font-family-newrail-bold();
     float:right;
     width:9em;
     font-size:2em;
     line-height:1.1em;
 }
+.csstransforms .exhibition-name{
+    .transform(rotate(-90deg));
+    .transform-origin(37% 0);
+    .font-family-newrail-bold();
+    margin-right:-3em;
+}
 
 .showrca .footer-logo{
     display:none;
 }
-
 
 .type-standard .body-text{
    float:none;

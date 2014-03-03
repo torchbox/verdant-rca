@@ -1,25 +1,44 @@
+{% load pageurl image_tags show_tags %}
+
 <ul class="showgallery">
-    {% for student in rand_students %}
-        {% if student.ma_in_show %}
-            {% with student.show_carousel_items.all as carousel_items %}
-                {% with carousel_items|first as carousel_item %}
-                    {% if carousel_item.image %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
-                    {% else %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+    {% if self.programme %}
+        {% for student in rand_students %}
+            <li class="item" >
+                <a href="{% get_student_url self student %}">
+                    {% if student.profile_image %}
+                        <div class="gallery-image">
+                            {% image student.profile_image fill-300x300 %}
+                        </div>
                     {% endif %}
+                    <div class="content">
+                        <h2 class="h6"><i>{{ student.title }}</i></h2>
+                    </div>
+                </a>
+            </li>
+        {% endfor %}
+    {% else %}
+        {% for student in rand_students %}
+            {% if student.ma_in_show %}
+                {% with student.show_carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                        {% else %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                        {% endif %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
-        {% else %}
-            {% with student.research_carousel_items.all as carousel_items %}
-                {% with carousel_items|first as carousel_item %}
-                    {% if carousel_item.image %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
-                    {% else %}
-                        {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
-                    {% endif %}
+            {% else %}
+                {% with student.research_carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
+                        {% else %}
+                            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=carousel_item.poster_image %}
+                        {% endif %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
-        {% endif %}
-    {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 </ul>

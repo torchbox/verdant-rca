@@ -13,10 +13,12 @@ from rca.models import NewStudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_C
 
 class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
+    map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body'),
+    FieldPanel('map_coords'),
 ]
 
 ShowStandardPage.promote_panels = [
