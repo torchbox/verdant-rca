@@ -4239,18 +4239,8 @@ class DonationPage(Page, SocialFields):
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
-                    try:
-                        # CardErrors are displayed to the user
-                        messages.error(request, e['message'])
-                    except:
-                        logging.error("[stripe] ", exc_info=full_exc_info())
-                        messages.error(request, e)
-                        try:
-                            messages.error(request, e.json_body)
-                        except:
-                            pass
-
-
+                    # CardErrors are displayed to the user  
+                    messages.error(request, e.json_body['error']['message'])    
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
