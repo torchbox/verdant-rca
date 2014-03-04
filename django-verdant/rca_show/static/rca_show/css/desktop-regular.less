@@ -1,0 +1,27 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop
+ *
+ * Overrides core.less for desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
+
+@import "../../../../rca/static/rca/css/variables.less";
+@import "../../../../rca/static/rca/css/grid.less";
+@import "../../../../rca/static/rca/css/mixins.less";
+
+.showrca2014-footer ul li{
+    .column(3);
+}
+
+#showrca2014-overlay{
+    .intro{
+        width:30%;    
+    }
+}
+
+
+/* must come at bottom of file */
+@import "modules-desktop-regular.less";

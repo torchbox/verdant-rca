@@ -1,0 +1,91 @@
+{% extends "rca/base.html" %}
+{% load show_tags static rich_text pageurl %}
+
+{% block body_class %}showrca school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
+    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
+
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" />
+    <![endif]-->
+{% endblock %}
+
+{% block logo %}
+    <a href="{% pageurl request.show_index %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <p class="exhibition-date">{{ request.show_index.exhibition_date }}</p>
+{% endblock %}
+
+{% block extra_footer %}
+    {% secondary_menu request.show_index as menuitems %}
+    
+    <div class="prefooter standard-wrapper">
+        <a href="/" class="logo-rca">Royal College of Art</a>
+        <a href="/" class="exhibition-name">The Royal College of Art Exhibition</a>
+    </div>
+
+    <div class="showrca2014-footer full-width-footer">
+        <div class="footer-wrapper">
+            <footer>
+                <ul>
+                    <li>    
+                        <address>
+                            <h2>Kensington Campus</h2>
+                            Royal College of Art<br />
+                            Kensington Gore<br />
+                            London SW7 2EU
+                        </address>
+                    </li>
+                    <!-- <li>
+                        <address>
+                            <h2>Battersea Campus</h2>
+                            15-25 Howie St<br />
+                            London<br />
+                            SW11 4AS
+                        </address>
+                    </li> -->
+                    {% for item in menuitems %}
+                        <li>
+                            <a href="{% pageurl item %}">{{ item.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
+
+    <div id="showrca2014-overlay" class="fade">
+        <div class="logo repos">Logo</div>
+        <div class="exhibition-date repos">{{ request.show_index.exhibition_date }}</div>
+        <div class="exhibition-name">The Royal College of Art Exhibition</div>
+        <div class="intro col-detect">
+            {{ request.show_index.overlay_intro|richtext }}
+            <div class="crest col-detect"></div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block show_js %}
+    <script>
+        WebFontConfig = { fontdeck: { id: '42490' } };
+
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })();
+    </script>
+
+    <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
+    <script src="{% static "rca_show/js/site.js" %}"></script>
+{% endblock %}
