@@ -1,26 +1,26 @@
 {% load pageurl image_tags %}
 
 <a href="{% pageurl project %}">
-    <div class="image">
-        {% if project.feed_image %}
-            {% image project.feed_image width-300 %}
-        {% else %}
-            {% with project.carousel_items.all as carousel_items %}
-                {% with carousel_items|first as carousel_item %}
-                    {% if carousel_item.image %}
-                        {% image carousel_item.image fill-300x169 %}
-                    {% else %}
-                        {% if person %}
-                            {# TODO: delete these placeholder images from git once proper image exists #}
-                            <img src="/static/rca/images/rca-placeholder.jpg" width="300">
+        <div class="image">
+            {% if project.feed_image %}
+                {% image project.feed_image width-300 %}
+            {% else %}
+                {% with project.carousel_items.all as carousel_items %}
+                    {% with carousel_items|first as carousel_item %}
+                        {% if carousel_item.image %}
+                            {% image carousel_item.image fill-300x169 %}
                         {% else %}
-                            <img src="/static/rca/images/rca-placeholder.jpg" width="300">
+                            {% if person %}
+                                {# TODO: delete these placeholder images from git once proper image exists #}
+                                <img src="/static/rca/images/rca-placeholder.jpg" width="300">
+                            {% else %}
+                                <img src="/static/rca/images/rca-placeholder.jpg" width="300">
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
+                    {% endwith %}
                 {% endwith %}
-            {% endwith %}
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
     <div class="content">
         <h3 class="h8">{{ project.title }}</h3>
         {% with project.creator.all as creators %}
