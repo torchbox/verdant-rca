@@ -1,0 +1,217 @@
+.shownav{
+	position:relative;
+	margin:@spacing-two 0;
+
+	.jumplist .toggle, a{
+		padding:@grid-gutter-width;
+		display:block;
+	}
+
+	.jumplist{
+		a{
+			padding:0;
+			display:inline-block;
+		}
+		.toggle{
+			cursor:pointer;
+
+			&:after {
+				.sprite-load-23(
+					@positionX: -48px,
+					@positionY: -48px,
+					@retinaPositionX: -97px,
+					@retinaPositionY: -97px,
+					@width: 23px,
+					@height: 13px
+				);
+				content: "";
+				position: absolute;
+				top: 1.3em; /* Arbitrary. Whatever looks good */
+				right: @spacing-one;
+				visibility: visible; /* override generic nav a style */
+			}
+		}
+		h2, .selected{
+			font-size:1em;
+			margin:0;
+			color:@color-black;
+			font-weight:normal;
+			border-bottom:2px solid @color-black;
+			position:relative;	
+		}
+		.options{
+			font-family:@font-family-benton-light;
+            text-transform:uppercase;
+            font-size:0.8em;
+			padding:@spacing-one;
+			position:absolute;
+			z-index:2;
+			background-color:white;
+			width:100%;
+
+			li{
+				padding:@grid-gutter-width/4 0;
+			}
+		}
+		.selected, .options{
+			display:none;
+		}
+		&.active{
+			h2{
+				display:none;
+			}
+			.selected{
+				display:block;
+			}
+		}
+		&.open{
+			.toggle{
+				background-color:@color-pink;
+				&:after{
+					.sprite-load-23(
+						@positionX: -48px,
+						@positionY: -12px,
+						@retinaPositionX: -97px,
+						@retinaPositionY: -25px,
+						@width: 23px,
+						@height: 13px
+					);
+				}
+			}
+
+			.options{
+				display:block;
+			}
+		}
+		&:hover{
+			.toggle{
+				background-color:@color-pink;
+			}
+		}
+	}
+}
+
+.showgallery{
+	.clearfix();
+	.row-flush();
+	
+	li{
+		position:relative;
+		float:left;
+		overflow:hidden;
+		margin-bottom:@grid-gutter-width;
+	}
+	img{
+		display:block;
+	}
+	.content{
+		.transition(opacity 0.3s ease);
+		opacity:0;
+		position:absolute;
+		top:0;
+		left:0;
+		right:0;
+		bottom:0;
+		background-color:black;
+		background-color:rgba(0,0,0,0.9);
+		padding:@spacing-half;
+
+		h2{
+			margin-top:0;
+			color:white;
+		}
+		p{
+			margin:0;
+		}
+
+		&:hover{
+			opacity:1;
+		}
+	}
+}
+
+.body-text{
+	h2{
+		border:0;
+		margin-top:0;
+	}
+}
+
+.meta-data{
+	dt{
+		display:none;
+	}
+	dd{
+		.font-family-newrail-medium();
+		text-transform:none;
+		margin-bottom:@spacing-one;
+		color:black;
+	}
+}
+
+.share {
+    text-indent: -9999px;
+    .sprite-load-54(
+        @positionX: -162px,
+        @positionY: -86px,
+        @retinaPositionX: -323px,
+        @retinaPositionY: -172px,
+        @width: 47px,
+        @height: @share-link-height
+    );
+    cursor: pointer;
+    &:hover {
+
+        .sprite-load-54(
+            @positionX: -161px,
+            @positionY: -305px,
+            @retinaPositionX: -323px,
+            @retinaPositionY: -610px,
+            @width: 47px,
+            @height: @share-link-height
+        );
+    }
+}
+
+.map-aside{
+	#map{
+		width:100%;
+		height:350px;
+	}
+}
+
+.tabdeck{
+	border-top:0 !important;
+	margin-top:0 !important;
+}
+
+.programme-curatingcontemporaryart .showgallery{
+	li{
+		.column(4);
+	}
+	a{
+		display:block;
+		height:0;
+		position:relative;
+		overflow:hidden;
+		padding-bottom:100%;
+	}
+	img{
+		max-width:none;
+		width:auto;
+		padding-bottom:100%;
+		height:140%;
+	}
+	
+	.content{
+		opacity:1;
+
+		&:hover{
+			opacity:0;
+		}
+
+		h2{
+			word-spacing:300px; 
+		}
+	}
+}
