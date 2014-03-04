@@ -51,7 +51,9 @@
                 {% endcompress %}
             <![endif]-->
 
-            {% block extra_css %}{% endblock %}
+            {% compress css %}
+                 {% block extra_css %}{% endblock %}
+            {% endcompress %}
         {% endblock %}
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
@@ -160,9 +162,9 @@
                     </script>
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
+                {% block show_js %}{% endblock %}
+                {% block extra_js %}{% endblock %}
             {% endcompress %}
-            {% block show_js %}{% endblock %}
-            {% block extra_js %}{% endblock %}
         {% endblock %}
     </body>
 </html>
