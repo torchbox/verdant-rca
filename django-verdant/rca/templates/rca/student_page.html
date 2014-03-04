@@ -1,9 +1,7 @@
 {% extends "rca/base.html" %}
-{% load image_tags rich_text rca_tags %}
+{% load image_tags rich_text rca_tags pageurl %}
 
-{% block body_class %}
-    type-student-profile
-{% endblock %}
+{% block body_class %}type-student-profile{% endblock %}
 
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
@@ -109,6 +107,21 @@
                             <h3 class="a2 space">Specialism</h3>
                             <p class="h7">{{ self.specialism }}</p>
                         {% endif %}
+
+
+                        {% with self.supervisors.all as supervisors %}
+                            {% if supervisors %}
+                                <h3 class="a2 space">Supervisor</h3>
+                                {% for supervisor in supervisors %}
+                                    {% if supervisor.supervisor %}
+                                        <a href="{% pageurl supervisor.supervisor %}"><p class="h7">{{ supervisor.supervisor }}</p></a>
+                                    {% else %}
+                                        <p class="h7">{{ supervisor.supervisor_other }}</p>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                        
 
                     </li>
                     <li class="col">

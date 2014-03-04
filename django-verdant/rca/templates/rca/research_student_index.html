@@ -1,16 +1,13 @@
 {% extends "rca/base.html" %}
 {% load rca_tags rich_text pageurl %}
 
-
-{% block body_class %}
-    type-news-index
-{% endblock %}
+{% block body_class %}type-news-index{% endblock %}
 
 {% block content %}
 
 	{% include "rca/includes/modules/h1-major.html" %}
 
-	<section class="filters two-filters row">
+	<section class="filters three-filters row">
 	    <form id="filters" action="{% pageurl self %}" method="GET">
 	        <ul>
 	        	<li class="filter">
@@ -31,6 +28,13 @@
 						{% endfor %}
 	                </select>
 	            </li>
+                <li class="filter">
+                    <label for="period">Current or past</label>
+                    <select id="period" name="period">
+                        <option value="current" {% if request.GET.period == 'current' %}selected="selected"{% endif %}>Current students</option>
+                        <option value="past" {% if request.GET.period == 'past' %}selected="selected"{% endif %}>Past students</option>
+                    </select>
+                </li>
 				<input type="submit" />
 			</ul>
 		</form>

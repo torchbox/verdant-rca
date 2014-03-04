@@ -2,9 +2,7 @@
 {% load rich_text image_tags %}
 {% load rca_tags %}
 
-{% block body_class %}
-    type-event
-{% endblock %}
+{% block body_class %}type-event{% endblock %}
 
 {% block content %}
     <span class="a2"><a href="{{ global_events_index_url }}?audience={{ self.audience }}">{{ self.get_audience_display }}</a></span>
@@ -33,8 +31,10 @@
             {% if self.location == "other" %}
                 {{ self.location_other }}
             {% else %}
-                {{ self.get_location_display }}
-                {% if self.location_other %} 
+                {{ self.get_location_display }}{% if self.gallery %},
+                    {{ self.get_gallery_display }}
+                {% endif %}
+                {% if self.location_other %}
                     and {{ self.location_other }}
                 {% endif %}
             {% endif %}
@@ -42,10 +42,16 @@
                     &#124; <a class="a2" href="{{ self.specific_directions_link }}">{{ self.specific_directions }}</a>
                 {% endif %}</p>
         {% if self.cost %}{{ self.cost|richtext }}{% endif %}
-        
-        {% if self.external_link and self.external_link_text %}
-            <p><a href="{{ self.external_link }}">{{ self.external_link_text }}</a></p>
-        {% endif %}
+
+        {% for external_link in self.external_links.all %}
+            <p>
+                {% if external_link.text %}
+                    <a href="{{ external_link.link }}">{{ external_link.text }}</a>
+                {% else %}
+                    <a href="{{ external_link.link }}">{{ external_link.link }}</a>
+                {% endif %}
+            </p>
+        {% endfor %}
     </div>
     <div class="col-2">
         {% include "rca/includes/modules/calendar-button.html" with url=self.url %}

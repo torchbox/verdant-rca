@@ -19,7 +19,7 @@ def fieldtype(bound_field):
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
 def upcoming_events(context, exclude=None, count=3):
-    events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to')).order_by('start_date')
+    events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
     if exclude:
         events = events.exclude(id=exclude.id)
     return {
@@ -217,6 +217,19 @@ def staff_random(context, exclude=None, programmes=None, count=4):
         staff = staff.exclude(id=exclude.id)
     if programmes:
         staff = staff.filter(roles__programme__in=programmes)
+    return {
+        'staff': staff[:count],
+        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
+    }
+
+@register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
+def staff_related(context, staff_page, count=4):
+    staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
+    # import pdb; pdb.set_trace()
+    if staff_page.programmes:
+        staff = staff.filter(roles__programme__in=staff_page.programmes)
+    elif staff_page.school:
+        staff = staff.filter(school=staff_page.school)
     return {
         'staff': staff[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -522,7 +535,7 @@ class TabDeckNode(template.Node):
         module_title_html = '';
         if self.module_title_expr:
             module_title_html = '<h2 class="module-title">%s</h2>' % self.module_title_expr.resolve(context)
-        return '<section class="row module">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
+        return '<section class="row module tabdeck">' + module_title_html + tab_header_html + '<div class="tab-content">' + output + '</div></section>'
 
 
 @register.tag
