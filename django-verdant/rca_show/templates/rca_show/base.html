@@ -1,17 +1,20 @@
 {% extends "rca/base.html" %}
-{% load show_tags static rich_text pageurl %}
+{% load compress static show_tags rich_text pageurl %}
 
 {% block body_class %}showrca school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
-    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
-    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
-    <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
-
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
+    {% endcompress %}
     <!--[if lt IE 9]>
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" />
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" />
+        {% compress css %}
+            <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" />
+        {% endcompress %}
     <![endif]-->
 {% endblock %}
 
@@ -86,6 +89,8 @@
         })();
     </script>
 
-    <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
-    <script src="{% static "rca_show/js/site.js" %}"></script>
+    {% compress js %}
+        <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
+        <script src="{% static "rca_show/js/site.js" %}"></script>
+    {% endcompress %}
 {% endblock %}
