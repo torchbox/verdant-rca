@@ -1,0 +1,85 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags rich_text pageurl %}
+
+{% block body_class %}{{ block.super }} type-standard{% endblock %}
+
+{% block content %}
+    {% get_programme_students request.show_index request.show_index.school request.show_index.programme as students %}
+    {% secondary_menu request.show_index as menuitems %}
+
+     <section class="shownav">
+        <ul>
+            {% if request.show_index.programme %}
+                <li class="jumplist">
+                    <h2 class="toggle">Students</h2>
+                    <div class="selected toggle"></div>
+                    <ul class="options">
+                        {% for student in students %}
+                            <li><a href="{% get_student_url request.show_index student %}">{{ student.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% get_school_index_url request.show_index %}">Schools &amp; Students</a>
+                </li>
+            {% endif %}
+            {% for item in menuitems %}
+                <li>
+                    <a href="{% pageurl item %}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <h1>{{ self.title }}</h1>
+
+    <section class="body-text">
+        {% if self.map_coords %}
+            <figure class="map-aside right">
+                <div id="map"></div>
+            </figure>
+        {% endif %}
+
+        {% if self.body %}
+            {{ self.body|richtext }}
+        {% endif %}
+    </section>
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
+
+{% block extra_js %}
+    
+    {% if self.map_coords %}
+        <script>
+        function initialize() {
+            var myLatlng = new google.maps.LatLng({{ self.map_coords }});
+            var map_canvas = document.getElementById('map');
+            var map_options = {
+              center: myLatlng,
+              zoom: 17,
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+              disableDefaultUI: true,
+              zoomControl: true,
+  zoomControlOptions: {
+    style: google.maps.ZoomControlStyle.SMALL
+  }
+            }
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map
+            });
+            var map = new google.maps.Map(map_canvas, map_options);
+            marker.setMap(map);
+        }
+        $(function(){
+            initialize();
+        });
+        </script>
+    {% endif %}
+{% endblock %}
