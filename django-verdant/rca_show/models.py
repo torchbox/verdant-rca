@@ -138,6 +138,10 @@ class ShowIndexPage(Page, SocialFields):
     programme_template = 'rca_show/programme.html'
     student_template = 'rca_show/student.html'
 
+    def serve(self, request):
+        # If serve called directly (eg, from preview) redirect to serve_landing
+        return self.serve_landing(request)
+
     def serve_landing(self, request):
         # Render response
         return render(request, self.landing_template, {

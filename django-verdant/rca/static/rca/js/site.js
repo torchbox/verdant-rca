@@ -89,10 +89,10 @@ function showSearchAutocomplete() {
             });
         },
         select: function( event, ui ) {
-            window.location.href = ui.item.url;
+            window.location.href = ui.item.search_url || ui.item.url;
         }
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.label + "<span>" + item.type + "</span></a>" ).appendTo( ul );
+        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
     };
 }
 
