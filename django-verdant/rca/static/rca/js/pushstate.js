@@ -1,6 +1,8 @@
 (function(){
     // TODO:
     // * bind click handlers to selected elements only
+    // Add different base template for ajax requests:
+    // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
 
     var initialUrl = window.location.href;
 
