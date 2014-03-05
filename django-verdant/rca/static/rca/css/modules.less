@@ -1883,8 +1883,17 @@ select{
 .selectInner{
     padding: 12px 17px;
 }
+    select[data-stripe="exp-month"] + .select .selectInner,
+    select[data-stripe="exp-year"] + .select .selectInner{
+        padding-left: 16px;
+        padding-right: 0;
+        min-width: 35px;
+    }
+    select[data-stripe="exp-year"] + .select .selectInner{
+        min-width: 48px;
+    }
     .expirydatefield select{
-        width: 50px;
+        width: 35px;
     }
     #id_cvc{
         width: 75px;
