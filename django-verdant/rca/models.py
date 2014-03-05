@@ -138,6 +138,7 @@ AREA_CHOICES = (
     ('reachoutrca', 'ReachOutRCA'),
     ('support', 'Support'),
     ('drawingstudio', 'Drawing Studio'),
+    ('alumnirca', 'AlumniRCA'),
 )
 
 STAFF_AREA_CHOICES = AREA_CHOICES + (
@@ -399,6 +400,14 @@ STAFF_TYPES_CHOICES = (
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
+# Generic fields to opt out of events and twitter blocks
+class OptionalBlockFields(models.Model):
+    exclude_twitter_block = models.BooleanField(default=False)
+    exclude_events_sidebar = models.BooleanField(default=False)
+    exclude_global_adverts = models.BooleanField(default=False)
+
+    class Meta:
+        abstract = True
 
 # Generic social fields abstract class to add social image/text to any new content type easily.
 class SocialFields(models.Model):
@@ -1385,6 +1394,16 @@ class EventItemDatesTimes(Orderable):
         FieldPanel('time_other'),
     ]
 
+class EventItemExternalLink(Orderable):
+    page = ParentalKey('rca.EventItem', related_name='external_links')
+    link = models.URLField()
+    text = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('link'),
+        FieldPanel('text'),
+    ]
+
 class FutureEventItemManager(models.Manager):
     def get_query_set(self):
         return super(FutureEventItemManager, self).get_query_set().extra(
@@ -1397,6 +1416,10 @@ class FutureNotCurrentEventItemManager(models.Manager):
         return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
+        ).extra(
+            select={'next_date_from': '(SELECT date_from FROM rca_eventitemdatestimes WHERE page_id=wagtailcore_page.id AND date_from >= %s LIMIT 1)'},
+            select_params=[date.today()],
+            order_by=['next_date_from']
         )
 
 class PastEventItemManager(models.Manager):
@@ -1418,8 +1441,6 @@ class EventItem(Page, SocialFields):
     special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below")
     cost = RichTextField(blank=True, help_text="Prices should be in bold")
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text='Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID.')
-    external_link = models.URLField(blank=True)
-    external_link_text = models.CharField(max_length=255, blank=True)
     show_on_homepage = models.BooleanField()
     listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing event items', blank=True)
     middle_column_body = RichTextField(blank=True)
@@ -1429,6 +1450,10 @@ class EventItem(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    # DELETED
+    external_link = models.URLField(blank=True, editable=False)
+    external_link_text = models.CharField(max_length=255, blank=True, editable=False)
 
     objects = models.Manager()
     future_objects = FutureEventItemManager()
@@ -1537,8 +1562,7 @@ EventItem.content_panels = [
         FieldPanel('gallery'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
-        FieldPanel('external_link'),
-        FieldPanel('external_link_text'),
+        InlinePanel(EventItem, 'external_links', label="External links"),
         FieldPanel('middle_column_body')
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
@@ -2176,7 +2200,7 @@ class StandardIndexContactSnippet(Orderable):
         SnippetChooserPanel('contact_snippet', ContactSnippet),
     ]
 
-class StandardIndex(Page, SocialFields):
+class StandardIndex(Page, SocialFields, OptionalBlockFields):
     intro = RichTextField(blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     strapline = models.CharField(max_length=255, blank=True)
@@ -2292,7 +2316,13 @@ StandardIndex.promote_panels = [
     MultiFieldPanel([
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
-    ], 'Social networks')
+    ], 'Social networks'),
+
+    MultiFieldPanel([
+        FieldPanel('exclude_twitter_block'),
+        FieldPanel('exclude_events_sidebar'),
+        FieldPanel('exclude_global_adverts'),
+    ], 'Optional page elements'),
 ]
 
 
@@ -2832,7 +2862,7 @@ class StaffPage(Page, SocialFields):
 
     @property
     def programmes(self):
-        return list({role.programme for role in StaffPageRole.objects.filter(page=self)})
+        return list({role.programme for role in StaffPageRole.objects.filter(page=self) if role.programme})
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3402,18 +3432,18 @@ class NewStudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
-    # Postgrad details
-    postgrad_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
-    postgrad_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    postgrad_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
-    postgrad_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+    # MA details
+    ma_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
+    ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
+    ma_in_show = models.BooleanField("In show", default=False)
 
     # Show details
     show_work_title = models.CharField("Project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
-    show_in_show = models.BooleanField("In show", default=False)
 
     # Research details
     research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
@@ -3427,7 +3457,7 @@ class NewStudentPage(Page, SocialFields):
 
     indexed_fields = (
         'first_name', 'last_name', 'preferred_name', 'statement',
-        'get_postgrad_school_display', 'get_postgrad_programme_display', 'postgrad_degree_year', 'get_postgrad_specialism_display',
+        'get_ma_school_display', 'get_ma_programme_display', 'ma_degree_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_research_school_display', 'get_research_programme_display', 'research_graduation_year', 'get_research_qualification_display', 'research_dissertation_title', 'research_statement',
     )
@@ -3437,8 +3467,22 @@ class NewStudentPage(Page, SocialFields):
         return self.research_school != ''
 
     @property
-    def is_postgraduate(self):
-        return self.postgrad_school != ''
+    def is_ma_student(self):
+        return self.ma_school != ''
+
+    @property
+    def school(self):
+        if self.is_research_student:
+            return self.research_school
+        elif self.is_ma_student:
+            return self.ma_school
+
+    @property
+    def programme(self):
+        if self.is_research_student:
+            return self.research_programme
+        elif self.is_ma_student:
+            return self.ma_programme
 
     @property
     def search_name(self):
@@ -3450,6 +3494,25 @@ class NewStudentPage(Page, SocialFields):
         else:
             return "Graduate"
 
+    @property
+    def search_url(self):
+        # Try to find a show profile for this student
+        from rca_show.models import ShowIndexPage
+        for show in ShowIndexPage.objects.filter(live=True):
+            # Check if this student is in this show
+            if not show.get_students().filter(id=self.id).exists():
+                continue
+
+            # Get students URL in this show
+            try:
+                url = show.get_student_url(self)
+                assert url is not None
+                return url
+            except:
+                pass
+
+        # Cannot find any show profiles, return regular URL
+        return self.url
 
 NewStudentPage.content_panels = [
     # General details
@@ -3473,17 +3536,17 @@ NewStudentPage.content_panels = [
     InlinePanel(NewStudentPage, 'publications', label="Publications"),
     InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
 
-    # Postgrad details
+    # MA details
     MultiFieldPanel([
-        FieldPanel('postgrad_school'),
-        FieldPanel('postgrad_programme'),
-        FieldPanel('postgrad_graduation_year'),
-        FieldPanel('postgrad_specialism'),
+        FieldPanel('ma_in_show'),
+        FieldPanel('ma_school'),
+        FieldPanel('ma_programme'),
+        FieldPanel('ma_graduation_year'),
+        FieldPanel('ma_specialism'),
     ], "MA details"),
 
     # Show details
     MultiFieldPanel([
-        FieldPanel('show_in_show'),
         FieldPanel('show_work_type'),
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
@@ -4176,20 +4239,29 @@ class DonationPage(Page, SocialFields):
             form = DonationForm(request.POST)
             if form.is_valid():
                 try:
+                    metadata = form.cleaned_data.get('metadata', {})
+
+                    customer = stripe.Customer.create(
+                        card=form.cleaned_data.get('stripe_token'),
+                        email=metadata.get("email", "")
+                    )
+
                     # When exporting the payments from the dashboard
                     # the metadata field is not exported but the description is,
                     # so we duplicate the metadata there as well.
                     charge = stripe.Charge.create(
-                        card=form.cleaned_data.get('stripe_token'),
+                        customer=customer.id,
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
                         currency="gbp",
                         description=self.payment_description,
-                        metadata=form.cleaned_data.get('metadata', {}),
+                        metadata=metadata,
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
-                    # CardErrors are displayed to the user
-                    messages.error(request, e['message'])
+                    # CardErrors are displayed to the user, but we notify admins as well
+                    mail_exception(e, prefix=" [stripe] ")
+                    logging.error("[stripe] ", exc_info=full_exc_info())
+                    messages.error(request, e.json_body['error']['message'])    
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError

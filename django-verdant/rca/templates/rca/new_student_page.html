@@ -20,19 +20,19 @@
                             <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
                         {% endif %}
                     </li>
-                    {% if self.is_postgraduate %}
+                    {% if self.is_ma_student %}
                         <li class="col">
-                            <h3 class="a1">Postgraduate</h3>
+                            <h3 class="a1">MA Degree</h3>
 
                             <h3 class="a2">School</h3>
-                            <p class="h7">{{ self.get_postgrad_school_display }}</p>
+                            <p class="h7">{{ self.get_ma_school_display }}</p>
 
                             <h3 class="a2 space">Programme</h3>
-                            <p class="h7">MA {{ self.get_postgrad_programme_display }}{% if self.postgrad_degree_year %}, {{ self.postgrad_degree_year }}{% endif %}</p>
+                            <p class="h7">MA {{ self.get_ma_programme_display }}{% if self.ma_degree_year %}, {{ self.ma_degree_year }}{% endif %}</p>
 
-                            {% if self.postgrad_specialism %}
+                            {% if self.ma_specialism %}
                                 <h3 class="a2 space">Specialism</h3>
-                                <p class="h7">{{ self.postgrad_specialism }}</p>
+                                <p class="h7">{{ self.ma_specialism }}</p>
                             {% endif %}
                         </li>
                     {% endif %}

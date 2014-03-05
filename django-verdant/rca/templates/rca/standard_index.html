@@ -1,9 +1,7 @@
 {% extends "rca/base.html" %}
 {% load image_tags rich_text pageurl rca_tags %}
 
-{% block body_class %}
-    type-standard-index
-{% endblock %}
+{% block body_class %}type-standard-index{% endblock %}
 
 {% block content %}
 	{% include "rca/includes/modules/background-image.html" %}
@@ -133,7 +131,10 @@
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/contact_snippet.html" %}
-    {% include "rca/includes/modules/twitter-feed.html" %}
+    
+    {% if self.exclude_twitter_block != True %}
+        {% include "rca/includes/modules/twitter-feed.html" %}
+    {% endif %}
 
 {% endblock %}
 

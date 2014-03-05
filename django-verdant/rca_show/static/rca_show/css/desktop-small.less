@@ -1,0 +1,121 @@
+/**
+ * Author(s): Helen Chapman, Dave Cranwell
+ *
+ * Desktop
+ *
+ * Overrides core.less for desktop sizes
+ * Reusable module styles should go in modules.less (and desktop equivalents)
+ * Parametric mixins go in mixins.less
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+header {
+    .exhibition-date,.site-name{
+        margin-top:0;
+    }
+
+    .site-name{
+        background-color:transparent;
+    }
+}
+
+    .exhibition-date{
+        float:left;
+        right:auto;
+        left:50%;
+    }
+    form.search {
+        position:static;
+        width:180px;
+        height:auto;
+        margin-left: -@right-col-width;
+        display:block;
+        border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+        border-bottom: 1px solid fade(@color-medium-grey, 40%);
+
+        input[type="text"]{
+            height:auto;
+            font-size:1em;
+            padding:7px 8px;
+            
+        }
+    }
+
+.prefooter{
+    
+}
+
+.showrca2014-footer footer{
+    padding:1em 0;
+}
+
+.showrca2014-footer ul li{
+    .column(4);
+}
+#showrca2014-overlay{
+    .intro{
+        top:300px;
+        width:50%;    
+    }
+    .exhibition-name{
+        bottom:5%;
+        right:5%;
+    }
+    .crest{
+        position:fixed;
+    }
+    .slot-1{
+        top:30px;
+        left:5%;
+    }
+    .slot-2{
+        top:30px;
+        left:25%;
+    }
+    .slot-3{
+        top:30px;
+        left:55%;
+    }
+    .slot-4{
+        top:30px;
+        left:80%;
+    }
+    .slot-5{
+        left:90%;
+        top:30%;
+    }
+    .slot-6{
+        left:90%;
+        top:35%;
+    }
+    .slot-7{
+        left:90%;
+        top:40%;
+    }
+    .slot-8{    
+        left:90%;
+        top:45%;
+    }
+}
+
+.csstransforms #showrca2014-overlay .exhibition-name{
+    left:95%;
+}
+
+/* HEIGHT-based media query to prevent date and exhibition name clashing on screens that aren't very tall */
+@media screen and (max-height:690px){
+    #showrca2014-overlay{
+        .slot-5,.slot-6,.slot-7,.slot-8{
+            top:30px;
+        }
+        .intro{
+            top:250px;
+        }
+    }
+}
+
+/* must come at bottom of file */
+@import "modules-desktop-small.less";

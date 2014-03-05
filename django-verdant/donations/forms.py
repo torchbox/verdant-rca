@@ -66,6 +66,7 @@ class DonationForm(forms.Form):
             ("scholarships", "Scholarships"),
             ("storm_thorgerson_scholarship", "Storm Thorgerson Scholarship"),
             ("wendy_dagworthy_scholarship_fund", "Wendy Dagworthy Scholarship Fund"),
+            ("in_memory_of_dorothy_kemp", "In memory of Dorothy Kemp"),
             ("college_greatest_need", "College’s greatest need"),
     ))
     class_year = forms.CharField(label="Class year", required=False, max_length=255)
