@@ -2,6 +2,10 @@
 	position:relative;
 	margin:@spacing-two 0;
 
+	> ul{
+		.row();
+	}
+	
 	.jumplist .toggle, a{
 		padding:@grid-gutter-width;
 		display:block;
@@ -89,17 +93,31 @@
 			}
 		}
 	}
+
+	.nav-overview a{
+		text-transform:uppercase;
+		color:@color-dark-grey;
+		font-size:0.9em;
+	}
+}
+
+.programme-list{
+	li{
+		.column(6);
+		padding-bottom:@spacing-one;
+	}
+	a{
+		padding:0;
+	}
 }
 
 .showgallery{
 	.clearfix();
-	.row-flush();
 	
 	li{
 		position:relative;
 		float:left;
 		overflow:hidden;
-		margin-bottom:@grid-gutter-width;
 	}
 	img{
 		display:block;
@@ -131,12 +149,15 @@
 }
 
 .body-text,
-.body-text-style /* allows highlighted links etc without the column stuff */ {
+.body-text-style{
+    .font-family-newrail-light();
+
     .intro {
         margin-top: @spacing-one;
     }
 
     p {
+
         margin: 12px 0;
     }
 
@@ -292,6 +313,7 @@
 .programme-curatingcontemporaryart .showgallery{
 	li{
 		.column(4);
+		margin-bottom:@grid-gutter-width;
 	}
 	a{
 		display:block;
@@ -301,10 +323,9 @@
 		padding-bottom:100%;
 	}
 	img{
-		max-width:none;
-		width:auto;
+		max-width:100%;
 		padding-bottom:100%;
-		height:140%;
+		height:auto;
 	}
 	
 	.content{
