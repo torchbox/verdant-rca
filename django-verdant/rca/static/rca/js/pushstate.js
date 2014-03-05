@@ -1,7 +1,6 @@
 (function(){
     // TODO:
     // * bind click handlers to selected elements only
-    // * add chaching
 
     var initialUrl = window.location.href;
 
@@ -67,14 +66,17 @@
                 showLightbox(contents);
             }else{
                 $.ajax({
-                    url: state.url,
+                    // use different url for ajax in order to avoid the browser caching the ajax response,
+                    // and displaying it instead of the real page
+                    url: state.url + "?_ajax=1",
                     success: function(data, status, xhr){
+                        var url = this.url.replace("?_ajax=1", "");
                         var obj = extractContainer(data, xhr, {
-                                requestUrl: this.url,
-                                fragment: ".page-content > .inner"
+                            requestUrl: url,
+                            fragment: ".page-content > .inner"
                         });
                         var contents = obj.contents;
-                        cache[this.url] = contents;
+                        cache[url] = contents;
                         showLightbox(contents);
                     }
                 });
