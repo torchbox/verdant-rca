@@ -8,14 +8,57 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Schools</h2>
+    {% get_school_programmes self school as programmes %}
+    {% get_schools self as schools %}
+    {% get_programme_students self school programme as students %}
 
-    <h3>Schools/Programmes</h3>
-    <ul>
-        {% get_schools self as schools %}
+    <section class="shownav">
+        <ul class="nav-overview">
+            <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
+            {% for item in menuitems %}
+                <li>
+                    <a href="{% pageurl item %}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <ul>
+            <li class="jumplist">
+                <h2 class="toggle">Select a School</h2>
+                <div class="selected toggle"></div>
+                <ul class="options">
+                    {% for school in schools %}
+                        <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="jumplist">
+                <h2 class="toggle">Select a Programmes</h2>
+                <div class="selected toggle"></div>
+                <ul class="options">
+                    {% for programme in programmes %}
+                        <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            <li class="jumplist">
+                <h2 class="toggle">Select a Students</h2>
+                <div class="selected toggle"></div>
+                <ul class="options">
+                    {% for student in students %}
+                        <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+        </ul>
+    </section>
+
+    <h1 class="hidden">Schools &amp; Programmes</h1>
+    
+    <div class="school-list-wrapper">
         {% for school in schools %}
-            <li>
-                <b><a href="{% get_school_url self school %}">{% get_school_display school %}</a></b>
+            {% cycle '<ul class="school-list">' '' '' %}
+            <li class="school-{{ school }}">
+                <h2><a href="{% get_school_url self school %}">{% get_school_display school %}</a></h2>
                 <ul>
                     {% get_school_programmes self school as programmes%}
                         {% for programme in programmes %}
@@ -23,8 +66,10 @@
                     {% endfor %}
                 </ul>
             </li>
+            {% cycle '' '' '</ul>' %}
         {% endfor %}
-    </ul>
+        {% if not schools|length|divisibleby:3 %}</ul>{% endif %}
+    </div>
 {% endblock %}
 
 {% block sidebar %}

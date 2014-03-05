@@ -35,16 +35,19 @@
     <h1>{{ self.title }}</h1>
 
     <section class="body-text">
-        {% if self.map_coords %}
-            <figure class="map-aside right">
-                <div id="map"></div>
-            </figure>
-        {% endif %}
+       
 
         {% if self.body %}
             {{ self.body|richtext }}
         {% endif %}
     </section>
+
+    {% if self.map_coords %}
+        <figure class="map-aside right">
+            <div id="map"></div>
+        </figure>
+    {% endif %}
+
 
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 {% endblock %}

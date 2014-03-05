@@ -97,6 +97,7 @@ $(function(){
         var $this = $(this);
         $('.toggle', $this).click(function(){
             $this.toggleClass('open');
+            $('.jumplist').not($this).removeClass('open');
         })
     });
 });

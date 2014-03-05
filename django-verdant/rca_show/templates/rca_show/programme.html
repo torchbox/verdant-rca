@@ -11,6 +11,16 @@
     {% secondary_menu self as menuitems %}
 
     <section class="shownav">
+        {% if not self.programme %}
+            <ul class="nav-overview">
+                <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
+                {% for item in menuitems %}
+                    <li>
+                        <a href="{% pageurl item %}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
         <ul>
             {% if self.programme %}
                 <li class="jumplist">
