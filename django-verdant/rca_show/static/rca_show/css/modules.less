@@ -130,11 +130,115 @@
 	}
 }
 
-.body-text{
-	h2{
-		border:0;
+.body-text,
+.body-text-style /* allows highlighted links etc without the column stuff */ {
+    .intro {
+        margin-top: @spacing-one;
+    }
+
+    p {
+        margin: 12px 0;
+    }
+
+    a {
+        color: @color-highlight-blue;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    ul {
+        padding: 0 0 0 40px;
+        margin: 1em 0;
+    }
+
+    ul li {
+        list-style-type: none;
+        &:before {
+            content: '\2013\00A0\00A0\00A0\00A0\00A0'; /* 2013 is hex for an en dash, 00A0 is hex for nbsp */
+            margin-left: -1.7em;
+        }
+    }
+
+    ul ul, ol ol {
+        margin-top: 0; /* make sure nested lists don't have a big space before the indented item */
+        li {
+            font-style: italic;
+        }
+    }
+
+    b, strong {
+        .font-family-newrail-bold();
+    }
+
+    em, i{
+        .font-family-newrail-medium-italic();
+    }
+
+    /* seriously. */
+    b em, em b, b i, i b, strong em, em strong, strong i, i strong{
+    	.font-family-newrail-bold-italic();
+    }
+
+    /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
+    hello.js will allow and we can't add classes. This mimics the intro style on the standard page. */
+    h5 {
+        .font-family-newrail-bold();
+        font-size: @font-size-18;
+        line-height: @line-height-5;
+        text-transform: none;
+        margin-top: @spacing-one;
+    }
+
+    /* h2 to h4 (NOT h5) in the rich text editor match the styles of .h5, .h6, .h7;
+    this ensures that they have a sensible range of heading sizes available for body text,
+    which wouldn't be the case if we mapped them to .h2, .h3, .h4 (they're all too big).
+    */
+    h2 {
+        .font-family-newrail-bold();
+        font-size: @font-size-22;
+        line-height: @line-height-4;
+        padding-top: @spacing-one;
+        clear: both;
+        border:0;
 		margin-top:0;
-	}
+    }
+
+    h3 {
+        .font-family-newrail-bold();
+        font-size: @font-size-18;
+        line-height: @line-height-5;
+        margin-bottom: 0;
+    }
+
+    h3 + p {
+        margin-top:0.25em; /* reduce top margin of p immediately following an h3 */
+    }
+
+    h4 {
+        .font-family-newrail-bold();
+        font-size: @font-size-15;
+        line-height: @line-height-3;
+        text-transform: none;
+    }
+
+    hr {
+        border-bottom: 1px solid @color-dark-grey;
+        border-top: none;
+        border-left: none;
+    }
+
+    /* different colour lines for middle-column body text */
+    &.middle-column-body-text {
+        hr {
+            border-bottom-color: @color-middle-column-lines;
+        }
+
+        h2 {
+            border-top-color: @color-middle-column-lines;
+        }
+    }
+
 }
 
 .meta-data{

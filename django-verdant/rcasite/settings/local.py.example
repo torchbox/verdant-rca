@@ -10,5 +10,5 @@ from .dev import *
 
 EMBEDLY_KEY = 'get-one-from-http://embed.ly/'
 
-STRIPE_PUBLISHABLE_KEY = ""
 STRIPE_SECRET_KEY = ""
+STRIPE_PUBLISHABLE_KEY = ""
