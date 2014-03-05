@@ -3494,6 +3494,25 @@ class NewStudentPage(Page, SocialFields):
         else:
             return "Graduate"
 
+    @property
+    def search_url(self):
+        # Try to find a show profile for this student
+        from rca_show.models import ShowIndexPage
+        for show in ShowIndexPage.objects.filter(live=True):
+            # Check if this student is in this show
+            if not show.get_students().filter(id=self.id).exists():
+                continue
+
+            # Get students URL in this show
+            try:
+                url = show.get_student_url(self)
+                assert url is not None
+                return url
+            except:
+                pass
+
+        # Cannot find any show profiles, return regular URL
+        return self.url
 
 NewStudentPage.content_panels = [
     # General details
@@ -4239,7 +4258,9 @@ class DonationPage(Page, SocialFields):
                     )
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
-                    # CardErrors are displayed to the user  
+                    # CardErrors are displayed to the user, but we notify admins as well
+                    mail_exception(e, prefix=" [stripe] ")
+                    logging.error("[stripe] ", exc_info=full_exc_info())
                     messages.error(request, e.json_body['error']['message'])    
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
