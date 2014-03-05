@@ -92,7 +92,7 @@ function showSearchAutocomplete() {
             window.location.href = ui.item.search_url || ui.item.url;
         }
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + item.search_name + "</span></a>" ).appendTo( ul );
+        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
     };
 }
 
