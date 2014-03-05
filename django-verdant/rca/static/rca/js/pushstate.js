@@ -9,6 +9,8 @@
 
     var prevScrollY = window.scrollY;
 
+    var cache = {};
+
     function fixLightboxHeight(){
         // .pjax-content is pos:abs and doesn't have a height,
         // so we need to calculate it based on the children
@@ -21,6 +23,38 @@
         $('.pjax-content').removeClass("measure-height-helper");
     }
 
+    function showLightbox(contents){
+        
+        $(".pjax-content").html(contents);
+
+        prevScrollY = window.scrollY;
+
+        // needed so that the browser can scroll back when closing the lightbox
+        $("body, html").css("min-height", $(document).height());
+
+        // display lightbox
+        $("body").addClass("lightbox-view");
+
+
+        // disable bs-affix because it would interfer with positioning
+        $(".page-wrapper").data('bs.affix').disable();
+        $(".page-wrapper").removeClass('affix affix-top');
+
+        var affixed = $(".header-wrapper").hasClass("affix");
+        $(".page-wrapper").css({
+            top: -window.scrollY + (affixed ? 186 : 200)
+        });
+
+        if(window.scrollY > affixOffsetTop){
+            // scroll to top, but leave the menu collapsed
+            $(window).scrollTop(affixOffsetTop);
+        }
+
+        // resize lightbox to fit contents:
+        fixLightboxHeight();
+        setTimeout(fixLightboxHeight, 1000);
+    }
+
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
 
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
@@ -28,43 +62,23 @@
         // We should use if(state.data.showLightbox) but the initial data can get mixed up
         // with the following ones after full page reloads, so we're not relying on that
         if(state.url != initialUrl){
-            $.ajax({
-                url: state.url,
-                success: function(data, status, xhr){
-                    var obj = extractContainer(data, xhr, {
-                            requestUrl: state.url,
-                            fragment: ".page-content > .inner"
-                    });
-                    $(".pjax-content").html(obj.contents);
-
-                    prevScrollY = window.scrollY;
-
-                    // needed so that the browser can scroll back when closing the lightbox
-                    $("body, html").css("min-height", $(document).height());
-
-                    // display lightbox
-                    $("body").addClass("lightbox-view");
-
-
-                    // disable bs-affix because it would interfer with positioning
-                    $(".page-wrapper").data('bs.affix').disable();
-                    $(".page-wrapper").removeClass('affix affix-top');
-
-                    var affixed = $(".header-wrapper").hasClass("affix");
-                    $(".page-wrapper").css({
-                        top: -window.scrollY + (affixed ? 186 : 200)
-                    });
-
-                    if(window.scrollY > affixOffsetTop){
-                        // scroll to top, but leave the menu collapsed
-                        $(window).scrollTop(affixOffsetTop);
+            var contents = cache[state.url];
+            if(contents){
+                showLightbox(contents);
+            }else{
+                $.ajax({
+                    url: state.url,
+                    success: function(data, status, xhr){
+                        var obj = extractContainer(data, xhr, {
+                                requestUrl: this.url,
+                                fragment: ".page-content > .inner"
+                        });
+                        var contents = obj.contents;
+                        cache[this.url] = contents;
+                        showLightbox(contents);
                     }
-
-                    // resize lightbox to fit contents:
-                    fixLightboxHeight();
-                    setTimeout(fixLightboxHeight, 1000);
-                }
-            });
+                });
+            }
         }else{
             var affixed = $(".header-wrapper").hasClass("affix");
 
@@ -81,7 +95,6 @@
             // scroll back to the original position
             $(window).scrollTop(prevScrollY);
 
-            // if($(".header-wrapper").hasClass("affix-top")){
             if(window.scrollY <= affixOffsetTop){
                 $(".page-wrapper").removeClass("affix").addClass("affix-top");
             }
