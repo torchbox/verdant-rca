@@ -335,7 +335,7 @@
                         </div>
                     </div>
                     <div class="col col-9 last body-text">
-                        <h2>
+                        <h2 class="module-title">
                             {% if student.ma_in_show %}
                                 {# Only show type/title if a type is chosen, else nothing #}
                                 {% if student.show_work_type %}
@@ -346,6 +346,7 @@
                             {% endif %}
                         </h2>
 
+                    
                         <h3>{{ student.show_work_title }}</h3>
 
                         {% if student.ma_in_show %}
@@ -353,6 +354,7 @@
                         {% else %}
                             {{ student.research_statement|richtext }}
                         {% endif %}
+                        
                     </div>
                 </div>
             </section>
