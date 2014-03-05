@@ -3494,6 +3494,25 @@ class NewStudentPage(Page, SocialFields):
         else:
             return "Graduate"
 
+    @property
+    def search_url(self):
+        # Try to find a show profile for this student
+        from rca_show.models import ShowIndexPage
+        for show in ShowIndexPage.objects.filter(live=True):
+            # Check if this student is in this show
+            if not show.get_students().filter(id=self.id).exists():
+                continue
+
+            # Get students URL in this show
+            try:
+                url = show.get_student_url(self)
+                assert url is not None
+                return url
+            except:
+                pass
+
+        # Cannot find any show profiles, return regular URL
+        return self.url
 
 NewStudentPage.content_panels = [
     # General details
