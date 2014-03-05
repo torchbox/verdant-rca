@@ -10,6 +10,8 @@ var breakpoints = {
 
 var expansionAnimationSpeed = 300;
 
+// this value is used in pushstate.js as well
+window.affixOffsetTop = 151;
 
 /* generic function to show / hide elements
  * the argument element will be assigned or unassigned an 'expanded' class.
@@ -385,7 +387,7 @@ $(function(){
             // console.log($(window).height());
             if($(document).height()-250 > $(window).height()){
                 $('.header-wrapper, .page-wrapper, .pjax-container').affix({
-                    offset: { top: 151 }
+                    offset: { top: window.affixOffsetTop }
                 });
             }
 

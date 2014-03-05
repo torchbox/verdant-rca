@@ -2,9 +2,12 @@
     // TODO:
     // * bind click handlers to selected elements only
     // * add chaching
-    // * get affaix
 
-    window.initialUrl = window.location.href;
+    var initialUrl = window.location.href;
+
+    var affixOffsetTop = window.affixOffsetTop; // defined in site.js
+
+    var prevScrollY = window.scrollY;
 
     function fixLightboxHeight(){
         // .pjax-content is pos:abs and doesn't have a height,
@@ -19,10 +22,12 @@
     }
 
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
+
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
+
         // We should use if(state.data.showLightbox) but the initial data can get mixed up
         // with the following ones after full page reloads, so we're not relying on that
-        if(state.url != window.initialUrl){
+        if(state.url != initialUrl){
             $.ajax({
                 url: state.url,
                 success: function(data, status, xhr){
@@ -32,7 +37,7 @@
                     });
                     $(".pjax-content").html(obj.contents);
 
-                    window.prevScrollY = window.scrollY;
+                    prevScrollY = window.scrollY;
 
                     // needed so that the browser can scroll back when closing the lightbox
                     $("body, html").css("min-height", $(document).height());
@@ -50,9 +55,9 @@
                         top: -window.scrollY + (affixed ? 186 : 200)
                     });
 
-                    if(window.scrollY > 151){
+                    if(window.scrollY > affixOffsetTop){
                         // scroll to top, but leave the menu collapsed
-                        $(window).scrollTop(151);
+                        $(window).scrollTop(affixOffsetTop);
                     }
 
                     // resize lightbox to fit contents:
@@ -74,9 +79,10 @@
             $(".page-wrapper").addClass("affix");
 
             // scroll back to the original position
-            $(window).scrollTop(window.prevScrollY);
+            $(window).scrollTop(prevScrollY);
 
-            if($(".header-wrapper").hasClass("affix-top")){
+            // if($(".header-wrapper").hasClass("affix-top")){
+            if(window.scrollY <= affixOffsetTop){
                 $(".page-wrapper").removeClass("affix").addClass("affix-top");
             }
         }
@@ -89,14 +95,15 @@
 
 
     $(window).on("load", function(){
-        // var Affix = $('[data-spy="affix"]').eq(0).data('bs.affix').constructor;
         var Affix = $('.page-wrapper').eq(0).data('bs.affix').constructor;
+
         Affix.prototype.disable = function(){
             if(this.$element.length){
                 this._$element = this.$element;
                 this.$element = $([]);
             }
         };
+
         Affix.prototype.enable = function(){
             if(this._$element){
                 this.$element = this._$element;
