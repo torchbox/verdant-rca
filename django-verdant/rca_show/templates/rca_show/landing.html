@@ -8,10 +8,8 @@
     {% get_programme_students self school programme True as rand_students %}    
 
     <section class="shownav">
-        <ul>
-            <li>
-                <a href="{% get_school_index_url self %}">Schools &amp; Students</a>
-            </li>
+        <ul class="nav-overview">
+            <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
                 <li>
                     <a href="{% pageurl item %}">{{ item.title }}</a>

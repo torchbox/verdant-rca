@@ -54,6 +54,10 @@ i{
     &.fade { opacity:0; }
     &.in { opacity:1; display:block;}
 
+    a,a:hover{
+        color:white;
+    }
+
     > div{
         .transition(~"top 0.5s ease, left 0.5s ease, width 0.5s ease");
         position:fixed;
@@ -77,6 +81,7 @@ i{
         color:white;
         left:90%;
         bottom:5%;
+        width:9em;
     }
     .crest{
         bottom:5%;
@@ -206,7 +211,6 @@ header {
 
 .exhibition-name{
     float:right;
-    width:9em;
     font-size:2em;
     line-height:1.1em;
 }
@@ -214,15 +218,11 @@ header {
     .transform(rotate(-90deg));
     .transform-origin(37% 0);
     .font-family-newrail-bold();
-    margin-right:-3em;
+    margin-right:-1em;
 }
 
 .showrca .footer-logo{
     display:none;
-}
-
-.type-standard .body-text{
-   float:none;
 }
 
 @import "modules.less";
