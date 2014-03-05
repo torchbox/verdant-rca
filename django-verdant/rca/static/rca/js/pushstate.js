@@ -75,6 +75,10 @@ History.Adapter.bind(window, 'statechange', function(){ // Note: We are using st
 
         // scroll back to the original position
         $(window).scrollTop(window.prevScrollY);
+
+        if($(".header-wrapper").hasClass("affix-top")){
+            $(".page-wrapper").removeClass("affix").addClass("affix-top");
+        }
     }
 });
 
