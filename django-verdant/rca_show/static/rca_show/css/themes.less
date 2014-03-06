@@ -5,14 +5,31 @@ body{
     background-color:#F7F7F7;
 }
 
-.programme-curatingcontemporaryart{
-    .theme('cca', #e0413e, #F9A09F, 180px, 225px);
+.school-schoolofarchitecture{
+    .theme(arc, #ff0000, #ffffff, 180px, 225px);
+}
+.school-schoolofcommunication{
+    .theme(com, #00ff00, #ffffff, 180px, 225px);
+}
+.school-schoolofdesign{
+    .theme(des, #0000ff, #ffffff, 180px, 225px);
+}
+.school-schooloffineart{
+    .theme(art, #ff00ff, #ffffff, 180px, 225px);
+}
+.school-schoolofhumanities{
+    .theme(hum, #ffff00, #ffffff, 180px, 225px);
+}
+.school-schoolofmaterial{
+    .theme(mat, #00ffff, #ffffff, 180px, 225px); 
 }
 
-.theme(@code:"", @colorprimary, @colorsecondary, @logowidth, @logoheight){
-    a:hover,a:active{
-        color:@colorprimary;
-    }
+/* CCA show specific, to be removed after show */
+.programme-curatingcontemporaryart{
+    .theme(cca, #e0413e, #F9A09F, 180px, 225px);
+}
+
+.theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
     #showrca2014-overlay {
         color:@colorsecondary;
         background-color: @colorprimary; /* fallback for ie8 */
@@ -27,11 +44,13 @@ body{
             background-image:url('@{path-static-show}images/logo-@{code}.png');
             background-position:0px -@logoheight;
             width:@logowidth;
-            height:@logoheight;        
+            height:@logoheight;  
+
+            @media @media-retina {
+                background-size:@logowidth @logoheight*2;
+            }
+
         }
-    }
-    .text-theme-@{code}{
-        color:@colorprimary;
     }
     .site-name {
         width:@logowidth;
@@ -39,10 +58,19 @@ body{
             background-image:url('@{path-static-show}images/logo-@{code}.png');
             width:@logowidth;
             height:@logoheight;
+
+            @media @media-retina {
+                background-size:@logowidth @logoheight*2;
+            }
         }
     }
+
+    a:hover,a:active,
+    .text-theme-@{code},
     .exhibition-date,
-    .exhibition-name{
+    .exhibition-name,
+    &.type-school h1,
+    .programme-list a{
         color:@colorprimary;
     }
     .shownav .jumplist.open .toggle,

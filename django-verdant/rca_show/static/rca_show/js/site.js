@@ -83,7 +83,7 @@ $(function(){
     if(overlay.length){
         setupOverlay();
 
-        if(!$.cookie('showrca2014')){
+        if(!$.cookie('showrca20142')){
             displayShowOverlay();
             $.cookie('showrca2014', '1', { expires: 0.5 });
         }
@@ -97,6 +97,7 @@ $(function(){
         var $this = $(this);
         $('.toggle', $this).click(function(){
             $this.toggleClass('open');
+            $('.jumplist').not($this).removeClass('open');
         })
     });
 });

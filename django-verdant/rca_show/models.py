@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.http import Http404
 from django.shortcuts import render
@@ -90,7 +91,7 @@ class ShowIndexPage(Page, SocialFields):
         students = NewStudentPage.objects.filter(live=True)
 
         # Filter by students in this particular show
-        students = students.filter(self.get_ma_students_q(school, programme) | self.get_research_students_q(school, programme))
+        students = students.filter(self.get_ma_students_q(school, programme) | self.get_research_students_q(school, programme)).order_by('first_name')
 
         return students
 

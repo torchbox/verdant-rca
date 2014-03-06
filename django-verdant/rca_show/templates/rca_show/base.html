@@ -1,7 +1,8 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags rich_text pageurl %}
 
-{% block body_class %}showrca school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% endblock %}
+{% block body_class %}showrca{% if request.show_index.programme %}school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% else %}
+school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -25,10 +26,10 @@
 
 {% block extra_footer %}
     {% secondary_menu request.show_index as menuitems %}
-    
+
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
-        <a href="/" class="exhibition-name">The Royal College of Art Exhibition</a>
+        <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
     </div>
 
     <div class="showrca2014-footer full-width-footer">
@@ -66,8 +67,8 @@
     <div id="showrca2014-overlay" class="fade">
         <div class="logo repos">Logo</div>
         <div class="exhibition-date repos">{{ request.show_index.exhibition_date }}</div>
-        <div class="exhibition-name">The Royal College of Art Exhibition</div>
-        <div class="intro col-detect">
+        <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
+        <div class="intro col-detect body-text">
             {{ request.show_index.overlay_intro|richtext }}
             <div class="crest col-detect"></div>
         </div>

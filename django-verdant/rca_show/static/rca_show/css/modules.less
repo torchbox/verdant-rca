@@ -2,6 +2,10 @@
 	position:relative;
 	margin:@spacing-two 0;
 
+	> ul{
+		.row();
+	}
+	
 	.jumplist .toggle, a{
 		padding:@grid-gutter-width;
 		display:block;
@@ -89,17 +93,31 @@
 			}
 		}
 	}
+
+	.nav-overview a{
+		text-transform:uppercase;
+		color:@color-dark-grey;
+		font-size:0.9em;
+	}
+}
+
+.programme-list{
+	li{
+		.column(6);
+		padding-bottom:@spacing-one;
+	}
+	a{
+		padding:0;
+	}
 }
 
 .showgallery{
 	.clearfix();
-	.row-flush();
 	
 	li{
 		position:relative;
 		float:left;
 		overflow:hidden;
-		margin-bottom:@grid-gutter-width;
 	}
 	img{
 		display:block;
@@ -131,12 +149,20 @@
 }
 
 .body-text,
-.body-text-style /* allows highlighted links etc without the column stuff */ {
+.body-text-style{
+    .font-family-newrail-light();
+
+    .module-title{
+    	font-family:@font-family-benton-light;
+    	font-size: 0.867em;
+    }
+
     .intro {
         margin-top: @spacing-one;
     }
 
     p {
+
         margin: 12px 0;
     }
 
@@ -172,7 +198,7 @@
     }
 
     em, i{
-        .font-family-newrail-medium-italic();
+        .font-family-newrail-light-italic();
     }
 
     /* seriously. */
@@ -251,6 +277,11 @@
 		margin-bottom:@spacing-one;
 		color:black;
 	}
+	.ellipsis{
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
 }
 
 .share {
@@ -258,14 +289,13 @@
     .sprite-load-54(
         @positionX: -162px,
         @positionY: -86px,
-        @retinaPositionX: -3px,
+        @retinaPositionX: -324px,
         @retinaPositionY: -172px,
         @width: 47px,
         @height: @share-link-height
     );
     cursor: pointer;
     &:hover {
-
         .sprite-load-54(
             @positionX: -161px,
             @positionY: -377px,
@@ -291,7 +321,8 @@
 
 .programme-curatingcontemporaryart .showgallery{
 	li{
-		.column(4);
+		.column(6);
+		margin-bottom:@grid-gutter-width;
 	}
 	a{
 		display:block;
@@ -301,10 +332,9 @@
 		padding-bottom:100%;
 	}
 	img{
-		max-width:none;
-		width:auto;
+		max-width:100%;
 		padding-bottom:100%;
-		height:140%;
+		height:auto;
 	}
 	
 	.content{
@@ -318,4 +348,12 @@
 			word-spacing:300px; 
 		}
 	}
+}
+
+@media screen and (min-width:480px){
+    .programme-curatingcontemporaryart .showgallery{
+        li{
+            .column(4);
+        }
+    }
 }
