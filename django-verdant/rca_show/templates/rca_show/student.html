@@ -298,7 +298,7 @@
                                 
                                 {% if student.phones %}
                                     <dt>Phone</dt>
-                                    <dd>            
+                                    <dd class="ellipsis">            
                                         {% for phone in student.phones.all %}
                                             <div>{{ phone.phone }}</div>
                                         {% endfor %}
@@ -307,7 +307,7 @@
 
                                 {% if student.emails %}
                                     <dt>Emails</dt>
-                                    <dd>
+                                    <dd class="ellipsis">
                                         {% for email in student.emails.all %}
                                             <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
                                         {% endfor %}
@@ -316,7 +316,7 @@
 
                                 {% if student.websites %}
                                     <dt>Websites</dt>
-                                    <dd>
+                                    <dd class="ellipsis">
                                         {% for website in student.websites.all %}
                                             <div><a href="{{ website.website }}">{{ website.website }}</a></div>
                                         {% endfor %}
@@ -325,7 +325,7 @@
 
                                 {% if student.twitter_handle %}
                                     <dt>Twitter</dt>
-                                    <dd><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
+                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
                                 {% endif %}
 
                             </dl>
