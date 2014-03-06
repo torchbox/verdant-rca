@@ -850,10 +850,14 @@ class ProgrammePage(Page, SocialFields):
         # Get staff from manual feed
         feed = self.manual_staff_feed.all()
 
-        # Get each staffpage out of the feed
-        feed = [staffpage.staff for staffpage in feed]
+        # Get each staffpage out of the feed and add their role
+        feed2 = []
+        for staffpage in feed:
+            staff = staffpage.staff
+            staff.staff_role = staffpage.staff_role
+            feed2.append(staff)
 
-        return feed
+        return feed2
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
