@@ -289,14 +289,13 @@
     .sprite-load-54(
         @positionX: -162px,
         @positionY: -86px,
-        @retinaPositionX: -3px,
+        @retinaPositionX: -324px,
         @retinaPositionY: -172px,
         @width: 47px,
         @height: @share-link-height
     );
     cursor: pointer;
     &:hover {
-
         .sprite-load-54(
             @positionX: -161px,
             @positionY: -377px,
@@ -322,7 +321,7 @@
 
 .programme-curatingcontemporaryart .showgallery{
 	li{
-		.column(4);
+		.column(6);
 		margin-bottom:@grid-gutter-width;
 	}
 	a{
@@ -349,4 +348,12 @@
 			word-spacing:300px; 
 		}
 	}
+}
+
+@media screen and (min-width:480px){
+    .programme-curatingcontemporaryart .showgallery{
+        li{
+            .column(4);
+        }
+    }
 }

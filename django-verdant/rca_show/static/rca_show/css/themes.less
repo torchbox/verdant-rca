@@ -44,7 +44,12 @@ body{
             background-image:url('@{path-static-show}images/logo-@{code}.png');
             background-position:0px -@logoheight;
             width:@logowidth;
-            height:@logoheight;        
+            height:@logoheight;  
+
+            @media @media-retina {
+                background-size:@logowidth @logoheight*2;
+            }
+
         }
     }
     .site-name {
@@ -53,6 +58,10 @@ body{
             background-image:url('@{path-static-show}images/logo-@{code}.png');
             width:@logowidth;
             height:@logoheight;
+
+            @media @media-retina {
+                background-size:@logowidth @logoheight*2;
+            }
         }
     }
 
