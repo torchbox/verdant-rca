@@ -2,6 +2,8 @@
 /* requires an 'current_page' var to be set before this is called, on the template, to determine the index page to load */
 
 $(function() {
+	
+	
     function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
             // Run filters
@@ -64,13 +66,42 @@ $(function() {
             alignGallery(); // Defined in site.js
         });
     }
-
-    updateFilters();
-
+	
+	function updateHashTags() {
+        // Add non-empty filters to hashtag
+		window.location.hash = $('select', '#filters').filter(function() {
+			return $(this).val() ; 
+		}).serialize();
+		//window.location.hash = $("#filters :select[value!='']").serialize();
+	
+	}
+    
+	/*
+	function selectFiltersFromHashTags() {
+		var oldHashTags = window.location.hash.substring(1);
+		var hashParams = getHashParams();
+		console.log(hashParams);
+		$('select', '#filters').each( function() {
+			console.log($(this).attr('name') );
+			var filterValue = hashParams[$(this).attr('name') ];
+			console.log(filterValue)
+			if(filterValue) {
+			
+				$(this).val(filterValue);
+				console.log($(this).val() );
+			}
+		});
+	}
+	
+	selectFiltersFromHashTags();
+    */
+	updateFilters();
+	updateHashTags();
+	
 
     $('#filters .options li').click(function() {
         updateFilters();
-
+		updateHashTags();
         $(this).parent().closest('li').removeClass('expanded');
 
         return false;
