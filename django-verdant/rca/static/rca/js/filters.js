@@ -19,10 +19,10 @@ $(function() {
 
                         // Reset filter label
                         $(this).html($(this).data('originalLabel'));
-
+                        
                         // Clear select box value
-                        $parent.find('select').val('');
-
+                        $parent.find('select').val(null);
+                        
                         // Set ALL filter option as the selected option
                         $parent.find('li[data-val].selected').removeClass('selected');
                         $parent.find('li[data-val=""]').addClass('selected');
@@ -64,44 +64,29 @@ $(function() {
             });
 
             alignGallery(); // Defined in site.js
+            updateHashTags();
         });
     }
 	
 	function updateHashTags() {
         // Add non-empty filters to hashtag
-		window.location.hash = $('select', '#filters').filter(function() {
-			return $(this).val() ; 
+		var serializedFilters = $('select', '#filters').filter(function() {
+			return $(this).val()  ; 
 		}).serialize();
-		//window.location.hash = $("#filters :select[value!='']").serialize();
-	
+
+        if (serializedFilters) {
+            window.location.hash = '#/?' + serializedFilters;
+        }
 	}
-    
-	/*
-	function selectFiltersFromHashTags() {
-		var oldHashTags = window.location.hash.substring(1);
-		var hashParams = getHashParams();
-		console.log(hashParams);
-		$('select', '#filters').each( function() {
-			console.log($(this).attr('name') );
-			var filterValue = hashParams[$(this).attr('name') ];
-			console.log(filterValue)
-			if(filterValue) {
-			
-				$(this).val(filterValue);
-				console.log($(this).val() );
-			}
-		});
-	}
-	
-	selectFiltersFromHashTags();
-    */
+        
 	updateFilters();
-	updateHashTags();
 	
 
     $('#filters .options li').click(function() {
+        
         updateFilters();
-		updateHashTags();
+		
+        
         $(this).parent().closest('li').removeClass('expanded');
 
         return false;

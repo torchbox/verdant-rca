@@ -595,7 +595,7 @@ $(function(){
 			a = /\+/g,  // Regex for replacing addition symbol with a space
 			r = /([^&;=]+)=?([^&;]*)/g,
 			d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-			q = window.location.hash.substring(1);
+			q = window.location.hash.substring('#/?'.length);
 
 		while (e = r.exec(q))
 		   hashParams[d(e[1])] = d(e[2]);
@@ -627,24 +627,19 @@ $(function(){
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
 			
-			
-			console.log('selname'+$(this).attr('name') );
 			hashValue=getHashParams()[$(this).attr('name')];
-			console.log('selval '+ hashValue  );
 			
             options.each(function(){
-				console.log('optval '+$(this).val() );
 				var isSelected = "";
-				
-				
-				if(hashValue == $(this).val() ) {// || $(this).prop('selected') ) {
+				if(hashValue == $(this).val() ) {
 					isSelected ="selected";
 					$(this).prop('selected', true);
-				}
-				console.log(isSelected);
+				} else if (!hashValue) {
+                    // TODO: Test this a  bit
+                    isSelected=$(this).prop('selected')==true?"selected":"";
+                }
                 newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ isSelected +'">' + $(this).html() + '</li>';
             });
-			console.log(newOptions);
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
