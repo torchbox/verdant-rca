@@ -2,8 +2,8 @@
 /* requires an 'current_page' var to be set before this is called, on the template, to determine the index page to load */
 
 $(function() {
-	
-	
+    
+    
     function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
             // Run filters
@@ -67,12 +67,12 @@ $(function() {
             updateHashTags();
         });
     }
-	
-	function updateHashTags() {
+    
+    function updateHashTags() {
         // Add non-empty filters to hashtag
-		var serializedFilters = $('select', '#filters').filter(function() {
-			return $(this).val()  ; 
-		}).serialize();
+        var serializedFilters = $('select', '#filters').filter(function() {
+            return $(this).val()  ; 
+        }).serialize();
 
         if (serializedFilters) {
             window.location.hash = '#/?' + serializedFilters;
@@ -94,15 +94,15 @@ $(function() {
                 document.body.scrollLeft = scrollH;
             }
         }
-	}
+    }
         
-	updateFilters();
-	
+    updateFilters();
+    
 
     $('#filters .options li').click(function() {
         
         updateFilters();
-		
+        
         
         $(this).parent().closest('li').removeClass('expanded');
 

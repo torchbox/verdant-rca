@@ -588,26 +588,26 @@ $(function(){
     alignGallery();
     window.alignGallery = alignGallery; // this is used in filters.js too
 
-	// Copied from @Yarin's answer in http://stackoverflow.com/questions/4197591/parsing-url-hash-fragment-identifier-with-javascript
-	function getHashParams() {
-		var hashParams = {};
-		var e,
-			a = /\+/g,  // Regex for replacing addition symbol with a space
-			r = /([^&;=]+)=?([^&;]*)/g,
-			d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-			q = window.location.hash.substring('#/?'.length);
+    // Copied from @Yarin's answer in http://stackoverflow.com/questions/4197591/parsing-url-hash-fragment-identifier-with-javascript
+    function getHashParams() {
+        var hashParams = {};
+        var e,
+            a = /\+/g,  // Regex for replacing addition symbol with a space
+            r = /([^&;=]+)=?([^&;]*)/g,
+            d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+            q = window.location.hash.substring('#/?'.length);
 
-		while (e = r.exec(q))
-		   hashParams[d(e[1])] = d(e[2]);
+        while (e = r.exec(q))
+           hashParams[d(e[1])] = d(e[2]);
 
-		return hashParams;
-	}
-	
+        return hashParams;
+    }
+    
     /* Search filters */
     $('.filters').each(function(){
         $self = $(this);
-		
-		function setLabel(option){
+        
+        function setLabel(option){
             $('label[for=' + $(option).parent().data('id') + ']', $self).html($(option).html()).addClass('active');
         }
 
@@ -626,15 +626,15 @@ $(function(){
             var options = $('option', $(this));
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
-			
-			hashValue=getHashParams()[$(this).attr('name')];
-			
+            
+            hashValue=getHashParams()[$(this).attr('name')];
+            
             options.each(function(){
-				var isSelected = "";
-				if(hashValue == $(this).val() ) {
-					isSelected ="selected";
-					$(this).prop('selected', true);
-				} else if (!hashValue) {
+                var isSelected = "";
+                if(hashValue == $(this).val() ) {
+                    isSelected ="selected";
+                    $(this).prop('selected', true);
+                } else if (!hashValue) {
                     // TODO: Test this a  bit
                     isSelected=$(this).prop('selected')==true?"selected":"";
                 }
@@ -644,7 +644,7 @@ $(function(){
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
         });
-		
+
         /* if form already has items selected, replicate this */
         $('.options li', $self).each(function(){
             if($(this).hasClass('selected') && $(this).data('val')){
