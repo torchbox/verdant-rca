@@ -3697,13 +3697,11 @@ class RcaNowIndex(Page, SocialFields):
 
         rca_now_items = RcaNowPage.objects.filter(live=True)
 
-        if area:
-            rca_now_items = rca_now_items.filter(area=area)
-
-        # Run school and programme filters
+        # Run school, area and programme filters
         rca_now_items, filters = run_filters(rca_now_items, [
             ('school', 'school', school),
             ('programme', 'programme', programme),
+            ('area', 'area', area),
         ])
 
         rca_now_items = rca_now_items.order_by('-date')
