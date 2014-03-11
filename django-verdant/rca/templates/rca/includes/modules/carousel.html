@@ -21,12 +21,9 @@
                                 {% endif %}
                                     {% if carousel_item.overlay_text %}
                                         <h3 class="bc1">
-                                            {% if carousel_item.get_link %}
-                                                <a href="{{ carousel_item.get_link }}">
-                                            {% endif %}
                                             {{ carousel_item.overlay_text }}
                                             {% if carousel_item.get_link %}
-                                                ...<span class="bc4 caps">Continue</span></a>
+                                                ...<span class="bc4 caps">Continue</span>
                                             {% endif %}
                                         </h3>
                                     {% endif %}
