@@ -61,10 +61,9 @@ class StudentMigration(object):
         new_page.show_on_homepage = page.show_on_homepage
 
         # Show info
-        if page.is_in_show:
-            new_page.show_work_type = page.work_type
-            new_page.show_work_location = page.work_location
-            new_page.show_work_description = page.work_description
+        new_page.show_work_type = page.work_type
+        new_page.show_work_location = page.work_location
+        new_page.show_work_description = page.work_description
 
         # MA info
         if page.is_ma_page:
@@ -113,25 +112,10 @@ class StudentMigration(object):
         for award in page.awards.all():
             new_page.awards.add(NewStudentPageAwards(award=award.award))
 
-        # Show child objects
-        if page.is_in_show:
-            for carousel_item in page.carousel_items.all():
-                new_page.show_carousel_items.add(NewStudentPageShowCarouselItem(
-                    image=carousel_item.image,
-                    overlay_text=carousel_item.overlay_text,
-                    link=carousel_item.link,
-                    link_page=carousel_item.link_page,
-                    embedly_url=carousel_item.embedly_url,
-                    poster_image=carousel_item.poster_image,
-                ))
+        for supervisor in page.supervisors.all():
+            new_page.research_supervisors.add(NewStudentPageResearchSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
-            for collaborator in page.collaborators.all():
-                new_page.show_collaborators.add(NewStudentPageShowCollaborator(name=collaborator.name))
-
-            for sponsor in page.sponsor.all():
-                new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
-
-        # Research child objects
+        # Move carousel items/collaborators/sponsors to research if this is a research student
         if page.is_research_page:
             for carousel_item in page.carousel_items.all():
                 new_page.research_carousel_items.add(NewStudentPageResearchCarouselItem(
@@ -149,8 +133,24 @@ class StudentMigration(object):
             for sponsor in page.sponsor.all():
                 new_page.research_sponsors.add(NewStudentPageResearchSponsor(name=sponsor.name))
 
-            for supervisor in page.supervisors.all():
-                new_page.research_supervisors.add(NewStudentPageResearchSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
+        # If this is not a research student, move carousel items/collaborators/sponsors to show
+        if not page.is_research_page:
+            for carousel_item in page.carousel_items.all():
+                new_page.show_carousel_items.add(NewStudentPageShowCarouselItem(
+                    image=carousel_item.image,
+                    overlay_text=carousel_item.overlay_text,
+                    link=carousel_item.link,
+                    link_page=carousel_item.link_page,
+                    embedly_url=carousel_item.embedly_url,
+                    poster_image=carousel_item.poster_image,
+                ))
+
+            for collaborator in page.collaborators.all():
+                new_page.show_collaborators.add(NewStudentPageShowCollaborator(name=collaborator.name))
+
+            for sponsor in page.sponsor.all():
+                new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
+
 
     def migrate_student(self, page):
         # Create new page
