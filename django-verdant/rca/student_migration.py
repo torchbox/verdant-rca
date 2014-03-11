@@ -1,5 +1,7 @@
 from django.utils.text import slugify
 from itertools import chain
+import re
+from wagtail.wagtailcore.models import Page
 from rca.models import (
     StudentPage, NewStudentPage,
 
@@ -45,13 +47,14 @@ class StudentPageProxy(StudentPage):
 
 
 class StudentMigration(object):
-    def __init__(self, save=False):
+    def __init__(self, save=False, index_page=None):
         self.save = save
         self.skipped_students = []
+        self.index_page = Page.objects.get(pk=index_page) if index_page else None
 
     def migrate_page(self, new_page, page):
         # General info
-        new_page.first_name, page.first_name
+        new_page.first_name = page.first_name
         new_page.last_name = page.last_name
         new_page.profile_image = page.profile_image
         new_page.statement = page.statement
@@ -152,40 +155,60 @@ class StudentMigration(object):
                 new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
 
 
-    def migrate_student(self, page):
+    def migrate_student(self, name, page):
         # Create new page
         new_page = NewStudentPage()
-        new_page.title = page.title
-        new_page.slug = slugify(page.title)
+        new_page.title = name
+        new_page.slug = slugify(name)
 
         # Migrate old page
         self.migrate_page(new_page, page)
 
-        # TODO: Add save here
+        # Save new page
+        if self.save and self.index_page:
+            self.index_page.add_child(new_page)
 
     def run(self):
-        # Get names
-        names = set(
-            student['title']
-            for student in StudentPage.objects.all().values('title')
-        )
+        # Couple of regexes for cleaning titles
+        multi_space = re.compile(' +')
+        start_space = re.compile('^ +')
+        end_space = re.compile(' +$')
+
+        # Get students
+        students = {}
+        for student in StudentPageProxy.objects.all():
+            name = student.title
+
+            # Some student pages have a suffix, remove the suffix
+            bad_suffixes = [', PhD', ', MPhil', ' MA', ' PhD', ' CX PhD Candidate']
+            for bad_suffix in bad_suffixes:
+                if name.endswith(bad_suffix):
+                    name = name[:-len(bad_suffix)]
+
+            # Some student pages contain extra spaces
+            name = multi_space.sub(' ', name)
+            name = start_space.sub('', name)
+            name = end_space.sub('', name)
+
+            # Put the student page in the students mapping
+            if name in students.keys():
+                students[name].append(student)
+            else:
+                students[name] = [student]
 
         # Migrate each one
-        for name in names:
-            # Get pages for this student
-            pages = StudentPageProxy.objects.filter(title=name)
-
+        for student, pages in students.items():
             # Skip if this student has multiple pages
-            if pages.count() > 1:
-                self.skipped_students.append(name)
+            if len(pages) > 1:
+                self.skipped_students.append(student)
                 continue
 
             # Migrate student
-            self.migrate_student(pages[0])
+            self.migrate_student(student, pages[0])
 
 
-def run():
-    sm = StudentMigration(save=False)
+def run(*args, **kwargs):
+    sm = StudentMigration(*args, **kwargs)
     sm.run()
 
     print repr(sm.skipped_students)
