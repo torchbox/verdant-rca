@@ -28,7 +28,7 @@
         <meta property="og:url" content="{{ self.url }}" /> 
         <meta property="og:title" content="{{ self.title }}" />
         <meta property="og:image" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" /> 
-        <meta property="og:description" content="{{ self.social_text }}" />
+        <meta property="og:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta property="og:site_name" content="Royal College of Art" />
 
         {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
