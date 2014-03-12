@@ -154,12 +154,13 @@ class StudentMigration(object):
             for sponsor in page.sponsor.all():
                 new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
 
-
     def migrate_student(self, name, page):
         # Create new page
         new_page = NewStudentPage()
         new_page.title = name
         new_page.slug = slugify(name)
+        new_page.live = page.live
+        new_page.has_unpublished_changes = not new_page.live
 
         # Migrate old page
         self.migrate_page(new_page, page)
@@ -167,6 +168,7 @@ class StudentMigration(object):
         # Save new page
         if self.save and self.index_page:
             self.index_page.add_child(new_page)
+            new_page.save_revision()
 
     def run(self):
         # Couple of regexes for cleaning titles
