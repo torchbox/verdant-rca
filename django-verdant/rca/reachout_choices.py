@@ -56,7 +56,7 @@ REACHOUT_PARTICIPANTS_CHOICES = (
 REACHOUT_THEMES_CHOICES = (
     ('animation','Animation'),
     ('architecture','Architecture'),
-    ('ceramicsglass','Ceramics \& Glass'),
+    ('ceramicsglass','Ceramics & Glass'),
     ('collaboration','Collaboration'),
     ('collage','Collage'),
     ('curating','Curating'),
@@ -82,7 +82,6 @@ REACHOUT_THEMES_CHOICES = (
 )
 
 REACHOUT_PARTNERSHIPS_CHOICES = (
-    ('allpartnerships', 'All partnerships'),
     ('artontheunderground', 'Art on the Underground'),
     ('creativequarter', 'Creative Quarter'),
     ('burberryfoundation', 'Burberry Foundation'),

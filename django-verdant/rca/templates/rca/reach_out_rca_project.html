@@ -73,6 +73,21 @@
                         {% endif %}
                     {% endwith %}
 
+                    {% with self.partnerships.all as partnerships %}
+                        {% if partnerships %}
+                            <dd>Workshop partnership{% if partnerships|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for partnership in partnerships %}
+                                        <li>
+                                            {{ partnership.get_partnership_display }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
                     <dd>Date</dd>
                     <dt>{{ self.date }}</dt>
 
