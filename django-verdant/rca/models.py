@@ -4626,42 +4626,42 @@ class ReachOutRCAProject(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
-    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_type_display')
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_display')
 
     search_name = 'ReachOutRCA Project'
 
     @vary_on_headers('X-Requested-With')
-    # def serve(self, request):
-    #     # Get related research
-    #     projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
-    #     projects = projects.filter(project_type=self.project_type)
-    #     if self.programme:
-    #         projects = projects.filter(programme=self.programme)
-    #     elif self.school:
-    #         projects = projects.filter(school=self.school)
+    def serve(self, request):
+        # Get related research
+        projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = projects.filter(project=self.project)
+        if self.programme:
+            projects = projects.filter(programme=self.programme)
+        elif self.school:
+            projects = projects.filter(school=self.school)
 
-    #     paginator = Paginator(projects, 4)
+        paginator = Paginator(projects, 4)
 
-    #     page = request.GET.get('page')
-    #     try:
-    #         projects = paginator.page(page)
-    #     except PageNotAnInteger:
-    #         # If page is not an integer, deliver first page.
-    #         projects = paginator.page(1)
-    #     except EmptyPage:
-    #         # If page is out of range (e.g. 9999), deliver last page of results.
-    #         projects = paginator.page(paginator.num_pages)
+        page = request.GET.get('page')
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            projects = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            projects = paginator.page(paginator.num_pages)
 
-    #     if request.is_ajax():
-    #         return render(request, "rca/includes/innovation_rca_listing.html", {
-    #             'self': self,
-    #             'projects': projects
-    #         })
-    #     else:
-    #         return render(request, self.template, {
-    #             'self': self,
-    #             'projects': projects
-    #         })
+        if request.is_ajax():
+            return render(request, "rca/includes/innovation_rca_listing.html", {
+                'self': self,
+                'projects': projects
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects
+            })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
