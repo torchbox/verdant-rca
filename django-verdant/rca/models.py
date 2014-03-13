@@ -851,10 +851,14 @@ class ProgrammePage(Page, SocialFields):
         # Get staff from manual feed
         feed = self.manual_staff_feed.all()
 
-        # Get each staffpage out of the feed
-        feed = [staffpage.staff for staffpage in feed]
+        # Get each staffpage out of the feed and add their role
+        feed2 = []
+        for staffpage in feed:
+            staff = staffpage.staff
+            staff.staff_role = staffpage.staff_role
+            feed2.append(staff)
 
-        return feed
+        return feed2
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -2226,14 +2230,26 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     @property
     def staff_feed(self):
         # Get staff from manual feed
-        feed = self.manual_staff_feed.all()
+        manual_feed = self.manual_staff_feed.all()
+    
+        # Get from manual feed and append staff_role defined there
+        feed2 = []
+        for staffpage in manual_feed:
+            staff = staffpage.staff
+            staff.staff_role = staffpage.staff_role
+            feed2.append(staff)
 
-        # Get each staffpage out of the feed
-        feed = [staffpage.staff for staffpage in feed]
-
-        # If feed source is set, get staff from that too
+        manual_feed = feed2
+        
+        # Get from source feed and append first role title
+        # for selected school of feed 
+        feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
+        for staffpage in feed_source:
+            staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+        
+        
         if self.staff_feed_source:
-            feed = chain(feed, StaffPage.objects.filter(school=self.staff_feed_source))
+            feed = chain(manual_feed, feed_source)
 
         return feed
 
