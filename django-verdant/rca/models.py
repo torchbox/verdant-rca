@@ -2245,13 +2245,15 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
         # for selected school of feed 
         feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
         for staffpage in feed_source:
-            staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+            if self.staff_feed_source:
+                staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
         
         
         if self.staff_feed_source:
             feed = chain(manual_feed, feed_source)
-
-        return feed
+            return feed 
+        else:
+            return False
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
