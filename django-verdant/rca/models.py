@@ -46,7 +46,7 @@ from rca.filters import run_filters
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
-from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES
+from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
 # TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
@@ -4592,6 +4592,14 @@ class ReachOutRCAParticipants(Orderable):
         FieldPanel('participant')
     ]
 
+class ReachOutRCAPartnership(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='partnerships')
+    partnership = models.CharField(max_length=255, blank=True, choices=REACHOUT_PARTNERSHIPS_CHOICES)
+
+    panels=[
+        FieldPanel('partnership')
+    ]
+
 class ReachOutRCAQuotation(Orderable):
     page = ParentalKey('rca.ReachOutRCAProject', related_name='quotations')
     quotation = models.TextField()
@@ -4620,7 +4628,7 @@ class ReachOutRCAProject(Page, SocialFields):
 
     search_name = 'ReachOutRCA Project'
 
-    # @vary_on_headers('X-Requested-With')
+    @vary_on_headers('X-Requested-With')
     # def serve(self, request):
     #     # Get related research
     #     projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
@@ -4653,13 +4661,13 @@ class ReachOutRCAProject(Page, SocialFields):
     #             'projects': projects
     #         })
 
-    # def get_related_news(self, count=4):
-    #     return NewsItem.get_related(
-    #         area='research',
-    #         programmes=([self.programme] if self.programme else None),
-    #         schools=([self.school] if self.school else None),
-    #         count=count,
-    #     )
+    def get_related_news(self, count=4):
+        return NewsItem.get_related(
+            area='research',
+            programmes=([self.programme] if self.programme else None),
+            schools=([self.school] if self.school else None),
+            count=count,
+        )
 
     class Meta:
         verbose_name = "ReachOutRCA Project"
@@ -4673,6 +4681,7 @@ ReachOutRCAProject.content_panels = [
     InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
     InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
     InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
+    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project parnterships"),
     FieldPanel('description', classname="full"),
     FieldPanel('date'),
     FieldPanel('school'),
@@ -4699,4 +4708,92 @@ ReachOutRCAProject.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks')
+]
+
+# == ReachOut RCA Index page ==
+
+class ReachOutRCAIndexAd(Orderable):
+    page = ParentalKey('rca.ReachOutRCAIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ReachOutRCAIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed = False
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get list of live projects
+        projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
+        
+        # Apply filters
+        project = request.GET.get('project', None)
+        participant = request.GET.get('participant', None)
+        theme = request.GET.get('theme', None)
+        partnership = request.GET.get('partnership', None)
+        
+        # Run filters
+        projects, filters = run_filters(projects, [
+            ('project', 'project', project),
+            ('participant', 'participants__participant', participant),
+            ('theme', 'themes__theme', theme),
+            ('partnership', 'partnerships__partnership', partnership),
+        ])
+
+        #pagination
+
+        page = request.GET.get('page')
+        paginator = Paginator(projects, 8)
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/reach_out_rca_listing.html", {
+                'self': self,
+                'projects': projects,
+                'filters': json.dumps(filters),
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects,
+                'filters': json.dumps(filters),
+            })
+
+    class Meta:
+        verbose_name = "ReachOutRCA Project Index"
+
+ReachOutRCAIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(ReachOutRCAIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ReachOutRCAIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
 ]

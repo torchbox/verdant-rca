@@ -1,4 +1,5 @@
 from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES, INNOVATIONRCA_PROJECT_TYPES_CHOICES, SHOW_SCHOOLS
+from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 from datetime import date
 
 
@@ -26,4 +27,8 @@ def global_vars(request):
         'global_events_index_url': '/news-and-events/events/',
         'global_news_index_url': '/news-and-events/news/',
         'global_default_twitter_handle': "RCAevents",
+        'global_reachout_projects': REACHOUT_PROJECT_CHOICES,
+        'global_reachout_participants': REACHOUT_PARTICIPANTS_CHOICES,
+        'global_reachout_themes': REACHOUT_THEMES_CHOICES,
+        'global_reachout_partnerships': REACHOUT_PARTNERSHIPS_CHOICES,
     }
