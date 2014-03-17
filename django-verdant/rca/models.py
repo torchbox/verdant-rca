@@ -2247,7 +2247,10 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
         if self.staff_feed_source:
             feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
             for staffpage in feed_source:
-                staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+                try:
+                    staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+                except:
+                    pass
         
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)
