@@ -4685,7 +4685,7 @@ ReachOutRCAProject.content_panels = [
     InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
     InlinePanel(ReachOutRCAProject, 'partnerships', label="Project parnterships"),
     FieldPanel('description', classname="full"),
-    FieldPanel('date'),
+    FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
     InlinePanel(ReachOutRCAProject, 'links', label="Links"),
