@@ -88,11 +88,15 @@
                         {% endif %}
                     {% endwith %}
 
-                    <dd>Date</dd>
-                    <dt>{{ self.date }}</dt>
+                    {% if self.date %}
+                        <dd>Date</dd>
+                        <dt>{{ self.date }}</dt>
+                    {% endif %}
 
-                    <dd>Centre</dd>
-                    <dt>{{ self.get_school_display }}</dt>
+                    {% if self.programme %}
+                        <dd>Centre</dd>
+                        <dt>{{ self.get_school_display }}</dt>
+                    {% endif %}
 
                     {% if self.programme %}
                         <dd>Programme</dd>

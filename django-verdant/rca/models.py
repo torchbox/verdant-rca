@@ -4616,7 +4616,7 @@ class ReachOutRCAQuotation(Orderable):
 
 class ReachOutRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True)
-    date = models.DateField("Date")
+    year = models.CharField(max_length=4, blank=True)
     description = RichTextField()
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
