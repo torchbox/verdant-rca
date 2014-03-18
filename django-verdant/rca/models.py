@@ -2252,7 +2252,8 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)
 
-        return feed
+        if manual_feed or self.staff_feed_source:
+            return feed
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
