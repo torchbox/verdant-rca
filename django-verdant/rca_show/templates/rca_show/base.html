@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags rich_text pageurl %}
 
-{% block body_class %}showrca{% if show_index.programme %}school-{{ show_index.school }} programme-{{ show_index.programme }}{% else %}
+{% block body_class %}{% get_show_index as show_index %}showrca{% if show_index.programme %}school-{{ show_index.school }} programme-{{ show_index.programme }}{% else %}
 school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 
 {% block extra_css %}
