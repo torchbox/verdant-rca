@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags rich_text pageurl %}
 
-{% block body_class %}showrca{% if request.show_index.programme %}school-{{ request.show_index.school }} programme-{{ request.show_index.programme }}{% else %}
+{% block body_class %}showrca{% if show_index.programme %}school-{{ show_index.school }} programme-{{ show_index.programme }}{% else %}
 school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 
 {% block extra_css %}
@@ -20,12 +20,15 @@ school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 {% endblock %}
 
 {% block logo %}
-    <a href="{% pageurl request.show_index %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
-    <p class="exhibition-date">{{ request.show_index.exhibition_date }}</p>
+    {% get_show_index as show_index %}
+    <a href="{% if show_index %}{% pageurl show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <p class="exhibition-date">{{ show_index.exhibition_date }}</p>
 {% endblock %}
 
 {% block extra_footer %}
-    {% secondary_menu request.show_index as menuitems %}
+    {% get_show_index as show_index %}
+
+    {% secondary_menu show_index as menuitems %}
 
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
@@ -66,10 +69,10 @@ school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 
     <div id="showrca2014-overlay" class="fade">
         <div class="logo repos">Logo</div>
-        <div class="exhibition-date repos">{{ request.show_index.exhibition_date }}</div>
+        <div class="exhibition-date repos">{{ show_index.exhibition_date }}</div>
         <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
         <div class="intro col-detect body-text">
-            {{ request.show_index.overlay_intro|richtext }}
+            {{ show_index.overlay_intro|richtext }}
             <div class="crest col-detect"></div>
         </div>
     </div>

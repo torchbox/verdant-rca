@@ -19,6 +19,12 @@ class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
+    def get_show_index(self):
+        for page in self.get_ancestors().reverse():
+            specific_page = page.specific
+            if isinstance(specific_page, ShowIndexPage):
+                return specific_page
+
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
