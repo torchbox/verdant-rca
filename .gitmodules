@@ -1,6 +1,3 @@
-[submodule "django-modelcluster"]
-	path = django-modelcluster
-	url = git@github.com:torchbox/django-modelcluster.git
 [submodule "django-wagtail"]
 	path = django-wagtail
 	url = git@github.com:torchbox/wagtail.git
