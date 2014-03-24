@@ -18,7 +18,6 @@ def deploy_staging():
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
-            sudo("git submodule update")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
@@ -38,7 +37,6 @@ def deploy():
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git pull")
-            sudo("git submodule update")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
 
             if env['host'] == MIGRATION_SERVER:
