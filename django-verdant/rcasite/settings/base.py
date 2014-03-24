@@ -11,10 +11,8 @@ sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 # Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
 
-# Add dependencies django-modelcluster and django-treebeard, which live alongside PROJECT_ROOT
-# (until they get released as a standalone project / merged upstream respectively)
+# Add dependency django-modelcluster, which lives alongside PROJECT_ROOT
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-modelcluster'))
-sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -154,7 +152,6 @@ INSTALLED_APPS = (
     'south',
     'compressor',
     'template_timings_panel',
-    'treebeard',
     'taggit',
     'modelcluster',
     'gunicorn',
