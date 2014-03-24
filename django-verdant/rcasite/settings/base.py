@@ -11,9 +11,6 @@ sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 # Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
 sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
 
-# Add dependency django-modelcluster, which lives alongside PROJECT_ROOT
-sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-modelcluster'))
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -153,7 +150,6 @@ INSTALLED_APPS = (
     'compressor',
     'template_timings_panel',
     'taggit',
-    'modelcluster',
     'gunicorn',
     'djcelery',
     'kombu.transport.django',
