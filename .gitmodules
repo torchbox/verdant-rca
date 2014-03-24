@@ -1,3 +1,0 @@
-[submodule "django-wagtail"]
-	path = django-wagtail
-	url = git@github.com:torchbox/wagtail.git
