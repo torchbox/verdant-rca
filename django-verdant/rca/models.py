@@ -3367,7 +3367,7 @@ class NewStudentPageConference(Orderable):
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageAwards(Orderable):
+class NewStudentPageAward(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='awards')
     award = models.CharField(max_length=255, blank=True)
 
@@ -3394,12 +3394,6 @@ class NewStudentPageShowSponsor(Orderable):
 # Research
 class NewStudentPageResearchCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewStudentPage', related_name='research_carousel_items')
-
-class NewStudentPageResearchAwards(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_awards')
-    award = models.CharField(max_length=255, blank=True)
-
-    panels = [FieldPanel('award')]
 
 class NewStudentPageResearchCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='research_collaborators')
@@ -3470,6 +3464,7 @@ class NewStudentPage(Page, SocialFields):
     research_start_year = models.CharField("Start year", max_length=4, blank=True)
     research_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
     research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
+    research_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     research_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     research_statement = RichTextField("Research statement", blank=True)
     research_in_show = models.BooleanField("In show", default=False)
@@ -3585,6 +3580,7 @@ NewStudentPage.content_panels = [
         FieldPanel('research_start_year'),
         FieldPanel('research_graduation_year'),
         FieldPanel('research_qualification'),
+        FieldPanel('research_work_location'),
         InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
         InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
