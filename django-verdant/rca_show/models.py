@@ -8,16 +8,26 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import NewStudentPage, SocialFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP
+from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP
 
 # Standard page for contacts etc
+
+class ShowStandardPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca_show.ShowStandardPage', related_name='carousel_items')
 
 class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
+    def get_show_index(self):
+        for page in self.get_ancestors().reverse():
+            specific_page = page.specific
+            if isinstance(specific_page, ShowIndexPage):
+                return specific_page
+
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
+    InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
     FieldPanel('body'),
     FieldPanel('map_coords'),
 ]
