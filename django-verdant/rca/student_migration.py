@@ -1,7 +1,9 @@
 from django.utils.text import slugify
 from itertools import chain
 import re
+import json
 from wagtail.wagtailcore.models import Page
+from modelcluster.fields import ParentalKey
 from rca.models import (
     StudentPage, NewStudentPage,
 
@@ -13,12 +15,11 @@ from rca.models import (
     NewStudentPageContactsWebsite,
     NewStudentPagePublication,
     NewStudentPageConference,
-    NewStudentPageAwards,
+    NewStudentPageAward,
     NewStudentPageShowCarouselItem,
     NewStudentPageShowCollaborator,
     NewStudentPageShowSponsor,
     NewStudentPageResearchCarouselItem,
-    NewStudentPageResearchAwards,
     NewStudentPageResearchCollaborator,
     NewStudentPageResearchSponsor,
     NewStudentPageResearchSupervisor,
@@ -52,21 +53,78 @@ class StudentMigration(object):
         self.skipped_students = []
         self.index_page = Page.objects.get(pk=index_page) if index_page else None
 
+        # Some regexes for cleaning titles
+        self.re_multi_space = re.compile(' +')
+        self.re_start_space = re.compile('^ +')
+        self.re_end_space = re.compile(' +$')
+
+    def update_references(self, old_page, new_page):
+        # Get relations
+        model = old_page.__class__
+        relations = model._meta.get_all_related_objects(include_hidden=True, include_proxy_eq=True)
+
+        # Remove wagtailcore relations
+        relations = [relation for relation in relations if not relation.model._meta.app_label == 'wagtailcore']
+
+        # Remove ParentalKey relations
+        relations = [relation for relation in relations if not isinstance(relation.field, ParentalKey)]
+
+        # Update references
+        for relation in relations:
+            if self.save:
+                # Update references in database
+                relation.model._base_manager.filter(
+                    **{relation.field.name: old_page}
+                ).update(
+                    **{relation.field.name: new_page}
+                )
+
+                # If the foreign key is in a page. Look through the revisions table for in each references
+                if issubclass(relation.model, Page):
+                    for page in relation.model._base_manager.all():
+                        revision = page.get_latest_revision_as_page()
+
+                        if getattr(revision, relation.field.name) == old_page:
+                            setattr(revision, relation.field.name, new_page)
+                            revision.save_revision()
+
+                # If the foreign key in a page child. Find the parent page type and update the child object in the revisions table
+                try:
+                    # Note: This only works as all child objects in RCA happen to call their ParentalKey 'page'
+                    page_field = relation.model._meta.get_field_by_name('page')[0]
+                    assert isinstance(page_field, ParentalKey)
+                except:
+                    pass
+                else:
+                    # Get pages that contain this child object
+                    for page in page_field.rel.to._base_manager.all():
+                        if page.get_latest_revision():
+                            # Get latest revision for this page as JSON
+                            revision = json.loads(page.get_latest_revision().content_json)
+
+                            # Find references in the json and change them
+                            changed = False
+                            if page_field.rel.related_name in revision:
+                                for child_object in revision[page_field.rel.related_name]:
+                                    if relation.field.name in child_object:
+                                        if child_object[relation.field.name] == old_page.pk:
+                                            changed = True
+                                            child_object[relation.field.name] = new_page.pk
+
+                            if changed:
+                                page.revisions.create(content_json=json.dumps(revision))
+
+
     def migrate_page(self, new_page, page):
         # General info
         new_page.first_name = page.first_name
         new_page.last_name = page.last_name
         new_page.profile_image = page.profile_image
         new_page.statement = page.statement
-        #twitter_handle
+        new_page.twitter_handle = page.student_twitter_feed
         new_page.funding = page.funding
         new_page.feed_image = page.feed_image
         new_page.show_on_homepage = page.show_on_homepage
-
-        # Show info
-        new_page.show_work_type = page.work_type
-        new_page.show_work_location = page.work_location
-        new_page.show_work_description = page.work_description
 
         # MA info
         if page.is_ma_page:
@@ -84,7 +142,8 @@ class StudentMigration(object):
             new_page.research_graduation_year = page.graduation_year
             new_page.research_qualification = page.degree_qualification
             #research_dissertation_title
-            #research_statement
+            new_page.research_statement = page.work_description
+            new_page.research_work_location = page.work_location
             new_page.research_in_show = page.is_in_show
 
         # General child objects
@@ -113,7 +172,7 @@ class StudentMigration(object):
             new_page.conferences.add(NewStudentPageConference(name=conference.name))
 
         for award in page.awards.all():
-            new_page.awards.add(NewStudentPageAwards(award=award.award))
+            new_page.awards.add(NewStudentPageAward(award=award.award))
 
         for supervisor in page.supervisors.all():
             new_page.research_supervisors.add(NewStudentPageResearchSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
@@ -138,6 +197,11 @@ class StudentMigration(object):
 
         # If this is not a research student, move carousel items/collaborators/sponsors to show
         if not page.is_research_page:
+            # Show info
+            new_page.show_work_type = page.work_type
+            new_page.show_work_location = page.work_location
+            new_page.show_work_description = page.work_description
+
             for carousel_item in page.carousel_items.all():
                 new_page.show_carousel_items.add(NewStudentPageShowCarouselItem(
                     image=carousel_item.image,
@@ -170,27 +234,27 @@ class StudentMigration(object):
             self.index_page.add_child(new_page)
             new_page.save_revision()
 
-    def run(self):
-        # Couple of regexes for cleaning titles
-        multi_space = re.compile(' +')
-        start_space = re.compile('^ +')
-        end_space = re.compile(' +$')
+        return new_page
 
+    def clean_student_name(self, name):
+        # Some student pages have a suffix, remove the suffix
+        bad_suffixes = [', PhD', ', MPhil', ' MA', ' PhD', ' CX PhD Candidate']
+        for bad_suffix in bad_suffixes:
+            if name.endswith(bad_suffix):
+                name = name[:-len(bad_suffix)]
+
+        # Some student pages contain extra spaces
+        name = self.re_multi_space.sub(' ', name)
+        name = self.re_start_space.sub('', name)
+        name = self.re_end_space.sub('', name)
+
+        return name
+
+    def run(self):
         # Get students
         students = {}
         for student in StudentPageProxy.objects.all():
-            name = student.title
-
-            # Some student pages have a suffix, remove the suffix
-            bad_suffixes = [', PhD', ', MPhil', ' MA', ' PhD', ' CX PhD Candidate']
-            for bad_suffix in bad_suffixes:
-                if name.endswith(bad_suffix):
-                    name = name[:-len(bad_suffix)]
-
-            # Some student pages contain extra spaces
-            name = multi_space.sub(' ', name)
-            name = start_space.sub('', name)
-            name = end_space.sub('', name)
+            name = self.clean_student_name(student.title)
 
             # Put the student page in the students mapping
             if name in students.keys():
@@ -206,7 +270,10 @@ class StudentMigration(object):
                 continue
 
             # Migrate student
-            self.migrate_student(student, pages[0])
+            new_page = self.migrate_student(student, pages[0])
+
+            # Update references
+            self.update_references(pages[0], new_page)
 
 
 def run(*args, **kwargs):
