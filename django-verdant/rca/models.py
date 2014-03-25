@@ -46,6 +46,7 @@ from rca.filters import run_filters
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
+from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
 # TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
 options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
@@ -850,10 +851,14 @@ class ProgrammePage(Page, SocialFields):
         # Get staff from manual feed
         feed = self.manual_staff_feed.all()
 
-        # Get each staffpage out of the feed
-        feed = [staffpage.staff for staffpage in feed]
+        # Get each staffpage out of the feed and add their role
+        feed2 = []
+        for staffpage in feed:
+            staff = staffpage.staff
+            staff.staff_role = staffpage.staff_role
+            feed2.append(staff)
 
-        return feed
+        return feed2
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -2225,16 +2230,30 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     @property
     def staff_feed(self):
         # Get staff from manual feed
-        feed = self.manual_staff_feed.all()
+        manual_feed = self.manual_staff_feed.all()
+    
+        # Get from manual feed and append staff_role defined there
+        feed2 = []
+        for staffpage in manual_feed:
+            staff = staffpage.staff
+            staff.staff_role = staffpage.staff_role
+            feed2.append(staff)
 
-        # Get each staffpage out of the feed
-        feed = [staffpage.staff for staffpage in feed]
-
-        # If feed source is set, get staff from that too
+        manual_feed = feed2
+        
+        # Get from source feed and append first role title
+        # for selected school of feed 
+        feed_source=[]
         if self.staff_feed_source:
-            feed = chain(feed, StaffPage.objects.filter(school=self.staff_feed_source))
+            feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
+            for staffpage in feed_source:
+                staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+        
+        # Chain manual_feed + feed_source (any or both may be empty)
+        feed = chain(manual_feed, feed_source)
 
-        return feed
+        if manual_feed or self.staff_feed_source:
+            return feed
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -3693,13 +3712,11 @@ class RcaNowIndex(Page, SocialFields):
 
         rca_now_items = RcaNowPage.objects.filter(live=True)
 
-        if area:
-            rca_now_items = rca_now_items.filter(area=area)
-
-        # Run school and programme filters
+        # Run school, area and programme filters
         rca_now_items, filters = run_filters(rca_now_items, [
             ('school', 'school', school),
             ('programme', 'programme', programme),
+            ('area', 'area', area),
         ])
 
         rca_now_items = rca_now_items.order_by('-date')
@@ -4509,6 +4526,263 @@ InnovationRCAIndex.content_panels = [
 ]
 
 InnovationRCAIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+# # == ReachOutRCA Project page ==
+
+class ReachOutRCAProjectCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='carousel_items')
+
+class ReachOutRCAWorkshopLeader(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='leader')
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+
+    panels=[
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
+    ]
+
+class ReachOutRCAWorkshopAssistant(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='assistant')
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+
+    panels=[
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
+    ]
+
+class ReachOutRCAProjectLink(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='links')
+    link = models.URLField(blank=True)
+    link_text = models.CharField(max_length=255, blank=True)
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class ReachOutRCAThemes(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='themes')
+    theme = models.CharField(max_length=255, blank=True, choices=REACHOUT_THEMES_CHOICES)
+
+    panels=[
+        FieldPanel('theme')
+    ]
+
+class ReachOutRCAParticipants(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='participants')
+    participant = models.CharField(max_length=255, blank=True, choices=REACHOUT_PARTICIPANTS_CHOICES)
+
+    panels=[
+        FieldPanel('participant')
+    ]
+
+class ReachOutRCAPartnership(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='partnerships')
+    partnership = models.CharField(max_length=255, blank=True, choices=REACHOUT_PARTNERSHIPS_CHOICES)
+
+    panels=[
+        FieldPanel('partnership')
+    ]
+
+class ReachOutRCAQuotation(Orderable):
+    page = ParentalKey('rca.ReachOutRCAProject', related_name='quotations')
+    quotation = models.TextField()
+    quotee = models.CharField(max_length=255, blank=True)
+    quotee_job_title = models.CharField(max_length=255, blank=True)
+
+    panels = [
+        FieldPanel('quotation'),
+        FieldPanel('quotee'),
+        FieldPanel('quotee_job_title')
+    ]
+
+class ReachOutRCAProject(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True)
+    year = models.CharField(max_length=4, blank=True)
+    description = RichTextField()
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    show_on_homepage = models.BooleanField()
+    project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES)
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed_fields = ('subtitle', 'get_research_type_display', 'description', 'get_school_display', 'get_programme_display', 'get_project_display')
+
+    search_name = 'ReachOutRCA Project'
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get related research
+        projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = projects.filter(project=self.project)
+        if self.programme:
+            projects = projects.filter(programme=self.programme)
+        elif self.school:
+            projects = projects.filter(school=self.school)
+
+        paginator = Paginator(projects, 4)
+
+        page = request.GET.get('page')
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            projects = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            projects = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/innovation_rca_listing.html", {
+                'self': self,
+                'projects': projects
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects
+            })
+
+    def get_related_news(self, count=4):
+        return NewsItem.get_related(
+            area='research',
+            programmes=([self.programme] if self.programme else None),
+            schools=([self.school] if self.school else None),
+            count=count,
+        )
+
+    class Meta:
+        verbose_name = "ReachOutRCA Project"
+
+ReachOutRCAProject.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
+    InlinePanel(ReachOutRCAProject, 'carousel_items', label="Carousel content"),
+    FieldPanel('project'),
+    InlinePanel(ReachOutRCAProject, 'leader', label="Project leaders"),
+    InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
+    InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
+    InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
+    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project parnterships"),
+    FieldPanel('description', classname="full"),
+    FieldPanel('year'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    InlinePanel(ReachOutRCAProject, 'links', label="Links"),
+    InlinePanel(ReachOutRCAProject, 'quotations', label="Middle column quotations"),
+    FieldPanel('twitter_feed'),
+]
+
+ReachOutRCAProject.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
+# == ReachOut RCA Index page ==
+
+class ReachOutRCAIndexAd(Orderable):
+    page = ParentalKey('rca.ReachOutRCAIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class ReachOutRCAIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed = False
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get list of live projects
+        projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
+        
+        # Apply filters
+        project = request.GET.get('project', None)
+        participant = request.GET.get('participant', None)
+        theme = request.GET.get('theme', None)
+        partnership = request.GET.get('partnership', None)
+        
+        # Run filters
+        projects, filters = run_filters(projects, [
+            ('project', 'project', project),
+            ('participant', 'participants__participant', participant),
+            ('theme', 'themes__theme', theme),
+            ('partnership', 'partnerships__partnership', partnership),
+        ])
+
+        #pagination
+
+        page = request.GET.get('page')
+        paginator = Paginator(projects, 8)
+        try:
+            staff_pages = paginator.page(page)
+        except PageNotAnInteger:
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            staff_pages = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/reach_out_rca_listing.html", {
+                'self': self,
+                'projects': projects,
+                'filters': json.dumps(filters),
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects,
+                'filters': json.dumps(filters),
+            })
+
+    class Meta:
+        verbose_name = "ReachOutRCA Project Index"
+
+ReachOutRCAIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(ReachOutRCAIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+ReachOutRCAIndex.promote_panels = [
     MultiFieldPanel([
         FieldPanel('seo_title'),
         FieldPanel('slug'),
