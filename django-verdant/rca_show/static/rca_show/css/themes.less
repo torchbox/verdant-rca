@@ -5,23 +5,42 @@ body{
     background-color:#F7F7F7;
 }
 
-.school-schoolofarchitecture{
-    .theme(arc, #ffb52f, #ffda97, 180px, 225px);
+@color-arc-1: #ffb52f;
+@color-arc-2: #ffda97;
+
+@color-com-1: #25c7d1;
+@color-com-2: #92e3e8;
+
+@color-des-1: #ff6e3a;
+@color-des-2: #FFB79D;
+
+@color-fin-1: #006fb4;
+@color-fin-2: #80B7DA;
+
+@color-hum-1: #f55262;
+@color-hum-2: #FAA9B0;
+
+@color-mat-1: #c357b3;
+@color-mat-2: #E1ABD9;
+
+
+.school-schoolofarchitecture, .theme-schoolofarchitecture{
+    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
 }
-.school-schoolofcommunication{
-    .theme(com, #25c7d1, #92e3e8, 180px, 225px);
+.school-schoolofcommunication, .theme-schoolofcommunication{
+    .theme(com, @color-com-1, @color-com-2, 147px, 226px);
 }
-.school-schoolofdesign{
-    .theme(des, #ff6e3a, #FFB79D, 180px, 225px);
+.school-schoolofdesign, .theme-schoolofdesign{
+    .theme(des, @color-des-1, @color-des-2, 318px, 226px);
 }
-.school-schooloffineart{
-    .theme(art, #006fb4, #80B7DA, 180px, 225px);
+.school-schooloffineart, .theme-schooloffineart{
+    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
 }
-.school-schoolofhumanities{
-    .theme(hum, #f55262, #FAA9B0, 180px, 225px);
+.school-schoolofhumanities, .theme-schoolofhumanities{
+    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
 }
-.school-schoolofmaterial{
-    .theme(mat, #c357b3, #E1ABD9, 180px, 225px); 
+.school-schoolofmaterial, .theme-schoolofmaterial{
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
 }
 
 /* CCA show specific */
@@ -52,6 +71,7 @@ body{
 
         }
     }
+
     .site-name {
         width:@logowidth;
         p{
@@ -80,7 +100,9 @@ body{
     .bx-wrapper .bx-next:hover, 
     .bx-wrapper .bx-prev:hover,
     .share:hover,
-    .tab-nav a:hover{
+    .tab-nav a:hover,
+    .today h2:hover,
+    nav h2 a:hover{
         background-color:@colorprimary;
     }
 

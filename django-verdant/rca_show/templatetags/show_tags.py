@@ -15,7 +15,7 @@ def get_school_index_url(show_index):
 
 
 @register.simple_tag
-def get_school_url(self, show_index):
+def get_school_url(show_index, school):
     if show_index is None:
         return ''
 
@@ -40,16 +40,12 @@ def get_student_url(show_index, student):
 
 @register.simple_tag
 def get_programme_display(programme):
-    if show_index is None:
-        return ''
 
     return dict(rca_models.ALL_PROGRAMMES)[programme]
 
 
 @register.simple_tag
 def get_school_display(school):
-    if show_index is None:
-        return ''
 
     return dict(rca_models.SCHOOL_CHOICES)[school]
 

@@ -2,6 +2,22 @@
 
 var overlay;
 
+var themes = ['schoolofarchitecture', 'schoolofcommunication', 'schoolofdesign', 'schooloffineart', 'schoolofhumanities', 'schoolofmaterial'];
+
+function randTheme(){
+    var chosen;
+
+    if(window.debug || !$.cookie('showrcatheme')){
+        chosen = themes[Math.floor(Math.random() * themes.length)];
+        $.cookie('showrcatheme', chosen, { expires: 0.5 });
+    } else {
+        chosen = $.cookie('showrcatheme')
+    }
+
+    $('body').addClass('theme-' + chosen);
+    return chosen;
+}
+
 function setupOverlay(){
     var usedSlots = [];
 
@@ -81,9 +97,10 @@ $(function(){
     overlay = $('#showrca2014-overlay');
 
     if(overlay.length){
+        console.log(randTheme());
         setupOverlay();
 
-        if(!$.cookie('showrca2014')){
+        if(window.debug || !$.cookie('showrca2014')){
             displayShowOverlay();
             $.cookie('showrca2014', '1', { expires: 0.5 });
         }

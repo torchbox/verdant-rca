@@ -3,10 +3,6 @@
 
 {% block body_class %}{{ block.super }} type-school-index{% endblock %}
 
-{% block logo %}
-    <a href="#" class="site-name" tabindex="2"><p>CCA Show 2014</p></a>
-{% endblock %}
-
 {% block content %}
     {% get_school_programmes self school as programmes %}
     {% get_schools self as schools %}
@@ -22,15 +18,17 @@
             {% endfor %}
         </ul>
         <ul>
-            <li class="jumplist">
-                <h2 class="toggle">Select a School</h2>
-                <div class="selected toggle"></div>
-                <ul class="options">
-                    {% for school in schools %}
-                        <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
-                    {% endfor %}
-                </ul>
-            </li>
+            {% if schools %}
+                <li class="jumplist">
+                    <h2 class="toggle">Select a School</h2>
+                    <div class="selected toggle"></div>
+                    <ul class="options">
+                        {% for school in schools %}
+                            <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endif %}
             <li class="jumplist">
                 <h2 class="toggle">Select a Programmes</h2>
                 <div class="selected toggle"></div>
