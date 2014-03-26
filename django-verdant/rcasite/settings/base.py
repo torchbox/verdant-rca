@@ -197,6 +197,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lesspress.LessCompiler'),
 )
