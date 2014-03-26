@@ -48,17 +48,19 @@ class StudentPageProxy(StudentPage):
 
 
 class StudentMigration(object):
-    def __init__(self, save=False, index_page=None):
+    def __init__(self, save=False, index_page=None, migrate=True, update_references=False):
         self.save = save
         self.skipped_students = []
         self.index_page = Page.objects.get(pk=index_page) if index_page else None
+        self.migrate = migrate
+        self.update_references = update_references
 
         # Some regexes for cleaning titles
         self.re_multi_space = re.compile(' +')
         self.re_start_space = re.compile('^ +')
         self.re_end_space = re.compile(' +$')
 
-    def update_references(self, old_page, new_page):
+    def update_page_references(self, old_page, new_page):
         # Get relations
         model = old_page.__class__
         relations = model._meta.get_all_related_objects(include_hidden=True, include_proxy_eq=True)
@@ -71,49 +73,67 @@ class StudentMigration(object):
 
         # Update references
         for relation in relations:
-            if self.save:
-                # Update references in database
-                relation.model._base_manager.filter(
-                    **{relation.field.name: old_page}
-                ).update(
-                    **{relation.field.name: new_page}
-                )
+            # Find objects with references to the old page for this relation
+            objects = relation.model._base_manager.filter(
+                **{relation.field.name: old_page}
+            )
 
-                # If the foreign key is in a page. Look through the revisions table for in each references
-                if issubclass(relation.model, Page):
-                    for page in relation.model._base_manager.all():
-                        revision = page.get_latest_revision_as_page()
+            # If the relation is a page. Look through the revisions table for references
+            # We need to check all objects that we know have live objects ('objects') and any pages
+            # that have unpublished changes in case a reference was added recently
+            if issubclass(relation.model, Page):
+                for page in chain(relation.model._base_manager.filter(has_unpublished_changes=True), objects):
+                    revision = page.get_latest_revision_as_page()
 
-                        if getattr(revision, relation.field.name) == old_page:
-                            setattr(revision, relation.field.name, new_page)
+                    # Make sure the reference is to the old page to avoid mistakes
+                    if getattr(revision, relation.field.name) == old_page:
+                        setattr(revision, relation.field.name, new_page)
+
+                        if self.save:
                             revision.save_revision()
 
-                # If the foreign key in a page child. Find the parent page type and update the child object in the revisions table
-                try:
-                    # Note: This only works as all child objects in RCA happen to call their ParentalKey 'page'
-                    page_field = relation.model._meta.get_field_by_name('page')[0]
-                    assert isinstance(page_field, ParentalKey)
-                except:
-                    pass
-                else:
-                    # Get pages that contain this child object
-                    for page in page_field.rel.to._base_manager.all():
-                        if page.get_latest_revision():
-                            # Get latest revision for this page as JSON
-                            revision = json.loads(page.get_latest_revision().content_json)
+            # If the foreign key is in a page child. Find the parent pages type and find/update the child object in the revisions table
+            try:
+                # Note: This only works as all child objects in RCA happen to call their ParentalKey 'page'
+                # This will raise an exception if the field doesn't exist
+                page_field = relation.model._meta.get_field_by_name('page')[0]
 
-                            # Find references in the json and change them
-                            changed = False
-                            if page_field.rel.related_name in revision:
-                                for child_object in revision[page_field.rel.related_name]:
-                                    if relation.field.name in child_object:
-                                        if child_object[relation.field.name] == old_page.pk:
-                                            changed = True
-                                            child_object[relation.field.name] = new_page.pk
+                # Field type must be ParentalKey for this to be a child object
+                assert isinstance(page_field, ParentalKey)
 
-                            if changed:
-                                page.revisions.create(content_json=json.dumps(revision))
+                # The parent object must be a page (otherwise there won't be any revisions)
+                assert issubclass(page_field.rel.to, Page)
+            except:
+                pass
+            else:
+                # Get pages that may contain a reference
+                for page in chain(
+                        page_field.rel.to._base_manager.filter(has_unpublished_changes=True),
+                        [obj.page for obj in objects]
+                    ):
 
+                    # Check if there is a revision
+                    if page.get_latest_revision():
+                        # Get latest revision for this page as JSON
+                        revision = json.loads(page.get_latest_revision().content_json)
+
+                        # Find references in the json and change them
+                        changed = False
+                        if page_field.rel.related_name in revision:
+                            for child_object in revision[page_field.rel.related_name]:
+                                if relation.field.name in child_object:
+                                    if child_object[relation.field.name] == old_page.pk:
+                                        changed = True
+                                        child_object[relation.field.name] = new_page.pk
+
+                        if changed and self.save:
+                            page.revisions.create(content_json=json.dumps(revision))
+
+            # Update objects in the database
+            if self.save:
+                objects.update(
+                    **{relation.field.name: new_page}
+                )
 
     def migrate_page(self, new_page, page):
         # General info
@@ -263,17 +283,29 @@ class StudentMigration(object):
                 students[name] = [student]
 
         # Migrate each one
-        for student, pages in students.items():
-            # Skip if this student has multiple pages
-            if len(pages) > 1:
-                self.skipped_students.append(student)
-                continue
+        if self.migrate:
+            for student, pages in students.items():
+                print "Migrating: " + student
 
-            # Migrate student
-            new_page = self.migrate_student(student, pages[0])
+                # Skip if this student has multiple pages
+                if len(pages) > 1:
+                    self.skipped_students.append(student)
+                    continue
 
-            # Update references
-            self.update_references(pages[0], new_page)
+                # Migrate student
+                self.migrate_student(student, pages[0])
+
+        # Update references
+        if self.update_references:
+            for student, pages in students.items():
+                print "Updating references: " + student
+                try:
+                    new_page = NewStudentPage.objects.get(title=student)
+
+                    for page in pages:
+                        self.update_page_references(page, new_page)
+                except NewStudentPage.DoesNotExist:
+                    print "WARNING: Cannot find new student page for " + student
 
 
 def run(*args, **kwargs):
