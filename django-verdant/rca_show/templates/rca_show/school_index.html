@@ -55,12 +55,12 @@
     <div class="school-list-wrapper">
         {% for school in schools %}
             {% cycle '<ul class="school-list">' '' '' %}
-            <li class="school-{{ school }}">
-                <h2><a href="{% get_school_url self school %}">{% get_school_display school %}</a></h2>
+            <li>
+                <h2><a href="{% get_school_url self school %}" class="color-{{ school }}">{% get_school_display school %}</a></h2>
                 <ul>
                     {% get_school_programmes self school as programmes%}
                         {% for programme in programmes %}
-                        <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
+                        <li><a href="{% get_programme_url self school programme %}" class="hovercolor-{{ school }}">{% get_programme_display programme %}</a></li>
                     {% endfor %}
                 </ul>
             </li>

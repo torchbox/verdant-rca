@@ -1,10 +1,6 @@
 @import "variables.less";
 @import "mixins.less";
 
-body{
-    background-color:#F7F7F7;
-}
-
 @color-arc-1: #ffb52f;
 @color-arc-2: #ffda97;
 
@@ -22,31 +18,6 @@ body{
 
 @color-mat-1: #c357b3;
 @color-mat-2: #E1ABD9;
-
-
-.school-schoolofarchitecture, .theme-schoolofarchitecture{
-    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
-}
-.school-schoolofcommunication, .theme-schoolofcommunication{
-    .theme(com, @color-com-1, @color-com-2, 147px, 226px);
-}
-.school-schoolofdesign, .theme-schoolofdesign{
-    .theme(des, @color-des-1, @color-des-2, 318px, 226px);
-}
-.school-schooloffineart, .theme-schooloffineart{
-    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
-}
-.school-schoolofhumanities, .theme-schoolofhumanities{
-    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
-}
-.school-schoolofmaterial, .theme-schoolofmaterial{
-    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
-}
-
-/* CCA show specific */
-.programme-curatingcontemporaryart{
-    .theme(cca, #e0413e, #F9A09F, 180px, 225px);
-}
 
 .theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
     #showrca2014-overlay {
@@ -111,3 +82,71 @@ body{
         color:@colorsecondary;
     }
 }
+
+body{
+    background-color:#F7F7F7;
+}
+
+.theme-schoolofarchitecture{
+    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
+}
+.theme-schoolofcommunication{
+    .theme(com, @color-com-1, @color-com-2, 147px, 226px);
+}
+.theme-schoolofdesign{
+    .theme(des, @color-des-1, @color-des-2, 318px, 226px);
+}
+.theme-schooloffineart{
+    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
+}
+.theme-schoolofhumanities{
+    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
+}
+.theme-schoolofmaterial{
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+}
+
+/* .school-* must come after .theme-* otherwise school cannot trump the random theme assigned */
+.school-schoolofarchitecture,{
+    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
+}
+.school-schoolofcommunication{
+    .theme(com, @color-com-1, @color-com-2, 147px, 226px);
+}
+.school-schoolofdesign{
+    .theme(des, @color-des-1, @color-des-2, 318px, 226px);
+}
+.school-schooloffineart{
+    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
+}
+.school-schoolofhumanities{
+    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
+}
+.school-schoolofmaterial{
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+}
+
+/* CCA show specific */
+.programme-curatingcontemporaryart{
+    .theme(cca, #e0413e, #F9A09F, 180px, 225px);
+}
+
+.color-schoolofarchitecture, a.hovercolor-schoolofarchitecture:hover{
+    color:@color-arc-1;
+}
+.color-schoolofcommunication, a.hovercolor-schoolofcommunication:hover{
+    color:@color-com-1;
+}
+.color-schoolofdesign, a.hovercolor-schoolofdesign:hover{
+    color:@color-des-1;
+}
+.color-schooloffineart, a.hovercolor-schooloffineart:hover{
+    color:@color-fin-1;
+}
+.color-schoolofhumanities, a.hovercolor-schoolofhumanities:hover{
+    color:@color-hum-1;
+}
+.color-schoolofmaterial, a.hovercolor-schoolofmaterial:hover{
+    color:@color-mat-1;
+}
+
