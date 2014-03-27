@@ -35,7 +35,7 @@
                                     <dt>
                                         {{ self.get_research_programme_display }}
                                     </dt>
-                                    {% if self.research_sponsors %}
+                                    {% if self.research_sponsors.all %}
                                         <dd>Sponsors</dd>
                                         <dt>
                                             {% for sponsor in self.research_sponsors.all %}
@@ -73,7 +73,7 @@
                                     <dt>
                                         {{ self.ma_programme }}
                                     </dt>
-                                    {% if self.show_collaborators %}
+                                    {% if self.show_collaborators.all %}
                                         <dd>Collaborators</dd>
                                         <dt>
                                             {% for collaborator in self.show_collaborators.all %}
@@ -81,7 +81,7 @@
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
-                                    {% if self.show_sponsors %}
+                                    {% if self.show_sponsors.all %}
                                         <dd>Sponsors</dd>
                                         <dt>
                                             {% for sponsor in self.show_sponsors.all %}
