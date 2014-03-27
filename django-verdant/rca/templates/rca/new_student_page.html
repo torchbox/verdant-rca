@@ -10,7 +10,66 @@
 
     {% tabdeck %}
         <!-- links and ids added by javascript -->
+        {% tab "Research" class="flush" %}
+            Content
+
+             <h3>{{ self.show_work_title }}</h3>
+
+                        {% if self.ma_in_show %}
+                            {{ self.show_work_description|richtext }}
+                        {% else %}
+                            {{ self.research_statement|richtext }}
+                        {% endif %}
+                        
+
+             FieldPanel('research_in_show'),
+            FieldPanel('research_school'),
+            FieldPanel('research_programme'),
+            FieldPanel('research_dissertation_title'),
+            FieldPanel('research_statement'),
+            FieldPanel('research_start_year'),
+            FieldPanel('research_graduation_year'),
+            FieldPanel('research_qualification'),
+            FieldPanel('research_work_location'),
+            InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
+            InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
+            InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
+            InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
+        {% endtab %}
+
+        {% if self.ma_in_show or self.research_in_show %}
+            {% tab "Show" class="flush" %}
+                 <section class="row">
+                    
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="module-title">
+                                {% if self.ma_in_show %}
+                                    {# Only show type/title if a type is chosen, else nothing #}
+                                    {% if self.show_work_type %}
+                                        <span>{{ self.get_show_work_type_display }}:</span>
+                                    {% endif %}
+                                {% else %}
+                                    Dissertation 
+                                {% endif %}
+                            </h2>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            <h3>{{ self.show_work_title }}</h3>
+
+                            {% if self.ma_in_show %}
+                                {{ self.show_work_description|richtext }}
+                            {% else %}
+                                {{ self.research_statement|richtext }}
+                            {% endif %}
+                        </li>
+                    </ul>
+                </section>
+            {% endtab %}
+        {% endif %}
+
         {% tab "Info" class="flush" %}
+
             <div class="profile">
                 <ul class="four-cols">
                     <li class="col first">
