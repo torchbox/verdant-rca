@@ -8,67 +8,101 @@
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
+        {% if student.ma_in_show %}
+        {% with student.show_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% else %}
+        {% with student.research_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% endif %}
+
+
     {% tabdeck %}
-        <!-- links and ids added by javascript -->
-        {% tab "Research" class="flush" %}
-            Content
+        {% if self.is_research_student %}
+            {% tab "Research work" %}
+                {% with self.research_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
 
-             <h3>{{ self.show_work_title }}</h3>
-
-                        {% if self.ma_in_show %}
-                            {{ self.show_work_description|richtext }}
-                        {% else %}
-                            {{ self.research_statement|richtext }}
-                        {% endif %}
-                        
-
-             FieldPanel('research_in_show'),
-            FieldPanel('research_school'),
-            FieldPanel('research_programme'),
-            FieldPanel('research_dissertation_title'),
-            FieldPanel('research_statement'),
-            FieldPanel('research_start_year'),
-            FieldPanel('research_graduation_year'),
-            FieldPanel('research_qualification'),
-            FieldPanel('research_work_location'),
-            InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
-            InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
-            InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
-            InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
-        {% endtab %}
-
-        {% if self.ma_in_show or self.research_in_show %}
-            {% tab "Show" class="flush" %}
-                 <section class="row">
-                    
-                    <ul class="three-nine-cols">
-                        <li class="col col-3 first">
-                            <h2 class="module-title">
-                                {% if self.ma_in_show %}
-                                    {# Only show type/title if a type is chosen, else nothing #}
-                                    {% if self.show_work_type %}
-                                        <span>{{ self.get_show_work_type_display }}:</span>
+                <section class="row">
+                    <div class="three-nine-cols">
+                        <div class="col col-3 first">
+                            <div class="meta-data">
+                                <dl>
+                                    <dd>Programme</dd>
+                                    <dt>
+                                        {{ self.get_research_programme_display }}
+                                    </dt>
+                                    {% if self.research_sponsors %}
+                                        <dd>Sponsors</dd>
+                                        <dt>
+                                            {% for sponsor in self.research_sponsors.all %}
+                                                {{ sponsor.name }}<br />
+                                            {% endfor %}
+                                        </dt>
                                     {% endif %}
-                                {% else %}
-                                    Dissertation 
-                                {% endif %}
-                            </h2>
-                        </li>
-                        <li class="col col-9 last body-text-style">
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.research_dissertation_title }}</h3>
+
+                            {{ self.research_statement|richtext }}
+                        </div>
+                    </div>
+                </section>
+
+            {% endtab %}
+        {% endif %}
+
+        {% if self.is_ma_student %}
+            {% tab "MA work" %}
+
+                {% with self.show_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+
+                <section class="row">
+                    <div class="three-nine-cols">
+                        <div class="col col-3 first">
+                            <div class="meta-data">
+                                <dl>
+                                    <dd>Programme</dd>
+                                    <dt>
+                                        {{ self.ma_programme }}
+                                    </dt>
+                                    {% if self.show_collaborators %}
+                                        <dd>Collaborators</dd>
+                                        <dt>
+                                            {% for collaborator in self.show_collaborators.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                    {% if self.show_sponsors %}
+                                        <dd>Sponsors</dd>
+                                        <dt>
+                                            {% for sponsor in self.show_sponsors.all %}
+                                                {{ sponsor.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="col col-9 last body-text">
                             <h3>{{ self.show_work_title }}</h3>
 
-                            {% if self.ma_in_show %}
-                                {{ self.show_work_description|richtext }}
-                            {% else %}
-                                {{ self.research_statement|richtext }}
-                            {% endif %}
-                        </li>
-                    </ul>
+                            {{ self.show_work_description|richtext }}
+                        </div>
+                    </div>
                 </section>
             {% endtab %}
         {% endif %}
 
-        {% tab "Info" class="flush" %}
+        {% tab "Info" %}
 
             <div class="profile">
                 <ul class="four-cols">
@@ -200,6 +234,23 @@
                             <li class="col col-9 last body-text-style">
                                 {% for exhibition in exhibitions %}
                                     {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- awards -->
+                {% with self.awards.all as awards %}
+                    {% if awards %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Awards</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for award in awards %}
+                                    {{ award.name }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
                             </li>
                         </ul>
