@@ -4239,12 +4239,16 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
-    def student_which_profile(self, student, ma_students_q, research_students_q):
+    def student_which_profile(self, student, ma_students_q, mphil_students_q, phd_students_q):
         students = NewStudentPage.get_students()
 
-        # Check if student is in research students
-        if students.filter(research_students_q).filter(pk=student.pk).exists():
-            return 'research'
+        # Check if student is in phd students
+        if students.filter(phd_students_q).filter(pk=student.pk).exists():
+            return 'phd'
+
+        # Check if student is in mphil students
+        if students.filter(mphil_students_q).filter(pk=student.pk).exists():
+            return 'mphil'
 
         # Check if student is in ma students
         if students.filter(ma_students_q).filter(pk=student.pk).exists():
@@ -4252,7 +4256,8 @@ class GalleryPage(Page, SocialFields):
 
     def get_students_q(self, school=None, programme=None, year=None):
         ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
-        research_students_q = ~models.Q(research_school='') & ~models.Q(research_graduation_year='') & models.Q(research_in_show=True)
+        mphil_students_q = ~models.Q(mphil_school='') & ~models.Q(mphil_graduation_year='') & models.Q(mphil_in_show=True)
+        phd_students_q = ~models.Q(phd_school='') & ~models.Q(phd_graduation_year='') & models.Q(phd_in_show=True)
 
         # Run filters
         ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
@@ -4260,14 +4265,19 @@ class GalleryPage(Page, SocialFields):
             ('programme', 'ma_programme', programme),
             ('year', 'ma_graduation_year', year),
         ])
-        research_filters = run_filters_q(NewStudentPage, research_students_q, [
-            ('school', 'research_school', school),
-            ('programme', 'research_programme', programme),
-            ('year', 'research_graduation_year', year),
+        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
+            ('school', 'mphil_school', school),
+            ('programme', 'mphil_programme', programme),
+            ('year', 'mphil_graduation_year', year),
+        ])
+        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
+            ('school', 'phd_school', school),
+            ('programme', 'phd_programme', programme),
+            ('year', 'phd_graduation_year', year),
         ])
 
         # Combine filters
-        filters = combine_filters(ma_filters, research_filters)
+        filters = combine_filters(ma_filters, mphil_filters, phd_filters)
 
         # Add combined filters to both groups
         ma_students_q &= get_filters_q(filters, {
@@ -4275,17 +4285,22 @@ class GalleryPage(Page, SocialFields):
             'programme': 'ma_programme',
             'year': 'ma_graduation_year',
         })
-        research_students_q &= get_filters_q(filters, {
-            'school': 'research_school',
-            'programme': 'research_programme',
-            'year': 'research_graduation_year',
+        mphil_students_q &= get_filters_q(filters, {
+            'school': 'mphil_school',
+            'programme': 'mphil_programme',
+            'year': 'mphil_graduation_year',
+        })
+        phd_students_q &= get_filters_q(filters, {
+            'school': 'phd_school',
+            'programme': 'phd_programme',
+            'year': 'phd_graduation_year',
         })
 
-        return ma_students_q, research_students_q, filters
+        return ma_students_q, mphil_students_q, phd_students_q, filters
 
     def get_students(self, school=None, programme=None, year=None):
-        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
-        return NewStudentPage.get_students().filter(ma_students_q | research_students_q), filters 
+        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
+        return NewStudentPage.get_students().filter(ma_students_q | mphil_students_q | phd_students_q), filters 
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -4295,8 +4310,8 @@ class GalleryPage(Page, SocialFields):
         year = request.GET.get('degree_year')
 
         # Get students
-        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
-        students = NewStudentPage.get_students().filter(ma_students_q | research_students_q)
+        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
+        students = NewStudentPage.get_students().filter(ma_students_q | mphil_students_q | phd_students_q)
 
         # Find year options
         year_options = []
@@ -4308,7 +4323,7 @@ class GalleryPage(Page, SocialFields):
         # Randomly order students
         students = students.extra(
             select={
-                '_year': "CASE WHEN research_graduation_year = '' THEN ma_graduation_year ELSE research_graduation_year END"
+                '_year': "CASE WHEN phd_graduation_year = '' THEN CASE WHEN mphil_graduation_year = '' THEN ma_graduation_year ELSE mphil_graduation_year END ELSE phd_graduation_year END"
             },
             order_by=['-_year', 'random_order'],
         ).distinct()
@@ -4325,7 +4340,7 @@ class GalleryPage(Page, SocialFields):
 
         # Add profile to students
         for student in students:
-            student.profile = self.student_which_profile(student, ma_students_q, research_students_q)
+            student.profile = self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q)
 
         # Get template
         if request.is_ajax():

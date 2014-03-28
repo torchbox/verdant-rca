@@ -5,8 +5,18 @@
         <div class='item-container row'>
             <ul class='row'>
                 {% for galleryitem in gallery_items %}
-                    {% if galleryitem.profile == 'research' %}
-                        {% with galleryitem.research_carousel_items.all as carousel_items %}
+                    {% if galleryitem.profile == 'phd' %}
+                        {% with galleryitem.phd_carousel_items.all as carousel_items %}
+                            {% with carousel_items|first as carousel_item %}
+                                {% if carousel_item.image %}
+                                    {% include "rca/includes/modules/gallery_include.html" with gallery_image=carousel_item.image %}
+                                {% elif carousel_item.poster_image %}
+                                    {% include "rca/includes/modules/gallery_include.html" with gallery_image=carousel_item.poster_image %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endwith %}
+                    {% elseif galleryitem.profile == 'mphil' %}
+                        {% with galleryitem.mphil_carousel_items.all as carousel_items %}
                             {% with carousel_items|first as carousel_item %}
                                 {% if carousel_item.image %}
                                     {% include "rca/includes/modules/gallery_include.html" with gallery_image=carousel_item.image %}
