@@ -3391,24 +3391,63 @@ class NewStudentPageShowSponsor(Orderable):
     panels = [FieldPanel('name')]
 
 
-# Research
-class NewStudentPageResearchCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_carousel_items')
+# MPhil
+class NewStudentPageMPhilCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_carousel_items')
 
-class NewStudentPageResearchCollaborator(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_collaborators')
+class NewStudentPageMPhilCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_collaborators')
     name = models.CharField(max_length=255, blank=True)
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageResearchSponsor(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_sponsors')
+class NewStudentPageMPhilSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_sponsors')
     name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageResearchSupervisor(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_supervisors')
+class NewStudentPageMPhilSupervisor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor_other = models.CharField(max_length=255, blank=True)
+
+    @property
+    def name(self):
+        if self.supervisor:
+            return self.supervisor.title
+        else:
+            return self.supervisor_other
+
+    @property
+    def link(self):
+        if self.supervisor:
+            return self.supervisor.url
+
+    panels = [
+        PageChooserPanel('supervisor'),
+        FieldPanel('supervisor_other'),
+    ]
+
+
+# PhD
+class NewStudentPagePhDCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_carousel_items')
+
+class NewStudentPagePhDCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_collaborators')
+    name = models.CharField(max_length=255, blank=True)
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPagePhDSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPagePhDSupervisor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_supervisors')
     supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
     supervisor_other = models.CharField(max_length=255, blank=True)
 
@@ -3451,56 +3490,74 @@ class NewStudentPage(Page, SocialFields):
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
     ma_in_show = models.BooleanField("In show", default=False)
-
-    # Show details
     show_work_title = models.CharField("Project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
 
-    # Research details
-    research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
-    research_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    research_start_year = models.CharField("Start year", max_length=4, blank=True)
-    research_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
-    research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
-    research_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
-    research_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
-    research_statement = RichTextField("Research statement", blank=True)
-    research_in_show = models.BooleanField("In show", default=False)
+    # MPhil details
+    mphil_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    mphil_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    mphil_start_year = models.CharField("Start year", max_length=4, blank=True)
+    mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
+    mphil_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
+    mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
+    mphil_statement = RichTextField("Research statement", blank=True)
+    mphil_in_show = models.BooleanField("In show", default=False)
+
+    # PhD details
+    phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    phd_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    phd_start_year = models.CharField("Start year", max_length=4, blank=True)
+    phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
+    phd_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
+    phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
+    phd_statement = RichTextField("Research statement", blank=True)
+    phd_in_show = models.BooleanField("In show", default=False)
 
     indexed_fields = (
         'first_name', 'last_name', 'preferred_name', 'statement',
         'get_ma_school_display', 'get_ma_programme_display', 'ma_degree_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
-        'get_research_school_display', 'get_research_programme_display', 'research_graduation_year', 'get_research_qualification_display', 'research_dissertation_title', 'research_statement',
+        'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'get_mphil_qualification_display', 'mphil_dissertation_title', 'mphil_statement',
+        'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'get_phd_qualification_display', 'phd_dissertation_title', 'phd_statement',
     )
-
-    @property
-    def is_research_student(self):
-        return self.research_school != ''
 
     @property
     def is_ma_student(self):
         return self.ma_school != ''
 
     @property
+    def is_mphil_student(self):
+        return self.research_school != ''
+
+    @property
+    def is_phd_student(self):
+        return self.research_school != ''
+
+    @property
     def school(self):
-        if self.is_research_student:
-            return self.research_school
+        if self.is_phd_student:
+            return self.phd_school
+        elif self.is_mphil_student:
+            return self.mphil_school
         elif self.is_ma_student:
             return self.ma_school
 
     @property
     def programme(self):
-        if self.is_research_student:
-            return self.research_programme
+        if self.is_phd_student:
+            return self.phd_programme
+        elif self.is_phd_student:
+            return self.phd_programme
         elif self.is_ma_student:
             return self.ma_programme
 
     @property
     def search_name(self):
-        if self.is_research_student:
+        if self.is_mphil_student or self.is_phd_student:
             if self.research_qualification == 'innovationrca-fellow':
                 return "InnovationRCA Fellow"
             else:
@@ -3570,22 +3627,39 @@ NewStudentPage.content_panels = [
         InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
     ], "MA Show details"),
 
-    # Research details
+    # MPhil details
     MultiFieldPanel([
-        FieldPanel('research_in_show'),
-        FieldPanel('research_school'),
-        FieldPanel('research_programme'),
-        FieldPanel('research_dissertation_title'),
-        FieldPanel('research_statement'),
-        FieldPanel('research_start_year'),
-        FieldPanel('research_graduation_year'),
-        FieldPanel('research_qualification'),
-        FieldPanel('research_work_location'),
-        InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
-        InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
-    ], "MPhil/PhD details"),
+        FieldPanel('mphil_in_show'),
+        FieldPanel('mphil_school'),
+        FieldPanel('mphil_programme'),
+        FieldPanel('mphil_dissertation_title'),
+        FieldPanel('mphil_statement'),
+        FieldPanel('mphil_start_year'),
+        FieldPanel('mphil_graduation_year'),
+        FieldPanel('mphil_qualification'),
+        FieldPanel('mphil_work_location'),
+        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
+        InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
+    ], "MPhil details"),
+
+    # PhD details
+    MultiFieldPanel([
+        FieldPanel('phd_in_show'),
+        FieldPanel('phd_school'),
+        FieldPanel('phd_programme'),
+        FieldPanel('phd_dissertation_title'),
+        FieldPanel('phd_statement'),
+        FieldPanel('phd_start_year'),
+        FieldPanel('phd_graduation_year'),
+        FieldPanel('phd_qualification'),
+        FieldPanel('phd_work_location'),
+        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
+        InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
+    ], "PhD details"),
 ]
 
 NewStudentPage.promote_panels = [
