@@ -4207,7 +4207,12 @@ class GalleryPage(Page, SocialFields):
                 break
 
         # Randomly order students
-        students = students.order_by('-research_graduation_year', '-ma_graduation_year', 'random_order')
+        students = students.extra(
+            select={
+                '_year': "CASE WHEN research_graduation_year = '' THEN ma_graduation_year ELSE research_graduation_year END"
+            },
+            order_by=['-_year', 'random_order'],
+        ).distinct()
 
         # Pagination
         page = request.GET.get('page')
