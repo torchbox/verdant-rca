@@ -4199,6 +4199,13 @@ class GalleryPage(Page, SocialFields):
         # Get students
         students, filters = self.get_students(year, school, programme)
 
+        # Find year options
+        year_options = []
+        for fil in filters:
+            if fil['name'] == 'year':
+                year_options = fil['options']
+                break
+
         # Randomly order students
         students = students.order_by('-research_graduation_year', '-ma_graduation_year', 'random_order')
 
@@ -4223,7 +4230,7 @@ class GalleryPage(Page, SocialFields):
             'self': self,
             'gallery_items': students,
             'filters': json.dumps(filters),
-            'years': reversed(sorted(filters[2]['options'])),
+            'years': reversed(sorted(year_options)),
             'selected_year': year,
         })
 
