@@ -3531,11 +3531,11 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def is_mphil_student(self):
-        return self.research_school != ''
+        return self.mphil_school != ''
 
     @property
     def is_phd_student(self):
-        return self.research_school != ''
+        return self.phd_school != ''
 
     @property
     def school(self):
