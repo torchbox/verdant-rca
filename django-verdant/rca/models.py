@@ -4165,10 +4165,27 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
-    def get_students(self, year=None, school=None, programme=None):
-        # Make queries
+    def student_which_profile(self, student, ma_students_q, research_students_q):
+        students = NewStudentPage.get_students()
+
+        # Check if student is in research students
+        if students.filter(research_students_q).filter(pk=student.pk).exists():
+            return 'research'
+
+        # Check if student is in ma students
+        if students.filter(ma_students_q).filter(pk=student.pk).exists():
+            return 'ma'
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get filter parameters
+        year = request.GET.get('degree_year')
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+
+        # Get students
         ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
-        research_students_q = ~models.Q(research_school='') & models.Q(research_in_show=True)
+        research_students_q = ~models.Q(research_school='') & ~models.Q(research_graduation_year='') & models.Q(research_in_show=True)
 
         # Run filters
         ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
@@ -4197,18 +4214,7 @@ class GalleryPage(Page, SocialFields):
             'year': 'research_graduation_year',
         })
 
-        # Combine student queries
-        return NewStudentPage.get_students().filter(ma_students_q | research_students_q), filters
-
-    @vary_on_headers('X-Requested-With')
-    def serve(self, request):
-        # Get filter parameters
-        year = request.GET.get('degree_year')
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
-
-        # Get students
-        students, filters = self.get_students(year, school, programme)
+        students = NewStudentPage.get_students().filter(ma_students_q | research_students_q)
 
         # Find year options
         year_options = []
@@ -4234,6 +4240,10 @@ class GalleryPage(Page, SocialFields):
             students = paginator.page(1)
         except EmptyPage:
             students = paginator.page(paginator.num_pages)
+
+        # Add profile to students
+        for student in students:
+            student.profile = self.student_which_profile(student, ma_students_q, research_students_q)
 
         # Get template
         if request.is_ajax():
