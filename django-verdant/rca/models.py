@@ -42,7 +42,7 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_filters
+from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
@@ -3039,15 +3039,15 @@ class ResearchStudentIndex(Page, SocialFields):
     search_name = None
 
     def all_students(self):
-        return StudentPage.objects.filter(live=True, path__startswith=self.path)
+        return NewStudentPage.objects.filter(live=True).exclude(research_school='')
 
     def current_students(self):
         current_year = timezone.now().year
-        return self.all_students().filter(models.Q(graduation_year='') | models.Q(graduation_year__gte=current_year))
+        return self.all_students().filter(models.Q(research_graduation_year='') | models.Q(research_graduation_year__gte=current_year))
 
     def past_students(self):
         current_year = timezone.now().year
-        return self.all_students().filter(graduation_year__lt=current_year).exclude(graduation_year='')
+        return self.all_students().filter(research_graduation_year__lt=current_year).exclude(research_graduation_year='')
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -3063,8 +3063,8 @@ class ResearchStudentIndex(Page, SocialFields):
 
         # Run school and programme filters
         research_students, filters = run_filters(research_students, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
+            ('school', 'research_school', school),
+            ('programme', 'research_programme', programme),
         ])
 
         research_students = research_students.distinct().order_by('random_order')
@@ -3092,6 +3092,18 @@ class ResearchStudentIndex(Page, SocialFields):
                 'research_students': research_students,
                 'filters': json.dumps(filters),
             })
+
+    def route(self, request, path_components):
+        # If there are any path components, try checking if one if them is a student in the research student index
+        # If so, re route through the student page
+        if len(path_components) == 1:
+            try:
+                student_page = self.all_students().get(slug=path_components[0])
+                return student_page.specific.serve(request, view='research')
+            except NewStudentPage.DoesNotExist:
+                pass
+
+        return super(ResearchStudentIndex, self).route(request, path_components)
 
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3584,6 +3596,28 @@ class NewStudentPage(Page, SocialFields):
 
         # Cannot find any show profiles, return regular URL
         return self.url
+
+    def serve(self, request, view='standard'):
+        if view not in ['standard', 'show', 'research']:
+            raise Http404("Student view doesn't exist")
+
+        # Insert view into TemplateResponse object
+        response = super(NewStudentPage, self).serve(request)
+        response.context_data['view'] = view
+        return response
+
+    @classmethod
+    def get_students_q(cls):
+        # Find student index
+        student_index = StandardIndex.objects.filter(live=True, slug='students')
+        if not student_index.exists():
+            return cls.objects.none()
+
+        return models.Q(live=True, path__startswith=student_index.first().path)
+
+    @classmethod
+    def get_students(cls):
+        return cls.objects.filter(cls.get_students_q())
 
 NewStudentPage.content_panels = [
     # General details
@@ -4205,35 +4239,93 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
+    def student_which_profile(self, student, ma_students_q, research_students_q):
+        students = NewStudentPage.get_students()
+
+        # Check if student is in research students
+        if students.filter(research_students_q).filter(pk=student.pk).exists():
+            return 'research'
+
+        # Check if student is in ma students
+        if students.filter(ma_students_q).filter(pk=student.pk).exists():
+            return 'ma'
+
+    def get_students_q(self, school=None, programme=None, year=None):
+        ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
+        research_students_q = ~models.Q(research_school='') & ~models.Q(research_graduation_year='') & models.Q(research_in_show=True)
+
+        # Run filters
+        ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
+            ('school', 'ma_school', school),
+            ('programme', 'ma_programme', programme),
+            ('year', 'ma_graduation_year', year),
+        ])
+        research_filters = run_filters_q(NewStudentPage, research_students_q, [
+            ('school', 'research_school', school),
+            ('programme', 'research_programme', programme),
+            ('year', 'research_graduation_year', year),
+        ])
+
+        # Combine filters
+        filters = combine_filters(ma_filters, research_filters)
+
+        # Add combined filters to both groups
+        ma_students_q &= get_filters_q(filters, {
+            'school': 'ma_school',
+            'programme': 'ma_programme',
+            'year': 'ma_graduation_year',
+        })
+        research_students_q &= get_filters_q(filters, {
+            'school': 'research_school',
+            'programme': 'research_programme',
+            'year': 'research_graduation_year',
+        })
+
+        return ma_students_q, research_students_q, filters
+
+    def get_students(self, school=None, programme=None, year=None):
+        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
+        return NewStudentPage.get_students().filter(ma_students_q | research_students_q), filters 
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get filter parameters
-        year = request.GET.get('degree_year')
         school = request.GET.get('school')
         programme = request.GET.get('programme')
+        year = request.GET.get('degree_year')
 
-        # Get all possible gallery items
-        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
+        # Get students
+        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
+        students = NewStudentPage.get_students().filter(ma_students_q | research_students_q)
 
-        # Run filters
-        gallery_items, filters = run_filters(gallery_items, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-            ('degree_year', 'degree_year', year),
-        ])
+        # Find year options
+        year_options = []
+        for fil in filters:
+            if fil['name'] == 'year':
+                year_options = fil['options']
+                break
 
-        # Randomly order gallery items
-        gallery_items = gallery_items.order_by('-degree_year', 'random_order')
+        # Randomly order students
+        students = students.extra(
+            select={
+                '_year': "CASE WHEN research_graduation_year = '' THEN ma_graduation_year ELSE research_graduation_year END"
+            },
+            order_by=['-_year', 'random_order'],
+        ).distinct()
 
         # Pagination
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
+        paginator = Paginator(students, 5)  # Show 5 gallery items per page
         try:
-            gallery_items = paginator.page(page)
+            students = paginator.page(page)
         except PageNotAnInteger:
-            gallery_items = paginator.page(1)
+            students = paginator.page(1)
         except EmptyPage:
-            gallery_items = paginator.page(paginator.num_pages)
+            students = paginator.page(paginator.num_pages)
+
+        # Add profile to students
+        for student in students:
+            student.profile = self.student_which_profile(student, ma_students_q, research_students_q)
 
         # Get template
         if request.is_ajax():
@@ -4244,11 +4336,24 @@ class GalleryPage(Page, SocialFields):
         # Render response
         return render(request, template, {
             'self': self,
-            'gallery_items': gallery_items,
+            'gallery_items': students,
             'filters': json.dumps(filters),
-            'years': reversed(sorted(filters[2]['options'])),
+            'years': reversed(sorted(year_options)),
             'selected_year': year,
         })
+
+    def route(self, request, path_components):
+        # If there are any path components, try checking if one if them is a student in the gallery
+        # If so, re route through the student page
+        if len(path_components) == 1:
+            try:
+                student_page = self.get_students()[0].get(slug=path_components[0])
+                return student_page.specific.serve(request, view='show')
+            except NewStudentPage.DoesNotExist:
+                pass
+
+        return super(GalleryPage, self).route(request, path_components)
+
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
