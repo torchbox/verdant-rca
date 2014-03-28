@@ -4176,14 +4176,7 @@ class GalleryPage(Page, SocialFields):
         if students.filter(ma_students_q).filter(pk=student.pk).exists():
             return 'ma'
 
-    @vary_on_headers('X-Requested-With')
-    def serve(self, request):
-        # Get filter parameters
-        year = request.GET.get('degree_year')
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
-
-        # Get students
+    def get_students_q(self, school=None, programme=None, year=None):
         ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
         research_students_q = ~models.Q(research_school='') & ~models.Q(research_graduation_year='') & models.Q(research_in_show=True)
 
@@ -4214,6 +4207,21 @@ class GalleryPage(Page, SocialFields):
             'year': 'research_graduation_year',
         })
 
+        return ma_students_q, research_students_q, filters
+
+    def get_students(self, school=None, programme=None, year=None):
+        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
+        return NewStudentPage.get_students().filter(ma_students_q | research_students_q), filters 
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get filter parameters
+        school = request.GET.get('school')
+        programme = request.GET.get('programme')
+        year = request.GET.get('degree_year')
+
+        # Get students
+        ma_students_q, research_students_q, filters = self.get_students_q(school, programme, year)
         students = NewStudentPage.get_students().filter(ma_students_q | research_students_q)
 
         # Find year options
