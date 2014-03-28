@@ -28,6 +28,11 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.research_dissertation_title }}</h3>
+
+                            {{ self.research_statement|richtext }}
+                        </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
@@ -46,18 +51,13 @@
                                 </dl>
                             </div>
                         </div>
-                        <div class="col col-9 last body-text">
-                            <h3>{{ self.research_dissertation_title }}</h3>
-
-                            {{ self.research_statement|richtext }}
-                        </div>
                     </div>
                 </section>
 
             {% endtab %}
         {% endif %}
 
-        {% if self.is_ma_student %}
+        {% if self.is_ma_student and self.ma_in_show %}
             {% tab "MA work" %}
 
                 {% with self.show_carousel_items.all as carousel_items %}
@@ -66,6 +66,11 @@
 
                 <section class="row">
                     <div class="three-nine-cols">
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.show_work_title }}</h3>
+
+                            {{ self.show_work_description|richtext }}
+                        </div>
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
@@ -92,11 +97,6 @@
                                 </dl>
                             </div>
                         </div>
-                        <div class="col col-9 last body-text">
-                            <h3>{{ self.show_work_title }}</h3>
-
-                            {{ self.show_work_description|richtext }}
-                        </div>
                     </div>
                 </section>
             {% endtab %}
@@ -115,7 +115,7 @@
                     </li>
                     {% if self.is_ma_student %}
                         <li class="col">
-                            <h3 class="a1">MA Degree</h3>
+                            <h2 class="h6">MA Degree</h2>
 
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_ma_school_display }}</p>
@@ -131,7 +131,7 @@
                     {% endif %}
                     {% if self.is_research_student %}
                         <li class="col">
-                            <h3 class="a1">Research</h3>
+                            <h2 class="h6">Research</h2>
 
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_research_school_display }}</p>
@@ -145,12 +145,12 @@
                     <li class="col">
                         {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
                         
-                            <h3 class="a2">Contact</h3>
+                            <h2 class="h6">Contact</h2>
                             <ul>
                                 {% with self.emails.all as emails %}
                                     {% if emails %}
                                         {% for email in emails %}
-                                            <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
+                                            <li><a href="mailto:{{ email.email }}">Email</a></li>
                                         {% endfor %}
                                     {% endif %}
                                 {% endwith %}
@@ -164,7 +164,7 @@
                                 {% with self.websites.all as websites %}
                                     {% if websites %}
                                         {% for website in websites %}
-                                            <li><a href="{{ website.website }}">{{ website.website }}</a></li>
+                                            <li><a href="{{ website.website }}">Website</a></li>
                                         {% endfor %}
                                     {% endif %}
                                 {% endwith %}
@@ -250,7 +250,7 @@
                             </li>
                             <li class="col col-9 last body-text-style">
                                 {% for award in awards %}
-                                    {{ award.name }}{% if not forloop.last %}; {% endif %}
+                                    {{ award.award }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
                             </li>
                         </ul>
