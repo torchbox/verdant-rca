@@ -29,7 +29,7 @@ def run_filters_q(cls, q, filters):
         # Add filter to output
         filters_out.append(dict(name=name, current_value=current_value, options=options))
 
-    return q, filters_out
+    return filters_out
 
 
 def run_filters(queryset, filters):
@@ -83,3 +83,14 @@ def combine_filters(*args):
         }
         for name, field in fields.items()
     ]
+
+
+def get_filters_q(filters, field_mapping):
+    q = Q()
+
+    for fil in filters:
+        if fil['name'] in field_mapping and fil['current_value']:
+            field = field_mapping[fil['name']]
+            q &= Q(**{field: fil['current_value']})
+
+    return q

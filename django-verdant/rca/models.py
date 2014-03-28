@@ -42,7 +42,7 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_filters, run_filters_q, combine_filters
+from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
@@ -4167,17 +4167,16 @@ class GalleryPage(Page, SocialFields):
 
     def get_students(self, year=None, school=None, programme=None):
         # Make queries
-        all_students_q = NewStudentPage.get_students_q()
-        ma_students_q = all_students_q & ~models.Q(ma_school='') & models.Q(ma_in_show=True)
-        research_students_q = all_students_q & ~models.Q(research_school='') & models.Q(research_in_show=True)
+        ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
+        research_students_q = ~models.Q(research_school='') & models.Q(research_in_show=True)
 
         # Run filters
-        ma_students_q, ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
+        ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
             ('school', 'ma_school', school),
             ('programme', 'ma_programme', programme),
             ('year', 'ma_graduation_year', year),
         ])
-        research_students_q, research_filters = run_filters_q(NewStudentPage, research_students_q, [
+        research_filters = run_filters_q(NewStudentPage, research_students_q, [
             ('school', 'research_school', school),
             ('programme', 'research_programme', programme),
             ('year', 'research_graduation_year', year),
@@ -4186,8 +4185,20 @@ class GalleryPage(Page, SocialFields):
         # Combine filters
         filters = combine_filters(ma_filters, research_filters)
 
+        # Add combined filters to both groups
+        ma_students_q &= get_filters_q(filters, {
+            'school': 'ma_school',
+            'programme': 'ma_programme',
+            'year': 'ma_graduation_year',
+        })
+        research_students_q &= get_filters_q(filters, {
+            'school': 'research_school',
+            'programme': 'research_programme',
+            'year': 'research_graduation_year',
+        })
+
         # Combine student queries
-        return NewStudentPage.objects.filter(ma_students_q | research_students_q), filters
+        return NewStudentPage.get_students().filter(ma_students_q | research_students_q), filters
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
