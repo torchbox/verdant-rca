@@ -3574,7 +3574,7 @@ class NewStudentPage(Page, SocialFields):
 
     indexed_fields = (
         'first_name', 'last_name', 'preferred_name', 'statement',
-        'get_ma_school_display', 'get_ma_programme_display', 'ma_degree_year', 'get_ma_specialism_display',
+        'get_ma_school_display', 'get_ma_programme_display', 'ma_graduation_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'get_mphil_qualification_display', 'mphil_dissertation_title', 'mphil_statement',
         'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'get_phd_qualification_display', 'phd_dissertation_title', 'phd_statement',
