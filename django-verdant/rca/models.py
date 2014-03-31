@@ -3648,11 +3648,21 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def school(self):
-        return self.get_profile()['school']
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['school']
+        else:
+            return ''
 
     @property
     def programme(self):
-        return self.get_profile()['programme']
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['programme']
+        else:
+            return ''
 
     @property
     def search_name(self):
@@ -3666,7 +3676,6 @@ class NewStudentPage(Page, SocialFields):
             is_graduate = false
 
         return profile['name'] + (" Graduate" if is_graduate else " Student")
-
 
     @property
     def profile_url(self):
