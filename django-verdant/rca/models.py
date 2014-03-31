@@ -3632,7 +3632,7 @@ class NewStudentPage(Page, SocialFields):
         return profiles
 
     def get_profile(self, profile=None):
-        profiles = get_profiles(self)
+        profiles = self.get_profiles()
 
         # Try to find the profile that was asked for
         if profile and profile in profiles:
