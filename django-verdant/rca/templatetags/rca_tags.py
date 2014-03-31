@@ -187,7 +187,7 @@ def jobs_listing(context):
 @register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
 def students_related(context, programme="", year="", exclude=None, count=4):
     students = NewStudentPage.objects.filter(live=True).filter(Q(ma_programme=programme) | Q(mphil_programme=programme) | Q(phd_programme=programme))
-    students = students.filter(degree_year=year)
+    students = students.filter(Q(ma_graduation_year=year) | Q(mphil_start_year=year) | Q(phd_start_year=year))
     students = students.order_by('?')
     if exclude:
         students = students.exclude(id=exclude.id)
@@ -199,7 +199,7 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 # Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
 @register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
 def students_related_work(context, year="", exclude=None, count=4):
-    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_graduation_year=programme) | Q(mphil_degree_year=programme) | Q(phd_degree_year=programme))
+    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_graduation_year=year) | Q(mphil_start_year=year) | Q(phd_start_year=year))
     students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
     students = students.order_by('?')
 
