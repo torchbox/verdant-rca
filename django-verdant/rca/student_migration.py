@@ -153,7 +153,9 @@ class StudentMigration(object):
         new_page.slug = slugify(name)
         new_page.live = most_recent.live
         new_page.has_unpublished_changes = not most_recent.live
-        new_page.owner = ma_page.owner or mphil_page.owner or phd_page.owner
+        new_page.owner = None
+        for page in pages:
+            new_page.owner = new_page.owner or page.owner
 
         # General info
         new_page.first_name = most_recent.first_name
