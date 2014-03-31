@@ -3665,24 +3665,42 @@ class NewStudentPage(Page, SocialFields):
             return "Graduate"
 
     @property
-    def search_url(self):
-        # Try to find a show profile for this student
-        from rca_show.models import ShowIndexPage
-        for show in ShowIndexPage.objects.filter(live=True):
-            # Check if this student is in this show
-            if not show.get_students().filter(id=self.id).exists():
-                continue
+    def profile_url(self):
+        # Try to find a show profile
+        if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
+            from rca_show.models import ShowIndexPage
+            for show in ShowIndexPage.objects.filter(live=True):
+                # Check if this student is in this show
+                if not show.get_students().filter(id=self.id).exists():
+                    continue
 
-            # Get students URL in this show
-            try:
-                url = show.get_student_url(self)
-                assert url is not None
-                return url
-            except:
-                pass
+                # Get students URL in this show
+                try:
+                    url = show.get_student_url(self)
+                    assert url is not None
+                    return url
+                except:
+                    pass
 
-        # Cannot find any show profiles, return regular URL
+        # Try to find a research profile
+        if self.is_phd_student or self.is_mphil_student:
+            for research_student_index in ResearchStudentIndex.objects.all():
+                if research_student_index.all_students().filter(id=self.id).exists():
+                    return research_student_index.url + self.slug + '/'
+
+        # Try to find gallery profile
+        if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
+            for gallery_page in GalleryPage.objects.all():
+                if gallery_page.get_students()[0].filter(id=self.id).exists():
+                    return gallery_page.url + self.slug + '/'
+
+        # Cannot find any profiles, use regular url
         return self.url
+
+    @property
+    def search_url(self):
+        # Use profile url in the search
+        return self.profile_url
 
     def serve(self, request, view='standard'):
         if view not in ['standard', 'show', 'research']:
