@@ -3534,6 +3534,7 @@ class NewStudentPage(Page, SocialFields):
     funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
+    innovation_rca_fellow = models.BooleanField(default=False)
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
@@ -3555,7 +3556,6 @@ class NewStudentPage(Page, SocialFields):
     mphil_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True)
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
-    mphil_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     mphil_statement = RichTextField("Research statement", blank=True)
@@ -3566,7 +3566,6 @@ class NewStudentPage(Page, SocialFields):
     phd_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     phd_start_year = models.CharField("Start year", max_length=4, blank=True)
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
-    phd_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     phd_statement = RichTextField("Research statement", blank=True)
@@ -3576,8 +3575,8 @@ class NewStudentPage(Page, SocialFields):
         'first_name', 'last_name', 'preferred_name', 'statement',
         'get_ma_school_display', 'get_ma_programme_display', 'ma_graduation_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
-        'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'get_mphil_qualification_display', 'mphil_dissertation_title', 'mphil_statement',
-        'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'get_phd_qualification_display', 'phd_dissertation_title', 'phd_statement',
+        'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'mphil_dissertation_title', 'mphil_statement',
+        'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'phd_dissertation_title', 'phd_statement',
     )
 
     @property
@@ -3591,7 +3590,6 @@ class NewStudentPage(Page, SocialFields):
     @property
     def is_phd_student(self):
         return self.phd_school != ''
-
 
     def get_profiles(self):
         profiles = {}
@@ -3749,6 +3747,7 @@ NewStudentPage.content_panels = [
     FieldPanel('statement', classname="full"),
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
+    FieldPanel('innovation_rca_fellow'),
     InlinePanel(NewStudentPage, 'emails', label="Email"),
     InlinePanel(NewStudentPage, 'phones', label="Phone"),
     InlinePanel(NewStudentPage, 'websites', label="Website"),
@@ -3788,7 +3787,6 @@ NewStudentPage.content_panels = [
         FieldPanel('mphil_statement'),
         FieldPanel('mphil_start_year'),
         FieldPanel('mphil_graduation_year'),
-        FieldPanel('mphil_qualification'),
         FieldPanel('mphil_work_location'),
         InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel item"),
         InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
@@ -3805,7 +3803,6 @@ NewStudentPage.content_panels = [
         FieldPanel('phd_statement'),
         FieldPanel('phd_start_year'),
         FieldPanel('phd_graduation_year'),
-        FieldPanel('phd_qualification'),
         FieldPanel('phd_work_location'),
         InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel item"),
         InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
