@@ -3605,8 +3605,8 @@ class NewStudentPage(Page, SocialFields):
     def programme(self):
         if self.is_phd_student:
             return self.phd_programme
-        elif self.is_phd_student:
-            return self.phd_programme
+        elif self.is_mphil_student:
+            return self.mphil_programme
         elif self.is_ma_student:
             return self.ma_programme
 
