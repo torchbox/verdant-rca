@@ -48,6 +48,7 @@
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
+
                                     {% if self.phd_supervisors.all %}
                                         <dd>Supervisors</dd>
                                         <dt>
@@ -56,6 +57,7 @@
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
+
                                     {% if self.phd_sponsors.all %}
                                         <dd>Sponsors</dd>
                                         <dt>
@@ -275,7 +277,7 @@
                                 {% with self.emails.all as emails %}
                                     {% if emails %}
                                         {% for email in emails %}
-                                            <li><a href="mailto:{{ email.email }}">Email</a></li>
+                                            <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
                                         {% endfor %}
                                     {% endif %}
                                 {% endwith %}
@@ -289,7 +291,7 @@
                                 {% with self.websites.all as websites %}
                                     {% if websites %}
                                         {% for website in websites %}
-                                            <li><a href="{{ website.website }}">Website</a></li>
+                                            <li><a href="{{ website.website }}">{{ website.website }}</a></li>
                                         {% endfor %}
                                     {% endif %}
                                 {% endwith %}
