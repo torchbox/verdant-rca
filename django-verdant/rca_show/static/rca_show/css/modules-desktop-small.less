@@ -11,13 +11,26 @@
         background-color: @color-tab-grey !important;
 
         &:hover{
-        	color:inherit;
+            color:inherit;
         }
     }
 }
 
+.showgallery{
+    li{
+        height:300px;
+        margin-bottom:@spacing-one;
+    }
+        .landscape{
+            .column(6);
+        }
+        .portrait{
+            .column(3);
+        }    
+}
+
 .programme-curatingcontemporaryart .showgallery{
-	li{
-		.column(4);
-	}
+    li{
+        .column(4);
+    }
 }

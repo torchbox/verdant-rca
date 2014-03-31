@@ -1,7 +1,6 @@
 {% load pageurl image_tags show_tags %}
-{% image gallery_image width-600 as tmpimage %}
 
-<li class="item {% if gallery_image.landscape %}landscape{% else %}portrait{% endif %}" >
+<li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}" >
     <a href="{% get_student_url self student %}">
         <div class="gallery-image">
             {% image gallery_image height-300 %}
