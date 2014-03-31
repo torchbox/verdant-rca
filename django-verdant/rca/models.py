@@ -3592,32 +3592,67 @@ class NewStudentPage(Page, SocialFields):
     def is_phd_student(self):
         return self.phd_school != ''
 
+
+    def get_profiles(self):
+        profiles = {}
+
+        if self.is_phd_student:
+            profiles['phd'] = {
+                'name': "PhD",
+                'school': self.phd_school,
+                'programme': self.phd_programme,
+                'start_year': self.phd_start_year,
+                'graduation_year': self.phd_graduation_year,
+                'in_show_': self.phd_in_show,
+                'carousel_items': self.phd_carousel_items,
+            }
+
+        if self.is_mphil_student:
+            profiles['mphil'] = {
+                'name': "MPhil",
+                'school': self.mphil_school,
+                'programme': self.mphil_programme,
+                'start_year': self.mphil_start_year,
+                'graduation_year': self.mphil_graduation_year,
+                'in_show_': self.mphil_in_show,
+                'carousel_items': self.mphil_carousel_items,
+            }
+
+        if self.is_ma_student:
+            profiles['ma'] = {
+                'name': "MA",
+                'school': self.ma_school,
+                'programme': self.ma_programme,
+                'start_year': self.ma_graduation_year,
+                'graduation_year': self.ma_graduation_year,
+                'in_show_': self.ma_in_show,
+                'carousel_items': self.show_carousel_items,
+            }
+
+        return profiles
+
+    def get_profile(self, profile=None):
+        profiles = get_profiles(self)
+
+        # Try to find the profile that was asked for
+        if profile and profile in profiles:
+            return profiles[profile]
+
+        # Return the best profile
+        if 'phd' in profiles:
+            return profiles['phd']
+        if 'mphil' in profiles:
+            return profiles['mphil']
+        if 'ma' in profiles:
+            return profiles['ma']
+
     @property
     def school(self):
-        if self.is_phd_student:
-            return self.phd_school
-        elif self.is_mphil_student:
-            return self.mphil_school
-        elif self.is_ma_student:
-            return self.ma_school
+        return self.get_profile()['school']
 
     @property
     def programme(self):
-        if self.is_phd_student:
-            return self.phd_programme
-        elif self.is_mphil_student:
-            return self.mphil_programme
-        elif self.is_ma_student:
-            return self.ma_programme
-
-    @property
-    def carousel_items(self):
-        if self.is_phd_student:
-            return self.phd_carousel_items
-        elif self.is_mphil_student:
-            return self.mphil_carousel_items
-        elif self.is_ma_student:
-            return self.show_carousel_items
+        return self.get_profile()['programme']
 
     @property
     def search_name(self):
@@ -4392,7 +4427,7 @@ class GalleryPage(Page, SocialFields):
 
         # Add profile to students
         for student in students:
-            student.profile = self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q)
+            student.profile = student.get_profile(self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q))
 
         # Get template
         if request.is_ajax():
