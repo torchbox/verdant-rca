@@ -15,7 +15,7 @@
                                 {% endif %}
                             {% endwith %}
                         {% endwith %}
-                    {% elseif galleryitem.profile == 'mphil' %}
+                    {% elif galleryitem.profile == 'mphil' %}
                         {% with galleryitem.mphil_carousel_items.all as carousel_items %}
                             {% with carousel_items|first as carousel_item %}
                                 {% if carousel_item.image %}
