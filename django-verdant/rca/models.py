@@ -3038,31 +3038,27 @@ class ResearchStudentIndex(Page, SocialFields):
     indexed_fields = ('intro', )
     search_name = None
 
+    def current_students_q(self):
+        current_year = timezone.now().year
+        return (~models.Q(phd_school='') & (models.Q(phd_graduation_year='') | models.Q(phd_graduation_year__gte=current_year))) | (~models.Q(mphil_school='') & (models.Q(mphil_graduation_year='') | models.Q(mphil_graduation_year__gte=current_year)))
+
     def phd_students_q(self, period=None):
         q = ~models.Q(phd_school='')
 
-        if period in ['current', 'past']:
-            current_year = timezone.now().year
-            period_q = models.Q(phd_graduation_year='') | models.Q(phd_graduation_year__gte=current_year)
-
-            if period == 'past':
-                period_q = ~period_q
-
-            q &= period_q
+        if period == 'current':
+            q &= self.current_students_q()
+        elif period == 'past':
+            q &= ~self.current_students_q()
 
         return q
 
     def mphil_students_q(self, period=None):
         q = ~models.Q(mphil_school='')
 
-        if period in ['current', 'past']:
-            current_year = timezone.now().year
-            period_q = models.Q(mphil_graduation_year='') | models.Q(mphil_graduation_year__gte=current_year)
-
-            if period == 'past':
-                period_q = ~period_q
-
-            q &= period_q
+        if period == 'current':
+            q &= self.current_students_q()
+        elif period == 'past':
+            q &= ~self.current_students_q()
 
         return q
 
@@ -3098,7 +3094,7 @@ class ResearchStudentIndex(Page, SocialFields):
 
     def all_students(self):
         phd_students_q, mphil_students_q, filters = self.get_students_q()
-        return NewStudentPage.get_students().filter(phd_students_q | mphil_students_q)
+        return NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -3108,7 +3104,7 @@ class ResearchStudentIndex(Page, SocialFields):
 
         # Get students
         phd_students_q, mphil_students_q, filters = self.get_students_q(school, programme, period)
-        research_students = NewStudentPage.get_students().filter(phd_students_q | mphil_students_q)
+        research_students = NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
 
         research_students = research_students.distinct().order_by('random_order')
 
@@ -3721,19 +3717,6 @@ class NewStudentPage(Page, SocialFields):
         response = super(NewStudentPage, self).serve(request)
         response.context_data['view'] = view
         return response
-
-    @classmethod
-    def get_students_q(cls):
-        # Find student index
-        student_index = StandardIndex.objects.filter(live=True, slug='students')
-        if not student_index.exists():
-            return cls.objects.none()
-
-        return models.Q(live=True, path__startswith=student_index.first().path)
-
-    @classmethod
-    def get_students(cls):
-        return cls.objects.filter(cls.get_students_q())
 
 NewStudentPage.content_panels = [
     # General details
@@ -4355,7 +4338,7 @@ class GalleryPage(Page, SocialFields):
     search_name = 'Gallery'
 
     def student_which_profile(self, student, ma_students_q, mphil_students_q, phd_students_q):
-        students = NewStudentPage.get_students()
+        students = NewStudentPage.objects.filter(live=True)
 
         # Check if student is in phd students
         if students.filter(phd_students_q).filter(pk=student.pk).exists():
@@ -4415,7 +4398,7 @@ class GalleryPage(Page, SocialFields):
 
     def get_students(self, school=None, programme=None, year=None):
         ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        return NewStudentPage.get_students().filter(ma_students_q | mphil_students_q | phd_students_q), filters 
+        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters 
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -4426,7 +4409,7 @@ class GalleryPage(Page, SocialFields):
 
         # Get students
         ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        students = NewStudentPage.get_students().filter(ma_students_q | mphil_students_q | phd_students_q)
+        students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q)
 
         # Find year options
         year_options = []
