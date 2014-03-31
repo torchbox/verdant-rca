@@ -3656,13 +3656,17 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def search_name(self):
-        if self.is_mphil_student or self.is_phd_student:
-            if self.research_qualification == 'innovationrca-fellow':
-                return "InnovationRCA Fellow"
-            else:
-                return "Research Student"
-        else:
-            return "Graduate"
+        profile = self.get_profile()
+        if not profile:
+            return "Student"
+
+        current_year = timezone.now().year
+        is_graduate = not profile['graduation_year']
+        if is_graduate and profile['graduation_year'] == str(timezone.now().year):
+            is_graduate = false
+
+        return profile['name'] + (" Graduate" if is_graduate else " Student")
+
 
     @property
     def profile_url(self):
