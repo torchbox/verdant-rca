@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 
 from wagtail.wagtailcore.models import UserPagePermissionsProxy
 
-from rca.models import RcaNowPage, RcaNowIndex, StudentPage, NewStudentPage
+from rca.models import RcaNowPage, RcaNowIndex, NewStudentPage, StandardIndex
 
 def find_rca_now_index_page(user):
     """Look for the RCA Now index page: a page of type RcaNowIndex where this user can add pages"""
@@ -16,6 +16,16 @@ def find_rca_now_index_page(user):
             return page
 
     raise Exception('No usable RCA Now section found (using the RcaNowIndex page type and with add permission for students)')
+
+def find_student_index_page(user):
+    """Look for the student index page: a page of type StandardIndex with slug "students" where this user can add pages"""
+    user_perms = UserPagePermissionsProxy(user)
+
+    for page in StandardIndex.objects.filter(slug='students'):
+        if user_perms.for_page(page).can_add_subpage():
+            return page
+
+    raise Exception('No usable student index found (using the StandardIndex page type and with add permission for students)')
 
 @login_required
 def rca_now_index(request):
@@ -31,10 +41,10 @@ def rca_now_index(request):
 @login_required
 def student_page_index(request):
     # look for StudentPages owned by this user
-    pages = NewStudentPage.objects.filter(owner=request.user) or StudentPage.objects.filter(owner=request.user)
+    pages = NewStudentPage.objects.filter(owner=request.user)
 
     if not pages:
-        index_page = find_rca_now_index_page(request.user)
+        index_page = find_student_index_page(request.user)
 
         # Redirect to the interface for adding a StudentPage in this section
         return redirect('wagtailadmin_pages_create', 'rca', 'newstudentpage', index_page.id)
