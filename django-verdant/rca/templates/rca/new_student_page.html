@@ -204,10 +204,8 @@
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_mphil_school_display }}</p>
 
-                            {% if self.mphil_qualification  %}
-                                <h3 class="a2 space">Programme</h3>
-                                <p class="h7">{% if self.mphil_qualification %}{{ self.get_mphil_qualification_display }} {% endif %}{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}{% if self.mphil_graduation_year %}&ndash;{{ self.mphil_graduation_year }}{% endif %}</p>
-                            {% endif %}
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}{% if self.mphil_graduation_year %}&ndash;{{ self.mphil_graduation_year }}{% endif %}</p>
                         </li>
                     {% endif %}
                     {% if self.is_phd_student %}
@@ -217,15 +215,11 @@
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_phd_school_display }}</p>
 
-                            {% if self.phd_qualification  %}
-                                <h3 class="a2 space">Programme</h3>
-                                <p class="h7">{% if self.phd_qualification %}{{ self.get_phd_qualification_display }} {% endif %}{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}{% if self.phd_graduation_year %}&ndash;{{ self.phd_graduation_year }}{% endif %}</p>
-                            {% endif %}
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}{% if self.phd_graduation_year %}&ndash;{{ self.phd_graduation_year }}{% endif %}</p>
                         </li>
                     {% endif %}
                 </ul>
-                
-
 
                 {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
                   
