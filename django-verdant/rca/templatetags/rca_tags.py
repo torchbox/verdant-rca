@@ -1,6 +1,6 @@
 from django import template
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Q
 from django.template.base import parse_bits
 from wagtail.wagtailcore.util import camelcase_to_underscore
 
@@ -186,7 +186,7 @@ def jobs_listing(context):
 
 @register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
 def students_related(context, programme="", year="", exclude=None, count=4):
-    students = StudentPage.objects.filter(live=True, programme=programme)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_programme=programme) | Q(mphil_programme=programme) | Q(phd_programme=programme))
     students = students.filter(degree_year=year)
     students = students.order_by('?')
     if exclude:
@@ -199,7 +199,7 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 # Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
 @register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
 def students_related_work(context, year="", exclude=None, count=4):
-    students = StudentPage.objects.filter(live=True, degree_year=year)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_degree_year=programme) | Q(mphil_degree_year=programme) | Q(phd_degree_year=programme))
     students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
     students = students.order_by('?')
 
@@ -239,7 +239,7 @@ def staff_related(context, staff_page, count=4):
 def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-    student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -281,7 +281,7 @@ def sidebar_links(context, calling_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_feed.html', takes_context=True)
 def research_students_feed(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(mphil_supervisors__supervisor=staff_page) | Q(phd_supervisors__supervisor=staff_page))
     return {
         'students': students,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -289,7 +289,7 @@ def research_students_feed(context, staff_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_list.html', takes_context=True)
 def research_students_list(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(mphil_supervisors__supervisor=staff_page) | Q(phd_supervisors__supervisor=staff_page))
     return {
         'students': students,
         'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages

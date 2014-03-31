@@ -2402,7 +2402,7 @@ class HomePage(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
@@ -3038,16 +3038,67 @@ class ResearchStudentIndex(Page, SocialFields):
     indexed_fields = ('intro', )
     search_name = None
 
+    def phd_students_q(self, period=None):
+        q = ~models.Q(phd_school='')
+
+        if period in ['current', 'past']:
+            current_year = timezone.now().year
+            period_q = models.Q(phd_graduation_year='') | models.Q(phd_graduation_year__gte=current_year)
+
+            if period == 'past':
+                period_q = ~period_q
+
+            q &= period_q
+
+        return q
+
+    def mphil_students_q(self, period=None):
+        q = ~models.Q(mphil_school='')
+
+        if period in ['current', 'past']:
+            current_year = timezone.now().year
+            period_q = models.Q(mphil_graduation_year='') | models.Q(mphil_graduation_year__gte=current_year)
+
+            if period == 'past':
+                period_q = ~period_q
+
+            q &= period_q
+
+        return q
+
+    def get_students_q(self, school=None, programme=None, period=None):
+        # Get students
+        phd_students_q = self.phd_students_q(period)
+        mphil_students_q = self.mphil_students_q(period)
+
+        # Run filters
+        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
+            ('school', 'phd_school', school),
+            ('programme', 'phd_programme', programme),
+        ])
+        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
+            ('school', 'mphil_school', school),
+            ('programme', 'mphil_programme', programme),
+        ])
+
+        # Combine filters
+        filters = combine_filters(phd_filters, mphil_filters)
+
+        # Add combined filters to both groups
+        phd_students_q &= get_filters_q(filters, {
+            'school': 'phd_school',
+            'programme': 'phd_programme',
+        })
+        mphil_students_q &= get_filters_q(filters, {
+            'school': 'mphil_school',
+            'programme': 'mphil_programme',
+        })
+
+        return phd_students_q, mphil_students_q, filters
+
     def all_students(self):
-        return NewStudentPage.objects.filter(live=True).exclude(research_school='')
-
-    def current_students(self):
-        current_year = timezone.now().year
-        return self.all_students().filter(models.Q(research_graduation_year='') | models.Q(research_graduation_year__gte=current_year))
-
-    def past_students(self):
-        current_year = timezone.now().year
-        return self.all_students().filter(research_graduation_year__lt=current_year).exclude(research_graduation_year='')
+        phd_students_q, mphil_students_q, filters = self.get_students_q()
+        return NewStudentPage.get_students().filter(phd_students_q | mphil_students_q)
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -3056,16 +3107,8 @@ class ResearchStudentIndex(Page, SocialFields):
         period = request.GET.get('period')
 
         # Get students
-        if period == 'past':
-            research_students = self.past_students()
-        else:
-            research_students = self.current_students()
-
-        # Run school and programme filters
-        research_students, filters = run_filters(research_students, [
-            ('school', 'research_school', school),
-            ('programme', 'research_programme', programme),
-        ])
+        phd_students_q, mphil_students_q, filters = self.get_students_q(school, programme, period)
+        research_students = NewStudentPage.get_students().filter(phd_students_q | mphil_students_q)
 
         research_students = research_students.distinct().order_by('random_order')
 
