@@ -3611,6 +3611,15 @@ class NewStudentPage(Page, SocialFields):
             return self.ma_programme
 
     @property
+    def carousel_items(self):
+        if self.is_phd_student:
+            return self.phd_carousel_items
+        elif self.is_mphil_student:
+            return self.mphil_carousel_items
+        elif self.is_ma_student:
+            return self.show_carousel_items
+
+    @property
     def search_name(self):
         if self.is_mphil_student or self.is_phd_student:
             if self.research_qualification == 'innovationrca-fellow':

@@ -199,8 +199,10 @@ def students_related(context, programme="", year="", exclude=None, count=4):
 # Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
 @register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
 def students_related_work(context, year="", exclude=None, count=4):
-    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_graduation_year=year) | Q(mphil_start_year=year) | Q(phd_start_year=year))
-    students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
+    ma_students_q = Q(ma_graduation_year=year) & (Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
+    mphil_students_q = Q(mphil_start_year=year) & (Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
+    phd_students_q = Q(phd_start_year=year) & (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
+    students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q)
     students = students.order_by('?')
 
     if exclude:
