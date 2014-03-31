@@ -28,7 +28,7 @@
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                            <li><a href="{% profile_url self student %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>

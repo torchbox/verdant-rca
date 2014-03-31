@@ -15,6 +15,16 @@ from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_
 class ShowStandardPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStandardPage', related_name='carousel_items')
 
+class ShowStandardPageContent(Orderable):
+    page = ParentalKey('rca_show.ShowStandardPage', related_name='content_block')
+    body = RichTextField(blank=True)
+    map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
+
+    panels = [
+        FieldPanel('body'), 
+        FieldPanel('map_coords')
+    ]
+
 class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
@@ -30,9 +40,35 @@ ShowStandardPage.content_panels = [
     InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
     FieldPanel('body'),
     FieldPanel('map_coords'),
+    InlinePanel(ShowStandardPage, 'content_block', label="Content block"),
 ]
 
 ShowStandardPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+class ShowExhibitionMapPage(Page, SocialFields):
+    body = RichTextField(blank=True) 
+
+ShowExhibitionMapPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body'),
+]
+
+ShowExhibitionMapPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('seo_title'),
         FieldPanel('slug'),
