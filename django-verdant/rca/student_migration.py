@@ -354,9 +354,11 @@ class StudentMigration(object):
                     # MA page
                     if page.is_ma_page:
                         if ma_page:
-                            error = True
-                            break
-                        ma_page = page
+                            # Take latest ma page
+                            if ma_page.degree_year < page.degree_year:
+                                ma_page = page
+                        else:
+                            ma_page = page
 
                     # MPhil page
                     if page.is_mphil_page:
