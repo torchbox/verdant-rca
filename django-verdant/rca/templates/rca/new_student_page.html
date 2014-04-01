@@ -202,7 +202,7 @@
                             <p class="h7">{{ self.get_mphil_school_display }}</p>
 
                             <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}{% if self.mphil_graduation_year %}&ndash;{{ self.mphil_graduation_year }}{% endif %}</p>
+                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}&ndash;{% if self.mphil_graduation_year %}{{ self.mphil_graduation_year }}{% endif %}</p>
                         </li>
                     {% endif %}
                     {% if self.is_ma_student %}
