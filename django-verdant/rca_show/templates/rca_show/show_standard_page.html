@@ -10,7 +10,7 @@
     {% secondary_menu show_index as menuitems %}
 
      <section class="shownav">
-        <ul>
+        <ul class="nav-overview">
             {% if request.show_index.programme %}
                 <li class="jumplist">
                     <h2 class="toggle">Students</h2>
@@ -27,7 +27,7 @@
                 </li>
             {% endif %}
             {% for item in menuitems %}
-                <li>
+                <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>
                 </li>
             {% endfor %}
@@ -46,9 +46,25 @@
 
     {% if self.map_coords %}
         <figure class="map-aside right">
-            <div id="map"></div>
+            <div id="map" class="map"></div>
         </figure>
     {% endif %}
+
+    <div class="row col-2">
+        {% for block in self.content_block.all %}
+            <section class="body-text">
+                {% if block.map_coords %}
+                    <figure>
+                        <div id="map-{{ forloop.counter }}" class="map"></div>
+                    </figure>
+                {% endif %}
+
+                <div class="body">
+                    {{ block.body|richtext }}
+                </div>
+            </section>
+        {% endfor %}
+    </div>
 
 
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -59,32 +75,38 @@
 {% endblock %}
 
 {% block extra_js %}
-    
-    {% if self.map_coords %}
-        <script>
-        function initialize() {
-            var myLatlng = new google.maps.LatLng({{ self.map_coords }});
-            var map_canvas = document.getElementById('map');
-            var map_options = {
-              center: myLatlng,
-              zoom: 17,
-              mapTypeId: google.maps.MapTypeId.ROADMAP,
-              disableDefaultUI: true,
-              zoomControl: true,
-  zoomControlOptions: {
-    style: google.maps.ZoomControlStyle.SMALL
-  }
+   
+    <script>
+    function initializeMap(id, centre_coords_lat, centre_coords_lon) {
+        var myLatlng = new google.maps.LatLng(centre_coords_lat, centre_coords_lon);
+        var map_canvas = document.getElementById(id);
+        var map_options = {
+            center: myLatlng,
+            zoom: 17,
+            scrollwheel: false,
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            disableDefaultUI: true,
+            zoomControl: true,
+            zoomControlOptions: {
+                style: google.maps.ZoomControlStyle.SMALL
             }
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map
-            });
-            var map = new google.maps.Map(map_canvas, map_options);
-            marker.setMap(map);
         }
-        $(function(){
-            initialize();
+        var marker = new google.maps.Marker({
+            position: myLatlng,
+            map: map
         });
-        </script>
-    {% endif %}
+        var map = new google.maps.Map(map_canvas, map_options);
+        marker.setMap(map);
+    }
+    $(function(){
+        {% if self.map_coords %}
+            initializeMap('map', {{ self.map_coords }});
+        {% endif %}
+        {% for block in self.content_block.all %}
+            {% if block.map_coords %}
+                initializeMap('map-{{ forloop.counter }}', {{ block.map_coords }});
+            {% endif %}
+        {% endfor %}
+    });
+    </script>
 {% endblock %}

@@ -94,10 +94,17 @@
         }
     }
 
-    .nav-overview a{
-        text-transform:uppercase;
-        color:@color-dark-grey;
-        font-size:0.9em;
+    .nav-overview {
+        a{
+            text-transform:uppercase;
+            color:@color-dark-grey;
+            font-size:0.9em;
+        }
+        .active a{
+            border-bottom:2px solid @color-dark-grey;
+            padding:@spacing-one 0 0 0;
+            display:inline-block;           
+        }
     }
 }
 
@@ -320,16 +327,19 @@
     }
 }
 
-.map-aside{
-    #map{
-        width:100%;
-        height:350px;
-    }
+
+.map{
+    width:100%;
+    height:350px;
 }
 
 .tabdeck{
     border-top:0 !important;
     margin-top:0 !important;
+}
+
+.col-2 .body{
+    .column(10);
 }
 
 .programme-curatingcontemporaryart .showgallery{

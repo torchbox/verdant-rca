@@ -313,10 +313,10 @@ ShowIndexPage.content_panels = [
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
+    FieldPanel('overlay_intro'),
     MultiFieldPanel([
         FieldPanel('school'),
         FieldPanel('programme'),
-        FieldPanel('overlay_intro'),
     ], "Limit page to this school/programme"),
 ]
 

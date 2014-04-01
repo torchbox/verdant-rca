@@ -11,7 +11,7 @@
         <ul class="nav-overview">
             <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
-                <li>
+                <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>
                 </li>
             {% endfor %}
