@@ -3531,6 +3531,7 @@ class NewStudentPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
     innovation_rca_fellow = models.BooleanField(default=False)
+    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="Your representative image for RCA Show. Must be 10:15 ratio.")
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
@@ -3727,6 +3728,7 @@ NewStudentPage.content_panels = [
         FieldPanel('preferred_name'),
     ], "Full name"),
     ImageChooserPanel('profile_image'),
+    ImageChooserPanel('postcard_image'),
     FieldPanel('statement', classname="full"),
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
