@@ -18,14 +18,22 @@
 
 .showgallery{
     li{
-        height:300px;
+        height:0px;
         margin-bottom:@spacing-one;
     }
         .landscape{
-            .column(6);
+            box-sizing: border-box;
+            display: inline;
+            float:left;
+            width:450px;
+            height:300px;
         }
         .portrait{
-            .column(3);
+            box-sizing: border-box;
+            display: inline;
+            float:left;
+            width:200px;
+            height:300px;
         }    
 }
 
