@@ -34,6 +34,10 @@ class StudentPageProxy(StudentPage):
     class Meta:
         proxy = True
 
+    def __init__(self, *args, **kwargs):
+        super(StudentPageProxy, self).__init__(*args, **kwargs)
+        self.parent_id = self.get_parent().id
+
     @property
     def is_phd_page(self):
         return self.degree_qualification in ['phd', 'researchstudent']
@@ -48,11 +52,15 @@ class StudentPageProxy(StudentPage):
 
     @property
     def is_in_show(self):
-        return self.get_parent().id == 5255
+        return self.parent_id == 5255
 
     @property
-    def is_in_rcanow(self):
-        return self.get_parent().id == 36
+    def is_in_rca_now(self):
+        return self.parent_id == 36
+
+    @property
+    def is_in_research_students(self):
+        return self.parent_id == 3970
 
 
 class StudentMigration(object):
@@ -143,9 +151,16 @@ class StudentMigration(object):
                     **{relation.field.name: new_page}
                 )
 
-    def migrate_student_pages(self, name, ma_page, mphil_page, phd_page):
-        pages = [page for page in [ma_page, mphil_page, phd_page] if page]
+    def migrate_student_pages(self, name, ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page):
+        pages = [page for page in [ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page] if page]
         most_recent = sorted(pages, key=lambda page: page.degree_year)[-1]
+
+        mphil_pages = [page for page in [mphil_research_page, mphil_show_page] if page]
+        phd_pages = [page for page in [phd_research_page, phd_show_page] if page]
+        mphil_page_research = mphil_research_page or mphil_show_page
+        phd_page_research = phd_research_page or phd_show_page
+        mphil_page_show = mphil_show_page or mphil_research_page
+        phd_page_show = phd_show_page or phd_research_page
 
         # Create new page
         new_page = NewStudentPage()
@@ -179,28 +194,26 @@ class StudentMigration(object):
             new_page.ma_in_show = ma_page.is_in_show
 
         # MPhil info
-        if mphil_page:
-            new_page.mphil_school = mphil_page.school
-            new_page.mphil_programme = mphil_page.programme
-            new_page.mphil_start_year = mphil_page.degree_year
-            new_page.mphil_graduation_year = mphil_page.graduation_year
-            new_page.mphil_qualification = mphil_page.degree_qualification
+        if mphil_pages:
+            new_page.mphil_school = mphil_page_research.school
+            new_page.mphil_programme = mphil_page_research.programme
+            new_page.mphil_start_year = mphil_page_research.degree_year
+            new_page.mphil_graduation_year = mphil_page_research.graduation_year
             #research_dissertation_title
-            new_page.mphil_statement = mphil_page.work_description
-            new_page.mphil_work_location = mphil_page.work_location
-            new_page.mphil_in_show = mphil_page.is_in_show
+            new_page.mphil_statement = mphil_page_show.work_description
+            new_page.mphil_work_location = mphil_page_research.work_location
+            new_page.mphil_in_show = mphil_page_show.is_in_show
 
         # PhD info
-        if phd_page:
-            new_page.phd_school = phd_page.school
-            new_page.phd_programme = phd_page.programme
-            new_page.phd_start_year = phd_page.degree_year
-            new_page.phd_graduation_year = phd_page.graduation_year
-            new_page.phd_qualification = phd_page.degree_qualification
+        if phd_pages:
+            new_page.phd_school = phd_page_research.school
+            new_page.phd_programme = phd_page_research.programme
+            new_page.phd_start_year = phd_page_research.degree_year
+            new_page.phd_graduation_year = phd_page_research.graduation_year
             #research_dissertation_title
-            new_page.phd_statement = phd_page.work_description
-            new_page.phd_work_location = phd_page.work_location
-            new_page.phd_in_show = phd_page.is_in_show
+            new_page.phd_statement = phd_page_show.work_description
+            new_page.phd_work_location = phd_page_research.work_location
+            new_page.phd_in_show = phd_page_show.is_in_show
 
         # General child objects
         for page in pages:
@@ -250,8 +263,8 @@ class StudentMigration(object):
                 new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
 
         # MPhil child objects
-        if mphil_page:
-            for carousel_item in mphil_page.carousel_items.all():
+        for page in mphil_pages:
+            for carousel_item in page.carousel_items.all():
                 new_page.mphil_carousel_items.add(NewStudentPageMPhilCarouselItem(
                     image=carousel_item.image,
                     overlay_text=carousel_item.overlay_text,
@@ -261,18 +274,18 @@ class StudentMigration(object):
                     poster_image=carousel_item.poster_image,
                 ))
 
-            for collaborator in mphil_page.collaborators.all():
+            for collaborator in page.collaborators.all():
                 new_page.mphil_collaborators.add(NewStudentPageMPhilCollaborator(name=collaborator.name))
 
-            for sponsor in mphil_page.sponsor.all():
+            for sponsor in page.sponsor.all():
                 new_page.mphil_sponsors.add(NewStudentPageMPhilSponsor(name=sponsor.name))
 
-            for supervisor in mphil_page.supervisors.all():
+            for supervisor in page.supervisors.all():
                 new_page.mphil_supervisors.add(NewStudentPageMPhilSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
         # PhD child objects
-        if phd_page:
-            for carousel_item in phd_page.carousel_items.all():
+        if page in phd_pages:
+            for carousel_item in page.carousel_items.all():
                 new_page.phd_carousel_items.add(NewStudentPagePhDCarouselItem(
                     image=carousel_item.image,
                     overlay_text=carousel_item.overlay_text,
@@ -282,13 +295,13 @@ class StudentMigration(object):
                     poster_image=carousel_item.poster_image,
                 ))
 
-            for collaborator in phd_page.collaborators.all():
+            for collaborator in page.collaborators.all():
                 new_page.phd_collaborators.add(NewStudentPagePhDCollaborator(name=collaborator.name))
 
-            for sponsor in phd_page.sponsor.all():
+            for sponsor in page.sponsor.all():
                 new_page.phd_sponsors.add(NewStudentPagePhDSponsor(name=sponsor.name))
 
-            for supervisor in phd_page.supervisors.all():
+            for supervisor in page.supervisors.all():
                 new_page.phd_supervisors.add(NewStudentPagePhDSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
         # Save new page
@@ -332,8 +345,10 @@ class StudentMigration(object):
             for student, pages in students.items():
                 # Get pages
                 ma_page = None
-                mphil_page = None
-                phd_page = None
+                mphil_research_page = None
+                phd_research_page = None
+                mphil_show_page = None
+                phd_show_page = None
                 error = False
                 for page in pages:
                     # MA page
@@ -345,22 +360,34 @@ class StudentMigration(object):
 
                     # MPhil page
                     if page.is_mphil_page:
-                        if mphil_page:
-                            error = True
-                            break
-                        mphil_page = page
+                        if page.is_in_show:
+                            if mphil_show_page:
+                                error = True
+                                break
+                            mphil_show_page = page
+                        else:
+                            if mphil_research_page:
+                                error = True
+                                break
+                            mphil_research_page = page
 
                     # PHD page
                     if page.is_phd_page:
-                        if phd_page:
-                            error = True
-                            break
-                        phd_page = page
+                        if page.is_in_show:
+                            if phd_show_page:
+                                error = True
+                                break
+                            phd_show_page = page
+                        else:
+                            if phd_research_page:
+                                error = True
+                                break
+                            phd_research_page = page
 
                 # Check for error
                 if not error:
                     print "Migrating: " + student
-                    new_page = self.migrate_student_pages(student, ma_page, mphil_page, phd_page)
+                    new_page = self.migrate_student_pages(student, ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page)
                 else:
                     print "Skipping: " + student
                     self.skipped_students.append(student)
