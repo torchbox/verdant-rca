@@ -233,7 +233,7 @@ class StudentMigration(object):
 
         # MA child objects
         if ma_page:
-            for carousel_item in page.carousel_items.all():
+            for carousel_item in ma_page.carousel_items.all():
                 new_page.show_carousel_items.add(NewStudentPageShowCarouselItem(
                     image=carousel_item.image,
                     overlay_text=carousel_item.overlay_text,
@@ -243,10 +243,10 @@ class StudentMigration(object):
                     poster_image=carousel_item.poster_image,
                 ))
 
-            for collaborator in page.collaborators.all():
+            for collaborator in ma_page.collaborators.all():
                 new_page.show_collaborators.add(NewStudentPageShowCollaborator(name=collaborator.name))
 
-            for sponsor in page.sponsor.all():
+            for sponsor in ma_page.sponsor.all():
                 new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
 
         # MPhil child objects
@@ -267,7 +267,7 @@ class StudentMigration(object):
             for sponsor in mphil_page.sponsor.all():
                 new_page.mphil_sponsors.add(NewStudentPageMPhilSponsor(name=sponsor.name))
 
-            for supervisor in page.supervisors.all():
+            for supervisor in mphil_page.supervisors.all():
                 new_page.mphil_supervisors.add(NewStudentPageMPhilSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
         # PhD child objects
@@ -288,7 +288,7 @@ class StudentMigration(object):
             for sponsor in phd_page.sponsor.all():
                 new_page.phd_sponsors.add(NewStudentPagePhDSponsor(name=sponsor.name))
 
-            for supervisor in page.supervisors.all():
+            for supervisor in phd_page.supervisors.all():
                 new_page.phd_supervisors.add(NewStudentPagePhDSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
         # Save new page
