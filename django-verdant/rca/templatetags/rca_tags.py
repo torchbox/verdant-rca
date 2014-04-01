@@ -184,31 +184,45 @@ def jobs_listing(context):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
-def students_related(context, programme="", year="", exclude=None, count=4):
-    students = NewStudentPage.objects.filter(live=True).filter(Q(ma_programme=programme) | Q(mphil_programme=programme) | Q(phd_programme=programme))
-    students = students.filter(Q(ma_graduation_year=year) | Q(mphil_start_year=year) | Q(phd_start_year=year))
-    students = students.order_by('?')
+def get_related_students(programme=None, year=None, exclude=None, has_work=False):
+    ma_students_q = ~Q(ma_school='')
+    mphil_students_q = ~Q(mphil_school='')
+    phd_students_q = ~Q(phd_school='')
+
+    if has_work:
+        ma_students_q &= (Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
+        mphil_students_q &= (Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
+        phd_students_q &= (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
+
+    if programme:
+        ma_students_q &= Q(ma_programme=programme)
+        mphil_students_q &= Q(mphil_programme=programme)
+        phd_students_q &= Q(phd_programme=programme)
+
+    if year:
+        ma_students_q &= Q(ma_graduation_year=year)
+        mphil_students_q &= Q(mphil_start_year=year)
+        phd_students_q &= Q(phd_start_year=year)
+
+    students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q).order_by('?')
+
     if exclude:
         students = students.exclude(id=exclude.id)
+
+    return students
+
+@register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
+def students_related(context, programme=None, year=None, exclude=None, count=4):
     return {
-        'students': students[:count],
+        'students': get_related_students(programme=programme, year=year, exclude=exclude, has_work=False)[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
 # Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
 @register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
-def students_related_work(context, year="", exclude=None, count=4):
-    ma_students_q = Q(ma_graduation_year=year) & (Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
-    mphil_students_q = Q(mphil_start_year=year) & (Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
-    phd_students_q = Q(phd_start_year=year) & (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
-    students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q)
-    students = students.order_by('?')
-
-    if exclude:
-        students = students.exclude(id=exclude.id)
+def students_related_work(context, year=None, exclude=None, count=4):
     return {
-        'students': students[:count],
+        'students': get_related_students(year=year, exclude=exclude, has_work=True)[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
