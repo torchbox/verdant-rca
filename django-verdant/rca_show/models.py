@@ -81,19 +81,35 @@ class ShowIndexPage(Page, SocialFields):
 
         return models.Q(**filters)
 
-    def get_research_students_q(self, school=None, programme=None):
+    def get_mphil_students_q(self, school=None, programme=None):
         filters = {
-            'research_in_show': True,
+            'mphil_in_show': True,
         }
 
         if self.year:
-            filters['research_graduation_year'] = self.year
+            filters['mphil_graduation_year'] = self.year
 
         if school:
-            filters['research_school'] = school
+            filters['mphil_school'] = school
 
         if programme:
-            filters['research_programme'] = programme
+            filters['mphil_programme'] = programme
+
+        return models.Q(**filters)
+
+    def get_phd_students_q(self, school=None, programme=None):
+        filters = {
+            'phd_in_show': True,
+        }
+
+        if self.year:
+            filters['phd_graduation_year'] = self.year
+
+        if school:
+            filters['phd_school'] = school
+
+        if programme:
+            filters['phd_programme'] = programme
 
         return models.Q(**filters)
 
@@ -101,7 +117,7 @@ class ShowIndexPage(Page, SocialFields):
         students = NewStudentPage.objects.filter(live=True)
 
         # Filter by students in this particular show
-        students = students.filter(self.get_ma_students_q(school, programme) | self.get_research_students_q(school, programme)).order_by('first_name')
+        students = students.filter(self.get_ma_students_q(school, programme) | self.get_mphil_students_q(school, programme) | self.get_phd_students_q(school, programme)).order_by('first_name')
 
         return students
 

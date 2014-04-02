@@ -14,7 +14,7 @@
                     {% else %}
                         <li>
                     {% endif %}
-                        <a href="{% pageurl student %}">
+                        <a href="{% pageurl self %}{{ student.slug }}/">
                             <div class="image">
                                 {% if student.profile_image %}
                                     {% image student.profile_image width-200 %}

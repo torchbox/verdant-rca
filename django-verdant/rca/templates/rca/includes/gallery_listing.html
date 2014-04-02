@@ -5,7 +5,7 @@
         <div class='item-container row'>
             <ul class='row'>
                 {% for galleryitem in gallery_items %}
-                    {% with galleryitem.carousel_items.all as carousel_items %}
+                    {% with galleryitem.profile.carousel_items.all as carousel_items %}
                         {% with carousel_items|first as carousel_item %}
                             {% if carousel_item.image %}
                                 {% include "rca/includes/modules/gallery_include.html" with gallery_image=carousel_item.image %}

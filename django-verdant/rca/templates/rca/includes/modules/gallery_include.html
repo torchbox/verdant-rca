@@ -1,7 +1,7 @@
 {% load pageurl image_tags %}
 
 <li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}">
-    <a href="{% pageurl galleryitem %}">
+    <a href="{% pageurl self %}{{ galleryitem.slug }}/">
         <div class="gallery_image {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}">
             {% image gallery_image width-600 %}
         </div>

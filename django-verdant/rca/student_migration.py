@@ -19,10 +19,14 @@ from rca.models import (
     NewStudentPageShowCarouselItem,
     NewStudentPageShowCollaborator,
     NewStudentPageShowSponsor,
-    NewStudentPageResearchCarouselItem,
-    NewStudentPageResearchCollaborator,
-    NewStudentPageResearchSponsor,
-    NewStudentPageResearchSupervisor,
+    NewStudentPageMPhilCarouselItem,
+    NewStudentPageMPhilCollaborator,
+    NewStudentPageMPhilSponsor,
+    NewStudentPageMPhilSupervisor,
+    NewStudentPagePhDCarouselItem,
+    NewStudentPagePhDCollaborator,
+    NewStudentPagePhDSponsor,
+    NewStudentPagePhDSupervisor,
 )
 
 
@@ -30,9 +34,17 @@ class StudentPageProxy(StudentPage):
     class Meta:
         proxy = True
 
+    def __init__(self, *args, **kwargs):
+        super(StudentPageProxy, self).__init__(*args, **kwargs)
+        self.parent_id = self.get_parent().id
+
     @property
-    def is_research_page(self):
-        return self.degree_qualification in ['mphil', 'phd', 'researchstudent', 'innovationrca-fellow']
+    def is_phd_page(self):
+        return self.degree_qualification in ['phd', 'researchstudent']
+
+    @property
+    def is_mphil_page(self):
+        return self.degree_qualification == 'mphil'
 
     @property
     def is_ma_page(self):
@@ -40,18 +52,22 @@ class StudentPageProxy(StudentPage):
 
     @property
     def is_in_show(self):
-        return self.get_parent().id == 5255
+        return self.parent_id == 5255
 
     @property
-    def is_in_rcanow(self):
-        return self.get_parent().id == 36
+    def is_in_rca_now(self):
+        return self.parent_id == 36
+
+    @property
+    def is_in_research_students(self):
+        return self.parent_id == 3970
 
 
 class StudentMigration(object):
     def __init__(self, save=False, index_page=None, migrate=True, update_references=False):
-        self.save = save
         self.skipped_students = []
         self.index_page = Page.objects.get(pk=index_page) if index_page else None
+        self.save = save and self.index_page
         self.migrate = migrate
         self.update_references = update_references
 
@@ -135,94 +151,102 @@ class StudentMigration(object):
                     **{relation.field.name: new_page}
                 )
 
-    def migrate_page(self, new_page, page):
+    def migrate_student_pages(self, name, ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page):
+        pages = [page for page in [ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page] if page]
+        most_recent = sorted(pages, key=lambda page: page.degree_year)[-1]
+
+        mphil_pages = [page for page in [mphil_research_page, mphil_show_page] if page]
+        phd_pages = [page for page in [phd_research_page, phd_show_page] if page]
+        mphil_page_research = mphil_research_page or mphil_show_page
+        phd_page_research = phd_research_page or phd_show_page
+        mphil_page_show = mphil_show_page or mphil_research_page
+        phd_page_show = phd_show_page or phd_research_page
+
+        # Create new page
+        new_page = NewStudentPage()
+        new_page.title = name
+        new_page.slug = slugify(name)
+        new_page.live = most_recent.live
+        new_page.has_unpublished_changes = not most_recent.live
+        new_page.owner = None
+        for page in pages:
+            new_page.owner = new_page.owner or page.owner
+
         # General info
-        new_page.first_name = page.first_name
-        new_page.last_name = page.last_name
-        new_page.profile_image = page.profile_image
-        new_page.statement = page.statement
-        new_page.twitter_handle = page.student_twitter_feed
-        new_page.funding = page.funding
-        new_page.feed_image = page.feed_image
-        new_page.show_on_homepage = page.show_on_homepage
+        new_page.first_name = most_recent.first_name
+        new_page.last_name = most_recent.last_name
+        new_page.profile_image = most_recent.profile_image
+        new_page.statement = most_recent.statement
+        new_page.twitter_handle = most_recent.student_twitter_feed
+        new_page.funding = '; '.join([page.funding for page in pages if page.funding])
+        new_page.feed_image = most_recent.feed_image
+        new_page.show_on_homepage = most_recent.show_on_homepage
 
         # MA info
-        if page.is_ma_page:
-            new_page.ma_school = page.school
-            new_page.ma_programme = page.programme
-            new_page.ma_graduation_year = page.graduation_year or page.degree_year
-            new_page.ma_specialism = page.specialism
-            new_page.ma_in_show = page.is_in_show
+        if ma_page:
+            new_page.ma_school = ma_page.school
+            new_page.ma_programme = ma_page.programme
+            new_page.ma_graduation_year = ma_page.graduation_year or ma_page.degree_year
+            new_page.ma_specialism = ma_page.specialism
+            new_page.show_work_type = ma_page.work_type
+            new_page.show_work_location = ma_page.work_location
+            new_page.show_work_description = ma_page.work_description
+            new_page.ma_in_show = ma_page.is_in_show
 
-        # Research info
-        if page.is_research_page:
-            new_page.research_school = page.school
-            new_page.research_programme = page.programme
-            new_page.research_start_year = page.degree_year
-            new_page.research_graduation_year = page.graduation_year
-            new_page.research_qualification = page.degree_qualification
+        # MPhil info
+        if mphil_pages:
+            new_page.mphil_school = mphil_page_research.school
+            new_page.mphil_programme = mphil_page_research.programme
+            new_page.mphil_start_year = mphil_page_research.degree_year
+            new_page.mphil_graduation_year = mphil_page_research.graduation_year
             #research_dissertation_title
-            new_page.research_statement = page.work_description
-            new_page.research_work_location = page.work_location
-            new_page.research_in_show = page.is_in_show
+            new_page.mphil_statement = mphil_page_show.work_description
+            new_page.mphil_work_location = mphil_page_research.work_location
+            new_page.mphil_in_show = mphil_page_show.is_in_show
+
+        # PhD info
+        if phd_pages:
+            new_page.phd_school = phd_page_research.school
+            new_page.phd_programme = phd_page_research.programme
+            new_page.phd_start_year = phd_page_research.degree_year
+            new_page.phd_graduation_year = phd_page_research.graduation_year
+            #research_dissertation_title
+            new_page.phd_statement = phd_page_show.work_description
+            new_page.phd_work_location = phd_page_research.work_location
+            new_page.phd_in_show = phd_page_show.is_in_show
 
         # General child objects
-        for degree in page.degrees.all():
-            new_page.previous_degrees.add(NewStudentPagePreviousDegree(degree=degree.degree))
+        for page in pages:
+            for degree in page.degrees.all():
+                new_page.previous_degrees.add(NewStudentPagePreviousDegree(degree=degree.degree))
 
-        for exhibition in page.exhibitions.all():
-            new_page.exhibitions.add(NewStudentPageExhibition(exhibition=exhibition.exhibition))
+            for exhibition in page.exhibitions.all():
+                new_page.exhibitions.add(NewStudentPageExhibition(exhibition=exhibition.exhibition))
 
-        for experience in page.experiences.all():
-            new_page.experiences.add(NewStudentPageExperience(experience=experience.experience))
+            for experience in page.experiences.all():
+                new_page.experiences.add(NewStudentPageExperience(experience=experience.experience))
 
-        for email in page.email.all():
-            new_page.emails.add(NewStudentPageContactsEmail(email=email.email))
+            for email in page.email.all():
+                new_page.emails.add(NewStudentPageContactsEmail(email=email.email))
 
-        for phone in page.phone.all():
-            new_page.phones.add(NewStudentPageContactsPhone(phone=phone.phone))
+            for phone in page.phone.all():
+                new_page.phones.add(NewStudentPageContactsPhone(phone=phone.phone))
 
-        for website in page.website.all():
-            new_page.websites.add(NewStudentPageContactsWebsite(website=website.website))
+            for website in page.website.all():
+                new_page.websites.add(NewStudentPageContactsWebsite(website=website.website))
 
-        for publication in page.publications.all():
-            new_page.publications.add(NewStudentPagePublication(name=publication.name))
+            for publication in page.publications.all():
+                new_page.publications.add(NewStudentPagePublication(name=publication.name))
 
-        for conference in page.conferences.all():
-            new_page.conferences.add(NewStudentPageConference(name=conference.name))
+            for conference in page.conferences.all():
+                new_page.conferences.add(NewStudentPageConference(name=conference.name))
 
-        for award in page.awards.all():
-            new_page.awards.add(NewStudentPageAward(award=award.award))
+            for award in page.awards.all():
+                new_page.awards.add(NewStudentPageAward(award=award.award))
 
-        for supervisor in page.supervisors.all():
-            new_page.research_supervisors.add(NewStudentPageResearchSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
-
-        # Move carousel items/collaborators/sponsors to research if this is a research student
-        if page.is_research_page:
-            for carousel_item in page.carousel_items.all():
-                new_page.research_carousel_items.add(NewStudentPageResearchCarouselItem(
-                    image=carousel_item.image,
-                    overlay_text=carousel_item.overlay_text,
-                    link=carousel_item.link,
-                    link_page=carousel_item.link_page,
-                    embedly_url=carousel_item.embedly_url,
-                    poster_image=carousel_item.poster_image,
-                ))
-
-            for collaborator in page.collaborators.all():
-                new_page.research_collaborators.add(NewStudentPageResearchCollaborator(name=collaborator.name))
-
-            for sponsor in page.sponsor.all():
-                new_page.research_sponsors.add(NewStudentPageResearchSponsor(name=sponsor.name))
-
-        # If this is not a research student, move carousel items/collaborators/sponsors to show
-        if not page.is_research_page:
-            # Show info
-            new_page.show_work_type = page.work_type
-            new_page.show_work_location = page.work_location
-            new_page.show_work_description = page.work_description
-
-            for carousel_item in page.carousel_items.all():
+        # MA child objects
+        if ma_page:
+            for carousel_item in ma_page.carousel_items.all():
                 new_page.show_carousel_items.add(NewStudentPageShowCarouselItem(
                     image=carousel_item.image,
                     overlay_text=carousel_item.overlay_text,
@@ -232,26 +256,60 @@ class StudentMigration(object):
                     poster_image=carousel_item.poster_image,
                 ))
 
-            for collaborator in page.collaborators.all():
+            for collaborator in ma_page.collaborators.all():
                 new_page.show_collaborators.add(NewStudentPageShowCollaborator(name=collaborator.name))
 
-            for sponsor in page.sponsor.all():
+            for sponsor in ma_page.sponsor.all():
                 new_page.show_sponsors.add(NewStudentPageShowSponsor(name=sponsor.name))
 
-    def migrate_student(self, name, page):
-        # Create new page
-        new_page = NewStudentPage()
-        new_page.title = name
-        new_page.slug = slugify(name)
-        new_page.live = page.live
-        new_page.has_unpublished_changes = not new_page.live
+        # MPhil child objects
+        for page in mphil_pages:
+            for carousel_item in page.carousel_items.all():
+                new_page.mphil_carousel_items.add(NewStudentPageMPhilCarouselItem(
+                    image=carousel_item.image,
+                    overlay_text=carousel_item.overlay_text,
+                    link=carousel_item.link,
+                    link_page=carousel_item.link_page,
+                    embedly_url=carousel_item.embedly_url,
+                    poster_image=carousel_item.poster_image,
+                ))
 
-        # Migrate old page
-        self.migrate_page(new_page, page)
+            for collaborator in page.collaborators.all():
+                new_page.mphil_collaborators.add(NewStudentPageMPhilCollaborator(name=collaborator.name))
+
+            for sponsor in page.sponsor.all():
+                new_page.mphil_sponsors.add(NewStudentPageMPhilSponsor(name=sponsor.name))
+
+            for supervisor in page.supervisors.all():
+                new_page.mphil_supervisors.add(NewStudentPageMPhilSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
+
+        # PhD child objects
+        if page in phd_pages:
+            for carousel_item in page.carousel_items.all():
+                new_page.phd_carousel_items.add(NewStudentPagePhDCarouselItem(
+                    image=carousel_item.image,
+                    overlay_text=carousel_item.overlay_text,
+                    link=carousel_item.link,
+                    link_page=carousel_item.link_page,
+                    embedly_url=carousel_item.embedly_url,
+                    poster_image=carousel_item.poster_image,
+                ))
+
+            for collaborator in page.collaborators.all():
+                new_page.phd_collaborators.add(NewStudentPagePhDCollaborator(name=collaborator.name))
+
+            for sponsor in page.sponsor.all():
+                new_page.phd_sponsors.add(NewStudentPagePhDSponsor(name=sponsor.name))
+
+            for supervisor in page.supervisors.all():
+                new_page.phd_supervisors.add(NewStudentPagePhDSupervisor(supervisor=supervisor.supervisor, supervisor_other=supervisor.supervisor_other))
 
         # Save new page
-        if self.save and self.index_page:
+        if self.save:
+            # Add new page into tree
             self.index_page.add_child(new_page)
+
+            # Save revision
             new_page.save_revision()
 
         return new_page
@@ -285,15 +343,56 @@ class StudentMigration(object):
         # Migrate each one
         if self.migrate:
             for student, pages in students.items():
-                print "Migrating: " + student
+                # Get pages
+                ma_page = None
+                mphil_research_page = None
+                phd_research_page = None
+                mphil_show_page = None
+                phd_show_page = None
+                error = False
+                for page in pages:
+                    # MA page
+                    if page.is_ma_page:
+                        if ma_page:
+                            # Take latest ma page
+                            if ma_page.degree_year < page.degree_year:
+                                ma_page = page
+                        else:
+                            ma_page = page
 
-                # Skip if this student has multiple pages
-                if len(pages) > 1:
+                    # MPhil page
+                    if page.is_mphil_page:
+                        if page.is_in_show:
+                            if mphil_show_page:
+                                error = True
+                                break
+                            mphil_show_page = page
+                        else:
+                            if mphil_research_page:
+                                error = True
+                                break
+                            mphil_research_page = page
+
+                    # PHD page
+                    if page.is_phd_page:
+                        if page.is_in_show:
+                            if phd_show_page:
+                                error = True
+                                break
+                            phd_show_page = page
+                        else:
+                            if phd_research_page:
+                                error = True
+                                break
+                            phd_research_page = page
+
+                # Check for error
+                if not error:
+                    print "Migrating: " + student
+                    new_page = self.migrate_student_pages(student, ma_page, mphil_research_page, phd_research_page, mphil_show_page, phd_show_page)
+                else:
+                    print "Skipping: " + student
                     self.skipped_students.append(student)
-                    continue
-
-                # Migrate student
-                self.migrate_student(student, pages[0])
 
         # Update references
         if self.update_references:
