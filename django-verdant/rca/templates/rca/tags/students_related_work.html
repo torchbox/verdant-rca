@@ -8,8 +8,8 @@
                     <div class="image">
                         {% if student.feed_image %}
                             {% image student.feed_image width-180 %}
-                        {% elif student.carousel_items %}
-                            {% with student.carousel_items.all as carousel_items %}
+                        {% elif student.get_profile.carousel_items %}
+                            {% with student.get_profile.carousel_items.all as carousel_items %}
                                 {% with carousel_items|first as carousel_item %}
                                     {% if carousel_item.image %}
                                         {% image carousel_item.image fill-180x101 %}
