@@ -2231,7 +2231,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     def staff_feed(self):
         # Get staff from manual feed
         manual_feed = self.manual_staff_feed.all()
-    
+
         # Get from manual feed and append staff_role defined there
         feed2 = []
         for staffpage in manual_feed:
@@ -2240,15 +2240,15 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
             feed2.append(staff)
 
         manual_feed = feed2
-        
+
         # Get from source feed and append first role title
-        # for selected school of feed 
+        # for selected school of feed
         feed_source=[]
         if self.staff_feed_source:
             feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
             for staffpage in feed_source:
                 staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
-        
+
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)
 
@@ -3372,19 +3372,19 @@ def reassign_student_pages(sender, request, user, **kwargs):
 # General
 class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
-    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation")
+    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation, separated by commas")
 
     panels = [FieldPanel('degree')]
 
 class NewStudentPageExhibition(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include Exhibition title, gallery, city and year")
+    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include exhibition title, gallery, city and year, separated by commas")
 
     panels = [FieldPanel('exhibition')]
 
 class NewStudentPageExperience(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='experiences')
-    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s)")
+    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s), separated by commas")
 
     panels = [FieldPanel('experience')]
 
@@ -3408,19 +3408,19 @@ class NewStudentPageContactsWebsite(Orderable):
 
 class NewStudentPagePublication(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='publications')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageConference(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='conferences')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include paper, title of conference, institution, date, separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageAward(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='awards')
-    award = models.CharField(max_length=255, blank=True)
+    award = models.CharField(max_length=255, blank=True, help_text="Please include prize, award title and year, separated by commas")
 
     panels = [FieldPanel('award')]
 
@@ -3431,13 +3431,13 @@ class NewStudentPageShowCarouselItem(Orderable, CarouselItemFields):
 
 class NewStudentPageShowCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_collaborators')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageShowSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_sponsors')
-    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
 
     panels = [FieldPanel('name')]
 
@@ -3448,19 +3448,19 @@ class NewStudentPageMPhilCarouselItem(Orderable, CarouselItemFields):
 
 class NewStudentPageMPhilCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_collaborators')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageMPhilSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_sponsors')
-    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageMPhilSupervisor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_supervisors')
-    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True, help_text="Please select your RCA supervisor's profile page or enter the name of an external supervisor")
     supervisor_other = models.CharField(max_length=255, blank=True)
 
     @property
@@ -3487,19 +3487,19 @@ class NewStudentPagePhDCarouselItem(Orderable, CarouselItemFields):
 
 class NewStudentPagePhDCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_collaborators')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPagePhDSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_sponsors')
-    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPagePhDSupervisor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_supervisors')
-    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True, help_text="Please select your RCA supervisor's profile page or enter the name of an external supervisor")
     supervisor_other = models.CharField(max_length=255, blank=True)
 
     @property
@@ -3523,15 +3523,14 @@ class NewStudentPage(Page, SocialFields):
     # General details
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    preferred_name = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
     statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
     twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
-    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
+    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
-    innovation_rca_fellow = models.BooleanField(default=False)
-    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="Your representative image for RCA Show. Must be 10:15 ratio.")
+    innovation_rca_fellow = models.BooleanField(default=False, help_text="Please tick this box only if you are currently an InnovationRCA Fellow")
+    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="Please upload images sized to A6 plus 5mm 'bleed' (1490 x 1055mm or 1760 x 1246px @ 300 dpi) - this must be uploaded at the correct size for printed postcards")
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
@@ -3542,8 +3541,8 @@ class NewStudentPage(Page, SocialFields):
     ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
-    ma_in_show = models.BooleanField("In show", default=False)
-    show_work_title = models.CharField("Project title", max_length=255, blank=True)
+    ma_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
+    show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
@@ -3556,7 +3555,7 @@ class NewStudentPage(Page, SocialFields):
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     mphil_statement = RichTextField("Research statement", blank=True)
-    mphil_in_show = models.BooleanField("In show", default=False)
+    mphil_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
 
     # PhD details
     phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
@@ -3566,10 +3565,10 @@ class NewStudentPage(Page, SocialFields):
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
     phd_statement = RichTextField("Research statement", blank=True)
-    phd_in_show = models.BooleanField("In show", default=False)
+    phd_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
 
     indexed_fields = (
-        'first_name', 'last_name', 'preferred_name', 'statement',
+        'first_name', 'last_name', 'statement',
         'get_ma_school_display', 'get_ma_programme_display', 'ma_graduation_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'mphil_dissertation_title', 'mphil_statement',
@@ -3725,7 +3724,6 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('first_name'),
         FieldPanel('last_name'),
-        FieldPanel('preferred_name'),
     ], "Full name"),
     ImageChooserPanel('profile_image'),
     ImageChooserPanel('postcard_image'),
@@ -3750,7 +3748,7 @@ NewStudentPage.content_panels = [
         FieldPanel('ma_programme'),
         FieldPanel('ma_graduation_year'),
         FieldPanel('ma_specialism'),
-    ], "MA details"),
+    ], "MA details", classname="collapsible collapsed"),
 
     # Show details
     MultiFieldPanel([
@@ -3758,10 +3756,10 @@ NewStudentPage.content_panels = [
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
         FieldPanel('show_work_description'),
-        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
-    ], "MA Show details"),
+    ], "MA Show details", classname="collapsible collapsed"),
 
     # MPhil details
     MultiFieldPanel([
@@ -3773,11 +3771,11 @@ NewStudentPage.content_panels = [
         FieldPanel('mphil_start_year'),
         FieldPanel('mphil_graduation_year'),
         FieldPanel('mphil_work_location'),
-        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
         InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
-    ], "MPhil details"),
+    ], "MPhil details", classname="collapsible collapsed"),
 
     # PhD details
     MultiFieldPanel([
@@ -3789,11 +3787,11 @@ NewStudentPage.content_panels = [
         FieldPanel('phd_start_year'),
         FieldPanel('phd_graduation_year'),
         FieldPanel('phd_work_location'),
-        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
         InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
-    ], "PhD details"),
+    ], "PhD details", classname="collapsible collapsed"),
 ]
 
 NewStudentPage.promote_panels = [
@@ -4400,7 +4398,7 @@ class GalleryPage(Page, SocialFields):
 
     def get_students(self, school=None, programme=None, year=None):
         ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters 
+        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -4568,7 +4566,7 @@ class DonationPage(Page, SocialFields):
                     # CardErrors are displayed to the user, but we notify admins as well
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
-                    messages.error(request, e.json_body['error']['message'])    
+                    messages.error(request, e.json_body['error']['message'])
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
@@ -5023,13 +5021,13 @@ class ReachOutRCAIndex(Page, SocialFields):
     def serve(self, request):
         # Get list of live projects
         projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
-        
+
         # Apply filters
         project = request.GET.get('project', None)
         participant = request.GET.get('participant', None)
         theme = request.GET.get('theme', None)
         partnership = request.GET.get('partnership', None)
-        
+
         # Run filters
         projects, filters = run_filters(projects, [
             ('project', 'project', project),
