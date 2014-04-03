@@ -2231,7 +2231,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     def staff_feed(self):
         # Get staff from manual feed
         manual_feed = self.manual_staff_feed.all()
-    
+
         # Get from manual feed and append staff_role defined there
         feed2 = []
         for staffpage in manual_feed:
@@ -2240,15 +2240,15 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
             feed2.append(staff)
 
         manual_feed = feed2
-        
+
         # Get from source feed and append first role title
-        # for selected school of feed 
+        # for selected school of feed
         feed_source=[]
         if self.staff_feed_source:
             feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
             for staffpage in feed_source:
                 staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
-        
+
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)
 
@@ -3750,7 +3750,7 @@ NewStudentPage.content_panels = [
         FieldPanel('ma_programme'),
         FieldPanel('ma_graduation_year'),
         FieldPanel('ma_specialism'),
-    ], "MA details"),
+    ], "MA details", classname="collapsible collapsed"),
 
     # Show details
     MultiFieldPanel([
@@ -3761,7 +3761,7 @@ NewStudentPage.content_panels = [
         InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel item"),
         InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
-    ], "MA Show details"),
+    ], "MA Show details", classname="collapsible collapsed"),
 
     # MPhil details
     MultiFieldPanel([
@@ -3777,7 +3777,7 @@ NewStudentPage.content_panels = [
         InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
         InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
-    ], "MPhil details"),
+    ], "MPhil details", classname="collapsible collapsed"),
 
     # PhD details
     MultiFieldPanel([
@@ -3793,7 +3793,7 @@ NewStudentPage.content_panels = [
         InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
         InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
-    ], "PhD details"),
+    ], "PhD details", classname="collapsible collapsed"),
 ]
 
 NewStudentPage.promote_panels = [
@@ -4400,7 +4400,7 @@ class GalleryPage(Page, SocialFields):
 
     def get_students(self, school=None, programme=None, year=None):
         ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters 
+        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -4568,7 +4568,7 @@ class DonationPage(Page, SocialFields):
                     # CardErrors are displayed to the user, but we notify admins as well
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
-                    messages.error(request, e.json_body['error']['message'])    
+                    messages.error(request, e.json_body['error']['message'])
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
@@ -5023,13 +5023,13 @@ class ReachOutRCAIndex(Page, SocialFields):
     def serve(self, request):
         # Get list of live projects
         projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
-        
+
         # Apply filters
         project = request.GET.get('project', None)
         participant = request.GET.get('participant', None)
         theme = request.GET.get('theme', None)
         partnership = request.GET.get('partnership', None)
-        
+
         # Run filters
         projects, filters = run_filters(projects, [
             ('project', 'project', project),
