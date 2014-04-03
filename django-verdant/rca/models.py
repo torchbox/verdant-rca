@@ -3523,7 +3523,6 @@ class NewStudentPage(Page, SocialFields):
     # General details
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    preferred_name = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
     statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
     twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
@@ -3569,7 +3568,7 @@ class NewStudentPage(Page, SocialFields):
     phd_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
 
     indexed_fields = (
-        'first_name', 'last_name', 'preferred_name', 'statement',
+        'first_name', 'last_name', 'statement',
         'get_ma_school_display', 'get_ma_programme_display', 'ma_graduation_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'mphil_dissertation_title', 'mphil_statement',
@@ -3725,7 +3724,6 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('first_name'),
         FieldPanel('last_name'),
-        FieldPanel('preferred_name'),
     ], "Full name"),
     ImageChooserPanel('profile_image'),
     ImageChooserPanel('postcard_image'),
