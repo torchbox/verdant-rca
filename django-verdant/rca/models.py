@@ -3378,7 +3378,7 @@ class NewStudentPagePreviousDegree(Orderable):
 
 class NewStudentPageExhibition(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include Exhibition title, gallery, city and year, separated by commas")
+    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include exhibition title, gallery, city and year, separated by commas")
 
     panels = [FieldPanel('exhibition')]
 
@@ -3526,11 +3526,11 @@ class NewStudentPage(Page, SocialFields):
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
     statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
     twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
-    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
+    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
     innovation_rca_fellow = models.BooleanField(default=False, help_text="Please tick this box only if you are currently an InnovationRCA Fellow")
-    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="A6 plus 5mm 'bleed' (1490 x 1055mm) or 1760 x 1246px @ 300 dpi (this must be uploaded at the correct size for printed postcards)")
+    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="Please upload images sized to A6 plus 5mm 'bleed' (1490 x 1055mm or 1760 x 1246px @ 300 dpi) - this must be uploaded at the correct size for printed postcards")
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
