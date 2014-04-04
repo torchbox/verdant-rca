@@ -132,8 +132,6 @@ AREA_CHOICES = (
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('innovationrca', 'InnovationRCA'),
     ('research-knowledgeexchange', "Research & Knowledge Exchange"),
-    ('research', 'Research'),
-    ('knowledgeexchange', 'Knowledge Exchange'),
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
     ('sustainrca', 'SustainRCA'),
