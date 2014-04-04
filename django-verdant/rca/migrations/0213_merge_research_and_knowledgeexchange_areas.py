@@ -15,11 +15,13 @@ class Migration(DataMigration):
 
         # Update latest revision of pages
         for page in pages | model.objects.filter(has_unpublished_changes=True):
-            latest_revision = json.loads(orm['wagtailcore.PageRevision'].objects.filter(page=page).order_by('-created_at')[0].content_json)
+            revisions = orm['wagtailcore.PageRevision'].objects.filter(page=page).order_by('-created_at')
+            if len(revisions) > 0:
+                latest_revision = json.loads(revisions[0].content_json)
 
-            if latest_revision[field] in self.MIGRATE_FROM:
-                latest_revision[field] = self.MIGRATE_TO
-                orm['wagtailcore.PageRevision'].objects.create(page=page, content_json=json.dumps(latest_revision))
+                if latest_revision[field] in self.MIGRATE_FROM:
+                    latest_revision[field] = self.MIGRATE_TO
+                    orm['wagtailcore.PageRevision'].objects.create(page=page, content_json=json.dumps(latest_revision))
 
         pages.update(**{field: self.MIGRATE_TO})
 
@@ -28,12 +30,14 @@ class Migration(DataMigration):
 
         # Update latest revision of pages with unpublished changes
         for page in model.objects.filter(has_unpublished_changes=True) | model.objects.filter(**{relation + '__in': child_objects}):
-            latest_revision = json.loads(orm['wagtailcore.PageRevision'].objects.filter(page=page).order_by('-created_at')[0].content_json)
+            revisions = orm['wagtailcore.PageRevision'].objects.filter(page=page).order_by('-created_at')
+            if len(revisions) > 0:
+                latest_revision = json.loads(revisions[0].content_json)
 
-            for child_object in latest_revision[relation]:
-                if child_object[field] in self.MIGRATE_FROM:
-                    child_object[field] = self.MIGRATE_TO
-                    orm['wagtailcore.PageRevision'].objects.create(page=page, content_json=json.dumps(latest_revision))
+                for child_object in latest_revision[relation]:
+                    if child_object[field] in self.MIGRATE_FROM:
+                        child_object[field] = self.MIGRATE_TO
+                        orm['wagtailcore.PageRevision'].objects.create(page=page, content_json=json.dumps(latest_revision))
 
         child_objects.update(**{field: self.MIGRATE_TO})
 
