@@ -2862,10 +2862,10 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text='Please complete this field for academic and administrative staff only')
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
-    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text='Used only for Technical Staff')
+    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text='Please complete this field for technical staff only')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     intro = RichTextField()
     biography = RichTextField(blank=True)
