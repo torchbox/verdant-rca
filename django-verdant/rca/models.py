@@ -400,6 +400,16 @@ STAFF_TYPES_CHOICES = (
     ('administrative', 'Administrative'),
 )
 
+STAFF_LOCATION_CHOICES = (
+    ('ceramicsgsmj', 'Ceramics, Glass, Metalwork & Jewellery'),
+    ('darwinworshops', 'Darwin Workshops'),
+    ('fashiontextiles', 'Fashion & Textiles'),
+    ('lensbasedmediaaudio', 'Lens-based Media and Audio'),
+    ('paintingsculpture', 'Painting & Sculpture'),
+    ('printmakingletterpress', 'Printmaking & Letterpress'),
+    ('rapidform', 'Rapidform'),
+)
+
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
 # Generic fields to opt out of events and twitter blocks
 class OptionalBlockFields(models.Model):
@@ -2855,6 +2865,7 @@ class StaffPage(Page, SocialFields):
     school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
+    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text='Used only for Technical Staff')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     intro = RichTextField()
     biography = RichTextField(blank=True)
@@ -2893,6 +2904,7 @@ StaffPage.content_panels = [
     FieldPanel('school'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
+    FieldPanel('staff_location'),
     InlinePanel(StaffPage, 'roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
