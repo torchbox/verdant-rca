@@ -4,6 +4,8 @@
 {% block body_class %}{{ block.super }} type-school{% endblock %}
 
 {% block content %}
+    {% secondary_menu self as menuitems %}
+
     {% get_school_programmes self school as programmes %}
     {% get_school_students self school as students %}
     {% get_school_students self school random=True as rand_students %}

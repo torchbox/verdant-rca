@@ -5,7 +5,6 @@ from rca import models as rca_models
 
 register = template.Library()
 
-
 @register.simple_tag
 def get_school_index_url(show_index):
     if show_index is None:
@@ -113,3 +112,9 @@ def get_show_index(context):
         return context['request'].show_index
     if hasattr(context['self'], 'get_show_index'):
         return context['self'].get_show_index()
+
+@register.assignment_tag(takes_context=True)
+def get_maps_for_campus(context, campus):
+    maps = models.ShowExhibitionMapPage.objects.filter(live=True, campus=campus)
+   
+    return maps

@@ -7,9 +7,9 @@ var themes = ['schoolofarchitecture', 'schoolofcommunication', 'schoolofdesign',
 function randTheme(){
     var chosen;
 
-    if(window.debug || !$.cookie('showrcatheme')){
+    if(!$.cookie('showrcatheme')){
         chosen = themes[Math.floor(Math.random() * themes.length)];
-        $.cookie('showrcatheme', chosen, { expires: 0.5 });
+        $.cookie('showrcatheme', chosen, { expires: 0.04, path: '/' });
     } else {
         chosen = $.cookie('showrcatheme')
     }
@@ -97,12 +97,13 @@ $(function(){
     overlay = $('#showrca2014-overlay');
 
     if(overlay.length){
-        console.log(randTheme());
-        setupOverlay();
+        randTheme();
 
-        if(window.debug || !$.cookie('showrca2014')){
+        // if(window.debug || !$.cookie('showrca2014')){
+        if(!$.cookie('showrca2014')){
+            setupOverlay();
             displayShowOverlay();
-            $.cookie('showrca2014', '1', { expires: 0.5 });
+            $.cookie('showrca2014', '1', { expires: 0.04, path: '/' });
         }
         
         $('.toggleoverlay').click(function(){

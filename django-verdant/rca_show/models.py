@@ -8,7 +8,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP
+from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
 
 # Standard page for contacts etc
 
@@ -60,12 +60,50 @@ ShowStandardPage.promote_panels = [
     ], "Social networks"),
 ]
 
+class ShowExhibitionMapIndexContent(Orderable):
+    page = ParentalKey('rca_show.ShowExhibitionMapIndex', related_name='content_block')
+    body = RichTextField(blank=True)
+    map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
+
+    panels = [
+        FieldPanel('body'), 
+        FieldPanel('map_coords')
+    ]
+
+class ShowExhibitionMapIndex(Page, SocialFields):
+    pass
+
+ShowExhibitionMapIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    InlinePanel(ShowExhibitionMapIndex, 'content_block', label="Content block"),
+]
+
+ShowExhibitionMapIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+
 class ShowExhibitionMapPage(Page, SocialFields):
-    body = RichTextField(blank=True) 
+    body = RichTextField(blank=True)
+    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
 
 ShowExhibitionMapPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body'),
+    FieldPanel('campus'),
 ]
 
 ShowExhibitionMapPage.promote_panels = [
