@@ -42,6 +42,10 @@
             font-weight:normal;
             border-bottom:1px solid @color-black;
             position:relative;  
+
+            &:hover{
+                color:white;
+            }
         }
         .options{
             font-size:0.8em;
@@ -343,6 +347,8 @@
     .column(10);
 }
 
+.programme-fashionmenswear .showgallery,
+.programme-fashionwomenswear .showgallery,
 .programme-curatingcontemporaryart .showgallery{
     li{
         .column(6);
@@ -375,6 +381,8 @@
 }
 
 @media screen and (min-width:480px){
+    .programme-fashionmenswear .showgallery,
+    .programme-fashionwomenswear .showgallery,
     .programme-curatingcontemporaryart .showgallery{
         li{
             .column(4);
