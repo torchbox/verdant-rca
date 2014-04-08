@@ -19,6 +19,7 @@
 @color-mat-1: #c357b3;
 @color-mat-2: #E1ABD9;
 
+
 .theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
     #showrca2014-overlay {
         color:@colorsecondary;
@@ -131,6 +132,30 @@ body{
 .programme-curatingcontemporaryart{
     .theme(cca, #e0413e, #F9A09F, 180px, 225px);
 }
+
+/* Fasion show specific */
+.programme-fashionmenswear,
+.programme-fashionwomenswear{
+    .theme(fas, #000000, #783CAC, 295px, 225px);
+}
+
+/* some more specific overrides for the fashion show */
+.programme-fashionmenswear,
+.programme-fashionwomenswear{
+    .shownav .jumplist.open .toggle,
+    .shownav .jumplist:hover .toggle{
+        color:white;
+    }
+    #showrca2014-overlay {
+        color:white;
+
+        .crest{
+            background-image:url('/static/rca_show/images/logo-rca-footer-inverse.png');
+        }
+    }
+}
+
+/* generic "make this text a themed colour" stuff. */
 
 .color-schoolofarchitecture, a.hovercolor-schoolofarchitecture:hover{
     color:@color-arc-1;
