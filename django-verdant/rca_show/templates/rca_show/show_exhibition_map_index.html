@@ -80,21 +80,18 @@
         </figure>
     {% endif %}
 
-    <div class="row col-2">
-        {% for block in self.content_block.all %}
-            <section class="body-text">
-                {% if block.map_coords %}
-                    <figure>
-                        <div id="map-{{ forloop.counter }}" class="map"></div>
-                    </figure>
-                {% endif %}
-
-                <div class="body">
-                    {{ block.body|richtext }}
-                </div>
-            </section>
-        {% endfor %}
-    </div>
+    {% for block in self.content_block.all %}
+        <section class="row row-flush">
+            <div class="body-text-style four">
+                {{ block.body|richtext }}
+            </div>
+            {% if block.map_coords %}
+                <figure class="eight">
+                    <div id="map-{{ forloop.counter }}" class="map"></div>
+                </figure>
+            {% endif %}
+        </section>
+    {% endfor %}
 
 
     <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
