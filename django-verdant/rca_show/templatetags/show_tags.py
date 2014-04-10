@@ -1,13 +1,16 @@
 import random
 from django import template
 from rca_show import models
-from rca import models as rca_models
+from rca import models as rca_models, utils as rca_utils
 
 register = template.Library()
 
 
 @register.simple_tag
 def show_subpage_url(show_index, name, *args, **kwargs):
+    if show_index.is_programme_page and name in ['student', 'programme'] and 'school' in kwargs:
+        del kwargs['school']
+
     return show_index.reverse_subpage(name, *args, **kwargs)
 
 
@@ -43,20 +46,20 @@ def get_school_students(show_index, school, random = False):
         return []
 
     if random:
-        return show_index.get_rand_students(school)
+        return show_index.get_rand_students(school=school)
     else:
-        return show_index.get_students(school)
+        return show_index.get_students(school=school)
 
 
 @register.assignment_tag
-def get_programme_students(show_index, school, programme, random = False):
+def get_programme_students(show_index, programme, random = False):
     if show_index is None:
         return []
 
     if random:
-        return show_index.get_rand_students(school, programme)
+        return show_index.get_rand_students(programme=programme)
     else:
-        return show_index.get_students(school, programme)
+        return show_index.get_students(programme=programme)
 
 
 @register.assignment_tag
@@ -85,8 +88,14 @@ def get_show_index(context):
     if hasattr(context['self'], 'get_show_index'):
         return context['self'].get_show_index()
 
-@register.assignment_tag(takes_context=True)
-def get_maps_for_campus(context, campus):
+
+@register.assignment_tag
+def get_maps_for_campus(campus):
     maps = models.ShowExhibitionMapPage.objects.filter(live=True, campus=campus)
    
     return maps
+
+
+@register.assignment_tag
+def get_school_for_programme(programme):
+    return rca_utils.get_school_for_programme(programme)

@@ -4,14 +4,14 @@
 {% block body_class %}{{ block.super }} type-programme{% endblock %}
 
 {% block content %}
-    {% get_programme_students self school programme as students %}
-    {% get_programme_students self school programme True as rand_students %}
+    {% get_programme_students self programme as students %}
+    {% get_programme_students self programme True as rand_students %}
     {% get_school_programmes self school as programmes %}
     {% get_schools self as schools %}
     {% secondary_menu self as menuitems %}
 
     <section class="shownav">
-        {% if not self.programmes.count %}
+        {% if not self.is_programme_page %}
             <ul class="nav-overview">
                 <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}
@@ -22,13 +22,13 @@
             </ul>
         {% endif %}
         <ul>
-            {% if self.programmes.count %}
+            {% if self.is_programme_page %}
                 <li class="jumplist">
                     <h2 class="toggle">Students</h2>
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -61,7 +61,7 @@
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>

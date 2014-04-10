@@ -5,10 +5,10 @@
 
 {% block content %}
     {% secondary_menu self as menuitems %}
-    {% get_programme_students self school programme True as rand_students %}    
+    {% get_programme_students self programme True as rand_students %}    
 
     <section class="shownav">
-        {% if not self.programmes.count %}
+        {% if not self.is_programme_page %}
             <ul class="nav-overview">
                 <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}

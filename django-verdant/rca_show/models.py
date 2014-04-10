@@ -202,7 +202,14 @@ class ShowIndexPage(SuperPage, SocialFields):
         return rca_utils.get_school_for_programme(self.programme)
 
     def get_programmes(self):
-        return self.programmes.all().values_list('programme', flat=True)
+        # This method gets hit quite alot (sometimes over 100 times per request)
+        if not hasattr(self, '_programmes_cache'):
+            self._programmes_cache = self.programmes.all().values_list('programme', flat=True)
+
+        return self._programmes_cache
+
+    def is_programme_page(self):
+        return bool(self.get_programmes)
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
@@ -336,7 +343,7 @@ class ShowIndexPage(SuperPage, SocialFields):
             'intro': intro,
         })
 
-    def serve_programme(self, request, programme):
+    def serve_programme(self, request, programme, school=None):
         # Check that the programme exists
         if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
@@ -348,7 +355,7 @@ class ShowIndexPage(SuperPage, SocialFields):
             'programme': programme,
         })
 
-    def serve_student(self, request, programme, slug):
+    def serve_student(self, request, programme, slug, school=None):
         # Check that the programme exists
         if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
@@ -368,28 +375,28 @@ class ShowIndexPage(SuperPage, SocialFields):
         })
 
     def get_subpage_urls(self):
-        programme_count = self.programmes.count()
+        programme_count = self.is_programme_page
 
         if programme_count == 0:
             return [
                 url(r'^$', self.serve_landing, name='landing'),
                 url(r'^schools/$', self.serve_school_index, name='school_index'),
                 url(r'^(?P<school>[\w\-]+)/$', self.serve_school, name='school'),
-                url(r'^[\w\-]+/(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
-                url(r'^[\w\-]+/(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, name='student'),
+                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/(?P<slug>[\w\-]+)/$', self.serve_student, name='student'),
             ]
         elif programme_count == 1:
             programme = self.programmes.all()[0].programme
 
             return [
-                url(r'^$', self.serve_programme, dict(programme=programme), name='programme'),
-                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme=programme), name='student'),
+                url(r'^$', self.serve_programme, dict(programme=programme, school=None), name='programme'),
+                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme=programme, school=None), name='student'),
             ]
         else:
             return [
                 url(r'^$', self.serve_landing, name='landing'),
-                url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
-                url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, name='student'),
+                url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
+                url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
             ]
 
     def route(self, request, path_components):
