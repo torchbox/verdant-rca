@@ -3,14 +3,15 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import RegexURLResolver
+from django.conf.urls import url
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
-from django.core.urlresolvers import RegexURLResolver
-from django.conf.urls import url
+from rca import utils as rca_utils
 
 
 class SuperPage(Page):
@@ -188,10 +189,13 @@ class ShowIndexPageSchool(Orderable):
 
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
+
+    @property
+    def school(self):
+        return rca_utils.get_school_for_programme(self.programme)
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
@@ -259,13 +263,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         return [school.school for school in self.schools.all()]
 
     def get_school_programmes(self, school):
-        if not self.year in SCHOOL_PROGRAMME_MAP:
-            return None
-
-        if not school in SCHOOL_PROGRAMME_MAP[self.year]:
-            return None
-
-        return SCHOOL_PROGRAMME_MAP[self.year][school]
+        return rca_utils.get_programmes_for_school(school, self.year)
 
     def get_student_url(self, student):
         return self.reverse_subpage(
@@ -374,9 +372,8 @@ ShowIndexPage.content_panels = [
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
     MultiFieldPanel([
-        FieldPanel('school'),
         FieldPanel('programme'),
-    ], "Limit page to this school/programme"),
+    ], "Limit page to this programme"),
 ]
 
 ShowIndexPage.promote_panels = [
