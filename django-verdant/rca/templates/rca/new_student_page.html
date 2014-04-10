@@ -183,6 +183,28 @@
                             <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
                         {% endif %}
                     </li>
+                     {% if self.is_phd_student %}
+                        <li class="col">
+                            <h2 class="h6">PhD</h2>
+
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_phd_school_display }}</p>
+
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}&ndash;{% if self.phd_graduation_year %}{{ self.phd_graduation_year }}{% endif %}</p>
+                        </li>
+                    {% endif %}
+                    {% if self.is_mphil_student %}
+                        <li class="col">
+                            <h2 class="h6">MPhil</h2>
+
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_mphil_school_display }}</p>
+
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}&ndash;{% if self.mphil_graduation_year %}{{ self.mphil_graduation_year }}{% endif %}</p>
+                        </li>
+                    {% endif %}
                     {% if self.is_ma_student %}
                         <li class="col">
                             <h2 class="h6">MA Degree</h2>
@@ -197,28 +219,6 @@
                                 <h3 class="a2 space">Specialism</h3>
                                 <p class="h7">{{ self.ma_specialism }}</p>
                             {% endif %}
-                        </li>
-                    {% endif %}
-                    {% if self.is_mphil_student %}
-                        <li class="col">
-                            <h2 class="h6">MPhil</h2>
-
-                            <h3 class="a2">School</h3>
-                            <p class="h7">{{ self.get_mphil_school_display }}</p>
-
-                            <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}{% if self.mphil_graduation_year %}&ndash;{{ self.mphil_graduation_year }}{% endif %}</p>
-                        </li>
-                    {% endif %}
-                    {% if self.is_phd_student %}
-                        <li class="col">
-                            <h2 class="h6">PhD</h2>
-
-                            <h3 class="a2">School</h3>
-                            <p class="h7">{{ self.get_phd_school_display }}</p>
-
-                            <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}{% if self.phd_graduation_year %}&ndash;{{ self.phd_graduation_year }}{% endif %}</p>
                         </li>
                     {% endif %}
                 </ul>

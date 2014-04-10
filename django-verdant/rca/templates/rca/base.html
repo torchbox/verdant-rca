@@ -1,5 +1,4 @@
 {% load compress static image_tags wagtailuserbar rca_tags %}
-{% static "rca/css/vendor/wagtail-userbar.css" as wagtailuserbarcss %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie10 lt-ie9 lt-ie8"> <![endif]-->
@@ -69,7 +68,7 @@
     </head>
     <body class="{% block body_class %}{% endblock %}">
         <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a> 
-        {% wagtailuserbar wagtailuserbarcss %}
+        {% wagtailuserbar %}
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->

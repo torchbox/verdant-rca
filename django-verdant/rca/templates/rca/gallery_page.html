@@ -41,7 +41,7 @@
 	                <select id="degree_year" name="degree_year">
 	                    <option value="">All years</option>
 	                    {% for year in years %}
-	                    	<option value="{{ year }}" {% if request.GET.year == year %}selected="selected"{% endif %}>{{ year }}</option>
+	                    	<option value="{{ year }}" {% if selected_year == year %}selected="selected"{% endif %}>{{ year }}</option>
 						{% endfor %}
 	                </select>
 	            </li>
