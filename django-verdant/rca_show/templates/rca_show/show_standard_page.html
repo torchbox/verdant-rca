@@ -12,13 +12,13 @@
 
      <section class="shownav">
         <ul class="nav-overview">
-            {% if request.show_index.programme %}
+            {% if request.show_index.programmes.count %}
                 <li class="jumplist">
                     <h2 class="toggle">Select a Student</h2>
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% show_subpage_url show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url show_index 'student' programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
