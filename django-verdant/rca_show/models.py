@@ -9,6 +9,61 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, Inli
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
+from django.core.urlresolvers import RegexURLResolver, Resolver404
+from django.conf.urls import url
+
+
+class SuperPage(Page):
+    """
+    This class extends Page by adding methods to allow urlconfs to be embedded inside pages
+    """
+
+    def get_subpage_urls(self):
+        """
+        Override this method to add your own subpage urls
+        """
+        return [
+            url('^$', self.serve, name='main'),
+        ]
+
+    def reverse_subpage(self, name, *args, **kwargs):
+        """
+        This method does the same job as Djangos' built in "urlresolvers.reverse()" function for subpage urlconfs.
+        """
+        resolver = RegexURLResolver(r'^', self.get_subpage_urls())
+        return self.url + resolver.reverse(name, *args, **kwargs)
+
+    def resolve_subpage(self, path):
+        """
+        This finds a view method/function from a URL path.
+        """
+        resolver = RegexURLResolver(r'^', self.get_subpage_urls())
+        return resolver.resolve(path)
+
+    def route(self, request, path_components):
+        print path_components
+        """
+        This hooks the subpage urls into Wagtails routing.
+        """
+        if self.live:
+            #try:
+            path = '/'.join(path_components)
+            if path:
+                path += '/'
+
+            print path
+            view, args, kwargs = self.resolve_subpage(path)
+            return view(request, *args, **kwargs)
+            #except Resolver404:
+                #pass
+
+        return super(SuperPage, self).route(request, path_components)
+
+    is_abstract = True
+
+    class Meta:
+        abstract = True
+
 
 # Standard page for contacts etc
 
@@ -132,7 +187,7 @@ class ShowIndexPageSchool(Orderable):
 
     panels = [FieldPanel('school'), FieldPanel('intro')]
 
-class ShowIndexPage(Page, SocialFields):
+class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
@@ -303,48 +358,25 @@ class ShowIndexPage(Page, SocialFields):
             'student': student,
         })
 
+    def get_subpage_urls(self):
+        if not self.programme:
+            return [
+                url(r'^$', self.serve_landing, name='landing'),
+                url(r'^schools/$', self.serve_school_index, name='school_index'),
+                url(r'^(.+)/$', self.serve_school, name='school'),
+                url(r'^(.+)/(.+)/$', self.serve_programme, name='programme'),
+                url(r'^(.+)/(.+)/(.+)/$', self.serve_student, name='student'),
+            ]
+        else:
+            return [
+                url(r'^$', self.serve_programme, dict(school=self.school, programme=self.programme), name='programme'),
+                url(r'^(?P<slug>.+)/$', self.serve_student, dict(school=self.school, programme=self.programme), name='student'),
+            ]
+
     def route(self, request, path_components):
         request.show_index = self
 
-        if self.live:
-            # Check if this is a request for the schools index
-            if not self.school and len(path_components) == 1 and path_components[0] == 'schools':
-                return self.serve_school_index(request)
-
-            # Check if this is a request for the landing page
-            if not self.school and not path_components:
-                return self.serve_landing(request)
-
-            # Must be for a school/programme/student find the slugs
-            slugs = []
-            if self.school:
-                slugs.append(self.school)
-                if self.programme:
-                    slugs.append(self.programme)
-            slugs.extend(path_components)
-
-            try:
-                if len(slugs) == 1:
-                    return self.serve_school(request, slugs[0])
-                elif len(slugs) == 2:
-                    return self.serve_programme(request, slugs[0], slugs[1])
-                elif len(slugs) == 3:
-                    return self.serve_student(request, slugs[0], slugs[1], slugs[2])
-            except Http404:
-                pass
-
-        if path_components:
-            # Fallback to subpage
-            child_slug = path_components[0]
-            remaining_components = path_components[1:]
-            try:
-                subpage = self.get_children().get(slug=child_slug)
-            except Page.DoesNotExist:
-                raise Http404
-
-            return subpage.specific.route(request, remaining_components)
-        else:
-            raise Http404
+        return super(ShowIndexPage, self).route(request, path_components)
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
