@@ -208,8 +208,9 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         return self._programmes_cache
 
+    @property
     def is_programme_page(self):
-        return bool(self.get_programmes)
+        return bool(self.get_programmes())
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
