@@ -51,7 +51,6 @@ class SuperPage(Page):
                 if path:
                     path += '/'
 
-                print path
                 view, args, kwargs = self.resolve_subpage(path)
                 return view(request, *args, **kwargs)
             except Http404:
@@ -187,15 +186,23 @@ class ShowIndexPageSchool(Orderable):
 
     panels = [FieldPanel('school'), FieldPanel('intro')]
 
+class ShowIndexPageProgramme(Orderable):
+    page = ParentalKey('rca_show.ShowIndexPage', related_name='programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+
+    panels = [FieldPanel('programme')]
+
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
 
     @property
     def school(self):
         return rca_utils.get_school_for_programme(self.programme)
+
+    def get_programmes(self):
+        return self.programmes.all().values_list('programme', flat=True)
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
@@ -204,6 +211,10 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         if self.year:
             filters['ma_graduation_year'] = self.year
+
+        programmes = self.get_programmes()
+        if programmes:
+            filters['ma_programme__in'] = programmes
 
         if school:
             filters['ma_school'] = school
@@ -221,6 +232,10 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.year:
             filters['mphil_graduation_year'] = self.year
 
+        programmes = self.get_programmes()
+        if programmes:
+            filters['mphil_programme__in'] = programmes
+
         if school:
             filters['mphil_school'] = school
 
@@ -236,6 +251,10 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         if self.year:
             filters['phd_graduation_year'] = self.year
+
+        programmes = self.get_programmes()
+        if programmes:
+            filters['phd_programme__in'] = programmes
 
         if school:
             filters['phd_school'] = school
@@ -256,22 +275,25 @@ class ShowIndexPage(SuperPage, SocialFields):
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]
 
-    def get_student(self, school, programme, slug):
+    def get_student(self, school=None, programme=None, slug=None):
         return self.get_students(school, programme).get(slug=slug)
 
     def get_schools(self):
         return [school.school for school in self.schools.all()]
 
     def get_school_programmes(self, school):
-        return rca_utils.get_programmes_for_school(school, self.year)
+        return rca_utils.get_programmes(school, self.year)
 
     def get_student_url(self, student):
         return self.reverse_subpage(
             'student',
-            school=student.school,
             programme=student.programme,
             slug=student.slug,
         )
+
+    def contains_programme(self, programme):
+        programmes = self.get_programmes() or rca_utils.get_programmes(year=self.year)
+        return programme in programmes
 
     # Views
     landing_template = 'rca_show/landing.html'
@@ -314,50 +336,60 @@ class ShowIndexPage(SuperPage, SocialFields):
             'intro': intro,
         })
 
-    def serve_programme(self, request, school, programme):
-        # Check that the school/programme exists
-        programmes = self.get_school_programmes(school)
-        if programmes is None:
-            raise Http404("School doesn't exist")
-
-        if programme not in programmes:
+    def serve_programme(self, request, programme):
+        # Check that the programme exists
+        if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
 
         # Render response
         return render(request, self.programme_template, {
             'self': self,
-            'school': school,
+            'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
         })
 
-    def serve_student(self, request, school, programme, slug):
+    def serve_student(self, request, programme, slug):
+        # Check that the programme exists
+        if not self.contains_programme(programme):
+            raise Http404("Programme doesn't exist")
+
         # Get the student
         try:
-            student = self.get_student(school, programme, slug)
+            student = self.get_student(programme=programme, slug=slug)
         except NewStudentPage.DoesNotExist:
             raise Http404("Cannot find student")
 
         # Render response
         return render(request, self.student_template, {
             'self': self,
-            'school': school,
+            'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
             'student': student,
         })
 
     def get_subpage_urls(self):
-        if not self.programme:
+        programme_count = self.programmes.count()
+
+        if programme_count == 0:
             return [
                 url(r'^$', self.serve_landing, name='landing'),
                 url(r'^schools/$', self.serve_school_index, name='school_index'),
-                url(r'^(?P<school>.+)/$', self.serve_school, name='school'),
-                url(r'^(?P<school>.+)/(?P<programme>.+)/$', self.serve_programme, name='programme'),
-                url(r'^(?P<school>.+)/(?P<programme>.+)/(?P<slug>.+)/$', self.serve_student, name='student'),
+                url(r'^(?P<school>[\w\-]+)/$', self.serve_school, name='school'),
+                url(r'^[\w\-]+/(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^[\w\-]+/(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, name='student'),
+            ]
+        elif programme_count == 1:
+            programme = self.programmes.all()[0].programme
+
+            return [
+                url(r'^$', self.serve_programme, dict(programme=programme), name='programme'),
+                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme=programme), name='student'),
             ]
         else:
             return [
-                url(r'^$', self.serve_programme, dict(school=self.school, programme=self.programme), name='programme'),
-                url(r'^(?P<slug>.+)/$', self.serve_student, dict(school=self.school, programme=self.programme), name='student'),
+                url(r'^$', self.serve_landing, name='landing'),
+                url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, name='student'),
             ]
 
     def route(self, request, path_components):
@@ -371,9 +403,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
-    MultiFieldPanel([
-        FieldPanel('programme'),
-    ], "Limit page to this programme"),
+    InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
 ]
 
 ShowIndexPage.promote_panels = [

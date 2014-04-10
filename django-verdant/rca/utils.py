@@ -7,10 +7,16 @@ def get_school_programme_map(year=None):
         return SCHOOL_PROGRAMME_MAP[max(SCHOOL_PROGRAMME_MAP.keys())]
 
 
-def get_programmes_for_school(school, year=None):
+def get_programmes(school=None, year=None):
     school_programme_map = get_school_programme_map(year)
 
-    return school_programme_map[school]
+    if school:
+        return school_programme_map[school]
+    else:
+        programmes = []
+        for extra_programmes in school_programme_map.values():
+            programmes.extend(extra_programmes)
+        return list(set(programmes))
 
 
 def get_school_for_programme(programme, year=None):

@@ -8,14 +8,16 @@
     {% get_programme_students self school programme True as rand_students %}    
 
     <section class="shownav">
-        <ul class="nav-overview">
-            <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
-            {% for item in menuitems %}
-                <li {% if item.url == self.url %}class="active"{% endif %}>
-                    <a href="{% pageurl item %}">{{ item.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
+        {% if not self.programmes.count %}
+            <ul class="nav-overview">
+                <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
+                {% for item in menuitems %}
+                    <li {% if item.url == self.url %}class="active"{% endif %}>
+                        <a href="{% pageurl item %}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </section>
 
     {% include "rca_show/includes/modules/rand_gallery.html" with rand_students=rand_students %}

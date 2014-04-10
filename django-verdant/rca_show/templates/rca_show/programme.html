@@ -11,7 +11,7 @@
     {% secondary_menu self as menuitems %}
 
     <section class="shownav">
-        {% if not self.programme %}
+        {% if not self.programmes.count %}
             <ul class="nav-overview">
                 <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}
@@ -22,13 +22,13 @@
             </ul>
         {% endif %}
         <ul>
-            {% if self.programme %}
+            {% if self.programmes.count %}
                 <li class="jumplist">
                     <h2 class="toggle">Students</h2>
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url self 'student' programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -61,7 +61,7 @@
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url self 'student' programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
