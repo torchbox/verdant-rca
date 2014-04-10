@@ -4,7 +4,7 @@
     {% if self.programme %}
         {% for student in rand_students %}
             <li class="item" >
-                <a href="{% get_student_url self student %}">
+                <a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">
                     {% if student.profile_image %}
                         <div class="gallery-image">
                             {% image student.profile_image fill-300x300 %}

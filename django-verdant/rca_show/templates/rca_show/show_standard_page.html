@@ -18,13 +18,13 @@
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for student in students %}
-                            <li><a href="{% get_student_url show_index student %}">{{ student.title }}</a></li>
+                            <li><a href="{% show_subpage_url show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
             {% else %}
                 <li>
-                    <a href="{% get_school_index_url show_index %}">Schools &amp; Students</a>
+                    <a href="{% show_subpage_url show_index 'school_index' %}">Schools &amp; Students</a>
                 </li>
             {% endif %}
             {% for item in menuitems %}

@@ -11,7 +11,7 @@
 
     <section class="shownav">
         <ul class="nav-overview">
-            <li><a href="{% get_school_index_url show_index %}">Schools &amp; Students</a></li>
+            <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
                 <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>

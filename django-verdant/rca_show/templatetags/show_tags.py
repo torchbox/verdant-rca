@@ -5,47 +5,19 @@ from rca import models as rca_models
 
 register = template.Library()
 
-@register.simple_tag
-def get_school_index_url(show_index):
-    if show_index is None:
-        return ''
-
-    return show_index.get_school_index_url()
-
 
 @register.simple_tag
-def get_school_url(show_index, school):
-    if show_index is None:
-        return ''
-
-    return show_index.get_school_url(school)
-
-
-@register.simple_tag
-def get_programme_url(show_index, school, programme):
-    if show_index is None:
-        return ''
-
-    return show_index.get_programme_url(school, programme)
-
-
-@register.simple_tag
-def get_student_url(show_index, student):
-    if show_index is None:
-        return ''
-
-    return show_index.get_student_url(student)
+def show_subpage_url(show_index, name, *args, **kwargs):
+    return show_index.reverse_subpage(name, *args, **kwargs)
 
 
 @register.simple_tag
 def get_programme_display(programme):
-
     return dict(rca_models.ALL_PROGRAMMES)[programme]
 
 
 @register.simple_tag
 def get_school_display(school):
-
     return dict(rca_models.SCHOOL_CHOICES)[school]
 
 

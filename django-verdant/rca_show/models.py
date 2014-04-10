@@ -9,7 +9,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, Inli
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
-from django.core.urlresolvers import RegexURLResolver, Resolver404
+from django.core.urlresolvers import RegexURLResolver
 from django.conf.urls import url
 
 
@@ -41,21 +41,20 @@ class SuperPage(Page):
         return resolver.resolve(path)
 
     def route(self, request, path_components):
-        print path_components
         """
         This hooks the subpage urls into Wagtails routing.
         """
         if self.live:
-            #try:
-            path = '/'.join(path_components)
-            if path:
-                path += '/'
+            try:
+                path = '/'.join(path_components)
+                if path:
+                    path += '/'
 
-            print path
-            view, args, kwargs = self.resolve_subpage(path)
-            return view(request, *args, **kwargs)
-            #except Resolver404:
-                #pass
+                print path
+                view, args, kwargs = self.resolve_subpage(path)
+                return view(request, *args, **kwargs)
+            except Http404:
+                pass
 
         return super(SuperPage, self).route(request, path_components)
 
@@ -268,23 +267,13 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         return SCHOOL_PROGRAMME_MAP[self.year][school]
 
-    def get_school_index_url(self):
-        return self.url + 'schools/'
-
-    def get_school_url(self, school):
-        if not self.school:
-            return self.url + school + '/'
-        else:
-            return self.url
-
-    def get_programme_url(self, school, programme):
-        if not self.programme:
-            return self.get_school_url(school) + programme + '/'
-        else:
-            return self.get_school_url(school)
-
     def get_student_url(self, student):
-        return self.get_programme_url(student.school, student.programme) + student.slug + '/'
+        return self.reverse_subpage(
+            'student',
+            school=student.school,
+            programme=student.programme,
+            slug=student.slug,
+        )
 
     # Views
     landing_template = 'rca_show/landing.html'
@@ -363,9 +352,9 @@ class ShowIndexPage(SuperPage, SocialFields):
             return [
                 url(r'^$', self.serve_landing, name='landing'),
                 url(r'^schools/$', self.serve_school_index, name='school_index'),
-                url(r'^(.+)/$', self.serve_school, name='school'),
-                url(r'^(.+)/(.+)/$', self.serve_programme, name='programme'),
-                url(r'^(.+)/(.+)/(.+)/$', self.serve_student, name='student'),
+                url(r'^(?P<school>.+)/$', self.serve_school, name='school'),
+                url(r'^(?P<school>.+)/(?P<programme>.+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<school>.+)/(?P<programme>.+)/(?P<slug>.+)/$', self.serve_student, name='student'),
             ]
         else:
             return [

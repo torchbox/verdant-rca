@@ -12,7 +12,7 @@
 
     <section class="shownav">
         <ul class="nav-overview">
-            <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
+            <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
                 <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>
@@ -26,7 +26,7 @@
                     <div class="selected toggle"></div>
                     <ul class="options">
                         {% for school in schools %}
-                            <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
+                            <li><a href="{% show_subpage_url self 'school' school=school %}">{% get_school_display school %}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -36,7 +36,7 @@
                 <div class="selected toggle"></div>
                 <ul class="options">
                     {% for programme in programmes %}
-                        <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
+                        <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -45,7 +45,7 @@
                 <div class="selected toggle"></div>
                 <ul class="options">
                     {% for student in students %}
-                        <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
+                        <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -58,11 +58,11 @@
         {% for school in schools %}
             {% cycle '<ul class="school-list">' '' '' %}
             <li>
-                <h2><a href="{% get_school_url self school %}" class="color-{{ school }}">{% get_school_display school %}</a></h2>
+                <h2><a href="{% show_subpage_url self 'school' school=school %}" class="color-{{ school }}">{% get_school_display school %}</a></h2>
                 <ul>
                     {% get_school_programmes self school as programmes%}
                         {% for programme in programmes %}
-                        <li><a href="{% get_programme_url self school programme %}" class="hovercolor-{{ school }}">{% get_programme_display programme %}</a></li>
+                        <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}" class="hovercolor-{{ school }}">{% get_programme_display programme %}</a></li>
                     {% endfor %}
                 </ul>
             </li>
