@@ -6,6 +6,7 @@
 {% block content %}
     {% secondary_menu self as menuitems %}
     {% get_programme_students self programme True as rand_students %}    
+    {% get_programme_students self programme as students %}
 
     <section class="shownav">
         {% if not self.is_programme_page %}
@@ -13,6 +14,34 @@
                 <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}
                     <li {% if item.url == self.url %}class="active"{% endif %}>
+                        <a href="{% pageurl item %}">{{ item.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <ul>
+                <li class="jumplist">
+                    <h2 class="toggle">Select a Student</h2>
+                    <div class="selected toggle"></div>
+                    <ul class="options">
+                        {% if self.get_programmes > 1 %}
+                            {% for programme in self.get_programmes %}
+                                <li><b>{% get_programme_display programme %}</b></li>
+                                {% get_programme_students self programme as students %}
+                                {% for student in students %}
+                                    <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                                {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            {% get_programme_students self programme as students %}
+                            {% for student in students %}
+                                <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </li>
+                {% for item in menuitems %}
+                    <li>
                         <a href="{% pageurl item %}">{{ item.title }}</a>
                     </li>
                 {% endfor %}

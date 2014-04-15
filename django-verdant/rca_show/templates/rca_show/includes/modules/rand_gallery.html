@@ -1,20 +1,9 @@
 {% load pageurl image_tags show_tags %}
 
 <ul class="showgallery">
-    {% if self.is_programme_page %}
+    {% if "curatingcontemporaryart" in self.get_programmes %}
         {% for student in rand_students %}
-            <li class="item" >
-                <a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">
-                    {% if student.profile_image %}
-                        <div class="gallery-image">
-                            {% image student.profile_image fill-300x300 %}
-                        </div>
-                    {% endif %}
-                    <div class="content">
-                        <h2 class="h6"><i>{{ student.title }}</i></h2>
-                    </div>
-                </a>
-            </li>
+            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=student.postcard_image image_format="fill" %}
         {% endfor %}
     {% else %}
         {% for student in rand_students %}
