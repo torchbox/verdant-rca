@@ -7,7 +7,7 @@ env.roledefs = {
     'staging': ['django-staging.torchbox.com'],
 
     'squid': ['root@rca1.dh.bytemark.co.uk'],
-    'db': ['root@rca1.dh.bytemark.co.uk'],
+    'db': ['rca1.dh.bytemark.co.uk'],
     # All hosts will be listed here.
     'production': ['root@rca2.dh.bytemark.co.uk', 'root@rca3.dh.bytemark.co.uk'],
 }
