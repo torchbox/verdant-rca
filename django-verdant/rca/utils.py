@@ -11,9 +11,9 @@ def get_programmes(school=None, year=None):
     school_programme_map = get_school_programme_map(year)
 
     if school:
-        try:
+        if school in school_programme_map:
             return school_programme_map[school]
-        except:
+        else:
             return []
     else:
         programmes = []

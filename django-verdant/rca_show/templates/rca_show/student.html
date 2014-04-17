@@ -44,7 +44,7 @@
                 <h2 class="toggle">Select a Student</h2>
                 <div class="selected toggle">{{ student.title }}</div>
                 <ul class="options">
-                    {% if self.get_programmes.count > 1 %}
+                    {% if self.get_programmes|length > 1 %}
                         {% for programme in self.get_programmes %}
                             <li><a href="{% show_subpage_url self 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
                             {% get_programme_students self programme as students %}

@@ -24,7 +24,7 @@
                     <h2 class="toggle">Select a Student</h2>
                     <div class="selected toggle"></div>
                     <ul class="options">
-                        {% if self.get_programmes.count > 1 %}
+                        {% if self.get_programmes|length > 1 %}
                             {% for programme in self.get_programmes %}
                                 <li><b>{% get_programme_display programme %}</b></li>
                                 {% get_programme_students self programme as students %}
