@@ -11,7 +11,10 @@ def get_programmes(school=None, year=None):
     school_programme_map = get_school_programme_map(year)
 
     if school:
-        return school_programme_map[school]
+        try:
+            return school_programme_map[school]
+        except:
+            return []
     else:
         programmes = []
         for extra_programmes in school_programme_map.values():
