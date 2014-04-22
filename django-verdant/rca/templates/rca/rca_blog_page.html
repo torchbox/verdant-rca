@@ -1,0 +1,54 @@
+{% extends "rca/base.html" %}
+{% load pageurl %}
+
+{% block body_class %}type-rcablog{% endblock %}
+
+{% block content %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with showTitle="true" body=self.body%}
+
+        {# Meta data #}
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    {% with self.author_profile_page as author_profile_page %}
+                        {% if author_profile_page %}
+                            <dd>By</dd>
+                            <dt><a href="{% pageurl author_profile_page %}">{{ author_profile_page.title }}</a></dt>
+                        {% elif self.author %}
+                            <dd>By</dd>
+                            <dt>{{ self.author }}</dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    <dd>Date</dd>
+                    <dt>{{ self.date|date:"j F Y" }}</dt>
+
+                    <dd>Programme</dd>
+                    <dt>{{ self.get_programme_display }}</dt>
+
+                    {% if self.tags.all.count > 0 %}
+                        <dd>Tags</dd>
+                        <dt>
+                            {% with self.tags.all as tags %}
+                                {% for tag in tags %}
+                                    {{ tag }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                        </dt>
+                    {% endif %}
+                </dl>
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRCABlog="true" %}
+{% endblock %}

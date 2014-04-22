@@ -3986,6 +3986,162 @@ RcaNowIndex.promote_panels = [
     ], 'Social networks'),
 ]
 
+# == RCA Blog page ==
+
+class RcaBlogPagePageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.RcaBlogPage', related_name='carousel_items')
+
+
+class RcaBlogPageTag(TaggedItemBase):
+    content_object = ParentalKey('rca.RcaBlogPage', related_name='tagged_items')
+
+
+class RcaBlogPage(Page, SocialFields):
+    body = RichTextField()
+    author = models.CharField(max_length=255, blank=True)
+    date = models.DateField("Creation date")
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
+    show_on_homepage = models.BooleanField()
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    tags = ClusterTaggableManager(through=RcaBlogPageTag)
+
+    indexed_fields = ('body', 'author', 'get_programme_display', 'get_school_display', 'get_area_display')
+
+    search_name = 'RCA Blog'
+
+    class Meta:
+        verbose_name = 'RCA Blog Page'
+
+    def author_profile_page(self):
+        """Return the profile page for the author of this post, if one exists (and is live)"""
+        if self.owner:
+            try:
+                return StudentPage.objects.filter(live=True, owner=self.owner)[0]
+            except IndexError:
+                return None
+
+
+RcaBlogPage.content_panels = [
+    InlinePanel(RcaBlogPage, 'carousel_items', label="Carousel content"),
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body', classname="full"),
+    FieldPanel('author'),
+    FieldPanel('date'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('area'),
+    FieldPanel('twitter_feed'),
+]
+
+RcaBlogPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+    # InlinePanel(RcaBlogPage, 'tagged_items', label='tag'),
+    FieldPanel('tags'),
+]
+
+
+# == RCA Blog index ==
+
+
+class RcaBlogIndex(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        programme = request.GET.get('programme')
+        school = request.GET.get('school')
+        area = request.GET.get('area')
+
+        rca_blog_items = RcaBlogPage.objects.filter(live=True)
+
+        # Run school, area and programme filters
+        rca_blog_items, filters = run_filters(rca_blog_items, [
+            ('school', 'school', school),
+            ('programme', 'programme', programme),
+            ('area', 'area', area),
+        ])
+
+        rca_blog_items = rca_blog_items.order_by('-date')
+
+        page = request.GET.get('page')
+        paginator = Paginator(rca_blog_items, 10)  # Show 10 rca blog items per page
+        try:
+            rca_blog_items = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            rca_blog_items = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            rca_blog_items = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/rca_blog_listing.html", {
+                'self': self,
+                'rca_blog_items': rca_blog_items,
+                'filters': json.dumps(filters),
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'rca_blog_items': rca_blog_items,
+                'filters': json.dumps(filters),
+            })
+
+    class Meta:
+        verbose_name = 'RCA Blog Index'
+
+RcaBlogIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    FieldPanel('twitter_feed'),
+]
+
+RcaBlogIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
+
 # == Research Item page ==
 
 class ResearchItemCarouselItem(Orderable, CarouselItemFields):
