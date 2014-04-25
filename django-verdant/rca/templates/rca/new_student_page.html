@@ -8,9 +8,172 @@
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
+        {% if student.ma_in_show %}
+        {% with student.show_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% else %}
+        {% with student.research_carousel_items.all as carousel_items %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+        {% endwith %}
+    {% endif %}
+
+
     {% tabdeck %}
-        <!-- links and ids added by javascript -->
-        {% tab "Info" class="flush" %}
+        {% if self.is_phd_student %}
+            {% tab "PhD Work" %}
+                {% with self.phd_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+
+                <section class="row">
+                    <div class="three-nine-cols">
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.phd_dissertation_title }}</h3>
+
+                            {{ self.phd_statement|richtext }}
+                        </div>
+                        <div class="col col-3 first">
+                            <div class="meta-data">
+                                <dl>
+                                    <dd>Programme</dd>
+                                    <dt>
+                                        {{ self.get_phd_programme_display }}
+                                    </dt>
+                                    {% if self.phd_collaborators.all %}
+                                        <dd>Collaborators</dd>
+                                        <dt>
+                                            {% for collaborator in self.phd_collaborators.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+
+                                    {% if self.phd_supervisors.all %}
+                                        <dd>Supervisors</dd>
+                                        <dt>
+                                            {% for collaborator in self.phd_supervisors.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+
+                                    {% if self.phd_sponsors.all %}
+                                        <dd>Sponsors</dd>
+                                        <dt>
+                                            {% for sponsor in self.phd_sponsors.all %}
+                                                {{ sponsor.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            {% endtab %}
+        {% endif %}
+
+        {% if self.is_mphil_student %}
+            {% tab "MPhil work" %}
+                {% with self.mphil_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+
+                <section class="row">
+                    <div class="three-nine-cols">
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.mphil_dissertation_title }}</h3>
+
+                            {{ self.mphil_statement|richtext }}
+                        </div>
+                        <div class="col col-3 first">
+                            <div class="meta-data">
+                                <dl>
+                                    <dd>Programme</dd>
+                                    <dt>
+                                        {{ self.get_mphil_programme_display }}
+                                    </dt>
+                                    {% if self.mphil_collaborators.all %}
+                                        <dd>Collaborators</dd>
+                                        <dt>
+                                            {% for collaborator in self.mphil_collaborators.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                    {% if self.mphil_supervisors.all %}
+                                        <dd>Supervisors</dd>
+                                        <dt>
+                                            {% for collaborator in self.mphil_supervisors.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                    {% if self.mphil_sponsors.all %}
+                                        <dd>Sponsors</dd>
+                                        <dt>
+                                            {% for sponsor in self.mphil_sponsors.all %}
+                                                {{ sponsor.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            {% endtab %}
+        {% endif %}
+
+        {% if self.is_ma_student and self.ma_in_show %}
+            {% tab "MA work" %}
+
+                {% with self.show_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+
+                <section class="row">
+                    <div class="three-nine-cols">
+                        <div class="col col-9 last body-text">
+                            <h3>{{ self.show_work_title }}</h3>
+
+                            {{ self.show_work_description|richtext }}
+                        </div>
+                        <div class="col col-3 first">
+                            <div class="meta-data">
+                                <dl>
+                                    <dd>Programme</dd>
+                                    <dt>
+                                        {{ self.get_ma_programme_display }}
+                                    </dt>
+                                    {% if self.show_collaborators.all %}
+                                        <dd>Collaborators</dd>
+                                        <dt>
+                                            {% for collaborator in self.show_collaborators.all %}
+                                                {{ collaborator.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                    {% if self.show_sponsors.all %}
+                                        <dd>Sponsors</dd>
+                                        <dt>
+                                            {% for sponsor in self.show_sponsors.all %}
+                                                {{ sponsor.name }}<br />
+                                            {% endfor %}
+                                        </dt>
+                                    {% endif %}
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {% endtab %}
+        {% endif %}
+
+        {% tab "Info" %}
             <div class="profile">
                 <ul class="four-cols">
                     <li class="col first">
@@ -20,15 +183,37 @@
                             <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
                         {% endif %}
                     </li>
+                     {% if self.is_phd_student %}
+                        <li class="col">
+                            <h2 class="h6">PhD</h2>
+
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_phd_school_display }}</p>
+
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}&ndash;{% if self.phd_graduation_year %}{{ self.phd_graduation_year }}{% endif %}</p>
+                        </li>
+                    {% endif %}
+                    {% if self.is_mphil_student %}
+                        <li class="col">
+                            <h2 class="h6">MPhil</h2>
+
+                            <h3 class="a2">School</h3>
+                            <p class="h7">{{ self.get_mphil_school_display }}</p>
+
+                            <h3 class="a2 space">Programme</h3>
+                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}&ndash;{% if self.mphil_graduation_year %}{{ self.mphil_graduation_year }}{% endif %}</p>
+                        </li>
+                    {% endif %}
                     {% if self.is_ma_student %}
                         <li class="col">
-                            <h3 class="a1">MA Degree</h3>
+                            <h2 class="h6">MA Degree</h2>
 
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_ma_school_display }}</p>
 
                             <h3 class="a2 space">Programme</h3>
-                            <p class="h7">MA {{ self.get_ma_programme_display }}{% if self.ma_degree_year %}, {{ self.ma_degree_year }}{% endif %}</p>
+                            <p class="h7">MA {{ self.get_ma_programme_display }}{% if self.ma_graduation_year %}, {{ self.ma_graduation_year }}{% endif %}</p>
 
                             {% if self.ma_specialism %}
                                 <h3 class="a2 space">Specialism</h3>
@@ -36,23 +221,58 @@
                             {% endif %}
                         </li>
                     {% endif %}
-                    {% if self.is_research_student %}
-                        <li class="col">
-                            <h3 class="a1">Research</h3>
+                </ul>
 
-                            <h3 class="a2">School</h3>
-                            <p class="h7">{{ self.get_research_school_display }}</p>
-
-                            {% if self.research_qualification  %}
-                                <h3 class="a2 space">Programme</h3>
-                                <p class="h7">{% if self.research_qualification %}{{ self.get_research_qualification_display }} {% endif %}{% if self.research_programme %}{{ self.get_research_programme_display }}{% endif %}{% if self.research_start_year %}, {{ self.research_start_year }}{% endif %}{% if self.research_graduation_year %}&ndash;{{ self.research_graduation_year }}{% endif %}</p>
+                {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
+                  
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="module-title">Contact</h2>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            {% with self.emails.all as emails %}
+                                {% if emails %}
+                                    {% for email in emails %}
+                                        <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            {% with self.phones.all as phone_nos %}
+                                {% if phone_nos %}
+                                    {% for phone_no in phone_nos %}
+                                        <div>{{ phone_no.phone }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            {% with self.websites.all as websites %}
+                                {% if websites %}
+                                    {% for website in websites %}
+                                        <div><a href="{{ website.website }}">{{ website.website }}</a></div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            {% if self.twitter_handle %}
+                                <div><a href="http://www.twitter.com/{{ self.twitter_handle }}">&#64;{{ self.twitter_handle }}</a></div>
                             {% endif %}
                         </li>
-                    {% endif %}
-                    <li class="col">
-                        {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
-                        
-                            <h3 class="a2">Contact</h3>
+                    </ul>
+                   
+                {% endif %}
+                <div class="divider"></div>
+                <ul class="three-nine-cols">
+                    <li class="col col-3 first">
+                        <div class="row">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </li>
+                    <li class="col col-9 last body-text-style">
+                        {{ self.statement|richtext }}
+                    </li>
+                </ul>
+
+     <!--                    
+                            <h2 class="h6">Contact</h2>
                             <ul>
                                 {% with self.emails.all as emails %}
                                     {% if emails %}
@@ -79,22 +299,9 @@
                                     <a href="http://www.twitter.com/{{ self.twitter_handle }}">&#64;{{ self.twitter_handle }}</a>
                                 {% endif %}
                             </ul>
-                        {% endif %}
-                    </li>
-                    <li class="col last">
-                    </li>
-                </ul>
-                <div class="divider"></div>
-                <ul class="three-nine-cols">
-                    <li class="col col-3 first">
-                        <div class="row">
-                            {% include "rca/includes/modules/share-button.html" %}
-                        </div>
-                    </li>
-                    <li class="col col-9 last body-text-style">
-                        {{ self.statement|richtext }}
-                    </li>
-                </ul>
+                         -->
+                  
+
 
                 <!--degrees-->
                 {% with self.previous_degrees.all as degrees %}
@@ -141,6 +348,23 @@
                             <li class="col col-9 last body-text-style">
                                 {% for exhibition in exhibitions %}
                                     {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- awards -->
+                {% with self.awards.all as awards %}
+                    {% if awards %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Awards</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for award in awards %}
+                                    {{ award.award }}{% if not forloop.last %}; {% endif %}
                                 {% endfor %}
                             </li>
                         </ul>

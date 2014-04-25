@@ -19,6 +19,12 @@ class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
+    def get_show_index(self):
+        for page in self.get_ancestors().reverse():
+            specific_page = page.specific
+            if isinstance(specific_page, ShowIndexPage):
+                return specific_page
+
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
@@ -75,19 +81,35 @@ class ShowIndexPage(Page, SocialFields):
 
         return models.Q(**filters)
 
-    def get_research_students_q(self, school=None, programme=None):
+    def get_mphil_students_q(self, school=None, programme=None):
         filters = {
-            'research_in_show': True,
+            'mphil_in_show': True,
         }
 
         if self.year:
-            filters['research_graduation_year'] = self.year
+            filters['mphil_graduation_year'] = self.year
 
         if school:
-            filters['research_school'] = school
+            filters['mphil_school'] = school
 
         if programme:
-            filters['research_programme'] = programme
+            filters['mphil_programme'] = programme
+
+        return models.Q(**filters)
+
+    def get_phd_students_q(self, school=None, programme=None):
+        filters = {
+            'phd_in_show': True,
+        }
+
+        if self.year:
+            filters['phd_graduation_year'] = self.year
+
+        if school:
+            filters['phd_school'] = school
+
+        if programme:
+            filters['phd_programme'] = programme
 
         return models.Q(**filters)
 
@@ -95,7 +117,7 @@ class ShowIndexPage(Page, SocialFields):
         students = NewStudentPage.objects.filter(live=True)
 
         # Filter by students in this particular show
-        students = students.filter(self.get_ma_students_q(school, programme) | self.get_research_students_q(school, programme)).order_by('first_name')
+        students = students.filter(self.get_ma_students_q(school, programme) | self.get_mphil_students_q(school, programme) | self.get_phd_students_q(school, programme)).order_by('first_name')
 
         return students
 

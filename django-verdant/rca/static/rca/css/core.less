@@ -1376,13 +1376,18 @@ footer {
 
 .type-staff-profile,
 .type-student-profile {
-    div.related-content-item img {
-        max-width: 125px;
+    div.related-content-item{
+        img {
+            max-width: 125px;
+        }
+        .staff figcaption {
+            .a3();
+            .name();
+        }
     }
-    div.related-content-item .staff figcaption {
-        .a3();
-        .name();
-    }
+}
+
+.type-staff-profile{
     #tab2 {
         h3 {
             margin: @spacing-half 0 0 0;
@@ -1397,7 +1402,6 @@ footer {
         }
     }
     #tab4 {
-
         .module {
             clear:both;
             .clearfix();
@@ -1412,6 +1416,17 @@ footer {
 .type-student-profile {
     .tab-pane .three-plus {
         margin-top: @grid-gutter-width;
+    }
+    .profile h3 {
+        margin: @spacing-half 0 0 0;
+    }
+    .profile h2{
+        margin-top:0;
+    }
+    .profile .four-cols .col ul li{
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
     }
 }
 

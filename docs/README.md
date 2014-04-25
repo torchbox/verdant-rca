@@ -3,8 +3,6 @@
 * Install [Vagrant](https://wiki.torchbox.com/view/Vagrant)
 * ```git clone git@github.com:torchbox/verdant-rca.git```
 * ```cd verdant-rca```
-* ```git submodule init```
-* ```git submodule update```
 * ```vagrant up```
 * ```vagrant ssh```
 * ```./manage.py runserver 0.0.0.0:8000```

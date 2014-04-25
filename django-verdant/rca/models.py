@@ -42,7 +42,7 @@ import stripe
 
 import hashlib
 
-from rca.filters import run_filters
+from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
 
 from rca_signage.constants import SCREEN_CHOICES
@@ -131,8 +131,7 @@ def rendition_delete(sender, instance, **kwargs):
 AREA_CHOICES = (
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('innovationrca', 'InnovationRCA'),
-    ('research', 'Research'),
-    ('knowledgeexchange', 'Knowledge Exchange'),
+    ('research-knowledgeexchange', "Research & Knowledge Exchange"),
     ('showrca', 'Show RCA'),
     ('fuelrca', 'Fuel RCA'),
     ('sustainrca', 'SustainRCA'),
@@ -398,6 +397,16 @@ STAFF_TYPES_CHOICES = (
     ('academic', 'Academic'),
     ('technical', 'Technical'),
     ('administrative', 'Administrative'),
+)
+
+STAFF_LOCATION_CHOICES = (
+    ('ceramicsgsmj', 'Ceramics, Glass, Metalwork & Jewellery'),
+    ('darwinworshops', 'Darwin Workshops'),
+    ('fashiontextiles', 'Fashion & Textiles'),
+    ('lensbasedmediaaudio', 'Lens-based Media and Audio'),
+    ('paintingsculpture', 'Painting & Sculpture'),
+    ('printmakingletterpress', 'Printmaking & Letterpress'),
+    ('rapidform', 'Rapidform'),
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
@@ -2231,7 +2240,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     def staff_feed(self):
         # Get staff from manual feed
         manual_feed = self.manual_staff_feed.all()
-    
+
         # Get from manual feed and append staff_role defined there
         feed2 = []
         for staffpage in manual_feed:
@@ -2240,22 +2249,24 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
             feed2.append(staff)
 
         manual_feed = feed2
-        
+
         # Get from source feed and append first role title
-        # for selected school of feed 
+        # for selected school of feed
         feed_source=[]
         if self.staff_feed_source:
             feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
             for staffpage in feed_source:
-                try:
-                    staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
-                except:
-                    pass
-        
+
+            try:
+                staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+            except IndexError:
+                pass
+
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)
 
-        return feed
+        if manual_feed or self.staff_feed_source:
+            return feed
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -2404,7 +2415,7 @@ class HomePage(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
+        student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
@@ -2854,9 +2865,10 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES)
+    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text='Please complete this field for academic and administrative staff only')
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES)
+    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text='Please complete this field for technical staff only')
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     intro = RichTextField()
     biography = RichTextField(blank=True)
@@ -2895,6 +2907,7 @@ StaffPage.content_panels = [
     FieldPanel('school'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
+    FieldPanel('staff_location'),
     InlinePanel(StaffPage, 'roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
@@ -3040,16 +3053,63 @@ class ResearchStudentIndex(Page, SocialFields):
     indexed_fields = ('intro', )
     search_name = None
 
+    def current_students_q(self):
+        current_year = timezone.now().year
+        return (~models.Q(phd_school='') & (models.Q(phd_graduation_year='') | models.Q(phd_graduation_year__gte=current_year))) | (~models.Q(mphil_school='') & (models.Q(mphil_graduation_year='') | models.Q(mphil_graduation_year__gte=current_year)))
+
+    def phd_students_q(self, period=None):
+        q = ~models.Q(phd_school='')
+
+        if period == 'current':
+            q &= self.current_students_q()
+        elif period == 'past':
+            q &= ~self.current_students_q()
+
+        return q
+
+    def mphil_students_q(self, period=None):
+        q = ~models.Q(mphil_school='')
+
+        if period == 'current':
+            q &= self.current_students_q()
+        elif period == 'past':
+            q &= ~self.current_students_q()
+
+        return q
+
+    def get_students_q(self, school=None, programme=None, period=None):
+        # Get students
+        phd_students_q = self.phd_students_q(period)
+        mphil_students_q = self.mphil_students_q(period)
+
+        # Run filters
+        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
+            ('school', 'phd_school', school),
+            ('programme', 'phd_programme', programme),
+        ])
+        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
+            ('school', 'mphil_school', school),
+            ('programme', 'mphil_programme', programme),
+        ])
+
+        # Combine filters
+        filters = combine_filters(phd_filters, mphil_filters)
+
+        # Add combined filters to both groups
+        phd_students_q &= get_filters_q(filters, {
+            'school': 'phd_school',
+            'programme': 'phd_programme',
+        })
+        mphil_students_q &= get_filters_q(filters, {
+            'school': 'mphil_school',
+            'programme': 'mphil_programme',
+        })
+
+        return phd_students_q, mphil_students_q, filters
+
     def all_students(self):
-        return StudentPage.objects.filter(live=True, path__startswith=self.path)
-
-    def current_students(self):
-        current_year = timezone.now().year
-        return self.all_students().filter(models.Q(graduation_year='') | models.Q(graduation_year__gte=current_year))
-
-    def past_students(self):
-        current_year = timezone.now().year
-        return self.all_students().filter(graduation_year__lt=current_year).exclude(graduation_year='')
+        phd_students_q, mphil_students_q, filters = self.get_students_q()
+        return NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -3058,16 +3118,8 @@ class ResearchStudentIndex(Page, SocialFields):
         period = request.GET.get('period')
 
         # Get students
-        if period == 'past':
-            research_students = self.past_students()
-        else:
-            research_students = self.current_students()
-
-        # Run school and programme filters
-        research_students, filters = run_filters(research_students, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-        ])
+        phd_students_q, mphil_students_q, filters = self.get_students_q(school, programme, period)
+        research_students = NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
 
         research_students = research_students.distinct().order_by('random_order')
 
@@ -3094,6 +3146,18 @@ class ResearchStudentIndex(Page, SocialFields):
                 'research_students': research_students,
                 'filters': json.dumps(filters),
             })
+
+    def route(self, request, path_components):
+        # If there are any path components, try checking if one if them is a student in the research student index
+        # If so, re route through the student page
+        if len(path_components) == 1:
+            try:
+                student_page = self.all_students().get(slug=path_components[0])
+                return student_page.specific.serve(request, view='research')
+            except NewStudentPage.DoesNotExist:
+                pass
+
+        return super(ResearchStudentIndex, self).route(request, path_components)
 
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3323,19 +3387,19 @@ def reassign_student_pages(sender, request, user, **kwargs):
 # General
 class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
-    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation")
+    degree = models.CharField(max_length=255, help_text="Please include the degree level, subject, institution name and year of graduation, separated by commas")
 
     panels = [FieldPanel('degree')]
 
 class NewStudentPageExhibition(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
-    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include Exhibition title, gallery, city and year")
+    exhibition = models.CharField(max_length=255, blank=True, help_text="Please include exhibition title, gallery, city and year, separated by commas")
 
     panels = [FieldPanel('exhibition')]
 
 class NewStudentPageExperience(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='experiences')
-    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s)")
+    experience = models.CharField(max_length=255, blank=True, help_text="Please include job title, company name, city and year(s), separated by commas")
 
     panels = [FieldPanel('experience')]
 
@@ -3359,19 +3423,19 @@ class NewStudentPageContactsWebsite(Orderable):
 
 class NewStudentPagePublication(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='publications')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageConference(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='conferences')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include paper, title of conference, institution, date, separated by commas")
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageAwards(Orderable):
+class NewStudentPageAward(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='awards')
-    award = models.CharField(max_length=255, blank=True)
+    award = models.CharField(max_length=255, blank=True, help_text="Please include prize, award title and year, separated by commas")
 
     panels = [FieldPanel('award')]
 
@@ -3382,42 +3446,75 @@ class NewStudentPageShowCarouselItem(Orderable, CarouselItemFields):
 
 class NewStudentPageShowCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_collaborators')
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
 
     panels = [FieldPanel('name')]
 
 class NewStudentPageShowSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_sponsors')
-    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
 
     panels = [FieldPanel('name')]
 
 
-# Research
-class NewStudentPageResearchCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_carousel_items')
+# MPhil
+class NewStudentPageMPhilCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_carousel_items')
 
-class NewStudentPageResearchAwards(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_awards')
-    award = models.CharField(max_length=255, blank=True)
-
-    panels = [FieldPanel('award')]
-
-class NewStudentPageResearchCollaborator(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_collaborators')
-    name = models.CharField(max_length=255, blank=True)
+class NewStudentPageMPhilCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_collaborators')
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageResearchSponsor(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_sponsors')
-    name = models.CharField(max_length=255, blank=True, help_text="This should list companies and individuals who have supported the production of your graduate work.")
+class NewStudentPageMPhilSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
 
     panels = [FieldPanel('name')]
 
-class NewStudentPageResearchSupervisor(Orderable):
-    page = ParentalKey('rca.NewStudentPage', related_name='research_supervisors')
-    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True)
+class NewStudentPageMPhilSupervisor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='mphil_supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True, help_text="Please select your RCA supervisor's profile page or enter the name of an external supervisor")
+    supervisor_other = models.CharField(max_length=255, blank=True)
+
+    @property
+    def name(self):
+        if self.supervisor:
+            return self.supervisor.title
+        else:
+            return self.supervisor_other
+
+    @property
+    def link(self):
+        if self.supervisor:
+            return self.supervisor.url
+
+    panels = [
+        PageChooserPanel('supervisor'),
+        FieldPanel('supervisor_other'),
+    ]
+
+
+# PhD
+class NewStudentPagePhDCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_carousel_items')
+
+class NewStudentPagePhDCollaborator(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_collaborators')
+    name = models.CharField(max_length=255, blank=True, help_text="Please include collaborator's name and programme (if RCA), separated by commas")
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPagePhDSponsor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_sponsors')
+    name = models.CharField(max_length=255, blank=True, help_text="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
+
+    panels = [FieldPanel('name')]
+
+class NewStudentPagePhDSupervisor(Orderable):
+    page = ParentalKey('rca.NewStudentPage', related_name='phd_supervisors')
+    supervisor = models.ForeignKey('rca.StaffPage', related_name='+', null=True, blank=True, help_text="Please select your RCA supervisor's profile page or enter the name of an external supervisor")
     supervisor_other = models.CharField(max_length=255, blank=True)
 
     @property
@@ -3441,13 +3538,14 @@ class NewStudentPage(Page, SocialFields):
     # General details
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    preferred_name = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text="Self-portrait image, 500x500px")
     statement = RichTextField(blank=True, help_text="This should be a statement about your practice/research/future plans.")
     twitter_handle = models.CharField(max_length=255, blank=True, help_text="Please enter Twitter handle without the @ symbol")
-    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils here.")
+    funding = models.CharField(max_length=255, blank=True, help_text="Please include major funding bodies, including research councils")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     show_on_homepage = models.BooleanField(default=False)
+    innovation_rca_fellow = models.BooleanField(default=False, help_text="Please tick this box only if you are currently an InnovationRCA Fellow")
+    postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="Please upload images sized to A6 plus 5mm 'bleed' (1490 x 1055mm or 1760 x 1246px @ 300 dpi) - this must be uploaded at the correct size for printed postcards")
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
@@ -3458,82 +3556,182 @@ class NewStudentPage(Page, SocialFields):
     ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True)
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True)
-    ma_in_show = models.BooleanField("In show", default=False)
-
-    # Show details
-    show_work_title = models.CharField("Project title", max_length=255, blank=True)
+    ma_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
+    show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True)
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True)
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
     show_work_description = RichTextField("Work description", blank=True, help_text="This should be a description of your graduation project, graduation work or dissertation abstract.")
 
-    # Research details
-    research_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
-    research_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
-    research_start_year = models.CharField("Start year", max_length=4, blank=True)
-    research_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
-    research_qualification = models.CharField("Qualification", max_length=255, choices=QUALIFICATION_CHOICES, blank=True)
-    research_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
-    research_statement = RichTextField("Research statement", blank=True)
-    research_in_show = models.BooleanField("In show", default=False)
+    # MPhil details
+    mphil_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    mphil_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    mphil_start_year = models.CharField("Start year", max_length=4, blank=True)
+    mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
+    mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
+    mphil_statement = RichTextField("Research statement", blank=True)
+    mphil_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
+
+    # PhD details
+    phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True)
+    phd_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    phd_start_year = models.CharField("Start year", max_length=4, blank=True)
+    phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True)
+    phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True)
+    phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True)
+    phd_statement = RichTextField("Research statement", blank=True)
+    phd_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
 
     indexed_fields = (
-        'first_name', 'last_name', 'preferred_name', 'statement',
-        'get_ma_school_display', 'get_ma_programme_display', 'ma_degree_year', 'get_ma_specialism_display',
+        'first_name', 'last_name', 'statement',
+        'get_ma_school_display', 'get_ma_programme_display', 'ma_graduation_year', 'get_ma_specialism_display',
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
-        'get_research_school_display', 'get_research_programme_display', 'research_graduation_year', 'get_research_qualification_display', 'research_dissertation_title', 'research_statement',
+        'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'mphil_dissertation_title', 'mphil_statement',
+        'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'phd_dissertation_title', 'phd_statement',
     )
-
-    @property
-    def is_research_student(self):
-        return self.research_school != ''
 
     @property
     def is_ma_student(self):
         return self.ma_school != ''
 
     @property
+    def is_mphil_student(self):
+        return self.mphil_school != ''
+
+    @property
+    def is_phd_student(self):
+        return self.phd_school != ''
+
+    def get_profiles(self):
+        profiles = {}
+
+        if self.is_phd_student:
+            profiles['phd'] = {
+                'name': "PhD",
+                'school': self.phd_school,
+                'programme': self.phd_programme,
+                'start_year': self.phd_start_year,
+                'graduation_year': self.phd_graduation_year,
+                'in_show_': self.phd_in_show,
+                'carousel_items': self.phd_carousel_items,
+            }
+
+        if self.is_mphil_student:
+            profiles['mphil'] = {
+                'name': "MPhil",
+                'school': self.mphil_school,
+                'programme': self.mphil_programme,
+                'start_year': self.mphil_start_year,
+                'graduation_year': self.mphil_graduation_year,
+                'in_show_': self.mphil_in_show,
+                'carousel_items': self.mphil_carousel_items,
+            }
+
+        if self.is_ma_student:
+            profiles['ma'] = {
+                'name': "MA",
+                'school': self.ma_school,
+                'programme': self.ma_programme,
+                'start_year': self.ma_graduation_year,
+                'graduation_year': self.ma_graduation_year,
+                'in_show_': self.ma_in_show,
+                'carousel_items': self.show_carousel_items,
+            }
+
+        return profiles
+
+    def get_profile(self, profile=None):
+        profiles = self.get_profiles()
+
+        # Try to find the profile that was asked for
+        if profile and profile in profiles:
+            return profiles[profile]
+
+        # Return the best profile
+        if 'phd' in profiles:
+            return profiles['phd']
+        if 'mphil' in profiles:
+            return profiles['mphil']
+        if 'ma' in profiles:
+            return profiles['ma']
+
+    @property
     def school(self):
-        if self.is_research_student:
-            return self.research_school
-        elif self.is_ma_student:
-            return self.ma_school
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['school']
+        else:
+            return ''
 
     @property
     def programme(self):
-        if self.is_research_student:
-            return self.research_programme
-        elif self.is_ma_student:
-            return self.ma_programme
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['programme']
+        else:
+            return ''
 
     @property
     def search_name(self):
-        if self.is_research_student:
-            if self.research_qualification == 'innovationrca-fellow':
-                return "InnovationRCA Fellow"
-            else:
-                return "Research Student"
-        else:
-            return "Graduate"
+        profile = self.get_profile()
+        if not profile:
+            return "Student"
+
+        current_year = timezone.now().year
+        is_graduate = not profile['graduation_year']
+        if is_graduate and profile['graduation_year'] == str(timezone.now().year):
+            is_graduate = false
+
+        return profile['name'] + (" Graduate" if is_graduate else " Student")
+
+    @property
+    def profile_url(self):
+        # Try to find a show profile
+        if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
+            from rca_show.models import ShowIndexPage
+            for show in ShowIndexPage.objects.filter(live=True):
+                # Check if this student is in this show
+                if not show.get_students().filter(id=self.id).exists():
+                    continue
+
+                # Get students URL in this show
+                try:
+                    url = show.get_student_url(self)
+                    assert url is not None
+                    return url
+                except:
+                    pass
+
+        # Try to find a research profile
+        if self.is_phd_student or self.is_mphil_student:
+            for research_student_index in ResearchStudentIndex.objects.all():
+                if research_student_index.all_students().filter(id=self.id).exists():
+                    return research_student_index.url + self.slug + '/'
+
+        # Try to find gallery profile
+        if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
+            for gallery_page in GalleryPage.objects.all():
+                if gallery_page.get_students()[0].filter(id=self.id).exists():
+                    return gallery_page.url + self.slug + '/'
+
+        # Cannot find any profiles, use regular url
+        return self.url
 
     @property
     def search_url(self):
-        # Try to find a show profile for this student
-        from rca_show.models import ShowIndexPage
-        for show in ShowIndexPage.objects.filter(live=True):
-            # Check if this student is in this show
-            if not show.get_students().filter(id=self.id).exists():
-                continue
+        # Use profile url in the search
+        return self.profile_url
 
-            # Get students URL in this show
-            try:
-                url = show.get_student_url(self)
-                assert url is not None
-                return url
-            except:
-                pass
+    def serve(self, request, view='standard'):
+        if view not in ['standard', 'show', 'research']:
+            raise Http404("Student view doesn't exist")
 
-        # Cannot find any show profiles, return regular URL
-        return self.url
+        # Insert view into TemplateResponse object
+        response = super(NewStudentPage, self).serve(request)
+        response.context_data['view'] = view
+        return response
 
 NewStudentPage.content_panels = [
     # General details
@@ -3541,12 +3739,13 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('first_name'),
         FieldPanel('last_name'),
-        FieldPanel('preferred_name'),
     ], "Full name"),
     ImageChooserPanel('profile_image'),
+    ImageChooserPanel('postcard_image'),
     FieldPanel('statement', classname="full"),
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
+    FieldPanel('innovation_rca_fellow'),
     InlinePanel(NewStudentPage, 'emails', label="Email"),
     InlinePanel(NewStudentPage, 'phones', label="Phone"),
     InlinePanel(NewStudentPage, 'websites', label="Website"),
@@ -3564,7 +3763,7 @@ NewStudentPage.content_panels = [
         FieldPanel('ma_programme'),
         FieldPanel('ma_graduation_year'),
         FieldPanel('ma_specialism'),
-    ], "MA details"),
+    ], "MA details", classname="collapsible collapsed"),
 
     # Show details
     MultiFieldPanel([
@@ -3572,26 +3771,42 @@ NewStudentPage.content_panels = [
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
         FieldPanel('show_work_description'),
-        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel item"),
+        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
-    ], "MA Show details"),
+    ], "MA Show details", classname="collapsible collapsed"),
 
-    # Research details
+    # MPhil details
     MultiFieldPanel([
-        FieldPanel('research_in_show'),
-        FieldPanel('research_school'),
-        FieldPanel('research_programme'),
-        FieldPanel('research_dissertation_title'),
-        FieldPanel('research_statement'),
-        FieldPanel('research_start_year'),
-        FieldPanel('research_graduation_year'),
-        FieldPanel('research_qualification'),
-        InlinePanel(NewStudentPage, 'research_carousel_items', label="Carousel item"),
-        InlinePanel(NewStudentPage, 'research_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'research_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'research_supervisors', label="Supervisor"),
-    ], "MPhil/PhD details"),
+        FieldPanel('mphil_in_show'),
+        FieldPanel('mphil_school'),
+        FieldPanel('mphil_programme'),
+        FieldPanel('mphil_dissertation_title'),
+        FieldPanel('mphil_statement'),
+        FieldPanel('mphil_start_year'),
+        FieldPanel('mphil_graduation_year'),
+        FieldPanel('mphil_work_location'),
+        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel image/video"),
+        InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
+        InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
+    ], "MPhil details", classname="collapsible collapsed"),
+
+    # PhD details
+    MultiFieldPanel([
+        FieldPanel('phd_in_show'),
+        FieldPanel('phd_school'),
+        FieldPanel('phd_programme'),
+        FieldPanel('phd_dissertation_title'),
+        FieldPanel('phd_statement'),
+        FieldPanel('phd_start_year'),
+        FieldPanel('phd_graduation_year'),
+        FieldPanel('phd_work_location'),
+        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel image/video"),
+        InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
+        InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
+        InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
+    ], "PhD details", classname="collapsible collapsed"),
 ]
 
 NewStudentPage.promote_panels = [
@@ -4137,35 +4352,108 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
+    def student_which_profile(self, student, ma_students_q, mphil_students_q, phd_students_q):
+        students = NewStudentPage.objects.filter(live=True)
+
+        # Check if student is in phd students
+        if students.filter(phd_students_q).filter(pk=student.pk).exists():
+            return 'phd'
+
+        # Check if student is in mphil students
+        if students.filter(mphil_students_q).filter(pk=student.pk).exists():
+            return 'mphil'
+
+        # Check if student is in ma students
+        if students.filter(ma_students_q).filter(pk=student.pk).exists():
+            return 'ma'
+
+    def get_students_q(self, school=None, programme=None, year=None):
+        ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
+        mphil_students_q = ~models.Q(mphil_school='') & ~models.Q(mphil_graduation_year='') & models.Q(mphil_in_show=True)
+        phd_students_q = ~models.Q(phd_school='') & ~models.Q(phd_graduation_year='') & models.Q(phd_in_show=True)
+
+        # Run filters
+        ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
+            ('school', 'ma_school', school),
+            ('programme', 'ma_programme', programme),
+            ('year', 'ma_graduation_year', year),
+        ])
+        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
+            ('school', 'mphil_school', school),
+            ('programme', 'mphil_programme', programme),
+            ('year', 'mphil_graduation_year', year),
+        ])
+        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
+            ('school', 'phd_school', school),
+            ('programme', 'phd_programme', programme),
+            ('year', 'phd_graduation_year', year),
+        ])
+
+        # Combine filters
+        filters = combine_filters(ma_filters, mphil_filters, phd_filters)
+
+        # Add combined filters to both groups
+        ma_students_q &= get_filters_q(filters, {
+            'school': 'ma_school',
+            'programme': 'ma_programme',
+            'year': 'ma_graduation_year',
+        })
+        mphil_students_q &= get_filters_q(filters, {
+            'school': 'mphil_school',
+            'programme': 'mphil_programme',
+            'year': 'mphil_graduation_year',
+        })
+        phd_students_q &= get_filters_q(filters, {
+            'school': 'phd_school',
+            'programme': 'phd_programme',
+            'year': 'phd_graduation_year',
+        })
+
+        return ma_students_q, mphil_students_q, phd_students_q, filters
+
+    def get_students(self, school=None, programme=None, year=None):
+        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
+        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get filter parameters
-        year = request.GET.get('degree_year')
         school = request.GET.get('school')
         programme = request.GET.get('programme')
+        year = request.GET.get('degree_year') or '2013'
 
-        # Get all possible gallery items
-        gallery_items = StudentPage.objects.filter(live=True, path__startswith=self.path).exclude(degree_qualification='researchstudent')
+        # Get students
+        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
+        students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q)
 
-        # Run filters
-        gallery_items, filters = run_filters(gallery_items, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-            ('degree_year', 'degree_year', year),
-        ])
+        # Find year options
+        year_options = []
+        for fil in filters:
+            if fil['name'] == 'year':
+                year_options = fil['options']
+                break
 
-        # Randomly order gallery items
-        gallery_items = gallery_items.order_by('-degree_year', 'random_order')
+        # Randomly order students
+        students = students.extra(
+            select={
+                '_year': "CASE WHEN phd_graduation_year = '' THEN CASE WHEN mphil_graduation_year = '' THEN ma_graduation_year ELSE mphil_graduation_year END ELSE phd_graduation_year END"
+            },
+            order_by=['-_year', 'random_order'],
+        ).distinct()
 
         # Pagination
         page = request.GET.get('page')
-        paginator = Paginator(gallery_items, 5)  # Show 5 gallery items per page
+        paginator = Paginator(students, 5)  # Show 5 gallery items per page
         try:
-            gallery_items = paginator.page(page)
+            students = paginator.page(page)
         except PageNotAnInteger:
-            gallery_items = paginator.page(1)
+            students = paginator.page(1)
         except EmptyPage:
-            gallery_items = paginator.page(paginator.num_pages)
+            students = paginator.page(paginator.num_pages)
+
+        # Add profile to students
+        for student in students:
+            student.profile = student.get_profile(self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q))
 
         # Get template
         if request.is_ajax():
@@ -4176,11 +4464,24 @@ class GalleryPage(Page, SocialFields):
         # Render response
         return render(request, template, {
             'self': self,
-            'gallery_items': gallery_items,
+            'gallery_items': students,
             'filters': json.dumps(filters),
-            'years': reversed(sorted(filters[2]['options'])),
+            'years': reversed(sorted(year_options)),
             'selected_year': year,
         })
+
+    def route(self, request, path_components):
+        # If there are any path components, try checking if one if them is a student in the gallery
+        # If so, re route through the student page
+        if len(path_components) == 1:
+            try:
+                student_page = self.get_students()[0].get(slug=path_components[0])
+                return student_page.specific.serve(request, view='show')
+            except NewStudentPage.DoesNotExist:
+                pass
+
+        return super(GalleryPage, self).route(request, path_components)
+
 
 GalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -4280,7 +4581,7 @@ class DonationPage(Page, SocialFields):
                     # CardErrors are displayed to the user, but we notify admins as well
                     mail_exception(e, prefix=" [stripe] ")
                     logging.error("[stripe] ", exc_info=full_exc_info())
-                    messages.error(request, e.json_body['error']['message'])    
+                    messages.error(request, e.json_body['error']['message'])
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
@@ -4735,13 +5036,13 @@ class ReachOutRCAIndex(Page, SocialFields):
     def serve(self, request):
         # Get list of live projects
         projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
-        
+
         # Apply filters
         project = request.GET.get('project', None)
         participant = request.GET.get('participant', None)
         theme = request.GET.get('theme', None)
         partnership = request.GET.get('partnership', None)
-        
+
         # Run filters
         projects, filters = run_filters(projects, [
             ('project', 'project', project),

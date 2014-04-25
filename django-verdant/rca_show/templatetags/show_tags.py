@@ -7,59 +7,89 @@ register = template.Library()
 
 
 @register.simple_tag
-def get_school_index_url(self):
-    return self.get_school_index_url()
+def get_school_index_url(show_index):
+    if show_index is None:
+        return ''
+
+    return show_index.get_school_index_url()
 
 
 @register.simple_tag
-def get_school_url(self, school):
-    return self.get_school_url(school)
+def get_school_url(self, show_index):
+    if show_index is None:
+        return ''
+
+    return show_index.get_school_url(school)
 
 
 @register.simple_tag
-def get_programme_url(self, school, programme):
-    return self.get_programme_url(school, programme)
+def get_programme_url(show_index, school, programme):
+    if show_index is None:
+        return ''
+
+    return show_index.get_programme_url(school, programme)
 
 
 @register.simple_tag
-def get_student_url(self, student):
-    return self.get_student_url(student)
+def get_student_url(show_index, student):
+    if show_index is None:
+        return ''
+
+    return show_index.get_student_url(student)
 
 
 @register.simple_tag
 def get_programme_display(programme):
+    if show_index is None:
+        return ''
+
     return dict(rca_models.ALL_PROGRAMMES)[programme]
 
 
 @register.simple_tag
 def get_school_display(school):
+    if show_index is None:
+        return ''
+
     return dict(rca_models.SCHOOL_CHOICES)[school]
 
 
 @register.assignment_tag
-def get_schools(self):
-    return self.get_schools()
+def get_schools(show_index):
+    if show_index is None:
+        return []
+
+    return show_index.get_schools()
 
 
 @register.assignment_tag
-def get_school_programmes(self, school):
-    return self.get_school_programmes(school)
+def get_school_programmes(show_index, school):
+    if show_index is None:
+        return []
+
+    return show_index.get_school_programmes(school)
 
 
 @register.assignment_tag
-def get_school_students(self, school, random = False):
+def get_school_students(show_index, school, random = False):
+    if show_index is None:
+        return []
+
     if random:
-        return self.get_rand_students(school)
+        return show_index.get_rand_students(school)
     else:
-        return self.get_students(school)
+        return show_index.get_students(school)
 
 
 @register.assignment_tag
-def get_programme_students(self, school, programme, random = False):
+def get_programme_students(show_index, school, programme, random = False):
+    if show_index is None:
+        return []
+
     if random:
-        return self.get_rand_students(school, programme)
+        return show_index.get_rand_students(school, programme)
     else:
-        return self.get_students(school, programme)
+        return show_index.get_students(school, programme)
 
 
 @register.assignment_tag
@@ -77,3 +107,13 @@ def secondary_menu(calling_page=None):
         )
 
     return pages
+
+
+@register.assignment_tag(takes_context=True)
+def get_show_index(context):
+    if isinstance(context['self'], models.ShowIndexPage):
+        return context['self']
+    if hasattr(context['request'], 'show_index'):
+        return context['request'].show_index
+    if hasattr(context['self'], 'get_show_index'):
+        return context['self'].get_show_index()
