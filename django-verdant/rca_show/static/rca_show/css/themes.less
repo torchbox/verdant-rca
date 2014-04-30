@@ -138,6 +138,7 @@ body{
 .programme-fashionmenswear,
 .programme-fashionwomenswear{
     .theme(fas, #000000, #783CAC, 295px, 225px);
+/*    .theme(fas, #000000, #FFFFFF, 295px, 225px);*/
 }
 
 /* some more specific overrides for the fashion show */
@@ -153,6 +154,18 @@ body{
         .crest{
             background-image:url('/static/rca_show/images/logo-rca-footer-inverse.png');
         }
+    }
+    a.active {
+        color:#000000;
+    }
+    a:hover {
+        color:#783CAC;
+    }
+    a .active { 
+        color: white;
+    }
+    .showgallery .content h2 {
+        color:#FFFFFF;
     }
 }
 

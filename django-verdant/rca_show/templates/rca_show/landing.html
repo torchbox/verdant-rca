@@ -26,7 +26,7 @@
                     <ul class="options">
                         {% if self.get_programmes|length > 1 %}
                             {% for programme in self.get_programmes %}
-                                <li><b>{% get_programme_display programme %}</b></li>
+                                <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
                                 {% get_programme_students self programme as students %}
                                 {% for student in students %}
                                     <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>

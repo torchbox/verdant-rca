@@ -3,7 +3,7 @@
 <ul class="showgallery">
     {% if "curatingcontemporaryart" in self.get_programmes %}
         {% for student in rand_students %}
-            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=student.postcard_image image_format="fill" %}
+            {% include "rca_show/includes/modules/gallery_include.html" with student=student galleryitem=student gallery_image=student.profile_image image_format="fill" %}
         {% endfor %}
     {% else %}
         {% for student in rand_students %}
