@@ -3676,7 +3676,7 @@ class NewStudentPage(Page, SocialFields):
             return "Student"
 
         current_year = timezone.now().year
-        is_graduate = not profile['graduation_year']
+        is_graduate = bool(profile['graduation_year'])
         if is_graduate and profile['graduation_year'] == str(timezone.now().year):
             is_graduate = False
 
