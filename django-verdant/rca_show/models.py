@@ -222,10 +222,13 @@ class ShowIndexPage(Page, SocialFields):
             raise Http404("Cannot find student")
 
         # Render response
+        return self._serve_student(request, student)
+
+    def _serve_student(self, request, student):
         return render(request, self.student_template, {
             'self': self,
-            'school': school,
-            'programme': programme,
+            'school': student.school,
+            'programme': student.programme,
             'student': student,
         })
 
