@@ -34,7 +34,7 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 
 from modelcluster.tags import ClusterTaggableManager
-from taggit.models import TaggedItemBase
+from taggit.models import TaggedItemBase, Tag
 
 from donations.forms import DonationForm
 from donations.mail_admins import mail_exception, full_exc_info
@@ -4072,13 +4072,16 @@ class RcaBlogIndex(Page, SocialFields):
 
     search_name = None
 
+    def get_blog_items(self):
+        return RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
+
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        rca_blog_items = RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
+        rca_blog_items = self.get_blog_items()
 
         # Run school, area and programme filters
         rca_blog_items, filters = run_filters(rca_blog_items, [
@@ -4112,6 +4115,17 @@ class RcaBlogIndex(Page, SocialFields):
                 'rca_blog_items': rca_blog_items,
                 'filters': json.dumps(filters),
             })
+
+    def get_popular_tags(self):
+        # Get Queryset of RcaBlogTags for all blog items
+        all_tags = RcaBlogPageTag.objects.filter(content_object__in=self.get_blog_items())
+
+        # Get a ValuesQuerySet of tags ordered by most popular
+        popular_tags = all_tags.values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [Tag.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     class Meta:
         verbose_name = 'RCA Blog Index'
