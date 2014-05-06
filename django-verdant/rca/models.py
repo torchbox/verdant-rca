@@ -4078,7 +4078,7 @@ class RcaBlogIndex(Page, SocialFields):
         school = request.GET.get('school')
         area = request.GET.get('area')
 
-        rca_blog_items = RcaBlogPage.objects.filter(live=True)
+        rca_blog_items = RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
 
         # Run school, area and programme filters
         rca_blog_items, filters = run_filters(rca_blog_items, [
