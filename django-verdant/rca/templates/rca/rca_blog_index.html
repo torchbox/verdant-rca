@@ -57,6 +57,11 @@
 	</section>-->
 
 
+	{% for tag in self.get_popular_tags %}
+		<a href="{{ self.url }}?tag={{ tag.slug }}">{{ tag }}</a>
+	{% endfor %}
+
+
     <div id="listing">
     	{% include "rca/includes/rca_blog_listing.html" %}
 	</div>

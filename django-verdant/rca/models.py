@@ -4072,16 +4072,23 @@ class RcaBlogIndex(Page, SocialFields):
 
     search_name = None
 
-    def get_blog_items(self):
-        return RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
+    def get_blog_items(self, tag=None):
+        blog_items = RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
+
+        # Filter by tag
+        if tag is not None:
+            blog_items = blog_items.filter(tagged_items__tag__slug=tag)
+
+        return blog_items
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programme = request.GET.get('programme')
         school = request.GET.get('school')
         area = request.GET.get('area')
+        tag = request.GET.get('tag', None)
 
-        rca_blog_items = self.get_blog_items()
+        rca_blog_items = self.get_blog_items(tag=tag)
 
         # Run school, area and programme filters
         rca_blog_items, filters = run_filters(rca_blog_items, [
