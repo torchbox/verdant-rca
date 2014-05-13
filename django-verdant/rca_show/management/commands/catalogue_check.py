@@ -6,7 +6,7 @@ This script checks through all students of a particular year and makes the follo
 
 It outputs a report of the above in HTML and CSV format
 """
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
 from django.db import models
 from rca.models import NewStudentPage
 from rca.report_generator import Report
@@ -105,17 +105,20 @@ class CatalogueCheckReport(Report):
         """
 
 
-class Command(NoArgsCommand):
+class Command(BaseCommand):
     def students_for_year(self, year):
         q = models.Q(ma_graduation_year=year) | models.Q(mphil_graduation_year=year) | models.Q(phd_graduation_year=year)
         return NewStudentPage.objects.filter(q)
 
-    def handle_noargs(self, **options):
-        students = self.students_for_year('2014').order_by('phd_programme', 'mphil_programme', 'ma_programme', 'title')
+    def handle(self, year, format='csv', **options):
+        students = self.students_for_year(year).order_by('phd_programme', 'mphil_programme', 'ma_programme', 'title')
         report = CatalogueCheckReport(students)
 
-        with open('report.html', 'w') as html:
-            html.write(report.get_html().encode('UTF-8'))
-
-        with open('report.csv', 'w') as html:
-            html.write(report.get_csv().encode('UTF-8'))
+        if format == 'csv':
+            with open('report.csv', 'w') as html:
+                html.write(report.get_csv().encode('UTF-8'))
+        elif format == 'html':
+            with open('report.html', 'w') as html:
+                html.write(report.get_html().encode('UTF-8'))
+        else:
+            print "Unrecognised output format"
