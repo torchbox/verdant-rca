@@ -116,9 +116,9 @@ class Command(BaseCommand):
 
         if format == 'csv':
             with open('report.csv', 'w') as html:
-                html.write(report.get_csv().encode('UTF-8'))
+                html.write(report.get_csv())
         elif format == 'html':
             with open('report.html', 'w') as html:
-                html.write(report.get_html().encode('UTF-8'))
+                html.write(report.get_html())
         else:
             print "Unrecognised output format"
