@@ -61,7 +61,7 @@ class CatalogueCheckReport(Report):
             return (
                 "Yes (" + str(image.width) + "x" + str(image.height) + " " + image_mode + ")",
                 None,
-                'http://www.rca.ac.uk' + image.file.url,
+                None,
             )
         else:
             return (
