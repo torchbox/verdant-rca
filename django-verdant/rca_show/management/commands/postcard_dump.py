@@ -13,42 +13,119 @@ import os
 
 
 class PostcardDumpReport(Report):
-    def name_field(self, student):
+    def student_name_field(self, student):
         return (
             student.title,
             None,
             'http://www.rca.ac.uk/admin/pages/' + str(student.id) + '/edit/',
         )
 
-    def get_image(self, image):
-        if image:
-            # Work out image mode
-            try:
-                img = Image.open(image.file.file)
-                image_mode = img.mode
-            except IOError:
-                image_mode = "Unknown"
+    def student_degree_field(self, student):
+        return (
+            student.get_profile()['name'] or "Not set",
+            'error' if not student.get_profile()['name'] else None,
+            None,
+        )
 
+    def student_programme_field(self, student):
+        return (
+            student.get_profile()['programme_display'] or "Not set",
+            'error' if not student.get_profile()['programme_display'] else None,
+            None,
+        )
+
+    def student_specialism_field(self, student):
+        if student.get_profile()['name'] == "MA":
             return (
-                "Yes (" + str(image.width) + "x" + str(image.height) + " " + image_mode + ")",
+                student.ma_specialism or "Not set",
+                'error' if not student.ma_specialism else None,
                 None,
-                'images/' + os.path.split(image.file.name)[1],
             )
         else:
             return (
-                "No",
+                "Not MA student",
+                None,
+                None,
+            )
+
+    def get_child_objects(self, child_objects, field_name):
+        if child_objects.exists():
+            return (
+                ' '.join([getattr(child_object, field_name) for child_object in child_objects.all()]),
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set",
                 'error',
                 None,
             )
 
-    def postcard_image_field(self, student):
-        return self.get_image(student.postcard_image)
+    def student_email_field(self, student):
+        return self.get_child_objects(student.emails, 'email')
+
+    def student_phone_number_field(self, student):
+        return self.get_child_objects(student.phones, 'phone')
+
+    def student_website_field(self, student):
+        return self.get_child_objects(student.websites, 'website')
+
+    def image_field(self, student):
+        if student.postcard_image:
+            return (
+                os.path.split(student.postcard_image.file.name)[1],
+                None,
+                'images/' + os.path.split(student.postcard_image.file.name)[1],
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
+
+    def caption_field(self, student):
+        if student.postcard_image:
+            return (
+                student.postcard_image.title,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if student.postcard_image else "",
+                'error',
+                None,
+            )
+
+    def permission_field(self, student):
+        if student.postcard_image and student.postcard_image.permission:
+            return (
+                student.postcard_image.permission,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if student.postcard_image else "",
+                'error',
+                None,
+            )
 
     title = "Postcard image dump"
 
     fields = (
-        ("Name", name_field),
-        ("Postcard image", postcard_image_field),
+        ("Name", student_name_field),
+        ("Degree level", student_degree_field),
+        ("Programme", student_programme_field),
+        ("Specialism", student_specialism_field),
+        ("Email", student_email_field),
+        ("Phone", student_phone_number_field),
+        ("Website", student_website_field),
+        ("Image", image_field),
+        ("Image Caption", caption_field),
+        ("Image Permission", permission_field),
     )
 
     extra_css = """
@@ -83,3 +160,4 @@ class Command(BaseCommand):
             # Generate report
             report = PostcardDumpReport(students)
             zf.writestr('report.html', report.get_html().encode('UTF-8'))
+            zf.writestr('report.csv', report.get_csv().encode('UTF-8'))
