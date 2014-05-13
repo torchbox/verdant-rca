@@ -14,7 +14,7 @@ class Report(object):
             <title>{{ title }}</title>
             <style type="text/css">
               table, th, td {
-                  border: 1px solid black;
+                border: 1px solid black;
               }
               table {
                 width: 100%;
