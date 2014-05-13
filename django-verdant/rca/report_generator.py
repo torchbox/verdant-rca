@@ -78,10 +78,10 @@ class Report(object):
             yield [field_func(self, row) for field_name, field_func in self.fields]
 
     def get_csv(self):
-        csv = ', '.join(['"' + heading + '"' for heading in self.get_headings()]) + '\n'
+        csv = ', '.join(self.get_headings()) + '\n'
 
         for row in self.get_rows():
-            csv += ', '.join(['"' + field[0] + '"' for field in row]) + '\n'
+            csv += ', '.join([field[0] for field in row]) + '\n'
 
         return csv
 
