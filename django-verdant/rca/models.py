@@ -3605,7 +3605,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['phd'] = {
                 'name': "PhD",
                 'school': self.phd_school,
+                'school_display': self.get_phd_school_display(),
                 'programme': self.phd_programme,
+                'programme_display': self.get_phd_programme_display(),
                 'start_year': self.phd_start_year,
                 'graduation_year': self.phd_graduation_year,
                 'in_show_': self.phd_in_show,
@@ -3616,7 +3618,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['mphil'] = {
                 'name': "MPhil",
                 'school': self.mphil_school,
+                'school_display': self.get_mphil_school_display(),
                 'programme': self.mphil_programme,
+                'programme_display': self.get_mphil_programme_display(),
                 'start_year': self.mphil_start_year,
                 'graduation_year': self.mphil_graduation_year,
                 'in_show_': self.mphil_in_show,
@@ -3627,7 +3631,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['ma'] = {
                 'name': "MA",
                 'school': self.ma_school,
+                'school_display': self.get_ma_school_display(),
                 'programme': self.ma_programme,
+                'programme_display': self.get_ma_programme_display(),
                 'start_year': self.ma_graduation_year,
                 'graduation_year': self.ma_graduation_year,
                 'in_show_': self.ma_in_show,
