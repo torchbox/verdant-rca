@@ -93,3 +93,21 @@ def fetch_live_data_notroot():
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
     local ('rm %s' % local_path)
+
+
+@roles('production')
+def run_show_reports(year="2014"):
+    with cd('/usr/local/django/verdant-rca/'):
+        with settings(sudo_user='verdant-rca'):
+            if env['host'] == MIGRATION_SERVER:
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py catalogue_check %s csv --settings=rcasite.settings.production' % year)
+                get('report.csv', 'report.csv')
+                sudo('rm report.csv')
+
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py catalogue_check %s html --settings=rcasite.settings.production' % year)
+                get('report.html', 'report.html')
+                sudo('rm report.html')
+
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
+                get('postcard_dump.zip', 'postcard_dump.zip')
+                sudo('rm postcard_dump.zip')
