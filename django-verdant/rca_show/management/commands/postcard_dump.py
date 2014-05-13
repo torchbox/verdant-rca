@@ -116,6 +116,7 @@ class PostcardDumpReport(Report):
     def colour_format_field(self, student):
         if student.postcard_image:
             try:
+                student.postcard_image.file.seek(0)
                 image_mode = Image.open(student.postcard_image.file.file).mode
             except IOError:
                 image_mode = "Unknown"
