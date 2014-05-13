@@ -55,7 +55,6 @@ class CatalogueCheckReport(Report):
             try:
                 img = Image.open(image.file.file)
                 image_mode = img.mode
-                img.close()
             except IOError:
                 image_mode = "Unknown"
 
