@@ -209,5 +209,5 @@ class Command(BaseCommand):
 
             # Generate report
             report = PostcardDumpReport(students)
-            zf.writestr('report.html', report.get_html().encode('UTF-8'))
-            zf.writestr('report.csv', report.get_csv().encode('UTF-8'))
+            zf.writestr('report.html', report.get_html()))
+            zf.writestr('report.csv', report.get_csv())

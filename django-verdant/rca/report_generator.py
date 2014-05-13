@@ -1,5 +1,6 @@
 from django.template import Template, Context
 from django.utils import timezone
+import StringIO, csv
 
 
 class Report(object):
@@ -78,12 +79,14 @@ class Report(object):
             yield [field_func(self, row) for field_name, field_func in self.fields]
 
     def get_csv(self):
-        csv = ', '.join(self.get_headings()) + '\n'
+        output = StringIO.StringIO()
+        cw = csv.writer(output)
+        cw.writerow(self.get_headings())
 
         for row in self.get_rows():
-            csv += ', '.join([field[0] for field in row]) + '\n'
+            cw.writerow([field[0].encode('UTF-8') for field in row])
 
-        return csv
+        return output.getvalue()
 
     def get_html(self):
         template = Template(self.template)
@@ -95,4 +98,4 @@ class Report(object):
             'time': timezone.now(),
         })
 
-        return template.render(context)
+        return template.render(context).encode('UTF-8')
