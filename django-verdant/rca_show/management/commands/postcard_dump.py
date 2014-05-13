@@ -85,6 +85,53 @@ class PostcardDumpReport(Report):
                 None,
             )
 
+    def width_field(self, student):
+        if student.postcard_image:
+            return (
+                str(student.postcard_image.width),
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def height_field(self, student):
+        if student.postcard_image:
+            return (
+                str(student.postcard_image.height),
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def colour_format_field(self, student):
+        if student.postcard_image:
+            try:
+                image_mode = Image.open(student.postcard_image.file.file).mode
+            except IOError:
+                image_mode = "Unknown"
+
+            return (
+                image_mode,
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
     def caption_field(self, student):
         if student.postcard_image:
             return (
@@ -124,6 +171,9 @@ class PostcardDumpReport(Report):
         ("Phone", student_phone_number_field),
         ("Website", student_website_field),
         ("Image", image_field),
+        ("Image Width", width_field),
+        ("Image Height", height_field),
+        ("Image Colour Format", colour_format_field),
         ("Image Caption", caption_field),
         ("Image Permission", permission_field),
     )
