@@ -64,6 +64,44 @@ class SuperPage(Page):
         abstract = True
 
 
+# Stream page (for Fashion show)
+
+class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
+
+class ShowStreamPage(Page, SocialFields):
+    body = RichTextField(blank=True)
+
+    def get_show_index(self):
+        for page in self.get_ancestors().reverse():
+            specific_page = page.specific
+            if isinstance(specific_page, ShowIndexPage):
+                return specific_page
+
+ShowStreamPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
+    FieldPanel('body'),
+]
+
+ShowStreamPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+
 # Standard page for contacts etc
 
 class ShowStandardPageCarouselItem(Orderable, CarouselItemFields):
