@@ -4,6 +4,7 @@ puts all of their postcard images into a zip file with a report
 """
 from django.core.management.base import BaseCommand
 from django.db import models
+from django.conf import settings
 from rca.models import NewStudentPage
 from rca.report_generator import Report
 from PIL import Image
@@ -75,7 +76,7 @@ class Command(BaseCommand):
                     filename = student.postcard_image.file.name
 
                     try:
-                        zf.write(filename, 'images/' + os.path.split(filename)[1])
+                        zf.write(os.path.join(settings.MEDIA_ROOT, filename), 'images/' + os.path.split(filename)[1])
                     except (IOError, OSError) as e:
                         print e
 
