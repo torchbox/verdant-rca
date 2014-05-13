@@ -31,7 +31,7 @@ class CatalogueCheckReport(Report):
     def programme_field(self, student):
         return (
             student.get_profile()['programme_display'] or "Not set",
-            'error' if not student.programme else None,
+            'error' if not student.get_profile()['programme_display'] else None,
             None,
         )
 
