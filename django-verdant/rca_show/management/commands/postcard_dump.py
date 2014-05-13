@@ -76,8 +76,8 @@ class Command(BaseCommand):
 
                     try:
                         zf.write(filename, 'images/' + os.path.split(filename)[1])
-                    except (IOError, OSError):
-                        pass
+                    except (IOError, OSError) as e:
+                        print e
 
             # Generate report
             report = PostcardDumpReport(students)
