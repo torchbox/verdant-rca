@@ -9,6 +9,7 @@ from rca.models import NewStudentPage
 from rca.report_generator import Report
 from PIL import Image
 from zipfile import ZipFile
+import humanize
 import os
 
 
@@ -131,7 +132,7 @@ class PostcardDumpReport(Report):
         if student.postcard_image:
             try:
                 student.postcard_image.file.seek(0, 2)
-                file_size = str(student.postcard_image.file.tell())
+                file_size = str(humanize.naturalsize(student.postcard_image.file.tell()))
                 student.postcard_image.file.seek(0)
             except IOError:
                 file_size = "Unknown"
