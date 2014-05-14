@@ -20,6 +20,40 @@ class PostcardDumpReport(Report):
             'http://www.rca.ac.uk/admin/pages/' + str(student.id) + '/edit/',
         )
 
+    def page_status_field(self, student):
+        status = student.status_string.upper()
+
+        # If page in moderation
+        if student.get_latest_revision().submitted_for_moderation:
+            status += " (in moderation)"
+
+        return (
+            status,
+            'error' if not student.live else None,
+            None,
+        )
+
+    def page_in_moderation_field(self, student):
+        return (
+            "Yes" if student.get_latest_revision().submitted_for_moderation else "No",
+            None,
+            None,
+        )
+
+    def student_fname_field(self, student):
+        return (
+            student.first_name or "Not set",
+            'error' if not student.first_name else None,
+            None,
+        )
+
+    def student_lname_field(self, student):
+        return (
+            student.last_name or "Not set",
+            'error' if not student.last_name else None,
+            None,
+        )
+
     def student_degree_field(self, student):
         return (
             student.get_profile()['name'] or "Not set",
@@ -71,6 +105,14 @@ class PostcardDumpReport(Report):
     def student_website_field(self, student):
         return self.get_child_objects(student.websites, 'website')
 
+    def student_carousel_items_field(self, student):
+        carousel_item_count = student.get_profile()['carousel_items'].count()
+        return (
+            str(carousel_item_count),
+            'error' if carousel_item_count == 0 else None,
+            None,
+        )
+
     def image_field(self, student):
         if student.postcard_image:
             return (
@@ -81,6 +123,27 @@ class PostcardDumpReport(Report):
         else:
             return (
                 "Not set",
+                'error',
+                None,
+            )
+
+    def file_size_field(self, student):
+        if student.postcard_image:
+            try:
+                student.postcard_image.file.seek(0, 2)
+                file_size = str(student.postcard_image.file.tell())
+                student.postcard_image.file.seek(0)
+            except IOError:
+                file_size = "Unknown"
+
+            return (
+                file_size,
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
                 'error',
                 None,
             )
@@ -165,13 +228,18 @@ class PostcardDumpReport(Report):
 
     fields = (
         ("Name", student_name_field),
+        ("Page Status", page_status_field),
+        ("First name", student_fname_field),
+        ("Last name", student_lname_field),
         ("Degree level", student_degree_field),
         ("Programme", student_programme_field),
         ("Specialism", student_specialism_field),
         ("Email", student_email_field),
         ("Phone", student_phone_number_field),
         ("Website", student_website_field),
+        ("Carousel items", student_carousel_items_field),
         ("Image", image_field),
+        ("Image File Size", file_size_field),
         ("Image Width", width_field),
         ("Image Height", height_field),
         ("Image Colour Format", colour_format_field),
@@ -180,6 +248,10 @@ class PostcardDumpReport(Report):
     )
 
     extra_css = """
+        td, th {
+            padding: 1px;
+            font-size: 0.8em;
+        }
         td.error {
             color: #FF0000;
             font-weight: bold;
@@ -194,7 +266,7 @@ class Command(BaseCommand):
 
     def handle(self, year, **options):
         # Get students
-        students = self.students_for_year(year).order_by('phd_programme', 'mphil_programme', 'ma_programme', 'title')
+        students = self.students_for_year(year).order_by('phd_programme', 'mphil_programme', 'ma_programme', 'last_name', 'first_name')
 
         # Create zipfile
         with ZipFile('postcard_dump.zip', 'w') as zf:
