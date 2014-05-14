@@ -86,11 +86,11 @@ class Command(BaseCommand):
         page = None
 
         # Find by email
-        if page is None:
+        if page is None and email:
             page = students.filter(emails__email=email).first()
 
         # Find by owner email
-        if page is None:
+        if page is None and email:
             page = students.filter(owner__email=email).first()
 
         # Find by name
