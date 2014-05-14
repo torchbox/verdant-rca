@@ -1,12 +1,19 @@
 {% extends "rca/base.html" %}
-{% load compress rca_tags rich_text image_tags %}
+{% load compress static rca_tags rich_text image_tags %}
 
 {% block body_class %}type-donations{% endblock %}
 
 {% block extra_js %}
-    {# TODO: what's with these sources that don't use {% static %}? #}
-    <script type="text/javascript" src="/static/donations/js/jquery.payment.js"></script>
-    <script type="text/javascript" src="/static/donations/js/donation.js"></script>
+    <script>
+        window.bboxInit = function () {
+           bbox.showForm('{{ self.form_id }}');
+        };
+        (function () {
+           var e = document.createElement('script'); e.async = true;
+           e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
+           document.getElementsByTagName('head')[0].appendChild(e);
+        } ());
+    </script>
 {% endblock extra_js %}
 
 {% block content %}
@@ -20,16 +27,6 @@
         {% include "rca/includes/modules/body-text.html" with showIntro="true" showReusableText="true" body=self.body %}
 
         <div id="bbox-root"></div>
-        <script type="text/javascript">
-               window.bboxInit = function () {
-                   bbox.showForm('{{ self.form_id }}');
-               };
-               (function () {
-                   var e = document.createElement('script'); e.async = true;
-                   e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
-                   document.getElementsByTagName('head')[0].appendChild(e);
-               } ());
-        </script>
 
         <section class="four">
             {% if self.middle_column_body %}
