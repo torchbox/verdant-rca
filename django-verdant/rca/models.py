@@ -4014,7 +4014,7 @@ class RcaBlogPage(Page, SocialFields):
     search_name = 'RCA Blog'
 
     class Meta:
-        verbose_name = 'RCA Blog Page'
+        verbose_name = 'Blog Page'
 
     def author_profile_page(self):
         """Return the profile page for the author of this post, if one exists (and is live)"""
@@ -4072,11 +4072,14 @@ class RcaBlogIndex(Page, SocialFields):
 
     search_name = None
 
+    class Meta:
+        verbose_name = 'Blog Index'
+
     def get_blog_items(self, tag=None):
         blog_items = RcaBlogPage.objects.filter(live=True, path__startswith=self.path)
 
         # Filter by tag
-        if tag is not None:
+        if tag is not None and len(tag):
             blog_items = blog_items.filter(tagged_items__tag__slug=tag)
 
         return blog_items
@@ -4133,9 +4136,6 @@ class RcaBlogIndex(Page, SocialFields):
         # Return first 10 popular tags as tag objects
         # Getting them individually to preserve the order
         return [Tag.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
-
-    class Meta:
-        verbose_name = 'RCA Blog Index'
 
 RcaBlogIndex.content_panels = [
     FieldPanel('title', classname="full title"),
