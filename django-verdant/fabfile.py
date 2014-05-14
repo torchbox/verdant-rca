@@ -96,10 +96,18 @@ def fetch_live_data_notroot():
 
 
 @roles('production')
-def run_postcard_dump(year="2014"):
+def run_show_reports(year="2014"):
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             if env['host'] == MIGRATION_SERVER:
+                put('graduating_students.csv', 'graduating_students.csv')
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py students_report graduating_students.csv %s --settings=rcasite.settings.production' % year)
+                get('report.csv', 'students_report.csv')
+                get('report.html', 'students_report.html')
+                sudo('rm report.csv')
+                sudo('rm report.html')
+                sudo('rm graduating_students.csv')
+
                 sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
                 get('postcard_dump.zip', 'postcard_dump.zip')
                 sudo('rm postcard_dump.zip')
