@@ -1,6 +1,6 @@
 from django.template import Template, Context
 from django.utils import timezone
-import StringIO, csv
+import StringIO, unicodecsv
 
 
 class Report(object):
@@ -80,11 +80,11 @@ class Report(object):
 
     def get_csv(self):
         output = StringIO.StringIO()
-        cw = csv.writer(output)
+        cw = unicodecsv.writer(output)
         cw.writerow(self.get_headings())
 
         for row in self.get_rows():
-            cw.writerow([field[0].encode('UTF-8') for field in row])
+            cw.writerow([field[0] for field in row])
 
         return output.getvalue()
 
