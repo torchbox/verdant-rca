@@ -1,0 +1,62 @@
+{% extends "rca/base.html" %}
+{% load compress rca_tags rich_text image_tags %}
+
+{% block body_class %}type-donations{% endblock %}
+
+{% block extra_js %}
+    {# TODO: what's with these sources that don't use {% static %}? #}
+    <script type="text/javascript" src="/static/donations/js/jquery.payment.js"></script>
+    <script type="text/javascript" src="/static/donations/js/donation.js"></script>
+{% endblock extra_js %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+
+    <section class="row">
+
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" showReusableText="true" body=self.body %}
+
+        <div id="bbox-root"></div>
+        <script type="text/javascript">
+               window.bboxInit = function () {
+                   bbox.showForm('{{ self.form_id }}');
+               };
+               (function () {
+                   var e = document.createElement('script'); e.async = true;
+                   e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
+                   document.getElementsByTagName('head')[0].appendChild(e);
+               } ());
+        </script>
+
+        <section class="four">
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+                    {{ self.middle_column_body|richtext }}
+                </div>
+            {% endif %}
+            {% include "rca/includes/modules/downloads.html" %}
+            {% include "rca/includes/modules/quotation.html" %}
+            {% with self.images.all as images %}
+                {% if images %}
+                    {% for image in images %}
+                        <figure>
+                            <div class="image">{% image image.image width-400 %}</div>
+                            <figcaption class="a4">{{ image.image.caption_html }}</figcaption>
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
