@@ -65,6 +65,8 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
               })();
         </script>
+        {% block extra_js_head %}{% endblock %}
+
     </head>
     <body class="{% block body_class %}{% endblock %}">
         <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a> 
