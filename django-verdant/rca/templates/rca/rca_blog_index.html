@@ -15,51 +15,6 @@
         </section>
     {% endif %}
 
-    <section class="filters three-filters row">
-        <form id="filters" action="{% pageurl self %}" method="GET">
-            <ul>
-                <!--<li class="filter">
-                    <label for="school">School</label>
-                    <select id="school" name="school">
-                        <option value="">All schools</option>
-                        {% for key, value in global_schools %}
-                            <option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-                <li class="filter three-cols">
-                    <label for="programme">Programme</label>
-                    <select id="programme" name="programme">
-                        <option value="">All programmes</option>
-                        {% for key, value in global_programmes %}
-                            <option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-                <li class="filter">
-                    <label for="area">Area</label>
-                    <select id="area" name="area">
-                        <option value="">All areas</option>
-                        {% for key, value in global_areas %}
-                            <option value="{{ key }}" {% if request.GET.area == key %}selected="selected"{% endif %}>{{ value }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-            -->
-                <li class="filter">
-                    <label for="tag">Tags</label>
-                    <select id="tag" name="tag">
-                        <option value="">All tags</option>
-                        {% for tag in self.get_popular_tags %}
-                            <option value="{{ tag.slug }}">{{ tag }}</option>
-                        {% endfor %}
-                    </select>
-                </li>
-                <input type="submit" />
-            </ul>
-        </form>
-    </section>
-
     <div id="listing">
         {% include "rca/includes/rca_blog_listing.html" %}
     </div>
@@ -68,6 +23,20 @@
 {% endblock %}
 
 {% block sidebar %}
+    {% if self.get_popular_tags %}
+    <div class="related expanded">
+        <h2>Tags {{self.tag}}</h2>
+        <div class="wrapper">
+            <ul>
+                <li><a href="?tag=" {% if not tag %}class="active"{% endif %}>All</a></li>
+                {% for poptag in self.get_popular_tags %}
+                    <li><a href="?tag={{ poptag.slug }}" {% if tag = poptag.slug %}class="active"{% endif %}>{{ poptag }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
     {% include "rca/includes/sidebar.html" with showTags="true" %}
 {% endblock %}
 

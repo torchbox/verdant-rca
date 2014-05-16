@@ -4086,19 +4086,19 @@ class RcaBlogIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
-        area = request.GET.get('area')
+        # programme = request.GET.get('programme')
+        # school = request.GET.get('school')
+        # area = request.GET.get('area')
         tag = request.GET.get('tag', None)
 
         rca_blog_items = self.get_blog_items(tag=tag)
 
         # Run school, area and programme filters
-        rca_blog_items, filters = run_filters(rca_blog_items, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-            ('area', 'area', area),
-        ])
+        # rca_blog_items, filters = run_filters(rca_blog_items, [
+        #     ('school', 'school', school),
+        #     ('programme', 'programme', programme),
+        #     ('area', 'area', area),
+        # ])
 
         rca_blog_items = rca_blog_items.order_by('-date')
 
@@ -4117,13 +4117,15 @@ class RcaBlogIndex(Page, SocialFields):
             return render(request, "rca/includes/rca_blog_listing.html", {
                 'self': self,
                 'rca_blog_items': rca_blog_items,
-                'filters': json.dumps(filters),
+                'tag': tag,
+                #'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'rca_blog_items': rca_blog_items,
-                'filters': json.dumps(filters),
+                'tag': tag,
+                #'filters': json.dumps(filters),
             })
 
     def get_popular_tags(self):
