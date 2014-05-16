@@ -12,8 +12,11 @@ class StudentsReport(Report):
     def last_name_field(self, student):
         return student[1], None, None
 
+    def programme_field(self, student):
+        return student[2], None, None
+
     def page_field(self, student):
-        page = student[3]
+        page = student[4]
 
         if page:
             return (
@@ -29,7 +32,7 @@ class StudentsReport(Report):
             )
 
     def page_status_field(self, student):
-        page = student[3]
+        page = student[4]
 
         if page:
             # Get status
@@ -56,6 +59,7 @@ class StudentsReport(Report):
     fields = (
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
+        ("Programme", programme_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
     )
@@ -75,9 +79,10 @@ class Command(BaseCommand):
 
     def process_student(self, student, year):
         # Student info
-        first_name = student[1]
-        last_name = student[0]
-        email = student[2]
+        programme = student[0]
+        first_name = student[2]
+        last_name = student[1]
+        email = student[3]
 
         # Get list of possible pages
         students = self.students_for_year(year)
@@ -97,7 +102,7 @@ class Command(BaseCommand):
         if page is None:
             page = students.filter(last_name__iexact=last_name, first_name__iexact=first_name).first()
 
-        return first_name, last_name, email, page
+        return first_name, last_name, programme, email, page
 
     def handle(self, filename, year, **options):
         # Get list of students
