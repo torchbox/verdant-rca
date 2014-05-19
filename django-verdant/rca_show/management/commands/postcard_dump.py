@@ -126,12 +126,21 @@ class PostcardDumpReport(Report):
         return self.get_child_objects(student.websites, 'website')
 
     def student_carousel_items_field(self, student):
-        carousel_item_count = student.get_profile()['carousel_items'].count()
-        return (
-            str(carousel_item_count),
-            'error' if carousel_item_count == 0 else None,
-            None,
-        )
+        profile = student.get_profile()
+
+        if profile is not None:
+            carousel_item_count = profile['carousel_items'].count()
+            return (
+                str(carousel_item_count),
+                'error' if carousel_item_count == 0 else None,
+                None,
+            )
+        else:
+            return (
+                '0',
+                'error',
+                None,
+            )
 
     def image_field(self, student):
         if student.postcard_image:
