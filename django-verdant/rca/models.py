@@ -4018,7 +4018,7 @@ class ResearchItemCarouselItem(Orderable, CarouselItemFields):
 class ResearchItemCreator(Orderable):
     page = ParentalKey('rca.ResearchItem', related_name='creator')
     person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked).")
-    manual_person_name= models.CharField(max_length=255, blank=True, on_delete=models.SET_NULL, help_text="Only required if the creator has no page of their own to link to")
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
 
     panels=[
         PageChooserPanel('person'),
