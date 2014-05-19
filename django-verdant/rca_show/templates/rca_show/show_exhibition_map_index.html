@@ -13,7 +13,13 @@
 
     {% secondary_menu show_index as menuitems %}
 
-     <section class="shownav">
+    {% with menuitems.all as items %}  
+    {% if items|length >= 3 %}
+        <section class="shownav four-items">
+    {% else %}
+        <section class="shownav">
+    {% endif %}
+    {% endwith %}
         <ul class="nav-overview">
             {% if request.show_index.is_programme_page %}
                 <li class="jumplist">

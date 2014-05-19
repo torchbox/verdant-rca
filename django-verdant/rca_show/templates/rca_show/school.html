@@ -11,7 +11,13 @@
     {% get_school_students self school random=True as rand_students %}
     {% get_schools self as schools %}
 
-    <section class="shownav">
+    {% with menuitems.all as items %}  
+    {% if items|length >= 3 %}
+        <section class="shownav four-items">
+    {% else %}
+        <section class="shownav">
+    {% endif %}
+    {% endwith %}
         <ul class="nav-overview">
             <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
