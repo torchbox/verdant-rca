@@ -56,21 +56,40 @@ class PostcardDumpReport(Report):
         )
 
     def student_degree_field(self, student):
-        return (
-            student.get_profile()['name'] or "Not set",
-            'error' if not student.get_profile()['name'] else None,
-            None,
-        )
+        profile = student.get_profile()
+
+        if profile is not None:
+            return (
+                profile['name'] or "Not set",
+                'error' if not profile['name'] else None,
+                None,
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
 
     def student_programme_field(self, student):
-        return (
-            student.get_profile()['programme_display'] or "Not set",
-            'error' if not student.get_profile()['programme_display'] else None,
-            None,
-        )
+        profile = student.get_profile()
+
+        if profile is not None:
+            return (
+                profile['programme_display'] or "Not set",
+                'error' if not profile['programme_display'] else None,
+                None,
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
 
     def student_specialism_field(self, student):
-        if student.get_profile()['name'] == "MA":
+        profile = student.get_profile()
+        if profile is not None and profile['name'] == "MA":
             return (
                 student.ma_specialism or "Not set",
                 'error' if not student.ma_specialism else None,
