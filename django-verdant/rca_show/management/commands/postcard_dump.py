@@ -13,6 +13,14 @@ import humanize
 import os
 
 
+def get_postcard_zip_filename(student):
+    return '-'.join([
+        str(student.id),
+        student.first_name.replace(' ', '-'),
+        student.last_name.replace(' ', '-'),
+    ]) + os.path.splitext(student.postcard_image.file.name)[1]
+
+
 class PostcardDumpReport(Report):
     def student_name_field(self, student):
         return (
@@ -144,10 +152,11 @@ class PostcardDumpReport(Report):
 
     def image_field(self, student):
         if student.postcard_image:
+            filename = get_postcard_zip_filename(student)
             return (
-                os.path.split(student.postcard_image.file.name)[1],
+                filename,
                 None,
-                'images/' + os.path.split(student.postcard_image.file.name)[1],
+                'images/' + filename,
             )
         else:
             return (
@@ -305,7 +314,7 @@ class Command(BaseCommand):
                     filename = student.postcard_image.file.name
 
                     try:
-                        zf.write(os.path.join(settings.MEDIA_ROOT, filename), 'images/' + os.path.split(filename)[1])
+                        zf.write(os.path.join(settings.MEDIA_ROOT, filename), 'images/' + get_postcard_zip_filename(student))
                     except (IOError, OSError) as e:
                         print e
 
