@@ -2,7 +2,7 @@
 
 var overlay;
 
-var themes = ['schoolofarchitecture', 'schoolofcommunication', 'schoolofdesign', 'schooloffineart', 'schoolofhumanities', 'schoolofmaterial'];
+var themes = ['architecture', 'communication', 'design', 'fineart', 'humanities', 'material'];
 
 function randTheme(){
     var chosen;
@@ -14,7 +14,7 @@ function randTheme(){
         chosen = $.cookie('showrcatheme')
     }
 
-    $('body').addClass('theme-' + chosen);
+    $('body').addClass('theme-schoolof' + chosen);
     return chosen;
 }
 
