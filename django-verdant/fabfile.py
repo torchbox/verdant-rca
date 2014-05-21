@@ -109,3 +109,7 @@ def run_show_reports(year="2014"):
                 sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
                 get('postcard_dump.zip', 'postcard_dump.zip')
                 sudo('rm postcard_dump.zip')
+
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py profile_image_dump django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
+                get('profile_image_dump.zip', 'profile_image_dump.zip')
+                sudo('rm profile_image_dump.zip')
