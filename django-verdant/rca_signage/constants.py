@@ -7,6 +7,7 @@ SCREEN_CHOICES = (
     ('sculpture', 'Sculpture'),
     ('sackler', 'Sackler'),
     ('common-room-block', 'Common Room Block'),
+    ('test-screen', 'Test screen'),
 )
 
 SCREEN_CHOICES_DICT = {

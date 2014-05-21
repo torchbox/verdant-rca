@@ -8,6 +8,8 @@ env.roledefs = {
 
     'squid': ['root@rca1.dh.bytemark.co.uk'],
     'db': ['root@rca1.dh.bytemark.co.uk'],
+    'db-notroot': ['rca1.dh.bytemark.co.uk'],
+
     # All hosts will be listed here.
     'production': ['root@rca2.dh.bytemark.co.uk', 'root@rca3.dh.bytemark.co.uk'],
 }
@@ -58,6 +60,7 @@ def deploy():
 def clear_cache():
     run('squidclient -p 80 -m PURGE http://www.rca.ac.uk')
 
+
 @roles('db')
 def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
@@ -73,3 +76,36 @@ def fetch_live_data():
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
     local ('rm %s' % local_path)
+
+
+@roles('db-notroot')
+def fetch_live_data_notroot():
+    filename = "verdant_rca_%s.sql" % uuid.uuid4()
+    local_path = "/home/vagrant/verdant/%s" % filename
+    remote_path = "~/dumps/%s" % filename
+
+    run('pg_dump -cf %s verdant_rca' % remote_path)
+    run('gzip %s' % remote_path)
+    get("%s.gz" % remote_path, "%s.gz" % local_path)
+    run('rm %s.gz' % remote_path)
+    local('dropdb -Upostgres verdant')
+    local('createdb -Upostgres verdant')
+    local('gunzip %s.gz' % local_path)
+    local('psql -Upostgres verdant -f %s' % local_path)
+    local ('rm %s' % local_path)
+
+
+@roles('production')
+def run_show_reports(year="2014"):
+    with cd('/usr/local/django/verdant-rca/'):
+        with settings(sudo_user='verdant-rca'):
+            if env['host'] == MIGRATION_SERVER:
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py students_report django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
+                get('report.csv', 'students_report.csv')
+                get('report.html', 'students_report.html')
+                sudo('rm report.csv')
+                sudo('rm report.html')
+
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
+                get('postcard_dump.zip', 'postcard_dump.zip')
+                sudo('rm postcard_dump.zip')
