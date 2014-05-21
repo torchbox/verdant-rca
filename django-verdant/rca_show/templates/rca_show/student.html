@@ -76,17 +76,6 @@
         </ul>
     </section>
 
-    {% if student.ma_in_show %}
-        {% with student.show_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% else %}
-        {% with student.research_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% endif %}
-
-
     <h1>
         {% if student.preferred_name %}
             {{ student.preferred_name }}
@@ -96,6 +85,95 @@
     </h1>
 
     {% tabdeck %}
+        {% tab "Show RCA work" %}
+            {% if student.ma_in_show %}
+                {% with student.show_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+            {% else %}
+                {% with student.research_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+            {% endif %}
+
+            <section class="row">
+                <div class="three-nine-cols">
+                    <div class="col col-3 first">
+                        <div class="meta-data">
+                            <dl>
+                                <dt>Programme</dt>
+                                <dd>
+                                    {% if student.ma_in_show %}
+                                        {{ student.get_ma_programme_display }}
+                                    {% else %}
+                                        {{ student.get_research_programme_display }}
+                                    {% endif %}
+                                </dd>
+                                
+                                {% if student.phones %}
+                                    <dt>Phone</dt>
+                                    <dd class="ellipsis">            
+                                        {% for phone in student.phones.all %}
+                                            <div>{{ phone.phone }}</div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.emails %}
+                                    <dt>Emails</dt>
+                                    <dd class="ellipsis">
+                                        {% for email in student.emails.all %}
+                                            <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.websites %}
+                                    <dt>Websites</dt>
+                                    <dd class="ellipsis">
+                                        {% for website in student.websites.all %}
+                                            <div><a href="{{ website.website }}">{{ website.website }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.twitter_handle %}
+                                    <dt>Twitter</dt>
+                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
+                                {% endif %}
+
+                            </dl>
+                        </div>
+                        <div class="single">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </div>
+                    <div class="col col-9 last body-text">
+                        <h2 class="module-title">
+                            {% if student.ma_in_show %}
+                                {# Only show type/title if a type is chosen, else nothing #}
+                                {% if student.show_work_type %}
+                                    <span>{{ student.get_show_work_type_display }}:</span>
+                                {% endif %}
+                            {% else %}
+                                Dissertation: 
+                            {% endif %}
+                        </h2>
+
+                    
+                        <h3>{{ student.show_work_title }}</h3>
+
+                        {% if student.ma_in_show %}
+                            {{ student.show_work_description|richtext }}
+                        {% else %}
+                            {{ student.research_statement|richtext }}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </section>
+        {% endtab %}
+
         {% tab "Info" %}
             <div class="profile">
                 <ul class="four-cols">
@@ -295,86 +373,7 @@
                     </ul>
                 {% endif %}
             </div>
-        {% endtab %}
-
-        {% tab "Show RCA work" %}
-            <section class="row">
-                <div class="three-nine-cols">
-                    <div class="col col-3 first">
-                        <div class="meta-data">
-                            <dl>
-                                <dt>Programme</dt>
-                                <dd>
-                                    {% if student.ma_in_show %}
-                                        {{ student.get_ma_programme_display }}
-                                    {% else %}
-                                        {{ student.get_research_programme_display }}
-                                    {% endif %}
-                                </dd>
-                                
-                                {% if student.phones %}
-                                    <dt>Phone</dt>
-                                    <dd class="ellipsis">            
-                                        {% for phone in student.phones.all %}
-                                            <div>{{ phone.phone }}</div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.emails %}
-                                    <dt>Emails</dt>
-                                    <dd class="ellipsis">
-                                        {% for email in student.emails.all %}
-                                            <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.websites %}
-                                    <dt>Websites</dt>
-                                    <dd class="ellipsis">
-                                        {% for website in student.websites.all %}
-                                            <div><a href="{{ website.website }}">{{ website.website }}</a></div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.twitter_handle %}
-                                    <dt>Twitter</dt>
-                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
-                                {% endif %}
-
-                            </dl>
-                        </div>
-                        <div class="single">
-                            {% include "rca/includes/modules/share-button.html" %}
-                        </div>
-                    </div>
-                    <div class="col col-9 last body-text">
-                        <h2 class="module-title">
-                            {% if student.ma_in_show %}
-                                {# Only show type/title if a type is chosen, else nothing #}
-                                {% if student.show_work_type %}
-                                    <span>{{ student.get_show_work_type_display }}:</span>
-                                {% endif %}
-                            {% else %}
-                                Dissertation: 
-                            {% endif %}
-                        </h2>
-
-                    
-                        <h3>{{ student.show_work_title }}</h3>
-
-                        {% if student.ma_in_show %}
-                            {{ student.show_work_description|richtext }}
-                        {% else %}
-                            {{ student.research_statement|richtext }}
-                        {% endif %}
-                        
-                    </div>
-                </div>
-            </section>
-        {% endtab %}
+        {% endtab %}        
     {% endtabdeck %}    
    
 {% endblock %}
