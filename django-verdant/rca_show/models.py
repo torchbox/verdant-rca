@@ -411,8 +411,8 @@ class ShowIndexPage(SuperPage, SocialFields):
     def _serve_student(self, request, student):
         return render(request, self.student_template, {
             'self': self,
-            'school': rca_utils.get_school_for_programme(programme, year=self.year),
-            'programme': programme,
+            'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
+            'programme': student.programme,
             'student': student,
         })
 
