@@ -233,7 +233,7 @@ class ShowIndexPageProgramme(Orderable):
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.CharField(max_length=255, blank=True)
+    exhibition_date = models.TextField(max_length=255, blank=True)
 
     @property
     def school(self):
