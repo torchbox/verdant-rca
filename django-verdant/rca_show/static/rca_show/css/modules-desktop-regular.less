@@ -1,44 +1,48 @@
 .shownav{
-	> ul{
-		.row-flush();
-	}
-	> ul > li{
-		.column(4);
-	}
-	.jumplist .options{
-		left:0;
-		max-width:@site-max-width;
-        -moz-column-count: 3;
-        -webkit-column-count: 3;
-        -moz-column-gap: 20px;
-        -webkit-column-gap : 20px;
-	}
+    > ul{
+        .row-flush();
+    }
+    > ul > li{
+        .column(4);
+    }
+    .jumplist{
+        position:relative;
+    }
+    .jumplist .options{
+        margin:0 @grid-gutter-width/2;
+    }
+
+    ul.nav-campus .jumplist{
+        .column(6);
+    }
+}
+
+.shownav.four-items {
+    > ul > li{
+        .column(3);
+    }
 }
 
 .school-list-wrapper{
-	.row-flush();
+    .row-flush();
 }
 
 .school-list{
-	.column(4);	
+    .column(4); 
 }
 
 .programme-list{
-	li{
-		.column(4);
-	}
+    li{
+        .column(4);
+    }
 }
 
-.map-aside{
-	.column(6);
-}
-
-.body-text{
-	.column(6);   
+.map-aside .map{
+    .column(6);
 }
 
 .programme-curatingcontemporaryart .showgallery{
-	li{
-		.column(3);
-	}
+    li{
+        .column(3);
+    }
 }

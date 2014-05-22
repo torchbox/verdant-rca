@@ -11,13 +11,35 @@
         background-color: @color-tab-grey !important;
 
         &:hover{
-        	color:inherit;
+            color:inherit;
         }
     }
 }
 
+.showgallery{
+    li{
+        height:0px;
+        margin-bottom:@spacing-one;
+    }
+        .landscape{
+            box-sizing: border-box;
+            display: inline;
+            float:left;
+            width:450px;
+            height:300px;
+        }
+        .portrait{
+            box-sizing: border-box;
+            display: inline;
+            float:left;
+            width:200px;
+            height:300px;
+        }    
+}
+
+/* CCA show specific */
 .programme-curatingcontemporaryart .showgallery{
-	li{
-		.column(4);
-	}
+    li{
+        .column(4);
+    }
 }

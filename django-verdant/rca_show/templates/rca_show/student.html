@@ -4,53 +4,69 @@
 {% block body_class %}{{ block.super }} type-student{% endblock %}
 
 {% block content %}
-    {% get_programme_students self school programme as students %}
     {% get_schools self as schools %}
     {% get_school_programmes self school as programmes %}
     {% secondary_menu self as menuitems %}
 
-    <section class="shownav">
-        {% if not self.programme %}
+    {% with menuitems.all as items %}  
+        {% if items|length >= 3 %}
+            <section class="shownav four-items">
+        {% else %}
+            <section class="shownav">
+        {% endif %}
+    {% endwith %}
+        {% if not self.is_programme_page %}
             <ul class="nav-overview">
-                <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
+                <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}
-                    <li>
+                    <li {% if item.url == self.url %}class="active"{% endif %}>
                         <a href="{% pageurl item %}">{{ item.title }}</a>
                     </li>
                 {% endfor %}
             </ul>
         {% endif %}
         <ul>
-            {% if not self.programme %}
+            {% if not self.is_programme_page %}
                 <li class="jumplist active">
-                    <h2 class="toggle">Schools</h2>
+                    <h2 class="toggle">Select a School</h2>
                     <div class="selected toggle">{% get_school_display school %}</div>
                     <ul class="options">
                         {% for school in schools %}
-                            <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
+                            <li><a href="{% show_subpage_url self 'school' school=school %}">{% get_school_display school %}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 <li class="jumplist active">
-                    <h2 class="toggle">Programmes</h2>
+                    <h2 class="toggle">Select a Programme</h2>
                     <div class="selected toggle">{% get_programme_display programme %}</div>
                     <ul class="options">
                         {% for programme in programmes %}
-                            <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
+                            <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
             {% endif %}
             <li class="jumplist active">
-                <h2 class="toggle">Students</h2>
+                <h2 class="toggle">Select a Student</h2>
                 <div class="selected toggle">{{ student.title }}</div>
                 <ul class="options">
-                    {% for student in students %}
-                        <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
-                    {% endfor %}
+                    {% if self.get_programmes|length > 1 %}
+                        {% for programme in self.get_programmes %}
+                            <li><a href="{% show_subpage_url self 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
+                            {% get_programme_students self programme as students %}
+                            {% for student in students %}
+                                <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                            {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        {% get_programme_students self programme as students %}
+                        {% for student in students %}
+                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
             </li>
-            {% if self.programme %}
+            {% if self.is_programme_page %}
                 {% for item in menuitems %}
                     <li>
                         <a href="{% pageurl item %}">{{ item.title }}</a>
@@ -59,17 +75,6 @@
             {% endif %}
         </ul>
     </section>
-
-    {% if student.ma_in_show %}
-        {% with student.show_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% else %}
-        {% with student.research_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% endif %}
-
 
     <h1>
         {% if student.preferred_name %}
@@ -80,6 +85,95 @@
     </h1>
 
     {% tabdeck %}
+        {% tab "Show RCA work" %}
+            {% if student.ma_in_show %}
+                {% with student.show_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+            {% else %}
+                {% with student.research_carousel_items.all as carousel_items %}
+                    {% include "rca_show/includes/modules/carousel.html" %}
+                {% endwith %}
+            {% endif %}
+
+            <section class="row">
+                <div class="three-nine-cols">
+                    <div class="col col-3 first">
+                        <div class="meta-data">
+                            <dl>
+                                <dt>Programme</dt>
+                                <dd>
+                                    {% if student.ma_in_show %}
+                                        {{ student.get_ma_programme_display }}
+                                    {% else %}
+                                        {{ student.get_research_programme_display }}
+                                    {% endif %}
+                                </dd>
+                                
+                                {% if student.phones %}
+                                    <dt>Phone</dt>
+                                    <dd class="ellipsis">            
+                                        {% for phone in student.phones.all %}
+                                            <div>{{ phone.phone }}</div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.emails %}
+                                    <dt>Emails</dt>
+                                    <dd class="ellipsis">
+                                        {% for email in student.emails.all %}
+                                            <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.websites %}
+                                    <dt>Websites</dt>
+                                    <dd class="ellipsis">
+                                        {% for website in student.websites.all %}
+                                            <div><a href="{{ website.website }}">{{ website.website }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.twitter_handle %}
+                                    <dt>Twitter</dt>
+                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
+                                {% endif %}
+
+                            </dl>
+                        </div>
+                        <div class="single">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </div>
+                    <div class="col col-9 last body-text">
+                        <h2 class="module-title">
+                            {% if student.ma_in_show %}
+                                {# Only show type/title if a type is chosen, else nothing #}
+                                {% if student.show_work_type %}
+                                    <span>{{ student.get_show_work_type_display }}:</span>
+                                {% endif %}
+                            {% else %}
+                                Dissertation: 
+                            {% endif %}
+                        </h2>
+
+                    
+                        <h3>{{ student.show_work_title }}</h3>
+
+                        {% if student.ma_in_show %}
+                            {{ student.show_work_description|richtext }}
+                        {% else %}
+                            {{ student.research_statement|richtext }}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </section>
+        {% endtab %}
+
         {% tab "Info" %}
             <div class="profile">
                 <ul class="four-cols">
@@ -279,86 +373,7 @@
                     </ul>
                 {% endif %}
             </div>
-        {% endtab %}
-
-        {% tab "Show RCA work" %}
-            <section class="row">
-                <div class="three-nine-cols">
-                    <div class="col col-3 first">
-                        <div class="meta-data">
-                            <dl>
-                                <dt>Programme</dt>
-                                <dd>
-                                    {% if student.ma_in_show %}
-                                        {{ student.get_ma_programme_display }}
-                                    {% else %}
-                                        {{ student.get_research_programme_display }}
-                                    {% endif %}
-                                </dd>
-                                
-                                {% if student.phones %}
-                                    <dt>Phone</dt>
-                                    <dd class="ellipsis">            
-                                        {% for phone in student.phones.all %}
-                                            <div>{{ phone.phone }}</div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.emails %}
-                                    <dt>Emails</dt>
-                                    <dd class="ellipsis">
-                                        {% for email in student.emails.all %}
-                                            <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.websites %}
-                                    <dt>Websites</dt>
-                                    <dd class="ellipsis">
-                                        {% for website in student.websites.all %}
-                                            <div><a href="{{ website.website }}">{{ website.website }}</a></div>
-                                        {% endfor %}
-                                    </dd>
-                                {% endif %}
-
-                                {% if student.twitter_handle %}
-                                    <dt>Twitter</dt>
-                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
-                                {% endif %}
-
-                            </dl>
-                        </div>
-                        <div class="single">
-                            {% include "rca/includes/modules/share-button.html" %}
-                        </div>
-                    </div>
-                    <div class="col col-9 last body-text">
-                        <h2 class="module-title">
-                            {% if student.ma_in_show %}
-                                {# Only show type/title if a type is chosen, else nothing #}
-                                {% if student.show_work_type %}
-                                    <span>{{ student.get_show_work_type_display }}:</span>
-                                {% endif %}
-                            {% else %}
-                                Dissertation: 
-                            {% endif %}
-                        </h2>
-
-                    
-                        <h3>{{ student.show_work_title }}</h3>
-
-                        {% if student.ma_in_show %}
-                            {{ student.show_work_description|richtext }}
-                        {% else %}
-                            {{ student.research_statement|richtext }}
-                        {% endif %}
-                        
-                    </div>
-                </div>
-            </section>
-        {% endtab %}
+        {% endtab %}        
     {% endtabdeck %}    
    
 {% endblock %}

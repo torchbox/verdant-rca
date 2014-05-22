@@ -3,17 +3,119 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import RegexURLResolver
+from django.conf.urls import url
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
-from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP
+from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
+from rca import utils as rca_utils
+
+
+class SuperPage(Page):
+    """
+    This class extends Page by adding methods to allow urlconfs to be embedded inside pages
+    """
+
+    def get_subpage_urls(self):
+        """
+        Override this method to add your own subpage urls
+        """
+        return [
+            url('^$', self.serve, name='main'),
+        ]
+
+    def reverse_subpage(self, name, *args, **kwargs):
+        """
+        This method does the same job as Djangos' built in "urlresolvers.reverse()" function for subpage urlconfs.
+        """
+        resolver = RegexURLResolver(r'^', self.get_subpage_urls())
+        return self.url + resolver.reverse(name, *args, **kwargs)
+
+    def resolve_subpage(self, path):
+        """
+        This finds a view method/function from a URL path.
+        """
+        resolver = RegexURLResolver(r'^', self.get_subpage_urls())
+        return resolver.resolve(path)
+
+    def route(self, request, path_components):
+        """
+        This hooks the subpage urls into Wagtails routing.
+        """
+        if self.live:
+            try:
+                path = '/'.join(path_components)
+                if path:
+                    path += '/'
+
+                view, args, kwargs = self.resolve_subpage(path)
+                return view(request, *args, **kwargs)
+            except Http404:
+                pass
+
+        return super(SuperPage, self).route(request, path_components)
+
+    is_abstract = True
+
+    class Meta:
+        abstract = True
+
+
+# Stream page (for Fashion show)
+
+class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
+
+class ShowStreamPage(Page, SocialFields):
+    body = RichTextField(blank=True)
+
+    def get_show_index(self):
+        for page in self.get_ancestors().reverse():
+            specific_page = page.specific
+            if isinstance(specific_page, ShowIndexPage):
+                return specific_page
+
+ShowStreamPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
+    FieldPanel('body'),
+]
+
+ShowStreamPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
 
 # Standard page for contacts etc
 
 class ShowStandardPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStandardPage', related_name='carousel_items')
+
+class ShowStandardPageContent(Orderable):
+    page = ParentalKey('rca_show.ShowStandardPage', related_name='content_block')
+    body = RichTextField(blank=True)
+    map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
+
+    panels = [
+        FieldPanel('body'), 
+        FieldPanel('map_coords')
+    ]
 
 class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
@@ -30,9 +132,73 @@ ShowStandardPage.content_panels = [
     InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
     FieldPanel('body'),
     FieldPanel('map_coords'),
+    InlinePanel(ShowStandardPage, 'content_block', label="Content block"),
 ]
 
 ShowStandardPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+class ShowExhibitionMapIndexContent(Orderable):
+    page = ParentalKey('rca_show.ShowExhibitionMapIndex', related_name='content_block')
+    body = RichTextField(blank=True)
+    map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
+
+    panels = [
+        FieldPanel('body'), 
+        FieldPanel('map_coords')
+    ]
+
+class ShowExhibitionMapIndex(Page, SocialFields):
+    pass
+
+ShowExhibitionMapIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    InlinePanel(ShowExhibitionMapIndex, 'content_block', label="Content block"),
+]
+
+ShowExhibitionMapIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], "Common page configuration"),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('search_description'),
+    ], "Cross-page behaviour"),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], "Social networks"),
+]
+
+
+class ShowExhibitionMapPage(Page, SocialFields):
+    body = RichTextField(blank=True)
+    campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
+
+ShowExhibitionMapPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body'),
+    FieldPanel('campus'),
+]
+
+ShowExhibitionMapPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('seo_title'),
         FieldPanel('slug'),
@@ -58,12 +224,31 @@ class ShowIndexPageSchool(Orderable):
 
     panels = [FieldPanel('school'), FieldPanel('intro')]
 
-class ShowIndexPage(Page, SocialFields):
+class ShowIndexPageProgramme(Orderable):
+    page = ParentalKey('rca_show.ShowIndexPage', related_name='programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+
+    panels = [FieldPanel('programme')]
+
+class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.CharField(max_length=255, blank=True)
+    exhibition_date = models.TextField(max_length=255, blank=True)
+
+    @property
+    def school(self):
+        return rca_utils.get_school_for_programme(self.programme)
+
+    def get_programmes(self):
+        # This method gets hit quite alot (sometimes over 100 times per request)
+        if not hasattr(self, '_programmes_cache'):
+            self._programmes_cache = self.programmes.all().values_list('programme', flat=True)
+
+        return self._programmes_cache
+
+    @property
+    def is_programme_page(self):
+        return bool(self.get_programmes())
 
     def get_ma_students_q(self, school=None, programme=None):
         filters = {
@@ -72,6 +257,10 @@ class ShowIndexPage(Page, SocialFields):
 
         if self.year:
             filters['ma_graduation_year'] = self.year
+
+        programmes = self.get_programmes()
+        if programmes:
+            filters['ma_programme__in'] = programmes
 
         if school:
             filters['ma_school'] = school
@@ -89,6 +278,10 @@ class ShowIndexPage(Page, SocialFields):
         if self.year:
             filters['mphil_graduation_year'] = self.year
 
+        programmes = self.get_programmes()
+        if programmes:
+            filters['mphil_programme__in'] = programmes
+
         if school:
             filters['mphil_school'] = school
 
@@ -104,6 +297,10 @@ class ShowIndexPage(Page, SocialFields):
 
         if self.year:
             filters['phd_graduation_year'] = self.year
+
+        programmes = self.get_programmes()
+        if programmes:
+            filters['phd_programme__in'] = programmes
 
         if school:
             filters['phd_school'] = school
@@ -124,38 +321,25 @@ class ShowIndexPage(Page, SocialFields):
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]
 
-    def get_student(self, school, programme, slug):
+    def get_student(self, school=None, programme=None, slug=None):
         return self.get_students(school, programme).get(slug=slug)
 
     def get_schools(self):
         return [school.school for school in self.schools.all()]
 
     def get_school_programmes(self, school):
-        if not self.year in SCHOOL_PROGRAMME_MAP:
-            return None
-
-        if not school in SCHOOL_PROGRAMME_MAP[self.year]:
-            return None
-
-        return SCHOOL_PROGRAMME_MAP[self.year][school]
-
-    def get_school_index_url(self):
-        return self.url + 'schools/'
-
-    def get_school_url(self, school):
-        if not self.school:
-            return self.url + school + '/'
-        else:
-            return self.url
-
-    def get_programme_url(self, school, programme):
-        if not self.programme:
-            return self.get_school_url(school) + programme + '/'
-        else:
-            return self.get_school_url(school)
+        return rca_utils.get_programmes(school, self.year)
 
     def get_student_url(self, student):
-        return self.get_programme_url(student.school, student.programme) + student.slug + '/'
+        return self.reverse_subpage(
+            'student',
+            programme=student.programme,
+            slug=student.slug,
+        )
+
+    def contains_programme(self, programme):
+        programmes = self.get_programmes() or rca_utils.get_programmes(year=self.year)
+        return programme in programmes
 
     # Views
     landing_template = 'rca_show/landing.html'
@@ -198,26 +382,26 @@ class ShowIndexPage(Page, SocialFields):
             'intro': intro,
         })
 
-    def serve_programme(self, request, school, programme):
-        # Check that the school/programme exists
-        programmes = self.get_school_programmes(school)
-        if programmes is None:
-            raise Http404("School doesn't exist")
-
-        if programme not in programmes:
+    def serve_programme(self, request, programme, school=None):
+        # Check that the programme exists
+        if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
 
         # Render response
         return render(request, self.programme_template, {
             'self': self,
-            'school': school,
+            'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
         })
 
-    def serve_student(self, request, school, programme, slug):
+    def serve_student(self, request, programme, slug, school=None):
+        # Check that the programme exists
+        if not self.contains_programme(programme):
+            raise Http404("Programme doesn't exist")
+
         # Get the student
         try:
-            student = self.get_student(school, programme, slug)
+            student = self.get_student(programme=programme, slug=slug)
         except NewStudentPage.DoesNotExist:
             raise Http404("Cannot find student")
 
@@ -227,64 +411,48 @@ class ShowIndexPage(Page, SocialFields):
     def _serve_student(self, request, student):
         return render(request, self.student_template, {
             'self': self,
-            'school': student.school,
+            'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
             'programme': student.programme,
             'student': student,
         })
 
+    def get_subpage_urls(self):
+        programme_count = self.programmes.count()
+
+        if programme_count == 0:
+            return [
+                url(r'^$', self.serve_landing, name='landing'),
+                url(r'^schools/$', self.serve_school_index, name='school_index'),
+                url(r'^(?P<school>[\w\-]+)/$', self.serve_school, name='school'),
+                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/(?P<slug>[\w\-]+)/$', self.serve_student, name='student'),
+            ]
+        elif programme_count == 1:
+            programme = self.programmes.all()[0].programme
+
+            return [
+                url(r'^$', self.serve_programme, dict(programme=programme, school=None), name='programme'),
+                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme=programme, school=None), name='student'),
+            ]
+        else:
+            return [
+                url(r'^$', self.serve_landing, name='landing'),
+                url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
+                url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
+            ]
+
     def route(self, request, path_components):
         request.show_index = self
 
-        if self.live:
-            # Check if this is a request for the schools index
-            if not self.school and len(path_components) == 1 and path_components[0] == 'schools':
-                return self.serve_school_index(request)
-
-            # Check if this is a request for the landing page
-            if not self.school and not path_components:
-                return self.serve_landing(request)
-
-            # Must be for a school/programme/student find the slugs
-            slugs = []
-            if self.school:
-                slugs.append(self.school)
-                if self.programme:
-                    slugs.append(self.programme)
-            slugs.extend(path_components)
-
-            try:
-                if len(slugs) == 1:
-                    return self.serve_school(request, slugs[0])
-                elif len(slugs) == 2:
-                    return self.serve_programme(request, slugs[0], slugs[1])
-                elif len(slugs) == 3:
-                    return self.serve_student(request, slugs[0], slugs[1], slugs[2])
-            except Http404:
-                pass
-
-        if path_components:
-            # Fallback to subpage
-            child_slug = path_components[0]
-            remaining_components = path_components[1:]
-            try:
-                subpage = self.get_children().get(slug=child_slug)
-            except Page.DoesNotExist:
-                raise Http404
-
-            return subpage.specific.route(request, remaining_components)
-        else:
-            raise Http404
+        return super(ShowIndexPage, self).route(request, path_components)
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
-    MultiFieldPanel([
-        FieldPanel('school'),
-        FieldPanel('programme'),
-        FieldPanel('overlay_intro'),
-    ], "Limit page to this school/programme"),
+    FieldPanel('overlay_intro'),
+    InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
 ]
 
 ShowIndexPage.promote_panels = [

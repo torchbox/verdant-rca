@@ -59,7 +59,7 @@ i{
     }
 
     > div{
-        .transition(~"top 0.5s ease, left 0.5s ease, width 0.5s ease");
+        .transition(~"top 0.5s ease, left 0.5s ease, margin-left 0.5s ease, width 0.5s ease");
         position:fixed;
     }
 
@@ -119,9 +119,13 @@ header {
         right:0%;
         top:30px;
         .font-family-newrail-bold();
-        width:4em;
+        width:5em;
         font-size:2em;
         line-height:1.1em;
+
+        p{
+            margin:0;
+        }
     }
     
     .header-wrapper.affix .exhibition-date{
@@ -223,6 +227,18 @@ header {
 
 .showrca .footer-logo{
     display:none;
+}
+
+/* template-specific, non-module tweaks */
+.type-school{
+    h1{
+        text-transform:uppercase;
+        max-width:6em;
+    }
+}
+
+section.row{
+    margin-bottom:@spacing-one;
 }
 
 

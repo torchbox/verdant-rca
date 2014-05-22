@@ -1,33 +1,24 @@
 @import "variables.less";
 @import "mixins.less";
 
-body{
-    background-color:#F7F7F7;
-}
+@color-arc-1: #FFD100;
+@color-arc-2: #FFE880;
 
-.school-schoolofarchitecture{
-    .theme(arc, #ff0000, #ffffff, 180px, 225px);
-}
-.school-schoolofcommunication{
-    .theme(com, #00ff00, #ffffff, 180px, 225px);
-}
-.school-schoolofdesign{
-    .theme(des, #0000ff, #ffffff, 180px, 225px);
-}
-.school-schooloffineart{
-    .theme(art, #ff00ff, #ffffff, 180px, 225px);
-}
-.school-schoolofhumanities{
-    .theme(hum, #ffff00, #ffffff, 180px, 225px);
-}
-.school-schoolofmaterial{
-    .theme(mat, #00ffff, #ffffff, 180px, 225px); 
-}
+@color-des-1: #25c7d1;
+@color-des-2: #92e3e8;
 
-/* CCA show specific, to be removed after show */
-.programme-curatingcontemporaryart{
-    .theme(cca, #e0413e, #F9A09F, 180px, 225px);
-}
+@color-com-1: #ff6e3a;
+@color-com-2: #FFB79D;
+
+@color-fin-1: #006fb4;
+@color-fin-2: #80B7DA;
+
+@color-hum-1: #f55262;
+@color-hum-2: #FAA9B0;
+
+@color-mat-1: #783cac;
+@color-mat-2: #BB9ED5;
+
 
 .theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
     #showrca2014-overlay {
@@ -52,6 +43,7 @@ body{
 
         }
     }
+
     .site-name {
         width:@logowidth;
         p{
@@ -69,8 +61,9 @@ body{
     .text-theme-@{code},
     .exhibition-date,
     .exhibition-name,
-    &.type-school h1,
-    .programme-list a{
+    h1,
+    .programme-list a,
+    .shownav .jumplist a.active{
         color:@colorprimary;
     }
     .shownav .jumplist.open .toggle,
@@ -80,12 +73,120 @@ body{
     .bx-wrapper .bx-next:hover, 
     .bx-wrapper .bx-prev:hover,
     .share:hover,
-    .tab-nav a:hover{
+    .tab-nav a:hover,
+    .today h2:hover,
+    nav h2 a:hover{
         background-color:@colorprimary;
     }
 
     .showgallery .content h2,
-    .showrca2014-footer a:hover{
+    .showrca2014-footer a:hover,
+    .programme-list a:hover{
         color:@colorsecondary;
     }
 }
+
+body{
+    background-color:#F7F7F7;
+}
+
+.theme-schoolofarchitecture{
+    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
+}
+.theme-schoolofcommunication{
+    .theme(com, @color-com-1, @color-com-2, 318px, 226px);
+}
+.theme-schoolofdesign{
+    .theme(des, @color-des-1, @color-des-2, 147px, 226px);
+}
+.theme-schooloffineart{
+    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
+}
+.theme-schoolofhumanities{
+    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
+}
+.theme-schoolofmaterial{
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+}
+
+/* .school-* must come after .theme-* otherwise school cannot trump the random theme assigned */
+.school-schoolofarchitecture,{
+    .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
+}
+.school-schoolofcommunication{
+    .theme(com, @color-com-1, @color-com-2, 318px, 226px);
+}
+.school-schoolofdesign{
+    .theme(des, @color-des-1, @color-des-2, 147px, 226px);
+}
+.school-schooloffineart{
+    .theme(fin, @color-fin-1, @color-fin-2, 143px, 226px);
+}
+.school-schoolofhumanities{
+    .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
+}
+.school-schoolofmaterial{
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+}
+
+/* CCA show specific */
+.programme-curatingcontemporaryart{
+    .theme(cca, #e0413e, #F9A09F, 180px, 225px);
+}
+
+/* Fasion show specific */
+.programme-fashionmenswear,
+.programme-fashionwomenswear{
+    .theme(fas, #000000, #783CAC, 295px, 225px);
+/*    .theme(fas, #000000, #FFFFFF, 295px, 225px);*/
+}
+
+/* some more specific overrides for the fashion show */
+.programme-fashionmenswear,
+.programme-fashionwomenswear{
+    .shownav .jumplist.open .toggle,
+    .shownav .jumplist:hover .toggle{
+        color:white;
+    }
+    #showrca2014-overlay {
+        color:white;
+
+        .crest{
+            background-image:url('/static/rca_show/images/logo-rca-footer-inverse.png');
+        }
+    }
+    a.active {
+        color:#000000;
+    }
+    a:hover {
+        color:#783CAC;
+    }
+    a .active { 
+        color: white;
+    }
+    .showgallery .content h2 {
+        color:#FFFFFF;
+    }
+}
+
+/* generic "make this text a themed colour" stuff. */
+
+.color-schoolofarchitecture, a.hovercolor-schoolofarchitecture:hover{
+    color:@color-arc-1;
+}
+.color-schoolofcommunication, a.hovercolor-schoolofcommunication:hover{
+    color:@color-com-1;
+}
+.color-schoolofdesign, a.hovercolor-schoolofdesign:hover{
+    color:@color-des-1;
+}
+.color-schooloffineart, a.hovercolor-schooloffineart:hover{
+    color:@color-fin-1;
+}
+.color-schoolofhumanities, a.hovercolor-schoolofhumanities:hover{
+    color:@color-hum-1;
+}
+.color-schoolofmaterial, a.hovercolor-schoolofmaterial:hover{
+    color:@color-mat-1;
+}
+

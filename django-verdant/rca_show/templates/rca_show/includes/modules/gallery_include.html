@@ -1,10 +1,13 @@
 {% load pageurl image_tags show_tags %}
-{% image gallery_image width-600 as tmpimage %}
 
-<li class="item {% if gallery_image.landscape %}landscape{% else %}portrait{% endif %}" >
-    <a href="{% get_student_url self student %}">
+<li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}" >
+    <a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">
         <div class="gallery-image">
-            {% image gallery_image height-300 %}
+            {% if image_format == "fill" %}
+                {% image gallery_image fill-300x300 %}
+            {% else %}
+                {% image gallery_image height-300 %}
+            {% endif %}
         </div>
         <div class="content">
             <h2 class="h6"><i>{{ student.title }}</i></h2>
