@@ -9,6 +9,7 @@ from rca.models import NewStudentPage
 from rca.report_generator import Report
 from PIL import Image
 from zipfile import ZipFile
+from optparse import make_option
 import humanize
 import os
 
@@ -298,6 +299,14 @@ class PostcardDumpReport(Report):
 
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--no-fashion',
+            action='store_true',
+            dest='no_fashion',
+            default=False,
+            help='Remove fashion students from dump'),
+        )
+
     def students_for_year(self, year):
         q = models.Q(ma_graduation_year=year) | models.Q(mphil_graduation_year=year) | models.Q(phd_graduation_year=year)
         return NewStudentPage.objects.filter(q)
@@ -305,6 +314,13 @@ class Command(BaseCommand):
     def handle(self, year, **options):
         # Get students
         students = self.students_for_year(year).order_by('phd_programme', 'mphil_programme', 'ma_programme', 'last_name', 'first_name')
+
+        # Remove fashion students if '--no-fashion' option was used
+        if options['no_fashion']:
+            fashion_q = models.Q(phd_programme='fashionmenswear') | models.Q(phd_programme='fashionwomenswear') | \
+                        models.Q(mphil_programme='fashionmenswear') | models.Q(mphil_programme='fashionwomenswear') | \
+                        models.Q(ma_programme='fashionmenswear') | models.Q(ma_programme='fashionwomenswear')
+            students = students.exclude(fashion_q)
 
         # Create zipfile
         with ZipFile('postcard_dump.zip', 'w') as zf:
