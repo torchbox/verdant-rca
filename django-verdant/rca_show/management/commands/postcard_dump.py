@@ -305,6 +305,12 @@ class Command(BaseCommand):
             dest='no_fashion',
             default=False,
             help='Remove fashion students from dump'),
+        make_option('--exclude',
+            action='store',
+            type='string',
+            dest='exclude',
+            default=None,
+            help='Filename with list of student IDs to exclude from this report'),
         )
 
     def students_for_year(self, year):
@@ -321,6 +327,19 @@ class Command(BaseCommand):
                         models.Q(mphil_programme='fashionmenswear') | models.Q(mphil_programme='fashionwomenswear') | \
                         models.Q(ma_programme='fashionmenswear') | models.Q(ma_programme='fashionwomenswear')
             students = students.exclude(fashion_q)
+
+        # Remove any excluded students
+        if options['exclude'] is not None:
+            excluded_students = []
+            with open(options['exclude']) as f:
+                for student_id in f:
+                    try:
+                        excluded_students.append(int(student_id))
+                    except (TypeError, ValueError):
+                        print "WARN: '" + str(student_id) + "' is not an integer!"
+
+            print excluded_students
+            students = students.exclude(id__in=excluded_students)
 
         # Create zipfile
         with ZipFile('postcard_dump.zip', 'w') as zf:
