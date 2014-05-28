@@ -1,5 +1,5 @@
 from django.template import Template, Context
-from django.utils import timezone
+from django.utils import timezone, dateformat
 import StringIO, unicodecsv
 
 
@@ -60,23 +60,36 @@ class Report(object):
                 {% endfor %}
               </tbody>
             </table>
-            <p>Generated: {{ time|date:'l dS F Y P' }}</p>
+            <p>{{ footer|safe }}</p>
           </body>
         </html>
         """
 
-    def __init__(self, data):
+    def __init__(self, data, **kwargs):
         self.data = data
+        self.kwargs = kwargs
 
     def get_title(self):
         return self.title
 
+    def get_fields(self):
+        return self.fields
+
+    def get_footer(self):
+        return "Generated: " + dateformat.format(timezone.now(), 'l dS F Y P')
+
     def get_headings(self):
-        return [field[0] for field in self.fields]
+        return [field[0] for field in self.get_fields()]
+
+    def post_process(self, fields):
+        return fields
 
     def get_rows(self):
         for row in self.data:
-            yield [field_func(self, row) for field_name, field_func in self.fields]
+            fields = self.post_process([field_func(self, row) for field_name, field_func in self.get_fields()])
+
+            if fields is not None:
+                yield fields
 
     def get_csv(self):
         output = StringIO.StringIO()
@@ -95,7 +108,7 @@ class Report(object):
             'title': self.get_title(),
             'headings': self.get_headings(),
             'rows': self.get_rows(),
-            'time': timezone.now(),
+            'footer': self.get_footer()
         })
 
         return template.render(context).encode('UTF-8')
