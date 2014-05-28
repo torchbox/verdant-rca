@@ -1,22 +1,26 @@
 from django.core.management.base import BaseCommand
 from django.db import models
+from django.utils import dateformat
 from rca.models import NewStudentPage
 from rca.report_generator import Report
+from optparse import make_option
+import dateutil.parser
 import csv
+import json
 
 
 class StudentsReport(Report):
     def first_name_field(self, student):
-        return student[0], None, None
+        return student['first_name'], None, None
 
     def last_name_field(self, student):
-        return student[1], None, None
+        return student['last_name'], None, None
 
     def programme_field(self, student):
-        return student[2], None, None
+        return student['programme'], None, None
 
     def page_field(self, student):
-        page = student[4]
+        page = student['page']
 
         if page:
             return (
@@ -32,7 +36,7 @@ class StudentsReport(Report):
             )
 
     def page_status_field(self, student):
-        page = student[4]
+        page = student['page']
 
         if page:
             # Get status
@@ -54,7 +58,107 @@ class StudentsReport(Report):
                 None,
             )
 
-    title = "Students report"
+    def page_change_field(self, student):
+        if student['current_revision']:
+            if student['previous_revision']:
+                if student['current_revision'] != student['previous_revision']:
+                    return (
+                        "Changed",
+                        'changed',
+                        None,
+                    )
+                else:
+                    return (
+                        "Not changed",
+                        None,
+                        None,
+                    )
+            else:
+                return (
+                    "Created",
+                    'important',
+                    None,
+                )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def postcard_image_field(self, student):
+        page = student['page']
+
+        if page:
+            if page.postcard_image:
+                return (
+                    "Yes",
+                    None,
+                    None,
+                )
+            else:
+                return (
+                    "No",
+                    'error',
+                    None,
+                )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+
+    def postcard_image_change_field(self, student):
+        current = None
+        previous = None
+
+        if student['current_revision']:
+            revision_json = json.loads(student['current_revision'].content_json)
+            if 'postcard_image' in revision_json:
+                current = revision_json['postcard_image']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if student['previous_revision']:
+            revision_json = json.loads(student['previous_revision'].content_json)
+            if 'postcard_image' in revision_json:
+                previous = revision_json['postcard_image']
+
+        if current == previous:
+            return (
+                "Not changed",
+                None,
+                None,
+            )
+        elif current and not previous:
+            return (
+                "Added",
+                'important',
+                None,
+            )
+        elif previous and not current:
+            return (
+                "Removed",
+                'error',
+                None,
+            )
+        elif current != previous:
+            return (
+                "Changed",
+                'changed',
+                None,
+            )
+
+    def post_process(self, fields):
+        if self.kwargs['changed_only'] and fields[5][0] == "Not changed":
+            return
+        return fields
 
     fields = (
         ("First Name", first_name_field),
@@ -62,22 +166,72 @@ class StudentsReport(Report):
         ("Programme", programme_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
+        ("Has postcard", postcard_image_field),
     )
+
+    change_fields = (
+        ("First Name", first_name_field),
+        ("Last Name", last_name_field),
+        ("Programme", programme_field),
+        ("Page", page_field),
+        ("Page Status", page_status_field),
+        ("Change", page_change_field),
+        ("Has postcard", postcard_image_field),
+        ("Postcard change", postcard_image_change_field),
+    )
+
+    def get_fields(self):
+        if self.kwargs['previous_date'] is not None:
+            return self.change_fields
+        else:
+            return self.fields
+
+    def get_footer(self):
+        footer = super(StudentsReport, self).get_footer()
+
+        if self.kwargs['previous_date'] is not None:
+            footer += "<br>Showing changes since: " + dateformat.format(self.kwargs['previous_date'], 'l dS F Y P')
+
+        return footer
+
+    title = "Students report"
 
     extra_css = """
         td.error {
-            color: #FF0000;
+            color: #DD0000;
+            font-weight: bold;
+        }
+        td.important {
+            color: #00AA00;
+            font-weight: bold;
+        }
+        td.changed {
+            color: #DDAA00;
             font-weight: bold;
         }
         """
 
 
 class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--changes-since',
+            action='store',
+            type='string',
+            dest='previous_date',
+            default=None,
+            help='Date of previous report for reporting changes'),
+        make_option('--changed-only',
+            action='store_true',
+            dest='changed_only',
+            default=False,
+            help='If --changes-since is used. This will exclude any students that haven\'t changed'),
+        )
+
     def students_for_year(self, year):
         q = models.Q(ma_graduation_year=year) | models.Q(mphil_graduation_year=year) | models.Q(phd_graduation_year=year)
         return NewStudentPage.objects.filter(q)
 
-    def process_student(self, student, year):
+    def process_student(self, student, year, previous_date=None):
         # Student info
         programme = student[0]
         first_name = student[2]
@@ -102,17 +256,40 @@ class Command(BaseCommand):
         if page is None:
             page = students.filter(last_name__iexact=last_name, first_name__iexact=first_name).first()
 
-        return first_name, last_name, programme, email, page
+        # Get revisions
+        current_revision = None
+        previous_revision = None
+        if page:
+            current_revision = page.revisions.order_by('-created_at').first()
+            if previous_date is not None:
+                previous_revision = page.revisions.filter(created_at__lt=previous_date).order_by('-created_at').first()
+            else:
+                previous_revision = current_revision
+
+        return {
+            'first_name': first_name,
+            'last_name': last_name,
+            'programme': programme,
+            'email': email,
+            'page': page,
+            'current_revision': current_revision,
+            'previous_revision': previous_revision,
+        }
 
     def handle(self, filename, year, **options):
+        # Parse date
+        previous_date_parsed = None
+        if options['previous_date']:
+            previous_date_parsed = dateutil.parser.parse(options['previous_date'])
+
         # Get list of students
         students = []
         with open(filename) as f:
             for student in csv.reader(f):
-                students.append(self.process_student(student, year))
+                students.append(self.process_student(student, year, previous_date_parsed))
 
         # Create report
-        report = StudentsReport(students)
+        report = StudentsReport(students, previous_date=previous_date_parsed, changed_only=options['changed_only'])
 
         # Output CSV
         with open('report.csv', 'w') as output:
