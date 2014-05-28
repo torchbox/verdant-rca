@@ -19,6 +19,31 @@ class StudentsReport(Report):
     def programme_field(self, student):
         return student['programme'], None, None
 
+    def graduation_year_field(self, student):
+        page = student['page']
+
+        if page:
+            profile = page.get_profile()
+
+            if profile:
+                if profile['graduation_year']:
+                    return (
+                        profile['graduation_year'],
+                        None,
+                        None,
+                    )
+                else:
+                    return (
+                        "Not set",
+                        'error',
+                        None,
+                    )
+        return (
+            "",
+            'error',
+            None,
+        )
+
     def page_field(self, student):
         page = student['page']
 
@@ -164,6 +189,7 @@ class StudentsReport(Report):
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
         ("Programme", programme_field),
+        ("Graduation year", graduation_year_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
         ("Has postcard", postcard_image_field),
@@ -173,6 +199,7 @@ class StudentsReport(Report):
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
         ("Programme", programme_field),
+        ("Graduation year", graduation_year_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
         ("Change", page_change_field),
