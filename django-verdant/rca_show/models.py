@@ -233,7 +233,7 @@ class ShowIndexPageProgramme(Orderable):
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.TextField(max_length=255, blank=True)
+    exhibition_date = models.CharField(max_length=255, blank=True)
 
     @property
     def school(self):
@@ -406,13 +406,10 @@ class ShowIndexPage(SuperPage, SocialFields):
             raise Http404("Cannot find student")
 
         # Render response
-        return self._serve_student(request, student)
-
-    def _serve_student(self, request, student):
         return render(request, self.student_template, {
             'self': self,
-            'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
-            'programme': student.programme,
+            'school': rca_utils.get_school_for_programme(programme, year=self.year),
+            'programme': programme,
             'student': student,
         })
 
