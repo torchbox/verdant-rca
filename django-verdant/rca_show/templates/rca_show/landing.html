@@ -11,6 +11,7 @@
     {% else %}
         {% get_programme_students self programme True as rand_students %}
     {% endif %}   
+
     {% get_programme_students self programme as students %}
 
     {% with menuitems.all as items %}  
