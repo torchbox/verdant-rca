@@ -16,6 +16,9 @@ class StudentsReport(Report):
     def last_name_field(self, student):
         return student['last_name'], None, None
 
+    def email_field(self, student):
+        return student['email'], None, None
+
     def programme_field(self, student):
         return student['programme'], None, None
 
@@ -188,6 +191,7 @@ class StudentsReport(Report):
     fields = (
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
+        ("Email", email_field),
         ("Programme", programme_field),
         ("Graduation year", graduation_year_field),
         ("Page", page_field),
@@ -294,6 +298,8 @@ class Command(BaseCommand):
         with open(filename) as f:
             for student in csv.reader(f):
                 students.append(self.process_student(student, previous_date_parsed))
+
+        print students
 
         # Create report
         report = StudentsReport(students, previous_date=previous_date_parsed, changed_only=options['changed_only'])
