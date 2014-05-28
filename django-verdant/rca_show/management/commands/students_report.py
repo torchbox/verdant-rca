@@ -227,11 +227,7 @@ class Command(BaseCommand):
             help='If --changes-since is used. This will exclude any students that haven\'t changed'),
         )
 
-    def students_for_year(self, year):
-        q = models.Q(ma_graduation_year=year) | models.Q(mphil_graduation_year=year) | models.Q(phd_graduation_year=year)
-        return NewStudentPage.objects.filter(q)
-
-    def process_student(self, student, year, previous_date=None):
+    def process_student(self, student, previous_date=None):
         # Student info
         programme = student[0]
         first_name = student[2]
@@ -239,7 +235,7 @@ class Command(BaseCommand):
         email = student[3]
 
         # Get list of possible pages
-        students = self.students_for_year(year)
+        students = NewStudentPage.objects.all()
 
         # Find student page
         page = None
@@ -276,7 +272,7 @@ class Command(BaseCommand):
             'previous_revision': previous_revision,
         }
 
-    def handle(self, filename, year, **options):
+    def handle(self, filename, **options):
         # Parse date
         previous_date_parsed = None
         if options['previous_date']:
@@ -286,7 +282,7 @@ class Command(BaseCommand):
         students = []
         with open(filename) as f:
             for student in csv.reader(f):
-                students.append(self.process_student(student, year, previous_date_parsed))
+                students.append(self.process_student(student, previous_date_parsed))
 
         # Create report
         report = StudentsReport(students, previous_date=previous_date_parsed, changed_only=options['changed_only'])
