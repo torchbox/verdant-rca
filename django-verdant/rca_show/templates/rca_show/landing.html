@@ -5,20 +5,13 @@
 
 {% block content %}
     {% secondary_menu self as menuitems %}
-<<<<<<< HEAD
-     {% if "fashionmenswear" in self.get_programmes %}
-=======
     {% if "fashionmenswear" in self.get_programmes %}
->>>>>>> 05d3e8978cf803e07edbb53875f61b8310cc3c38
         {# NON-random students for fashion show #}
         {% get_programme_students self programme as rand_students %}
     {% else %}
         {% get_programme_students self programme True as rand_students %}
-<<<<<<< HEAD
-    {% endif %}
-=======
     {% endif %}   
->>>>>>> 05d3e8978cf803e07edbb53875f61b8310cc3c38
+
     {% get_programme_students self programme as students %}
 
     {% with menuitems.all as items %}  
