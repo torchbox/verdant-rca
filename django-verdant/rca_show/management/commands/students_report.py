@@ -112,10 +112,9 @@ class StudentsReport(Report):
             )
 
     def postcard_image_field(self, student):
-        page = student['page']
-
-        if page:
-            if page.postcard_image:
+        if student['current_revision']:
+            revision_json = json.loads(student['current_revision'].content_json)
+            if 'postcard_image' in revision_json and revision_json['postcard_image']:
                 return (
                     "Yes",
                     None,
@@ -133,7 +132,6 @@ class StudentsReport(Report):
                 'error',
                 None,
             )
-
 
     def postcard_image_change_field(self, student):
         current = None
