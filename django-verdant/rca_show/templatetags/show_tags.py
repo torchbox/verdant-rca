@@ -55,7 +55,6 @@ def get_school_students(show_index, school, random = False):
 def get_programme_students(show_index, programme, random = False):
     if show_index is None:
         return []
-
     if random:
         return show_index.get_rand_students(programme=programme)
     else:

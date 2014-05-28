@@ -5,7 +5,12 @@
 
 {% block content %}
     {% get_programme_students self programme as students %}
-    {% get_programme_students self programme True as rand_students %}
+    {% if "fashionmenswear" in self.get_programmes %}
+        {# NON-random students for fashion show #}
+        {% get_programme_students self programme as rand_students %}
+    {% else %}
+        {% get_programme_students self programme True as rand_students %}
+    {% endif %}
     {% get_school_programmes self school as programmes %}
     {% get_schools self as schools %}
     {% secondary_menu self as menuitems %}
