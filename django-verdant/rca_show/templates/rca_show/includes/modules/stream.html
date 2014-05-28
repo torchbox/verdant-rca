@@ -1,14 +1,25 @@
 {% load image_tags embed_filters %}
 
     <section class="row">
-		<div id='playerheISOpnjAxyM'></div>
-		<script type='text/javascript'>
-		    jwplayer('playerheISOpnjAxyM').setup({
-		        file: 'rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/rca',
-		        image: 'http://www.rca.ac.uk/static/rca/images/livestream.holding.2.jpg',
-		        title: 'Show Fashion 2014',
-		        width: '100%',
-		        aspectratio: '16:9'
-		    });
+		<div id='my-video'></div>
+
+		<script type='text/javascript'>			 
+			jwplayer('my-video').setup({
+			    playlist: [{
+			        image: "",
+			        sources: [{
+			            file: "rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/rca",
+			           
+			        },{
+			            file: "http://uh8w7w.live.cloud.influxis.com/uh8w7w/rca/playlist.m3u8"
+
+			        }]
+			    }],
+			     width: '100%',
+			    aspectratio: '16:9'
+			    'controls': 'true',
+			    'title': '',
+			    autostart: 'true'
+			});
 		</script>
     </section>
