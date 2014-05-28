@@ -181,7 +181,7 @@ class StudentsReport(Report):
             )
 
     def post_process(self, fields):
-        if self.kwargs['changed_only'] and fields[5][0] == "Not changed":
+        if self.kwargs['changed_only'] and fields[6][0] == "Not changed":
             return
         return fields
 
@@ -192,26 +192,10 @@ class StudentsReport(Report):
         ("Graduation year", graduation_year_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
-        ("Has postcard", postcard_image_field),
-    )
-
-    change_fields = (
-        ("First Name", first_name_field),
-        ("Last Name", last_name_field),
-        ("Programme", programme_field),
-        ("Graduation year", graduation_year_field),
-        ("Page", page_field),
-        ("Page Status", page_status_field),
         ("Change", page_change_field),
         ("Has postcard", postcard_image_field),
         ("Postcard change", postcard_image_change_field),
     )
-
-    def get_fields(self):
-        if self.kwargs['previous_date'] is not None:
-            return self.change_fields
-        else:
-            return self.fields
 
     def get_footer(self):
         footer = super(StudentsReport, self).get_footer()
