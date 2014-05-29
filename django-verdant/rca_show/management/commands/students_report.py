@@ -7,6 +7,7 @@ from rca.report_generator import Report
 from optparse import make_option
 import dateutil.parser
 from zipfile import ZipFile
+import humanize
 import os
 import csv
 import json
