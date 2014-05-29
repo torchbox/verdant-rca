@@ -496,7 +496,7 @@ class StudentsReport(Report):
 
     def __init__(self, *args, **kwargs):
         super(StudentsReport, self).__init__(*args, **kwargs)
-        self.included_students = []
+        self.postcard_images = []
 
     def post_process(self, obj, fields):
         force_include = False
@@ -512,7 +512,15 @@ class StudentsReport(Report):
             if self.kwargs['changed_postcard_only'] and fields[15][0] == "Not changed":
                 return
 
-        self.included_students.append(obj)
+        # Add postcard image to postcard images list
+        if obj['current_revision_page']:
+            current = obj['current_revision_page']
+            if current.postcard_image:
+                filename = current.postcard_image.file.name
+                self.postcard_images.append((
+                    current.postcard_image.file.name,
+                    get_postcard_zip_filename(current),
+                ))
 
         return fields
 
@@ -670,16 +678,11 @@ class Command(BaseCommand):
         # Create zipfile
         with ZipFile('students_report.zip', 'w') as zf:
             # Add postcard images into zip
-            for student in report.included_students:
-                if student['current_revision_page']:
-                    current = student['current_revision_page']
-                    if current.postcard_image:
-                        filename = current.postcard_image.file.name
-
-                        try:
-                            zf.write(os.path.join(settings.MEDIA_ROOT, filename), 'images/' + get_postcard_zip_filename(current))
-                        except (IOError, OSError) as e:
-                            print e
+            for postcard_image in report.postcard_images:
+                try:
+                    zf.write(os.path.join(settings.MEDIA_ROOT, postcard_image[0]), 'images/' + postcard_image[1])
+                except (IOError, OSError) as e:
+                    print e
 
             # Write report
             zf.writestr('report.html', report.get_html())
