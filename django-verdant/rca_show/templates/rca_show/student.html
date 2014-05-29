@@ -373,7 +373,7 @@
                     </ul>
                 {% endif %}
                 <!-- sponsors -->
-                {% with student.sponsors.all as sponsors %}
+                {% with student.get_profile.sponsors.all as sponsors %}
                     {% if sponsors %}
                     <div class="divider"></div>
                             <ul class="three-nine-cols">
@@ -389,7 +389,7 @@
                     {% endif %}
                 {% endwith %}
                 <!-- collaborators -->
-                {% with student.collaborators.all as collaborators %}
+                {% with student.get_profile.collaborators.all as collaborators %}
                     {% if collaborators %}
                     <div class="divider"></div>
                             <ul class="three-nine-cols">
