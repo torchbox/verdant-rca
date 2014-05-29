@@ -382,7 +382,7 @@
                                 </li>
                                 <li class="col col-9 last body-text-style">
                                     {% for sponsor in sponsors %}
-                                        {{ sponsor.sponsor }}{% if not forloop.last %}; {% endif %}
+                                        {{ sponsor.name }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
                                 </li>
                             </ul>
@@ -398,7 +398,7 @@
                                 </li>
                                 <li class="col col-9 last body-text-style">
                                     {% for collaborator in collaborators %}
-                                        {{ collaborator.collaborator }}{% if not forloop.last %}; {% endif %}
+                                        {{ collaborator.name }}{% if not forloop.last %}; {% endif %}
                                     {% endfor %}
                                 </li>
                             </ul>
