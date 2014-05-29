@@ -372,6 +372,39 @@
                         </li>
                     </ul>
                 {% endif %}
+                <!-- sponsors -->
+                {% with student.get_profile.sponsors.all as sponsors %}
+                    {% if sponsors %}
+                    <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Sponsors</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    {% for sponsor in sponsors %}
+                                        {{ sponsor.name }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                    {% endif %}
+                {% endwith %}
+                <!-- collaborators -->
+                {% with student.get_profile.collaborators.all as collaborators %}
+                    {% if collaborators %}
+                    <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Collaborators</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    {% for collaborator in collaborators %}
+                                        {{ collaborator.name }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                    {% endif %}
+                {% endwith %}      
+
             </div>
         {% endtab %}        
     {% endtabdeck %}    
