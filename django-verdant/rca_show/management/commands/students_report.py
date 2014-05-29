@@ -30,6 +30,9 @@ class StudentsReport(Report):
     def programme_field(self, student):
         return student['programme'], None, None
 
+    def email_field(self, student):
+        return student['email'], None, None
+
     def page_field(self, student):
         page = student['page']
 
@@ -501,10 +504,10 @@ class StudentsReport(Report):
                 force_include = True
 
         if not force_include:
-            if self.kwargs['changed_only'] and fields[12][0] == "Not changed":
+            if self.kwargs['changed_only'] and fields[13][0] == "Not changed":
                 return
 
-            if self.kwargs['changed_postcard_only'] and fields[14][0] == "Not changed":
+            if self.kwargs['changed_postcard_only'] and fields[15][0] == "Not changed":
                 return
 
         self.included_students.append(obj)
@@ -515,6 +518,7 @@ class StudentsReport(Report):
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
         ("Programme", programme_field),
+        ("Email", email_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
         ("Student programme", student_programme_field),
