@@ -23,6 +23,30 @@ def get_postcard_zip_filename(student_page):
 
 
 class StudentsReport(Report):
+    def changed(self, student):
+        return not student['previous_revision'] or student['current_revision'] != student['previous_revision']
+
+    def postcard_changed(self, student):
+        current = None
+        previous = None
+
+        if student['current_revision']:
+            revision_json = json.loads(student['current_revision'].content_json)
+            if 'postcard_image' in revision_json:
+                current = revision_json['postcard_image']
+        else:
+            return
+
+        if student['previous_revision']:
+            revision_json = json.loads(student['previous_revision'].content_json)
+            if 'postcard_image' in revision_json:
+                previous = revision_json['postcard_image']
+
+        if current == previous:
+            return False
+        elif current != previous:
+            return True
+
     def first_name_field(self, student):
         return student['first_name'], None, None
 
@@ -355,9 +379,9 @@ class StudentsReport(Report):
 
         if page.postcard_image:
             try:
-                page.postcard_image.file.seek(0, 2)
-                file_size = str(humanize.naturalsize(page.postcard_image.file.tell()))
-                page.postcard_image.file.seek(0)
+                with open(os.path.join(settings.MEDIA_ROOT, page.postcard_image.file.name), 'rb') as f:
+                    f.seek(0, 2)
+                    file_size = str(humanize.naturalsize(f.tell()))
             except IOError:
                 file_size = "Unknown"
 
@@ -431,8 +455,7 @@ class StudentsReport(Report):
 
         if page.postcard_image:
             try:
-                page.postcard_image.file.seek(0)
-                image_mode = Image.open(page.postcard_image.file.file).mode
+                image_mode = Image.open(os.path.join(settings.MEDIA_ROOT, page.postcard_image.file.name)).mode
             except IOError:
                 image_mode = "Unknown"
 
@@ -498,7 +521,7 @@ class StudentsReport(Report):
         super(StudentsReport, self).__init__(*args, **kwargs)
         self.postcard_images = []
 
-    def post_process(self, obj, fields):
+    def include_in_report(self, obj):
         force_include = False
 
         if self.kwargs['include_not_in'] is not None and obj['page']:
@@ -506,12 +529,16 @@ class StudentsReport(Report):
                 force_include = True
 
         if not force_include:
-            if self.kwargs['changed_only'] and fields[13][0] == "Not changed":
-                return
+            if self.kwargs['changed_only'] and not self.changed(obj):
+                return False
 
-            if self.kwargs['changed_postcard_only'] and fields[15][0] == "Not changed":
-                return
+            if self.kwargs['changed_postcard_only'] and not self.postcard_changed(obj):
+                return False
 
+        return True
+
+
+    def post_process(self, obj, fields):
         # Add postcard image to postcard images list
         if obj['current_revision_page']:
             current = obj['current_revision_page']
@@ -608,6 +635,8 @@ class Command(BaseCommand):
         last_name = student[1]
         email = student[3]
 
+        print first_name, last_name
+
         # Get list of possible pages
         students = NewStudentPage.objects.all()
 
@@ -659,22 +688,22 @@ class Command(BaseCommand):
             with open(options['include_not_in']) as f:
                 include_not_in = NewStudentPage.objects.filter(pk__in=list(f))
 
-        # Get list of students
-        students = []
+        print "Generating report"
         with open(filename) as f:
-            for student in csv.reader(f):
-                students.append(self.process_student(student, previous_date_parsed))
+            # Get list of students
+            students = (self.process_student(student, previous_date_parsed) for student in csv.reader(f))
 
-        # Generate report
-        report = StudentsReport(
-            students,
-            previous_date=previous_date_parsed,
-            changed_only=options['changed_only'],
-            changed_postcard_only=options['changed_postcard_only'],
-            include_not_in=include_not_in,
-        )
-        report.run()
+            # Generate report
+            report = StudentsReport(
+                students,
+                previous_date=previous_date_parsed,
+                changed_only=options['changed_only'],
+                changed_postcard_only=options['changed_postcard_only'],
+                include_not_in=include_not_in,
+            )
+            report.run()
 
+        print "Creating zip file"
         # Create zipfile
         with ZipFile('students_report.zip', 'w') as zf:
             # Add postcard images into zip
