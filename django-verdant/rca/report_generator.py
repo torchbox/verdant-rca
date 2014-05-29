@@ -82,11 +82,17 @@ class Report(object):
     def get_headings(self):
         return [field[0] for field in self.get_fields()]
 
+    def include_in_report(obj):
+        return True
+
     def post_process(self, obj, fields):
         return fields
 
     def get_rows(self):
         for row in self.data:
+            if not self.include_in_report(row):
+              continue
+
             fields = self.post_process(row, [field_func(self, row) for field_name, field_func in self.get_fields()])
 
             if fields is not None:
