@@ -3612,6 +3612,8 @@ class NewStudentPage(Page, SocialFields):
                 'graduation_year': self.phd_graduation_year,
                 'in_show_': self.phd_in_show,
                 'carousel_items': self.phd_carousel_items,
+                'sponsors': self.phd_sponsors,
+                'collaborators': self.phd_collaborators,
             }
 
         if self.is_mphil_student:
@@ -3625,6 +3627,8 @@ class NewStudentPage(Page, SocialFields):
                 'graduation_year': self.mphil_graduation_year,
                 'in_show_': self.mphil_in_show,
                 'carousel_items': self.mphil_carousel_items,
+                'sponsors': self.mphil_sponsors,
+                'collaborators': self.mphil_collaborators,
             }
 
         if self.is_ma_student:
@@ -3638,6 +3642,8 @@ class NewStudentPage(Page, SocialFields):
                 'graduation_year': self.ma_graduation_year,
                 'in_show_': self.ma_in_show,
                 'carousel_items': self.show_carousel_items,
+                'sponsors': self.show_sponsors,
+                'collaborators': self.show_collaborators,
             }
 
         return profiles
