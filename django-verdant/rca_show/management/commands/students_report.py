@@ -1,12 +1,23 @@
 from django.core.management.base import BaseCommand
 from django.db import models
 from django.utils import dateformat
+from django.conf import settings
 from rca.models import NewStudentPage
 from rca.report_generator import Report
 from optparse import make_option
 import dateutil.parser
+from zipfile import ZipFile
+import os
 import csv
 import json
+
+
+def get_postcard_zip_filename(student_page):
+    return '-'.join([
+        str(student_page.id),
+        student_page.first_name.replace(' ', '-'),
+        student_page.last_name.replace(' ', '-'),
+    ]) + os.path.splitext(student_page.postcard_image.file.name)[1]
 
 
 class StudentsReport(Report):
@@ -19,30 +30,8 @@ class StudentsReport(Report):
     def programme_field(self, student):
         return student['programme'], None, None
 
-    def graduation_year_field(self, student):
-        page = student['page']
-
-        if page:
-            profile = page.get_profile()
-
-            if profile:
-                if profile['graduation_year']:
-                    return (
-                        profile['graduation_year'],
-                        None,
-                        None,
-                    )
-                else:
-                    return (
-                        "Not set",
-                        'error',
-                        None,
-                    )
-        return (
-            "",
-            'error',
-            None,
-        )
+    def email_field(self, student):
+        return student['email'], None, None
 
     def page_field(self, student):
         page = student['page']
@@ -178,21 +167,376 @@ class StudentsReport(Report):
                 None,
             )
 
-    def post_process(self, fields):
-        if self.kwargs['changed_only'] and fields[6][0] == "Not changed":
-            return
+    def student_programme_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        profile = page.get_profile()
+
+        if profile is not None:
+            return (
+                profile['programme_display'] or "Not set",
+                'error' if not profile['programme_display'] else None,
+                None,
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
+
+    def student_graduation_year_field(self, student):
+        page = student['page']
+
+        if page:
+            profile = page.get_profile()
+
+            if profile:
+                if profile['graduation_year']:
+                    return (
+                        profile['graduation_year'],
+                        None,
+                        None,
+                    )
+                else:
+                    return (
+                        "Not set",
+                        'error',
+                        None,
+                    )
+        return (
+            "",
+            'error',
+            None,
+        )
+
+    def student_specialism_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        profile = page.get_profile()
+        if profile is not None and profile['name'] == "MA":
+            return (
+                page.ma_specialism or "Not set",
+                'error' if not page.ma_specialism else None,
+                None,
+            )
+        else:
+            return (
+                "Not MA student",
+                None,
+                None,
+            )
+
+    def get_child_objects(self, child_objects, field_name):
+        if child_objects.count() > 0:
+            return (
+                ' '.join([getattr(child_object, field_name) for child_object in child_objects.all()]),
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
+
+    def student_email_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        return self.get_child_objects(page.emails, 'email')
+
+    def student_phone_number_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        return self.get_child_objects(page.phones, 'phone')
+
+    def student_website_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        return self.get_child_objects(page.websites, 'website')
+
+    def student_carousel_items_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        profile = page.get_profile()
+
+        if profile is not None:
+            carousel_item_count = profile['carousel_items'].count()
+            return (
+                str(carousel_item_count),
+                'error' if carousel_item_count == 0 else None,
+                None,
+            )
+        else:
+            return (
+                '0',
+                'error',
+                None,
+            )
+
+    def postcard_image_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            filename = get_postcard_zip_filename(page)
+            return (
+                filename,
+                None,
+                'images/' + filename,
+            )
+        else:
+            return (
+                "Not set",
+                'error',
+                None,
+            )
+
+    def postcard_image_file_size_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            try:
+                page.postcard_image.file.seek(0, 2)
+                file_size = str(humanize.naturalsize(page.postcard_image.file.tell()))
+                page.postcard_image.file.seek(0)
+            except IOError:
+                file_size = "Unknown"
+
+            return (
+                file_size,
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def postcard_image_width_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            return (
+                str(page.postcard_image.width),
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def postcard_image_height_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            return (
+                str(page.postcard_image.height),
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def postcard_image_colour_format_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            try:
+                page.postcard_image.file.seek(0)
+                image_mode = Image.open(page.postcard_image.file.file).mode
+            except IOError:
+                image_mode = "Unknown"
+
+            return (
+                image_mode,
+                None,
+                None,
+            )
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+    def postcard_image_caption_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            return (
+                page.postcard_image.title,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if page.postcard_image else "",
+                'error',
+                None,
+            )
+
+    def postcard_image_permission_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image and page.postcard_image.permission:
+            return (
+                page.postcard_image.permission,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if page.postcard_image else "",
+                'error',
+                None,
+            )
+
+    def __init__(self, *args, **kwargs):
+        super(StudentsReport, self).__init__(*args, **kwargs)
+        self.included_students = []
+
+    def post_process(self, obj, fields):
+        force_include = False
+
+        if self.kwargs['include_not_in'] is not None and obj['page']:
+            if not self.kwargs['include_not_in'].filter(id=obj['page'].id).exists():
+                force_include = True
+
+        if not force_include:
+            if self.kwargs['changed_only'] and fields[13][0] == "Not changed":
+                return
+
+            if self.kwargs['changed_postcard_only'] and fields[15][0] == "Not changed":
+                return
+
+        self.included_students.append(obj)
+
         return fields
 
     fields = (
         ("First Name", first_name_field),
         ("Last Name", last_name_field),
         ("Programme", programme_field),
-        ("Graduation year", graduation_year_field),
+        ("Email", email_field),
         ("Page", page_field),
         ("Page Status", page_status_field),
+        ("Student programme", student_programme_field),
+        ("Student graduation year", student_graduation_year_field),
+        ("Student specialism", student_specialism_field),
+        ("Student email", student_email_field),
+        ("Student phone number", student_phone_number_field),
+        ("Student website", student_website_field),
+        ("Student carousel items", student_carousel_items_field),
         ("Change", page_change_field),
-        ("Has postcard", postcard_image_field),
+        ("Postcard image", postcard_image_field),
         ("Postcard change", postcard_image_change_field),
+        ("Postcard file size", postcard_image_file_size_field),
+        ("Postcard width", postcard_image_width_field),
+        ("Postcard height", postcard_image_height_field),
+        ("Postcard colour format", postcard_image_colour_format_field),
+        ("Postcard caption", postcard_image_caption_field),
+        ("Postcard permission", postcard_image_permission_field),
     )
 
     def get_footer(self):
@@ -234,6 +578,17 @@ class Command(BaseCommand):
             dest='changed_only',
             default=False,
             help='If --changes-since is used. This will exclude any students that haven\'t changed'),
+        make_option('--changed-postcard-only',
+            action='store_true',
+            dest='changed_postcard_only',
+            default=False,
+            help='If --changes-since is used. This will exclude any students that haven\'t changed their postcard'),
+        make_option('--include-not-in',
+            action='store',
+            type='string',
+            dest='include_not_in',
+            default=None,
+            help='If changed-only is set. Any students not in the list in this file will be included in the report'),
         )
 
     def process_student(self, student, previous_date=None):
@@ -279,6 +634,7 @@ class Command(BaseCommand):
             'page': page,
             'current_revision': current_revision,
             'previous_revision': previous_revision,
+            'current_revision_page': current_revision.as_page_object() if current_revision else None,
         }
 
     def handle(self, filename, **options):
@@ -287,19 +643,42 @@ class Command(BaseCommand):
         if options['previous_date']:
             previous_date_parsed = dateutil.parser.parse(options['previous_date'])
 
+        # Get include_not_in
+        include_not_in = None
+        if options['include_not_in']:
+            with open(options['include_not_in']) as f:
+                include_not_in = NewStudentPage.objects.filter(pk__in=list(f))
+
         # Get list of students
         students = []
         with open(filename) as f:
             for student in csv.reader(f):
                 students.append(self.process_student(student, previous_date_parsed))
 
-        # Create report
-        report = StudentsReport(students, previous_date=previous_date_parsed, changed_only=options['changed_only'])
+        # Generate report
+        report = StudentsReport(
+            students,
+            previous_date=previous_date_parsed,
+            changed_only=options['changed_only'],
+            changed_postcard_only=options['changed_postcard_only'],
+            include_not_in=include_not_in,
+        )
+        report.run()
 
-        # Output CSV
-        with open('report.csv', 'w') as output:
-            output.write(report.get_csv())
+        # Create zipfile
+        with ZipFile('students_report.zip', 'w') as zf:
+            # Add postcard images into zip
+            for student in report.included_students:
+                if student['current_revision_page']:
+                    current = student['current_revision_page']
+                    if current.postcard_image:
+                        filename = current.postcard_image.file.name
 
-        # Output HTML
-        with open('report.html', 'w') as output:
-            output.write(report.get_html())
+                        try:
+                            zf.write(os.path.join(settings.MEDIA_ROOT, filename), 'images/' + get_postcard_zip_filename(current))
+                        except (IOError, OSError) as e:
+                            print e
+
+            # Write report
+            zf.writestr('report.html', report.get_html())
+            zf.writestr('report.csv', report.get_csv())

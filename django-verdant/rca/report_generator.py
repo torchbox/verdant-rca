@@ -68,6 +68,7 @@ class Report(object):
     def __init__(self, data, **kwargs):
         self.data = data
         self.kwargs = kwargs
+        self.rows_output = None
 
     def get_title(self):
         return self.title
@@ -81,22 +82,25 @@ class Report(object):
     def get_headings(self):
         return [field[0] for field in self.get_fields()]
 
-    def post_process(self, fields):
+    def post_process(self, obj, fields):
         return fields
 
     def get_rows(self):
         for row in self.data:
-            fields = self.post_process([field_func(self, row) for field_name, field_func in self.get_fields()])
+            fields = self.post_process(row, [field_func(self, row) for field_name, field_func in self.get_fields()])
 
             if fields is not None:
                 yield fields
+
+    def run(self):
+        self.rows_output = list(self.get_rows())
 
     def get_csv(self):
         output = StringIO.StringIO()
         cw = unicodecsv.writer(output)
         cw.writerow(self.get_headings())
 
-        for row in self.get_rows():
+        for row in self.rows_output:
             cw.writerow([field[0] for field in row])
 
         return output.getvalue()
@@ -107,7 +111,7 @@ class Report(object):
             'extra_css': self.extra_css,
             'title': self.get_title(),
             'headings': self.get_headings(),
-            'rows': self.get_rows(),
+            'rows': self.rows_output,
             'footer': self.get_footer()
         })
 
