@@ -4589,8 +4589,10 @@ class DonationPage(Page, SocialFields):
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
+                error_metadata = ""
                 try:
                     metadata = form.cleaned_data.get('metadata', {})
+                    error_metadata = str(metadata)
 
                     customer = stripe.Customer.create(
                         card=form.cleaned_data.get('stripe_token'),
@@ -4610,14 +4612,14 @@ class DonationPage(Page, SocialFields):
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
                     # CardErrors are displayed to the user, but we notify admins as well
-                    mail_exception(e, prefix=" [stripe] ", message=str(metadata))
-                    logging.error("[stripe] " + str(metadata), exc_info=full_exc_info())
+                    mail_exception(e, prefix=" [stripe] ", message=error_metadata)
+                    logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
                     messages.error(request, e.json_body['error']['message'])
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
-                    mail_exception(e, prefix=" [stripe] ", message=str(metadata))
-                    logging.error("[stripe] " + str(metadata), exc_info=full_exc_info())
+                    mail_exception(e, prefix=" [stripe] ", message=error_metadata)
+                    logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
         else:
             towards = request.GET.get('to')
