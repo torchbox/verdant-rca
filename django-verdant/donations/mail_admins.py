@@ -9,7 +9,7 @@ def get_stacktrace(error):
     return "".join(traceback.format_exception(type(error), error, sys.exc_traceback))
 
 
-def mail_exception(error, prefix=None):
+def mail_exception(error, prefix=None, message=""):
     """ Mails an exception w/ stacktrace to ADMINS, can pass a prefix like '[celery]' """
     try:
         stacktrace = get_stacktrace(error)
@@ -18,7 +18,7 @@ def mail_exception(error, prefix=None):
             try:
                 if prefix:
                     subject = "%s %s" % (prefix, subject)
-                mail_admins(subject, "%s\n%s" % (error, stacktrace))
+                mail_admins(subject, "%s\n%s\n\n%s" % (error, stacktrace, message))
                 break
             except:
                 pass
