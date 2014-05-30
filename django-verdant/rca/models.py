@@ -2417,8 +2417,6 @@ class HomePage(Page, SocialFields):
                 except (TypeError, ValueError):
                     pass
 
-        print exclude
-
         news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
