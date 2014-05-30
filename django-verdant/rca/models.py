@@ -2403,26 +2403,33 @@ class HomePage(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
+        exclude = []
 
-        exclude = ','.join([str(self.news_item_1.id), str(self.news_item_2.id)])
+        if self.news_item_1:
+            exclude.append(self.news_item_1.id)
+        if self.news_item_2:
+            exclude.append(self.news_item_2.id)
 
         if request.GET.get('exclude'):
-            exclude = ','.join([exclude, request.GET.get('exclude')])
+            for extra_exclude in request.GET.get('exclude', '').split(','):
+                try:
+                    exclude.append(int(extra_exclude))
+                except (TypeError, ValueError):
+                    pass
 
-        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
-        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        print exclude
+
+        news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=True).order_by('?')
         tweets = [[],[],[],[],[]]
 
         if exclude:
-
-            exclude = exclude.split(',')
-
             news = news.exclude(id__in=exclude);
             staff = staff.exclude(id__in=exclude);
             student = student.exclude(id__in=exclude);
