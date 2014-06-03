@@ -1,6 +1,6 @@
 BeautifulSoup==3.2.1
 Django==1.6
-Embedly==0.4.4
+Embedly==0.5.0
 Fabric==1.6.1
 Jinja2==2.7.2
 Markdown==2.3.1

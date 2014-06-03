@@ -233,7 +233,7 @@ class ShowIndexPageProgramme(Orderable):
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.TextField(max_length=255, blank=True)
+    exhibition_date = models.CharField(max_length=255, blank=True)
 
     @property
     def school(self):
@@ -409,6 +409,10 @@ class ShowIndexPage(SuperPage, SocialFields):
         return self._serve_student(request, student)
 
     def _serve_student(self, request, student):
+        """
+        This part of the student view is separate to allow us to render any student with this shows styling
+        This is used for student page previews
+        """
         return render(request, self.student_template, {
             'self': self,
             'school': rca_utils.get_school_for_programme(student.programme, year=self.year),

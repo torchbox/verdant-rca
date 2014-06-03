@@ -119,11 +119,7 @@ class ProfileImageDumpReport(Report):
 
 
 class Command(BaseCommand):
-    def students_for_year(self, year):
-        q = models.Q(ma_graduation_year=year) | models.Q(mphil_graduation_year=year) | models.Q(phd_graduation_year=year)
-        return NewStudentPage.objects.filter(q)
-
-    def process_student(self, student, year):
+    def process_student(self, student):
         # Student info
         programme = student[0]
         first_name = student[2]
@@ -131,7 +127,7 @@ class Command(BaseCommand):
         email = student[3]
 
         # Get list of possible pages
-        students = self.students_for_year(year)
+        students = NewStudentPage.objects.all()
 
         # Find student page
         page = None
@@ -150,12 +146,12 @@ class Command(BaseCommand):
 
         return first_name, last_name, programme, email, page
 
-    def handle(self, filename, year, **options):
+    def handle(self, filename, **options):
         # Get list of students
         students = []
         with open(filename) as f:
             for student in csv.reader(f):
-                students.append(self.process_student(student, year))
+                students.append(self.process_student(student))
 
         # Create zipfile
         with ZipFile('profile_image_dump.zip', 'w') as zf:
@@ -172,5 +168,6 @@ class Command(BaseCommand):
 
             # Generate report
             report = ProfileImageDumpReport(students)
+            report.run()
             zf.writestr('report.html', report.get_html())
             zf.writestr('report.csv', report.get_csv())

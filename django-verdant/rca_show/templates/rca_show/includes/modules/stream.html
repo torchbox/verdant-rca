@@ -1,14 +1,28 @@
 {% load image_tags embed_filters %}
 
     <section class="row">
-		<div id='playerXLzVgbpkCUKi'></div>
-		<script type='text/javascript'>
-		    jwplayer('playerXLzVgbpkCUKi').setup({
-		        file: 'rtmp://remylb.live.cloud.influxis.com/uh8w7w/_definst_/RCAShow',
-		        image: 'http://www.longtailvideo.com/content/images/jw-player/lWMJeVvV-876.jpg',
-		        title: 'RCA Fashion Show 2014',
-		        width: '100%',
-		        aspectratio: '16:9'
-		    });
+		<div id='my-video'></div>
+
+		<script type='text/javascript'>			 
+			jwplayer('my-video').setup({
+				playlist: [{
+			        image: 'http://www.rca.ac.uk/static/rca/images/livestream.holding.2.jpg',
+			        sources: [{
+			            file: "rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/rca",
+			           
+			        },{
+			            file: "http://uh8w7w.live.cloud.influxis.com/uh8w7w/rca/playlist.m3u8"
+
+			        },{
+			            file: "http://influx.is/dtJk2K"
+
+			        }]
+			    }],
+			    width: '100%',
+			    aspectratio: '16:9',
+			    controls: 'true',
+			    title: '',
+			    autostart: 'true'
+			});
 		</script>
     </section>
