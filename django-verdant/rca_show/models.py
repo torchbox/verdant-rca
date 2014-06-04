@@ -72,11 +72,11 @@ class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
 class ShowStreamPage(Page, SocialFields):
     body = RichTextField(blank=True)
 
-    def get_show_index(self):
-        for page in self.get_ancestors().reverse():
-            specific_page = page.specific
-            if isinstance(specific_page, ShowIndexPage):
-                return specific_page
+    @property
+    def show_index(self):
+        if not hasattr(self, '_show_index'):
+            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
+        return self._show_index
 
 ShowStreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -121,11 +121,11 @@ class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
-    def get_show_index(self):
-        for page in self.get_ancestors().reverse():
-            specific_page = page.specific
-            if isinstance(specific_page, ShowIndexPage):
-                return specific_page
+    @property
+    def show_index(self):
+        if not hasattr(self, '_show_index'):
+            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
+        return self._show_index
 
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -234,6 +234,10 @@ class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
+
+    @property
+    def show_index(self):
+        return self
 
     @property
     def school(self):
@@ -437,11 +441,6 @@ class ShowIndexPage(SuperPage, SocialFields):
                 url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
                 url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
             ]
-
-    def route(self, request, path_components):
-        request.show_index = self
-
-        return super(ShowIndexPage, self).route(request, path_components)
 
 ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),

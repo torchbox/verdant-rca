@@ -78,16 +78,6 @@ def secondary_menu(calling_page=None):
     return pages
 
 
-@register.assignment_tag(takes_context=True)
-def get_show_index(context):
-    if isinstance(context['self'], models.ShowIndexPage):
-        return context['self']
-    if hasattr(context['request'], 'show_index'):
-        return context['request'].show_index
-    if hasattr(context['self'], 'get_show_index'):
-        return context['self'].get_show_index()
-
-
 @register.assignment_tag
 def get_maps_for_campus(campus):
     maps = models.ShowExhibitionMapPage.objects.filter(live=True, campus=campus)

@@ -1,7 +1,7 @@
 {% load pageurl image_tags show_tags %}
 
 <li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}" >
-    <a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">
+    <a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">
         <div class="gallery-image">
             {% if image_format == "fill" %}
                 {% image gallery_image fill-300x300 %}

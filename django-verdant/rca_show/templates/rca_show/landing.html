@@ -4,15 +4,15 @@
 {% block body_class %}{{ block.super }} type-landing{% endblock %}
 
 {% block content %}
-    {% secondary_menu self as menuitems %}
+    {% secondary_menu self.show_index as menuitems %}
     {% if "fashionmenswear" in self.get_programmes %}
         {# NON-random students for fashion show #}
-        {% get_programme_students self programme as rand_students %}
+        {% get_programme_students self.show_index programme as rand_students %}
     {% else %}
-        {% get_programme_students self programme True as rand_students %}
+        {% get_programme_students self.show_index programme True as rand_students %}
     {% endif %}   
 
-    {% get_programme_students self programme as students %}
+    {% get_programme_students self.show_index programme as students %}
 
     {% with menuitems.all as items %}  
     {% if items|length >= 3 %}
@@ -23,7 +23,7 @@
     {% endwith %}
         {% if not self.is_programme_page %}
             <ul class="nav-overview">
-                <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
+                <li><a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a></li>
                 {% for item in menuitems %}
                     <li {% if item.url == self.url %}class="active"{% endif %}>
                         <a href="{% pageurl item %}">{{ item.title }}</a>
@@ -38,16 +38,16 @@
                     <ul class="options">
                         {% if self.get_programmes|length > 1 %}
                             {% for programme in self.get_programmes %}
-                                <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
-                                {% get_programme_students self programme as students %}
+                                <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
+                                {% get_programme_students self.show_index programme as students %}
                                 {% for student in students %}
-                                    <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                                    <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                                 {% endfor %}
                             {% endfor %}
                         {% else %}
-                            {% get_programme_students self programme as students %}
+                            {% get_programme_students self.show_index programme as students %}
                             {% for student in students %}
-                                <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                                <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                             {% endfor %}
                         {% endif %}
                     </ul>
