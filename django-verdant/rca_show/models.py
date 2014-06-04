@@ -418,7 +418,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         })
 
     def get_subpage_urls(self):
-        programme_count = self.programmes.count()
+        programme_count = len(self.get_programmes())
 
         if programme_count == 0:
             return [
