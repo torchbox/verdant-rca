@@ -410,10 +410,17 @@ class ShowIndexPage(SuperPage, SocialFields):
             raise Http404("Cannot find student")
 
         # Render response
+        return self._serve_student(request, student)
+
+    def _serve_student(self, request, student):
+        """
+        This part of the student view is separate to allow us to render any student with this shows styling
+        This is used for student page previews
+        """
         return render(request, self.student_template, {
             'self': self,
-            'school': rca_utils.get_school_for_programme(programme, year=self.year),
-            'programme': programme,
+            'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
+            'programme': student.programme,
             'student': student,
         })
 

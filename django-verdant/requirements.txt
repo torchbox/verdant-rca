@@ -1,6 +1,6 @@
 BeautifulSoup==3.2.1
 Django==1.6
-Embedly==0.4.4
+Embedly==0.5.0
 Fabric==1.6.1
 Jinja2==2.7.2
 Markdown==2.3.1
@@ -48,7 +48,7 @@ sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
--e git://github.com/torchbox/wagtail.git@7159d246d8dd30763ee06ebfa6822e2ac6dbe78c#egg=wagtail-master
+-e git://github.com/torchbox/wagtail.git@9c3dbba#egg=wagtail-master
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4

@@ -2403,26 +2403,31 @@ class HomePage(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
+        exclude = []
 
-        exclude = ','.join([str(self.news_item_1.id), str(self.news_item_2.id)])
+        if self.news_item_1:
+            exclude.append(self.news_item_1.id)
+        if self.news_item_2:
+            exclude.append(self.news_item_2.id)
 
         if request.GET.get('exclude'):
-            exclude = ','.join([exclude, request.GET.get('exclude')])
+            for extra_exclude in request.GET.get('exclude', '').split(','):
+                try:
+                    exclude.append(int(extra_exclude))
+                except (TypeError, ValueError):
+                    pass
 
-        news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('-date')
-        staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('random_order')
-        review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-        events = EventItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
+        news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
+        staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=True).order_by('?')
         tweets = [[],[],[],[],[]]
 
         if exclude:
-
-            exclude = exclude.split(',')
-
             news = news.exclude(id__in=exclude);
             staff = staff.exclude(id__in=exclude);
             student = student.exclude(id__in=exclude);
@@ -4584,8 +4589,10 @@ class DonationPage(Page, SocialFields):
         if request.method == "POST":
             form = DonationForm(request.POST)
             if form.is_valid():
+                error_metadata = ""
                 try:
                     metadata = form.cleaned_data.get('metadata', {})
+                    error_metadata = str(metadata)
 
                     customer = stripe.Customer.create(
                         card=form.cleaned_data.get('stripe_token'),
@@ -4605,14 +4612,14 @@ class DonationPage(Page, SocialFields):
                     return HttpResponseRedirect(self.redirect_to_when_done.url)
                 except stripe.CardError, e:
                     # CardErrors are displayed to the user, but we notify admins as well
-                    mail_exception(e, prefix=" [stripe] ")
-                    logging.error("[stripe] ", exc_info=full_exc_info())
+                    mail_exception(e, prefix=" [stripe] ", message=error_metadata)
+                    logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
                     messages.error(request, e.json_body['error']['message'])
                 except Exception, e:
                     # for other exceptions we send emails to admins and display a user freindly error message
                     # InvalidRequestError (if token is used more than once), APIError (server is not reachable), AuthenticationError
-                    mail_exception(e, prefix=" [stripe] ")
-                    logging.error("[stripe] ", exc_info=full_exc_info())
+                    mail_exception(e, prefix=" [stripe] ", message=error_metadata)
+                    logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
         else:
             towards = request.GET.get('to')
