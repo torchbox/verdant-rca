@@ -36,8 +36,6 @@ class PageRevisionProxy(PageRevision):
             move_to_relation = 'mphil_carousel_items'
         elif move_to_name == 'phd':
             move_to_relation = 'phd_carousel_items'
-        else:
-            raise Exception("Unknown move to location: " + repr(move_to_name))
 
         # Deserialise this PageRevision
         content = json.loads(self.content_json)
@@ -177,24 +175,33 @@ class Command(BaseCommand):
                     print "USER NOT FOUND"
                     continue
 
+                print student, ":",
+
                 # Find the page and quit if this student doesn't have one
                 page = student.get_student_page()
                 if not page:
                     print "PAGE NOT FOUND"
                     continue
 
+                print page.id, ":",
+
                 # Quit if there is no where to move images to
                 if page.get_move_to_name() is None:
                     print "NOWHERE TO MOVE IMAGES"
                     continue
 
+                print page.get_move_to_name().upper(), ":",
+
                 # Quit if the student already has carousel items
-                if page.get_carousel_images().count() != 0:
+                carousel_image_count = page.get_carousel_images().count()
+                print carousel_image_count, ":",
+                if carousel_image_count != 0:
                     print "ALREADY HAS CAROUSEL ITEMS"
                     continue
 
                 # Check if there are any uploaded images to move and quit if there isn't any
                 images_to_move = student.get_unique_uploaded_images()
+                print len(images_to_move), ":",
                 if not images_to_move:
                     print "NO IMAGES TO MOVE"
                     continue
@@ -205,4 +212,4 @@ class Command(BaseCommand):
                 # Move the images
                 page.add_carousel_items(carousel_items)
 
-                print "MOVED " + str(len(carousel_items)) + " IMAGES TO " + page.get_move_to_name().upper() + " CAROUSEL"
+                print "MOVED"
