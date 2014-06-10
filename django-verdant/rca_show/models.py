@@ -230,6 +230,9 @@ class ShowIndexPageProgramme(Orderable):
 
     panels = [FieldPanel('programme')]
 
+class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
+
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
@@ -314,11 +317,11 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         return models.Q(**filters)
 
-    def get_students(self, school=None, programme=None):
+    def get_students(self, school=None, programme=None, orderby="first_name"):
         students = NewStudentPage.objects.filter(live=True)
 
         # Filter by students in this particular show
-        students = students.filter(self.get_ma_students_q(school, programme) | self.get_mphil_students_q(school, programme) | self.get_phd_students_q(school, programme)).order_by('first_name')
+        students = students.filter(self.get_ma_students_q(school, programme) | self.get_mphil_students_q(school, programme) | self.get_phd_students_q(school, programme)).order_by(orderby)
 
         return students
 
@@ -453,6 +456,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
+    InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),

@@ -5,6 +5,8 @@
         <div class="gallery-image">
             {% if image_format == "fill" %}
                 {% image gallery_image fill-300x300 %}
+            {% elif image_format == "video" %}
+                {% image gallery_image.poster_image fill-600x400 %}
             {% else %}
                 {% image gallery_image height-300 %}
             {% endif %}

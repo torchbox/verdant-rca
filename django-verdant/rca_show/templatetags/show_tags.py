@@ -60,6 +60,14 @@ def get_programme_students(show_index, programme, random = False):
     else:
         return show_index.get_students(programme=programme)
 
+@register.assignment_tag
+def get_programme_works(show_index, programme):
+    # Instead of getting a list of students (get_programme_students), 
+    # this gets the same list of students but ordered by their dissertation/work title
+    if show_index is None:
+        return []
+    else:
+        return show_index.get_students(programme=programme, orderby="show_work_title")
 
 @register.assignment_tag
 def randsize(rangeStart, rangeEnd):
