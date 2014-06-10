@@ -97,6 +97,12 @@ class NewStudentPageProxy(NewStudentPage):
 
         return ma | mphil | phd
 
+    def get_unmovable_images(self):
+        if self.profile_image:
+            return [self.profile_image]
+        else:
+            return []
+
     def add_carousel_items(self, carousel_items):
         # Add to live
         for carousel_item in carousel_items:
@@ -200,7 +206,7 @@ class Command(BaseCommand):
                     continue
 
                 # Check if there are any uploaded images to move and quit if there isn't any
-                images_to_move = student.get_unique_uploaded_images()
+                images_to_move = [image for image in student.get_unique_uploaded_images() if image not in page.get_unmovable_images()]
                 print len(images_to_move), ":",
                 if not images_to_move:
                     print "NO IMAGES TO MOVE"
