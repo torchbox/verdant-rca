@@ -91,9 +91,9 @@ class NewStudentPageProxy(NewStudentPage):
             return self.phd_carousel_items
 
     def get_carousel_images(self):
-        ma = RcaImage.objects.filter(id__in=self.show_carousel_items.values_list('id'))
-        mphil = RcaImage.objects.filter(id__in=self.mphil_carousel_items.values_list('id'))
-        phd = RcaImage.objects.filter(id__in=self.phd_carousel_items.values_list('id'))
+        ma = RcaImage.objects.filter(id__in=self.show_carousel_items.exclude(image__isnull=True).values_list('image_id'))
+        mphil = RcaImage.objects.filter(id__in=self.mphil_carousel_items.exclude(image__isnull=True).values_list('image_id'))
+        phd = RcaImage.objects.filter(id__in=self.phd_carousel_items.exclude(image__isnull=True).values_list('image_id'))
 
         return ma | mphil | phd
 
