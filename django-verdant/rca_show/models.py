@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.db import models
 from django.http import Http404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import RegexURLResolver
 from django.conf.urls import url
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailcore.models import Page, Orderable, Site
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
@@ -163,7 +163,11 @@ class ShowExhibitionMapIndexContent(Orderable):
     ]
 
 class ShowExhibitionMapIndex(Page, SocialFields):
-    pass
+    @property
+    def show_index(self):
+        if not hasattr(self, '_show_index'):
+            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
+        return self._show_index
 
 ShowExhibitionMapIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -191,6 +195,12 @@ ShowExhibitionMapIndex.promote_panels = [
 class ShowExhibitionMapPage(Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
+
+    @property
+    def show_index(self):
+        if not hasattr(self, '_show_index'):
+            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
+        return self._show_index
 
 ShowExhibitionMapPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -237,10 +247,16 @@ class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
+    parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
 
     @property
     def show_index(self):
         return self
+
+    @property
+    def menu_items(self):
+        show_index = self.parent_show_index or self
+        return show_index.get_children().live().filter(show_in_menus=True)
 
     @property
     def school(self):
@@ -467,6 +483,7 @@ ShowIndexPage.content_panels = [
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
+    PageChooserPanel('parent_show_index'),
 ]
 
 ShowIndexPage.promote_panels = [

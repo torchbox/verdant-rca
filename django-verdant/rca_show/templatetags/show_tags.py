@@ -78,10 +78,7 @@ def randsize(rangeStart, rangeEnd):
 def secondary_menu(calling_page=None):
     pages = []
     if calling_page:
-        pages = calling_page.get_children().filter(
-            live=True,
-            show_in_menus=True
-        )
+        pages = calling_page.menu_items
 
     return pages
 
