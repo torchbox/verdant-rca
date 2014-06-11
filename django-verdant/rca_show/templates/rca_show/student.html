@@ -26,7 +26,7 @@
             </ul>
         {% endif %}
         <ul>
-            {% if not show_index.is_programme_page %}
+            {% if not self.is_programme_page %}
                 <li class="jumplist active">
                     <h2 class="toggle">Select a School</h2>
                     <div class="selected toggle">{% get_school_display school %}</div>
@@ -50,8 +50,8 @@
                 <h2 class="toggle">Select a Student</h2>
                 <div class="selected toggle">{{ student.title }}</div>
                 <ul class="options">
-                    {% if show_index.get_programmes|length > 1 %}
-                        {% for programme in show_index.get_programmes %}
+                    {% if self.get_programmes|length > 1 %}
+                        {% for programme in self.get_programmes %}
                             <li><a href="{% show_subpage_url show_index 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
                             {% get_programme_students show_index programme as students %}
                             {% for student in students %}
@@ -66,7 +66,7 @@
                     {% endif %}
                 </ul>
             </li>
-            {% if show_index.is_programme_page %}
+            {% if self.is_programme_page %}
                 {% for item in menuitems %}
                     <li>
                         <a href="{% pageurl item %}">{{ item.title }}</a>

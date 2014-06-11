@@ -1,11 +1,11 @@
 {% load pageurl image_tags show_tags %}
 
 <ul class="showgallery">
-    {% if "curatingcontemporaryart" in show_index.get_programmes %}
+    {% if "curatingcontemporaryart" in self.get_programmes %}
         {% for student in students %}
             {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.profile_image image_format="fill" %}
         {% endfor %}
-    {% elif "animation" in show_index.get_programmes %}
+    {% elif "animation" in self.get_programmes %}
         {% for student in students %}
             {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.show_carousel_items.all|first image_format="video" %}
         {% endfor %}
