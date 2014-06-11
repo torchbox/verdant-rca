@@ -4,12 +4,12 @@
 {% block body_class %}{{ block.super }} type-school school-{{ school }}{% endblock %}
 
 {% block content %}
-    {% secondary_menu self.show_index as menuitems %}
+    {% secondary_menu show_index as menuitems %}
 
-    {% get_school_programmes self.show_index school as programmes %}
-    {% get_school_students self.show_index school as students %}
-    {% get_school_students self.show_index school random=True as rand_students %}
-    {% get_schools self.show_index as schools %}
+    {% get_school_programmes show_index school as programmes %}
+    {% get_school_students show_index school as students %}
+    {% get_school_students show_index school random=True as rand_students %}
+    {% get_schools show_index as schools %}
 
     {% with menuitems.all as items %}  
     {% if items|length >= 3 %}
@@ -19,7 +19,7 @@
     {% endif %}
     {% endwith %}
         <ul class="nav-overview">
-            <li><a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a></li>
+            <li><a href="{% show_subpage_url show_index 'school_index' %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
                 <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>
@@ -33,7 +33,7 @@
                     <div class="selected toggle">{% get_school_display school %}</div>
                     <ul class="options">
                         {% for school in schools %}
-                            <li><a href="{% show_subpage_url self.show_index 'school' school=school %}">{% get_school_display school %}</a></li>
+                            <li><a href="{% show_subpage_url show_index 'school' school=school %}">{% get_school_display school %}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -43,7 +43,7 @@
                 <div class="selected toggle"></div>
                 <ul class="options">
                     {% for programme in programmes %}
-                        <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
+                        <li><a href="{% show_subpage_url show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -52,7 +52,7 @@
                 <div class="selected toggle"></div>
                 <ul class="options">
                     {% for student in students %}
-                        <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                        <li><a href="{% show_subpage_url show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -66,7 +66,7 @@
     <div class="shownav programme-list">
         <ul>
             {% for programme in programmes %}
-                <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
+                <li><a href="{% show_subpage_url show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
             {% endfor %}
         </ul>
     </div>

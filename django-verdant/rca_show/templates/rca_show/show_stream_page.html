@@ -14,7 +14,7 @@
     </script>
 {% endblock %}
 {% block content %}
-    {% secondary_menu self.show_index as menuitems %}
+    {% secondary_menu show_index as menuitems %}
     {% with menuitems.all as items %}  
     {% if items|length >= 3 %}
         <section class="shownav four-items">
@@ -23,30 +23,30 @@
     {% endif %}
     {% endwith %}
         <ul>
-            {% if self.show_index.is_programme_page %}
+            {% if show_index.is_programme_page %}
                 <li class="jumplist">
                     <h2 class="toggle">Select a Student</h2>
                     <div class="selected toggle"></div>
                     <ul class="options">
-                        {% if self.show_index.get_programmes|length > 1 %}
-                            {% for programme in self.show_index.get_programmes %}
-                                <li><a href="{% show_subpage_url self.show_index 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
-                                {% get_programme_students self.show_index programme as students %}
+                        {% if show_index.get_programmes|length > 1 %}
+                            {% for programme in show_index.get_programmes %}
+                                <li><a href="{% show_subpage_url show_index 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
+                                {% get_programme_students show_index programme as students %}
                                 {% for student in students %}
-                                    <li><a href="{% show_subpage_url self.show_index 'student' programme=programme slug=student.slug %}">{{ student.title }}</a></li>
+                                    <li><a href="{% show_subpage_url show_index 'student' programme=programme slug=student.slug %}">{{ student.title }}</a></li>
                                 {% endfor %}
                             {% endfor %}
                         {% else %}
-                            {% get_programme_students self.show_index show_index.programme as students %}
+                            {% get_programme_students show_index show_index.programme as students %}
                             {% for student in students %}
-                                <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                                <li><a href="{% show_subpage_url show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
                             {% endfor %}
                         {% endif %}
                     </ul>
                 </li>
             {% else %}
                 <li>
-                    <a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a>
+                    <a href="{% show_subpage_url show_index 'school_index' %}">Schools &amp; Students</a>
                 </li>
             {% endif %}
             {% for item in menuitems %}
