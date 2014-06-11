@@ -82,7 +82,7 @@ class Report(object):
     def get_headings(self):
         return [field[0] for field in self.get_fields()]
 
-    def include_in_report(obj):
+    def include_in_report(self, obj):
         return True
 
     def post_process(self, obj, fields):
