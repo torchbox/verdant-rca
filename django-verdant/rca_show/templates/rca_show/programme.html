@@ -137,7 +137,7 @@
 
     {% include "rca/includes/modules/carousel.html" with overlayvisible=0 %}
 
-    {% if not show_index.is_programme_page %}
+    {% if not self.is_programme_page %}
         <h1>{% get_programme_display programme %}</h1>
     {% endif %}
 
