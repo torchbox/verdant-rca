@@ -406,12 +406,14 @@ class ShowIndexPage(SuperPage, SocialFields):
     def serve_landing(self, request):
         # Render response
         return render(request, self.landing_template, {
+            'self': self,
             'show_index': self.show_index,
         })
 
     def serve_school_index(self, request):
         # Render response
         return render(request, self.school_index_template, {
+            'self': self,
             'show_index': self.show_index,
         })
 
@@ -428,6 +430,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Render response
         return render(request, self.school_template, {
+            'self': self,
             'show_index': self.show_index,
             'school': school,
             'intro': intro,
@@ -445,6 +448,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Render response
         return render(request, self.programme_template, {
+            'self': self,
             'show_index': self.show_index,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
@@ -475,6 +479,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         This is used for student page previews
         """
         return render(request, self.student_template, {
+            'self': self,
             'show_index': self.show_index,
             'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
             'programme': student.programme,
