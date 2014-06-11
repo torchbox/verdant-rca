@@ -8,12 +8,6 @@ register = template.Library()
 
 @register.simple_tag
 def show_subpage_url(show_index, name, *args, **kwargs):
-    # Programmes may exist on a different show index page. Make sure the links point to the correct place
-    if name in ['student', 'programme'] and 'programme' in kwargs:
-        new_show_index = show_index.get_programme_show_index(kwargs['programme'])
-        if new_show_index:
-            show_index = new_show_index
-
     if show_index.is_programme_page and name in ['student', 'programme'] and 'school' in kwargs:
         del kwargs['school']
 

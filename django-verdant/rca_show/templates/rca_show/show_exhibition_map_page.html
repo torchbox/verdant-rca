@@ -5,7 +5,7 @@
 
 {% block content %}
     
-    {% secondary_menu show_index as menuitems %}
+    {% secondary_menu self.show_index as menuitems %}
     {% get_maps_for_campus "kensington" as kensingtonmaps %}
     {% get_maps_for_campus "battersea" as batterseamaps %}
     
@@ -17,7 +17,7 @@
     {% endif %}
     {% endwith %}
         <ul class="nav-overview">
-            <li><a href="{% show_subpage_url show_index 'school_index' %}">Schools &amp; Students</a></li>
+            <li><a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a></li>
             {% for item in menuitems %}
                 <li {% if item.url == self.url %}class="active"{% endif %}>
                     <a href="{% pageurl item %}">{{ item.title }}</a>

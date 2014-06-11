@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.db import models
 from django.http import Http404
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import RegexURLResolver
 from django.conf.urls import url
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailcore.models import Page, Orderable, Site
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
@@ -78,11 +78,6 @@ class ShowStreamPage(Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-    def get_context(self):
-        context = super(ShowStandardPage, self).get_context()
-        context['show_index'] = self.show_index
-        return context
-
 ShowStreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
@@ -132,11 +127,6 @@ class ShowStandardPage(Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-    def get_context(self):
-        context = super(ShowStandardPage, self).get_context()
-        context['show_index'] = self.show_index
-        return context
-
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
@@ -173,16 +163,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     ]
 
 class ShowExhibitionMapIndex(Page, SocialFields):
-    @property
-    def show_index(self):
-        if not hasattr(self, '_show_index'):
-            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
-        return self._show_index
-
-    def get_context(self):
-        context = super(ShowStandardPage, self).get_context()
-        context['show_index'] = self.show_index
-        return context
+    pass
 
 ShowExhibitionMapIndex.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -210,17 +191,6 @@ ShowExhibitionMapIndex.promote_panels = [
 class ShowExhibitionMapPage(Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
-
-    @property
-    def show_index(self):
-        if not hasattr(self, '_show_index'):
-            self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
-        return self._show_index
-
-    def get_context(self):
-        context = super(ShowStandardPage, self).get_context()
-        context['show_index'] = self.show_index
-        return context
 
 ShowExhibitionMapPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -267,14 +237,10 @@ class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
-    parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
 
     @property
     def show_index(self):
-        if self.parent_show_index:
-            return self.parent_show_index
-        else:
-            return self
+        return self
 
     @property
     def school(self):
@@ -286,9 +252,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         for (id, root_path, root_url) in Site.get_site_root_paths():
             if self.url_path.startswith(root_path):
                 return self.url_path[len(root_path) - 1:]
-
-    def get_programme_show_index(self, programme):
-        return ShowIndexPage.objects.live().filter(parent_show_index=self, programmes__programme=programme).first()
 
     def get_programmes(self):
         # This method gets hit quite alot (sometimes over 100 times per request)
@@ -407,14 +370,12 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Render response
         return render(request, self.landing_template, {
             'self': self,
-            'show_index': self.show_index,
         })
 
     def serve_school_index(self, request):
         # Render response
         return render(request, self.school_index_template, {
             'self': self,
-            'show_index': self.show_index,
         })
 
     def serve_school(self, request, school):
@@ -431,7 +392,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Render response
         return render(request, self.school_template, {
             'self': self,
-            'show_index': self.show_index,
             'school': school,
             'intro': intro,
         })
@@ -441,15 +401,9 @@ class ShowIndexPage(SuperPage, SocialFields):
         if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
 
-        # Check if this programme is in a different show index
-        show_index = self.get_programme_show_index(programme)
-        if show_index:
-            return redirect(show_index.reverse_subpage('programme', programme=programme))
-
         # Render response
         return render(request, self.programme_template, {
             'self': self,
-            'show_index': self.show_index,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
         })
@@ -458,11 +412,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Check that the programme exists
         if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
-
-        # Check if this programme is in a different show index
-        show_index = self.get_programme_show_index(programme)
-        if show_index:
-            return redirect(show_index.reverse_subpage('student', programme=programme, slug=slug))
 
         # Get the student
         try:
@@ -480,7 +429,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         """
         return render(request, self.student_template, {
             'self': self,
-            'show_index': self.show_index,
             'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
             'programme': student.programme,
             'student': student,
@@ -519,7 +467,6 @@ ShowIndexPage.content_panels = [
     InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
-    PageChooserPanel('parent_show_index'),
 ]
 
 ShowIndexPage.promote_panels = [

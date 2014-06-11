@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags rich_text pageurl %}
 
-{% block body_class %}showrca{% with show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+{% block body_class %}showrca{% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -20,14 +20,14 @@
 
 {% block logo %}
     
-    <a href="{% if show_index %}{% pageurl show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
-    <div class="exhibition-date">{{ show_index.exhibition_date|linebreaks }}</div>
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
 {% endblock %}
 
 {% block extra_footer %}
     
 
-    {% secondary_menu show_index as menuitems %}
+    {% secondary_menu self.show_index as menuitems %}
 
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
@@ -46,7 +46,7 @@
                             London SW7 2EU
                         </address>
                     </li>
-                    {% if not show_index.is_programme_page %}
+                    {% if not self.is_programme_page %}
                         <li>
                             <address>
                                 <h2>Battersea Campus</h2>
@@ -70,10 +70,10 @@
 
     <div id="showrca2014-overlay" class="fade">
         <div class="logo repos">Logo</div>
-        <div class="exhibition-date repos">{{ show_index.exhibition_date|linebreaks }}</div>
+        <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
         <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
         <div class="intro col-detect body-text">
-            {{ show_index.overlay_intro|richtext }}
+            {{ self.show_index.overlay_intro|richtext }}
             <div class="crest col-detect"></div>
         </div>
     </div>
@@ -83,7 +83,7 @@
     <script>
         WebFontConfig = { fontdeck: { id: '42490' } };
 
-        window.showIndexPath = '{{ show_index.local_url }}';
+        window.showIndexPath = '{{ self.show_index.local_url }}';
 
         (function() {
             var wf = document.createElement('script');
