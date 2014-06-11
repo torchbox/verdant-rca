@@ -17,21 +17,13 @@
     {% endif %}
     {% get_school_programmes self.show_index school as programmes %}
     {% get_schools self.show_index as schools %}
-    {% secondary_menu self.show_index as menuitems %}
 
-    {% with menuitems.all as items %}  
-    {% if items|length >= 3 %}
-        <section class="shownav four-items">
-    {% else %}
-        <section class="shownav">
-    {% endif %}
-    {% endwith %}
+    <section class="shownav{% if self.show_index.menu_items|length >= 4 %} four-items{% endif %}">
         {% if not self.is_programme_page %}
             <ul class="nav-overview">
-                <li><a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a></li>
-                {% for item in menuitems %}
-                    <li {% if item.url == self.url %}class="active"{% endif %}>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
+                {% for item in self.show_index.menu_items %}
+                    <li {% if item.0 == self.url %}class="active"{% endif %}>
+                        <a href="{{ item.0 }}">{{ item.1 }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -69,9 +61,9 @@
                         {% endfor %}
                     </ul>
                 </li>
-                {% for item in menuitems %}
+                {% for item in self.show_index.menu_items %}
                     <li>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
+                        <a href="{{ item.0 }}">{{ item.1 }}</a>
                     </li>
                 {% endfor %}
             {% else %}
@@ -97,9 +89,9 @@
                             {% endif %}
                         </ul>
                     </li>
-                    {% for item in menuitems %}
+                    {% for item in self.show_index.menu_items %}
                         <li>
-                            <a href="{% pageurl item %}">{{ item.title }}</a>
+                            <a href="{{ item.0 }}">{{ item.1 }}</a>
                         </li>
                     {% endfor %}
                 {% else %}

@@ -255,8 +255,23 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     @property
     def menu_items(self):
+        menu_items = []
+
+        # Get show index for the menu
         show_index = self.parent_show_index or self
-        return show_index.get_children().live().filter(show_in_menus=True)
+
+        # Schools & Programmes link
+        if len(show_index.get_programmes()) == 0:
+            menu_items.append(
+                (show_index.reverse_subpage('school_index'), "Schools & Students"),
+            )
+
+        # Links to show index subpages
+        menu_items.extend([
+            (page.url, page.title) for page in show_index.get_children().live().filter(show_in_menus=True)
+        ])
+
+        return menu_items
 
     @property
     def school(self):

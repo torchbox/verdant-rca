@@ -25,10 +25,6 @@
 {% endblock %}
 
 {% block extra_footer %}
-    
-
-    {% secondary_menu self.show_index as menuitems %}
-
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
         <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
@@ -56,9 +52,9 @@
                             </address>
                         </li>
                     {% endif %}
-                    {% for item in menuitems %}
+                    {% for item in self.show_index.menu_items %}
                         <li>
-                            <a href="{% pageurl item %}">{{ item.title }}</a>
+                            <a href="{{ item.0 }}">{{ item.1 }}</a>
                         </li>
                     {% endfor %}
                 </ul>

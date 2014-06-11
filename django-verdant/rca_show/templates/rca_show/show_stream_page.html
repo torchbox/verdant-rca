@@ -14,14 +14,7 @@
     </script>
 {% endblock %}
 {% block content %}
-    {% secondary_menu self.show_index as menuitems %}
-    {% with menuitems.all as items %}  
-    {% if items|length >= 3 %}
-        <section class="shownav four-items">
-    {% else %}
-        <section class="shownav">
-    {% endif %}
-    {% endwith %}
+    <section class="shownav{% if self.show_index.menu_items|length >= 4 %} four-items{% endif %}">
         <ul>
             {% if self.show_index.is_programme_page %}
                 <li class="jumplist">
@@ -49,9 +42,9 @@
                     <a href="{% show_subpage_url self.show_index 'school_index' %}">Schools &amp; Students</a>
                 </li>
             {% endif %}
-            {% for item in menuitems %}
-                <li {% if item.url == self.url %}class="active"{% endif %}>
-                    <a href="{% pageurl item %}">{{ item.title }}</a>
+            {% for item in self.show_index.menu_items %}
+                <li {% if item.0 == self.url %}class="active"{% endif %}>
+                    <a href="{{ item.0 }}">{{ item.1 }}</a>
                 </li>
             {% endfor %}
         </ul>
