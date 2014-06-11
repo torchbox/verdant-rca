@@ -200,7 +200,7 @@ class Command(BaseCommand):
                     continue
 
                 # Check if there are any uploaded images to move and quit if there isn't any
-                images_to_move = [image for image in student.get_unique_uploaded_images() if image.id != page.profile_image.id]
+                images_to_move = [image for image in student.get_unique_uploaded_images() if page.profile_image and image.id != page.profile_image.id]
                 print len(images_to_move), ":",
                 if not images_to_move:
                     print "NO IMAGES TO MOVE"
