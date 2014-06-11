@@ -9,7 +9,7 @@ function randTheme(){
 
     if(!$.cookie('showrcatheme')){
         chosen = themes[Math.floor(Math.random() * themes.length)];
-        $.cookie('showrcatheme', chosen, { expires: 0.04, path: '/' });
+        $.cookie('showrcatheme', chosen, { expires: 0.04, path: window.showIndexPath || '/' });
     } else {
         chosen = $.cookie('showrcatheme')
     }

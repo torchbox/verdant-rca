@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import RegexURLResolver
 from django.conf.urls import url
 from modelcluster.fields import ParentalKey
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Page, Orderable, Site
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
@@ -245,6 +245,13 @@ class ShowIndexPage(SuperPage, SocialFields):
     @property
     def school(self):
         return rca_utils.get_school_for_programme(self.programme)
+
+    @property
+    def local_url(self):
+        root_paths = Site.get_site_root_paths()
+        for (id, root_path, root_url) in Site.get_site_root_paths():
+            if self.url_path.startswith(root_path):
+                return self.url_path[len(root_path) - 1:]
 
     def get_programmes(self):
         # This method gets hit quite alot (sometimes over 100 times per request)

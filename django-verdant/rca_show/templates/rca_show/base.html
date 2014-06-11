@@ -83,6 +83,8 @@
     <script>
         WebFontConfig = { fontdeck: { id: '42490' } };
 
+        window.showIndexPath = '{{ self.show_index.local_url }}';
+
         (function() {
             var wf = document.createElement('script');
             wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
