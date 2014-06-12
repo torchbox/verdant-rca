@@ -11,7 +11,6 @@
     {% elif "animation" in self.get_programmes %}
         {# NON-random students for Animation show #}
         {% get_programme_students self.show_index programme as rand_students %}
-        {% get_programme_works self.show_index programme as works %}
     {% else %}
         {% get_programme_students self.show_index programme True as rand_students %}
     {% endif %}

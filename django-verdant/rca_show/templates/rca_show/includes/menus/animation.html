@@ -22,6 +22,7 @@
         <h2 class="toggle">Films by title</h2>
         <div class="selected toggle"></div>
         <ul class="options">
+            {% get_programme_works self.show_index programme as works %}
             {% for student in works %}
                 <li>
                     <a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">
