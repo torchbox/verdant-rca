@@ -10,6 +10,7 @@ from wagtail.wagtailcore.models import Page, Orderable, Site
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.url_routing import RouteResult
 from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
 from rca import utils as rca_utils
 
@@ -23,9 +24,7 @@ class SuperPage(Page):
         """
         Override this method to add your own subpage urls
         """
-        return [
-            url('^$', self.serve, name='main'),
-        ]
+        return []
 
     def reverse_subpage(self, name, *args, **kwargs):
         """
@@ -51,12 +50,14 @@ class SuperPage(Page):
                 if path:
                     path += '/'
 
-                view, args, kwargs = self.resolve_subpage(path)
-                return view(request, *args, **kwargs)
-            except Http404:
+                return RouteResult(self, self.resolve_subpage(path))
+            except Resolver404:
                 pass
 
         return super(SuperPage, self).route(request, path_components)
+
+    def serve(self, request, view, args, kwargs):
+        return view(request, *args, **kwargs)
 
     is_abstract = True
 
@@ -392,10 +393,6 @@ class ShowIndexPage(SuperPage, SocialFields):
     school_template = 'rca_show/school.html'
     programme_template = 'rca_show/programme.html'
     student_template = 'rca_show/student.html'
-
-    def serve(self, request):
-        # If serve called directly (eg, from preview) redirect to serve_landing
-        return self.serve_landing(request)
 
     def serve_landing(self, request):
         # Render response
