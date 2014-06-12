@@ -249,8 +249,9 @@ class ShowIndexPage(SuperPage, SocialFields):
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.CharField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
+    password_prompt = models.CharField(max_length=255, blank=True, help_text="A custom message asking the user to log in, on protected pages")
 
-    password_required_template = "rca_show/templates/rca_show/login.html"
+    password_required_template = "rca_show/login.html"
 
     @property
     def show_index(self):
@@ -498,6 +499,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
     PageChooserPanel('parent_show_index'),
+    FieldPanel('password_prompt'),
 ]
 
 ShowIndexPage.promote_panels = [
