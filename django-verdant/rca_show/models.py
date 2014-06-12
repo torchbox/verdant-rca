@@ -45,7 +45,11 @@ class SuperPage(Page):
         This hooks the subpage urls into Wagtails routing.
         """
         try:
-            return super(SuperPage, self).route(request, path_components)
+            route_result = super(SuperPage, self).route(request, path_components)
+
+            # Don't allow supers route method to serve this page
+            if route_result.page == self:
+                raise Http404
         except Http404 as e:
             if self.live:
                 try:
