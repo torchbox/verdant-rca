@@ -79,9 +79,9 @@
     {% tabdeck %}
         {% tab "Show RCA work" %}
             {% if "animation" in self.get_programmes %}
-                {% get_student_carousel_items self show_animation_videos=True as carousel_items %}
+                {% get_student_carousel_items student show_animation_videos=True as carousel_items %}
             {% else %}
-                {% get_student_carousel_items self as carousel_items %}
+                {% get_student_carousel_items student as carousel_items %}
             {% endif %}
             {% include "rca_show/includes/modules/carousel.html" %}
 
