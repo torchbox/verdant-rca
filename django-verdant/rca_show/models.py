@@ -238,13 +238,6 @@ ShowExhibitionMapPage.promote_panels = [
 
 # Main show index page (which performs school, programme and student layouts)
 
-class ShowIndexPageSchool(Orderable):
-    page = ParentalKey('rca_show.ShowIndexPage', related_name='schools')
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
-    intro = RichTextField(blank=True)
-
-    panels = [FieldPanel('school'), FieldPanel('intro')]
-
 class ShowIndexPageProgramme(Orderable):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='programmes')
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
@@ -376,12 +369,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.get_school_programmes(school) is None:
             raise Http404("School doesn't exist")
 
-        # Get school intro
-        try:
-            intro = self.schools.get(school=school).intro
-        except ShowIndexPageSchool.DoesNotExist:
-            intro = ''
-
         # Render response
         return render(request, self.school_template, {
             'self': self,
@@ -457,7 +444,6 @@ ShowIndexPage.content_panels = [
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
-    InlinePanel(ShowIndexPage, 'schools', label="Schools"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
     PageChooserPanel('parent_show_index'),
