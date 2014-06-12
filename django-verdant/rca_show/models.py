@@ -304,73 +304,25 @@ class ShowIndexPage(SuperPage, SocialFields):
     def is_programme_page(self):
         return bool(self.get_programmes())
 
-    def get_ma_students_q(self, school=None, programme=None):
-        filters = {
-            'ma_in_show': True,
-        }
-
-        if self.year:
-            filters['ma_graduation_year'] = self.year
-
-        programmes = self.get_programmes()
-        if programmes:
-            filters['ma_programme__in'] = programmes
-
-        if school:
-            filters['ma_school'] = school
-
-        if programme:
-            filters['ma_programme'] = programme
-
-        return models.Q(**filters)
-
-    def get_mphil_students_q(self, school=None, programme=None):
-        filters = {
-            'mphil_in_show': True,
-        }
-
-        if self.year:
-            filters['mphil_graduation_year'] = self.year
-
-        programmes = self.get_programmes()
-        if programmes:
-            filters['mphil_programme__in'] = programmes
-
-        if school:
-            filters['mphil_school'] = school
-
-        if programme:
-            filters['mphil_programme'] = programme
-
-        return models.Q(**filters)
-
-    def get_phd_students_q(self, school=None, programme=None):
-        filters = {
-            'phd_in_show': True,
-        }
-
-        if self.year:
-            filters['phd_graduation_year'] = self.year
-
-        programmes = self.get_programmes()
-        if programmes:
-            filters['phd_programme__in'] = programmes
-
-        if school:
-            filters['phd_school'] = school
-
-        if programme:
-            filters['phd_programme'] = programme
-
-        return models.Q(**filters)
-
     def get_students(self, school=None, programme=None, orderby="first_name"):
-        students = NewStudentPage.objects.filter(live=True)
+        filters = {
+            'in_show': True,
+        }
 
-        # Filter by students in this particular show
-        students = students.filter(self.get_ma_students_q(school, programme) | self.get_mphil_students_q(school, programme) | self.get_phd_students_q(school, programme)).order_by(orderby)
+        if self.year:
+            filters['graduation_year'] = self.year
 
-        return students
+        if school:
+            filters['school'] = school
+
+        if programme:
+            filters['programme'] = programme
+        else:
+            programmes = self.get_programmes()
+            if programmes:
+                filters['programme__in'] = programmes
+
+        return rca_utils.get_students(degree_filters=filters).order_by(orderby)
 
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]
