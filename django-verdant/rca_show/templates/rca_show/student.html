@@ -78,15 +78,12 @@
 
     {% tabdeck %}
         {% tab "Show RCA work" %}
-            {% if student.ma_in_show %}
-                {% with student.show_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+            {% if "animation" in self.get_programmes %}
+                {% get_student_carousel_items self show_animation_videos=True as carousel_items %}
             {% else %}
-                {% with student.research_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+                {% get_student_carousel_items self as carousel_items %}
             {% endif %}
+            {% include "rca_show/includes/modules/carousel.html" %}
 
             <section class="row">
                 <div class="three-nine-cols">
