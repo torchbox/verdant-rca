@@ -50,6 +50,8 @@ class SuperPage(Page):
             # Don't allow supers route method to serve this page
             if route_result.page == self:
                 raise Http404
+
+            return route_result
         except Http404 as e:
             if self.live:
                 try:
