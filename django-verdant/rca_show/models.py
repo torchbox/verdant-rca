@@ -244,6 +244,13 @@ class ShowIndexPageProgramme(Orderable):
 
     panels = [FieldPanel('programme')]
 
+class ShowIndexProgrammeIntro(Orderable):
+    page = ParentalKey('rca_show.ShowIndexPage', related_name='programme_intros')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    intro = RichTextField(blank=True)
+
+    panels = [FieldPanel('programme'), FieldPanel('intro')]
+
 class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
 
@@ -373,7 +380,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         return render(request, self.school_template, {
             'self': self,
             'school': school,
-            'intro': intro,
         })
 
     def serve_programme(self, request, programme, school=None):
@@ -381,11 +387,18 @@ class ShowIndexPage(SuperPage, SocialFields):
         if not self.contains_programme(programme):
             raise Http404("Programme doesn't exist")
 
+        # Get programme intro
+        try:
+            intro = self.programme_intros.get(programme=programme).intro
+        except ShowIndexProgrammeIntro.DoesNotExist:
+            intro = ''
+
         # Render response
         return render(request, self.programme_template, {
             'self': self,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
+            'intro': intro,
         })
 
     def serve_student(self, request, programme, slug, school=None):
@@ -445,6 +458,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('exhibition_date'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
+    InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),
     InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
     PageChooserPanel('parent_show_index'),
     FieldPanel('password_prompt'),

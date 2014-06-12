@@ -23,6 +23,8 @@
         <h1>{% get_programme_display programme %}</h1>
     {% endif %}
 
+    {{ intro|safe }}
+
     {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}    
 {% endblock %}
 
