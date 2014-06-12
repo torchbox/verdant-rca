@@ -12,7 +12,7 @@
             <ul class="nav-overview">
                 {% for item in self.show_index.menu_items %}
                     <li {% if item.0 == self.url %}class="active"{% endif %}>
-                        <a href="item.0">{{ item.1 }}</a>
+                        <a href="{{ item.0 }}">{{ item.1 }}</a>
                     </li>
                 {% endfor %}
             </ul>
