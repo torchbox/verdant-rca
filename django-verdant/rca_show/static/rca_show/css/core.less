@@ -229,11 +229,24 @@ header {
     display:none;
 }
 
+form .error-message{
+    color:red;
+}
+
 /* template-specific, non-module tweaks */
 .type-school{
     h1{
         text-transform:uppercase;
         max-width:6em;
+    }
+}
+
+.type-login{
+    .nav-wrapper{
+        display:none;
+    }
+    .login-form label{
+        font-weight:bold;
     }
 }
 
@@ -248,9 +261,7 @@ section.row{
             width:70%;
         }
     }
-
 }
-
 
 @import "modules.less";
 @import "themes.less";

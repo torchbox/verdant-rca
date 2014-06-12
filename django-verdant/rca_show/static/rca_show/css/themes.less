@@ -89,6 +89,25 @@
         color:@colorsecondary;
     }
 
+    /* specific login forms */ 
+    body&.type-login{
+        background-color:@colorprimary;
+        color:@colorsecondary;
+        .site-name {
+            p{
+                background-position:0px -@logoheight * @mobile-reduction-factor;
+            }
+        }
+
+        h1,.exhibition-date, .exhibition-name{
+            color:@colorsecondary;
+        }
+
+        input[type=submit], input[type=reset], input[type=button], button, .button{
+            background-color:@colorsecondary;
+        }
+    }
+
     @media @media-desktop-small {
         #showrca2014-overlay {
             .logo{
@@ -113,6 +132,15 @@
 
                 @media @media-retina {
                     background-size:@logowidth @logoheight*2;
+                }
+            }
+        }
+
+        /* specific login forms */ 
+        body&.type-login{           
+            .site-name {
+                p{
+                    background-position:0px -@logoheight;
                 }
             }
         }
