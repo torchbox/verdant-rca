@@ -249,6 +249,8 @@ class ShowIndexPage(SuperPage, SocialFields):
     exhibition_date = models.CharField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
 
+    password_required_template = "rca_show/templates/rca_show/login.html"
+
     @property
     def show_index(self):
         return self
