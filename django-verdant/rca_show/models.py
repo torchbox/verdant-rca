@@ -336,7 +336,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         return self.get_students(school, programme).get(slug=slug)
 
     def get_schools(self):
-        return [school.school for school in self.schools.all()]
+        return rca_utils.get_schools(self.year)
 
     def get_school_programmes(self, school):
         return rca_utils.get_programmes(school, self.year)

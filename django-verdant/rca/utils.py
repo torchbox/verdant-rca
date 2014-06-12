@@ -18,6 +18,20 @@ def get_school_programme_map(year=None):
         return SCHOOL_PROGRAMME_MAP[max(SCHOOL_PROGRAMME_MAP.keys())]
 
 
+def get_schools(year=None):
+    """
+    This function gets a list of school slugs for the specified school/year
+
+    If year is unspecified, the latest year in the SCHOOL_PROGRAMME_MAP will be used
+    If the year does not exist, this function will return None
+    """
+    school_programme_map = get_school_programme_map(year)
+    if not school_programme_map:
+        return
+
+    return school_programme_map.keys()
+
+
 def get_programmes(school=None, year=None):
     """
     This function gets a list of programme slugs for the specified school/year
