@@ -3,7 +3,7 @@ from django.db import models
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import RegexURLResolver
+from django.core.urlresolvers import RegexURLResolver, Resolver404
 from django.conf.urls import url
 from modelcluster.fields import ParentalKey
 from wagtail.wagtailcore.models import Page, Orderable, Site
@@ -44,17 +44,21 @@ class SuperPage(Page):
         """
         This hooks the subpage urls into Wagtails routing.
         """
-        if self.live:
-            try:
-                path = '/'.join(path_components)
-                if path:
-                    path += '/'
+        try:
+            return super(SuperPage, self).route(request, path_components)
+        except Http404 as e:
+            if self.live:
+                try:
+                    path = '/'.join(path_components)
+                    if path:
+                        path += '/'
 
-                return RouteResult(self, self.resolve_subpage(path))
-            except Resolver404:
-                pass
+                    return RouteResult(self, self.resolve_subpage(path))
+                except Resolver404:
+                    pass
 
-        return super(SuperPage, self).route(request, path_components)
+            # Reraise
+            raise e
 
     def serve(self, request, view, args, kwargs):
         return view(request, *args, **kwargs)
