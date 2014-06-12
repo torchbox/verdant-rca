@@ -4,7 +4,6 @@
 {% block jumplist %}
     {% get_schools self.show_index as schools %}
     {% get_school_programmes self.show_index school as programmes %}
-    {% get_programme_students self.show_index programme as students %}
 
     <li class="jumplist{% if school %} active{% endif %}">
         <h2 class="toggle">Select a School</h2>
@@ -25,13 +24,17 @@
             {% endfor %}
         </ul>
     </li>
-    <li class="jumplist">
-        <h2 class="toggle">Select a Student</h2>
-        <div class="selected toggle"></div>
-        <ul class="options">
-            {% for student in students %}
-                <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
-            {% endfor %}
-        </ul>
-    </li>
+    {% if programme %}
+        {% get_programme_students self.show_index programme as students %}
+        <li class="jumplist{% if student %} active{% endif %}">
+            <h2 class="toggle">Select a Student</h2>
+            <div class="selected toggle">{% if student %}{{ student }}{% endif %}</div>
+            <ul class="options">
+                {% for student in students %}
+                    <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
 {% endblock %}
+

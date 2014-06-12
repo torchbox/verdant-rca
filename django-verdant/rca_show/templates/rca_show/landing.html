@@ -13,7 +13,11 @@
 
     {% get_programme_students self.show_index programme as students %}
 
-    {% include "rca_show/includes/menus/menu.html" %}
+    {% if not self.is_programme_page %}
+        {% include "rca_show/includes/menus/menu.html" with hide_jumplist=True %}
+    {% else %}
+        {% include "rca_show/includes/menus/menu.html" %}
+    {% endif %}
 
     {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}
 

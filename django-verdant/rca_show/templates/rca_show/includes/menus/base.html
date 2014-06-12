@@ -11,7 +11,9 @@
         </ul>
     {% endblock %}
     <ul>
-        {% block jumplist %}{% endblock %}
+        {% if not hide_jumplist %}
+            {% block jumplist %}{% endblock %}
+        {% endif %}
     </ul>
         {% if kensingtonmaps or batterseamaps %}
             <ul class="nav-campus">
