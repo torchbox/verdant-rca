@@ -3,16 +3,17 @@
 {% block body_class %}type-news{% endblock %}
 
 {% block content %}
-    <h1 class="h1">{{ self.title }}</h1>
+    <h1 class="h1">Please enter the password to continue.</h1>
 
     <section class="row">
-        <form name="login" action="{{ action_url }}">
+        <form name="login" method="post" action="{{ action_url }}">
             <ul>
                 {% for field in form %}
                     {% include "rca/includes/field_as_li.html" %}
                 {% endfor %}
                 <li><input type="submit" value="Log in" /></li>
             </ul>
+            {% csrf_token %}
         </form>
     </section>
 {% endblock %}

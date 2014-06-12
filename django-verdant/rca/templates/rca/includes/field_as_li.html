@@ -13,8 +13,6 @@
         {% if not field.is_hidden and field|fieldtype = "boolean_field" %}{{ field.label_tag }}{% endif %}
     </div>
 
-    {{ field.errors }}
-
     {% if field.errors %}
         <p class="error-message">
             {% for error in field.errors %}
