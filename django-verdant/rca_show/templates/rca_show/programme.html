@@ -19,7 +19,7 @@
     {% get_schools self.show_index as schools %}
 
     <section class="shownav{% if self.show_index.menu_items|length >= 4 %} four-items{% endif %}">
-        {% if not self.is_programme_page %}
+        {% if not self.is_programme_page or "animation" in self.get_programmes %}
             <ul class="nav-overview">
                 {% for item in self.show_index.menu_items %}
                     <li {% if item.0 == self.url %}class="active"{% endif %}>
@@ -61,11 +61,6 @@
                         {% endfor %}
                     </ul>
                 </li>
-                {% for item in self.show_index.menu_items %}
-                    <li>
-                        <a href="{{ item.0 }}">{{ item.1 }}</a>
-                    </li>
-                {% endfor %}
             {% else %}
 
                 {% if self.is_programme_page %}
