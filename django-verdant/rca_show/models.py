@@ -398,7 +398,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     def serve_school(self, request, school):
         # Check that the school exists
-        if self.contains_school(school) is None:
+        if not self.contains_school(school):
             raise Http404("School doesn't exist")
 
         # Render response
