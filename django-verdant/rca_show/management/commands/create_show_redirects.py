@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.utils.text import slugify
 
 from wagtail.wagtailredirects.models import Redirect
 
@@ -12,7 +13,7 @@ class Command(BaseCommand):
 
         for student in show_index.get_students():
             # Work out a URL to redirect from
-            from_url = show_index.url + student.slug + '/'
+            from_url = show_index.url + slugify(student.title) + '/'
 
             # Find students url inside 
             if show_index.is_programme_page:
