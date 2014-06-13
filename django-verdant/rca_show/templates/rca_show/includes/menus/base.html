@@ -1,0 +1,44 @@
+{% load show_tags pageurl %}
+
+<section class="shownav{% if self.show_index.menu_items|length >= 3 %} four-items{% endif %}">
+    {% block overview %}
+        <ul class="nav-overview">
+            {% for item in self.show_index.menu_items %}
+                <li {% if item.0 == self.url %}class="active"{% endif %}>
+                    <a href="{{ item.0 }}">{{ item.1 }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endblock %}
+    <ul>
+        {% if not hide_jumplist %}
+            {% block jumplist %}{% endblock %}
+        {% endif %}
+    </ul>
+        {% if kensingtonmaps or batterseamaps %}
+            <ul class="nav-campus">
+                {% if kensingtonmaps %}
+                    <li class="jumplist">
+                        <h2 class="toggle">Kensington campus</h2>
+                        <div class="selected toggle"></div>
+                        <ul class="options">
+                            {% for map in kensingtonmaps %}
+                                <li><a href="{% pageurl map %}" class="{% if map == self %}active{% endif %}">{{ map.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+                {% if batterseamaps %}
+                    <li class="jumplist">
+                        <h2 class="toggle">Battersea campus</h2>
+                        <div class="selected toggle"></div>
+                        <ul class="options">
+                            {% for map in batterseamaps %}
+                                <li><a href="{% pageurl map %}" class="{% if map == self %}active{% endif %}">{{ map.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endif %}
+</section>

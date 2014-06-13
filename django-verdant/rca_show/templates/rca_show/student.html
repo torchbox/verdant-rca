@@ -4,77 +4,10 @@
 {% block body_class %}{{ block.super }} type-student{% endblock %}
 
 {% block content %}
-    {% get_schools self as schools %}
-    {% get_school_programmes self school as programmes %}
-    {% secondary_menu self as menuitems %}
+    {% get_schools self.show_index as schools %}
+    {% get_school_programmes self.show_index school as programmes %}
 
-    {% with menuitems.all as items %}  
-        {% if items|length >= 3 %}
-            <section class="shownav four-items">
-        {% else %}
-            <section class="shownav">
-        {% endif %}
-    {% endwith %}
-        {% if not self.is_programme_page %}
-            <ul class="nav-overview">
-                <li><a href="{% show_subpage_url self 'school_index' %}">Schools &amp; Students</a></li>
-                {% for item in menuitems %}
-                    <li {% if item.url == self.url %}class="active"{% endif %}>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <ul>
-            {% if not self.is_programme_page %}
-                <li class="jumplist active">
-                    <h2 class="toggle">Select a School</h2>
-                    <div class="selected toggle">{% get_school_display school %}</div>
-                    <ul class="options">
-                        {% for school in schools %}
-                            <li><a href="{% show_subpage_url self 'school' school=school %}">{% get_school_display school %}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="jumplist active">
-                    <h2 class="toggle">Select a Programme</h2>
-                    <div class="selected toggle">{% get_programme_display programme %}</div>
-                    <ul class="options">
-                        {% for programme in programmes %}
-                            <li><a href="{% show_subpage_url self 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endif %}
-            <li class="jumplist active">
-                <h2 class="toggle">Select a Student</h2>
-                <div class="selected toggle">{{ student.title }}</div>
-                <ul class="options">
-                    {% if self.get_programmes|length > 1 %}
-                        {% for programme in self.get_programmes %}
-                            <li><a href="{% show_subpage_url self 'programme' programme=programme %}"><b>{% get_programme_display programme %}</b></a></li>
-                            {% get_programme_students self programme as students %}
-                            {% for student in students %}
-                                <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
-                            {% endfor %}
-                        {% endfor %}
-                    {% else %}
-                        {% get_programme_students self programme as students %}
-                        {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
-                        {% endfor %}
-                    {% endif %}
-                </ul>
-            </li>
-            {% if self.is_programme_page %}
-                {% for item in menuitems %}
-                    <li>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
-                    </li>
-                {% endfor %}
-            {% endif %}
-        </ul>
-    </section>
+    {% include "rca_show/includes/menus/menu.html" %}
 
     <h1>
         {% if student.preferred_name %}
@@ -86,15 +19,12 @@
 
     {% tabdeck %}
         {% tab "Show RCA work" %}
-            {% if student.ma_in_show %}
-                {% with student.show_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+            {% if "animation" in self.get_programmes %}
+                {% get_student_carousel_items student show_animation_videos=True as carousel_items %}
             {% else %}
-                {% with student.research_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+                {% get_student_carousel_items student as carousel_items %}
             {% endif %}
+            {% include "rca_show/includes/modules/carousel.html" %}
 
             <section class="row">
                 <div class="three-nine-cols">

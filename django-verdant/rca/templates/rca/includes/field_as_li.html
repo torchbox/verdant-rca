@@ -1,14 +1,16 @@
 {% load rca_tags %}
 
 <li class="{{ field|fieldtype }} {{ field.name }} {{ field.css_classes }}">
-    {% if field_title %}<h3 class="heading">{{ field_title }}</h3>{% endif %}
-    {% if intro %}<p>{{ intro }}</p>{% endif %}
+    {% if not field.is_hidden %}
+        {% if field_title %}<h3 class="heading">{{ field_title }}</h3>{% endif %}
+        {% if intro %}<p>{{ intro }}</p>{% endif %}
+    {% endif %}
     <div class="field">
-        {% if field|fieldtype != "boolean_field" %}{{ field.label_tag }}{% endif %}
+        {% if not field.is_hidden and field|fieldtype != "boolean_field" %}{{ field.label_tag }}{% endif %}
         {% block form_field %}
             {{ field }}
         {% endblock %}
-        {% if field|fieldtype = "boolean_field" %}{{ field.label_tag }}{% endif %}
+        {% if not field.is_hidden and field|fieldtype = "boolean_field" %}{{ field.label_tag }}{% endif %}
     </div>
 
     {% if field.errors %}

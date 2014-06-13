@@ -60,6 +60,14 @@ def get_programme_students(show_index, programme, random = False):
     else:
         return show_index.get_students(programme=programme)
 
+@register.assignment_tag
+def get_programme_works(show_index, programme):
+    # Instead of getting a list of students (get_programme_students), 
+    # this gets the same list of students but ordered by their dissertation/work title
+    if show_index is None:
+        return []
+    else:
+        return show_index.get_students(programme=programme, orderby="show_work_title")
 
 @register.assignment_tag
 def randsize(rangeStart, rangeEnd):
@@ -70,22 +78,9 @@ def randsize(rangeStart, rangeEnd):
 def secondary_menu(calling_page=None):
     pages = []
     if calling_page:
-        pages = calling_page.get_children().filter(
-            live=True,
-            show_in_menus=True
-        )
+        pages = calling_page.menu_items
 
     return pages
-
-
-@register.assignment_tag(takes_context=True)
-def get_show_index(context):
-    if isinstance(context['self'], models.ShowIndexPage):
-        return context['self']
-    if hasattr(context['request'], 'show_index'):
-        return context['request'].show_index
-    if hasattr(context['self'], 'get_show_index'):
-        return context['self'].get_show_index()
 
 
 @register.assignment_tag

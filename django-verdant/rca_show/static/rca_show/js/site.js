@@ -9,7 +9,7 @@ function randTheme(){
 
     if(!$.cookie('showrcatheme')){
         chosen = themes[Math.floor(Math.random() * themes.length)];
-        $.cookie('showrcatheme', chosen, { expires: 0.04, path: '/' });
+        $.cookie('showrcatheme', chosen, { expires: 0.04, path: window.showIndexPath || '/' });
     } else {
         chosen = $.cookie('showrcatheme')
     }
@@ -100,7 +100,7 @@ $(function(){
         randTheme();
 
         // if(window.debug || !$.cookie('showrca2014')){
-        if(!$.cookie('showrca2014')){
+        if(!$('body').hasClass('type-login') && !$.cookie('showrca2014')){
             setupOverlay();
             displayShowOverlay();
             $.cookie('showrca2014', '1', { expires: 0.04, path: '/' });

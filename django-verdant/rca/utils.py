@@ -1,4 +1,6 @@
-from .models import SCHOOL_PROGRAMME_MAP
+from django.db.models import Q
+
+from .models import SCHOOL_PROGRAMME_MAP, NewStudentPage
 
 
 def get_school_programme_map(year=None):
@@ -14,6 +16,20 @@ def get_school_programme_map(year=None):
             return
     else:
         return SCHOOL_PROGRAMME_MAP[max(SCHOOL_PROGRAMME_MAP.keys())]
+
+
+def get_schools(year=None):
+    """
+    This function gets a list of school slugs for the specified school/year
+
+    If year is unspecified, the latest year in the SCHOOL_PROGRAMME_MAP will be used
+    If the year does not exist, this function will return None
+    """
+    school_programme_map = get_school_programme_map(year)
+    if not school_programme_map:
+        return
+
+    return school_programme_map.keys()
 
 
 def get_programmes(school=None, year=None):
@@ -54,3 +70,24 @@ def get_school_for_programme(programme, year=None):
     for school, programmes in school_programme_map.items():
         if programme in programmes:
             return school
+
+
+def get_students(ma=True, mphil=True, phd=True, degree_filters={}):
+    # Get list of degrees
+    degrees = []
+    if ma:    degrees.append('ma')
+    if mphil: degrees.append('mphil')
+    if phd:   degrees.append('phd')
+
+    if not degrees:
+        return NewStudentPage.objects.none()
+
+    # Build a Q object
+    q = Q()
+    for degree in degrees:
+        q |= Q(**{
+            degree + '_' + filter_name: filter_value
+            for filter_name, filter_value in degree_filters.items()
+        })
+
+    return NewStudentPage.objects.live().filter(q)

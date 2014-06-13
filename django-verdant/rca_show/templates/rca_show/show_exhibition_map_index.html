@@ -4,71 +4,10 @@
 {% block body_class %}{{ block.super }} type-standard{% endblock %}
 
 {% block content %}
-    {% secondary_menu self as menuitems %}
-
-    {% get_show_index as show_index %}
     {% get_maps_for_campus "kensington" as kensingtonmaps %}
     {% get_maps_for_campus "battersea" as batterseamaps %}
-    {% get_programme_students show_index show_index.programme as students %}
 
-    {% secondary_menu show_index as menuitems %}
-
-    {% with menuitems.all as items %}  
-    {% if items|length >= 3 %}
-        <section class="shownav four-items">
-    {% else %}
-        <section class="shownav">
-    {% endif %}
-    {% endwith %}
-        <ul class="nav-overview">
-            {% if show_index.is_programme_page %}
-                <li class="jumplist">
-                    <h2 class="toggle">Select a Student</h2>
-                    <div class="selected toggle"></div>
-                    <ul class="options">
-                        {% for student in students %}
-                            <li><a href="{% show_subpage_url self 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% show_subpage_url show_index 'school_index' %}">Schools &amp; Students</a>
-                </li>
-            {% endif %}
-            {% for item in menuitems %}
-                <li {% if item.url == self.url %}class="active"{% endif %}>
-                    <a href="{% pageurl item %}">{{ item.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-
-        <ul class="nav-campus">
-            {% if kensingtonmaps %}
-                <li class="jumplist">
-                    <h2 class="toggle">Kensington campus</h2>
-                    <div class="selected toggle"></div>
-                    <ul class="options">
-                        {% for map in kensingtonmaps %}
-                            <li><a href="{% pageurl map %}" class="{% if map == self %}active{% endif %}">{{ map.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endif %}
-            {% if batterseamaps %}
-                <li class="jumplist">
-                    <h2 class="toggle">Battersea campus</h2>
-                    <div class="selected toggle"></div>
-                    <ul class="options">
-                        {% for map in batterseamaps %}
-                            <li><a href="{% pageurl map %}" class="{% if map == self %}active{% endif %}">{{ map.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endif %}
-        </ul>
-
-    </section>
+    {% include "rca_show/includes/menus/menu.html" %}
 
     <h1>{{ self.title }}</h1>
 

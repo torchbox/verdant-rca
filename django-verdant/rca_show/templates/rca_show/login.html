@@ -1,0 +1,26 @@
+{% extends 'rca_show/base.html' %}
+
+{% block body_class %}{{ block.super }} type-login{% endblock %}
+
+{% block content %}
+   
+    <section class="row">
+        <form class="login-form" method="post" action="{{ action_url }}">
+            <h1 class="h1">{% if self.password_prompt %}{{ self.password_prompt }}{% else %}Please enter the password to continue.{% endif %}</h1>
+            <ul>
+                {% for field in form.visible_fields %}
+                    {% include "rca/includes/field_as_li.html" %}
+                {% endfor %}
+                <li><input type="submit" value="Log in" /></li>
+            </ul>
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
+            {% csrf_token %}
+        </form>
+    </section>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
+{% endblock %}
