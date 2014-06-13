@@ -1,7 +1,7 @@
 {% load pageurl image_tags show_tags %}
 
 <ul class="showgallery">
-    {% if "curatingcontemporaryart" in self.get_programmes %}
+    {% if "curatingcontemporaryart" in self.get_programmes or programme == "curatingcontemporaryart" %}
         {% for student in students %}
             {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.profile_image image_format="fill" %}
         {% endfor %}
