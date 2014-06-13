@@ -62,17 +62,17 @@
         </div>
     </div>
 
-    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
-
-    <div id="showrca2014-overlay" class="fade">
-        <div class="logo repos">Logo</div>
-        <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
-        <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
-        <div class="intro col-detect body-text">
-            {{ self.show_index.overlay_intro|richtext }}
-            <div class="crest col-detect"></div>
+    {% if self.show_index.overlay_intro %}
+        <div id="showrca2014-overlay" class="fade">
+            <div class="logo repos">Logo</div>
+            <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
+            <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
+            <div class="intro col-detect body-text">
+                {{ self.show_index.overlay_intro|richtext }}
+                <div class="crest col-detect"></div>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block show_js %}
