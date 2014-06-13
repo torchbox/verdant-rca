@@ -43,10 +43,14 @@ class Command(BaseCommand):
             # Publish them
             for student in students:
                 if student:
-                    if student.has_unpublished_changes or not student.live:
-                        student.get_latest_revision().publish()
+                    # Find latest revision that is in moderation
+                    revision = student.revisions.filter(submitted_for_moderation=True).order_by('-created_at').first()
+
+                    if revision:
+                        revision.publish()
+
                         print "PUBLISHED:", student.id
                     else:
-                        print "ALREADY LIVE:", student.id
+                        print "NOT IN MODERATION:", student.id
                 else:
                     print "CANNOT FIND PAGE"
