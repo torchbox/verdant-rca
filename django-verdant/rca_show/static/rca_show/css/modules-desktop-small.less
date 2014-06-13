@@ -52,13 +52,14 @@
         }
     }
     .showgallery{
+        .row-flush();
+        
         li{
             .column(6);
-            margin-right:0;
+            height:0 !important;
+            padding-bottom:32%;
 
-            &.portrait, &.landscape{
-                height:auto;
-            }
+            margin-right:0;
         }
     }
 }
