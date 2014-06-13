@@ -9,13 +9,7 @@
 
     {% include "rca_show/includes/menus/menu.html" %}
 
-    <h1>
-        {% if student.preferred_name %}
-            {{ student.preferred_name }}
-        {% else %}
-            {{ student.first_name }} {{ student.last_name }}
-        {% endif %}
-    </h1>
+    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
 
     {% tabdeck %}
         {% tab "Show RCA work" %}
