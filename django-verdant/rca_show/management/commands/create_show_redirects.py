@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
         for student in show_index.get_students():
             # Work out a URL to redirect from
-            from_url = show_index.url + slugify(student.title) + '/'
+            from_url = 'show2014/' + slugify(student.title) + '/'
 
             # Find students url inside 
             if show_index.is_programme_page:
@@ -21,14 +21,12 @@ class Command(BaseCommand):
             else:
                 to_url = show_index.reverse_subpage('student', school=student.school, programme=student.programme, slug=student.slug)
 
-            # Make sure the URLs are different (so we don't make any unneeded redirects)
-            if from_url != to_url:
-                # Normalise the URL
-                from_url_normalised = Redirect.normalise_path(from_url)
+            # Normalise the URL
+            from_url_normalised = Redirect.normalise_path(from_url)
 
-                # Create the redirect
-                redirect, created = Redirect.objects.get_or_create(old_path=from_url_normalised, defaults={'redirect_link': to_url})
+            # Create the redirect
+            redirect, created = Redirect.objects.get_or_create(old_path=from_url_normalised, defaults={'redirect_link': to_url})
 
-                # Print message
-                if created:
-                    print "Created redirect: " + from_url_normalised
+            # Print message
+            if created:
+                print "Created redirect: " + from_url_normalised
