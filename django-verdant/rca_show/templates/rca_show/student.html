@@ -1,7 +1,7 @@
 {% extends 'rca_show/base.html' %}
 {% load show_tags rca_tags image_tags rich_text pageurl %}
 
-{% block body_class %}{{ block.super }} type-student{% endblock %}
+{% block body_class %}{{ block.super }} type-student school-{{ school }}{% endblock %}
 
 {% block content %}
     {% get_schools self.show_index as schools %}
