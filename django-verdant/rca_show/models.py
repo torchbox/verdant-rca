@@ -335,11 +335,23 @@ class ShowIndexPage(SuperPage, SocialFields):
     def get_student(self, school=None, programme=None, slug=None):
         return self.get_students(school, programme).get(slug=slug)
 
+    def check_school_has_students(self, school):
+        return self.get_students(school=school).exists()
+
+    def check_programme_has_students(self, programme):
+        return self.get_students(programme=programme).exists()
+
     def get_schools(self):
-        return rca_utils.get_schools(self.year)
+        return [
+            school for school in rca_utils.get_schools(year=self.year)
+            if self.check_school_has_students(school)
+        ]
 
     def get_school_programmes(self, school):
-        return rca_utils.get_programmes(school, self.year)
+        return [
+            programme for programme in rca_utils.get_programmes(school, year=self.year)
+            if self.check_programme_has_students(programme)
+        ]
 
     def get_student_url(self, student):
         return self.reverse_subpage(
@@ -348,9 +360,22 @@ class ShowIndexPage(SuperPage, SocialFields):
             slug=student.slug,
         )
 
+    def contains_school(self, school):
+        if self.is_programme_page:
+            return False
+
+        if rca_utils.get_programmes(school, year=self.year) is None:
+            return False
+
+        return self.check_school_has_students(school)
+
     def contains_programme(self, programme):
         programmes = self.get_programmes() or rca_utils.get_programmes(year=self.year)
-        return programme in programmes
+
+        if not programme in programmes:
+            return False
+
+        return self.check_programme_has_students(programme)
 
     # Views
     landing_template = 'rca_show/landing.html'
@@ -373,7 +398,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     def serve_school(self, request, school):
         # Check that the school exists
-        if self.get_school_programmes(school) is None:
+        if self.contains_school(school) is None:
             raise Http404("School doesn't exist")
 
         # Render response
