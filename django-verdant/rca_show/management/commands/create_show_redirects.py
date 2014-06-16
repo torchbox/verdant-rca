@@ -59,4 +59,4 @@ class Command(BaseCommand):
 
             # Print message
             if created:
-                print "Created redirect: " + from_url_normalised + " to: " + to_url + " for student: " + str(student.id)
+                print "Created redirect: " + from_url_normalised + " to: " + to_url + " for student: " + student.title + " (" + str(student.id) + ")"
