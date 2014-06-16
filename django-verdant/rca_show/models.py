@@ -342,16 +342,20 @@ class ShowIndexPage(SuperPage, SocialFields):
         return self.get_students(programme=programme).exists()
 
     def get_schools(self):
-        return [
+        schools = [
             school for school in rca_utils.get_schools(year=self.year)
             if self.check_school_has_students(school)
         ]
+        schools.sort()
+        return schools
 
     def get_school_programmes(self, school):
-        return [
+        programmes = [
             programme for programme in rca_utils.get_programmes(school, year=self.year)
             if self.check_programme_has_students(programme)
         ]
+        programmes.sort()
+        return programmes
 
     def get_student_url(self, student):
         return self.reverse_subpage(
