@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
         for student in show_index.get_students():
             # Work out a URL to redirect from
-            from_url = 'show2014/' + slugify(student.title) + '/'
+            from_url = 'show2014/' + slugify(student.first_name) + '_' + slugify(student.last_name) + '/'
 
             # Find students url inside 
             if show_index.is_programme_page:
