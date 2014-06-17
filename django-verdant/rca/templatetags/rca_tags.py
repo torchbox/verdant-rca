@@ -615,8 +615,11 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
     if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme='animation')).filter(id=student.id).exists():
         # Remove first two carousel items if they are vimeo videos
         for i in range(2):
-            first_carousel_item = carousel_items.first()
-            if first_carousel_item and first_carousel_item.embedly_url:
-                carousel_items = carousel_items[1:]
+            try:
+                first_carousel_item = carousel_items[0]
+                if first_carousel_item and first_carousel_item.embedly_url:
+                    carousel_items = carousel_items[1:]
+            except IndexError:
+                pass
 
     return carousel_items
