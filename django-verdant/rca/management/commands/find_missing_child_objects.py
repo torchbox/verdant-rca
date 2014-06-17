@@ -1,12 +1,24 @@
 import json
+from optparse import make_option
 
-from django.core.management.base import NoArgsCommand
+from django.core.management.base import BaseCommand
+
+from modelcluster.models import model_from_serializable_data
 
 from wagtail.wagtailcore.models import get_page_types
 
 
-class Command(NoArgsCommand):
-    def handle_noargs(self, **options):
+class Command(BaseCommand):
+    option_list = BaseCommand.option_list + (
+        make_option('--fix',
+            action='store_true',
+            dest='fix',
+            default=False,
+            help="Fix any issues found by this script"
+        ),
+    )
+
+    def handle(self, fix=False, **options):
         for content_type in get_page_types():
             print "scanning %s" % content_type.name
 
@@ -34,3 +46,11 @@ class Command(NoArgsCommand):
                                 rel.model.objects.get(pk=pk)
                             except rel.model.DoesNotExist:
                                 print "No %s with ID %d found (linked from page %d)" % (rel.model.__name__, pk, page.id)
+
+                                # Fix
+                                if fix:
+                                    obj = model_from_serializable_data(rel.model, child)
+                                    obj._state.adding = True
+                                    obj.save()
+
+                                    print "Fixed"
