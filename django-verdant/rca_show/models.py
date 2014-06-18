@@ -325,8 +325,7 @@ class ShowIndexPage(SuperPage, SocialFields):
             if programmes:
                 q &= models.Q(programme__in=programmes)
 
-        # If this is the 2014 visual communication show, make sure all students have at least
-        # one vimeo item
+        # If this is the 2014 visual communication show, make that the first carousel item is an embed
         if self.year == '2014' and 'visualcommunication' in self.get_programmes():
             q &= models.Q(carousel_items__sort_order=0) & ~models.Q(carousel_items__embedly_url='')
 
