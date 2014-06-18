@@ -111,19 +111,23 @@
                     <li class="col">
                         <h3 class="a2">School</h3>
                         <p class="h7">
-                            {% if student.ma_in_show %}
+                            {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                                 {{ student.get_ma_school_display }}
-                            {% else %}
-                                {{ student.get_research_school_display }}
+                            {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                {{ student.get_mphil_school_display }}
+                            {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                {{ student.get_phd_school_display }}
                             {% endif %}
                         </p>
 
                         <h3 class="a2 space">Programme</h3>
                         <p class="h7">
-                            {% if student.ma_in_show %}
-                                {{ student.get_ma_programme_display }}
-                            {% else %}
-                                {{ student.get_research_programme_display }}
+                            {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                                MA {{ student.get_ma_programme_display }}
+                            {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                MPhil {{ student.get_mphil_programme_display }}
+                            {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                PhD {{ student.get_phd_programme_display }}
                             {% endif %}
                         </p>
         
