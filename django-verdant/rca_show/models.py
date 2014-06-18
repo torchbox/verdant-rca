@@ -458,8 +458,8 @@ class ShowIndexPage(SuperPage, SocialFields):
             'student': student,
         })
 
-    def show_as_mode(self, mode):
-        return self.serve(self.dummy_request(), self.serve_landing, [], {})
+    def serve_preview(self, request, mode_name):
+        return self.serve(request, self.serve_landing, [], {})
 
     def get_subpage_urls(self):
         programme_count = len(self.get_programmes())
