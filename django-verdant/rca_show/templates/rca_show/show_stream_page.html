@@ -5,21 +5,21 @@
 {% block extra_js_head %}
 <script src="http://jwpsrv.com/library/7CR3ti08EeKX8yIACp8kUw.js"></script>
 <script type="text/javascript">
-var file = "rtsp://uh8w7w.live.cloud.influxis.com:1935/live";
-if ((navigator.userAgent.indexOf('Android 2') != -1) ||
-(navigator.userAgent.indexOf('BlackBerry') != -1) ||
-(navigator.userAgent.indexOf('Android 4.3') != -1) ||
-(navigator.userAgent.indexOf('Android 3') != -1))  {
-
-document.write("<video width= '");
-        document.write( + "'")
+    var file = "http://uh8w7w.rtmphost.com/hls-live/livepkgr/_definst_/liveevent/live.m3u8";
+    if ((navigator.userAgent.indexOf(
+    'Android') >0) ||
+    (navigator.userAgent.indexOf('BlackBerry') >0) ||
+    (navigator.userAgent.indexOf('Android') >0) ||
+    (navigator.userAgent.indexOf('IEMobile/7.0') >0)) {
+        document.write("<video width= '");
+        document.write(800 + "'")
         document.write("height='");
-        document.write( + "'");
-
+        document.write(500 + "'");
         document.write("poster preload='true' controls>");
         document.write("<source src=" + file + ">");
-}
-</script>
+    }
+</script> 
+
 {% endblock %}
 {% block content %}
     {% include "rca_show/includes/menus/menu.html" %}
