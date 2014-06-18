@@ -2,9 +2,9 @@
 {% load show_tags %}
 
 {% block jumplist %}
-    <li class="jumplist{% if student %} active{% endif %}">
+    <li class="jumplist">
         <h2 class="toggle">Films by student</h2>
-        <div class="selected toggle">{% if student %}{{ student }}{% endif %}</div>
+        <div class="selected toggle"></div>
         <ul class="options">
             {# assumption that animation is 1 of 1 programmes defined #}
             {% get_programme_students self.show_index programme as students %}

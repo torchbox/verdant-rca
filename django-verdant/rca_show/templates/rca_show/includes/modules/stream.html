@@ -1,7 +1,24 @@
 {% load image_tags embed_filters %}
 
     <section class="row">
-		<div id='my-video'></div>
+		<div id='my-video'><iframe width="100%" height="" scrolling="no" src="http://influx.is/MmtjJN"></iframe></div>
+	    <script type='text/javascript'>
+	        jwplayer('my-video').setup({
+	            playlist: [{
+	                sources : [
+	                { file: 'rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/live' },
+	                ],
+	                title: "Live"
+	            }],
+	            width: '640',
+	            height: '360',
+	            fallback: false
+	        });
+	    </script>
+    </section>
+
+
+<!--     		<div id='my-video'></div>
 
 		<script type='text/javascript'>			 
 			jwplayer('my-video').setup({
@@ -24,5 +41,4 @@
 			    title: '',
 			    autostart: 'true'
 			});
-		</script>
-    </section>
+		</script> -->
