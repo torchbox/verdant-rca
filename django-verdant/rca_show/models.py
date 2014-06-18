@@ -327,7 +327,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # If this is the 2014 visual communication show, make that the first carousel item is an embed
         if self.year == '2014' and 'visualcommunication' in self.get_programmes():
-            q &= models.Q(carousel_items__sort_order=0) & ~models.Q(carousel_items__embedly_url='')
+            q &= models.Q(carousel_items__sort_order=0) & models.Q(carousel_items__embedly_url__startswith='http')
 
         return rca_utils.get_students(degree_q=q).order_by(orderby).distinct()
 
