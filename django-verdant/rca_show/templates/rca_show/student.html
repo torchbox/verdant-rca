@@ -13,7 +13,7 @@
 
     {% tabdeck %}
         {% tab "Show RCA work" %}
-            {% if "animation" in self.get_programmes %}
+            {% if "animation" in self.get_programmes or "visualcommunication" in self.get_programmes %}
                 {% get_student_carousel_items student show_animation_videos=True as carousel_items %}
             {% else %}
                 {% get_student_carousel_items student as carousel_items %}
