@@ -93,13 +93,8 @@ def convert_degree_filters(q, degree):
 
 
 def get_students(ma=True, mphil=True, phd=True, degree_filters=None, degree_q=None):
-    # Get list of degrees
-    degrees = []
-    if ma:    degrees.append('ma')
-    if mphil: degrees.append('mphil')
-    if phd:   degrees.append('phd')
-
-    if not degrees:
+    # Make sure one degree was set
+    if not ma or not mphil or not phd:
         return NewStudentPage.objects.none()
 
     # Get degree_q
