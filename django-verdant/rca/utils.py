@@ -72,7 +72,27 @@ def get_school_for_programme(programme, year=None):
             return school
 
 
-def get_students(ma=True, mphil=True, phd=True, degree_filters={}):
+def convert_degree_filters(q, degree):
+    if isinstance(q, tuple):
+        fil, arg = q
+
+        if degree == 'ma' and fil.startswith('carousel_items'):
+            fil = 'show_' + fil
+        else:
+            fil = degree + '_' + fil
+
+        return fil, arg
+    else:
+        new_q = q.__class__._new_instance(
+            children=[], connector=q.connector, negated=q.negated)
+
+        for child_q in q.children:
+            new_q.children.append(convert_degree_filters(child_q, degree))
+
+        return new_q
+
+
+def get_students(ma=True, mphil=True, phd=True, degree_filters=None, degree_q=None):
     # Get list of degrees
     degrees = []
     if ma:    degrees.append('ma')
@@ -82,12 +102,23 @@ def get_students(ma=True, mphil=True, phd=True, degree_filters={}):
     if not degrees:
         return NewStudentPage.objects.none()
 
-    # Build a Q object
-    q = Q()
-    for degree in degrees:
-        q |= Q(**{
-            degree + '_' + filter_name: filter_value
-            for filter_name, filter_value in degree_filters.items()
-        })
+    # Get degree_q
+    if degree_q is None:
+        degree_q = Q()
 
-    return NewStudentPage.objects.live().filter(q)
+    # Build a Q object from degree_filters
+    if degree_filters is not None:
+        degree_q &= Q(**degree_filters)
+
+    # Rewrite Q object to use actual field names
+    final_q = Q()
+    if ma:
+        final_q |= convert_degree_filters(degree_q, 'ma')
+
+    if mphil:
+        final_q |= convert_degree_filters(degree_q, 'mphil')
+
+    if phd:
+        final_q |= convert_degree_filters(degree_q, 'phd')
+
+    return NewStudentPage.objects.live().filter(final_q)
