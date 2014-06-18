@@ -310,24 +310,27 @@ class ShowIndexPage(SuperPage, SocialFields):
         return bool(self.get_programmes())
 
     def get_students(self, school=None, programme=None, orderby="first_name"):
-        filters = {
-            'in_show': True,
-        }
+        q = models.Q(in_show=True)
 
         if self.year:
-            filters['graduation_year'] = self.year
+            q &= models.Q(graduation_year=self.year)
 
         if school:
-            filters['school'] = school
+            q &= models.Q(school=school)
 
         if programme:
-            filters['programme'] = programme
+            q &= models.Q(programme=programme)
         else:
             programmes = self.get_programmes()
             if programmes:
-                filters['programme__in'] = programmes
+                q &= models.Q(programme__in=programmes)
 
-        return rca_utils.get_students(degree_filters=filters).order_by(orderby)
+        # If this is the 2014 visual communication show, make sure all students have at least
+        # one vimeo item
+        if self.year == '2014' and 'visualcommunication' in self.get_programmes():
+            q &= models.Q(carousel_items__sort_order=0) & ~models.Q(carousel_items__embedly_url='')
+
+        return rca_utils.get_students(degree_q=q).order_by(orderby).distinct()
 
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]

@@ -8,7 +8,7 @@
     {% if "fashionmenswear" in self.get_programmes %}
         {# NON-random students for fashion show #}
         {% get_programme_students self.show_index programme as rand_students %}
-    {% elif "animation" in self.get_programmes %}
+    {% elif "animation" in self.get_programmes or "visualcommunication" in self.get_programmes %}
         {# NON-random students for Animation show #}
         {% get_programme_students self.show_index programme as rand_students %}
     {% else %}
