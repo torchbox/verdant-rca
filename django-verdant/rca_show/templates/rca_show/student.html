@@ -27,10 +27,12 @@
                             <dl>
                                 <dt>Programme</dt>
                                 <dd>
-                                    {% if student.ma_in_show %}
+                                    {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                                         {{ student.get_ma_programme_display }}
-                                    {% else %}
-                                        {{ student.get_research_programme_display }}
+                                    {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                        {{ student.get_mphil_programme_display }}
+                                    {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                        {{ student.get_phd_programme_display }}    
                                     {% endif %}
                                 </dd>
                                 
@@ -87,12 +89,13 @@
                     
                         <h3>{{ student.show_work_title }}</h3>
 
-                        {% if student.ma_in_show %}
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                             {{ student.show_work_description|richtext }}
-                        {% else %}
-                            {{ student.research_statement|richtext }}
-                        {% endif %}
-                        
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_statment }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                {{ student.phd_statment }}
+                        {% endif %}                            
                     </div>
                 </div>
             </section>
@@ -137,19 +140,33 @@
                             <p class="h7">{{ student.ma_specialism }}</p>
                         {% endif %}
 
-
-                        {% with student.research_supervisors.all as supervisors %}
-                            {% if supervisors %}
-                                <h3 class="a2 space">Supervisor</h3>
-                                {% for supervisor in supervisors %}
-                                    {% if supervisor.supervisor %}
-                                        <a href="{% pageurl supervisor.supervisor %}"><p class="h7">{{ supervisor.supervisor }}</p></a>
-                                    {% else %}
-                                        <p class="h7">{{ supervisor.supervisor_other }}</p>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endwith %}
+                        {% if student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {% with student.mphil_supervisors.all as supervisors %}
+                                {% if supervisors %}
+                                    <h3 class="a2 space">Supervisor</h3>
+                                    {% for supervisor in supervisors %}
+                                        {% if supervisor.supervisor %}
+                                            <a href="{% pageurl supervisor.supervisor %}"><p class="h7">{{ supervisor.supervisor }}</p></a>
+                                        {% else %}
+                                            <p class="h7">{{ supervisor.supervisor_other }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {% with student.phd_supervisors.all as supervisors %}
+                                {% if supervisors %}
+                                    <h3 class="a2 space">Supervisor</h3>
+                                    {% for supervisor in supervisors %}
+                                        {% if supervisor.supervisor %}
+                                            <a href="{% pageurl supervisor.supervisor %}"><p class="h7">{{ supervisor.supervisor }}</p></a>
+                                        {% else %}
+                                            <p class="h7">{{ supervisor.supervisor_other }}</p>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
                     </li>
                     <li class="col">
                         {% if student.emails or student.phones or student.website or student.twitter_handle %}
