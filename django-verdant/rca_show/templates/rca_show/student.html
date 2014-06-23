@@ -100,9 +100,9 @@
                         {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                             {{ student.show_work_description|richtext }}
                         {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
-                            {{ student.mphil_statement }}
+                            {{ student.mphil_statement|richtext }}
                         {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
-                            {{ student.phd_statement }}
+                            {{ student.phd_statement|richtext }}
                         {% endif %}                            
                     </div>
                 </div>
