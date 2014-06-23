@@ -87,14 +87,22 @@
                         </h2>
 
                     
-                        <h3>{{ student.show_work_title }}</h3>
+                        <h3>
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                            {{ student.show_work_title }}
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_dissertation_title }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {{ student.phd_dissertation_title }}
+                        {% endif %}                         
+                        </h3>
 
                         {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                             {{ student.show_work_description|richtext }}
                         {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
-                            {{ student.mphil_statment }}
+                            {{ student.mphil_statement }}
                         {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
-                                {{ student.phd_statment }}
+                            {{ student.phd_statement }}
                         {% endif %}                            
                     </div>
                 </div>
