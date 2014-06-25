@@ -131,6 +131,8 @@ class ShowStandardPageContent(Orderable):
 class ShowStandardPage(Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    listing_intro = models.CharField(max_length=100, help_text='Used only on pages listing news items', blank=True)
 
     @property
     def show_index(self):
@@ -155,6 +157,8 @@ ShowStandardPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('search_description'),
+        FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
     ], "Cross-page behaviour"),
 
     MultiFieldPanel([
