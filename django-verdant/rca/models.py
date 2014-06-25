@@ -32,6 +32,7 @@ from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
+from wagtail.wagtailsearch import indexed
 
 from modelcluster.tags import ClusterTaggableManager
 from taggit.models import TaggedItemBase
@@ -2379,8 +2380,8 @@ class HomePageRelatedLink(Orderable):
 
 class HomePage(Page, SocialFields):
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
-    news_item_1 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
-    news_item_2 = models.ForeignKey('rca.NewsItem', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_1 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+')
+    news_item_2 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+')
     packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_student_work = models.IntegerField("Number of student work items to show", help_text="Student pages flagged to Show On Homepage must have at least one carousel item", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
@@ -3589,6 +3590,21 @@ class NewStudentPage(Page, SocialFields):
         'show_work_title', 'get_show_work_type_display', 'get_show_work_location_display', 'show_work_description',
         'get_mphil_school_display', 'get_mphil_programme_display', 'mphil_graduation_year', 'mphil_dissertation_title', 'mphil_statement',
         'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'phd_dissertation_title', 'phd_statement',
+    )
+
+    search_fields = Page.search_fields + (
+        indexed.FilterField('ma_in_show'),
+        indexed.FilterField('ma_school'),
+        indexed.FilterField('ma_programme'),
+        indexed.FilterField('ma_graduation_year'),
+        indexed.FilterField('mphil_in_show'),
+        indexed.FilterField('mphil_school'),
+        indexed.FilterField('mphil_programme'),
+        indexed.FilterField('mphil_graduation_year'),
+        indexed.FilterField('phd_in_show'),
+        indexed.FilterField('phd_school'),
+        indexed.FilterField('phd_programme'),
+        indexed.FilterField('phd_graduation_year'),
     )
 
     @property
