@@ -3592,21 +3592,6 @@ class NewStudentPage(Page, SocialFields):
         'get_phd_school_display', 'get_phd_programme_display', 'phd_graduation_year', 'phd_dissertation_title', 'phd_statement',
     )
 
-    search_fields = Page.search_fields + (
-        indexed.FilterField('ma_in_show'),
-        indexed.FilterField('ma_school'),
-        indexed.FilterField('ma_programme'),
-        indexed.FilterField('ma_graduation_year'),
-        indexed.FilterField('mphil_in_show'),
-        indexed.FilterField('mphil_school'),
-        indexed.FilterField('mphil_programme'),
-        indexed.FilterField('mphil_graduation_year'),
-        indexed.FilterField('phd_in_show'),
-        indexed.FilterField('phd_school'),
-        indexed.FilterField('phd_programme'),
-        indexed.FilterField('phd_graduation_year'),
-    )
-
     @property
     def is_ma_student(self):
         return self.ma_school != ''
