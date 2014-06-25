@@ -5136,3 +5136,59 @@ ReachOutRCAIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+# == Stream page ==
+
+
+class StreamPageRelatedLink(Orderable):
+    page = ParentalKey('rca.StreamPage', related_name='related_links')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
+    link_text = models.CharField(max_length=255, help_text="Link title")
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text'),
+    ]
+
+class StreamPageAd(Orderable):
+    page = ParentalKey('rca.StreamPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+')
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class StreamPage(Page, SocialFields):
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed_fields = ('intro', 'body')
+
+StreamPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    InlinePanel(StreamPage, 'related_links', label="Related links"),
+    InlinePanel(StreamPage, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+    ]
+
+StreamPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
