@@ -28,6 +28,7 @@ django-redis==3.3
 django-taggit==0.10
 docutils==0.11
 ecdsa==0.10
+elasticutils==0.8.1
 gunicorn==0.17.4
 html2text==3.200.3
 httplib2==0.8
@@ -36,6 +37,7 @@ lxml==3.2.3
 paramiko==1.12.1
 psycopg2==2.4.6
 pycrypto==2.6.1
+pyelasticsearch==0.6
 python-dateutil==1.5
 python-ldap==2.4.13
 redis==2.9.0
@@ -50,4 +52,3 @@ tweepy==2.1
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4
-elasticsearch==0.4.5
