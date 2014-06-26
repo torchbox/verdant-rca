@@ -265,7 +265,6 @@ $(function(){
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
             player.api('play');
-            console.log(f);
             $this.toggleClass('playing');
          });
 
