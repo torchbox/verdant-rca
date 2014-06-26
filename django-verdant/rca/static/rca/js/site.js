@@ -270,7 +270,7 @@ $(function(){
          });
 
         // Also start playback if poster image is clicked anywhere
-        $('.poster').click(function() {
+        $('.poster', $(this)).click(function() {
             player.api('play');
             $this.toggleClass('playing');
         });
