@@ -458,14 +458,22 @@ class CarouselItemFields(models.Model):
 
 # Related link item abstract class - all related links basically require the same fields
 class RelatedLinkMixin(models.Model):
-    # I don't know why the link field is optional -- however I'll leave it that way
     link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
+    link_external = models.URLField("External link", blank=True)
     link_text = models.CharField(max_length=255, help_text="Link title (or leave blank to use page title)", blank=True)
 
     panels = [
         PageChooserPanel('link'),
+        FieldPanel('link_external'),
         FieldPanel('link_text'),
     ]
+
+    @property
+    def get_link(self):
+        if self.link_page:
+            return self.link_page.url
+        else:
+            return self.link_external
 
     @property
     def get_link_text(self):
