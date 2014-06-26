@@ -457,10 +457,10 @@ class CarouselItemFields(models.Model):
         abstract = True
 
 # Related link item abstract class - all related links basically require the same fields
-class RelatedLinkItemFields(models.Model):
+class RelatedLinkMixin(models.Model):
     # I don't know why the link field is optional -- however I'll leave it that way
     link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Link title (or leave blank to use page title)", null=True, blank=True)
+    link_text = models.CharField(max_length=255, help_text="Link title (or leave blank to use page title)", blank=True)
 
     panels = [
         PageChooserPanel('link'),
@@ -658,7 +658,7 @@ class SchoolPageContactEmail(Orderable):
         FieldPanel('email_address')
     ]
 
-class SchoolPageRelatedLink(Orderable, RelatedLinkItemFields):
+class SchoolPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.SchoolPage', related_name='related_links')
 
 class SchoolPageAd(Orderable):
@@ -777,7 +777,7 @@ class ProgrammePageManualStaffFeed(Orderable):
         FieldPanel('staff_role'),
     ]
 
-class ProgrammePageRelatedLink(Orderable, RelatedLinkItemFields):
+class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
 
 class ProgrammePageContactPhone(Orderable):
@@ -1634,7 +1634,7 @@ EventItem.promote_panels = [
 
 # == Event index ==
 
-class EventIndexRelatedLink(Orderable, RelatedLinkItemFields):
+class EventIndexRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.EventIndex', related_name='related_links')
 
 class EventIndexAd(Orderable):
@@ -1904,7 +1904,7 @@ ReviewsIndex.promote_panels = [
 class ReviewPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.ReviewPage', related_name='carousel_items')
 
-class ReviewPageRelatedLink(Orderable, RelatedLinkItemFields):
+class ReviewPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ReviewPage', related_name='related_links')
 
 class ReviewPageQuotation(Orderable):
@@ -2000,7 +2000,7 @@ ReviewPage.promote_panels = [
 class StandardPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.StandardPage', related_name='carousel_items')
 
-class StandardPageRelatedLink(Orderable, RelatedLinkItemFields):
+class StandardPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.StandardPage', related_name='related_links')
 
 class StandardPageQuotation(Orderable):
@@ -2142,7 +2142,7 @@ class StandardIndexStaffFeed(Orderable):
         FieldPanel('staff_role'),
     ]
 
-class StandardIndexRelatedLink(Orderable, RelatedLinkItemFields):
+class StandardIndexRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.StandardIndex', related_name='related_links')
 
 class StandardIndexContactPhone(Orderable):
@@ -2350,7 +2350,7 @@ class HomePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class HomePageRelatedLink(Orderable, RelatedLinkItemFields):
+class HomePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.HomePage', related_name='related_links')
 
 class HomePage(Page, SocialFields):
@@ -2584,7 +2584,7 @@ JobPage.promote_panels = [
 
 # == Jobs index page ==
 
-class JobsIndexRelatedLink(Orderable, RelatedLinkItemFields):
+class JobsIndexRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.JobsIndex', related_name='related_links')
 
 class JobsIndexAd(Orderable):
@@ -2636,7 +2636,7 @@ JobsIndex.promote_panels = [
 
 # == Alumni index page ==
 
-class AlumniIndexRelatedLink(Orderable, RelatedLinkItemFields):
+class AlumniIndexRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.AlumniIndex', related_name='related_links')
 
 class AlumniIndexAd(Orderable):
@@ -4128,7 +4128,7 @@ class ResearchInnovationPageTeaser(Orderable):
         FieldPanel('text'),
     ]
 
-class ResearchInnovationPageRelatedLink(Orderable, RelatedLinkItemFields):
+class ResearchInnovationPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ResearchInnovationPage', related_name='related_links')
 
 class ResearchInnovationPageContactPhone(Orderable):
@@ -4318,7 +4318,7 @@ CurrentResearchPage.promote_panels = [
 
 # == Gallery Page ==
 
-class GalleryPageRelatedLink(Orderable, RelatedLinkItemFields):
+class GalleryPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.GalleryPage', related_name='related_links')
 
 class GalleryPage(Page, SocialFields):
@@ -5087,7 +5087,7 @@ ReachOutRCAIndex.promote_panels = [
 # == Stream page ==
 
 
-class StreamPageRelatedLink(Orderable, RelatedLinkItemFields):
+class StreamPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.StreamPage', related_name='related_links')
 
 class StreamPageAd(Orderable):
