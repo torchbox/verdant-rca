@@ -5087,15 +5087,8 @@ ReachOutRCAIndex.promote_panels = [
 # == Stream page ==
 
 
-class StreamPageRelatedLink(Orderable):
+class StreamPageRelatedLink(Orderable, RelatedLinkItemFields):
     page = ParentalKey('rca.StreamPage', related_name='related_links')
-    link = models.ForeignKey(Page, null=True, blank=True, related_name='+')
-    link_text = models.CharField(max_length=255, help_text="Link title")
-
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_text'),
-    ]
 
 class StreamPageAd(Orderable):
     page = ParentalKey('rca.StreamPage', related_name='manual_adverts')
