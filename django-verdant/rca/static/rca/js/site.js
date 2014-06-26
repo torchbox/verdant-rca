@@ -162,25 +162,13 @@ function applyCarousel(carouselSelector){
         },
         onSlideBefore: function($slideElement, oldIndex, newIndex){
             // find vimeos in old slide and stop them if playing
-            post($('.videoembed.vimeo iframe'), 'pause');
+            $('.videoembed.vimeo iframe').each(function(idx, iframe) {
+                $f(iframe).api('pause');
+            });
         }
     });
 
     return carousel;
-}
-
-// Helper function for sending a message to the player
-function post(frame, action, value) {
-    $(frame).each(function(){
-        var url = $(this).attr('src').split('?')[0];
-        var data = { method: action };
-
-        if (value) {
-            data.value = value;
-        }
-
-        $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
-    });
 }
 
 $(function(){
@@ -269,47 +257,21 @@ $(function(){
     });
 
     /* Vimeo player API */
-    $('.videoembed.vimeo').each(function(){
+    $('.videoembed.vimeo').each(function() {
         var $this = $(this);
-        var f = $('iframe', $(this));
-
-        // Listen for messages from the player
-        if (window.addEventListener){
-            window.addEventListener('message', onMessageReceived, false);
-        }
-        else {
-            window.attachEvent('onmessage', onMessageReceived, false);
-        }
-
-        // Handle messages received from the player
-        function onMessageReceived(e) {
-            var data = JSON.parse(e.data);
-
-            switch (data.event) {
-                case 'ready':
-                    post(f, 'addEventListener', 'pause');
-                    post(f, 'addEventListener', 'finish');
-                    break;
-
-                case 'pause':
-                    //nothing
-                    break;
-
-                case 'finish':
-                    //nothing
-                    break;
-            }
-        }
+        var iframe = $('iframe', $this)[0];
+        var player = $f(iframe);
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
-             post(f, 'play');
-             $this.toggleClass('playing');
+            player.api('play');
+            console.log(f);
+            $this.toggleClass('playing');
          });
 
-        //also start playback if poster image is clicked anywhere
-        $('.poster').click(function(){
-            post(f, 'play');
+        // Also start playback if poster image is clicked anywhere
+        $('.poster').click(function() {
+            player.api('play');
             $this.toggleClass('playing');
         });
     });
