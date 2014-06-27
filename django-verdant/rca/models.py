@@ -468,14 +468,12 @@ class RelatedLinkMixin(models.Model):
         FieldPanel('link_text'),
     ]
 
-    @property
     def get_link(self):
-        if self.link_page:
-            return self.link_page.url
+        if self.link:
+            return self.link.url
         else:
             return self.link_external
 
-    @property
     def get_link_text(self):
         if self.link_text:
             return self.link_text
