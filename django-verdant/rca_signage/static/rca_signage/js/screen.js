@@ -28,6 +28,8 @@ var Screen = function() {
                     window.screen.run();                
                 }, loadInterval * 1000);
             }
+        }).always(function() {
+            $('body').removeClass('loading');
         });
     };
 
@@ -44,7 +46,7 @@ var Screen = function() {
 
         // Check there actually are some events
         if (!eventsData.events.length){
-            $(eventsElemSelector).append('<p>There are no upcoming events</p>');
+            $(eventsElemSelector).empty().append('<p>There are no upcoming events</p>');
             return false;
         }
 
@@ -120,7 +122,6 @@ var Screen = function() {
 
         // remove loading indicators
         $('body').removeClass('loading');
-        $(eventsElemSelector).removeClass('loading');
 
         // show/activate paging
         if(pages.length > 1){
