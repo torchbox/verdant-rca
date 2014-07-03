@@ -1619,6 +1619,7 @@ EventItem.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_on_homepage'),
         FieldPanel('listing_intro'),
+        FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
