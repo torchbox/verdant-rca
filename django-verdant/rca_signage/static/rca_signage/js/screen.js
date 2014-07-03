@@ -18,16 +18,6 @@ var Screen = function() {
         $.getJSON("data/", function(data) {
             eventsData = data;
             handleEvents();
-
-            if(loadInterval){
-                // load new events on an interval
-                window.loadTimeout = setTimeout(function(){
-                    clearTimeout(window.loadTimeout); 
-                    window.screen = null;
-                    window.screen = new Screen();
-                    window.screen.run();                
-                }, loadInterval * 1000);
-            }
         }).always(function() {
             $('body').removeClass('loading');
         });
@@ -188,7 +178,16 @@ var Screen = function() {
     };
 
     this.run = function(){
-        clearTimeout(window.loadTimeout);
+        if(loadInterval){
+            // load new events on an interval
+            window.loadTimeout = setTimeout(function(){
+                clearTimeout(window.loadTimeout); 
+                window.screen = null;
+                window.screen = new Screen();
+                window.screen.run();                
+            }, loadInterval * 1000);
+        }
+
         loadEvents();
     };
 
