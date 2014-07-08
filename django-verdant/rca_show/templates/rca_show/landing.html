@@ -4,28 +4,25 @@
 {% block body_class %}{{ block.super }} type-landing{% endblock %}
 
 {% block content %}
-    {% secondary_menu self as menuitems %}
-    {% get_programme_students self school programme True as rand_students %}    
+    {% if "fashionmenswear" in self.get_programmes %}
+        {# NON-random students for fashion show #}
+        {% get_programme_students self.show_index programme as rand_students %}
+    {% else %}
+        {% get_programme_students self.show_index programme True as rand_students %}
+    {% endif %}   
 
-    <section class="shownav">
-        <ul class="nav-overview">
-            <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
-            {% for item in menuitems %}
-                <li>
-                    <a href="{% pageurl item %}">{{ item.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </section>
+    {% get_programme_students self.show_index programme as students %}
 
-    {% include "rca_show/includes/modules/rand_gallery.html" with rand_students=rand_students %}
+    {% if not self.is_programme_page %}
+        {% include "rca_show/includes/menus/menu.html" with hide_jumplist=True %}
+    {% else %}
+        {% include "rca_show/includes/menus/menu.html" %}
+    {% endif %}
+
+    {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}
 
 {% endblock %}
 
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" %}
-{% endblock %}
-
-{% block extra_js %}
-
 {% endblock %}

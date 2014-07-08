@@ -1,75 +1,31 @@
 {% extends "rca_show/base.html" %}
 {% load show_tags rich_text pageurl %}
 
-{% block body_class %}{{ block.super }} type-programme{% endblock %}
+{% block body_class %}{{ block.super }} type-programme school-{{ school }}{% endblock %}
 
 {% block content %}
-    {% get_programme_students self school programme as students %}
-    {% get_programme_students self school programme True as rand_students %}
-    {% get_school_programmes self school as programmes %}
-    {% get_schools self as schools %}
-    {% secondary_menu self as menuitems %}
+    {% get_programme_students self.show_index programme as students %}
+    {% if "fashionmenswear" in self.get_programmes %}
+        {# NON-random students for fashion show #}
+        {% get_programme_students self.show_index programme as rand_students %}
+    {% elif "animation" in self.get_programmes or "visualcommunication" in self.get_programmes %}
+        {# NON-random students for Animation show #}
+        {% get_programme_students self.show_index programme as rand_students %}
+    {% else %}
+        {% get_programme_students self.show_index programme True as rand_students %}
+    {% endif %}
 
-    <section class="shownav">
-        {% if not self.programme %}
-            <ul class="nav-overview">
-                <li><a href="{% get_school_index_url self %}">Schools &amp; Students</a></li>
-                {% for item in menuitems %}
-                    <li>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <ul>
-            {% if self.programme %}
-                <li class="jumplist">
-                    <h2 class="toggle">Students</h2>
-                    <div class="selected toggle"></div>
-                    <ul class="options">
-                        {% for student in students %}
-                            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% for item in menuitems %}
-                    <li>
-                        <a href="{% pageurl item %}">{{ item.title }}</a>
-                    </li>
-                {% endfor %}
-            {% else %}
-                <li class="jumplist active">
-                    <h2 class="toggle">Schools</h2>
-                    <div class="selected toggle">{% get_school_display school %}</div>
-                    <ul class="options">
-                        {% for school in schools %}
-                            <li><a href="{% get_school_url self school %}">{% get_school_display school %}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="jumplist active">
-                    <h2 class="toggle">Programmes</h2>
-                    <div class="selected toggle">{% get_programme_display programme %}</div>
-                    <ul class="options">
-                        {% for programme in programmes %}
-                            <li><a href="{% get_programme_url self school programme %}">{% get_programme_display programme %}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                <li class="jumplist">
-                    <h2 class="toggle">Students</h2>
-                    <div class="selected toggle"></div>
-                    <ul class="options">
-                        {% for student in students %}
-                            <li><a href="{% get_student_url self student %}">{{ student.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endif %}
-        </ul>
-    </section>
+    {% include "rca_show/includes/menus/menu.html" %}
 
-    {% include "rca_show/includes/modules/rand_gallery.html" with rand_students=rand_students %}
+    {% include "rca/includes/modules/carousel.html" with overlayvisible=0 %}
+
+    {% if not self.is_programme_page %}
+        <h1>{% get_programme_display programme %}</h1>
+    {% endif %}
+
+    {{ intro|safe }}
+
+    {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}    
 {% endblock %}
 
 {% block sidebar %}

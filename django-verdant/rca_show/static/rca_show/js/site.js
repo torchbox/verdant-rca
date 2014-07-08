@@ -2,6 +2,22 @@
 
 var overlay;
 
+var themes = ['architecture', 'communication', 'design', 'fineart', 'humanities', 'material'];
+
+function randTheme(){
+    var chosen;
+
+    if(!$.cookie('showrcatheme')){
+        chosen = themes[Math.floor(Math.random() * themes.length)];
+        $.cookie('showrcatheme', chosen, { expires: 0.04, path: window.showIndexPath || '/' });
+    } else {
+        chosen = $.cookie('showrcatheme')
+    }
+
+    $('body').addClass('theme-schoolof' + chosen);
+    return chosen;
+}
+
 function setupOverlay(){
     var usedSlots = [];
 
@@ -81,11 +97,13 @@ $(function(){
     overlay = $('#showrca2014-overlay');
 
     if(overlay.length){
-        setupOverlay();
+        randTheme();
 
-        if(!$.cookie('showrca2014')){
+        // if(window.debug || !$.cookie('showrca2014')){
+        if(!$('body').hasClass('type-login') && !$.cookie('showrca2014')){
+            setupOverlay();
             displayShowOverlay();
-            $.cookie('showrca2014', '1', { expires: 0.5 });
+            $.cookie('showrca2014', '1', { expires: 0.04, path: '/' });
         }
         
         $('.toggleoverlay').click(function(){

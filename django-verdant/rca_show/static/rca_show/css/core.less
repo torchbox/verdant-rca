@@ -59,7 +59,7 @@ i{
     }
 
     > div{
-        .transition(~"top 0.5s ease, left 0.5s ease, width 0.5s ease");
+        .transition(~"top 0.5s ease, left 0.5s ease, margin-left 0.5s ease, width 0.5s ease");
         position:fixed;
     }
 
@@ -116,12 +116,16 @@ header {
     .exhibition-date{
         margin:0;
         position:absolute;
-        right:0%;
+        right:5%;
         top:30px;
         .font-family-newrail-bold();
-        width:4em;
-        font-size:2em;
+        width:5em;
+        font-size:1.4em;
         line-height:1.1em;
+
+        p{
+            margin:0;
+        }
     }
     
     .header-wrapper.affix .exhibition-date{
@@ -225,6 +229,31 @@ header {
     display:none;
 }
 
+form .error-message{
+    color:red;
+}
+
+/* template-specific, non-module tweaks */
+.type-school{
+    h1{
+        text-transform:uppercase;
+        max-width:6em;
+    }
+}
+
+.type-login{
+    .nav-wrapper{
+        display:none;
+    }
+    .login-form label{
+        font-weight:bold;
+    }
+}
+
+section.row{
+    margin-bottom:@spacing-one;
+}
+
 
 @media screen and (min-width:480px){
     #showrca2014-overlay{
@@ -233,7 +262,6 @@ header {
         }
     }
 }
-
 
 @import "modules.less";
 @import "themes.less";

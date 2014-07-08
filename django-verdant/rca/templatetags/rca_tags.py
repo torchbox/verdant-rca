@@ -9,6 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
+from rca.utils import get_students
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -603,3 +604,22 @@ class TabNode(template.Node):
 @register.assignment_tag
 def get_debug():
     return getattr(settings, 'DEBUG', "")
+
+
+@register.assignment_tag
+def get_student_carousel_items(student, degree=None, show_animation_videos=False):
+    profile = student.get_profile(degree)
+    carousel_items = profile['carousel_items'].all()
+
+    # If this is a 2014 animation student, remove first carousel item
+    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
+        # Remove first two carousel items if they are vimeo videos
+        for i in range(2):
+            try:
+                first_carousel_item = carousel_items[0]
+                if first_carousel_item and first_carousel_item.embedly_url:
+                    carousel_items = carousel_items[1:]
+            except IndexError:
+                pass
+
+    return carousel_items
