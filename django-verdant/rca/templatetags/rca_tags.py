@@ -253,7 +253,7 @@ def staff_related(context, staff_page, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
+def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5, blog_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -261,9 +261,10 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     tweets = [[],[],[],[],[]]
 
-    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count], blog[:blog_count]))
     random.shuffle(packeryItems)
 
     return {

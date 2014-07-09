@@ -2373,6 +2373,7 @@ class HomePage(Page, SocialFields):
     packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
     packery_events = models.IntegerField("Number of events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
+    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),))
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -2408,6 +2409,7 @@ class HomePage(Page, SocialFields):
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
         events = EventItem.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         tweets = [[],[],[],[],[]]
 
         if exclude:
@@ -2420,8 +2422,9 @@ class HomePage(Page, SocialFields):
             alumni = alumni.exclude(id__in=exclude);
             review = review.exclude(id__in=exclude);
             events = events.exclude(id__in=exclude);
+            blog = blog.exclude(id__in=exclude);
 
-        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events]))
+        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], blog[:self.packery_blog]))
 
         # only add tweets to the packery content if not using the plus button
         if not exclude:
@@ -2494,7 +2497,8 @@ HomePage.content_panels = [
         FieldPanel('packery_research'),
         FieldPanel('packery_alumni'),
         FieldPanel('packery_review'),
-        FieldPanel('packery_events')
+        FieldPanel('packery_events'),
+        FieldPanel('packery_blog'),
     ], 'Packery content'),
     InlinePanel(HomePage, 'related_links', label="Related links"),
     InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
@@ -4004,8 +4008,8 @@ class RcaBlogPage(Page, SocialFields):
     body = RichTextField()
     author = models.CharField(max_length=255, blank=True)
     date = models.DateField("Creation date")
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True)
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True)
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True)
     show_on_homepage = models.BooleanField()
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
@@ -4027,6 +4031,10 @@ class RcaBlogPage(Page, SocialFields):
                 return StudentPage.objects.filter(live=True, owner=self.owner)[0]
             except IndexError:
                 return None
+
+    def blog_index(self):
+        """Return the parent blog index for the blog page, so that it can be displayed in the Homepage packery area"""
+        return self.get_ancestors().type(RcaBlogIndex).last()
 
 
 RcaBlogPage.content_panels = [

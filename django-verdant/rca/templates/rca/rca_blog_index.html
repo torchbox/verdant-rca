@@ -23,6 +23,9 @@
 {% endblock %}
 
 {% block sidebar %}
+
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" %}
+
     {% if self.get_popular_tags %}
     <div class="related expanded">
         <h2>Tags {{self.tag}}</h2>
@@ -37,7 +40,7 @@
     </div>
     {% endif %}
 
-    {% include "rca/includes/sidebar.html" with showTags="true" %}
+
 {% endblock %}
 
 {% block extra_js %}
