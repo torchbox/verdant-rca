@@ -1,4 +1,4 @@
-{% load pageurl image_tags %}
+{% load pageurl wagtailimages_tags %}
 
 <li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}">
     <a href="{% pageurl self %}{{ galleryitem.slug }}/">
