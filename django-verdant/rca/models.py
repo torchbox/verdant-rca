@@ -3628,7 +3628,6 @@ class NewStudentPage(Page, SocialFields):
     phd_statement = RichTextField("Research statement", blank=True)
     phd_in_show = models.BooleanField("In show", default=False, help_text="Please tick only if you're in the Show this academic year")
 
-
     search_fields = Page.search_fields + (
         indexed.SearchField('first_name', partial_match=True, boost=50),
         indexed.SearchField('last_name', partial_match=True, boost=50),
@@ -3643,18 +3642,30 @@ class NewStudentPage(Page, SocialFields):
         indexed.SearchField('get_show_work_type_display'),
         indexed.SearchField('get_show_work_location_display'),
         indexed.SearchField('show_work_description'),
+        indexed.FilterField('ma_in_show'),
+        indexed.FilterField('ma_school'),
+        indexed.FilterField('ma_programme'),
+        indexed.FilterField('ma_graduation_year'),
 
         indexed.SearchField('get_mphil_school_display'),
         indexed.SearchField('get_mphil_programme_display'),
         indexed.SearchField('mphil_graduation_year'),
         indexed.SearchField('mphil_dissertation_title'),
         indexed.SearchField('mphil_statement'),
+        indexed.FilterField('mphil_in_show'),
+        indexed.FilterField('mphil_school'),
+        indexed.FilterField('mphil_programme'),
+        indexed.FilterField('mphil_graduation_year'),
 
         indexed.SearchField('get_phd_school_display'),
         indexed.SearchField('get_phd_programme_display'),
         indexed.SearchField('phd_graduation_year'),
         indexed.SearchField('phd_dissertation_title'),
         indexed.SearchField('phd_statement'),
+        indexed.FilterField('phd_in_show'),
+        indexed.FilterField('phd_school'),
+        indexed.FilterField('phd_programme'),
+        indexed.FilterField('phd_graduation_year'),
     )
 
     @property
