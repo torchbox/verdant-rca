@@ -71,7 +71,7 @@
                             {% if carousel_item.poster_image %}
                                 <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
                             {% endif %}
-                            {{ carousel_item.embedly_url|embedly:"944" }}
+                            {{ carousel_item.embedly_url|embed:"944" }}
                         </div>
                     </li>
                 {% endif %}
