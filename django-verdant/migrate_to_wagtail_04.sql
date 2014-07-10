@@ -5,7 +5,7 @@ ALTER TABLE "wagtailcore_site" ADD CONSTRAINT "wagtailcore_site_hostname_29d2c7f
 ALTER TABLE "wagtailcore_pagerevision" ADD COLUMN "approved_go_live_at" timestamp with time zone NULL;
 ALTER TABLE "wagtailcore_page" ADD COLUMN "go_live_at" timestamp with time zone NULL;
 ALTER TABLE "wagtailcore_page" ADD COLUMN "expire_at" timestamp with time zone NULL;
-ALTER TABLE "wagtailcore_page" ADD COLUMN "expired" boolean NOT NULL;
+ALTER TABLE "wagtailcore_page" ADD COLUMN "expired" boolean NOT NULL DEFAULT 'f';
 
 INSERT INTO south_migrationhistory(app_name, migration, applied) VALUES ('wagtailcore', '0003_auto__del_unique_site_hostname__add_unique_site_hostname_port', now());
 INSERT INTO south_migrationhistory(app_name, migration, applied) VALUES ('wagtailcore', '0004_fields_for_scheduled_publishing', now());
