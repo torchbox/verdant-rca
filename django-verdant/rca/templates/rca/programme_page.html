@@ -47,7 +47,7 @@
     {% upcoming_events_related programme=self.programme display_name=self.get_programme_display %}
 
     <!-- staff -->
-    <!-- {% staff_by_programme programme=self.programme %} -->
+    <!-- {# staff_by_programme programme=self.programme #} -->
 
     <!-- staff feed -->
     {% include "rca/includes/modules/staff_feed.html" %}
@@ -101,20 +101,38 @@
 
         <!-- links and ids added by javascript -->
         {% tab "Facilities" class="flush" %}
-            
-            {% if self.facilities_text or self.facilities_image %}
-                {% if self.facilities_image %}
-                    <div class="image">{% image self.facilities_image width-1000 %}</div>
-                {% endif %}
-                {% if self.facilities_text %}
-                    <div class="facilities">
-                        {{ self.facilities_text|richtext }}
-                        {% if self.facilities_link %}
-                            ...<a class="bc5 caps" href="{% pageurl self.facilities_link %}">continue</a>
+            <div class="{% if self.facilities_carousel_items|length = 1 %}single-carousel{% endif %}">
+                <ul class="carousel paginated">
+                    {% for facility in self.facilities_carousel_items.all %}
+                        {% if facility.facilities_image %}
+                            <li>
+                                <div class="image {% if facility.facilities_image.is_portrait %}portrait{% else %}landscape{% endif %}">
+                                    {% if facility.facilities_link %}<a href="{{ facility.facilities_link }}">{% endif %}
+                                        {% image facility.facilities_image width-1000 %}
+                                    {% if facility.facilities_link %}</a>{% endif %}
+                                </div>
+                                
+                                {% if facility.facilities_text %}
+                                    <div class="content footer-content">
+                                        {% if facility.facilities_text %}
+                                            {{ facility.facilities_text|richtext }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                {# Repeat overlay and caption text for mobile #}
+                                {% if facility.facilities_text %}
+                                    <div class="mobilecaption footer-content">
+                                        {% if facility.facilities_text %}
+                                            {{ facility.facilities_text|richtext }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </li>
                         {% endif %}
-                    </div>
-                {% endif %}
-            {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
         {% endtab %}
 
     {% endtabdeck %}
