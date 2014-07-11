@@ -773,6 +773,18 @@ SchoolPage.promote_panels = [
 class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
 
+class ProgrammePageFacilitiesCarouselItem(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='facilities_carousel_items')
+    facilities_text = RichTextField(null=True, blank=True)
+    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+
+    panels = [
+        ImageChooserPanel('facilities_image'),
+        FieldPanel('facilities_text'),
+        PageChooserPanel('facilities_link'),
+    ]
+    
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
     staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+')
@@ -931,11 +943,7 @@ ProgrammePage.content_panels = [
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Video'),
     InlinePanel(ProgrammePage, 'student_stories', label="Student stories"),
-    MultiFieldPanel([
-        ImageChooserPanel('facilities_image'),
-        FieldPanel('facilities_text'),
-        PageChooserPanel('facilities_link'),
-    ], 'Facilities'),
+    InlinePanel(ProgrammePage, 'facilities_carousel_items', label="Facilities"),
     InlinePanel(ProgrammePage, 'documents', label="Documents"),
     InlinePanel(ProgrammePage, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
