@@ -862,18 +862,16 @@ class ProgrammePage(Page, SocialFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES)
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The full bleed image in the background")
-    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="This is my help text")
-    head_of_programme_statement = RichTextField(null=True, blank=True, help_text="This is my content this is my content this is my content")
-    head_of_programme_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    programme_video = models.CharField(max_length=255, blank=True)
-    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
+    head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="Select the profile page of the Head of this programme.")
+    head_of_programme_statement = RichTextField(null=True, blank=True, help_text="A small snippet of text from the full Head of Programme Welcome Page")
+    head_of_programme_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The link to the Head of Programme Welcome Page")
+    programme_video = models.CharField('Programme video Vimeo address', max_length=255, blank=True, help_text="The web addres for the programme video on Vimeo. For example, 'http://vimeo.com/62715625'.")
+    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The poster image for the programme video")
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=TWITTER_FEED_HELP_TEXT)
     contact_title = models.CharField(max_length=255, blank=True)
     contact_address = models.TextField(blank=True)
     contact_link = models.URLField(blank=True)
     contact_link_text = models.CharField(max_length=255, blank=True)
-    download_document_url = models.CharField(max_length=255, blank=True)
-    download_document_text = models.CharField(max_length=255, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term")
     facilities_text = RichTextField(null=True, blank=True)
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
@@ -929,22 +927,24 @@ class ProgrammePage(Page, SocialFields):
             })
 
 ProgrammePage.content_panels = [
-    ImageChooserPanel('background_image'),
     FieldPanel('title', classname="full title"),
+    ImageChooserPanel('background_image'),
     InlinePanel(ProgrammePage, 'carousel_items', label="Carousel content"),
-    InlinePanel(ProgrammePage, 'related_links', label="Related links"),
-    PageChooserPanel('head_of_programme', 'rca.StaffPage'),
-    FieldPanel('head_of_programme_statement'),
-    PageChooserPanel('head_of_programme_link'),
+    MultiFieldPanel([
+        PageChooserPanel('head_of_programme', 'rca.StaffPage',),
+        FieldPanel('head_of_programme_statement', classname="full"),
+        PageChooserPanel('head_of_programme_link'),
+    ], 'Head of Programme details'),
     InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
     InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
-    ], 'Video'),
+    ], 'Programme video'),
     InlinePanel(ProgrammePage, 'student_stories', label="Student stories"),
     InlinePanel(ProgrammePage, 'facilities_carousel_items', label="Facilities"),
     InlinePanel(ProgrammePage, 'documents', label="Documents"),
+    InlinePanel(ProgrammePage, 'related_links', label="Related links"),
     InlinePanel(ProgrammePage, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
