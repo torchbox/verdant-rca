@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load compress static show_tags rich_text pageurl %}
+{% load compress static show_tags wagtailcore_tags %}
 
 {% block body_class %}showrca{% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 

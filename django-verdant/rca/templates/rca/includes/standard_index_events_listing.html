@@ -1,4 +1,4 @@
-{% load pageurl %}
+{% load wagtailcore_tags %}
 {% if events %}
     <section class="events x-plus index-listing module" data-pagination=".pagination">
         <h2 class="module-title"><a href="{{ global_events_index_url }}?area={{ self.events_feed_area }}">{{ self.get_events_feed_area_display }} events</a></h2>

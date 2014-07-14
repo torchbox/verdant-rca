@@ -1,4 +1,4 @@
-{% load pageurl %}
+{% load wagtailcore_tags %}
 {% if events %}
     <section class="events x-plus row module">
         <h2 class="module-title">{% if opendays %}<a href="{{ events_index_url }}?audience=openday">Open days</a>{% elif school %}<a href="{{ events_index_url }}?school=school">{{ display_name }} events</a>{% elif programme %}<a href="{{ events_index_url }}?programme={{ programme }}">{{ display_name }} events</a>{% else %}<a href="{{ events_index_url }}?area=area">{{ display_name }} events</a>{% endif %}</h2>

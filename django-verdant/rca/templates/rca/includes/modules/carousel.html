@@ -1,4 +1,4 @@
-{% load image_tags embed_filters %}
+{% load wagtailimages_tags wagtailembeds_tags %}
 
 {% with self.carousel_items.all as carousel_items %}
     {% if carousel_items %}
@@ -74,7 +74,7 @@
                                 {% if carousel_item.poster_image %}
                                     <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
                                 {% endif %}
-                                {{ carousel_item.embedly_url|embedly:"944" }}
+                                {{ carousel_item.embedly_url|embed:"944" }}
                             </div>
                         </li>
                     {% endif %}
