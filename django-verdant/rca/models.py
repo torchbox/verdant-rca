@@ -354,7 +354,7 @@ PROGRAMME_CHOICES = sorted([
     )
     for year, mapping
     in SCHOOL_PROGRAMME_MAP.items()
-])
+], reverse=True)
 
 
 # Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
