@@ -3030,7 +3030,7 @@ class StaffIndex(Page, SocialFields):
             ('area', 'roles__area', area),
         ])
 
-        # Remove duplicates (#613)
+        # Remove duplicates (#615)
         staff_pages = staff_pages.distinct()
 
         staff_pages = staff_pages.order_by('-random_order')
