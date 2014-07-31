@@ -437,10 +437,10 @@ class SocialFields(models.Model):
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'image'))
-    overlay_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.MODEL', 'overlay_text'))
-    link = models.URLField("External link", blank=True, help_text=help_text('rca.MODEL', 'link'))
+    overlay_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.CarouselItemFields', 'overlay_text'))
+    link = models.URLField("External link", blank=True, help_text=help_text('rca.CarouselItemFields', 'link'))
     link_page = models.ForeignKey(Page, on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.CarouselItemFields', 'link_page'))
-    embedly_url = models.URLField('Vimeo URL', blank=True, help_text=help_text('rca.MODEL', 'embedly_url'))
+    embedly_url = models.URLField('Vimeo URL', blank=True, help_text=help_text('rca.CarouselItemFields', 'embedly_url'))
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'poster_image'))
 
     @property
@@ -1118,7 +1118,7 @@ class NewsItem(Page, SocialFields):
     show_on_news_index = models.BooleanField(default=True, help_text=help_text('rca.NewsItem', 'show_on_news_index'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.NewsItem', 'area'))
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False, help_text=help_text('rca.NewsItem', 'rca_content_id')) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
 
@@ -2815,7 +2815,7 @@ class AlumniPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.AlumniPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
     biography = RichTextField(help_text=help_text('rca.AlumniPage', 'biography'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.AlumniPage', 'random_order'))
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -2932,8 +2932,8 @@ class StaffPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'last_name'))
     supervised_student_other = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'supervised_student_other', default="Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically."))
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False, help_text=help_text('rca.StaffPage', 'rca_content_id')) # for import
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.StaffPage', 'random_order'))
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -3610,8 +3610,8 @@ class NewStudentPage(Page, SocialFields):
     postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"))
 
     # Hidden fields
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False, help_text=help_text('rca.NewStudentPage', 'rca_content_id'))  # for import
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.NewStudentPage', 'random_order'))
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     # MA details
     ma_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_school'))
@@ -4322,8 +4322,8 @@ class ResearchItemCarouselItem(Orderable, CarouselItemFields):
 
 class ResearchItemCreator(Orderable):
     page = ParentalKey('rca.ResearchItem', related_name='creator')
-    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked, help_text=help_text('rca.MODEL', 'person')).")
-    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.ResearchItemCreator', 'person', default="Choose an existing person's page, or enter a name manually below (which will not be linked)."))
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItemCreator', 'manual_person_name', default="Only required if the creator has no page of their own to link to"))
 
     panels=[
         PageChooserPanel('person'),
@@ -4352,10 +4352,10 @@ class ResearchItem(Page, SocialFields):
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'work_type_other'))
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES, blank=True, help_text=help_text('rca.ResearchItem', 'theme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False, help_text=help_text('rca.ResearchItem', 'rca_content_id')) # for import
-    eprintid = models.CharField(max_length=255, blank=True, editable=False, help_text=help_text('rca.ResearchItem', 'eprintid')) # for import
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
     show_on_homepage = models.BooleanField(help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.ResearchItem', 'random_order'))
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -4974,8 +4974,8 @@ class InnovationRCAProjectCarouselItem(Orderable, CarouselItemFields):
 
 class InnovationRCAProjectCreator(Orderable):
     page = ParentalKey('rca.InnovationRCAProject', related_name='creator')
-    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text="Choose an existing person's page, or enter a name manually below (which will not be linked, help_text=help_text('rca.MODEL', 'person')).")
-    manual_person_name= models.CharField(max_length=255, blank=True, help_text="Only required if the creator has no page of their own to link to")
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.InnovationRCAProjectCreator', 'person', default="Choose an existing person's page, or enter a name manually below (which will not be linked)."))
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProjectCreator', 'manual_person_name', default="Only required if the creator has no page of their own to link to"))
 
     panels=[
         PageChooserPanel('person'),
@@ -5002,7 +5002,7 @@ class InnovationRCAProject(Page, SocialFields):
     show_on_homepage = models.BooleanField(help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.InnovationRCAProject', 'project_type'))
     project_ended = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'project_ended'))
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.InnovationRCAProject', 'random_order'))
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.InnovationRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -5263,7 +5263,7 @@ class ReachOutRCAProject(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
     project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES, help_text=help_text('rca.ReachOutRCAProject', 'project'))
-    random_order = models.IntegerField(null=True, blank=True, editable=False, help_text=help_text('rca.ReachOutRCAProject', 'random_order'))
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReachOutRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
