@@ -24,6 +24,7 @@ from django.views.decorators.vary import vary_on_headers
 
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
@@ -3205,7 +3206,7 @@ class ResearchStudentIndex(Page, SocialFields):
         if len(path_components) == 1:
             try:
                 student_page = self.all_students().get(slug=path_components[0])
-                return student_page.specific.serve(request, view='research')
+                return RouteResult(student_page.specific, kwargs={'view': 'research'})
             except NewStudentPage.DoesNotExist:
                 pass
 
