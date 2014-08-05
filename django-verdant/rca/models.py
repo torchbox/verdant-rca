@@ -4796,7 +4796,7 @@ class GalleryPage(Page, SocialFields):
         if len(path_components) == 1:
             try:
                 student_page = self.get_students()[0].get(slug=path_components[0])
-                return student_page.specific.serve(request, view='show')
+                return RouteResult(student_page.specific, kwargs={'view': 'show'})
             except NewStudentPage.DoesNotExist:
                 pass
 
