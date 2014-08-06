@@ -24,6 +24,7 @@ from django.views.decorators.vary import vary_on_headers
 
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
@@ -3208,7 +3209,7 @@ class ResearchStudentIndex(Page, SocialFields):
         if len(path_components) == 1:
             try:
                 student_page = self.all_students().get(slug=path_components[0])
-                return student_page.specific.serve(request, view='research')
+                return RouteResult(student_page.specific, kwargs={'view': 'research'})
             except NewStudentPage.DoesNotExist:
                 pass
 
@@ -3827,23 +3828,24 @@ class NewStudentPage(Page, SocialFields):
         # Use profile url in the search
         return self.profile_url
 
-    def get_page_modes(self):
+    @property
+    def preview_modes(self):
         # Each ShowIndexPage can display a Student in a different styling
         # Find all ShowIndexPages and add them all to the list of page modes
         from rca_show.models import ShowIndexPage
-        return super(NewStudentPage, self).get_page_modes() + [
+        return super(NewStudentPage, self).preview_modes + [
             ('show:' + str(show_index.id), show_index.title)
             for show_index in ShowIndexPage.objects.all()
         ]
 
-    def show_as_mode(self, mode):
+    def serve_preview(self, request, mode):
         # Check if a ShowIndexPage preview was selected
         from rca_show.models import ShowIndexPage
         if mode.startswith('show:'):
             show_index = ShowIndexPage.objects.get(id=int(mode[5:]))
             return show_index._serve_student(self.dummy_request(), self)
 
-        return super(NewStudentPage, self).show_as_mode(mode)
+        return super(NewStudentPage, self).serve_preview(request, mode)
 
     def serve(self, request, view='standard'):
         if view not in ['standard', 'show', 'research']:
@@ -4798,7 +4800,7 @@ class GalleryPage(Page, SocialFields):
         if len(path_components) == 1:
             try:
                 student_page = self.get_students()[0].get(slug=path_components[0])
-                return student_page.specific.serve(request, view='show')
+                return RouteResult(student_page.specific, kwargs={'view': 'show'})
             except NewStudentPage.DoesNotExist:
                 pass
 
