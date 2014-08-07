@@ -6,7 +6,7 @@ Markdown==2.3.1
 MarkupSafe==0.18
 Pillow==2.0.0
 PyYAML==3.10
-South==0.8.3
+South==1.0.0
 Sphinx==1.2
 anyjson==0.3.3
 celery-with-redis==2.5
@@ -23,7 +23,7 @@ ecdsa==0.10
 html2text==3.200.3
 httplib2==0.8
 kombu==2.1.8
-psycopg2==2.4.6
+psycopg2==2.5.2
 pycrypto==2.6.1
 python-dateutil==1.5
 requests==2.2.0
@@ -32,7 +32,7 @@ sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
--e git://github.com/torchbox/wagtail.git@4f8cfa6346fd645af7a37cbaca3be9183d68b8b3#egg=wagtail-master
+wagtail==0.5
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4

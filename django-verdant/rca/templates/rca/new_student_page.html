@@ -40,8 +40,8 @@
                                     {% if self.phd_supervisors.all %}
                                         <dd>Supervisors</dd>
                                         <dt>
-                                            {% for collaborator in self.phd_supervisors.all %}
-                                                {{ collaborator.name }}<br />
+                                            {% for supervisor in self.phd_supervisors.all %}
+                                                {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
@@ -93,8 +93,8 @@
                                     {% if self.mphil_supervisors.all %}
                                         <dd>Supervisors</dd>
                                         <dt>
-                                            {% for collaborator in self.mphil_supervisors.all %}
-                                                {{ collaborator.name }}<br />
+                                            {% for supervisor in self.mphil_supervisors.all %}
+                                                {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
