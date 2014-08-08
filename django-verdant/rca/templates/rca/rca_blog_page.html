@@ -25,9 +25,11 @@
                     <dd>Date</dd>
                     <dt>{{ self.date|date:"j F Y" }}</dt>
 
+                    {% if self.programme %}
                     <dd>Programme</dd>
                     <dt>{{ self.get_programme_display }}</dt>
-
+                    {% endif %}
+                    
                     {% if self.tags.all.count > 0 %}
                         <dd>Tags</dd>
                         <dt>
@@ -48,7 +50,6 @@
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
-
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showRCABlog="true" %}
+    {% include 'rca/includes/sidebar_related_blog.html' %}
 {% endblock %}
