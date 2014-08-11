@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load image_tags rich_text rca_tags %}
+{% load wagtailimages_tags wagtailcore_tags rca_tags %}
 
 {% block body_class %}
     type-student-profile
@@ -8,23 +8,11 @@
 {% block content %}
     <h1 class="h1">{{ self.title }}</h1>
 
-        {% if student.ma_in_show %}
-        {% with student.show_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% else %}
-        {% with student.research_carousel_items.all as carousel_items %}
-            {% include "rca_show/includes/modules/carousel.html" %}
-        {% endwith %}
-    {% endif %}
-
-
     {% tabdeck %}
         {% if self.is_phd_student %}
             {% tab "PhD Work" %}
-                {% with self.phd_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+                {% get_student_carousel_items self 'phd' as phd_carousel_items %}
+                {% include "rca_show/includes/modules/carousel.html" with carousel_items=phd_carousel_items %}
 
                 <section class="row">
                     <div class="three-nine-cols">
@@ -52,8 +40,8 @@
                                     {% if self.phd_supervisors.all %}
                                         <dd>Supervisors</dd>
                                         <dt>
-                                            {% for collaborator in self.phd_supervisors.all %}
-                                                {{ collaborator.name }}<br />
+                                            {% for supervisor in self.phd_supervisors.all %}
+                                                {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
@@ -77,9 +65,8 @@
 
         {% if self.is_mphil_student %}
             {% tab "MPhil work" %}
-                {% with self.mphil_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+                {% get_student_carousel_items self 'mphil' as mphil_carousel_items %}
+                {% include "rca_show/includes/modules/carousel.html" with carousel_items=mphil_carousel_items %}
 
                 <section class="row">
                     <div class="three-nine-cols">
@@ -106,8 +93,8 @@
                                     {% if self.mphil_supervisors.all %}
                                         <dd>Supervisors</dd>
                                         <dt>
-                                            {% for collaborator in self.mphil_supervisors.all %}
-                                                {{ collaborator.name }}<br />
+                                            {% for supervisor in self.mphil_supervisors.all %}
+                                                {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}{{ supervisor.name }}{% if supervisor.link %}</a>{% endif %}<br />
                                             {% endfor %}
                                         </dt>
                                     {% endif %}
@@ -130,10 +117,8 @@
 
         {% if self.is_ma_student and self.ma_in_show %}
             {% tab "MA work" %}
-
-                {% with self.show_carousel_items.all as carousel_items %}
-                    {% include "rca_show/includes/modules/carousel.html" %}
-                {% endwith %}
+                {% get_student_carousel_items self 'ma' as ma_carousel_items %}
+                {% include "rca_show/includes/modules/carousel.html" with carousel_items=ma_carousel_items %}
 
                 <section class="row">
                     <div class="three-nine-cols">

@@ -1,0 +1,57 @@
+{% extends "rca/base.html" %}
+{% load rca_tags wagtailcore_tags %}
+
+{% block body_class %}type-news-index{% endblock %}
+
+{% block content %}
+
+    {% include "rca/includes/modules/h1-major.html" %}
+
+    {% include "rca/includes/modules/intro-large.html" %}
+    
+    {% if self.body %}
+        <section class='row'>
+            {% include "rca/includes/modules/body-text.html" with body=self.body %}
+        </section>
+    {% endif %}
+
+    <div id="listing">
+        {% include "rca/includes/rca_blog_listing.html" %}
+    </div>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+
+    {% include "rca/includes/sidebar.html" %}
+
+    {% if self.get_popular_tags %}
+    <div class="related expanded">
+        <h2>Tags {{self.tag}}</h2>
+        <div class="wrapper">
+            <ul>
+                <li><a href="?tag=" {% if not tag %}class="active"{% endif %}>All</a></li>
+                {% for poptag in self.get_popular_tags %}
+                    <li><a href="?tag={{ poptag.slug }}" {% if tag = poptag.slug %}class="active"{% endif %}>{{ poptag }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+
+
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        //global var for rca_blog_index set here so that it can be used by the script being called
+        var current_page = window.location.pathname;
+        var filters = {{ filters|safe }};
+    </script>
+    <script src="/static/rca/js/filters.js"></script>
+{% endblock %}
+
+<!-- TODOs
+    - filter of programme by school (or other filtering to be discussed)
+-->

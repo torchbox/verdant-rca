@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from wagtail.wagtailcore.models import Page
+from wagtail.wagtailcore.url_routing import RouteResult
 from rca.models import EventItemDatesTimes, EventItem
 from constants import SCREEN_CHOICES, SCREEN_CHOICES_DICT
 from rca_signage.templatetags import rca_signage_tags
@@ -105,7 +106,7 @@ class ScreenIndex(Page):
 
         if path_components:
             # Request is for a screen
-            return self.serve(request, screen=path_components[0], extra_path='/'.join(path_components[1:]))
+            return RouteResult(self, kwargs=dict(screen=path_components[0], extra_path='/'.join(path_components[1:])))
         else:
             # Request is for screens index
-            return self.serve(request)
+            return RouteResult(self)

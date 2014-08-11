@@ -20,11 +20,11 @@ WAGTAILSEARCH_BACKENDS = {
     'default': {
         'BACKEND': 'wagtail.wagtailsearch.backends.db.DBSearch',
     },
-    'es': {
-        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-        'INDEX': 'verdant',
-        'URLS': ['http://5.153.227.116:9200'],
-    },
+#    'es': {
+#        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+#        'INDEX': 'verdant',
+#        'URLS': ['http://5.153.227.116:9200'],
+#    },
 }
 
 EMAIL_SUBJECT_PREFIX = "[rca-production] "

@@ -9,6 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
+from rca.utils import get_students
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -252,7 +253,7 @@ def staff_related(context, staff_page, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
+def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5, blog_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
@@ -260,9 +261,10 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     tweets = [[],[],[],[],[]]
 
-    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count], blog[:blog_count]))
     random.shuffle(packeryItems)
 
     return {
@@ -288,7 +290,7 @@ def sidebar_links(context, calling_page=None):
 
         # If no children, get siblings instead
         if len(pages) == 0:
-            pages = calling_page.get_other_siblings().filter(live=True, show_in_menus=True)
+            pages = calling_page.get_siblings(inclusive=False).filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag
@@ -603,3 +605,22 @@ class TabNode(template.Node):
 @register.assignment_tag
 def get_debug():
     return getattr(settings, 'DEBUG', "")
+
+
+@register.assignment_tag
+def get_student_carousel_items(student, degree=None, show_animation_videos=False):
+    profile = student.get_profile(degree)
+    carousel_items = profile['carousel_items'].all()
+
+    # If this is a 2014 animation student, remove first carousel item
+    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
+        # Remove first two carousel items if they are vimeo videos
+        for i in range(2):
+            try:
+                first_carousel_item = carousel_items[0]
+                if first_carousel_item and first_carousel_item.embedly_url:
+                    carousel_items = carousel_items[1:]
+            except IndexError:
+                pass
+
+    return carousel_items

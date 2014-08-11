@@ -860,6 +860,9 @@ nav.dl-menuwrapper{
                 color: @color-pink;
             }
         }
+        a.active{
+            color:@color-highlight-blue;
+        }
         &:last-child a {
             border-bottom: none;
         }
@@ -1549,7 +1552,7 @@ footer {
         .field:before{
             opacity:0.5;
             position:absolute;
-            content: "£";
+            content: "\00a3";
             font-size:3em;
             top:0.85em;
             left:0.3em;
@@ -1654,14 +1657,18 @@ footer {
  * &Skip navigation link
  */
 
- a.hidden {
+a.hidden {
     position:absolute;
     left:-10000px;
     top:auto;
     width:1px;
     height:1px;
     overflow:hidden;
- }
+}
+
+#wagtail-userbar{
+    top:80px;
+}
 
 @import "modules.less";
 @import "dlmenu.less";

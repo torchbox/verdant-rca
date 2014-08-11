@@ -1,6 +1,6 @@
 from django.template import Template, Context
-from django.utils import timezone
-import StringIO, csv
+from django.utils import timezone, dateformat
+import StringIO, unicodecsv
 
 
 class Report(object):
@@ -60,31 +60,54 @@ class Report(object):
                 {% endfor %}
               </tbody>
             </table>
-            <p>Generated: {{ time|date:'l dS F Y P' }}</p>
+            <p>{{ footer|safe }}</p>
           </body>
         </html>
         """
 
-    def __init__(self, data):
+    def __init__(self, data, **kwargs):
         self.data = data
+        self.kwargs = kwargs
+        self.rows_output = None
 
     def get_title(self):
         return self.title
 
+    def get_fields(self):
+        return self.fields
+
+    def get_footer(self):
+        return "Generated: " + dateformat.format(timezone.now(), 'l dS F Y P')
+
     def get_headings(self):
-        return [field[0] for field in self.fields]
+        return [field[0] for field in self.get_fields()]
+
+    def include_in_report(self, obj):
+        return True
+
+    def post_process(self, obj, fields):
+        return fields
 
     def get_rows(self):
         for row in self.data:
-            yield [field_func(self, row) for field_name, field_func in self.fields]
+            if not self.include_in_report(row):
+              continue
+
+            fields = self.post_process(row, [field_func(self, row) for field_name, field_func in self.get_fields()])
+
+            if fields is not None:
+                yield fields
+
+    def run(self):
+        self.rows_output = list(self.get_rows())
 
     def get_csv(self):
         output = StringIO.StringIO()
-        cw = csv.writer(output)
+        cw = unicodecsv.writer(output)
         cw.writerow(self.get_headings())
 
-        for row in self.get_rows():
-            cw.writerow([field[0].encode('UTF-8') for field in row])
+        for row in self.rows_output:
+            cw.writerow([field[0] for field in row])
 
         return output.getvalue()
 
@@ -94,8 +117,8 @@ class Report(object):
             'extra_css': self.extra_css,
             'title': self.get_title(),
             'headings': self.get_headings(),
-            'rows': self.get_rows(),
-            'time': timezone.now(),
+            'rows': self.rows_output,
+            'footer': self.get_footer()
         })
 
         return template.render(context).encode('UTF-8')

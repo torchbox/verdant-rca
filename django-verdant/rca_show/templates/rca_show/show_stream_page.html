@@ -1,0 +1,44 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags wagtailcore_tags %}
+
+{% block body_class %}{{ block.super }} type-standard{% endblock %}
+{% block extra_js_head %}
+<script src="http://jwpsrv.com/library/7CR3ti08EeKX8yIACp8kUw.js"></script>
+<script type="text/javascript">
+    var file = "http://influx.is/MmtjJN";
+    if ((navigator.userAgent.indexOf(
+    'Android') >0) ||
+    (navigator.userAgent.indexOf('BlackBerry') >0) ||
+    (navigator.userAgent.indexOf('Android') >0) ||
+    (navigator.userAgent.indexOf('IEMobile/7.0') >0)) {
+        document.write("<video width= '");
+        document.write(100% + "'")
+        document.write("height='");
+        document.write( + "'");
+        document.write("poster preload='true' controls>");
+        document.write("<source src=" + file + ">");
+    }
+</script> 
+
+{% endblock %}
+{% block content %}
+    {% include "rca_show/includes/menus/menu.html" %}
+
+    <h1>{{ self.title }}</h1>
+
+    {% include "rca_show/includes/modules/stream.html" %}
+
+    <section class="body-text">
+       
+
+        {% if self.body %}
+            {{ self.body|richtext }}
+        {% endif %}
+    </section>
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
+

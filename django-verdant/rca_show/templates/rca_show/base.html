@@ -1,8 +1,7 @@
 {% extends "rca/base.html" %}
-{% load compress static show_tags rich_text pageurl %}
+{% load compress static show_tags wagtailcore_tags %}
 
-{% block body_class %}{% get_show_index as show_index %}showrca{% if show_index.programme %}school-{{ show_index.school }} programme-{{ show_index.programme }}{% else %}
-school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
+{% block body_class %}showrca{% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -20,16 +19,12 @@ school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
 {% endblock %}
 
 {% block logo %}
-    {% get_show_index as show_index %}
-    <a href="{% if show_index %}{% pageurl show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
-    <p class="exhibition-date">{{ show_index.exhibition_date }}</p>
+    
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
 {% endblock %}
 
 {% block extra_footer %}
-    {% get_show_index as show_index %}
-
-    {% secondary_menu show_index as menuitems %}
-
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
         <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
@@ -47,17 +42,19 @@ school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
                             London SW7 2EU
                         </address>
                     </li>
-                    <!-- <li>
-                        <address>
-                            <h2>Battersea Campus</h2>
-                            15-25 Howie St<br />
-                            London<br />
-                            SW11 4AS
-                        </address>
-                    </li> -->
-                    {% for item in menuitems %}
+                    {% if not self.is_programme_page %}
                         <li>
-                            <a href="{% pageurl item %}">{{ item.title }}</a>
+                            <address>
+                                <h2>Battersea Campus</h2>
+                                15-25 Howie St<br />
+                                London<br />
+                                SW11 4AS
+                            </address>
+                        </li>
+                    {% endif %}
+                    {% for item in self.show_index.menu_items %}
+                        <li>
+                            <a href="{{ item.0 }}">{{ item.1 }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -65,22 +62,24 @@ school-{{ school }} programme-{{ programme }}{% endif %}{% endblock %}
         </div>
     </div>
 
-    {# This logic should only be true for programme-scoped pages, e.g CCA show #}
-
-    <div id="showrca2014-overlay" class="fade">
-        <div class="logo repos">Logo</div>
-        <div class="exhibition-date repos">{{ show_index.exhibition_date }}</div>
-        <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
-        <div class="intro col-detect body-text">
-            {{ show_index.overlay_intro|richtext }}
-            <div class="crest col-detect"></div>
+    {% if self.show_index.overlay_intro %}
+        <div id="showrca2014-overlay" class="fade">
+            <div class="logo repos">Logo</div>
+            <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
+            <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
+            <div class="intro col-detect body-text">
+                {{ self.show_index.overlay_intro|richtext }}
+                <div class="crest col-detect"></div>
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock %}
 
 {% block show_js %}
     <script>
         WebFontConfig = { fontdeck: { id: '42490' } };
+
+        window.showIndexPath = '{{ self.show_index.local_url }}';
 
         (function() {
             var wf = document.createElement('script');

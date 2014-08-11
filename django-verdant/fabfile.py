@@ -24,6 +24,10 @@ def deploy_staging(branch="staging"):
             sudo("git pull")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
+
+            # FOR WAGTAIL 0.4 UPDATE
+            # sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.staging")
+
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
@@ -45,6 +49,10 @@ def deploy():
 
             if env['host'] == MIGRATION_SERVER:
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
+
+                # FOR WAGTAIL 0.4 UPDATE
+                # sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
+
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
                 sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
@@ -100,14 +108,16 @@ def run_show_reports(year="2014"):
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             if env['host'] == MIGRATION_SERVER:
-                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py catalogue_check %s csv --settings=rcasite.settings.production' % year)
-                get('report.csv', 'report.csv')
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py students_report django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
+                get('report.csv', 'students_report.csv')
+                get('report.html', 'students_report.html')
                 sudo('rm report.csv')
-
-                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py catalogue_check %s html --settings=rcasite.settings.production' % year)
-                get('report.html', 'report.html')
                 sudo('rm report.html')
 
                 sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py postcard_dump %s --settings=rcasite.settings.production' % year)
                 get('postcard_dump.zip', 'postcard_dump.zip')
                 sudo('rm postcard_dump.zip')
+
+                sudo('/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py profile_image_dump django-verdant/graduating_students.csv %s --settings=rcasite.settings.production' % year)
+                get('profile_image_dump.zip', 'profile_image_dump.zip')
+                sudo('rm profile_image_dump.zip')
