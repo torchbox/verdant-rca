@@ -1004,7 +1004,7 @@ class NewsIndexAd(Orderable):
     ]
 
 class NewsIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.NewsIndex', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.NewsIndex', 'intro'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewsIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     subpage_types = ['NewsItem']
@@ -1113,7 +1113,7 @@ class NewsItemRelatedProgramme(models.Model):
 class NewsItem(Page, SocialFields):
     author = models.CharField(max_length=255, help_text=help_text('rca.NewsItem', 'author'))
     date = models.DateField(help_text=help_text('rca.NewsItem', 'date'))
-    intro = RichTextField(help_text=help_text('rca.NewsItem', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.NewsItem', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.NewsItem', 'body'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.NewsItem', 'show_on_homepage'))
     show_on_news_index = models.BooleanField(default=True, help_text=help_text('rca.NewsItem', 'show_on_news_index'))
@@ -1233,8 +1233,8 @@ class PressReleaseIndexAd(Orderable):
     ]
 
 class PressReleaseIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.PressReleaseIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.PressReleaseIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.PressReleaseIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.PressReleaseIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PressReleaseIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressReleaseIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -1330,7 +1330,7 @@ class PressReleaseRelatedProgramme(models.Model):
 class PressRelease(Page, SocialFields):
     author = models.CharField(max_length=255, help_text=help_text('rca.PressRelease', 'author'))
     date = models.DateField(help_text=help_text('rca.PressRelease', 'date'))
-    intro = RichTextField(help_text=help_text('rca.PressRelease', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.PressRelease', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.PressRelease', 'body'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.PressRelease', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
@@ -1690,8 +1690,8 @@ class EventIndexAd(Orderable):
     ]
 
 class EventIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.EventIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.EventIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.EventIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.EventIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -1803,8 +1803,8 @@ class TalksIndexAd(Orderable):
     ]
 
 class TalksIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.TalksIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.TalksIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.TalksIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.TalksIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.TalksIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.TalksIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -1884,8 +1884,8 @@ class ReviewsIndexAd(Orderable):
     ]
 
 class ReviewsIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.ReviewsIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.ReviewsIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.ReviewsIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.ReviewsIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewsIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReviewsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -1999,7 +1999,7 @@ class ReviewPageAd(Orderable):
     ]
 
 class ReviewPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.ReviewPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.ReviewPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.ReviewPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.ReviewPage', 'middle_column_body'))
@@ -2107,7 +2107,7 @@ class StandardPageReusableTextSnippet(Orderable):
     ]
 
 class StandardPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.StandardPage', 'middle_column_body'))
@@ -2258,10 +2258,10 @@ class StandardIndexContactSnippet(Orderable):
     ]
 
 class StandardIndex(Page, SocialFields, OptionalBlockFields):
-    intro = RichTextField(help_text=help_text('rca.StandardIndex', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.StandardIndex', 'intro'), blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'intro_link'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'strapline'))
-    body = RichTextField(help_text=help_text('rca.StandardIndex', 'body'))
+    body = RichTextField(help_text=help_text('rca.StandardIndex', 'body'), blank=True)
     teasers_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'teasers_title'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'background_image', default="The full bleed image in the background"))
@@ -2670,8 +2670,8 @@ class JobsIndexAd(Orderable):
     ]
 
 class JobsIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.JobsIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.JobsIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.JobsIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.JobsIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobsIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -2725,8 +2725,8 @@ class AlumniIndexAd(Orderable):
     ]
 
 class AlumniIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.AlumniIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.AlumniIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.AlumniIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.AlumniIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.AlumniIndex', 'twitter_feed'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -2812,7 +2812,7 @@ class AlumniPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.AlumniPage', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.AlumniPage', 'programme'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.AlumniPage', 'year'))
-    intro = RichTextField(help_text=help_text('rca.AlumniPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.AlumniPage', 'intro'), blank=True)
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.AlumniPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
     biography = RichTextField(help_text=help_text('rca.AlumniPage', 'biography'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
@@ -2918,17 +2918,17 @@ class StaffPage(Page, SocialFields):
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
     staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location', default="Please complete this field for technical staff only"))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'twitter_feed'))
-    intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'))
-    biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'))
-    practice = RichTextField(help_text=help_text('rca.StaffPage', 'practice'))
-    publications_exhibtions_and_other_outcomes_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'publications_exhibtions_and_other_outcomes_placeholder'))
-    external_collaborations_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'external_collaborations_placeholder'))
-    current_recent_research = RichTextField(help_text=help_text('rca.StaffPage', 'current_recent_research'))
-    awards_and_grants = RichTextField(help_text=help_text('rca.StaffPage', 'awards_and_grants'))
+    intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'), blank=True)
+    biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'), blank=True)
+    practice = RichTextField(help_text=help_text('rca.StaffPage', 'practice'), blank=True)
+    publications_exhibtions_and_other_outcomes_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'publications_exhibtions_and_other_outcomes_placeholder'), blank=True)
+    external_collaborations_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'external_collaborations_placeholder'), blank=True)
+    current_recent_research = RichTextField(help_text=help_text('rca.StaffPage', 'current_recent_research'), blank=True)
+    awards_and_grants = RichTextField(help_text=help_text('rca.StaffPage', 'awards_and_grants'), blank=True)
     show_on_homepage = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_homepage'))
     show_on_programme_page = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
-    research_interests = RichTextField(help_text=help_text('rca.StaffPage', 'research_interests'))
+    research_interests = RichTextField(help_text=help_text('rca.StaffPage', 'research_interests'), blank=True)
     title_prefix = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'title_prefix'))
     first_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'last_name'))
@@ -3010,8 +3010,8 @@ class StaffIndexAd(Orderable):
     ]
 
 class StaffIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.StaffIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.StaffIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.StaffIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.StaffIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -3102,7 +3102,7 @@ class ResearchStudentIndexAd(Orderable):
     ]
 
 class ResearchStudentIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.ResearchStudentIndex', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.ResearchStudentIndex', 'intro'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchStudentIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchStudentIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -3336,8 +3336,8 @@ class StudentPage(Page, SocialFields):
     graduation_year = models.CharField(max_length=4, blank=True, help_text="This field should only be filled in for students whose courses are more than 1 year. Should be filled in after graduation.")
     specialism = models.CharField(max_length=255, blank=True)
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True)
-    statement = RichTextField()
-    work_description = RichTextField()
+    statement = RichTextField(blank=True)
+    work_description = RichTextField(blank=True)
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, blank=True)
     work_location = models.CharField(max_length=255, choices=CAMPUS_CHOICES, blank=True)
     work_awards = models.CharField(max_length=255, blank=True, verbose_name='Show RCA work awards')
@@ -3602,7 +3602,7 @@ class NewStudentPage(Page, SocialFields):
     first_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name'))
     profile_image = models.ForeignKey('rca.RcaImage', on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"))
-    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'))
+    statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'statement'), blank=True)
     twitter_handle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'twitter_handle', default="Please enter Twitter handle without the @ symbol"))
     funding = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -3623,7 +3623,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_title = models.CharField("Dissertation/project title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_title'))
     show_work_type = models.CharField("Work type", max_length=255, choices=SHOW_WORK_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_type'))
     show_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'show_work_location'))
-    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'))
+    show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
     mphil_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_school'))
@@ -3632,7 +3632,7 @@ class NewStudentPage(Page, SocialFields):
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_work_location'))
     mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_dissertation_title'))
-    mphil_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'mphil_statement'))
+    mphil_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'mphil_statement'), blank=True)
     mphil_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'mphil_in_show', default="Please tick only if you're in the Show this academic year"))
 
     # PhD details
@@ -3642,7 +3642,7 @@ class NewStudentPage(Page, SocialFields):
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_work_location'))
     phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_dissertation_title'))
-    phd_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'phd_statement'))
+    phd_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'phd_statement'), blank=True)
     phd_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'phd_in_show', default="Please tick only if you're in the Show this academic year"))
 
     search_fields = Page.search_fields + (
@@ -4044,8 +4044,8 @@ RcaNowPage.promote_panels = [
 
 
 class RcaNowIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.RcaNowIndex', 'intro'))
-    body = RichTextField(help_text=help_text('rca.RcaNowIndex', 'body'))
+    intro = RichTextField(help_text=help_text('rca.RcaNowIndex', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.RcaNowIndex', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowIndex', 'twitter_feed'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4517,7 +4517,7 @@ class ResearchInnovationPageAd(Orderable):
     ]
 
 class ResearchInnovationPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.ResearchInnovationPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.ResearchInnovationPage', 'intro'), blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'intro_link'))
     teasers_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'teasers_title'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
@@ -4590,7 +4590,7 @@ class CurrentResearchPageAd(Orderable):
     ]
 
 class CurrentResearchPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.CurrentResearchPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.CurrentResearchPage', 'intro'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.CurrentResearchPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CurrentResearchPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4673,8 +4673,8 @@ class GalleryPageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.GalleryPage', related_name='related_links')
 
 class GalleryPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.GalleryPage', 'intro'))
-    body = RichTextField(help_text=help_text('rca.GalleryPage', 'body'))
+    intro = RichTextField(help_text=help_text('rca.GalleryPage', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.GalleryPage', 'body'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.GalleryPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.GalleryPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4874,8 +4874,8 @@ class DonationPage(Page, SocialFields):
     payment_description = models.CharField(max_length=255, blank=True, help_text=help_text('rca.DonationPage', 'payment_description', default="This value will be stored along with each donation made on this page to help ditinguish them from donations on other pages."))
 
     # fields copied from StandrdPage
-    intro = RichTextField(help_text=help_text('rca.DonationPage', 'intro'))
-    body = RichTextField(help_text=help_text('rca.DonationPage', 'body'))
+    intro = RichTextField(help_text=help_text('rca.DonationPage', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.DonationPage', 'body'), blank=True)
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.DonationPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.DonationPage', 'middle_column_body'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.DonationPage', 'show_on_homepage'))
@@ -5114,7 +5114,7 @@ class InnovationRCAIndexAd(Orderable):
     ]
 
 class InnovationRCAIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.InnovationRCAIndex', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.InnovationRCAIndex', 'intro'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.InnovationRCAIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5378,7 +5378,7 @@ class ReachOutRCAIndexAd(Orderable):
     ]
 
 class ReachOutRCAIndex(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.ReachOutRCAIndex', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.ReachOutRCAIndex', 'intro'), blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReachOutRCAIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5470,7 +5470,7 @@ class StreamPageAd(Orderable):
     ]
 
 class StreamPage(Page, SocialFields):
-    intro = RichTextField(help_text=help_text('rca.StreamPage', 'intro'))
+    intro = RichTextField(help_text=help_text('rca.StreamPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StreamPage', 'body'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StreamPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
