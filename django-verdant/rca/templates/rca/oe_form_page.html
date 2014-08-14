@@ -11,8 +11,38 @@
         (function () {
            var e = document.createElement('script'); e.async = true;
            e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
+           console.log(e);
            document.getElementsByTagName('head')[0].appendChild(e);
         } ());
+
+        $(function() {
+           var blackbaudLoad = function() {
+              //Remove the JS added Blackbaud CSS when loaded. 
+              var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms/Funds-and-appeals---7516"]';
+              var blackbaudElementCheckInterval = setInterval(function(){
+                //Run once form has loaded
+                if ($(el).length) {
+                    $(el).remove();
+                    $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
+                    clearInterval(blackbaudElementCheckInterval);
+                    // FORM HELPERS for Donations
+                    // If other amount label selected show the other amount input
+                    $('.BBFormRadioLabelGivingLevelOther').on('click', function() {
+                      $('#bboxdonation_gift_fldOtherLevelAmount').show(200);
+                    });
+                    // Click was on an actual amount so hide the 'other' amount input box
+                    $('.BBFormRadioLabelGivingLevel:not(.BBFormRadioLabelGivingLevelOther)').on('click', function() {
+                      $('#bboxdonation_gift_fldOtherLevelAmount').hide(250);
+                    });  
+                    $('.BBFormSelectList').customSelect({customClass:'select'});                  
+
+
+                }
+              }, 1000);
+           }
+           blackbaudLoad();
+
+        });
     </script>
 {% endblock extra_js %}
 

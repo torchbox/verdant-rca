@@ -1511,110 +1511,171 @@ footer {
 }
 
 .type-donations{
-    .amounts{
-        ul{
-            .row();
-            .row-flush();
+    /* Blackbaud donation form */ 
+    #bbox-root {
+      .column(8);
+      padding: 0;
+      #mongo-form {
+        //Hide the blackbaud styled form on load
+        visibility: hidden;
+      }
+      #bbox-msg-wrapper {
+        margin: 0 auto;
+        width: 35px;
+      }
+      img {
+        max-width: 100%;
+        width: auto;
+      }
+      /* Form code */
+      .BBFormContainer {
+        border: none;
+        font-size: @font-size-15;
+        legend label {
+          font-family: inherit;
+          font-size: 1.25em;
+          text-transform: none;
         }
-        ul li{
-            .column(4);
-            
-            label{
-                font-size:2em;
-                margin:0;
-                line-height:1em;
-                font-style:normal;
-                background-color:@color-advert-pale-blue;
-                padding:@grid-gutter-width;
-                text-transform:none;
-                cursor:pointer;
-
-                &:hover{
-                    color:white;
-                    background-color:@color-highlight-blue;
-                }
-
-                &.selected{
-                    color:white;
-                    background-color:@color-pink;
-                }
+        label {
+          margin-top: 0.5em;
+        }
+        input[type=radio] {
+          display: none;
+        }
+        .select{
+          font-family:Arial,sans-serif;
+        }
+        .selectInner{
+          width:auto !important;
+        }
+        #bboxdonation_gift_fldAmountWithLevels {
+          .clearfix();
+        }
+        #bboxdonation_gift_fldOtherLevelAmount {
+          display: none;
+        }
+        .BBFormRadioItem {
+          margin-bottom: 16px;
+          .column(4);
+          padding-left: 0;
+          padding-right: 0;
+          padding: 0 16px 0 0;
+        }
+        .BBFormRadioLabel {
+          .large-radio-label();
+          &.BBFormRadioLabelGivingLevelSelected {
+            color: @color-white;
+            background-color: @color-pink;
+          }
+        }
+        .BBFormGiftOtherAmount {
+          color: @color-black;
+          font-family: @font-family-benton-light;
+          width: 7em;
+          padding-left: 1.4em;
+          font-size: 2.5em;
+          position: relative;
+          .large-radio-label();
+          &:hover {
+            background-color: @color-advert-pale-blue;
+            color: inherit;
+            font-family: inherit;
+          }
+        }
+        .BBFormTextbox.BBFormGiftOtherAmount:before {
+          opacity: 0.5;
+          position: absolute;
+          content: "\00a3";
+          font-size: 3em;
+          top: 0.85em;
+          left: 0.3em;
+        }
+        .BBFormTextArea {
+          resize: vertical;
+        }
+        #bboxdonation_billing_fldOrgGift,
+        #bboxdonation_billing_fldAnonymous {
+          .clearfix();
+          width: 40%;
+          input {
+            width: 15%;
+            margin-top: 0.5em;
+            float: right;
+          }
+          label {
+            width: 78%;
+            margin-right: 4%;
+            float: left;
+          }
+        }
+        .BBTwoFields {
+          #bboxdonation_billing_billingAddress_lblCAProvince,
+          #bboxdonation_billing_billingAddress_ddCAProvince {
+            width: 30%;
+          }
+          #bboxdonation_billing_billingAddress_txtCAPostCode,
+          #bboxdonation_billing_billingAddress_lblCAPostCode {
+            width: 20%;
+          }
+        }
+        .BBFormAddressBlock {
+          .clearfix();
+        }
+        .BBFormFieldContainerRequired label:after {
+          content: "*";
+          color: @color-pink;
+          font-weight: bold;
+          margin-left: 0.3em;
+          font-size: 1.3em;
+          vertical-align: middle;
+        }
+        .BBFormFieldContainer {
+          .clearfix();
+          #bboxdonation_billing_txtFirstName,
+          #bboxdonation_billing_lblFirstName,
+          #bboxdonation_billing_txtLastName,
+          #bboxdonation_billing_lblLastName {
+            width: 50%;
+          }
+        }
+        .BBFormBillingEmail {
+          margin-right: 2.5%;
+        }
+        .BBFormBillingEmail,
+        .BBFormBillingPhone {
+          width: 47.5%;
+          float: left;
+        }
+        .BBCCreditType {
+          .BBCardImageContainer {
+            float: left;
+            margin-left: 1em;
+            margin-top: 0.45em;
+            img {
+              float: left;
+              margin-right: 0.3em;
             }
+          }
+          #bboxdonation_payment_cboCardType {
+            display: block !important;
+            float: left;
+          }
+          .select.BBFormSelectList {
+            float: left;
+          }
         }
-        input{
-            display:none;
-        }
+      }
     }
-    .amount{
-        margin-top:-@grid-gutter-width;
-        display:none;
-        position:relative;
-
-        .field:before{
-            opacity:0.5;
-            position:absolute;
-            content: "\00a3";
-            font-size:3em;
-            top:0.85em;
-            left:0.3em;
-        }
-        input{
-            background-color:@color-advert-pale-blue;
-            width:7em;
-            padding-left:1.4em;
-            font-size:2.5em;
-        }
+    /* Blackbaud donation tooltip */
+    #cluetip {
+      padding: 1.2em;
+      background: fadeout(@color-white, 10%);
+      border: 1px solid @color-light-grey;
     }
-    .select{
-        font-family:Arial,sans-serif;
-    }
-    .selectInner{
-        width:auto !important;
-    }
-    .number{
-        .column(6);
-        padding-left:0;
-    }
-    .expiration{
-        .column(6);
-    } 
-    .cvc{
-        clear:both;
-        .field{
-            float:left;
-        }
-        .help{
-            float:left;
-            width:50%;
-            padding-top:2em;
-            padding-left:@grid-gutter-width;
-        }
-    }
-    .is_gift_aid{
-        clear:both;
-    }
-
-    .title, .first_name,.last_name{
-        width:40%;
-        float:left;
-        margin-left:3%;
-    }
-    .title{
-        width:12%;
-        margin-left:0;
-    }
-
-    .address_state, .address_zip{
-        width:45%;
-        float:left;
-    }
-    .address_zip{
-        margin-left:3%;
-    }
-    .donation-amount{ /* autocomplete ui */
-        a{
-            color:@color-pink;
-            font-size:2em;
-        }
+    #cluetip-close {
+      margin-bottom: 0.5em;
+      font-size: 0.8em;
+      text-align: right;
     }
 }
 
