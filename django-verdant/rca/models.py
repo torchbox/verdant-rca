@@ -27,7 +27,7 @@ from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
@@ -434,6 +434,14 @@ class SocialFields(models.Model):
 
     class Meta:
         abstract = True
+
+# Fields that configure how the sidebar of a given page should be treated
+class SidebarBehaviourFields(models.Model):
+    collapse_upcoming_events = models.BooleanField(default=False, help_text=help_text('rca.SidebarBehaviourFields', 'collapse_upcoming_events'))
+    
+    class Meta:
+        abstract = True
+
 
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
@@ -2106,7 +2114,7 @@ class StandardPageReusableTextSnippet(Orderable):
         SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
     ]
 
-class StandardPage(Page, SocialFields):
+class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'strapline'))
@@ -2172,6 +2180,12 @@ StandardPage.promote_panels = [
     ], 'Related pages'),
 ]
 
+StandardPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
+]
 
 # == Standard Index page ==
 
