@@ -691,7 +691,7 @@ class SchoolPageAd(Orderable):
     ]
 
 
-class SchoolPage(Page, SocialFields):
+class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
@@ -782,6 +782,13 @@ SchoolPage.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('school'),
+]
+
+SchoolPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]
 
 
@@ -875,7 +882,7 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class ProgrammePage(Page, SocialFields):
+class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
@@ -1000,6 +1007,12 @@ ProgrammePage.promote_panels = [
     FieldPanel('programme'),
 ]
 
+ProgrammePage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
+]
 
 # == News Index ==
 
@@ -2271,7 +2284,7 @@ class StandardIndexContactSnippet(Orderable):
         SnippetChooserPanel('contact_snippet', ContactSnippet),
     ]
 
-class StandardIndex(Page, SocialFields, OptionalBlockFields):
+class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardIndex', 'intro'), blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'intro_link'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'strapline'))
@@ -2412,6 +2425,13 @@ StandardIndex.promote_panels = [
         FieldPanel('exclude_events_sidebar'),
         FieldPanel('exclude_global_adverts'),
     ], 'Optional page elements'),
+]
+
+StandardIndex.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]
 
 
