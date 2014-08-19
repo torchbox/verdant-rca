@@ -5,7 +5,7 @@
         <!-- Events -->
         {% if showToday %}
             {% if self.exclude_events_sidebar != True %}
-                {% upcoming_events exclude=self open_by_default=True %}
+                {% upcoming_events exclude=self collapse_by_default=collapseToday %}
             {% endif %}
         {% endif %}
 
