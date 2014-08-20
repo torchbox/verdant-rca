@@ -1511,10 +1511,31 @@ footer {
 }
 
 .type-donations{
+    // Remove iOS styling
+    input,
+    textarea {
+      -webkit-appearance: none;
+      .border-radius(0);
+    }
     /* Blackbaud donation form */ 
     #bbox-root {
-      .column(8);
+      .column(12);
       padding: 0;
+      #bboxdonation_divError {
+        color: @color-red;
+        border-bottom: 1px solid @color-red;
+        padding-bottom: 0.4em;
+        margin-bottom: 0.8em;
+        &:before {
+            content: "Something isn't quite right:";
+            font-weight: bold;
+            border-bottom: 1px solid @color-red;
+            margin-top: -0.5em;
+            display: block;
+            padding-bottom: 0.3em;
+            margin-bottom: 0.3em
+        }
+      }
       #mongo-form {
         //Hide the blackbaud styled form on load
         visibility: hidden;
@@ -1537,7 +1558,7 @@ footer {
           text-transform: none;
         }
         label {
-          margin-top: 0.5em;
+          margin-top: 0.6em;
         }
         input[type=radio] {
           display: none;
@@ -1553,10 +1574,16 @@ footer {
         }
         #bboxdonation_gift_fldOtherLevelAmount {
           display: none;
+          .currency-symbol {
+            font-size: 2em;
+            padding: 16px 0px 16px 16px;
+            background-color: @color-advert-pale-blue;
+          }
         }
         .BBFormRadioItem {
           margin-bottom: 16px;
           .column(4);
+          min-width: 120px;
           padding-left: 0;
           padding-right: 0;
           padding: 0 16px 0 0;
@@ -1596,10 +1623,10 @@ footer {
         #bboxdonation_billing_fldOrgGift,
         #bboxdonation_billing_fldAnonymous {
           .clearfix();
-          width: 40%;
+          width: 80%;
           input {
-            width: 15%;
-            margin-top: 0.5em;
+            width: 7%;
+            margin-top: 0.6em;
             float: right;
           }
           label {
@@ -1608,16 +1635,7 @@ footer {
             float: left;
           }
         }
-        .BBTwoFields {
-          #bboxdonation_billing_billingAddress_lblCAProvince,
-          #bboxdonation_billing_billingAddress_ddCAProvince {
-            width: 30%;
-          }
-          #bboxdonation_billing_billingAddress_txtCAPostCode,
-          #bboxdonation_billing_billingAddress_lblCAPostCode {
-            width: 20%;
-          }
-        }
+        .BBFormAddress,
         .BBFormAddressBlock {
           .clearfix();
         }
@@ -1629,27 +1647,51 @@ footer {
           font-size: 1.3em;
           vertical-align: middle;
         }
-        .BBFormFieldContainer {
-          .clearfix();
-          #bboxdonation_billing_txtFirstName,
-          #bboxdonation_billing_lblFirstName,
-          #bboxdonation_billing_txtLastName,
-          #bboxdonation_billing_lblLastName {
-            width: 50%;
-          }
-        }
         .BBFormBillingEmail {
-          margin-right: 2.5%;
+          margin-right: 5%;
+        }
+        //JS wrapper to allow side by side form elements. 
+        .grouped-form-items {
+          .clearfix();
         }
         .BBFormBillingEmail,
-        .BBFormBillingPhone {
+        .BBFormBillingPhone,
+        #divName .grouped-form-items .grouped-form-items {
           width: 47.5%;
           float: left;
+          & + .grouped-form-items {
+            margin-left: 5%; 
+          }
+        }
+        .BBFieldBillingStateZip {
+          .clearfix();
+        }
+        .BBFieldBillingStateZip .grouped-form-items {
+          width: 51%;
+          float: left;
+          & + .grouped-form-items {
+            width: 35%;
+            margin-left: 5%; 
+          }
+        }
+        #bboxdonation_billing_billingAddress_lblCAProvincePostCode {
+            display: none;
+        }
+        #bboxdonation_payment_lblMonth,
+        #bboxdonation_payment_lblYear {
+          display: none;
+        }
+        .BBExpirationCSC {
+            .select.BBFormSelectList {
+              &:last-child {
+                  margin-left: 5%;
+              }
+            }
         }
         .BBCCreditType {
+          .clearfix();
           .BBCardImageContainer {
             float: left;
-            margin-left: 1em;
             margin-top: 0.45em;
             img {
               float: left;
@@ -1660,8 +1702,9 @@ footer {
             display: block !important;
             float: left;
           }
-          .select.BBFormSelectList {
+          .select.BBFormSelectList { 
             float: left;
+            margin-right: 1em;
           }
         }
       }
@@ -1671,6 +1714,7 @@ footer {
       padding: 1.2em;
       background: fadeout(@color-white, 10%);
       border: 1px solid @color-light-grey;
+      z-index: 200 !important;
     }
     #cluetip-close {
       margin-bottom: 0.5em;
