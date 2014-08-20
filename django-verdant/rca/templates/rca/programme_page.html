@@ -171,5 +171,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" showOpenDays="true" showRelatedLinks="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showAdverts="true" showOpenDays="true" showRelatedLinks="true" %}
 {% endblock %}
