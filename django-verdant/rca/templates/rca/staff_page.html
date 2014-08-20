@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load image_tags rich_text rca_tags %}
+{% load wagtailimages_tags wagtailcore_tags rca_tags %}
 
 {% block body_class %}type-staff-profile{% endblock %}
 
@@ -20,9 +20,14 @@
                         {% endif %}
                     </li>
                     <li class="col">{% comment %} note closed within forloop {% endcomment %}
-                        <h3 class="a2">Schools &amp; Centres</h3>
-                        <p class="h7">{{ self.get_school_display }}</p>
-
+                        {% if self.staff_type != "technical" %}
+                            <h3 class="a2">Schools &amp; Centres</h3>
+                            <p class="h7">{{ self.get_school_display }}</p>
+                        {% endif %}
+                        {% if self.staff_type == "technical" %}
+                            <h3 class="a2">Location</h3>
+                            <p class="h7">{{ self.get_staff_location_display }}</p>
+                        {% endif %}
                         {% with self.roles.all as roles %}
                             {% if roles %}
                                 {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}

@@ -48,7 +48,7 @@ if ! command -v pip; then
     easy_install -U pip
 fi
 if [[ ! -f /usr/local/bin/virtualenv ]]; then
-    easy_install virtualenv virtualenvwrapper stevedore virtualenv-clone
+    pip install virtualenv virtualenvwrapper stevedore==0.14.1 virtualenv-clone
 fi
 
 # bash environment global setup

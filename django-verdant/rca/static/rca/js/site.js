@@ -91,10 +91,10 @@ function showSearchAutocomplete() {
             });
         },
         select: function( event, ui ) {
-            window.location.href = ui.item.url;
+            window.location.href = ui.item.search_url || ui.item.url;
         }
     }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.label + "<span>" + item.type + "</span></a>" ).appendTo( ul );
+        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
     };
 }
 
@@ -164,25 +164,13 @@ function applyCarousel(carouselSelector){
         },
         onSlideBefore: function($slideElement, oldIndex, newIndex){
             // find vimeos in old slide and stop them if playing
-            post($('.videoembed.vimeo iframe'), 'pause');
+            $('.videoembed.vimeo iframe').each(function(idx, iframe) {
+                $f(iframe).api('pause');
+            });
         }
     });
 
     return carousel;
-}
-
-// Helper function for sending a message to the player
-function post(frame, action, value) {
-    $(frame).each(function(){
-        var url = $(this).attr('src').split('?')[0];
-        var data = { method: action };
-
-        if (value) {
-            data.value = value;
-        }
-
-        $(this)[0].contentWindow.postMessage(JSON.stringify(data), url);
-    });
 }
 
 $(function(){
@@ -271,47 +259,20 @@ $(function(){
     });
 
     /* Vimeo player API */
-    $('.videoembed.vimeo').each(function(){
+    $('.videoembed.vimeo').each(function() {
         var $this = $(this);
-        var f = $('iframe', $(this));
-
-        // Listen for messages from the player
-        if (window.addEventListener){
-            window.addEventListener('message', onMessageReceived, false);
-        }
-        else {
-            window.attachEvent('onmessage', onMessageReceived, false);
-        }
-
-        // Handle messages received from the player
-        function onMessageReceived(e) {
-            var data = JSON.parse(e.data);
-
-            switch (data.event) {
-                case 'ready':
-                    post(f, 'addEventListener', 'pause');
-                    post(f, 'addEventListener', 'finish');
-                    break;
-
-                case 'pause':
-                    //nothing
-                    break;
-
-                case 'finish':
-                    //nothing
-                    break;
-            }
-        }
+        var iframe = $('iframe', $this)[0];
+        var player = $f(iframe);
 
         // Call the API when a button is pressed
         $('.playpause', $(this)).on('click', function() {
-             post(f, 'play');
-             $this.toggleClass('playing');
+            player.api('play');
+            $this.toggleClass('playing');
          });
 
-        //also start playback if poster image is clicked anywhere
-        $('.poster').click(function(){
-            post(f, 'play');
+        // Also start playback if poster image is clicked anywhere
+        $('.poster', $(this)).click(function() {
+            player.api('play');
             $this.toggleClass('playing');
         });
     });
@@ -590,11 +551,26 @@ $(function(){
     alignGallery();
     window.alignGallery = alignGallery; // this is used in filters.js too
 
+	// Copied from @Yarin's answer in http://stackoverflow.com/questions/4197591/parsing-url-hash-fragment-identifier-with-javascript
+	function getHashParams() {
+		var hashParams = {};
+		var e,
+			a = /\+/g,  // Regex for replacing addition symbol with a space
+			r = /([^&;=]+)=?([^&;]*)/g,
+			d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+			q = window.location.hash.substring('#/?'.length);
+
+		while (e = r.exec(q))
+		   hashParams[d(e[1])] = d(e[2]);
+
+		return hashParams;
+	}
+	
     /* Search filters */
     $('.filters').each(function(){
         $self = $(this);
-
-        function setLabel(option){
+		
+		function setLabel(option){
             $('label[for=' + $(option).parent().data('id') + ']', $self).html($(option).html()).addClass('active');
         }
 
@@ -613,15 +589,25 @@ $(function(){
             var options = $('option', $(this));
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
+			
+			hashValue=getHashParams()[$(this).attr('name')];
+			
             options.each(function(){
-                newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ ($(this).prop('selected') ? "selected":"") +'">' + $(this).html() + '</li>';
+				var isSelected = "";
+				if(hashValue == $(this).val() ) {
+					isSelected ="selected";
+					$(this).prop('selected', true);
+				} else if (!hashValue) {
+                    // TODO: Test this a  bit
+                    isSelected=$(this).prop('selected')==true?"selected":"";
+                }
+                newOptions = newOptions + '<li data-val="' + ($(this).attr('value') ? $(this).val() : "") + '" class="'+ isSelected +'">' + $(this).html() + '</li>';
             });
-
             newOptions = newOptions + '</ul>';
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
         });
-
+		
         /* if form already has items selected, replicate this */
         $('.options li', $self).each(function(){
             if($(this).hasClass('selected') && $(this).data('val')){

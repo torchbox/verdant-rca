@@ -77,6 +77,10 @@
     padding-bottom: 20px; /* necessary to give pager dots space to exist */
     overflow: visible; /* because the padding above doesn't work in safari and dots get cut off */
 
+    a{
+        display:block;
+    }
+
     img {
         width: auto;
         margin: auto;
@@ -216,10 +220,18 @@
             }
         }
     }
-
     .hover-content,
     .content {
         display: none;
+    }
+
+    .footer-content{
+        color:@color-black;
+        padding:@grid-gutter-width;
+
+        p{
+            margin-top:0;
+        }
     }
 
     .mobilecaption {
@@ -228,6 +240,12 @@
             font-size:0.667em;
         }
     }
+}
+
+/* improved layout for carousels in flushed tab-panes */
+.tab-pane.flush .bx-wrapper .bx-pager{
+    bottom:5px;
+    left:5px;
 }
 
 /* Hide pager for carousels with only one item */

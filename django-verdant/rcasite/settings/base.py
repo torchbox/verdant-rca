@@ -8,14 +8,6 @@ PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '..', '..')
 # Modify sys.path to include the lib directory
 sys.path.append(os.path.join(PROJECT_ROOT, "lib"))
 
-# Add the django-wagtail library dir (which lives alongside PROJECT_ROOT)
-sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-wagtail'))
-
-# Add dependencies django-modelcluster and django-treebeard, which live alongside PROJECT_ROOT
-# (until they get released as a standalone project / merged upstream respectively)
-sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-modelcluster'))
-sys.path.append(os.path.join(PROJECT_ROOT, '..', 'django-treebeard'))
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -154,9 +146,7 @@ INSTALLED_APPS = (
     'south',
     'compressor',
     'template_timings_panel',
-    'treebeard',
     'taggit',
-    'modelcluster',
     'gunicorn',
     'djcelery',
     'kombu.transport.django',
@@ -207,6 +197,7 @@ DEBUG_TOOLBAR_PANELS = (
 
 # django-compressor settings
 COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
     ('text/coffeescript', 'coffee --compile --stdio'),
     ('text/less', 'lesspress.LessCompiler'),
 )
@@ -249,6 +240,7 @@ CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
         'LOCATION': '127.0.0.1:6379:1',
+        'KEY_PREFIX': 'rca',
         'OPTIONS': {
             'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
         }
@@ -261,10 +253,6 @@ WAGTAIL_SITE_NAME = 'RCA'
 
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'rca.RcaImage'
-
-# Override the search results template for wagtailsearch
-WAGTAILSEARCH_RESULTS_TEMPLATE = "rca/search_results.html"
-WAGTAILSEARCH_RESULTS_TEMPLATE_AJAX = "rca/includes/search_listing.html"
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
@@ -289,6 +277,8 @@ BROKER_URL = 'redis://'
 CELERY_SEND_TASK_ERROR_EMAILS = True
 
 CELERYD_LOG_COLOR = False
+
+PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
 
 # The scheduler used by this app needs to be defined in the settings.
 # It also contains some additional configuration options, some need to be set in the local settings.

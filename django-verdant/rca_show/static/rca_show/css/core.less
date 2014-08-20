@@ -54,8 +54,12 @@ i{
     &.fade { opacity:0; }
     &.in { opacity:1; display:block;}
 
+    a,a:hover{
+        color:white;
+    }
+
     > div{
-        .transition(~"top 0.5s ease, left 0.5s ease, width 0.5s ease");
+        .transition(~"top 0.5s ease, left 0.5s ease, margin-left 0.5s ease, width 0.5s ease");
         position:fixed;
     }
 
@@ -66,9 +70,8 @@ i{
         top:30px;
     }
     .exhibition-date{
-        right:5%;
+        right:0%;
         top:30px;
-        max-width:20%;
         left:auto;
         color:white;
     }
@@ -77,6 +80,8 @@ i{
         color:white;
         left:90%;
         bottom:5%;
+        width:9em;
+        font-size:1.4em;
     }
     .crest{
         bottom:5%;
@@ -89,7 +94,7 @@ i{
     }
     .intro{
         position:absolute;
-        width:70%;
+        width:50%;
         left:5%;
         top:250px; 
     }
@@ -111,12 +116,16 @@ header {
     .exhibition-date{
         margin:0;
         position:absolute;
-        right:0%;
+        right:5%;
         top:30px;
         .font-family-newrail-bold();
-        width:4em;
-        font-size:2em;
+        width:5em;
+        font-size:1.4em;
         line-height:1.1em;
+
+        p{
+            margin:0;
+        }
     }
     
     .header-wrapper.affix .exhibition-date{
@@ -206,7 +215,6 @@ header {
 
 .exhibition-name{
     float:right;
-    width:9em;
     font-size:2em;
     line-height:1.1em;
 }
@@ -214,15 +222,45 @@ header {
     .transform(rotate(-90deg));
     .transform-origin(37% 0);
     .font-family-newrail-bold();
-    margin-right:-3em;
+    margin-right:-1em;
 }
 
 .showrca .footer-logo{
     display:none;
 }
 
-.type-standard .body-text{
-   float:none;
+form .error-message{
+    color:red;
+}
+
+/* template-specific, non-module tweaks */
+.type-school{
+    h1{
+        text-transform:uppercase;
+        max-width:6em;
+    }
+}
+
+.type-login{
+    .nav-wrapper{
+        display:none;
+    }
+    .login-form label{
+        font-weight:bold;
+    }
+}
+
+section.row{
+    margin-bottom:@spacing-one;
+}
+
+
+@media screen and (min-width:480px){
+    #showrca2014-overlay{
+        .intro{
+            width:70%;
+        }
+    }
 }
 
 @import "modules.less";

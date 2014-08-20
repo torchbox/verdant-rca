@@ -1,4 +1,4 @@
-{% load image_tags embed_filters %}
+{% load wagtailimages_tags wagtailembeds_tags %}
 
 {% if carousel_items %}
     <section class="row{% if carousel_items|length = 1 %} single-carousel{% endif %}">
@@ -7,24 +7,32 @@
                 {% if carousel_item.image %}
                     <li>
                         <div class="image {% if carousel_item.image.is_portrait %}portrait{% else %}landscape{% endif %}">
-                            {% image carousel_item.image width-1000 %}
+                            {% if carousel_item.get_link %}<a href="{{ carousel_item.get_link }}">{% endif %}
+                                {% image carousel_item.image width-1000 %}
+                            {% if carousel_item.get_link %}</a>{% endif %}
                         </div>
                         {% if carousel_item.overlay_text or carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
-                            <div class="{% if not overlayvisible %}hover-{% endif %}content">
+                            {% if carousel_item.get_link %}
+                                <a href="{{ carousel_item.get_link }}" class="{% if not overlayvisible %}hover-{% endif %}content">
+                            {% else %}
+                                <div class="{% if not overlayvisible %}hover-{% endif %}content">
+                            {% endif %}
                                 {% if carousel_item.overlay_text %}
                                     <h3 class="bc1">
-                                        {% if carousel_item.get_link %}
-                                            <a href="{{ carousel_item.get_link }}">
-                                        {% endif %}
                                         {{ carousel_item.overlay_text }}
                                         {% if carousel_item.get_link %}
-                                            ...<span class="bc4 caps">Continue</span></a>
+                                            ...<span class="bc4 caps">Continue</span>
                                         {% endif %}
                                     </h3>
                                 {% endif %}
                                 <p class="caption a4">{{ carousel_item.image.caption_html }}</p>
-                            </div>
+                            {% if carousel_item.get_link %}
+                                </a>
+                            {% else %}
+                                </div>
+                            {% endif %}
                         {% endif %}
+                        
                         {% comment %} Repeat overlay and caption text for mobile {% endcomment %}
                         {% if carousel_item.overlay_text or carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
                             <div class="mobilecaption">
@@ -39,6 +47,7 @@
                                     {% endif %}
                                 </h3>
                             {% endif %}
+                            
                             {% comment %} only show caption on mobile if there is no overlay text {% endcomment %}
                             {% if not carousel_item.overlay_text %}
                                 {% if carousel_item.image.title or carousel_item.image.medium or carousel_item.image.dimensions or carousel_item.image.permission or carousel_item.image.photographer %}
@@ -62,7 +71,7 @@
                             {% if carousel_item.poster_image %}
                                 <div class="poster">{% image carousel_item.poster_image width-1000 %}</div>
                             {% endif %}
-                            {{ carousel_item.embedly_url|embedly:"944" }}
+                            {{ carousel_item.embedly_url|embed:"944" }}
                         </div>
                     </li>
                 {% endif %}

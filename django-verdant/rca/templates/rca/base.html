@@ -1,5 +1,4 @@
-{% load compress static image_tags wagtailuserbar rca_tags %}
-{% static "rca/css/vendor/wagtail-userbar.css" as wagtailuserbarcss %}
+{% load compress static wagtailimages_tags wagtailuserbar rca_tags %}
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie10 lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie10 lt-ie9 lt-ie8"> <![endif]-->
@@ -28,7 +27,7 @@
         <meta property="og:url" content="{{ self.url }}" />
         <meta property="og:title" content="{{ self.title }}" />
         <meta property="og:image" content="http://{% if self.social_image %}{{ request.site.hostname }}{{ social_img.url }}{% else %}{{ request.site.hostname }}/static/rca/images/social.png{% endif %}" />
-        <meta property="og:description" content="{{ self.social_text }}" />
+        <meta property="og:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta property="og:site_name" content="Royal College of Art" />
 
         {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
@@ -66,10 +65,12 @@
                 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
               })();
         </script>
+        {% block extra_js_head %}{% endblock %}
+
     </head>
     <body class="{% block body_class %}{% endblock %}">
         <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a>
-        {% wagtailuserbar wagtailuserbarcss %}
+        {% wagtailuserbar %}
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
         <![endif]-->
@@ -153,6 +154,7 @@
                 <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
                 <script src="{% static "rca/js/vendor/history.js/scripts/bundled/html4+html5/jquery.history.js" %}"></script>
                 <script src="{% static "rca/js/vendor/jquery.pjax.js" %}"></script>
+                <script src="{% static "rca/js/vendor/froogaloop2.min.js" %}"></script>
                 <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
                 <script src="{% static "rca/js/carousel-news.js" %}"></script>
                 <script src="{% static "rca/js/tweets.js" %}"></script>
@@ -166,6 +168,9 @@
                         //set global var for media_url so that it can be used by the script being called
                         var media_url = "http://{{ request.site.hostname }}:{{ request.site.port }}{{ MEDIA_URL }}";
                         console.log(media_url);
+
+                        // convenience feature for js switching during development
+                        var debug = true;
                     </script>
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}

@@ -1,0 +1,138 @@
+{% extends "rca/base.html" %}
+{% load rca_tags wagtailcore_tags %}
+
+{% block body_class %}type-innovationrca-project{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    {% if self.subtitle %}<h2 clas="bc3">{{ self.subtitle }}</h2>{% endif %}
+    {% include "rca/includes/modules/carousel.html" %}
+    <section class="row">
+        {% include "rca/includes/modules/body-text.html" with body=self.description %}
+
+        {# Meta data #}
+        <section class="four">
+            <div class="meta-data">
+                <dl>
+                    <dd>Project</dd>
+                    <dt>{{ self.get_project_display }}</dt>
+                    {% with self.leader.all as leaders %}
+                        {% if leaders %}
+                            <dd>Workshop leader{% if leaders|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for leader in leaders %}
+                                        <li>
+                                            {% if leader.person %}
+                                                <a href='{% pageurl leader.person %}'>
+                                                    {{ leader.person.title }}
+                                                </a>
+                                            {% elif leader.manual_person_name %}
+                                                {{ leader.manual_person_name }}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% with self.assistant.all as assistants %}
+                        {% if assistants %}
+                            <dd>Workshop assistant{% if assistants|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for assistant in assistants %}
+                                        <li>
+                                            {% if assistant.person %}
+                                                <a href='{% pageurl assistant.person %}'>
+                                                    {{ assistant.person.title }}
+                                                </a>
+                                            {% elif assistant.manual_person_name %}
+                                                {{ assistant.manual_person_name }}
+                                            {% endif %}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% with self.participants.all as participants %}
+                        {% if participants %}
+                            <dd>Workshop participant{% if participants|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for participant in participants %}
+                                        <li>
+                                            {{ participant.get_participant_display }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% with self.partnerships.all as partnerships %}
+                        {% if partnerships %}
+                            <dd>Workshop partnership{% if partnerships|length > 1 %}s{% endif %}</dd>
+                            <dt>
+                                <ul>
+                                    {% for partnership in partnerships %}
+                                        <li>
+                                            {{ partnership.get_partnership_display }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+
+                    {% if self.year %}
+                        <dd>Date</dd>
+                        <dt>{{ self.year }}</dt>
+                    {% endif %}
+
+                    {% if self.programme %}
+                        <dd>Centre</dd>
+                        <dt>{{ self.get_school_display }}</dt>
+                    {% endif %}
+
+                    {% if self.programme %}
+                        <dd>Programme</dd>
+                        <dt>{{ self.get_programme_display }}</dt>
+                    {% endif %}
+
+                    {% with self.links.all as links %}
+                        {% if links %}
+                            <dd>Links</dd>
+                            <dt>
+                                <ul>
+                                    {% for link in links %}
+                                    <li><a href="{{ link.link }}">{{ link.link_text }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </dt>
+                        {% endif %}
+                    {% endwith %}
+                </dl>
+                {% include "rca/includes/modules/quotation.html" %}
+            </div>
+            <div class="single">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+
+    </section>
+    <!-- innovation rca projects -->
+<!--     <div id="listing">
+        {% include "rca/includes/innovation_rca_listing.html" %}
+    </div>
+ -->
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showRelatedNews="true" %}
+{% endblock %}

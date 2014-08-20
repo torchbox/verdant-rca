@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load rca_tags pageurl image_tags %}
+{% load rca_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}type-homepage{% endblock %}
 
@@ -15,11 +15,11 @@
             {% if self.news_item_1 %}
                 <li>
                     <a href="{% pageurl self.news_item_1 %}">
-                        <div class="image">{% image self.news_item_1.feed_image width-464 %}</div>
+                        <div class="image">{% image self.news_item_1.specific.feed_image width-464 %}</div>
                         <div class="content">
                             <h2 class="h5">{{ self.news_item_1.title }}</h2>
                             {% if self.news_item_1.listing_intro %}
-                                <p class="bc4">{{ self.news_item_1.listing_intro }}</p>
+                                <p class="bc4">{{ self.news_item_1.specific.listing_intro }}</p>
                             {% endif %} 
                             <p class="a2">News</p>
                         </div>
@@ -29,11 +29,11 @@
             {% if self.news_item_2 %}
                 <li>
                     <a href="{% pageurl self.news_item_2 %}">
-                        <div class="image">{% image self.news_item_2.feed_image width-464 %}</div>
+                        <div class="image">{% image self.news_item_2.specific.feed_image width-464 %}</div>
                         <div class="content">
                             <h2 class="h5">{{ self.news_item_2.title }}</h2>
                             {% if self.news_item_2.listing_intro %}
-                                <p class="bc4">{{ self.news_item_2.listing_intro }}</p>
+                                <p class="bc4">{{ self.news_item_2.specific.listing_intro }}</p>
                             {% endif %} 
                             <p class="a2">News</p>
                         </div>

@@ -1,0 +1,8 @@
+{# Big nasty 'if' to change what dropdowns are available for the Animation programme only #}
+{% if "animation" in self.show_index.get_programmes or "visualcommunication" in self.show_index.get_programmes %}
+    {% include "rca_show/includes/menus/animation.html" %}
+{% elif self.show_index.is_programme_page %}
+    {% include "rca_show/includes/menus/programme_page.html" %}
+{% else %}
+    {% include "rca_show/includes/menus/default.html" %}
+{% endif %}

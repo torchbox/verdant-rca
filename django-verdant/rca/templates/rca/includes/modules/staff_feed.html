@@ -1,4 +1,4 @@
-{% load pageurl image_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% if self.staff_feed %}
     <section class="five-plus x-plus row module">
@@ -23,7 +23,7 @@
                             </div>
                             <div class="content">
                                 <h3 class="a3">{{ staff.title }}</h3>
-                                <p class="a3">{{ staff }}</h3>
+                                <p class="a3">{{ staff.staff_role }}</h3>
                                 {% if staff.listing_intro %}
                                     <p class="a4">{{ staff.listing_intro }}</p>
                                 {% endif %}

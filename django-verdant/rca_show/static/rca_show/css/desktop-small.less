@@ -26,6 +26,9 @@ header {
         float:left;
         right:auto;
         left:50%;
+       
+        font-size:2em;
+        padding-right:0;
     }
     form.search {
         position:static;
@@ -44,10 +47,6 @@ header {
         }
     }
 
-.prefooter{
-    
-}
-
 .showrca2014-footer footer{
     padding:1em 0;
 }
@@ -58,9 +57,13 @@ header {
 #showrca2014-overlay{
     .intro{
         top:300px;
-        width:50%;    
+        width:60%;    
+    }
+    .exhibition-date{
+        right:5%;
     }
     .exhibition-name{
+        font-size:2em;
         bottom:5%;
         right:5%;
     }
@@ -84,19 +87,19 @@ header {
         left:80%;
     }
     .slot-5{
-        left:90%;
+        right:2%;
         top:30%;
     }
     .slot-6{
-        left:90%;
+        right:2%;
         top:35%;
     }
     .slot-7{
-        left:90%;
+        right:2%;
         top:40%;
     }
     .slot-8{    
-        left:90%;
+        right:2%;
         top:45%;
     }
 }
@@ -104,6 +107,17 @@ header {
 .csstransforms #showrca2014-overlay .exhibition-name{
     left:95%;
 }
+
+.type-login{
+    h1{
+        font-size:1.5em;
+    }
+    .login-form{
+        margin:0 auto;
+        max-width:70%;
+    }
+}
+
 
 /* HEIGHT-based media query to prevent date and exhibition name clashing on screens that aren't very tall */
 @media screen and (max-height:690px){

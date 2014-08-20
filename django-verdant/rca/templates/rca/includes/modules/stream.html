@@ -1,0 +1,30 @@
+{% load wagtailimages_tags wagtailembeds_tags %}
+
+    <section class="row">
+    		<div id='my-video'></div>
+
+		<script type='text/javascript'>			 
+			jwplayer('my-video').setup({
+				playlist: [{
+			        image: 'http://www.rca.ac.uk/media/images/Convocation.live.small.jpg',
+			        sources: [{
+			            file: "rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/live",
+			           
+			        },{
+			            file: "http://uh8w7w.live.cloud.influxis.com/uh8w7w/live/playlist.m3u8"
+
+			        },{
+			            file: "http://influx.is/MmtjJN"
+
+			        }]
+			    }],
+			    width: '100%',
+			    aspectratio: '16:9',
+			    controls: 'true',
+			    title: '',
+			    autostart: 'true'
+			});
+		</script>
+</section>
+
+

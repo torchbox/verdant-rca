@@ -1,0 +1,53 @@
+{% load wagtailimages_tags wagtailembeds_tags %}
+
+    <section class="row">
+
+<div id='my-video'></div>
+<script type='text/javascript'>
+ 
+jwplayer('my-video').setup({
+    playlist: [{
+        image: "",
+        sources: [{
+            file: "rtmp://uh8w7w.live.cloud.influxis.com/_definst_/live",
+           
+        },{
+            file: "http://uh8w7w.live.cloud.influxis.com/live/playlist.m3u8"
+
+        }]
+    }],
+    height: 600,
+    width: 900,
+    'controls': 'true',
+    'title': '',
+    autostart: 'true'
+fallback: false
+});
+</script>
+</section>
+
+
+<!--     		<div id='my-video'></div>
+
+		<script type='text/javascript'>			 
+			jwplayer('my-video').setup({
+				playlist: [{
+			        image: 'http://www.rca.ac.uk/static/rca/images/livestream.holding.2.jpg',
+			        sources: [{
+			            file: "rtmp://uh8w7w.live.cloud.influxis.com/uh8w7w/_definst_/rca",
+			           
+			        },{
+			            file: "http://uh8w7w.live.cloud.influxis.com/uh8w7w/rca/playlist.m3u8"
+
+			        },{
+			            file: "http://influx.is/dtJk2K"
+
+			        }]
+			    }],
+			    width: '100%',
+			    aspectratio: '16:9',
+			    controls: 'true',
+			    title: '',
+			    autostart: 'true'
+			});
+		</script> -->

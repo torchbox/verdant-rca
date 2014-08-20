@@ -1,6 +1,6 @@
 from django import template
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max
+from django.db.models import Min, Max, Q
 from django.template.base import parse_bits
 from wagtail.wagtailcore.util import camelcase_to_underscore
 
@@ -9,6 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
+from rca.utils import get_students
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -113,7 +114,7 @@ def alumni_by_programme(context, programme):
 @register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
 def rca_now_related(context, programme="", author=""):
     if programme:
-        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).filter(programme=programme)
+        rcanow = RcaNowPage.objects.filter(live=True).filter(programme=programme)
     elif author:
         rcanow = RcaNowPage.objects.filter(live=True, author=author)
     return {
@@ -184,29 +185,45 @@ def jobs_listing(context):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
-def students_related(context, programme="", year="", exclude=None, count=4):
-    students = StudentPage.objects.filter(live=True, programme=programme)
-    students = students.filter(degree_year=year)
-    students = students.order_by('?')
+def get_related_students(programme=None, year=None, exclude=None, has_work=False):
+    ma_students_q = ~Q(ma_school='')
+    mphil_students_q = ~Q(mphil_school='')
+    phd_students_q = ~Q(phd_school='')
+
+    if has_work:
+        ma_students_q &= (Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
+        mphil_students_q &= (Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
+        phd_students_q &= (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
+
+    if programme:
+        ma_students_q &= Q(ma_programme=programme)
+        mphil_students_q &= Q(mphil_programme=programme)
+        phd_students_q &= Q(phd_programme=programme)
+
+    if year:
+        ma_students_q &= Q(ma_graduation_year=year)
+        mphil_students_q &= Q(mphil_start_year=year)
+        phd_students_q &= Q(phd_start_year=year)
+
+    students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q).order_by('?')
+
     if exclude:
         students = students.exclude(id=exclude.id)
+
+    return students
+
+@register.inclusion_tag('rca/tags/students_related.html', takes_context=True)
+def students_related(context, programme=None, year=None, exclude=None, count=4):
     return {
-        'students': students[:count],
+        'students': get_related_students(programme=programme, year=year, exclude=exclude, has_work=False)[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
 # Queries students who 'have work' (i.e. have some carousel entries). Also matches degree year
 @register.inclusion_tag('rca/tags/students_related_work.html', takes_context=True)
-def students_related_work(context, year="", exclude=None, count=4):
-    students = StudentPage.objects.filter(live=True, degree_year=year)
-    students = students.filter(carousel_items__image__isnull=False) | students.filter(carousel_items__embedly_url__isnull=False)
-    students = students.order_by('?')
-
-    if exclude:
-        students = students.exclude(id=exclude.id)
+def students_related_work(context, year=None, exclude=None, count=4):
     return {
-        'students': students[:count],
+        'students': get_related_students(year=year, exclude=exclude, has_work=True)[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
@@ -236,17 +253,18 @@ def staff_related(context, staff_page, count=4):
     }
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
-def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5):
+def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5, blog_count=5):
     news = NewsItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     staff = StaffPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
-    student = StudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    student = NewStudentPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     research = ResearchItem.objects.filter(live=True, show_on_homepage=1).order_by('?')
     alumni = AlumniPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     review = ReviewPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
+    blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=1).order_by('?')
     tweets = [[],[],[],[],[]]
 
-    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count]))
+    packeryItems =list(chain(news[:news_count], staff[:staff_count], student[:student_count], rcanow[:rcanow_count], research[:research_count], alumni[:alumni_count], review[:review_count], tweets[:tweets_count], blog[:blog_count]))
     random.shuffle(packeryItems)
 
     return {
@@ -272,7 +290,7 @@ def sidebar_links(context, calling_page=None):
 
         # If no children, get siblings instead
         if len(pages) == 0:
-            pages = calling_page.get_other_siblings().filter(live=True, show_in_menus=True)
+            pages = calling_page.get_siblings(inclusive=False).filter(live=True, show_in_menus=True)
     return {
         'pages': pages,
         'calling_page': calling_page, # needed to get related links from the tag
@@ -281,7 +299,7 @@ def sidebar_links(context, calling_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_feed.html', takes_context=True)
 def research_students_feed(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(mphil_supervisors__supervisor=staff_page) | Q(phd_supervisors__supervisor=staff_page))
     return {
         'students': students,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -289,7 +307,7 @@ def research_students_feed(context, staff_page=None):
 
 @register.inclusion_tag('rca/tags/research_students_list.html', takes_context=True)
 def research_students_list(context, staff_page=None):
-    students = StudentPage.objects.filter(live=True, supervisors__supervisor=staff_page)
+    students = NewStudentPage.objects.filter(live=True).filter(Q(mphil_supervisors__supervisor=staff_page) | Q(phd_supervisors__supervisor=staff_page))
     return {
         'students': students,
         'staff_page': staff_page, #needed to get the supervised_student_other field to list research students without profile pages
@@ -587,3 +605,22 @@ class TabNode(template.Node):
 @register.assignment_tag
 def get_debug():
     return getattr(settings, 'DEBUG', "")
+
+
+@register.assignment_tag
+def get_student_carousel_items(student, degree=None, show_animation_videos=False):
+    profile = student.get_profile(degree)
+    carousel_items = profile['carousel_items'].all()
+
+    # If this is a 2014 animation student, remove first carousel item
+    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
+        # Remove first two carousel items if they are vimeo videos
+        for i in range(2):
+            try:
+                first_carousel_item = carousel_items[0]
+                if first_carousel_item and first_carousel_item.embedly_url:
+                    carousel_items = carousel_items[1:]
+            except IndexError:
+                pass
+
+    return carousel_items

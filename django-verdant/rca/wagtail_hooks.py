@@ -1,13 +1,22 @@
-from wagtail.wagtailadmin import hooks
+from wagtail.wagtailcore import hooks
 from wagtail.wagtailadmin.menu import MenuItem
+
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
+from django.conf import settings
 
 from rca.models import RcaNowPage
 
+
+def editor_css():
+    return """<link rel="stylesheet" type="text/x-scss" href="%srca/css/richtext.scss" />""" % settings.STATIC_URL
+hooks.register('insert_editor_css', editor_css)
+
+
 def user_is_student(user):
     return [group.name for group in user.groups.all()] == ['Students']
+
 
 def construct_main_menu(request, menu_items):
     if user_is_student(request.user):
@@ -24,6 +33,7 @@ def construct_main_menu(request, menu_items):
         )
 hooks.register('construct_main_menu', construct_main_menu)
 
+
 def redirect_student_after_edit(request, page):
     if user_is_student(request.user):
         # Override the usual redirect to the explorer that happens after adding / deleting / editing a page;
@@ -35,6 +45,7 @@ def redirect_student_after_edit(request, page):
 hooks.register('after_create_page', redirect_student_after_edit)
 hooks.register('after_edit_page', redirect_student_after_edit)
 hooks.register('after_delete_page', redirect_student_after_edit)
+
 
 def construct_homepage_panels(request, panels):
     if user_is_student(request.user):

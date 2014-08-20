@@ -881,6 +881,9 @@ nav.dl-menuwrapper{
                 color: @color-pink;
             }
         }
+        a.active{
+            color:@color-highlight-blue;
+        }
         &:last-child a {
             border-bottom: none;
         }
@@ -1397,13 +1400,18 @@ footer {
 
 .type-staff-profile,
 .type-student-profile {
-    div.related-content-item img {
-        max-width: 125px;
+    div.related-content-item{
+        img {
+            max-width: 125px;
+        }
+        .staff figcaption {
+            .a3();
+            .name();
+        }
     }
-    div.related-content-item .staff figcaption {
-        .a3();
-        .name();
-    }
+}
+
+.type-staff-profile{
     #tab2 {
         h3 {
             margin: @spacing-half 0 0 0;
@@ -1418,7 +1426,6 @@ footer {
         }
     }
     #tab4 {
-
         .module {
             clear:both;
             .clearfix();
@@ -1433,6 +1440,17 @@ footer {
 .type-student-profile {
     .tab-pane .three-plus {
         margin-top: @grid-gutter-width;
+    }
+    .profile h3 {
+        margin: @spacing-half 0 0 0;
+    }
+    .profile h2{
+        margin-top:0;
+    }
+    .profile .four-cols .col ul li{
+        white-space: nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
     }
 }
 
@@ -1555,7 +1573,7 @@ footer {
         .field:before{
             opacity:0.5;
             position:absolute;
-            content: "£";
+            content: "\00a3";
             font-size:3em;
             top:0.85em;
             left:0.3em;
@@ -1660,14 +1678,18 @@ footer {
  * &Skip navigation link
  */
 
- a.hidden {
+a.hidden {
     position:absolute;
     left:-10000px;
     top:auto;
     width:1px;
     height:1px;
     overflow:hidden;
- }
+}
+
+#wagtail-userbar{
+    top:80px;
+}
 
 @import "modules.less";
 @import "dlmenu.less";

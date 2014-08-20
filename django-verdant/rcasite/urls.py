@@ -7,14 +7,7 @@ import os.path
 
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
-from wagtail.wagtailimages import urls as wagtailimages_urls
-from wagtail.wagtailembeds import urls as wagtailembeds_urls
-from wagtail.wagtaildocs import admin_urls as wagtaildocs_admin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
-from wagtail.wagtailsnippets import urls as wagtailsnippets_urls
-from wagtail.wagtailsearch.urls import frontend as wagtailsearch_frontend_urls, admin as wagtailsearch_admin_urls
-from wagtail.wagtailusers import urls as wagtailusers_urls
-from wagtail.wagtailredirects import urls as wagtailredirects_urls
 
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
@@ -32,35 +25,22 @@ rca_ldap_register_signal_handlers()
 
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'verdant.views.home', name='home'),
-    # url(r'^verdant/', include('verdant.foo.urls')),
-
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
     url(r'^django-admin/', include(admin.site.urls)),
-
-    # TODO: some way of getting wagtailimages to register itself within wagtailadmin so that we
-    # don't have to define it separately here
-    url(r'^admin/images/', include(wagtailimages_urls)),
-    url(r'^admin/embeds/', include(wagtailembeds_urls)),
-    url(r'^admin/documents/', include(wagtaildocs_admin_urls)),
-    url(r'^admin/snippets/', include(wagtailsnippets_urls)),
-    url(r'^admin/search/', include(wagtailsearch_admin_urls)),
-    url(r'^admin/users/', include(wagtailusers_urls)),
-    url(r'^admin/redirects/', include(wagtailredirects_urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
-    url(r'^search/', include(wagtailsearch_frontend_urls)),
-
     url(r'^documents/', include(wagtaildocs_urls)),
-
     url(r'^admin/donations/', include(donations_urls)),
-
     url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
-
     url(r'^twitter/', include(twitter_urls)),
+
+    url(r'^search/$', 'wagtail.wagtailsearch.views.search', {
+        'template': 'rca/search_results.html',
+        'template_ajax': 'rca/includes/search_listing.html',
+    }, name='wagtailsearch_search'),
+    url(r'^search/suggest/$', 'wagtail.wagtailsearch.views.search', {
+        'use_json': True,
+        'json_attrs': ['title', 'url', 'search_name', 'search_url']
+    }, name='wagtailsearch_suggest'),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
