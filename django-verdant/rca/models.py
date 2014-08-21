@@ -793,7 +793,7 @@ class ProgrammePageFacilitiesCarouselItem(Orderable):
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
     ]
-    
+
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
     staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff'))
@@ -4347,7 +4347,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link'),
         FieldPanel('link_text')
     ]
-    
+
 class ResearchItem(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'subtitle'))
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'research_type'))
@@ -5506,3 +5506,17 @@ StreamPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+
+"""
+Given the following options:
+
+USE_LIGHTBOX = {
+    NewsIndex: [NewsItem, EventItem],
+}
+
+links to event or news items will open in a lightbox on every NewsIndex page.
+"""
+USE_LIGHTBOX = {
+    NewsIndex: [NewsItem, EventItem],
+}

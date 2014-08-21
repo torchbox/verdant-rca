@@ -9,7 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
-from rca.utils import get_students
+from rca.utils import get_students, USE_LIGHTBOX
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -97,7 +97,7 @@ def related_staff(context, programme="", school=""):
     if school:
         staff = StaffPage.objects.filter(live=True, roles__school=school)
     if programme:
-        staff = StaffPage.objects.filter(live=True, roles__programme=programme)  
+        staff = StaffPage.objects.filter(live=True, roles__programme=programme)
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -624,3 +624,11 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
                 pass
 
     return carousel_items
+
+
+@register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
+def use_lightbox(context):
+    slugs = USE_LIGHTBOX.get(context['self'].__class__) or []
+    return {
+        'slugs': slugs,
+    }

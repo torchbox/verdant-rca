@@ -1,6 +1,5 @@
 (function(){
     // TODO:
-    // * bind click handlers to selected elements only
     // Add different base template for ajax requests:
     // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
 
@@ -19,13 +18,13 @@
         $('.pjax-content, .pjax-wrapper').css("height", "");
         $('.pjax-content').addClass("measure-height-helper");
         var newHeight = $('.pjax-content').height();
-        $('.pjax-content').height(newHeight);
+        $('.pjax-content').height(newHeight + 1000);  // TODO: height is not measured correctly
         $('.pjax-wrapper').height($('.pjax-content').outerHeight() + 186);
         $('.pjax-content').removeClass("measure-height-helper");
     }
 
     function showLightbox(contents){
-        
+
         $(".pjax-content").html(contents);
 
         prevScrollY = window.scrollY;
@@ -67,6 +66,7 @@
             if(contents){
                 showLightbox(contents);
             }else{
+                showLightbox("Loading...");
                 $.ajax({
                     // use different url for ajax in order to avoid the browser caching the ajax response,
                     // and displaying it instead of the real page
@@ -79,7 +79,8 @@
                         });
                         var contents = obj.contents;
                         cache[url] = contents;
-                        showLightbox(contents);
+                        $(".pjax-content").html(contents);
+                        fixLightboxHeight();
                     }
                 });
             }
@@ -105,9 +106,23 @@
         }
     });
 
-    $(document).on('click', 'aside a', function(event) {
-        History.pushState({showLightbox: true}, $(this).text(), $(this).attr("href"));
-        return false;
+    $(document).on('click', 'a', function(event) {
+        var href = $(this).attr('href');
+        var openInLightbox = false;
+        for (var i = window.useLightbox.length - 1; i >= 0; i--) {
+            if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?').test(href)){
+                openInLightbox = true;
+                break;
+            }
+        }
+        if(openInLightbox){
+            History.pushState({showLightbox: true}, $(this).text(), href);
+            return false;
+        }
+    });
+
+    $('.page-overlay').on('click', function(){
+        History.back();
     });
 
 

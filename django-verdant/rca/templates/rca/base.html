@@ -162,6 +162,8 @@
                 <script src="{% static "rca/js/nav.js" %}"></script>
                 <script src="{% static "rca/js/pushstate.js" %}"></script>
 
+                {% use_lightbox %}
+
                 {% get_debug as DEBUG %}
                 {% if DEBUG %}
                     <script type="text/javascript">
