@@ -64,35 +64,22 @@ $(function() {
             });
 
             alignGallery(); // Defined in site.js
-            updateHashTags();
+            updateUrl();
         });
     }
 
-	function updateHashTags() {
-        // Add non-empty filters to hashtag
-		var serializedFilters = $('select', '#filters').filter(function() {
-			return $(this).val()  ;
-		}).serialize();
+
+	function updateUrl() {
+        if(!history.replaceState){
+            return;
+        }
+
+        var serializedFilters = $('select', '#filters').filter(function() {
+            return $(this).val();
+        }).serialize();
 
         if (serializedFilters) {
-            window.location.hash = '#/?' + serializedFilters;
-        } else {
-            // Remove the # symbol, copied from @Andy E's answer @
-            // http://stackoverflow.com/questions/1397329/how-to-remove-the-hash-from-window-location-with-javascript-without-page-refresh
-            var scrollV, scrollH, loc = window.location;
-            if ("pushState" in history)
-                history.pushState("", document.title, loc.pathname + loc.search);
-            else {
-                // Prevent scrolling by storing the page's current scroll offset
-                scrollV = document.body.scrollTop;
-                scrollH = document.body.scrollLeft;
-
-                loc.hash = "";
-
-                // Restore the scroll offset, should be flicker free
-                document.body.scrollTop = scrollV;
-                document.body.scrollLeft = scrollH;
-            }
+            history.replaceState("", document.title, location.pathname + '?' + serializedFilters);
         }
 	}
 
@@ -102,7 +89,6 @@ $(function() {
     $('#filters .options li').click(function() {
 
         updateFilters();
-
 
         $(this).parent().closest('li').removeClass('expanded');
 
