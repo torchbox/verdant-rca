@@ -2,8 +2,8 @@
 /* requires an 'current_page' var to be set before this is called, on the template, to determine the index page to load */
 
 $(function() {
-	
-	
+
+
     function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
             // Run filters
@@ -19,10 +19,10 @@ $(function() {
 
                         // Reset filter label
                         $(this).html($(this).data('originalLabel'));
-                        
+
                         // Clear select box value
                         $parent.find('select').val(null);
-                        
+
                         // Set ALL filter option as the selected option
                         $parent.find('li[data-val].selected').removeClass('selected');
                         $parent.find('li[data-val=""]').addClass('selected');
@@ -54,7 +54,7 @@ $(function() {
                         if (visibleOptions > 8) {
                             $('#filters div[data-id=' + filter['name'] + ']').css('width', '201%');
                             $parent.removeClass('three-cols').addClass('three-cols-disabled');
-                        } 
+                        }
                         if (visibleOptions > 16) {
                             $('#filters div[data-id=' + filter['name'] + ']').css('width', '301%');
                             $parent.removeClass('three-cols-disabled').addClass('three-cols');
@@ -67,11 +67,11 @@ $(function() {
             updateHashTags();
         });
     }
-	
+
 	function updateHashTags() {
         // Add non-empty filters to hashtag
 		var serializedFilters = $('select', '#filters').filter(function() {
-			return $(this).val()  ; 
+			return $(this).val()  ;
 		}).serialize();
 
         if (serializedFilters) {
@@ -95,15 +95,15 @@ $(function() {
             }
         }
 	}
-        
+
 	updateFilters();
-	
+
 
     $('#filters .options li').click(function() {
-        
+
         updateFilters();
-		
-        
+
+
         $(this).parent().closest('li').removeClass('expanded');
 
         return false;
