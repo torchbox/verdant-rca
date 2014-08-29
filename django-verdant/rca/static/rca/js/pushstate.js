@@ -1,5 +1,4 @@
 (function(){
-    return;
     // TODO:
     // Add different base template for ajax requests:
     // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
@@ -62,7 +61,7 @@
 
         // We should use if(state.data.showLightbox) but the initial data can get mixed up
         // with the following ones after full page reloads, so we're not relying on that
-        if(state.url != initialUrl){
+        if(state.url.split('?')[0] != initialUrl){
             var contents = cache[state.url];
             if(contents){
                 showLightbox(contents);

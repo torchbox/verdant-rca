@@ -126,10 +126,12 @@ def get_slugs_for_immediate_parents(page_types):
         and returns the slugs of all the parents, e.g. ['news', 'events', 'upcoming-events'].
         This is used for specifying which links should open in a lightbox (Ticket #138).
     """
-
-    parent_paths = page_types[0].objects.filter(live=True).only('path').values_list('path', flat=True)
-    parent_paths = set(map(lambda p: p[:-4], parent_paths))
-    return Page.objects.filter(live=True, path__in=parent_paths).only('slug').values_list('slug', flat=True)
+    slugs = []
+    for page_type in page_types:
+        parent_paths = page_type.objects.filter(live=True).only('path').values_list('path', flat=True)
+        parent_paths = set(map(lambda p: p[:-4], parent_paths))
+        slugs += list(Page.objects.filter(live=True, path__in=parent_paths).only('slug').values_list('slug', flat=True))
+    return list(set(slugs))
 
 for page, pages in USE_LIGHTBOX.items():
     USE_LIGHTBOX[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])
