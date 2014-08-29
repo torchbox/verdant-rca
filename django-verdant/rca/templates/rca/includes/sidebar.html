@@ -1,25 +1,21 @@
 {% load rca_tags %}
 
 {% if showToday or showAdverts %}
-<div class="events-ads-wrapper">
-{% endif %}
-
-<!-- Events -->
-{% if showToday %}
-    {% if self.exclude_events_sidebar != True %}
-        {% upcoming_events exclude=self %}
-    {% endif %}
-{% endif %}
-
-<!-- adverts -->
-{% if showAdverts %}
-        {% if self.exclude_global_adverts != True %}
-            {% sidebar_adverts show_open_days=showOpenDays %}
+    <div class="events-ads-wrapper">
+        <!-- Events -->
+        {% if showToday %}
+            {% if self.exclude_events_sidebar != True %}
+                {% upcoming_events exclude=self collapse_by_default=collapseToday %}
+            {% endif %}
         {% endif %}
-{% endif %}
 
-{% if showToday or showAdverts %}
-</div>
+        <!-- adverts -->
+        {% if showAdverts %}
+            {% if self.exclude_global_adverts != True %}
+                {% sidebar_adverts show_open_days=showOpenDays %}
+            {% endif %}
+        {% endif %}
+    </div>
 {% endif %}
 
 <!-- Related links -->
