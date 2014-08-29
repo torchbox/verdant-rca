@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from .models import SCHOOL_PROGRAMME_MAP, NewStudentPage, USE_LIGHTBOX
+from .models import SCHOOL_PROGRAMME_MAP, NewStudentPage, Page, USE_LIGHTBOX
 
 
 def get_school_programme_map(year=None):
@@ -126,25 +126,10 @@ def get_slugs_for_immediate_parents(page_types):
         and returns the slugs of all the parents, e.g. ['news', 'events', 'upcoming-events'].
         This is used for specifying which links should open in a lightbox (Ticket #138).
     """
-    parent_slugs = []
-    for page_type in page_types:
-        # from django.db.models.loading import get_model
-        # if not hasattr(page_type, 'objects'):
-        #     page_type = get_model(*page_type.split('.', 1))
-        parent_paths = []
-        query = page_type.objects.filter(live=True)
-        while True:
-            for parent_path in parent_paths:
-                query = query.exclude(path__startswith=parent_path)
-            first_page = query.first()
-            if first_page:
-                parent = first_page.get_parent()
-                parent_paths.append(parent.path)
-                if parent.slug not in parent_slugs:
-                    parent_slugs.append(parent.slug)
-            else:
-                break
-    return parent_slugs
+
+    parent_paths = page_types[0].objects.filter(live=True).only('path').values_list('path', flat=True)
+    parent_paths = set(map(lambda p: p[:-4], parent_paths))
+    return Page.objects.filter(live=True, path__in=parent_paths).only('slug').values_list('slug', flat=True)
 
 for page, pages in USE_LIGHTBOX.items():
     USE_LIGHTBOX[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])

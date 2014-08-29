@@ -5517,6 +5517,8 @@ USE_LIGHTBOX = {
 
 links to event or news items will open in a lightbox on every NewsIndex page.
 """
+
 USE_LIGHTBOX = {
     NewsIndex: [NewsItem, EventItem],
+    StandardIndex: [StandardPage, CurrentResearchPage],
 }

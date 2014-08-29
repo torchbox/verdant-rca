@@ -1,4 +1,5 @@
 (function(){
+    return;
     // TODO:
     // Add different base template for ajax requests:
     // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
@@ -110,9 +111,14 @@
         var href = $(this).attr('href');
         var openInLightbox = false;
         for (var i = window.useLightbox.length - 1; i >= 0; i--) {
-            if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?').test(href)){
+            if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?$').test(href)){
                 openInLightbox = true;
-                break;
+                for (var j = window.useLightbox.length - 1; j >= 0; j--) {
+                    if(new RegExp('/' + window.useLightbox[j] + '/?$').test(href)){
+                        openInLightbox = false;
+                        break;
+                    }
+                }
             }
         }
         if(openInLightbox){

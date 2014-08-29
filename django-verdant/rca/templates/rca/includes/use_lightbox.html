@@ -1,0 +1,6 @@
+<script type="text/javascript">
+    window.useLightbox = [];
+    {% for slug in slugs %}
+        window.useLightbox.push('{{ slug }}');
+    {% endfor %}
+</script>
