@@ -658,6 +658,7 @@ $(function(){
       // Close button
       $(document).delegate('#cookie-notice-close', 'click', function() {
         $(".cookie-notice").slideUp("slow");
+        return false;
       });
 
       $(".cookie-notice").slideDown("slow");
