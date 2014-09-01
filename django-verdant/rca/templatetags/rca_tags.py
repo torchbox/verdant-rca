@@ -644,8 +644,10 @@ def get_lightbox_config():
             slugs += list(Page.objects.filter(live=True, path__in=parent_paths).only('slug').values_list('slug', flat=True))
         return list(set(slugs))
 
+    slugs = {}
+
     for page, pages in USE_LIGHTBOX.items():
-        USE_LIGHTBOX[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])
+        slugs[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])
 
     excluded = []
 
@@ -654,7 +656,7 @@ def get_lightbox_config():
             excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
 
     return {
-        'slugs': USE_LIGHTBOX,
+        'slugs': slugs,
         'excluded': excluded,
     }
 
@@ -670,6 +672,7 @@ def use_lightbox(context):
         cache.set(cache_key, lightbox_config, 60 * 60 * 24)
 
     slugs = lightbox_config['slugs'].get(context['self'].__class__) or []
+
     return {
         'slugs': slugs,
         'excluded': lightbox_config['excluded'],
