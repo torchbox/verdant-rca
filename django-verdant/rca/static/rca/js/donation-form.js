@@ -1,5 +1,11 @@
 // JAVASCRIPT HELPERS FOR BLACKBAUD DONATION FORM
 $(function() {
+    // Grouping of fields
+    function groupSetOfFields(fieldSelectors) {
+        console.log('here');
+        $(fieldSelectors).wrapAll('<div class="grouped-form-items"></div>');
+    }
+
     //Remove the JS added Blackbaud CSS when loaded. 
     var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms"]';
 
@@ -25,8 +31,12 @@ $(function() {
                 $('#bboxdonation_gift_fldOtherLevelAmount').hide(250);
             });  
 
-            $('.BBFormSelectList').customSelect({customClass:'select'});
-            
+            $('.BBFormSelectList').customSelect({customClass:'select'}).change(function(){
+                $('.hasCustomSelect').removeClass('hasCustomSelect').removeAttr('style');
+                $('.select').remove();
+                $('.BBFormSelectList').customSelect({customClass:'select'});
+            });            
+
             // FORM IMPROVEMENTS
             // Blackbaud markup isn't great so we're boosting the experience. 
 
@@ -37,11 +47,7 @@ $(function() {
             var firstNameLabel = $('#bboxdonation_billing_lblFullName').clone();
             $('#bboxdonation_billing_lblFirstName, #bboxdonation_billing_lblFullName').remove();
             $('#bboxdonation_billing_txtFirstName').before(firstNameLabel);
-            
-            // Grouping of fields
-            var groupSetOfFields = function (fieldSelectors) {
-                $(fieldSelectors).wrapAll('<div class="grouped-form-items" />');
-            }
+
 
             //Group firstname label with input
             groupSetOfFields('#bboxdonation_billing_lblFullName, #bboxdonation_billing_txtFirstName');
@@ -51,7 +57,16 @@ $(function() {
             groupSetOfFields('#divName .grouped-form-items');
             //Group Provience and Postcode 
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince + .select');
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblState , #bboxdonation_billing_billingAddress_ddState, #bboxdonation_billing_billingAddress_ddState + .select');
+
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAPostCode, #bboxdonation_billing_billingAddress_txtCAPostCode');
+            
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblZip, #bboxdonation_billing_billingAddress_txtZip');
+
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblNZCity, #bboxdonation_billing_billingAddress_ddNZCity, #bboxdonation_billing_billingAddress_ddNZCity + .select');
+
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblNZPostCode, #bboxdonation_billing_billingAddress_txtNZPostCode');
+
         }
     }, 1000);
 });

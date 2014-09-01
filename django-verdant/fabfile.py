@@ -16,15 +16,16 @@ env.roledefs = {
 MIGRATION_SERVER = 'rca2.dh.bytemark.co.uk'
 
 @roles('staging')
-def deploy_staging(branch="staging"):
+def deploy_staging(branch="staging", gitonly=False):
     with cd('/usr/local/django/verdant-rca/'):
         with settings(sudo_user='verdant-rca'):
             sudo("git fetch")
             sudo("git checkout %s" % branch)
             sudo("git pull")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
+            if not gitonly:
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
 
@@ -32,7 +33,8 @@ def deploy_staging(branch="staging"):
         sudo("supervisorctl restart rca-celeryd")
         sudo("supervisorctl restart rca-celerybeat")
 
-        with settings(sudo_user='verdant-rca'):
+        if not gitonly:
+            with settings(sudo_user='verdant-rca'):
             sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
 
 
