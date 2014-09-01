@@ -35,7 +35,7 @@ def deploy_staging(branch="staging", gitonly=False):
 
         if not gitonly:
             with settings(sudo_user='verdant-rca'):
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
+                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
 
 
 @roles('production')

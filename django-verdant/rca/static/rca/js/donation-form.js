@@ -48,23 +48,33 @@ $(function() {
             $('#bboxdonation_billing_lblFirstName, #bboxdonation_billing_lblFullName').remove();
             $('#bboxdonation_billing_txtFirstName').before(firstNameLabel);
 
+            // GROUPS OF FIELDS
 
-            //Group firstname label with input
+            // firstname 
             groupSetOfFields('#bboxdonation_billing_lblFullName, #bboxdonation_billing_txtFirstName');
-            //Group lastname label with input 
+            
+            // lastname
             groupSetOfFields('#bboxdonation_billing_lblLastName, #bboxdonation_billing_txtLastName');
+    
             //Group the above groups 
             groupSetOfFields('#divName .grouped-form-items');
-            //Group Provience and Postcode 
-            groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince + .select');
-            groupSetOfFields('#bboxdonation_billing_billingAddress_lblState , #bboxdonation_billing_billingAddress_ddState, #bboxdonation_billing_billingAddress_ddState + .select');
 
+            // CA province
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince + .select');
+
+            // CA postcode
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAPostCode, #bboxdonation_billing_billingAddress_txtCAPostCode');
-            
+
+            // USA state
+            groupSetOfFields('#bboxdonation_billing_billingAddress_lblState , #bboxdonation_billing_billingAddress_ddState, #bboxdonation_billing_billingAddress_ddState + .select');
+           
+            // USA zip
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblZip, #bboxdonation_billing_billingAddress_txtZip');
 
+            // NZ city
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblNZCity, #bboxdonation_billing_billingAddress_ddNZCity, #bboxdonation_billing_billingAddress_ddNZCity + .select');
 
+            // NZ postcode
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblNZPostCode, #bboxdonation_billing_billingAddress_txtNZPostCode');
 
         }
