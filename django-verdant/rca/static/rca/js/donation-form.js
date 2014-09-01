@@ -1,9 +1,9 @@
 // JAVASCRIPT HELPERS FOR BLACKBAUD DONATION FORM
 $(function() {
-   var blackbaudLoad = function() {
-      //Remove the JS added Blackbaud CSS when loaded. 
-      var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms"]';
-      var blackbaudElementCheckInterval = setInterval(function(){
+    //Remove the JS added Blackbaud CSS when loaded. 
+    var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms"]';
+
+    var blackbaudElementCheckInterval = setInterval(function(){
         //Run once form has loaded
         if ($(el).length) {
             clearInterval(blackbaudElementCheckInterval);
@@ -53,7 +53,5 @@ $(function() {
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince, #bboxdonation_billing_billingAddress_ddCAProvince + .select');
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblCAPostCode, #bboxdonation_billing_billingAddress_txtCAPostCode');
         }
-      }, 1000);
-   }
-   blackbaudLoad();
+    }, 1000);
 });
