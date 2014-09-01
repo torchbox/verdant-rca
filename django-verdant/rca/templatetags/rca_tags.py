@@ -9,7 +9,7 @@ from itertools import chain
 import random
 
 from rca.models import *
-from rca.utils import get_students, USE_LIGHTBOX
+from rca.utils import get_students, USE_LIGHTBOX, NEVER_OPEN_IN_LIGHTBOX
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -635,4 +635,5 @@ def use_lightbox(context):
     slugs = USE_LIGHTBOX.get(context['self'].__class__) or []
     return {
         'slugs': slugs,
+        'excluded': NEVER_OPEN_IN_LIGHTBOX
     }

@@ -1,7 +1,8 @@
 from django.db.models import Q
 
 from .models import SCHOOL_PROGRAMME_MAP, NewStudentPage, Page, USE_LIGHTBOX
-
+from . import models as rca_models
+from django.db.models import get_app, get_models
 
 def get_school_programme_map(year=None):
     """
@@ -135,3 +136,9 @@ def get_slugs_for_immediate_parents(page_types):
 
 for page, pages in USE_LIGHTBOX.items():
     USE_LIGHTBOX[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])
+
+NEVER_OPEN_IN_LIGHTBOX = []
+
+for m in get_models(get_app('rca')):
+    if m.__name__.lower().endswith('index'):
+        NEVER_OPEN_IN_LIGHTBOX += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())

@@ -110,13 +110,16 @@
     $(document).on('click', 'a', function(event) {
         var href = $(this).attr('href');
         var openInLightbox = false;
-        for (var i = window.useLightbox.length - 1; i >= 0; i--) {
-            if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?$').test(href)){
-                openInLightbox = true;
-                for (var j = window.useLightbox.length - 1; j >= 0; j--) {
-                    if(new RegExp('/' + window.useLightbox[j] + '/?$').test(href)){
-                        openInLightbox = false;
-                        break;
+
+        if(!new RegExp('/(' + window.neverOpenInLightbox.join('|') + ')/?$').test(href)){
+            for (var i = window.useLightbox.length - 1; i >= 0; i--) {
+                if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?$').test(href)){
+                    openInLightbox = true;
+                    for (var j = window.useLightbox.length - 1; j >= 0; j--) {
+                        if(new RegExp('/' + window.useLightbox[j] + '/?$').test(href)){
+                            openInLightbox = false;
+                            break;
+                        }
                     }
                 }
             }
