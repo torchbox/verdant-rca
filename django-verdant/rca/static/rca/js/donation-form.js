@@ -11,7 +11,7 @@ $(function() {
             //remove the stylesheet found
             $(el).remove();
 
-            $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
+            $('#bbox-root #mongo-form').css({opacity: 0}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
             
             // FORM HELPERS for Donations
 
