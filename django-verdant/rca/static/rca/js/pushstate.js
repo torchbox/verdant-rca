@@ -61,7 +61,7 @@
 
         // We should use if(state.data.showLightbox) but the initial data can get mixed up
         // with the following ones after full page reloads, so we're not relying on that
-        if(state.url.split('?')[0] != initialUrl){
+        if(state.url.split('?')[0] != initialUrl.split('?')[0]){
             var contents = cache[state.url];
             if(contents){
                 showLightbox(contents);
