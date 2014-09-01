@@ -2,36 +2,47 @@
 $(function() {
    var blackbaudLoad = function() {
       //Remove the JS added Blackbaud CSS when loaded. 
-      var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms/Funds-and-appeals---7516"]';
+      var el = 'link[href^="https://bbox.blackbaudhosting.com/webforms"]';
       var blackbaudElementCheckInterval = setInterval(function(){
         //Run once form has loaded
         if ($(el).length) {
-            $(el).remove();
-            $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
             clearInterval(blackbaudElementCheckInterval);
+
+            //remove the stylesheet found
+            $(el).remove();
+
+            $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
+            
             // FORM HELPERS for Donations
+
             // If other amount label selected show the other amount input
             $('.BBFormRadioLabelGivingLevelOther').on('click', function() {
-              $('#bboxdonation_gift_fldOtherLevelAmount').show(200);
+                $('#bboxdonation_gift_fldOtherLevelAmount').show(200);
             });
+
             // Click was on an actual amount so hide the 'other' amount input box
             $('.BBFormRadioLabelGivingLevel:not(.BBFormRadioLabelGivingLevelOther)').on('click', function() {
-              $('#bboxdonation_gift_fldOtherLevelAmount').hide(250);
+                $('#bboxdonation_gift_fldOtherLevelAmount').hide(250);
             });  
+
             $('.BBFormSelectList').customSelect({customClass:'select'});
             
             // FORM IMPROVEMENTS
             // Blackbaud markup isn't great so we're boosting the experience. 
+
             // Add currenty to the 'other amount box'
             $('#bboxdonation_gift_txtOtherAmountButtons').before('<span class="currency-symbol">&pound;</span>');                  
+            
             // Move the name label next to it's input field.
             var firstNameLabel = $('#bboxdonation_billing_lblFullName').clone();
             $('#bboxdonation_billing_lblFirstName, #bboxdonation_billing_lblFullName').remove();
             $('#bboxdonation_billing_txtFirstName').before(firstNameLabel);
+            
             // Grouping of fields
             var groupSetOfFields = function (fieldSelectors) {
-              $(fieldSelectors).wrapAll('<div class="grouped-form-items" />');
+                $(fieldSelectors).wrapAll('<div class="grouped-form-items" />');
             }
+
             //Group firstname label with input
             groupSetOfFields('#bboxdonation_billing_lblFullName, #bboxdonation_billing_txtFirstName');
             //Group lastname label with input 
@@ -45,5 +56,4 @@ $(function() {
       }, 1000);
    }
    blackbaudLoad();
-
 });
