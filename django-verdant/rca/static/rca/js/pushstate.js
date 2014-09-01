@@ -73,6 +73,7 @@
                     url: state.url + "?_ajax=1",
                     success: function(data, status, xhr){
                         var url = this.url.replace("?_ajax=1", "");
+                        // extractContainer is a local function exported from jquery.pjax.js
                         var obj = extractContainer(data, xhr, {
                             requestUrl: url,
                             fragment: ".page-content > .inner"
