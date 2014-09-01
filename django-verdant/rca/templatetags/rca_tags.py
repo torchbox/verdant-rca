@@ -630,6 +630,8 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
 
 @register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
 def use_lightbox(context):
+    if not 'self' in context:
+        return ''
     slugs = USE_LIGHTBOX.get(context['self'].__class__) or []
     return {
         'slugs': slugs,
