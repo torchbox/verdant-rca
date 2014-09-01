@@ -37,5 +37,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}
