@@ -181,7 +181,14 @@ function applyCarousel(carouselSelector){
     return carousel;
 }
 
-$(function(){
+function onDocumentReady(jQuery){
+    // By default we get an unmodified version of jQuery as the first argument
+    // but in pushstate.js we pass a modified version of jQuery
+    // that restricts it to work with elemnts in the lightbox only.
+    // This way we can avoid initialising things behind the lightbox after we load it.
+
+    var $ = jQuery;
+
     showSearchSubmit();
     showSearchAutocomplete();
     showHideFooter();
@@ -318,7 +325,7 @@ $(function(){
         }
     });
     $(window.packerytweets).on('loaded', function(){
-        var arr = jQuery.makeArray($('li', window.packerytweets));
+        var arr = $.makeArray($('li', window.packerytweets));
         $('.packery .tweet .inner .content').each(function(){
             $(this).html($(arr.shift()).html());
         });
@@ -573,11 +580,11 @@ $(function(){
 
 		return hashParams;
 	}
-	
+
     /* Search filters */
     $('.filters').each(function(){
         $self = $(this);
-		
+
 		function setLabel(option){
             $('label[for=' + $(option).parent().data('id') + ']', $self).html($(option).html()).addClass('active');
         }
@@ -597,9 +604,9 @@ $(function(){
             var options = $('option', $(this));
             var newOptions = '';
             var filterAttrs = 'data-id="' + $(this).attr('id') + '"';
-			
+
 			hashValue=getHashParams()[$(this).attr('name')];
-			
+
             options.each(function(){
 				var isSelected = "";
 				if(hashValue == $(this).val() ) {
@@ -615,7 +622,7 @@ $(function(){
             var thisOption = $('<div class="options" ' + filterAttrs + '><ul ' + filterAttrs + '>' + newOptions + '</div>');
             $(this).addClass('enhanced').after(thisOption);
         });
-		
+
         /* if form already has items selected, replicate this */
         $('.options li', $self).each(function(){
             if($(this).hasClass('selected') && $(this).data('val')){
@@ -688,4 +695,4 @@ $(function(){
       }
     });
 
-});
+}

@@ -139,6 +139,8 @@
                 var domainroot = "{{ request.site.hostname }}";
             </script>
 
+            {% use_lightbox %}
+
             {% compress js %}
                 <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
                 <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
@@ -162,6 +164,13 @@
                 <script src="{% static "rca/js/nav.js" %}"></script>
                 <script src="{% static "rca/js/pushstate.js" %}"></script>
 
+                <script type="text/javascript">
+                    {% if not request.is_ajax %}
+                        // onDocumentReady wraps all the startup code in site.js
+                        jQuery(onDocumentReady)
+                    {% endif %}
+                </script>
+
                 {% get_debug as DEBUG %}
                 {% if DEBUG %}
                     <script type="text/javascript">
@@ -175,8 +184,6 @@
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
             {% endcompress %}
-        
-            {% use_lightbox %}
 
             {% block show_js %}{% endblock %}
             {% block extra_js %}{% endblock %}

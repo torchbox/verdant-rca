@@ -59,9 +59,12 @@
 
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
 
-        // We should use if(state.data.showLightbox) but the initial data can get mixed up
-        // with the following ones after full page reloads, so we're not relying on that
-        if(state.url.split('?')[0] != initialUrl.split('?')[0]){
+        if(!$('.pjax-content').is(':visible') && !state.data.showLightbox){
+            location.href = state.url;
+            return;
+        }
+
+        if(state.data.showLightbox){
             var contents = cache[state.url];
             if(contents){
                 showLightbox(contents);
@@ -70,7 +73,7 @@
                 $.ajax({
                     // use different url for ajax in order to avoid the browser caching the ajax response,
                     // and displaying it instead of the real page
-                    url: state.url + "?_ajax=1",
+                    url: state.url + "?pjax=1",
                     success: function(data, status, xhr){
                         var url = this.url.replace("?_ajax=1", "");
                         // extractContainer is a local function exported from jquery.pjax.js
@@ -81,6 +84,21 @@
                         var contents = obj.contents;
                         cache[url] = contents;
                         $(".pjax-content").html(contents);
+
+                        var jQueryInLightbox = function( selector, context ) {
+                            if(context){
+                                context = jQuery(context, '.pjax-wrapper');
+                                return new jQuery.fn.init(selector, context);
+                            }else{
+                                return new jQuery.fn.init(selector, '.pjax-wrapper');
+                            }
+                        };
+                        jQueryInLightbox.prototype = jQuery.prototype;
+                        jQuery.extend(jQueryInLightbox, jQuery);
+                        jQuery(function(){
+                            onDocumentReady(jQueryInLightbox);
+                        });
+
                         fixLightboxHeight();
                     }
                 });
@@ -107,23 +125,48 @@
         }
     });
 
-    $(document).on('click', 'a', function(event) {
-        var href = $(this).attr('href');
-        var openInLightbox = false;
+    function shouldOpenInLightbox(){
+        var $this = $(this);
+        var href = $this.attr('href');
 
-        if(!new RegExp('/(' + window.neverOpenInLightbox.join('|') + ')/?$').test(href)){
-            for (var i = window.useLightbox.length - 1; i >= 0; i--) {
-                if(new RegExp('/' + window.useLightbox[i] + '/[^/]+/?$').test(href)){
-                    openInLightbox = true;
-                    for (var j = window.useLightbox.length - 1; j >= 0; j--) {
-                        if(new RegExp('/' + window.useLightbox[j] + '/?$').test(href)){
-                            openInLightbox = false;
-                            break;
-                        }
-                    }
-                }
+        var returnFalseIfAnyIsTrue = [
+            !href,
+            href == '/',
+            href && href.indexOf('http') === 0,
+            href && href.indexOf('#') != -1,
+            href && href.indexOf('javascript:') != -1,
+            $this.closest('aside').length,
+            $this.closest('.pjax-content').length,
+            $this.closest('aside').length,
+            !$this.closest('.page-wrapper').length
+        ];
+
+        for (var i = returnFalseIfAnyIsTrue.length - 1; i >= 0; i--) {
+            if(returnFalseIfAnyIsTrue[i]){
+                return false;
             }
         }
+
+        var openInLightbox = !(new RegExp(window.neverOpenInLightbox[0]).test(href));
+        if(openInLightbox)
+            openInLightbox = !(new RegExp(window.neverOpenInLightbox[1]).test(href));
+
+
+        return openInLightbox;
+    }
+
+    $('a').each(function(){
+        if(shouldOpenInLightbox.call(this)){
+            $(this).addClass('lightbox-link');
+            // TODO: this is for debugging only
+            // $(this).css('text-decoration', 'line-through');
+        }
+    });
+
+    $(document).on('click', 'a', function(event) {
+        var href = $(this).attr('href');
+        var openInLightbox = shouldOpenInLightbox.call(this);
+
         if(openInLightbox){
             History.pushState({showLightbox: true}, $(this).text(), href);
             return false;
@@ -134,7 +177,7 @@
         History.back();
     });
 
-
+    // TODO: the extra methods should be added on document ready, otherwise they throw exceptions in the pushstate code
     $(window).on("load", function(){
         var Affix = $('.page-wrapper').eq(0).data('bs.affix').constructor;
 

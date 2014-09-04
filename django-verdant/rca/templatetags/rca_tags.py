@@ -24,7 +24,7 @@ def upcoming_events(context, exclude=None, count=3, collapse_by_default=False):
     events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
     if exclude:
         events = events.exclude(id=exclude.id)
-    
+
     return {
         'collapse_by_default': collapse_by_default,
         'events': events[:count],
@@ -630,35 +630,37 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
 
 
 def get_lightbox_config():
-    def get_slugs_for_immediate_parents(page_types):
-        """
-            Given a list of page types (e.g. [NewsItem, EventItem])
-            it finds all the immediate parents of all news or event item pages
-            and returns the slugs of all the parents, e.g. ['news', 'events', 'upcoming-events'].
-            This is used for specifying which links should open in a lightbox (Ticket #138).
-        """
-        slugs = []
-        for page_type in page_types:
-            parent_paths = page_type.objects.filter(live=True).only('path').values_list('path', flat=True)
-            parent_paths = set(map(lambda p: p[:-4], parent_paths))
-            slugs += list(Page.objects.filter(live=True, path__in=parent_paths).only('slug').values_list('slug', flat=True))
-        return list(set(slugs))
-
-    slugs = {}
-
-    for page, pages in USE_LIGHTBOX.items():
-        slugs[page] = get_slugs_for_immediate_parents(USE_LIGHTBOX[page])
 
     excluded = []
 
-    for m in get_models(get_app('rca')):
-        if m.__name__.lower().endswith('index'):
+    DONT_OPEN_IN_LIGHTBOX = ['rca.ProgrammePage', 'rca.SchoolPage', 'rca.GalleryPage', 'rca.DonationPage']  # 'rca.OEFormPage'
+
+    for path in DONT_OPEN_IN_LIGHTBOX:
+        app, model_name = path.split('.')
+        for m in get_models(get_app(app)):
+            if not issubclass(m, Page):
+                continue
+            if m.__name__.lower() == model_name.lower():
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+            if 'index' in m.__name__.lower() and m.__name__.lower() != 'standardindex':
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+
+    excluded1 = '/(%s)/?$' % '|'.join(excluded)
+
+    excluded = []
+
+    # don't open anything that's defined in rca_show
+    for m in get_models(get_app('rca_show')):
+        if issubclass(m, Page):
             excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
 
+    excluded2 = '/(%s)/?.*' % '|'.join(excluded)
+
     return {
-        'slugs': slugs,
-        'excluded': excluded,
+        'excluded1': excluded1,
+        'excluded2': excluded2,
     }
+
 
 @register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
 def use_lightbox(context):
@@ -671,9 +673,4 @@ def use_lightbox(context):
         lightbox_config = get_lightbox_config()
         cache.set(cache_key, lightbox_config, 60 * 60 * 24)
 
-    slugs = lightbox_config['slugs'].get(context['self'].__class__) or []
-
-    return {
-        'slugs': slugs,
-        'excluded': lightbox_config['excluded'],
-    }
+    return lightbox_config

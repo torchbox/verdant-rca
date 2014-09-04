@@ -1,12 +1,5 @@
 <script type="text/javascript">
-    window.useLightbox = [];
     window.neverOpenInLightbox = [];
-    
-    {% for slug in slugs %}
-        window.useLightbox.push('{{ slug }}');
-    {% endfor %}
-
-    {% for slug in excluded %}
-        window.neverOpenInLightbox.push('{{ slug }}');
-    {% endfor %}
+    window.neverOpenInLightbox.push('{{ excluded1 }}');
+    window.neverOpenInLightbox.push('{{ excluded2 }}');
 </script>

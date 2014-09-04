@@ -438,7 +438,7 @@ class SocialFields(models.Model):
 # Fields that configure how the sidebar of a given page should be treated
 class SidebarBehaviourFields(models.Model):
     collapse_upcoming_events = models.BooleanField(default=False, help_text=help_text('rca.SidebarBehaviourFields', 'collapse_upcoming_events'))
-    
+
     class Meta:
         abstract = True
 
@@ -2356,7 +2356,8 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
             events = paginator.page(paginator.num_pages)
 
         # If the request is ajax, only return a new list of events
-        if request.is_ajax():
+        # But if the pjax param is present we need to render the main template instead
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, 'rca/includes/standard_index_events_listing.html', {
                 'self': self,
                 'events': events,
@@ -5540,19 +5541,3 @@ StreamPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
-
-
-"""
-Given the following options:
-
-USE_LIGHTBOX = {
-    NewsIndex: [NewsItem, EventItem],
-}
-
-links to event or news items will open in a lightbox on every NewsIndex page.
-"""
-
-USE_LIGHTBOX = {
-    NewsIndex: [NewsItem, EventItem],
-    StandardIndex: [StandardPage, CurrentResearchPage],
-}
