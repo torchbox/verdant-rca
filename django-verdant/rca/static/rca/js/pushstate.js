@@ -96,7 +96,7 @@
                         jQueryInLightbox.prototype = jQuery.prototype;
                         jQuery.extend(jQueryInLightbox, jQuery);
                         jQuery(function(){
-                            onDocumentReady(jQueryInLightbox);
+                            onDocumentReady(jQueryInLightbox, true);
                         });
 
                         fixLightboxHeight();

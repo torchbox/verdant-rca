@@ -181,11 +181,12 @@ function applyCarousel(carouselSelector){
     return carousel;
 }
 
-function onDocumentReady(jQuery){
+function onDocumentReady(jQuery, inLightBox){
     // By default we get an unmodified version of jQuery as the first argument
     // but in pushstate.js we pass a modified version of jQuery
     // that restricts it to work with elemnts in the lightbox only.
-    // This way we can avoid initialising things behind the lightbox after we load it.
+    // This way we can avoid initialising things behind the lightbox twice,
+    // and we don't have to duplicate any code to run in the lightbox only.
 
     var $ = jQuery;
 
