@@ -1607,13 +1607,13 @@ footer {
                 }
             }
             .BBFormGiftOtherAmount {
+                .large-radio-label();
                 color: @color-black;
                 font-family: @font-family-benton-light;
                 width: 7em;
                 padding-left: 1.4em;
-                font-size: 2.5em;
+                font-size: 1em;
                 position: relative;
-                .large-radio-label();
                 
                 &:hover {
                     background-color: @color-advert-pale-blue;
@@ -1690,9 +1690,6 @@ footer {
                     margin-left: 5%; 
                 }
             }
-            #bboxdonation_billing_billingAddress_lblCAProvincePostCode {
-                display: none;
-            }
             #bboxdonation_payment_lblMonth,
             #bboxdonation_payment_lblYear {
                 display: none;
@@ -1720,6 +1717,13 @@ footer {
                     float: left;
                     margin-right: 1em;
                 }
+            }
+            #bboxdonation_billing_billingAddress_lblCAProvincePostCode,
+            #bboxdonation_billing_billingAddress_lblUKCityCounty,
+            #bboxdonation_billing_billingAddress_lblStateZip,
+            #bboxdonation_billing_billingAddress_lblNZCityPostCode,
+            #bboxdonation_billing_billingAddress_lblAUStatePostCode{
+                display:none;
             }
         }
     }

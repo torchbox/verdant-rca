@@ -2,7 +2,6 @@
 $(function() {
     // Grouping of fields
     function groupSetOfFields(fieldSelectors) {
-        console.log('here');
         $(fieldSelectors).wrapAll('<div class="grouped-form-items"></div>');
     }
 
