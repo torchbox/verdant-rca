@@ -671,6 +671,6 @@ def use_lightbox(context):
     lightbox_config = cache.get(cache_key)
     if not lightbox_config:
         lightbox_config = get_lightbox_config()
-        cache.set(cache_key, lightbox_config, 60 * 60 * 24)
+        cache.set(cache_key, lightbox_config, 60 * 60)
 
     return lightbox_config

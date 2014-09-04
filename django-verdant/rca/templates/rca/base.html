@@ -164,14 +164,8 @@
                 <script src="{% static "rca/js/nav.js" %}"></script>
                 <script src="{% static "rca/js/pushstate.js" %}"></script>
 
-                <script type="text/javascript">
-                    {% if not request.is_ajax %}
-                        // onDocumentReady wraps all the startup code in site.js
-                        jQuery(onDocumentReady)
-                    {% endif %}
-                </script>
-
                 {% get_debug as DEBUG %}
+
                 {% if DEBUG %}
                     <script type="text/javascript">
                         //set global var for media_url so that it can be used by the script being called
@@ -184,6 +178,13 @@
                     <script src="{% static "rca/js/local_images.js" %}"></script>
                 {% endif %}
             {% endcompress %}
+
+            <script type="text/javascript">
+                {% if not request.is_ajax %}
+                    // onDocumentReady wraps all the startup code in site.js
+                    jQuery(onDocumentReady);
+                {% endif %}
+            </script>
 
             {% block show_js %}{% endblock %}
             {% block extra_js %}{% endblock %}
