@@ -117,6 +117,9 @@ function onDocumentReady(jQuery, inLightBox){
 
     /* search autocomplete */
     function showSearchAutocomplete() {
+        if(inLightBox){
+            return;
+        }
         $("input#search_box").autocomplete({
             source: function(request, response) {
                 $.getJSON("/search/suggest/?q=" + request.term, function(data) {
