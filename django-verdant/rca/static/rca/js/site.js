@@ -13,173 +13,20 @@ var expansionAnimationSpeed = 300;
 // this value is used in pushstate.js as well
 window.affixOffsetTop = 151;
 
-/* generic function to show / hide elements
- * the argument element will be assigned or unassigned an 'expanded' class.
- * The rest should be handled by the css, including display:none or display:block No sliding. */
-function showHide(clickElement, classElement){
-    $(clickElement).click(function(eventObject){
-        $(classElement).toggleClass('expanded');
-    });
-}
-
-/* show hide the footer - needs its own function because of being idiosyncratic */
-function showHideFooter() {
-    $('footer .menu .main').click(function(eventObject){
-        $(this).toggleClass('expanded');
-        $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
-    });
-    $('.submenu-block').click(function(e){
-        e.stopPropagation();
-    });
-}
-
-/* show hide dialogue - has its own funciton because of hide behaviour */
-function showHideDialogue() {
-    $('.share').click(function() {
-        if($('.dialogue').hasClass('expanded')) {
-            $('.dialogue').removeClass('expanded');
-            $('.dialogue').slideUp();
-        } else {
-            $('.dialogue').addClass('expanded');
-            $('.dialogue').slideDown();
-        }
-    });
-    $(document).click(function() {
-        $('.dialogue').removeClass('expanded');
-        $('.dialogue').slideUp();
-    });
-    $('.dialogue').click(function(e){
-        e.stopPropagation();
-    });
-    $('.share').click(function(e){
-        e.preventDefault();
-        e.stopPropagation();
-    });
-}
-
-/* generic function to show hide an element with slidey fun
-The classElement gets an expanded class, and the showElement gets hidden/shown
-with a slide */
-function showHideSlide(clickElement, classElement, showElement, openByDefault) {
-    if(typeof openByDefault == "undefined"){
-        openByDefault = true
+// window.Affix is the internal class used by each bootsrap-affix instance
+// it needs to made public in bootstrap-affix.js
+window.Affix.prototype.disable = function(){
+    if(this.$element.length){
+        this._$element = this.$element;
+        this.$element = $([]);
     }
+};
 
-    if (!openByDefault){
-        $(showElement).hide();
+window.Affix.prototype.enable = function(){
+    if(this._$element){
+        this.$element = this._$element;
     }
-
-    $(clickElement).click(function(eventObject){
-        $(classElement).toggleClass('expanded');
-        $(showElement).slideToggle(expansionAnimationSpeed);
-    });
-}
-
-/* hide the search submit button then show
-on typing text */
-function showSearchSubmit() {
-    $('form.search input[type="submit"]').hide();
-    $('form.search input[type="text"]').focus(function() {
-       $('form.search input[type="submit"]').show();
-    });
-    $(document).click(function() {
-        $('form.search input[type="submit"]').hide();
-    });
-    $('form.search input[type="text"]').click(function(e){
-        e.stopPropagation();
-    });
-}
-
-/* search autocomplete */
-function showSearchAutocomplete() {
-    $("input#search_box").autocomplete({
-        source: function(request, response) {
-            $.getJSON("/search/suggest/?q=" + request.term, function(data) {
-                response(data);
-            });
-        },
-        select: function( event, ui ) {
-            window.location.href = ui.item.search_url || ui.item.url;
-        }
-    }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-        return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
-    };
-}
-
-
-function showHideMobileMenu(){
-    $('.showmenu').click(function(eventObject){
-        $('nav').toggleClass('expanded');
-        $(this).toggleClass('expanded');
-    });
-}
-
-/*google maps for contact page
-Currently not being used but leaving commented out for reference - contains the correct lat and longs for Kensington and Battersea campuses */
-// function initializeMaps() {
-//     var mapCanvas = document.getElementById('map_canvas_kensington');
-//     var mapOptions = {
-//         center: new google.maps.LatLng(51.501144, -0.179285),
-//         zoom: 16,
-//         mapTypeId: google.maps.MapTypeId.ROADMAP
-//     };
-//     var map = new google.maps.Map(mapCanvas, mapOptions);
-
-//     var mapCanvas2 = document.getElementById('map_canvas_battersea');
-//     var mapOptions2 = {
-//         center: new google.maps.LatLng(51.479167, -0.170076),
-//         zoom: 16,
-//         mapTypeId: google.maps.MapTypeId.ROADMAP
-//     };
-//     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
-// }
-
-
-function applyCarousel(carouselSelector){
-    var $this = $(carouselSelector);
-
-    function calcHeight(){
-        return $this.parent().width();
-    }
-
-    // on mobile the overlay text (or the caption if there is no overlay text) display below the image.
-    // have to calculate the height and add it on to the max-height of the li and bx-viewpoort in the calculations to make sure it shows
-    // correctly for portrait images
-    function calcCaptionHeight(){
-        var captionTextHeight = 0;
-        $('.mobilecaption').each(function(){
-            if ($(this).height() > captionTextHeight) {
-                captionTextHeight = $(this).height();
-            }
-        });
-        return captionTextHeight;
-    }
-
-    $(window).resize(function(){
-        $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
-        $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
-        $('.portrait img', $this).css('max-height', calcHeight());
-    });
-
-    var carousel = $this.bxSlider({
-        adaptiveHeight: true,
-        pager: function(){ return $(this).hasClass('paginated'); },
-        touchEnabled: ($('li', $this).length > 1) ? true: false,
-        onSliderLoad: function(){
-            $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
-            $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
-            $('.portrait img', $this).css('max-height', calcHeight());
-        },
-        onSlideBefore: function($slideElement, oldIndex, newIndex){
-            // find vimeos in old slide and stop them if playing
-            $('.videoembed.vimeo iframe').each(function(idx, iframe) {
-                $f(iframe).api('pause');
-            });
-        }
-    });
-
-    return carousel;
-}
+};
 
 function onDocumentReady(jQuery, inLightBox){
     // By default we get an unmodified version of jQuery as the first argument
@@ -189,6 +36,175 @@ function onDocumentReady(jQuery, inLightBox){
     // and we don't have to duplicate any code to run in the lightbox only.
 
     var $ = jQuery;
+
+
+    /* generic function to show / hide elements
+     * the argument element will be assigned or unassigned an 'expanded' class.
+     * The rest should be handled by the css, including display:none or display:block No sliding. */
+    function showHide(clickElement, classElement){
+        $(clickElement).click(function(eventObject){
+            $(classElement).toggleClass('expanded');
+        });
+    }
+
+    /* show hide the footer - needs its own function because of being idiosyncratic */
+    function showHideFooter() {
+        $('footer .menu .main').click(function(eventObject){
+            $(this).toggleClass('expanded');
+            $('.submenu-block', this).slideToggle(expansionAnimationSpeed);
+        });
+        $('.submenu-block').click(function(e){
+            e.stopPropagation();
+        });
+    }
+
+    /* show hide dialogue - has its own funciton because of hide behaviour */
+    function showHideDialogue() {
+        $('.share').click(function() {
+            if($('.dialogue').hasClass('expanded')) {
+                $('.dialogue').removeClass('expanded');
+                $('.dialogue').slideUp();
+            } else {
+                $('.dialogue').addClass('expanded');
+                $('.dialogue').slideDown();
+            }
+        });
+        $(document).click(function() {
+            $('.dialogue').removeClass('expanded');
+            $('.dialogue').slideUp();
+        });
+        $('.dialogue').click(function(e){
+            e.stopPropagation();
+        });
+        $('.share').click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+        });
+    }
+
+    /* generic function to show hide an element with slidey fun
+    The classElement gets an expanded class, and the showElement gets hidden/shown
+    with a slide */
+    function showHideSlide(clickElement, classElement, showElement, openByDefault) {
+        if(typeof openByDefault == "undefined"){
+            openByDefault = true
+        }
+
+        if (!openByDefault){
+            $(showElement).hide();
+        }
+
+        $(clickElement).click(function(eventObject){
+            $(classElement).toggleClass('expanded');
+            $(showElement).slideToggle(expansionAnimationSpeed);
+        });
+    }
+
+    /* hide the search submit button then show
+    on typing text */
+    function showSearchSubmit() {
+        $('form.search input[type="submit"]').hide();
+        $('form.search input[type="text"]').focus(function() {
+           $('form.search input[type="submit"]').show();
+        });
+        $(document).click(function() {
+            $('form.search input[type="submit"]').hide();
+        });
+        $('form.search input[type="text"]').click(function(e){
+            e.stopPropagation();
+        });
+    }
+
+    /* search autocomplete */
+    function showSearchAutocomplete() {
+        $("input#search_box").autocomplete({
+            source: function(request, response) {
+                $.getJSON("/search/suggest/?q=" + request.term, function(data) {
+                    response(data);
+                });
+            },
+            select: function( event, ui ) {
+                window.location.href = ui.item.search_url || ui.item.url;
+            }
+        }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+            return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
+        };
+    }
+
+
+    function showHideMobileMenu(){
+        $('.showmenu').click(function(eventObject){
+            $('nav').toggleClass('expanded');
+            $(this).toggleClass('expanded');
+        });
+    }
+
+    /*google maps for contact page
+    Currently not being used but leaving commented out for reference - contains the correct lat and longs for Kensington and Battersea campuses */
+    // function initializeMaps() {
+    //     var mapCanvas = document.getElementById('map_canvas_kensington');
+    //     var mapOptions = {
+    //         center: new google.maps.LatLng(51.501144, -0.179285),
+    //         zoom: 16,
+    //         mapTypeId: google.maps.MapTypeId.ROADMAP
+    //     };
+    //     var map = new google.maps.Map(mapCanvas, mapOptions);
+
+    //     var mapCanvas2 = document.getElementById('map_canvas_battersea');
+    //     var mapOptions2 = {
+    //         center: new google.maps.LatLng(51.479167, -0.170076),
+    //         zoom: 16,
+    //         mapTypeId: google.maps.MapTypeId.ROADMAP
+    //     };
+    //     var map2 = new google.maps.Map(mapCanvas2, mapOptions2);
+    // }
+
+
+    function applyCarousel(carouselSelector){
+        var $this = $(carouselSelector);
+
+        function calcHeight(){
+            return $this.parent().width();
+        }
+
+        // on mobile the overlay text (or the caption if there is no overlay text) display below the image.
+        // have to calculate the height and add it on to the max-height of the li and bx-viewpoort in the calculations to make sure it shows
+        // correctly for portrait images
+        function calcCaptionHeight(){
+            var captionTextHeight = 0;
+            $('.mobilecaption').each(function(){
+                if ($(this).height() > captionTextHeight) {
+                    captionTextHeight = $(this).height();
+                }
+            });
+            return captionTextHeight;
+        }
+
+        $(window).resize(function(){
+            $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
+            $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
+            $('.portrait img', $this).css('max-height', calcHeight());
+        });
+
+        var carousel = $this.bxSlider({
+            adaptiveHeight: true,
+            pager: function(){ return $(this).hasClass('paginated'); },
+            touchEnabled: ($('li', $this).length > 1) ? true: false,
+            onSliderLoad: function(){
+                $this.parent().css('max-height', calcHeight() + calcCaptionHeight());
+                $('li', $this).css('max-height', calcHeight() + calcCaptionHeight());
+                $('.portrait img', $this).css('max-height', calcHeight());
+            },
+            onSlideBefore: function($slideElement, oldIndex, newIndex){
+                // find vimeos in old slide and stop them if playing
+                $('.videoembed.vimeo iframe').each(function(idx, iframe) {
+                    $f(iframe).api('pause');
+                });
+            }
+        });
+
+        return carousel;
+    }
 
     showSearchSubmit();
     showSearchAutocomplete();

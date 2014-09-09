@@ -1,4 +1,4 @@
-(function(){
+$(function(){
     // TODO:
     // Add different base template for ajax requests:
     // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
@@ -183,23 +183,4 @@
     $('.page-overlay').on('click', function(){
         History.back();
     });
-
-    // TODO: the extra methods should be added on document ready, otherwise they throw exceptions in the pushstate code
-    $(window).on("load", function(){
-        var Affix = $('.page-wrapper').eq(0).data('bs.affix').constructor;
-
-        Affix.prototype.disable = function(){
-            if(this.$element.length){
-                this._$element = this.$element;
-                this.$element = $([]);
-            }
-        };
-
-        Affix.prototype.enable = function(){
-            if(this._$element){
-                this.$element = this._$element;
-            }
-        };
-    });
-
-})();
+});
