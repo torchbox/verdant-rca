@@ -335,6 +335,7 @@ function onDocumentReady(jQuery, inLightBox){
     /* mobile rejigging */
     Harvey.attach(breakpoints.mobile, {
         setup: function(){
+            window.disablePushState = true;
             $('footer .social-wrapper').insertBefore('footer li.main:first'); //move social icons for mobile
             $('footer .smallprint ul').insertBefore('span.address'); //move smallprint for mobile
             $('aside').appendTo('.mobile-menu-wrapper'); //move sidebar for mobile

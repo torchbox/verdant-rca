@@ -3,6 +3,11 @@
     // Add different base template for ajax requests:
     // {% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
 
+    // window.disablePushState is set in site.js for small screens
+    if(!Modernizr.history || window.disablePushState){
+        return;
+    }
+
     var initialUrl = window.location.href;
 
     var affixOffsetTop = window.affixOffsetTop; // defined in site.js
@@ -47,8 +52,17 @@
 
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
 
+        // do a normal page load if the browser has been resized to mobile layout
+        if(window.disablePushState){
+            location.reload();
+            return;
+        }
+
+        // if a page with a lightbox was reloaded then we get a normal page,
+        // so when the user hits the back button we can't just hide the lightbox (now there isn't any after the page reload)
+        // but we need to go back to the previous page instead, i.e. reload the page with the now modified url
         if(!$('body.lightbox-view').length && !state.data.showLightbox){
-            location.href = state.url;
+            location.reload();
             return;
         }
 
@@ -72,6 +86,12 @@
                         });
                         var contents = obj.contents;
                         cache[url] = contents;
+
+                        // if the user cacncelled the request then don't show the lightbox now
+                        if(!$('body.lightbox-view').length){
+                            return;
+                        }
+
                         showLightbox(contents);
 
                         var jQueryInLightbox = function( selector, context ) {
