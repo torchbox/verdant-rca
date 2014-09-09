@@ -8,18 +8,22 @@ $(function(){
         return;
     }
 
+    function scrollPostition(){
+        return +(window.scrollY || window.pageYOffset);
+    }
+
     var initialUrl = window.location.href;
 
     var affixOffsetTop = window.affixOffsetTop; // defined in site.js
 
-    var prevScrollY = window.scrollY;
+    var prevScrollY = scrollPostition();
 
     var cache = {};
 
     function initLightbox(){
 
 
-        prevScrollY = window.scrollY;
+        prevScrollY = scrollPostition();
 
         // needed so that the browser can scroll back when closing the lightbox
         $("body, html").css("min-height", $(document).height());
@@ -34,10 +38,10 @@ $(function(){
 
         var affixed = $(".header-wrapper").hasClass("affix");
         $(".page-wrapper").css({
-            top: -window.scrollY + (affixed ? 186 : 200)
+            top: -scrollPostition() + (affixed ? 186 : 200)
         });
 
-        if(window.scrollY > affixOffsetTop){
+        if(scrollPostition() > affixOffsetTop){
             // scroll to top, but leave the menu collapsed
             $(window).scrollTop(affixOffsetTop);
         }
@@ -106,6 +110,7 @@ $(function(){
                         jQuery.extend(jQueryInLightbox, jQuery);
                         jQuery(function(){
                             onDocumentReady(jQueryInLightbox, true);
+                            $(".page-wrapper").data('bs.affix').disable();
                         });
                     }
                 });
@@ -126,7 +131,7 @@ $(function(){
             // scroll back to the original position
             $(window).scrollTop(prevScrollY);
 
-            if(window.scrollY <= affixOffsetTop){
+            if(scrollPostition() <= affixOffsetTop){
                 $(".page-wrapper").removeClass("affix").addClass("affix-top");
             }
         }
