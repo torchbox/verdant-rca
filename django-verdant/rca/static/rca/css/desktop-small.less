@@ -54,12 +54,15 @@ body.lightbox-view{
     .header-wrapper{
         z-index: 5002;
         position: absolute;
+        width: 90%;
+        left:0;
+        right:0;
     }
     .header-wrapper.affix{
         position: fixed;  // overriding mobile styles, which makes this absolute to bring it in fron of the overlay
     }
     .header-wrapper .page-header{
-        // we have to make the whol header opaque, so that the fixed page content won't bleed through
+        // we have to make the whole header opaque, so that the fixed page content won't bleed through
         // TODO: this is not compatible with background images
         background: #fff;
     }
@@ -67,6 +70,9 @@ body.lightbox-view{
     .mobile-content-wrapper > .page-wrapper{
         // make the main page content fixed so that it remains in place when scrolling the lightbox
         position: fixed;
+        left:0;
+        right:0;
+        .filter(blur(2px));
     }
 
     .page-overlay {
@@ -76,26 +82,26 @@ body.lightbox-view{
         right: 0;
         top: 0;
         bottom: 0;
-        z-index: 5000;
-        /* non-essential styles below */
+        z-index: 50;
         background-color: #FFF;
-        opacity: 0.55;
+        opacity: 0.6;
     }
 
     .pjax-wrapper{
-        top: 186px;
+        opacity: 1;
+        top: 206px;
+        padding-bottom:206px + 50;
         display: block;
         position: relative;
-        height: 1400px;  // needs to be changed with javascript once the content is loaded
-        /* non-essential styles below */
-        width: 50%;
-        margin: 0 auto;
+        width: 75%;
+        margin: 0 auto 50px;
         overflow: visible;
+        z-index:55;
+        height: 1400px;  // needs to be changed with javascript once the content is loaded
     }
         .pjax-wrapper.affix{
             margin-top: 200px;
         }
-
 
         .pjax-content{
             position: absolute;
@@ -104,9 +110,10 @@ body.lightbox-view{
             top: 0;
             bottom: 0;
             z-index: 5001;
-            /* non-essential styles below */
-            background: #ccc;
-            border: 10px solid #aaa;
+            .box-shadow(0 0 50px 0 rgba(0,0,0,0.5));
+            background:white;
+            border:1px solid @color-divider;
+            padding:28px;
         }
 
     .full-width-footer{

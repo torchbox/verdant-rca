@@ -155,7 +155,9 @@ body.show-mobile-menu{
  */
 
 .page-overlay, .pjax-wrapper {
-    display: none;
+    .transition(opacity 0.5s ease);
+    opacity:0;
+    display:none;
 }
 
 body.lightbox-view{
@@ -495,6 +497,8 @@ ul {
 
 .page-wrapper {
     .clearfix();
+    .transition(-webkit-filter 0.5s ease);
+    .filter(blur(0px));
     margin-top:1em;
 }
 
