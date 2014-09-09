@@ -11,18 +11,6 @@
 
     var cache = {};
 
-    function fixLightboxHeight(){
-        // .pjax-content is pos:abs and doesn't have a height,
-        // so we need to calculate it based on the children
-        // this might need to be run multiple times to account for image heights
-        $('.pjax-content, .pjax-wrapper').css("height", "");
-        $('.pjax-content').addClass("measure-height-helper");
-        var newHeight = $('.pjax-content').height();
-        $('.pjax-content').height(newHeight + 1000);  // TODO: height is not measured correctly
-        $('.pjax-wrapper').height($('.pjax-content').outerHeight() + 186);
-        $('.pjax-content').removeClass("measure-height-helper");
-    }
-
     function showLightbox(contents){
 
         $(".pjax-content").html(contents);
@@ -49,10 +37,6 @@
             // scroll to top, but leave the menu collapsed
             $(window).scrollTop(affixOffsetTop);
         }
-
-        // resize lightbox to fit contents:
-        fixLightboxHeight();
-        setTimeout(fixLightboxHeight, 1000);
     }
 
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
@@ -75,7 +59,7 @@
                     // and displaying it instead of the real page
                     url: state.url + "?pjax=1",
                     success: function(data, status, xhr){
-                        var url = this.url.replace("?_ajax=1", "");
+                        var url = this.url.replace("?pjax=1", "");
                         // extractContainer is a local function exported from jquery.pjax.js
                         var obj = extractContainer(data, xhr, {
                             requestUrl: url,
@@ -98,8 +82,6 @@
                         jQuery(function(){
                             onDocumentReady(jQueryInLightbox, true);
                         });
-
-                        fixLightboxHeight();
                     }
                 });
             }
