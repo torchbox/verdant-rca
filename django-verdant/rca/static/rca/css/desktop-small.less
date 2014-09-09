@@ -48,6 +48,10 @@ body {
  * Lightbox styles
  */
 
+.pjax-wrapper, .page-overlay {
+    .transition(opacity 0.5s ease);
+}
+
 body.lightbox-view{
 
     // need to make header pos:absolute so that it remains above the lightbox background overlay
@@ -88,7 +92,6 @@ body.lightbox-view{
     }
 
     .pjax-wrapper{
-        opacity: 1;
         top: 206px;
         padding-bottom:206px + 50;
         display: block;
@@ -97,6 +100,7 @@ body.lightbox-view{
         margin: 0 auto 50px;
         overflow: visible;
         z-index:55;
+        opacity: 0;
     }
         .pjax-wrapper.affix{
             margin-top: 200px;
@@ -112,10 +116,59 @@ body.lightbox-view{
             background:white;
             border:1px solid @color-divider;
             padding:28px;
+            display: block;
         }
+
+        #loading-spinner {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: 51;
+            margin:auto;
+            height: 48px;
+            width: 48px;
+            background: url('@{path-static}images/spinner.png') 0 0 no-repeat;
+            -webkit-animation: spin 1s steps(12) infinite;
+            -moz-animation: spin 1s steps(12) infinite;
+            animation: spin 1s steps(12) inifinite;
+        }
+
+        @keyframes spin{
+            from {
+                transform:rotate(0deg);
+            }
+            to {
+                transform:rotate(360deg);
+            }
+        }
+        @-webkit-keyframes spin {
+            from {
+                -webkit-transform:rotate(0deg);
+            }
+            to {
+                -webkit-transform:rotate(360deg);
+            }
+        }
+        @-moz-keyframes spin {
+            from {
+                -moz-transform: rotate(0deg);
+            }
+            to {
+                -moz-transform: rotate(360deg);
+            }
+        }
+
 
     .full-width-footer{
         display: none;
+    }
+}
+
+body.lightbox-visible {
+    #loading-spinner {
+        display: none;
+    }
+    .pjax-wrapper{
+        opacity: 1;
     }
 }
 

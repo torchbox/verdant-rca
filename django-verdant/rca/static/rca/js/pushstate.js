@@ -11,9 +11,8 @@
 
     var cache = {};
 
-    function showLightbox(contents){
+    function initLightbox(){
 
-        $(".pjax-content").html(contents);
 
         prevScrollY = window.scrollY;
 
@@ -39,11 +38,16 @@
         }
     }
 
+    function showLightbox(contents){
+        $(".pjax-content").html(contents);
+        $("body").addClass('lightbox-visible');
+    }
+
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
 
         var state = History.getState(); // Note: We are using History.getState() instead of event.state
 
-        if(!$('.pjax-content').is(':visible') && !state.data.showLightbox){
+        if(!$('body.lightbox-view').length && !state.data.showLightbox){
             location.href = state.url;
             return;
         }
@@ -51,9 +55,10 @@
         if(state.data.showLightbox){
             var contents = cache[state.url];
             if(contents){
+                initLightbox();
                 showLightbox(contents);
             }else{
-                showLightbox("Loading...");
+                initLightbox();
                 $.ajax({
                     // use different url for ajax in order to avoid the browser caching the ajax response,
                     // and displaying it instead of the real page
@@ -67,7 +72,7 @@
                         });
                         var contents = obj.contents;
                         cache[url] = contents;
-                        $(".pjax-content").html(contents);
+                        showLightbox(contents);
 
                         var jQueryInLightbox = function( selector, context ) {
                             if(context){
@@ -89,7 +94,7 @@
             var affixed = $(".header-wrapper").hasClass("affix");
 
             // hide overlay
-            $("body").removeClass("lightbox-view");
+            $("body").removeClass("lightbox-view lightbox-visible");
 
             // re-enable bs-affix on .page-wrapper
             $(".page-wrapper").css({
