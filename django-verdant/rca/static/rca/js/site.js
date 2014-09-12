@@ -443,7 +443,7 @@ $(function(){
         prepareNewItems(items.slice(loadmoreTargetIndex, loadmoreIndex));
 
         // This click event can originate from the filtered results on an index page or any other paginated content.
-        // If it is form a filter then we need to use event delegation but on other pages with multiple paginated
+        // If it is from a filter then we need to use event delegation but on other pages with multiple paginated
         // items this would result in a single event handler bound multiple times to the same container element.
         // So we have to use different containers to bind the event to: #listing for filters, and $this for everything else.
         var $bindTo = $this.closest("#listing").length ? $this.closest("#listing") : $this;

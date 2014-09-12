@@ -1,0 +1,219 @@
+@import "../variables.less";
+@import "../mixins.less";
+
+/*
+Colorbox
+The following CSS is consistent between example themes and should not be altered.
+*/
+#colorbox, #cboxOverlay, #cboxWrapper{
+    position:absolute;
+    top:0; left:0;
+    z-index:9999;
+    overflow:hidden;
+}
+#cboxWrapper {
+    max-width:none;
+}
+#cboxOverlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+}
+
+#cboxMiddleLeft, #cboxBottomLeft{
+    clear:left;
+}
+#cboxContent{
+    position:relative;
+}
+#cboxLoadedContent{
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+}
+#cboxTitle{
+    margin:0;
+}
+#cboxLoadingOverlay, #cboxLoadingGraphic{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+}
+#cboxPrevious, #cboxNext, #cboxClose, #cboxSlideshow{
+    cursor:pointer;
+}
+.cboxPhoto{
+    float:left;
+    margin:auto;
+    border:0;
+    display:block;
+    max-width:none;
+    -ms-interpolation-mode:bicubic;
+}
+.cboxIframe{
+    width:100%; height:100%;
+    display:block;
+    border:0;
+    padding:0;
+    margin:0;
+}
+
+#colorbox, #cboxContent, #cboxLoadedContent{
+    box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+}
+
+/*
+User Style:
+Change the following styles to modify the appearance of Colorbox.  They are
+ordered & tabbed in a way that represents the nesting of the generated HTML.
+*/
+#cboxOverlay{
+    background:rgba(0,0,0,0.5)
+}
+#colorbox{
+    outline:0;
+}
+
+/* Avoid using these unless necessary. Seem like an ugly solution.
+
+#cboxTopLeft{width:21px; height:21px; background:url(images/controls.png) no-repeat -101px 0;}
+#cboxTopRight{width:21px; height:21px; background:url(images/controls.png) no-repeat -130px 0;}
+#cboxBottomLeft{width:21px; height:21px; background:url(images/controls.png) no-repeat -101px -29px;}
+#cboxBottomRight{width:21px; height:21px; background:url(images/controls.png) no-repeat -130px -29px;}
+#cboxMiddleLeft{width:21px; background:url(images/controls.png) left top repeat-y;}
+#cboxMiddleRight{width:21px; background:url(images/controls.png) right top repeat-y;}
+#cboxTopCenter{height:21px; background:url(images/border.png) 0 0 repeat-x;}
+#cboxBottomCenter{height:21px; background:url(images/border.png) 0 -29px repeat-x;}
+*/
+
+#cboxContent{
+    overflow:hidden;
+    background:white;
+}
+.cboxIframe{}
+#cboxError{
+    background:red;
+    padding:5em;
+}
+#cboxLoadedContent{
+    margin-bottom:28px;
+}
+#cboxLoadingOverlay{
+    background:url(/static/rca/images/bx_loader.gif) no-repeat center center;
+}
+#cboxLoadingGraphic{
+    background:white url(/static/rca/images/bx_loader.gif) no-repeat center center;
+}
+
+/* Most of the furniture is absolutely positioned */
+#cboxTitle, #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose, #cboxCurrent {
+    position:absolute;
+}
+
+/* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
+#cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {
+    background-color: @color-pale-grey;
+    background-color: fade(@color-white, 80%);
+    color: #000;
+    border: 0;
+    transition: all 0.2s ease;
+    &:active{
+        outline:none;
+    }
+    &:hover {
+        background-color: @color-pink;
+        color: #fff;
+    }
+}
+
+#cboxTitle, #cboxCurrent{
+    padding:8px;
+    bottom:0;
+}
+
+#cboxTitle{
+    left:0;
+    width:100%;
+}
+#cboxCurrent{
+    left:45%
+}
+#cboxSlideshow{
+    bottom:4px; right:30px;
+}
+
+#cboxPrevious,
+#cboxNext,
+#cboxClose {
+    width: 94px;
+    height: 94px;
+    padding: 0;
+    margin: 0;
+    text-align:center;
+
+    &:before {
+        content: "";
+        position: relative;
+        text-align: center;
+        display: block;
+        margin:auto;
+    }
+   
+}
+
+#cboxPrevious,
+#cboxNext {
+    top:50%;
+    right:0;
+
+    &:before {
+        margin:15px auto;
+    }
+}
+
+#cboxPrevious{
+    left:0;
+    &:before {
+        .sprite-load-63(
+            @positionX: -293px,
+            @positionY: -84px,
+            @retinaPositionX: -585px,
+            @retinaPositionY: -167px,
+            @width: 34px,
+            @height: 63px
+        );
+    }
+}
+#cboxNext{
+    right: 0;
+    
+    &:before {
+        .sprite-load-63(
+            @positionX: -180px,
+            @positionY: -84px,
+            @retinaPositionX: -360px,
+            @retinaPositionY: -167px,
+            @width: 34px,
+            @height: 63px
+        );
+    }
+}
+#cboxClose{
+    top: 0;
+    right:0;
+    width: 53px;
+    height: 53px;
+
+    &:before {
+        .sprite-load-23(
+            @positionX: -156px,
+            @positionY: -48px,
+            @retinaPositionX: -585px,
+            @retinaPositionY: -167px,
+            @width: 23px,
+            @height: 23px
+        );
+        margin:15px auto;
+    }
+}

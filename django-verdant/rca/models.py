@@ -5540,3 +5540,54 @@ StreamPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+
+# == Lightbox Gallery page ==
+
+class LightboxGalleryPageItem(Orderable):
+    page = ParentalKey('rca.LightboxGalleryPage', related_name='gallery_items')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.LightboxGalleryPageItem', 'image'))
+    embedly_url = models.URLField('Video URL', blank=True, help_text="A video to show instead of an image")
+    poster_image = models.ForeignKey('rca.RcaImage', verbose_name="Video still image", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="A still image of the video to display when not playing.")
+    
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('embedly_url'),
+        ImageChooserPanel('poster_image'),
+    ]
+
+
+class LightboxGalleryPage(Page, SocialFields):
+    intro = RichTextField(help_text=help_text('rca.LightboxGalleryPage', 'intro'), blank=True)
+    listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.LightboxGalleryPage', 'listing_intro', default="Used only on pages listing Lightbox Galleries"))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+
+    search_fields = Page.search_fields + (
+        indexed.SearchField('intro'),
+    )
+
+LightboxGalleryPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(LightboxGalleryPage, 'gallery_items', label="Gallery items"),
+]
+
+LightboxGalleryPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+

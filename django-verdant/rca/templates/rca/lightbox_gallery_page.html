@@ -1,0 +1,62 @@
+{% extends "rca/base.html" %}
+{% load compress static rca_tags wagtailcore_tags wagtailimages_tags wagtailembeds_tags %}
+
+{% block body_class %}type-lightbox-gallery{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/vendor/colorbox.less" %}" />
+    {% endcompress %}
+{% endblock %}
+
+{% block content %}
+
+    {% include "rca/includes/modules/h1-major.html" %}
+    {% include "rca/includes/modules/intro-large.html" %}
+    
+    {% if self.gallery_items %}
+        <section class="module">
+            <ul class="gallery listing">
+                {% for item in self.gallery_items.all %}
+                    <li class="item {% if item.image.is_landscape or item.embedly_url %}landscape{% else %}portrait{% endif %} {% if item.embedly_url %}video{% endif %}">
+                        {% image item.image max-1024x1024 as larger_image %}
+                        <a href="{% if item.image %}{{ larger_image.url }}{% else %}#video{{ forloop.counter0 }}{% endif %}" class="lightbox {% if item.embedly_url %}inline{% endif %}" title="{{ item.image.title }}">
+                            <div class="gallery_image">
+                                {% if item.image %}
+                                    {% image item.image width-600 %}
+                                {% else %}
+                                    {% image item.poster_image fill-600x338 %}     
+                                {% endif %}
+
+                                {% if item.embedly_url %}
+                                    <div style="display:none">
+                                        <div id="video{{ forloop.counter0 }}" class="videoembed vimeo">
+                                            {{ item.embedly_url|embed:"680" }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                          
+                            </div>
+                            <div class="content">
+                                <h3 class="h5">{{ item.image.title }}</h3>
+                                {% if item.image.creator %}
+                                    <p class="bc4">{{ item.image.creator }}</p>
+                                {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts='true'%}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "rca/js/vendor/jquery.colorbox-min.js" %}"></script>
+    <script src="{% static "rca/js/lightbox.js" %}"></script>
+{% endblock %}
