@@ -6,11 +6,11 @@ $(function(){
     $('a.lightbox').one('click', function(){
         // lazy init on click
         $('a.lightbox').colorbox({
-        	inline: function(){return $(this).hasClass('inline')},
-        	width: function(){return ($(this).hasClass('inline')) ? "50%" : null },
             rel: '.lightbox',
             overlayClose: true,
-            opacity: 0.7
+            opacity: 0.7,
+        	inline: function(){ return $(this).hasClass('inline')},
+        	width: function(){ return ($(this).hasClass('inline')) ? "50%" : null }
         });
 
         // then run the item clicked
