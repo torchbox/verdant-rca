@@ -22,11 +22,7 @@ $(function(){
 
     function initLightbox(){
 
-
         prevScrollY = scrollPostition();
-
-        // needed so that the browser can scroll back when closing the lightbox
-        $("body, html").css("min-height", $(document).height());
 
         // display lightbox
         $("body").addClass("lightbox-view");
