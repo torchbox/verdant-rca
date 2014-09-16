@@ -24,6 +24,9 @@ $(function(){
 
         prevScrollY = scrollPostition();
 
+        // needed so that the browser can scroll back when closing the lightbox
+        $("body, html").css("min-height", $(document).height());
+
         // display lightbox
         $("body").addClass("lightbox-view");
 
@@ -46,6 +49,9 @@ $(function(){
     function showLightbox(contents){
         $(".pjax-content").html(contents);
         $("body").addClass('lightbox-visible');
+
+        // we don't need to have min-height any more, it's set before opening the lightbox to help keep the scroll position
+        $("body, html").css("min-height", 0);
     }
 
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
