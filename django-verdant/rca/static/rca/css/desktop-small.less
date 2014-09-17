@@ -90,6 +90,40 @@ body.lightbox-view{
         opacity: 0.85;
     }
 
+    .pjax-close{
+        background-color: @color-pale-grey;
+        border:0;
+        position:absolute;
+        top:1px; right:1px;
+        width:53px;
+        &:after{
+            content:"";
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            margin:auto;
+            .sprite-load-23(
+                @positionX: -156px,
+                @positionY: -48px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 23px
+            );
+        }
+
+        &:hover{
+            background-color:@color-pink;
+            color:@color-pink;
+
+            &:after{
+                background-position:-156px -13px;
+            }
+        }
+    }
+
     .pjax-wrapper{
         top: 206px;
         padding-bottom:206px + 50;
@@ -100,6 +134,10 @@ body.lightbox-view{
         overflow: visible;
         z-index:55;
         opacity: 0;
+
+        &:focus{
+            outline:none;
+        }
     }
         .pjax-wrapper.affix{
             margin-top: 200px;
@@ -113,7 +151,7 @@ body.lightbox-view{
             z-index: 5001;
             background:white;
             border:1px solid @color-divider;
-            padding:28px;
+            padding:28px 50px 28px 28px;
             display: block;
         }
 

@@ -30,7 +30,6 @@ $(function(){
         // display lightbox
         $("body").addClass("lightbox-view");
 
-
         // disable bs-affix because it would interfer with positioning
         $(".page-wrapper").data('bs.affix').disable();
         $(".page-wrapper").removeClass('affix affix-top');
@@ -48,6 +47,7 @@ $(function(){
 
     function showLightbox(contents){
         $(".pjax-content").html(contents);
+        $(".pjax-wrapper").attr('tabindex', '0');
         $("body").addClass('lightbox-visible');
 
         // we don't need to have min-height any more, it's set before opening the lightbox to help keep the scroll position
@@ -184,6 +184,16 @@ $(function(){
         if(openInLightbox){
             History.pushState({showLightbox: true}, $(this).text(), href);
             return false;
+        }
+    });
+
+    $(document).on('click', '#pjax-close', function(event) {
+        History.back();
+    });
+
+    $(document).on('keydown', 'body.lightbox-view', function(e){
+        if(e.keyCode == 27){
+            History.back();
         }
     });
 
