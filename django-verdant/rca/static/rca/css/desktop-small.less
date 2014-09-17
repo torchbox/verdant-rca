@@ -76,7 +76,6 @@ body.lightbox-view{
         position: fixed;
         left:0;
         right:0;
-        .filter(blur(2px));
     }
 
     .page-overlay {
@@ -88,7 +87,7 @@ body.lightbox-view{
         bottom: 0;
         z-index: 50;
         background-color: #FFF;
-        opacity: 0.6;
+        opacity: 0.85;
     }
 
     .pjax-wrapper{
@@ -112,7 +111,6 @@ body.lightbox-view{
             top: 0;
             bottom: 0;
             z-index: 5001;
-            .box-shadow(0 0 50px 0 rgba(0,0,0,0.5));
             background:white;
             border:1px solid @color-divider;
             padding:28px;
@@ -162,6 +160,20 @@ body.lightbox-view{
         display: none;
     }
 }
+
+/* only adding gpu-intensive effects for sufficiently powered browsers. It's not an exact science to identify "low powered" browsers, but no-webgl and touch are a fairly good indicator */
+.webgl.no-touch body.lightbox-view{
+    .page-overlay {
+        opacity: 0.6; //less opacity required when we're applying blur. It looks better.
+    }
+    .mobile-content-wrapper > .page-wrapper{
+        .filter(blur(1px));
+    }
+    .pjax-content{
+        .box-shadow(0 0 50px 0 rgba(0,0,0,0.5));
+    }
+}
+
 
 body.lightbox-visible {
     #loading-spinner {

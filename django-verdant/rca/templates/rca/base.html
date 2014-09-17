@@ -171,9 +171,7 @@
                 {% if DEBUG %}
                     <script type="text/javascript">
                         //set global var for media_url so that it can be used by the script being called
-                        var media_url = "http://{{ request.site.hostname }}:{{ request.site.port }}{{ MEDIA_URL }}";
-                        console.log(media_url);
-
+                        var media_url = document.location.origin + "{{ MEDIA_URL }}";
                         // convenience feature for js switching during development
                         var debug = true;
                     </script>
