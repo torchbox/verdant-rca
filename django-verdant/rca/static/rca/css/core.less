@@ -1521,7 +1521,22 @@ footer {
     /* Blackbaud donation form */ 
     #bbox-root {
         .column(12);
-        padding: 0;
+        padding-left:0;
+
+        a{
+            color: @color-highlight-blue;
+            font-family: "Benton Sans Medium", "BentonSans-Medium", "Helvetica Neue", Arial, Helvetica, Sans-Serif;
+            font-weight: normal;
+            font-style: normal;
+            border:0 !important;
+
+            &:hover,
+            &:active,
+            &:focus {
+                text-decoration:underline !important;
+            }
+        }
+
         #bboxdonation_divError {
             color: @color-red;
             border-bottom: 1px solid @color-red;

@@ -20,6 +20,8 @@ $(function() {
             
             // FORM HELPERS for Donations
 
+            $('#bboxdonation_payment_cboCardType option:eq(0)').text('Please select')
+
             // If other amount label selected show the other amount input
             $('.BBFormRadioLabelGivingLevelOther').on('click', function() {
                 $('#bboxdonation_gift_fldOtherLevelAmount').show(200);
