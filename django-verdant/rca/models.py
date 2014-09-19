@@ -1,3 +1,6 @@
+
+
+
 from datetime import date
 import datetime
 import logging
@@ -235,6 +238,11 @@ WORK_THEME_CHOICES = (
 INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
     ('startup', 'Start-up'),
     ('fellowship', 'Fellowship'),
+)
+
+SUSTAINRCA_PROJECT_TYPES_CHOICES = (
+    ('consultancy', 'Consultancy'),
+    ('academicresearch', 'Academic Research'),
 )
 
 SPECIALISM_CHOICES = (
@@ -5224,6 +5232,206 @@ InnovationRCAIndex.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
+
+# == SustainRCA Project page ==
+
+class SustainRCAProjectCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.SustainRCAProject', related_name='carousel_items')
+
+class SustainRCAProjectCreator(Orderable):
+    page = ParentalKey('rca.SustainRCAProject', related_name='creator')
+    person = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.SustainRCAProjectCreator', 'person', default="Choose an existing person's page, or enter a name manually below (which will not be linked)."))
+    manual_person_name= models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProjectCreator', 'manual_person_name', default="Only required if the creator has no page of their own to link to"))
+
+    panels=[
+        PageChooserPanel('person'),
+        FieldPanel('manual_person_name')
+    ]
+
+class SustainRCAProjectLink(Orderable):
+    page = ParentalKey('rca.SustainRCAProject', related_name='links')
+    link = models.URLField(help_text=help_text('rca.SustainRCAProjectLink', 'link'))
+    link_text = models.CharField(max_length=255, help_text=help_text('rca.SustainRCAProjectLink', 'link_text'))
+
+    panels=[
+        FieldPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class SustainRCAProject(Page, SocialFields):
+    subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'subtitle'))
+    year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.SustainRCAProject', 'year'))
+    description = RichTextField(help_text=help_text('rca.SustainRCAProject', 'description'))
+    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'school'))
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'programme'))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+    show_on_homepage = models.BooleanField(help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
+    project_type = models.CharField(max_length=255, choices=SUSTAINRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.SustainRCAProject', 'project_type'))
+    project_ended = models.BooleanField(default=False, help_text=help_text('rca.SustainRCAProject', 'project_ended'))
+    random_order = models.IntegerField(null=True, blank=True, editable=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SustainRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+
+    search_fields = Page.search_fields + (
+        indexed.SearchField('subtitle'),
+        indexed.SearchField('get_research_type_display'),
+        indexed.SearchField('description'),
+        indexed.SearchField('get_school_display'),
+        indexed.SearchField('get_programme_display'),
+        indexed.SearchField('get_project_type_display'),
+    )
+
+    search_name = 'SustainRCA Project'
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get related research
+        projects = SustainRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = projects.filter(project_type=self.project_type)
+        if self.programme:
+            projects = projects.filter(programme=self.programme)
+        elif self.school:
+            projects = projects.filter(school=self.school)
+
+        paginator = Paginator(projects, 4)
+
+        page = request.GET.get('page')
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            projects = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            projects = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/sustain_rca_listing.html", {
+                'self': self,
+                'projects': projects
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'projects': projects
+            })
+
+    def get_related_news(self, count=4):
+        return NewsItem.get_related(
+            area='research',
+            programmes=([self.programme] if self.programme else None),
+            schools=([self.school] if self.school else None),
+            count=count,
+        )
+
+    class Meta:
+        verbose_name = "SustainRCA Project"
+
+SustainRCAProject.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('subtitle'),
+    InlinePanel(SustainRCAProject, 'carousel_items', label="Carousel content"),
+    InlinePanel(SustainRCAProject, 'creator', label="Creator"),
+    FieldPanel('year'),
+    FieldPanel('school'),
+    FieldPanel('programme'),
+    FieldPanel('project_type'),
+    FieldPanel('project_ended'),
+    FieldPanel('description'),
+    InlinePanel(SustainRCAProject, 'links', label="Links"),
+    FieldPanel('twitter_feed'),
+]
+
+SustainRCAProject.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
+# == SustainRCA Index page ==
+
+class SustainRCAIndexAd(Orderable):
+    page = ParentalKey('rca.SustainRCAIndex', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.SustainRCAIndexAd', 'ad'))
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class SustainRCAIndex(Page, SocialFields):
+    intro = RichTextField(help_text=help_text('rca.SustainRCAIndex', 'intro'), blank=True)
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SustainRCAIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+
+    indexed = False
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        # Get list of live projects
+        projects = SustainRCAProject.objects.filter(live=True).order_by('random_order')
+
+        # Pagination
+        page = request.GET.get('page')
+        paginator = Paginator(projects, 8)  # Show 8 projects per page
+        try:
+            projects = paginator.page(page)
+        except PageNotAnInteger:
+            projects = paginator.page(1)
+        except EmptyPage:
+            projects = paginator.page(paginator.num_pages)
+
+        # Find template
+        if request.is_ajax():
+            template = "rca/includes/sustain_rca_listing.html"
+        else:
+            template = self.template
+
+        # Render
+        return render(request, template, {
+            'self': self,
+            'projects': projects,
+        })
+
+    class Meta:
+        verbose_name = "SustainRCA Project Index"
+
+SustainRCAIndex.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    InlinePanel(SustainRCAIndex, 'manual_adverts', label="Manual adverts"),
+    FieldPanel('twitter_feed'),
+]
+
+SustainRCAIndex.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+]
+
 
 # # == ReachOutRCA Project page ==
 
