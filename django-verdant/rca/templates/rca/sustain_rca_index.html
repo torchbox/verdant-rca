@@ -1,0 +1,34 @@
+{% extends "rca/base.html" %}
+{% load rca_tags wagtailcore_tags %}
+
+{% block body_class %}type-sustainrca-index{% endblock %}
+
+{% block content %}
+
+  <h1 class="h1 major">{{ self.title }}</h1>
+
+  {% include "rca/includes/modules/intro-large.html" %}
+
+  <div id="listing">
+      {% include "rca/includes/sustain_rca_listing.html" %}
+  </div>
+
+  {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" %}
+{% endblock %}
+
+
+{% block extra_js %}
+  <script type="text/javascript">
+    //global var for current_page set here so that it can be used by the script being called
+    var current_page = window.location.pathname;
+  </script>
+  <script src="/static/rca/js/filters.js"></script>
+{% endblock %}
+
+<!-- TODO:
+- filter of programmes when school is selected (or other filtering to be discussed)
+ -->
