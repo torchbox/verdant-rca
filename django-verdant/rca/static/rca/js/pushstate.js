@@ -52,6 +52,21 @@ $(function(){
 
         // we don't need to have min-height any more, it's set before opening the lightbox to help keep the scroll position
         $("body, html").css("min-height", 0);
+
+        var jQueryInLightbox = function( selector, context ) {
+            if(context){
+                context = jQuery(context, '.pjax-wrapper');
+                return new jQuery.fn.init(selector, context);
+            }else{
+                return new jQuery.fn.init(selector, '.pjax-wrapper');
+            }
+        };
+        jQueryInLightbox.prototype = jQuery.prototype;
+        jQuery.extend(jQueryInLightbox, jQuery);
+        jQuery(function(){
+            onDocumentReady(jQueryInLightbox, true);
+            $(".page-wrapper").data('bs.affix').disable();
+        });       
     }
 
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
@@ -91,7 +106,11 @@ $(function(){
                             fragment: ".page-content > .inner"
                         });
                         var contents = obj.contents;
-                        cache[url] = contents;
+
+                        // Clone into cache to avoid jquery enhancement being run on already-enhanced content.
+                        // Bear in mind that objects are passed by ref, so the DOM that jquery enhances *is* the cache,
+                        // unless cloned
+                        cache[url] = contents.clone(false); 
 
                         // if the user cacncelled the request then don't show the lightbox now
                         if(!$('body.lightbox-view').length){
@@ -99,21 +118,6 @@ $(function(){
                         }
 
                         showLightbox(contents);
-
-                        var jQueryInLightbox = function( selector, context ) {
-                            if(context){
-                                context = jQuery(context, '.pjax-wrapper');
-                                return new jQuery.fn.init(selector, context);
-                            }else{
-                                return new jQuery.fn.init(selector, '.pjax-wrapper');
-                            }
-                        };
-                        jQueryInLightbox.prototype = jQuery.prototype;
-                        jQuery.extend(jQueryInLightbox, jQuery);
-                        jQuery(function(){
-                            onDocumentReady(jQueryInLightbox, true);
-                            $(".page-wrapper").data('bs.affix').disable();
-                        });
                     }
                 });
             }
@@ -136,6 +140,7 @@ $(function(){
             if(scrollPostition() <= affixOffsetTop){
                 $(".page-wrapper").removeClass("affix").addClass("affix-top");
             }
+            $('.pjax-content').empty();
         }
     });
 
