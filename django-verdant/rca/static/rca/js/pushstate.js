@@ -169,13 +169,13 @@ $(function(){
         return openInLightbox;
     }
 
-    $('a').each(function(){
-        if(shouldOpenInLightbox.call(this)){
-            $(this).addClass('lightbox-link');
-            // TODO: this is for debugging only
-            // $(this).css('text-decoration', 'line-through');
-        }
-    });
+    // $('a').each(function(){
+    //     if(shouldOpenInLightbox.call(this)){
+    //         $(this).addClass('lightbox-link');
+    //         // TODO: this is for debugging only
+    //         // $(this).css('text-decoration', 'line-through');
+    //     }
+    // });
 
     $(document).on('click', 'a', function(event) {
         var href = $(this).attr('href');
