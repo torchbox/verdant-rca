@@ -37,6 +37,11 @@ function onDocumentReady(jQuery, inLightBox){
 
     var $ = jQuery;
 
+    /* Fluid video enhancement */
+    fluidvids.init({
+      selector: ['iframe'], // runs querySelectorAll()
+      players: ['www.youtube.com', 'player.vimeo.com'] // players to support
+    });
 
     /* generic function to show / hide elements
      * the argument element will be assigned or unassigned an 'expanded' class.
