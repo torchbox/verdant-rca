@@ -11,10 +11,18 @@
                 <dt>{{ self.date|date:"j F Y" }}</dt>
             {% endif %}
 
-            {% if self.area %}
-                <dd>Area</dd>
-                <dt>{{ self.get_area_display }}</dt>
-            {% endif %}
+            {% with self.areas.all as areas %}
+                {% if areas %}
+                    <dd>Area</dd>
+                    <dt>
+                        <ul>
+                            {% for area in areas %}
+                                <li>{{ area.get_area_display }}</li>
+                            {% endfor %}
+                        </ul>
+                    </dt>
+                {% endif %}
+            {% endwith %}
 
             {% with self.related_schools.all as related_schools %}
                 {% if related_schools %}

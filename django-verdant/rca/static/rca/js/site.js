@@ -58,7 +58,15 @@ function showHideDialogue() {
 /* generic function to show hide an element with slidey fun
 The classElement gets an expanded class, and the showElement gets hidden/shown
 with a slide */
-function showHideSlide(clickElement, classElement, showElement) {
+function showHideSlide(clickElement, classElement, showElement, openByDefault) {
+    if(typeof openByDefault == "undefined"){
+        openByDefault = true
+    }
+
+    if (!openByDefault){
+        $(showElement).hide();
+    }
+
     $(clickElement).click(function(eventObject){
         $(classElement).toggleClass('expanded');
         $(showElement).slideToggle(expansionAnimationSpeed);
@@ -175,7 +183,7 @@ $(function(){
     showSearchSubmit();
     showSearchAutocomplete();
     showHideFooter();
-    showHideSlide('.today h2', '.today', '.today ul');
+    showHideSlide('.today h2', '.today', '.today ul', $('.today').hasClass('expanded'));
     showHideSlide('.related h2', '.related', '.related .wrapper');
     showHideMobileMenu();
     showHide('.showsearch', 'form.search');

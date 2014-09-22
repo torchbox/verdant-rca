@@ -19,11 +19,13 @@ def fieldtype(bound_field):
     return camelcase_to_underscore(bound_field.field.__class__.__name__)
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
-def upcoming_events(context, exclude=None, count=3):
+def upcoming_events(context, exclude=None, count=3, collapse_by_default=False):
     events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
     if exclude:
         events = events.exclude(id=exclude.id)
+    
     return {
+        'collapse_by_default': collapse_by_default,
         'events': events[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -31,7 +33,7 @@ def upcoming_events(context, exclude=None, count=3):
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
 def news_carousel(context, area="", programme="", school="", count=5):
     if area:
-        news_items = NewsItem.objects.filter(live=True, area=area)
+        news_items = NewsItem.objects.filter(live=True, areas__area=area)
     elif programme:
         news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)
     elif school:

@@ -27,7 +27,7 @@ from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
@@ -435,6 +435,14 @@ class SocialFields(models.Model):
     class Meta:
         abstract = True
 
+# Fields that configure how the sidebar of a given page should be treated
+class SidebarBehaviourFields(models.Model):
+    collapse_upcoming_events = models.BooleanField(default=False, help_text=help_text('rca.SidebarBehaviourFields', 'collapse_upcoming_events'))
+    
+    class Meta:
+        abstract = True
+
+
 # Carousel item abstract class - all carousels basically require the same fields
 class CarouselItemFields(models.Model):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'image'))
@@ -683,7 +691,7 @@ class SchoolPageAd(Orderable):
     ]
 
 
-class SchoolPage(Page, SocialFields):
+class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
@@ -774,6 +782,13 @@ SchoolPage.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('school'),
+]
+
+SchoolPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]
 
 
@@ -867,7 +882,7 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
-class ProgrammePage(Page, SocialFields):
+class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
@@ -992,6 +1007,12 @@ ProgrammePage.promote_panels = [
     FieldPanel('programme'),
 ]
 
+ProgrammePage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
+]
 
 # == News Index ==
 
@@ -1027,7 +1048,7 @@ class NewsIndex(Page, SocialFields):
         news, filters = run_filters(news, [
             ('school', 'related_schools__school', school),
             ('programme', 'related_programmes__programme', programme),
-            ('area', 'area', area)
+            ('areas', 'areas__area', area)
         ])
 
         news = news.distinct().order_by('-date')
@@ -1110,6 +1131,12 @@ class NewsItemRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
+class NewsItemArea(models.Model):
+    page = ParentalKey('rca.NewsItem', related_name='areas')
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.NewsItemArea', 'area'))
+
+    panels = [FieldPanel('area')]
+
 class NewsItem(Page, SocialFields):
     author = models.CharField(max_length=255, help_text=help_text('rca.NewsItem', 'author'))
     date = models.DateField(help_text=help_text('rca.NewsItem', 'date'))
@@ -1118,10 +1145,12 @@ class NewsItem(Page, SocialFields):
     show_on_homepage = models.BooleanField(help_text=help_text('rca.NewsItem', 'show_on_homepage'))
     show_on_news_index = models.BooleanField(default=True, help_text=help_text('rca.NewsItem', 'show_on_news_index'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.NewsItem', 'area'))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    # DELETED FIELDS
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.NewsItem', 'area'))
 
     search_fields = Page.search_fields + (
         indexed.SearchField('intro'),
@@ -1132,7 +1161,7 @@ class NewsItem(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            area=self.area,
+            areas=list(self.areas.values_list('area', flat=True)),
             programmes=list(self.related_programmes.values_list('programme', flat=True)),
             schools=list(self.related_schools.values_list('school', flat=True)),
             exclude=self,
@@ -1140,10 +1169,10 @@ class NewsItem(Page, SocialFields):
         )
 
     @staticmethod
-    def get_related(area=None, programmes=None, schools=None, exclude=None, count=4):
+    def get_related(areas=None, programmes=None, schools=None, exclude=None, count=4):
         """
             Get NewsItem objects that have the highest relevance to the specified
-            area (singular), programmes (multiple) and schools (multiple).
+            areas (multiple), programmes (multiple) and schools (multiple).
         """
 
         # Assign each news item a score indicating similarity to these params:
@@ -1153,7 +1182,8 @@ class NewsItem(Page, SocialFields):
         # if self.area is blank, we don't want to give priority to other news items
         # that also have a blank area field - so instead, set the target area to
         # something that will never match, so that it never contributes to the score
-        area = area or "this_will_never_match"
+        if not areas:
+            areas = ["this_will_never_match"]
 
         if not programmes:
             # insert a dummy programme name to avoid an empty IN clause
@@ -1165,7 +1195,11 @@ class NewsItem(Page, SocialFields):
 
         results = NewsItem.objects.extra(
             select={'score': """
-                CASE WHEN rca_newsitem.area = %s THEN 100 ELSE 0 END
+                (
+                    SELECT COUNT(*) FROM rca_newsitemarea
+                    WHERE rca_newsitemarea.page_id=wagtailcore_page.id
+                        AND rca_newsitemarea.area IN %s
+                ) * 100
                 + (
                     SELECT COUNT(*) FROM rca_newsitemrelatedprogramme
                     WHERE rca_newsitemrelatedprogramme.page_id=wagtailcore_page.id
@@ -1177,7 +1211,7 @@ class NewsItem(Page, SocialFields):
                         AND rca_newsitemrelatedschool.school IN %s
                 ) * 1
             """},
-            select_params=(area, tuple(programmes), tuple(schools))
+            select_params=(tuple(areas), tuple(programmes), tuple(schools))
         )
         if exclude:
             results = results.exclude(id=exclude.id)
@@ -1217,7 +1251,7 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('show_on_news_index'),
-    FieldPanel('area'),
+    InlinePanel(NewsItem, 'areas', label="Areas"),
     InlinePanel(NewsItem, 'related_schools', label="Related schools"),
     InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
 ]
@@ -1327,6 +1361,12 @@ class PressReleaseRelatedProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
+class PressReleaseArea(models.Model):
+    page = ParentalKey('rca.PressRelease', related_name='areas')
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.PressReleaseArea', 'area'))
+
+    panels = [FieldPanel('area')]
+
 class PressRelease(Page, SocialFields):
     author = models.CharField(max_length=255, help_text=help_text('rca.PressRelease', 'author'))
     date = models.DateField(help_text=help_text('rca.PressRelease', 'date'))
@@ -1334,9 +1374,11 @@ class PressRelease(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.PressRelease', 'body'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.PressRelease', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.PressRelease', 'area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressRelease', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
+
+    # DELETED FIELDS
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.PressRelease', 'area'))
 
     search_fields = Page.search_fields + (
         indexed.SearchField('intro'),
@@ -1374,7 +1416,7 @@ PressRelease.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
-    FieldPanel('area'),
+    InlinePanel(PressRelease, 'areas', label="Areas"),
     InlinePanel(PressRelease, 'related_schools', label="Related schools"),
     InlinePanel(PressRelease, 'related_programmes', label="Related programmes"),
 ]
@@ -2106,7 +2148,7 @@ class StandardPageReusableTextSnippet(Orderable):
         SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
     ]
 
-class StandardPage(Page, SocialFields):
+class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'strapline'))
@@ -2172,6 +2214,12 @@ StandardPage.promote_panels = [
     ], 'Related pages'),
 ]
 
+StandardPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
+]
 
 # == Standard Index page ==
 
@@ -2257,7 +2305,7 @@ class StandardIndexContactSnippet(Orderable):
         SnippetChooserPanel('contact_snippet', ContactSnippet),
     ]
 
-class StandardIndex(Page, SocialFields, OptionalBlockFields):
+class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardIndex', 'intro'), blank=True)
     intro_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'intro_link'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'strapline'))
@@ -2274,6 +2322,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields):
     show_events_feed = models.BooleanField(default=False, help_text=help_text('rca.StandardIndex', 'show_events_feed'))
     events_feed_area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'events_feed_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    hide_body = models.BooleanField(default=True, help_text=help_text('rca.StandardIndex', 'hide_body'))
 
     search_fields = Page.search_fields + (
         indexed.SearchField('intro'),
@@ -2397,7 +2446,15 @@ StandardIndex.promote_panels = [
         FieldPanel('exclude_twitter_block'),
         FieldPanel('exclude_events_sidebar'),
         FieldPanel('exclude_global_adverts'),
+        FieldPanel('hide_body'),
     ], 'Optional page elements'),
+]
+
+StandardIndex.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]
 
 
@@ -3971,18 +4028,27 @@ class RcaNowPageTag(TaggedItemBase):
     content_object = ParentalKey('rca.RcaNowPage', related_name='tagged_items')
 
 
+class RcaNowPageArea(models.Model):
+    page = ParentalKey('rca.RcaNowPage', related_name='areas')
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaNowPageArea', 'area'))
+
+    panels = [FieldPanel('area')]
+
+
 class RcaNowPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaNowPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.RcaNowPage', 'area'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
+
+    # DELETED FIELDS
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaNowPage', 'area'))
 
     search_fields = Page.search_fields + (
         indexed.SearchField('body'),
@@ -4014,7 +4080,7 @@ RcaNowPage.content_panels = [
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    FieldPanel('area'),
+    InlinePanel(RcaNowPage, 'areas', label="Areas"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4135,18 +4201,27 @@ class RcaBlogPageTag(TaggedItemBase):
     content_object = ParentalKey('rca.RcaBlogPage', related_name='tagged_items')
 
 
+class RcaBlogPageArea(models.Model):
+    page = ParentalKey('rca.RcaBlogPage', related_name='areas')
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaBlogPageArea', 'area'))
+
+    panels = [FieldPanel('area')]
+
+
 class RcaBlogPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaBlogPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaBlogPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'area'))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
+
+    # DELETED FIELDS
+    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaBlogPage', 'area'))
 
     search_fields = Page.search_fields + (
         indexed.SearchField('body'),
@@ -4188,7 +4263,7 @@ RcaBlogPage.content_panels = [
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    FieldPanel('area'),
+    InlinePanel(RcaBlogPage, 'areas', label="Areas"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4413,7 +4488,7 @@ class ResearchItem(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            area='research',
+            areas=['research'],
             programmes=([self.programme] if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
@@ -5059,7 +5134,7 @@ class InnovationRCAProject(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            area='research',
+            areas=['research'],
             programmes=([self.programme] if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
@@ -5320,7 +5395,7 @@ class ReachOutRCAProject(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            area='research',
+            areas=['research'],
             programmes=([self.programme] if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
