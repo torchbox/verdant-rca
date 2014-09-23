@@ -39,10 +39,8 @@ $(function(){
             top: -scrollPostition() + (affixed ? 186 : 200)
         });
 
-        if(scrollPostition() > affixOffsetTop){
-            // scroll to top, but leave the menu collapsed
-            $(window).scrollTop(affixOffsetTop);
-        }
+        // scroll to top, but leave the menu collapsed
+        $(window).scrollTop(affixOffsetTop);
     }
 
     function showLightbox(contents){
