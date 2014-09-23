@@ -50,6 +50,10 @@ $(function(){
 
         // we don't need to have min-height any more, it's set before opening the lightbox to help keep the scroll position
         $("body, html").css("min-height", 0);
+        // For some reason the above line causes Chrome to jump back to the top of the page
+        // if the user has not scrolled the page since it was last done. Work around this by
+        // scrolling it back to the lightbox's 'home' position now
+        $(window).scrollTop(affixOffsetTop);
 
         var jQueryInLightbox = function( selector, context ) {
             if(context){
