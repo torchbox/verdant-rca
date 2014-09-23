@@ -126,7 +126,7 @@ class RcaRendition(AbstractRendition):
 
     class Meta:
         unique_together = (
-            ('image', 'filter'),
+            ('image', 'filter', 'focal_point_key'),
         )
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
