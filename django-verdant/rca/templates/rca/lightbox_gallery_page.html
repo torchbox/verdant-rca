@@ -20,7 +20,7 @@
                 {% for item in self.gallery_items.all %}
                     <li class="item {% if item.image.is_landscape or item.embedly_url %}landscape{% else %}portrait{% endif %} {% if item.embedly_url %}video{% endif %}">
                         
-                        {% image item.image max-1200x1200 as larger_image %}
+                        {% image item.image max-1600x1600 as larger_image %}
                         <a href="{% if item.image %}{{ larger_image.url }}{% else %}#video{{ forloop.counter0 }}{% endif %}" class="lightbox {% if item.embedly_url %}inline{% endif %}" title="{{ item.image.title }}">
                             <div class="gallery_image">
                                 {% if item.image %}
