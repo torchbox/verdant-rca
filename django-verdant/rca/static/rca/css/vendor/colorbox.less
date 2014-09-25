@@ -87,6 +87,10 @@ ordered & tabbed in a way that represents the nesting of the generated HTML.
 #cboxBottomCenter{height:21px; background:url(images/border.png) 0 -29px repeat-x;}
 */
 
+body.gallery-lightbox-open{
+    overflow:hidden;
+}
+
 #cboxContent{
     overflow:hidden;
     background:white;
@@ -112,6 +116,7 @@ ordered & tabbed in a way that represents the nesting of the generated HTML.
 
 /* these elements are buttons, and may need to have additional styles reset to avoid unwanted base styles */
 #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {
+    overflow:hidden;
     background-color: @color-pale-grey;
     background-color: fade(@color-white, 80%);
     color: #000;
