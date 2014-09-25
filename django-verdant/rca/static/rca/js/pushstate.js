@@ -90,10 +90,9 @@ $(function(){
         }
 
         if(state.data.showLightbox){
-            var contents = cache[state.url];
-            if(contents){
+            if(cache[state.url]){
                 initLightbox();
-                showLightbox(contents);
+                showLightbox($(cache[state.url]).clone(false));
             }else{
                 initLightbox();
                 $.ajax({
