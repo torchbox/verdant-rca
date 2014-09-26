@@ -1594,6 +1594,10 @@ footer {
             .selectInner{
                 width:auto !important;
             }
+
+            .BBFormFieldContainerGivingLevels{
+                position:relative;
+            }
             #bboxdonation_gift_fldAmountWithLevels {
                 .clearfix();
             }
@@ -1612,6 +1616,41 @@ footer {
                 padding-left: 0;
                 padding-right: 0;
                 padding: 0 16px 0 0;
+
+                &:last-child{
+                    .BBFormRadioLabel:after{
+                        content:"Enter your other amount";
+                        text-transform:uppercase;
+                        font-size: 0.4em;
+                        color:black;
+                        position:absolute;
+                        left:0;
+                        margin-top:32px;
+                        display:none; 
+                    }
+                    .BBFormGiftOtherAmount{
+                        display:none;
+                        position: absolute;
+                        left: 0;
+                        margin-top: 62px;
+                        width:31%;
+                    }
+                    .BBFormRadioButton:checked + .BBFormRadioLabel{
+                        margin-bottom:120px;
+                                       
+                        &:after{
+                            display:block;
+                        }
+                        .BBFormGiftOtherAmount{
+                            display:block;
+                            padding:16px;
+
+                            &:hover{
+                                color:black;
+                            }
+                        }
+                    } 
+                }
             }
             .BBFormRadioLabel {
                 .large-radio-label();
