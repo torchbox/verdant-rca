@@ -122,12 +122,21 @@ body.gallery-lightbox-open{
     color: #000;
     border: 0;
     transition: all 0.2s ease;
+
+    opacity:0; /* made visible on #cboxContent:hover */
+
     &:active{
         outline:none;
     }
     &:hover {
         background-color: @color-pink;
         color: #fff;
+    }
+}
+
+#cboxContent:hover {
+    #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose{
+        opacity:1;
     }
 }
 
