@@ -5413,7 +5413,7 @@ ReachOutRCAProject.content_panels = [
     InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
     InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
     InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
-    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project parnterships"),
+    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
     FieldPanel('school'),
