@@ -109,8 +109,12 @@ body.gallery-lightbox-open{
     background:white url(/static/rca/images/bx_loader.gif) no-repeat center center;
 }
 
+#cboxCurrent{
+    display:none;
+}
+
 /* Most of the furniture is absolutely positioned */
-#cboxTitle, #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose, #cboxCurrent {
+#cboxTitle, #cboxPrevious, #cboxNext, #cboxSlideshow, #cboxClose {
     position:absolute;
 }
 
@@ -140,7 +144,8 @@ body.gallery-lightbox-open{
     }
 }
 
-#cboxTitle, #cboxCurrent{
+
+#cboxTitle{
     padding:8px;
     bottom:0;
 }
@@ -148,9 +153,6 @@ body.gallery-lightbox-open{
 #cboxTitle{
     left:0;
     width:100%;
-}
-#cboxCurrent{
-    left:45%
 }
 #cboxSlideshow{
     bottom:4px; right:30px;
