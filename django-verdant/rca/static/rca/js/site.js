@@ -192,10 +192,18 @@ $(function(){
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');
     showHideSlide('.profile .showExternalCollaborations', '.profile .external-collaborations', '.profile .external-collaborations');
     showHideSlide('.profile .showPublications', '.profile .publications', '.profile .publications');
+    showHideSlide('.showbody', '.hide-body', '.hide-body');
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
             $(this).html('show more');
+        } else {
+            $(this).html('hide');
+        }
+    });
+    $('.type-standard-index .showmore').click(function(eventObject){
+        if($(this).html() == 'hide'){
+            $(this).html('read more');
         } else {
             $(this).html('hide');
         }
