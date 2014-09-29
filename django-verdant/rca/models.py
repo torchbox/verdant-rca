@@ -4941,6 +4941,51 @@ ContactUsPage.promote_panels = [
 ]
 
 
+# == Online Express form page ==
+
+class OEFormPage(Page, SocialFields):
+    form_id = models.CharField(max_length=255, help_text="The long number in brackets from the generated JavaScript snippet")
+
+    # fields copied from StandrdPage
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
+    show_on_homepage = models.BooleanField()
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
+
+OEFormPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    FieldPanel('middle_column_body', classname="full"),
+    FieldPanel('form_id'),
+]
+
+OEFormPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
 # == Donation page ==
 
 
