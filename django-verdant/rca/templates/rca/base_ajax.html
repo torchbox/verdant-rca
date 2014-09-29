@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %}{% endblock %}{% block title_postfix %} | Royal College of Art{% endblock %}</title>
+</head>
+<body>
+	<div>
+		<div class="page-content">
+			<div class="inner">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+{% comment %}
+
+	Use the following tag in the templates that currently extend base.html only:
+
+	{% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
+
+{% endcomment %}
