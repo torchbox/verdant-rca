@@ -153,7 +153,6 @@ $(function(){
             !href,
             href == '/',
             href && href.indexOf('#') != -1,
-            href && href.indexOf(':') != -1,
             $this.closest('aside').length,
             $this.closest('.pjax-content').length,
             $this.closest('aside').length,
@@ -165,6 +164,15 @@ $(function(){
                 return false;
             }
         }
+
+        // If we have an url with an expicitly defined protocol
+        if(href.indexOf(':') != -1)
+        // and if that's not on the current domain, or has a different protocol
+        if(href.indexOf(location.protocol + '//' + location.hostname) == -1){
+            // then don't open it in the lightbox.
+            return false;
+        }
+        // Otherwise it might be opened in lightbox.
 
         var openInLightbox = !(new RegExp(window.neverOpenInLightbox[0]).test(href));
         if(openInLightbox)
