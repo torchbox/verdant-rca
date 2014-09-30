@@ -68,7 +68,7 @@ $(function(){
         jQuery(function(){
             onDocumentReady(jQueryInLightbox, true);
             $(".page-wrapper").data('bs.affix').disable();
-        });       
+        });
     }
 
     History.Adapter.bind(window, 'statechange', function(){ // Note: We are using statechange instead of popstate
@@ -111,7 +111,7 @@ $(function(){
                         // Clone into cache to avoid jquery enhancement being run on already-enhanced content.
                         // Bear in mind that objects are passed by ref, so the DOM that jquery enhances *is* the cache,
                         // unless cloned
-                        cache[url] = contents.clone(false); 
+                        cache[url] = contents.clone(false);
 
                         // if the user cacncelled the request then don't show the lightbox now
                         if(!$('body.lightbox-view').length){
@@ -152,9 +152,8 @@ $(function(){
         var returnFalseIfAnyIsTrue = [
             !href,
             href == '/',
-            href && href.indexOf('http') === 0,
             href && href.indexOf('#') != -1,
-            href && href.indexOf('javascript:') != -1,
+            href && href.indexOf(':') != -1,
             $this.closest('aside').length,
             $this.closest('.pjax-content').length,
             $this.closest('aside').length,
