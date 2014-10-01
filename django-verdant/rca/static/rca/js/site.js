@@ -102,7 +102,10 @@ function onDocumentReady(jQuery, inLightBox){
         $(clickElement).click(function(eventObject){
             $(classElement).toggleClass('expanded');
             $(showElement).slideToggle(expansionAnimationSpeed);
+            return false;
         });
+
+
     }
 
     /* hide the search submit button then show
