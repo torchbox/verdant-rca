@@ -70,6 +70,7 @@ function showHideSlide(clickElement, classElement, showElement, openByDefault) {
     $(clickElement).click(function(eventObject){
         $(classElement).toggleClass('expanded');
         $(showElement).slideToggle(expansionAnimationSpeed);
+        return false;
     });
 }
 
@@ -103,7 +104,6 @@ function showSearchAutocomplete() {
         return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "<span>" + (item.search_name || "") + "</span></a>" ).appendTo( ul );
     };
 }
-
 
 function showHideMobileMenu(){
     $('.showmenu').click(function(eventObject){
