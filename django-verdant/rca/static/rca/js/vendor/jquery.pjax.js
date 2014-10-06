@@ -646,6 +646,8 @@ function extractContainer(data, xhr, options) {
 
   if (bodyClasses != null) {
     obj.bodyClasses = bodyClasses[1];
+  } else {
+    obj.bodyClasses = "";
   }
 
   if (options.fragment) {
