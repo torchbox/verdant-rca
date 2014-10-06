@@ -641,7 +641,12 @@ function extractContainer(data, xhr, options) {
   // If the body has a class, grab that too so we can apply the class to the wrapper around
   // our pjax content, once injected into the calling page
   obj.title = findAll($head, 'title').last().text();
-  obj.bodyClasses = data.match(/<body[^>]*class="([^\"]*)"[^>]*>/i)[1];
+
+  var bodyClasses = data.match(/<body[^>]*class="([^\"]*)"[^>]*>/i);
+
+  if (bodyClasses != null) {
+    obj.bodyClasses = bodyClasses[1];
+  }
 
   if (options.fragment) {
     // If they specified a fragment, look for it in the response

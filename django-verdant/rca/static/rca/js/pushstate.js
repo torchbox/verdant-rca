@@ -45,7 +45,9 @@ $(function(){
 
     function showLightbox(contentsObj){
         // Always take a clone of the content so js enhancement is done on a fresh DOM each time
-        $(".pjax-content").html(contentsObj.contents.clone(false)).addClass(contentsObj.bodyClasses);
+        if (contentsObj.bodyClasses) {
+            $(".pjax-content").html(contentsObj.contents.clone(false)).addClass(contentsObj.bodyClasses);
+        }
         $(".pjax-wrapper").attr('tabindex', '0');
         $("body").addClass('lightbox-visible');
 
