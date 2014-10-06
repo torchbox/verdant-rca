@@ -153,6 +153,7 @@ $(function(){
             !href,
             href == '/',
             href && href.indexOf('#') != -1,
+            href && href.indexOf('.') != -1,
             $this.closest('aside').length,
             $this.closest('.pjax-content').length,
             $this.closest('aside').length,
