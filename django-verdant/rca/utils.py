@@ -2,7 +2,6 @@ from django.db.models import Q
 
 from .models import SCHOOL_PROGRAMME_MAP, NewStudentPage
 
-
 def get_school_programme_map(year=None):
     """
     This function gets a mapping of schools to programmes for a particular year

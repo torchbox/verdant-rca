@@ -439,7 +439,7 @@ class SocialFields(models.Model):
 # Fields that configure how the sidebar of a given page should be treated
 class SidebarBehaviourFields(models.Model):
     collapse_upcoming_events = models.BooleanField(default=False, help_text=help_text('rca.SidebarBehaviourFields', 'collapse_upcoming_events'))
-    
+
     class Meta:
         abstract = True
 
@@ -809,7 +809,7 @@ class ProgrammePageFacilitiesCarouselItem(Orderable):
         FieldPanel('facilities_text'),
         PageChooserPanel('facilities_link'),
     ]
-    
+
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
     staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff'))
@@ -2379,7 +2379,8 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
             events = paginator.page(paginator.num_pages)
 
         # If the request is ajax, only return a new list of events
-        if request.is_ajax():
+        # But if the pjax param is present we need to render the main template instead
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, 'rca/includes/standard_index_events_listing.html', {
                 'self': self,
                 'events': events,
@@ -4423,7 +4424,7 @@ class ResearchItemLink(Orderable):
         FieldPanel('link'),
         FieldPanel('link_text')
     ]
-    
+
 class ResearchItem(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'subtitle'))
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'research_type'))
