@@ -638,6 +638,8 @@ function extractContainer(data, xhr, options) {
 
   // If there's a <title> tag in the header, use it as
   // the page's title.
+  // If the body has a class, grab that too so we can apply the class to the wrapper around
+  // our pjax content, once injected into the calling page
   obj.title = findAll($head, 'title').last().text();
   obj.bodyClasses = data.match(/<body[^>]*class="([^\"]*)"[^>]*>/i)[1];
 
