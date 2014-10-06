@@ -197,6 +197,7 @@ EVENT_GALLERY_CHOICES = (
     ('printmakingstudios', 'Printmaking Studios'),
     ('sacklerbuilding', 'Sackler Building'),
     ('sculpturebuilding', 'Sculpture Building'),
+    ('studiorca', 'StudioRCA'),
     ('testbed1', 'Testbed 1'),
     ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
     ('senior-common-room', 'Senior Common Room'),
@@ -1545,7 +1546,7 @@ class EventItem(Page, SocialFields):
     specific_directions_link = models.URLField(blank=True, help_text=help_text('rca.EventItem', 'specific_directions_link'))
     gallery = models.CharField("RCA galleries and rooms", max_length=255, choices=EVENT_GALLERY_CHOICES, blank=True, help_text=help_text('rca.EventItem', 'gallery'))
     special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text=help_text('rca.EventItem', 'special_event', default="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below"))
-    cost = RichTextField(help_text=help_text('rca.EventItem', 'cost'))
+    cost = RichTextField(help_text=help_text('rca.EventItem', 'cost'), blank=True)
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'eventbrite_id', default="Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID."))
     show_on_homepage = models.BooleanField(help_text=help_text('rca.EventItem', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.EventItem', 'listing_intro', default="Used only on pages listing event items"))
@@ -4942,6 +4943,51 @@ ContactUsPage.promote_panels = [
 ]
 
 
+# == Online Express form page ==
+
+class OEFormPage(Page, SocialFields):
+    form_id = models.CharField(max_length=255, help_text="The long number in brackets from the generated JavaScript snippet")
+
+    # fields copied from StandrdPage
+    intro = RichTextField(blank=True)
+    body = RichTextField(blank=True)
+    strapline = models.CharField(max_length=255, blank=True)
+    middle_column_body = RichTextField(blank=True)
+    show_on_homepage = models.BooleanField()
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+
+    indexed_fields = ('intro', 'body')
+
+    search_name = None
+
+OEFormPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('strapline', classname="full"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('body', classname="full"),
+    FieldPanel('middle_column_body', classname="full"),
+    FieldPanel('form_id'),
+]
+
+OEFormPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks')
+]
+
 # == Donation page ==
 
 
@@ -5414,7 +5460,7 @@ ReachOutRCAProject.content_panels = [
     InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
     InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
     InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
-    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project parnterships"),
+    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
     FieldPanel('school'),

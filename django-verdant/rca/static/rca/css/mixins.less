@@ -19,6 +19,25 @@
  *
  */
 
+.large-radio-label(){
+    font-size:2em;
+    margin:0;
+    line-height:1em;
+    font-style:normal;
+    background-color:@color-advert-pale-blue;
+    padding:@grid-gutter-width;
+    text-transform:none;
+    cursor:pointer;
+    &:hover{
+        color:white;
+        background-color:@color-highlight-blue;
+    }
+    &.selected{
+        color:white;
+        background-color:@color-pink;
+    }
+}
+
 .transform(@transform){
     -webkit-transform: @transform;
     -moz-transform: @transform;

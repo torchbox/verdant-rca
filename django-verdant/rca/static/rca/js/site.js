@@ -85,7 +85,7 @@ function onDocumentReady(jQuery, inLightBox){
             e.preventDefault();
             e.stopPropagation();
         });
-    }
+    }    
 
     /* generic function to show hide an element with slidey fun
     The classElement gets an expanded class, and the showElement gets hidden/shown
@@ -94,7 +94,6 @@ function onDocumentReady(jQuery, inLightBox){
         if(typeof openByDefault == "undefined"){
             openByDefault = true
         }
-
         if (!openByDefault){
             $(showElement).hide();
         }
@@ -102,7 +101,8 @@ function onDocumentReady(jQuery, inLightBox){
         $(clickElement).click(function(eventObject){
             $(classElement).toggleClass('expanded');
             $(showElement).slideToggle(expansionAnimationSpeed);
-        });
+            return false;
+        });        
     }
 
     /* hide the search submit button then show
@@ -728,5 +728,4 @@ function onDocumentReady(jQuery, inLightBox){
         displayCookieNotice();
       }
     });
-
 }
