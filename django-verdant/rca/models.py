@@ -4477,7 +4477,7 @@ class ResearchItem(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
@@ -5168,7 +5168,7 @@ class InnovationRCAProject(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             projects = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/innovation_rca_listing.html", {
                 'self': self,
                 'projects': projects
@@ -5429,7 +5429,7 @@ class ReachOutRCAProject(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             projects = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/innovation_rca_listing.html", {
                 'self': self,
                 'projects': projects
