@@ -1,3 +1,6 @@
+// CUSTOMISED BY DC 2014-09-06 to scrape body class from page
+
+
 // jquery.pjax.js
 // copyright chris wanstrath
 // https://github.com/defunkt/jquery-pjax
@@ -635,7 +638,8 @@ function extractContainer(data, xhr, options) {
 
   // If there's a <title> tag in the header, use it as
   // the page's title.
-  obj.title = findAll($head, 'title').last().text()
+  obj.title = findAll($head, 'title').last().text();
+  obj.bodyClasses = data.match(/<body[^>]*class="([^\"]*)"[^>]*>/i)[1];
 
   if (options.fragment) {
     // If they specified a fragment, look for it in the response

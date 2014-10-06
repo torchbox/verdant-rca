@@ -43,8 +43,9 @@ $(function(){
         $(window).scrollTop(affixOffsetTop);
     }
 
-    function showLightbox(contents){
-        $(".pjax-content").html(contents);
+    function showLightbox(contentsObj){
+        // Always take a clone of the content so js enhancement is done on a fresh DOM each time
+        $(".pjax-content").html(contentsObj.contents.clone(false)).addClass(contentsObj.bodyClasses);
         $(".pjax-wrapper").attr('tabindex', '0');
         $("body").addClass('lightbox-visible');
 
@@ -92,7 +93,7 @@ $(function(){
         if(state.data.showLightbox){
             if(cache[state.url]){
                 initLightbox();
-                showLightbox($(cache[state.url]).clone(false));
+                showLightbox(cache[state.url]);
             }else{
                 initLightbox();
                 $.ajax({
@@ -101,24 +102,22 @@ $(function(){
                     url: state.url + "?pjax=1",
                     success: function(data, status, xhr){
                         var url = this.url.replace("?pjax=1", "");
+                       
                         // extractContainer is a local function exported from jquery.pjax.js
                         var obj = extractContainer(data, xhr, {
                             requestUrl: url,
                             fragment: ".page-content > .inner"
                         });
-                        var contents = obj.contents;
 
-                        // Clone into cache to avoid jquery enhancement being run on already-enhanced content.
-                        // Bear in mind that objects are passed by ref, so the DOM that jquery enhances *is* the cache,
-                        // unless cloned
-                        cache[url] = contents.clone(false);
+                        // Cache for reuse later
+                        cache[url] = obj;
 
-                        // if the user cacncelled the request then don't show the lightbox now
+                        // if the user concelled the request then don't show the lightbox now
                         if(!$('body.lightbox-view').length){
                             return;
                         }
 
-                        showLightbox(contents);
+                        showLightbox(obj);
                     }
                 });
             }
