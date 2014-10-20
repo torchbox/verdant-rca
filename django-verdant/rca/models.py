@@ -180,6 +180,8 @@ CAMPUS_CHOICES = (
 
 EVENT_GALLERY_CHOICES = (
     ('courtyardgalleries', 'Courtyard Galleries'),
+    ('cwadseminarroom', 'Critical Writing in Art & Design Seminar Room'),
+    ('ccaseminarroom', 'Curating Contemporary Art Seminar Room'),
     ('danacentre', 'Dana Centre'),
     ('drawingstudio', 'Drawing Studio'),
     ('dysonbuilding', 'Dyson Building'),
