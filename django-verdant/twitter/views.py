@@ -14,7 +14,7 @@ def statuses_user_timeline(request):
         return HttpResponse("[]", content_type="application/json; charset=utf-8", mimetype="application/json")
 
     callback = request.GET.get("callback")
-    screen_name = request.GET.get("screen_name", "RCAevents").strip()
+    screen_name = request.GET.get("screen_name", "RCAevents").strip().strip('@')
     count = int(request.GET.get("count", 10))
     cache_key = "tweets_from_%s_last_%s" % (slugify(screen_name), count)
     result = cache.get(cache_key)
