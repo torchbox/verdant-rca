@@ -1,7 +1,7 @@
 from django import template
 from django.core.cache import cache
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max, Q, get_app, get_models
+from django.db.models import Min, Max, Q, get_app, get_models, get_model
 from django.template.base import parse_bits
 from wagtail.wagtailcore.util import camelcase_to_underscore
 
@@ -645,16 +645,11 @@ def get_lightbox_config():
             if 'index' in m.__name__.lower() and m.__name__.lower() != 'standardindex':
                 excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
 
-    excluded1 = '/(%s)/?$' % '|'.join(excluded)
+    excluded1 = '/(%s)/?[\?#]?[^/]*$' % '|'.join(excluded)
 
-    excluded = []
-
-    # don't open anything that's defined in rca_show
-    for m in get_models(get_app('rca_show')):
-        if issubclass(m, Page):
-            excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
-
-    excluded2 = '/(%s)/?.*' % '|'.join(excluded)
+    # don't open anything that's under a ShowIndexPage
+    slugs = get_model('rca_show', 'ShowIndexPage').objects.all().only('slug').values_list('slug', flat=True).distinct()
+    excluded2 = '/(%s)/.*' % '|'.join(slugs)
 
     return {
         'excluded1': excluded1,
