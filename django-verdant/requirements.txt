@@ -30,7 +30,7 @@ sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
--e git://github.com/torchbox/wagtail.git@8b91757e5828c3da1b30058ace55b5b2814f79ff#egg=wagtail
+wagtail==0.7
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4
