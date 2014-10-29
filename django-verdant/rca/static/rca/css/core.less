@@ -1535,7 +1535,7 @@ footer {
     }
 }
 
-.type-donations{
+.type-forms {
     // Remove iOS styling
     input,
     textarea {
@@ -1543,7 +1543,7 @@ footer {
         .border-radius(0);
     }
 
-    /* Blackbaud donation form */ 
+    /* Blackbaud forms */ 
     #bbox-root {
         .column(12);
         padding-left:0;
@@ -1580,6 +1580,9 @@ footer {
         #mongo-form {
             //Hide the blackbaud styled form on load
             visibility: hidden;
+            &.form-visible {
+                visibility: visible;
+            }
         }
 
         #bbox-msg-wrapper {
@@ -1613,12 +1616,65 @@ footer {
                 display: none;
             }
 
+            //Try and put checkboxes and label on the same line
+            input[type=checkbox] + label {
+                display: inline;
+            }
+
+            //Removes all labels that are acting like legends
+            .BBTwoFields label:first-child {
+                display: none;
+            }
+
             .select{
                 font-family:Arial,sans-serif;
             }
             .selectInner{
                 width:auto !important;
             }
+             
+            //Div Table
+            .BBFormTable {
+                display: table;
+            }
+            .BBFormTableHeader {
+                display: table-header-group;
+                font-weight: bold;
+            }
+            .BBFormTableFooter {
+                display: table-footer-group;
+            }
+            .BBFormTableHeaderCell,
+            .BBFormTableRowCell,
+            .BBFormTableFooterCell {
+                display: table-cell;
+                 padding: 0.4em 0.8em;
+            }
+            .BBFormTableRow {
+                display: table-row;
+            }
+
+            //Div Table
+            // .BBFormTable {
+            //     display: block;
+            // }
+            // .BBFormTableHeader {
+            //     display: none;
+            // }
+            // .BBFormTableFooter {
+            //     display: block;
+            //     font-weight: bold;
+            // }
+            // .BBFormTableHeaderCell,
+            // .BBFormTableRowCell,
+            // .BBFormTableFooterCell {
+            //     display: block;
+            //     margin-right: 0.75em;
+            //     padding: 0.5em;
+            // }
+            // .BBFormTableRow {
+            //     display: block;
+            //}
 
             .BBFormFieldContainerGivingLevels{
                 position:relative;

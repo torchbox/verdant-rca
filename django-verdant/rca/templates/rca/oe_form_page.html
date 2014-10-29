@@ -1,7 +1,19 @@
 {% extends "rca/base.html" %}
 {% load compress static rca_tags wagtailcore_tags wagtailimages_tags %}
 
-{% block body_class %}type-donations{% endblock %}
+{% block body_class %}type-forms{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms-desktop.less" %}" media="screen and (min-width:768px)" />
+
+        <!--[if lt IE 9]>
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms.less" %}" />
+                <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms-desktop.less" %}" />
+        <![endif]-->
+    {% endcompress %}
+{% endblock extra_css %}
 
 {% block extra_js %}
     <script>
@@ -11,11 +23,11 @@
         (function () {
            var e = document.createElement('script'); e.async = true;
            e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
-           console.log(e);
+           //console.log(e);
            document.getElementsByTagName('head')[0].appendChild(e);
         } ());
     </script>
-    <script type="text/javascript" src="{% static 'rca/js/donation-form.js' %}"></script>
+    <script type="text/javascript" src="{% static 'rca/js/forms.js' %}"></script>
 {% endblock extra_js %}
 
 {% block content %}
