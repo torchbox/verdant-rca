@@ -1,6 +1,6 @@
 {% load wagtailcore_tags %}
 {% if events %}
-    <div class="today expanded">
+    <div class="today {% if not collapse_by_default %}expanded{% endif %}">
         <h2>Events</h2>
         <ul>
             {% for event in events %}

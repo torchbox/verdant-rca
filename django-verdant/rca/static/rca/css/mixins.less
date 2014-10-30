@@ -3,21 +3,40 @@
  *
  * MIXINS
  *
- * Includes all mixins that are shared across the site, 
+ * Includes all mixins that are shared across the site,
  * both parametric (function) mixins and standard mixins.
  *
  * MIXIN EXAMPLE:
  *  ul {
  *    .some-reusable-class;
  *  }
- * 
- * PARAMETRIC MIXIN EXAMPLE: 
+ *
+ * PARAMETRIC MIXIN EXAMPLE:
  *  .parametric-mixin(@param1, @param2) {
  *    color: @param1;
- *    background: @param2;   
+ *    background: @param2;
  *  }
  *
  */
+
+.large-radio-label(){
+    font-size:2em;
+    margin:0;
+    line-height:1em;
+    font-style:normal;
+    background-color:@color-advert-pale-blue;
+    padding:@grid-gutter-width;
+    text-transform:none;
+    cursor:pointer;
+    &:hover{
+        color:white;
+        background-color:@color-highlight-blue;
+    }
+    &.selected{
+        color:white;
+        background-color:@color-pink;
+    }
+}
 
 .transform(@transform){
     -webkit-transform: @transform;
@@ -48,6 +67,14 @@
     -ms-filter: @filter;
 }
 
+
+.box-shadow(@shadow){
+    -webkit-box-shadow: @shadow;
+    -moz-box-shadow: @shadow;
+    -o-box-shadow: @shadow;
+    box-shadow: @shadow;
+}
+
 .visuallyhidden() {
     border: 0;
     clip: rect(0 0 0 0);
@@ -58,13 +85,13 @@
     position: absolute;
     width: 1px;
 
-    &:active, &:focus { 
-        clip: auto; 
-        height: auto; 
-        margin: 0; 
-        overflow: visible; 
-        position: static; 
-        width: auto; 
+    &:active, &:focus {
+        clip: auto;
+        height: auto;
+        margin: 0;
+        overflow: visible;
+        position: static;
+        width: auto;
     }
 }
 
@@ -194,7 +221,7 @@
     background-color: @color; /* fallback for ie8 */
     background-color: fade(@color, @fade);
     color:@text-color;
-    
+
     h2, p {
         margin: 0;
     }
@@ -223,7 +250,7 @@
 
     .module-title{
         margin-top:0;
-        margin-bottom:@spacing-one; 
+        margin-bottom:@spacing-one;
 
         a:after{
             margin-left:0.5em;
@@ -267,7 +294,7 @@
     }
     li{
         vertical-align:top;
-        .column(8); 
+        .column(8);
         display:inline-block;
         white-space:normal;
         float:none;
@@ -326,4 +353,11 @@
             .transition(all 0.5s ease);
         }
     }
+}
+
+/* Can be applied to elements with position:absolute if otherwise they wouldn't have proper height.
+   While this is applied we can use javascript to measure the height determined by its contents.
+ */
+.measure-height-helper{
+    position: static;
 }

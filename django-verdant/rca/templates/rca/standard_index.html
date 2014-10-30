@@ -15,10 +15,12 @@
 	{% include "rca/includes/modules/intro-large.html" %}
 
     {% if self.body %}
-        <section class='row'>
-            {% include "rca/includes/modules/body-text.html" with body=self.body %}
-        </section>
+         <section class='row {% if self.hide_body %}hide-body{% endif %}'>
+             {% include "rca/includes/modules/body-text.html" with body=self.body %}
+         </section>
+         {% if self.hide_body %}<a href="#" class="bc4 caps showmore showbody">Read more</a>{% endif %}
     {% endif %}
+
 
     {% include "rca/includes/modules/staff_feed.html" %}
     
@@ -139,5 +141,5 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
 {% endblock %}

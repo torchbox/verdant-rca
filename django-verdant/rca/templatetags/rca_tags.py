@@ -1,8 +1,9 @@
 from django import template
+from django.core.cache import cache
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max, Q
+from django.db.models import Min, Max, Q, get_app, get_models
 from django.template.base import parse_bits
-from wagtail.wagtailcore.util import camelcase_to_underscore
+from wagtail.wagtailcore.utils import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain
@@ -19,11 +20,13 @@ def fieldtype(bound_field):
     return camelcase_to_underscore(bound_field.field.__class__.__name__)
 
 @register.inclusion_tag('rca/tags/upcoming_events.html', takes_context=True)
-def upcoming_events(context, exclude=None, count=3):
+def upcoming_events(context, exclude=None, count=3, collapse_by_default=False):
     events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
     if exclude:
         events = events.exclude(id=exclude.id)
+
     return {
+        'collapse_by_default': collapse_by_default,
         'events': events[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -31,7 +34,7 @@ def upcoming_events(context, exclude=None, count=3):
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
 def news_carousel(context, area="", programme="", school="", count=5):
     if area:
-        news_items = NewsItem.objects.filter(live=True, area=area)
+        news_items = NewsItem.objects.filter(live=True, areas__area=area)
     elif programme:
         news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)
     elif school:
@@ -97,7 +100,7 @@ def related_staff(context, programme="", school=""):
     if school:
         staff = StaffPage.objects.filter(live=True, roles__school=school)
     if programme:
-        staff = StaffPage.objects.filter(live=True, roles__programme=programme)  
+        staff = StaffPage.objects.filter(live=True, roles__programme=programme)
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -624,3 +627,50 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
                 pass
 
     return carousel_items
+
+
+def get_lightbox_config():
+
+    excluded = []
+
+    DONT_OPEN_IN_LIGHTBOX = ['rca.ProgrammePage', 'rca.SchoolPage', 'rca.GalleryPage', 'rca.DonationPage']  # 'rca.OEFormPage'
+
+    for path in DONT_OPEN_IN_LIGHTBOX:
+        app, model_name = path.split('.')
+        for m in get_models(get_app(app)):
+            if not issubclass(m, Page):
+                continue
+            if m.__name__.lower() == model_name.lower():
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+            if 'index' in m.__name__.lower() and m.__name__.lower() != 'standardindex':
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+
+    excluded1 = '/(%s)/?$' % '|'.join(excluded)
+
+    excluded = []
+
+    # don't open anything that's defined in rca_show
+    for m in get_models(get_app('rca_show')):
+        if issubclass(m, Page):
+            excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+
+    excluded2 = '/(%s)/?.*' % '|'.join(excluded)
+
+    return {
+        'excluded1': excluded1,
+        'excluded2': excluded2,
+    }
+
+
+@register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
+def use_lightbox(context):
+    if not 'self' in context:
+        return {}
+
+    cache_key = 'lightbox_config'
+    lightbox_config = cache.get(cache_key)
+    if not lightbox_config:
+        lightbox_config = get_lightbox_config()
+        cache.set(cache_key, lightbox_config, 60 * 60)
+
+    return lightbox_config

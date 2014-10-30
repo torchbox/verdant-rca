@@ -1,10 +1,9 @@
-Django==1.6.5
+Django==1.6.7
 Embedly==0.5.0
 Fabric==1.6.1
 Jinja2==2.7.2
 Markdown==2.3.1
 MarkupSafe==0.18
-Pillow==2.0.0
 PyYAML==3.10
 South==1.0.0
 Sphinx==1.2
@@ -15,7 +14,6 @@ django-auth-ldap==1.1.7
 django-celery==2.5.5
 django-debug-toolbar==0.11.0
 django-debug-toolbar-template-timings==0.5.3
-django-devserver==0.7.0
 django-picklefield==0.3.1
 django-redis==3.3
 docutils==0.11
@@ -32,10 +30,10 @@ sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
-wagtail==0.5
+wagtail==0.7
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4
 elasticsearch==0.4.5
 gunicorn==0.17.4
-
+six>=1.7.0
