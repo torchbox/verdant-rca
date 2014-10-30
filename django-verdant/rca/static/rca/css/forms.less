@@ -49,6 +49,21 @@
             }
         }
     }
+
+    //Give the label the required afters
+    #bboxevent_billing_lblFirstName,
+    #bboxevent_registrant_templateRegistrant_lblFirstName,
+    #bboxevent_payment_lblYear {
+        &:after {
+            content: "*";
+            color: @color-pink;
+            font-weight: bold;
+            margin-left: 0.3em;
+            font-size: 1.3em;
+            vertical-align: middle;
+        }        
+    }
+
     //Remove unwanted labels / spans (trying to be labels)
     #bboxevent_billing_lblTitle,
     #bboxevent_billing_billingAddress_lblUKCityCounty,

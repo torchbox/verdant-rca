@@ -1626,8 +1626,23 @@ footer {
                 display: none;
             }
 
+            //Show this missing label
+            .BBCCreditType label.BBFormFieldLabel {
+                visibility: visible !important;
+            }
+
+            .BBCCreditType .BBCCreditType .BBCardImageContainer {
+                display: block;
+                float: none;
+                .clearfix();
+            }
+
+            .BBCCreditType .BBCCreditType .select.BBFormSelectList {
+                float: none;
+            }
+
             .select{
-                font-family:Arial,sans-serif;
+                font-family: @font-family-arial; 
             }
             .selectInner{
                 width:auto !important;
@@ -1654,27 +1669,15 @@ footer {
                 display: table-row;
             }
 
-            //Div Table
-            // .BBFormTable {
-            //     display: block;
-            // }
-            // .BBFormTableHeader {
-            //     display: none;
-            // }
-            // .BBFormTableFooter {
-            //     display: block;
-            //     font-weight: bold;
-            // }
-            // .BBFormTableHeaderCell,
-            // .BBFormTableRowCell,
-            // .BBFormTableFooterCell {
-            //     display: block;
-            //     margin-right: 0.75em;
-            //     padding: 0.5em;
-            // }
-            // .BBFormTableRow {
-            //     display: block;
-            //}
+            //Make fake label look like real label
+            .BBFormFieldLabel {
+                font-family: @font-family-benton-light;
+                font-size: @font-size-12;
+                line-height: 1.667em;
+                text-transform: uppercase;
+                display: block;
+                margin: 8px 0;
+            }
 
             .BBFormFieldContainerGivingLevels{
                 position:relative;
@@ -1690,6 +1693,19 @@ footer {
                     background-color: @color-advert-pale-blue;
                 }
             }
+
+            .BBFieldExpiration.BBFormFieldContainer {
+                .clearfix();
+                //Use JS group fields for more control
+                .grouped-form-items {
+                    float: left;
+                    margin-right: 5%;
+                    .select.BBFormSelectList {
+                        margin-left: 0;
+                    }
+                }
+            }
+
             .BBFormRadioItem {
                 margin-bottom: 16px;
                 .column(4);
