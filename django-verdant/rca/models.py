@@ -4957,6 +4957,7 @@ class OEFormPage(Page, SocialFields):
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField()
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    data_protection = RichTextField(blank=True)
 
     indexed_fields = ('intro', 'body')
 
@@ -4969,6 +4970,7 @@ OEFormPage.content_panels = [
     FieldPanel('body', classname="full"),
     FieldPanel('middle_column_body', classname="full"),
     FieldPanel('form_id'),
+    FieldPanel('data_protection', classname="full"),
 ]
 
 OEFormPage.promote_panels = [
