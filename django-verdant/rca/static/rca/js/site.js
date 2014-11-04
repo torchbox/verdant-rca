@@ -40,7 +40,7 @@ function onDocumentReady(jQuery, inLightBox){
     /* Fluid video enhancement */
     fluidvids.init({
       selector: ['iframe'], // runs querySelectorAll()
-      players: ['www.youtube.com', 'player.vimeo.com'] // players to support
+      players: ['www.youtube.com', 'player.vimeo.com', 'cdn.embedly.com'] // players to support
     });
 
     /* generic function to show / hide elements
