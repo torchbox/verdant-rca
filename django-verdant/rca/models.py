@@ -191,6 +191,7 @@ EVENT_GALLERY_CHOICES = (
     ('jaymewsgallery', 'Jay Mews Gallery'),
     ('lecturetheatre1', 'Lecture Theatre 1'),
     ('lecturetheatre2', 'Lecture Theatre 2'),
+    ('library', 'Library'),
     ('linkgallery', 'Link Gallery'),
     ('lowergulbenkiangallery', 'Lower Gulbenkian Gallery'),
     ('movingimagestudio', 'Moving Image Studio'),
@@ -198,11 +199,11 @@ EVENT_GALLERY_CHOICES = (
     ('photographystudios', 'Photography Studios'),
     ('printmakingstudios', 'Printmaking Studios'),
     ('sacklerbuilding', 'Sackler Building'),
+    ('senior-common-room', 'Senior Common Room'),
     ('sculpturebuilding', 'Sculpture Building'),
     ('studiorca', 'StudioRCA'),
     ('testbed1', 'Testbed 1'),
     ('uppergulbenkiangallery', 'Upper Gulbenkian Gallery'),
-    ('senior-common-room', 'Senior Common Room'),
 )
 
 WORK_TYPES_CHOICES = (
