@@ -30,7 +30,7 @@ sphinx-rtd-theme==0.1.5
 sqlparse==0.1.10
 stripe==1.9.8
 tweepy==2.1
-wagtail==0.7
+wagtail==0.8.1
 wsgiref==0.1.2
 humanize==0.5
 unicodecsv==0.9.4
