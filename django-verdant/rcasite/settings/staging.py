@@ -29,6 +29,14 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+WAGTAILSEARCH_BACKENDS = {
+    'default': {
+        'BACKEND': 'wagtail.wagtailsearch.backends.db.DBSearch',
+        'INDEX': 'rca',
+        'URLS': ['http://localhost:8938/es1.3'],
+    },
+}
+
 
 try:
 	from .local import *
