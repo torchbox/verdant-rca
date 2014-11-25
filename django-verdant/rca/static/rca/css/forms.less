@@ -1,0 +1,83 @@
+/**
+ * Author(s): James Morris
+ *
+ * Forms.less
+ * Make indivual form styles here. 
+ * Global form styles to go in core etc.
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/**
+ * Contents
+ * To search quickly for a main section prefix search terms with $
+ */
+
+/**
+ * Contents...................You’re reading it!
+ * Event form.................Styling for the bboxevent_BBEmbeddedForm
+ */
+
+//IDs sorry
+//RCA Event reg form
+#bboxevent_BBEmbeddedForm {
+    .BBFormTable {
+        .BBFormTableRowCell.BBFormColPriceAmt {
+            font-weight: bold;
+        }
+        .BBFormTableRowCell.BBFormColTotal {
+            display: none;
+        }
+        .BBFormTableRowCell.BBFormColQty {
+            min-width: 104px;
+            margin-right: 0;
+            padding-right: 0;
+            padding-left: 0;
+        }
+        .BBFormTableRowCell.BBFormPriceDescription {
+            display: none;
+        }
+        .BBFormTableRowCell.BBFormColPriceName {
+            padding-left: 0;
+        }
+        .BBFormTableFooter {
+            font-weight: bold;
+            .BBFormTableFooterLabel {
+                padding-left: 0;
+            }
+        }
+    }
+    //Remove 'required' asterisk for county
+    #bboxevent_billing_billingAddress_lblUKCounty:after {
+        content:none;
+    }
+    //Give the label the required afters
+    #bboxevent_billing_lblFirstName,
+    #bboxevent_registrant_templateRegistrant_lblFirstName,
+    #bboxevent_payment_lblYear {
+        &:after {
+            content: "*";
+            color: @color-pink;
+            font-weight: bold;
+            margin-left: 0.3em;
+            font-size: 1.3em;
+            vertical-align: middle;
+        }        
+    }
+
+    //Remove unwanted labels / spans (trying to be labels)
+    #bboxevent_billing_lblTitle,
+    #bboxevent_billing_billingAddress_lblUKCityCounty,
+    #bboxevent_registrant_templateRegistrant_RegistrantAddress_lblUKCityCounty,
+    #bboxevent_priceselect_divColTotalHeader {
+        display: none;
+    }
+
+    #bboxevent_attributes_ctl00_lblAttribDisplayName,
+    #bboxevent_attributes_ctl01_lblAttribDisplayName {
+        font-weight: bold;
+    }
+
+}

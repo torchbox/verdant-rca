@@ -1,4 +1,4 @@
-// JAVASCRIPT HELPERS FOR BLACKBAUD DONATION FORM
+// JAVASCRIPT HELPERS FOR BLACKBAUD FORMS
 $(function() {
     // Grouping of fields
     function groupSetOfFields(fieldSelectors) {
@@ -10,14 +10,18 @@ $(function() {
 
     var blackbaudElementCheckInterval = setInterval(function(){
         //Run once form has loaded
-        if ($(el).length) {
+        if ($('#mongo-form').length) {
             clearInterval(blackbaudElementCheckInterval);
 
             //remove the stylesheet found
             $(el).remove();
 
-            $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 200); //Smooth intro for the form.
+            //Shows the form smoothly
+            $('#bbox-root #mongo-form').css({opacity: 0, visibility: "visible"}).animate({opacity: 1.0}, 340, function() {
+                $(this).addClass("form-visible");
+            }); //Smooth intro for the form.
             
+
             // FORM HELPERS for Donations
 
             $('#bboxdonation_payment_cboCardType option:eq(0)').text('Please select')
@@ -56,7 +60,7 @@ $(function() {
             
             // lastname
             groupSetOfFields('#bboxdonation_billing_lblLastName, #bboxdonation_billing_txtLastName');
-    
+
             //Group the above groups 
             groupSetOfFields('#divName .grouped-form-items');
 
@@ -77,6 +81,10 @@ $(function() {
 
             // NZ postcode
             groupSetOfFields('#bboxdonation_billing_billingAddress_lblNZPostCode, #bboxdonation_billing_billingAddress_txtNZPostCode');
+
+            // Credit expiration 
+            groupSetOfFields('#bboxevent_payment_lblMonth, #bboxevent_payment_cboMonth');           
+            groupSetOfFields('#bboxevent_payment_lblYear, #bboxevent_payment_cboYear');           
 
         }
     }, 1000);

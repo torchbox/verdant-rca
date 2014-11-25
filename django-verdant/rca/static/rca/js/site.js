@@ -40,7 +40,7 @@ function onDocumentReady(jQuery, inLightBox){
     /* Fluid video enhancement */
     fluidvids.init({
       selector: ['iframe'], // runs querySelectorAll()
-      players: ['www.youtube.com', 'player.vimeo.com'] // players to support
+      players: ['www.youtube.com', 'player.vimeo.com', 'cdn.embedly.com'] // players to support
     });
 
     /* generic function to show / hide elements
@@ -85,7 +85,7 @@ function onDocumentReady(jQuery, inLightBox){
             e.preventDefault();
             e.stopPropagation();
         });
-    }    
+    }
 
     /* generic function to show hide an element with slidey fun
     The classElement gets an expanded class, and the showElement gets hidden/shown
@@ -102,7 +102,7 @@ function onDocumentReady(jQuery, inLightBox){
             $(classElement).toggleClass('expanded');
             $(showElement).slideToggle(expansionAnimationSpeed);
             return false;
-        });        
+        });
     }
 
     /* hide the search submit button then show
@@ -327,7 +327,7 @@ function onDocumentReady(jQuery, inLightBox){
 
     /* Tweet blocks */
     $('.twitter-feed-items').each(function(){
-        var username = $(this).data('twitter-feed');
+        var username = $.trim($(this).data('twitter-feed')).replace(/^@/,'');
         $(this).tweet({
             join_text: 'auto',
             username: username,
@@ -341,7 +341,7 @@ function onDocumentReady(jQuery, inLightBox){
     /* Packery tweet blocks (behaves as several individual blocks) */
     $('.packery .tweet').each(function(){
         if(!window.packerytweets){
-            var username = $(this).data('twitter-feed');
+            var username = $.trim($(this).data('twitter-feed')).replace(/^@/,'');
             var count = $(this).data('twitter-count');
 
             var tmp = $('<div></div>');

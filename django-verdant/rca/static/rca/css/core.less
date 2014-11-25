@@ -1535,7 +1535,7 @@ footer {
     }
 }
 
-.type-donations{
+.type-forms {
     // Remove iOS styling
     input,
     textarea {
@@ -1543,7 +1543,7 @@ footer {
         .border-radius(0);
     }
 
-    /* Blackbaud donation form */ 
+    /* Blackbaud forms */ 
     #bbox-root {
         .column(12);
         padding-left:0;
@@ -1580,6 +1580,9 @@ footer {
         #mongo-form {
             //Hide the blackbaud styled form on load
             visibility: hidden;
+            &.form-visible {
+                visibility: visible;
+            }
         }
 
         #bbox-msg-wrapper {
@@ -1589,6 +1592,9 @@ footer {
         img {
             max-width: 100%;
             width: auto;
+        }
+        #bboxdonation_billing_billingAddress_lblUKCounty:after {
+            content:none
         }
 
         /* Form code */
@@ -1605,6 +1611,10 @@ footer {
                 margin-top: 0.6em;
             }
 
+            .BBSameAsBillingContainer label {
+                font-weight: bold;
+            }
+
             legend{
                 padding:0;
             }
@@ -1613,11 +1623,67 @@ footer {
                 display: none;
             }
 
+            //Try and put checkboxes and label on the same line
+            input[type=checkbox] + label {
+                display: inline;
+            }
+
+            //Removes all labels that are acting like legends
+            .BBTwoFields label:first-child {
+                display: none;
+            }
+
+            //Show this missing label
+            .BBCCreditType label.BBFormFieldLabel {
+                visibility: visible !important;
+            }
+
+            .BBCCreditType .BBCCreditType .BBCardImageContainer {
+                display: block;
+                float: none;
+                .clearfix();
+            }
+
+            .BBCCreditType .BBCCreditType .select.BBFormSelectList {
+                float: none;
+            }
+
             .select{
-                font-family:Arial,sans-serif;
+                font-family: @font-family-arial; 
             }
             .selectInner{
                 width:auto !important;
+            }
+             
+            //Div Table
+            .BBFormTable {
+                display: table;
+            }
+            .BBFormTableHeader {
+                display: table-header-group;
+                font-weight: bold;
+            }
+            .BBFormTableFooter {
+                display: table-footer-group;
+            }
+            .BBFormTableHeaderCell,
+            .BBFormTableRowCell,
+            .BBFormTableFooterCell {
+                display: table-cell;
+                 padding: 0.4em 0.8em;
+            }
+            .BBFormTableRow {
+                display: table-row;
+            }
+
+            //Make fake label look like real label
+            .BBFormFieldLabel {
+                font-family: @font-family-benton-light;
+                font-size: @font-size-12;
+                line-height: 1.667em;
+                text-transform: uppercase;
+                display: block;
+                margin: 8px 0;
             }
 
             .BBFormFieldContainerGivingLevels{
@@ -1634,6 +1700,19 @@ footer {
                     background-color: @color-advert-pale-blue;
                 }
             }
+
+            .BBFieldExpiration.BBFormFieldContainer {
+                .clearfix();
+                //Use JS group fields for more control
+                .grouped-form-items {
+                    float: left;
+                    margin-right: 5%;
+                    .select.BBFormSelectList {
+                        margin-left: 0;
+                    }
+                }
+            }
+
             .BBFormRadioItem {
                 margin-bottom: 16px;
                 .column(4);

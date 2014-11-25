@@ -3,7 +3,7 @@ from django.core.cache import cache
 from django.utils.html import conditional_escape
 from django.db.models import Min, Max, Q, get_app, get_models, get_model
 from django.template.base import parse_bits
-from wagtail.wagtailcore.util import camelcase_to_underscore
+from wagtail.wagtailcore.utils import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain

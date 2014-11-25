@@ -18,13 +18,10 @@ CACHES['default']['LOCATION'] = 'rca1.dh.bytemark.co.uk:6379:1'
 
 WAGTAILSEARCH_BACKENDS = {
     'default': {
-        'BACKEND': 'wagtail.wagtailsearch.backends.db.DBSearch',
+        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
+        'INDEX': 'rca',
+        'URLS': ['http://rca1.dh.bytemark.co.uk:8938/es1.3'],
     },
-#    'es': {
-#        'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
-#        'INDEX': 'verdant',
-#        'URLS': ['http://5.153.227.116:9200'],
-#    },
 }
 
 EMAIL_SUBJECT_PREFIX = "[rca-production] "
