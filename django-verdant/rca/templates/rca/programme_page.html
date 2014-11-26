@@ -11,9 +11,9 @@
 
     <!-- head of programme -->
     {% if self.head_of_programme or self.head_of_programme_statement %}
-        <section class="head-of-programme row module">
+        <section class="head-of-programme {% if self.head_of_programme_second %}head-of-programme-double{% endif %} row module">
             {% if self.head_of_programme %}
-                <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head of programme</a></h2>
+                <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head{% if self.head_of_programme_second %}s{% endif %} of programme</a></h2>
                 <a href="{% pageurl self.head_of_programme %}">
                     <div class="image">
                         {% if self.head_of_programme.profile_image %}
@@ -23,12 +23,28 @@
                         {% endif %}
                     </div>
                 </a>
+                {% if self.head_of_programme_second %}
+                    <a href="{% pageurl self.head_of_programme_second %}">
+                        <div class="image">
+                            {% if self.head_of_programme_second.profile_image %}
+                                {% image self.head_of_programme_second.profile_image width-200 %}
+                            {% else %}
+                                <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endif %}
             {% endif %}
                     
             <div class="content bc2{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
-                {% if self.head_of_programme %}
-                    <strong>{{ self.head_of_programme.title }}</strong>
-                {% endif %}
+                <strong>
+                    {% if self.head_of_programme %}
+                        {{ self.head_of_programme.title }}
+                    {% endif %}
+                    {% if self.head_of_programme_second %}
+                        &amp; {{ self.head_of_programme_second.title }}
+                    {% endif %}
+                </strong>
                 {% if self.head_of_programme_statement %}
                     {{ self.head_of_programme_statement|richtext }}
                 {% endif %}
