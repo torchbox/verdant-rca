@@ -5,12 +5,11 @@
 
 {% block extra_css %}
     {% compress css %}
-        <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms.less" %}" />
-        <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms-desktop.less" %}" media="screen and (min-width:768px)" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms-desktop.less" %}" media="screen and (min-width:768px)" />
 
         <!--[if lt IE 9]>
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms.less" %}" />
-                <link rel="stylesheet" type="text/less" href="{% static "rca/css/forms-desktop.less" %}" />
+            <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms-desktop.less" %}" />
         <![endif]-->
     {% endcompress %}
 {% endblock extra_css %}
@@ -27,7 +26,7 @@
            document.getElementsByTagName('head')[0].appendChild(e);
         } ());
     </script>
-    <script type="text/javascript" src="{% static 'rca/js/forms.js' %}"></script>
+    <script type="text/javascript" src="{% static 'rca/js/bb-forms.js' %}"></script>
 {% endblock extra_js %}
 
 {% block content %}
@@ -48,8 +47,10 @@
                     {{ self.middle_column_body|richtext }}
                 </div>
             {% endif %}
+            
             {% include "rca/includes/modules/downloads.html" %}
             {% include "rca/includes/modules/quotation.html" %}
+
             {% with self.images.all as images %}
                 {% if images %}
                     {% for image in images %}
@@ -69,12 +70,6 @@
     <div class="row">
         <section class="bc5 body-text">
             {{ self.data_protection|richtext }}
-<!--  -  Review removal (JM) -          
-            <h3>Data Protection</h3>
-
-            <p>Information provided by you on this form will be used by the Royal College of Art for the purpose of correctly recording and acknowledging your gift. Personal information contained in the RCA’s Development Office records is used only for College-related business.</p>
-
-            <p>Please click here for the College’s full <a href="/contact-us/about-this-website/privacy-cookies/">Privacy Policy</a> or contact <a href="mailto:development@rca.ac.uk">development@rca.ac.uk</a>.</p> -->
         </section>
     </div>
 
