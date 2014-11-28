@@ -44,8 +44,8 @@ class DonationForm(forms.Form):
     address_line1   = forms.CharField(label="Address line 1", required=True, max_length=255)
     address_line2   = forms.CharField(label="Address line 2", required=False, max_length=255)
     address_city    = forms.CharField(label="Town", required=True, max_length=255)
-    address_state   = forms.CharField(label="County", required=False, max_length=255)
-    address_zip     = forms.CharField(label="Postcode", required=True, max_length=255)
+    address_state   = forms.CharField(label="State / Province", required=False, max_length=255)
+    address_zip     = forms.CharField(label="ZIP / Postal code", required=True, max_length=255)
     address_country = forms.CharField(label="Country", required=True, max_length=255)
     phone           = forms.CharField(required=True, max_length=255)
 

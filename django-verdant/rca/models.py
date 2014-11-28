@@ -5020,6 +5020,9 @@ class DonationPage(Page, SocialFields):
 
     search_name = None
 
+    class Meta:
+        verbose_name = "RCA USA Stripe donation page"
+
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
