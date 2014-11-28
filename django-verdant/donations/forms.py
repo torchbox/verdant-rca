@@ -22,11 +22,11 @@ class DonationForm(forms.Form):
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
     amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", widget=forms.RadioSelect(), required=False, initial=50, choices=(
-        ("50", "£50"),
-        ("100", "£100"),
-        ("250", "£250"),
-        ("500", "£500"),
-        ("1000", "£1000"),
+        ("50", "$50"),
+        ("100", "$100"),
+        ("250", "$250"),
+        ("500", "$500"),
+        ("1000", "$1000"),
         ("", "Other"),
     ))
     amount = forms.FloatField(label="Other amount", required=False)
