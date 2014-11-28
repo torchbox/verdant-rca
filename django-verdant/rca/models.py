@@ -5045,7 +5045,7 @@ class DonationPage(Page, SocialFields):
                     charge = stripe.Charge.create(
                         customer=customer.id,
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
-                        currency="gbp",
+                        currency="usd",
                         description=self.payment_description,
                         metadata=metadata,
                     )
