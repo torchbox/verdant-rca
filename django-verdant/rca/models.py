@@ -4835,7 +4835,7 @@ class GalleryPage(Page, SocialFields):
         # Get filter parameters
         school = request.GET.get('school')
         programme = request.GET.get('programme')
-        year = request.GET.get('degree_year') or '2013'
+        year = request.GET.get('degree_year') or '2014'
 
         # Get students
         ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
