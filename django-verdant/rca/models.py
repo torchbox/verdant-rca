@@ -5062,8 +5062,7 @@ class DonationPage(Page, SocialFields):
                     logging.error("[stripe] " + error_metadata, exc_info=full_exc_info())
                     messages.error(request, "There was a problem processing your payment. Please try again later.")
         else:
-            towards = request.GET.get('to')
-            form = DonationForm(initial={'donation_for': towards})
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,
