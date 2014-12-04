@@ -17,7 +17,7 @@ class DonationForm(forms.Form):
 
     required_css_class = 'required'
 
-    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'email', 'phone', 'class_year', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
+    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
 
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
@@ -62,6 +62,15 @@ class DonationForm(forms.Form):
     ))
 
     class_year = forms.CharField(label="Class year", required=False, max_length=255)
+
+    donation_for = forms.ChoiceField(label="Please direct my gift towards", required=True, choices=(
+            # ("scholarships", "Scholarships"),
+            # ("storm_thorgerson_scholarship", "Storm Thorgerson Scholarship"),
+            # ("wendy_dagworthy_scholarship_fund", "Wendy Dagworthy Scholarship Fund"),
+            # ("in_memory_of_dorothy_kemp", "In memory of Dorothy Kemp"),
+            # ("college_greatest_need", "College’s greatest need"),
+            ("rca_fund", "RCA Fund"),
+    ), initial="rca_fund")
 
     name = forms.CharField(required=False, max_length=255)
     stripe_token = forms.CharField(required=False, max_length=255)
