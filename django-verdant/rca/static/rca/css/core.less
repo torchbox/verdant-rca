@@ -1978,6 +1978,11 @@ footer {
             padding-top:2em;
             padding-left:@grid-gutter-width;
         }
+        .error-message{
+            clear: both;
+            padding-top: 8px;  // there's floating element above, top margin is collapsed
+        }
+        .clearfix();
     }
 
     .title, .first_name,.last_name{
@@ -2003,6 +2008,12 @@ footer {
             font-size:2em;
         }
     }
+    .not_included_in_supporters_list{
+        clear: both;
+    }
+        .not_included_in_supporters_list label{
+            line-height: 1em;
+        }
 }
 
 
