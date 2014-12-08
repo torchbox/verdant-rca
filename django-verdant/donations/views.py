@@ -163,9 +163,9 @@ def export(request, include_all=False):
         ("card__address_country", "Country"),
         ("card__address_line1", "Address line 1"),
         ("card__address_line2", "Address line 2"),
-        ("card__address_state", "County"),
+        ("card__address_state", "State / Province"),
         ("card__address_country", "Country"),
-        ("card__address_zip", "Post code"),
+        ("card__address_zip", "ZIP / Postal code"),
         # "metadata__phone_type": "Phone type",
     ))
 

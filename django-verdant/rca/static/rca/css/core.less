@@ -1543,7 +1543,7 @@ footer {
         .border-radius(0);
     }
 
-    /* Blackbaud forms */ 
+    /* Blackbaud forms */
     #bbox-root {
         .column(12);
         padding-left:0;
@@ -1649,12 +1649,12 @@ footer {
             }
 
             .select{
-                font-family: @font-family-arial; 
+                font-family: @font-family-arial;
             }
             .selectInner{
                 width:auto !important;
             }
-             
+
             //Div Table
             .BBFormTable {
                 display: table;
@@ -1730,7 +1730,7 @@ footer {
                         position:absolute;
                         left:0;
                         margin-top:32px;
-                        display:none; 
+                        display:none;
                     }
                     .BBFormGiftOtherAmount{
                         display:none;
@@ -1741,7 +1741,7 @@ footer {
                     }
                     .BBFormRadioButton:checked + .BBFormRadioLabel{
                         margin-bottom:120px;
-                                       
+
                         &:after{
                             display:block;
                         }
@@ -1753,12 +1753,12 @@ footer {
                                 color:black;
                             }
                         }
-                    } 
+                    }
                 }
             }
             .BBFormRadioLabel {
                 .large-radio-label();
-               
+
                 &.BBFormRadioLabelGivingLevelSelected {
                     color: @color-white;
                     background-color: @color-pink;
@@ -1772,7 +1772,7 @@ footer {
                 padding-left: 1.4em;
                 font-size: 1em;
                 position: relative;
-                
+
                 &:hover {
                     background-color: @color-advert-pale-blue;
                     color: inherit;
@@ -1822,7 +1822,7 @@ footer {
                 margin-right: 5%;
             }
 
-            //JS wrapper to allow side by side form elements. 
+            //JS wrapper to allow side by side form elements.
             .grouped-form-items {
                 .clearfix();
             }
@@ -1833,7 +1833,7 @@ footer {
                 float: left;
 
                 & + .grouped-form-items {
-                    margin-left: 5%; 
+                    margin-left: 5%;
                 }
             }
             .BBFieldBillingStateZip {
@@ -1845,7 +1845,7 @@ footer {
 
                 & + .grouped-form-items {
                     width: 35%;
-                    margin-left: 5%; 
+                    margin-left: 5%;
                 }
             }
             #bboxdonation_payment_lblMonth,
@@ -1861,7 +1861,7 @@ footer {
                 .BBCardImageContainer {
                     float: left;
                     margin-top: 0.45em;
-                    
+
                     img {
                         float: left;
                         margin-right: 0.3em;
@@ -1871,7 +1871,7 @@ footer {
                     display: block !important;
                     float: left;
                 }
-                .select.BBFormSelectList { 
+                .select.BBFormSelectList {
                     float: left;
                     margin-right: 1em;
                 }
@@ -1908,7 +1908,7 @@ footer {
         }
         ul li{
             .column(4);
-            
+
             label{
                 font-size:2em;
                 margin:0;
@@ -1942,7 +1942,7 @@ footer {
         .field:before{
             opacity:0.5;
             position:absolute;
-            content: "£";
+            content: "$";
             font-size:3em;
             top:0.85em;
             left:0.3em;
@@ -1966,7 +1966,7 @@ footer {
     }
     .expiration{
         .column(6);
-    } 
+    }
     .cvc{
         clear:both;
         .field{
@@ -1978,9 +1978,11 @@ footer {
             padding-top:2em;
             padding-left:@grid-gutter-width;
         }
-    }
-    .is_gift_aid{
-        clear:both;
+        .error-message{
+            clear: both;
+            padding-top: 8px;  // there's floating element above, top margin is collapsed
+        }
+        .clearfix();
     }
 
     .title, .first_name,.last_name{
@@ -2006,6 +2008,12 @@ footer {
             font-size:2em;
         }
     }
+    .not_included_in_supporters_list{
+        clear: both;
+    }
+        .not_included_in_supporters_list label{
+            line-height: 1em;
+        }
 }
 
 

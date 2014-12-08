@@ -69,11 +69,6 @@ jQuery(function($) {
         }
     });
 
-    // Gift aid toggles some fields
-    $('#id_is_gift_aid').change(function(){
-        $('.giftaid-toggled').toggle();
-    });
-
     // amounts field
 
     // indicate selected val if already present

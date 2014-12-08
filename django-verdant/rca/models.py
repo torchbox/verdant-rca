@@ -5020,6 +5020,9 @@ class DonationPage(Page, SocialFields):
 
     search_name = None
 
+    class Meta:
+        verbose_name = "RCA USA Stripe donation page"
+
     def serve(self, request):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -5042,7 +5045,7 @@ class DonationPage(Page, SocialFields):
                     charge = stripe.Charge.create(
                         customer=customer.id,
                         amount=form.cleaned_data.get('amount'),  # amount in cents (converted by the form)
-                        currency="gbp",
+                        currency="usd",
                         description=self.payment_description,
                         metadata=metadata,
                     )
@@ -5061,6 +5064,7 @@ class DonationPage(Page, SocialFields):
         else:
             towards = request.GET.get('to')
             form = DonationForm(initial={'donation_for': towards})
+            form = DonationForm()
 
         return render(request, self.template, {
             'self': self,
