@@ -733,7 +733,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
@@ -947,7 +947,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items,
@@ -1070,7 +1070,7 @@ class NewsIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             news = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/news_listing.html", {
                 'self': self,
                 'news': news,
@@ -1300,7 +1300,7 @@ class PressReleaseIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             press_releases = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/press_release_listing.html", {
                 'self': self,
                 'press_releases': press_releases,
@@ -1799,7 +1799,7 @@ class EventIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             events = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/events_listing.html", {
                 'self': self,
                 'events': events,
@@ -1881,7 +1881,7 @@ class TalksIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             talks = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/talks_listing.html", {
                 'self': self,
                 'talks': talks
@@ -1962,7 +1962,7 @@ class ReviewsIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             reviews = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/reviews_listing.html", {
                 'self': self,
                 'reviews': reviews
@@ -2827,7 +2827,7 @@ class AlumniIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             alumni_pages = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/alumni_pages_listing.html", {
                 'self': self,
                 'alumni_pages': alumni_pages,
@@ -3116,7 +3116,7 @@ class StaffIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             staff_pages = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/staff_pages_listing.html", {
                 'self': self,
                 'staff_pages': staff_pages,
@@ -3257,7 +3257,7 @@ class ResearchStudentIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_students = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
                 'research_students': research_students,
@@ -4157,7 +4157,7 @@ class RcaNowIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             rca_now_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/rca_now_listing.html", {
                 'self': self,
                 'rca_now_items': rca_now_items,
@@ -4353,7 +4353,7 @@ class RcaBlogIndex(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             rca_blog_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/rca_blog_listing.html", {
                 'self': self,
                 'rca_blog_items': rca_blog_items,
@@ -4482,7 +4482,7 @@ class ResearchItem(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items
@@ -4709,7 +4709,7 @@ class CurrentResearchPage(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
                 'research_items': research_items,
@@ -4871,7 +4871,7 @@ class GalleryPage(Page, SocialFields):
             student.profile = student.get_profile(self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q))
 
         # Get template
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             template = 'rca/includes/gallery_listing.html'
         else:
             template = self.template
@@ -5182,7 +5182,7 @@ class InnovationRCAProject(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             projects = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/innovation_rca_listing.html", {
                 'self': self,
                 'projects': projects
@@ -5288,7 +5288,7 @@ class InnovationRCAIndex(Page, SocialFields):
             projects = paginator.page(paginator.num_pages)
 
         # Find template
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             template = "rca/includes/innovation_rca_listing.html"
         else:
             template = self.template
@@ -5443,7 +5443,7 @@ class ReachOutRCAProject(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             projects = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/innovation_rca_listing.html", {
                 'self': self,
                 'projects': projects
@@ -5550,7 +5550,7 @@ class ReachOutRCAIndex(Page, SocialFields):
         except EmptyPage:
             staff_pages = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/reach_out_rca_listing.html", {
                 'self': self,
                 'projects': projects,
