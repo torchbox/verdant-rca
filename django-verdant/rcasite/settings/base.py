@@ -151,6 +151,7 @@ INSTALLED_APPS = (
     'djcelery',
     'kombu.transport.django',
     'twitter',  # the app used to proxy the Twitter REST API
+    'widget_tweaks',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
