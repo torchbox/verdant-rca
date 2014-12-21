@@ -173,6 +173,7 @@ INSTALLED_APPS = (
     'rca_signage',
     'rca_ldap',
     'rca_show',
+    'student_profiles',
 )
 
 EMAIL_SUBJECT_PREFIX = '[wagtail] '
