@@ -1,0 +1,34 @@
+{% extends "rca/base.html" %}
+{% load static compress %}
+
+{% block title %}Student profile{% endblock title %}
+
+
+{% block content %}
+
+{# navbar #}
+<ul>
+  {% if page_id %}
+  <li{% if nav_basic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a></li>
+  <li{% if nav_academic %}class="active"{% endif %}><a href="#">Academic details</a></li>
+
+  {% if is_ma %}<li{% if nav_ma %}class="active"{% endif %}><a href="#">MA details</a></li>{% endif %}
+  {% if is_mphil %}<li{% if nav_mphil %}class="active"{% endif %}><a href="#">MPhil details</a></li>{% endif %}
+  {% if is_phd %}<li{% if nav_phd %}class="active"{% endif %}><a href="#">PhD details</a></li>{% endif %}
+
+  {% if in_show %}<li{% if nav_show_profile %}class="active"{% endif %}><a href="#">Profile for the show</a></li>{% endif %}
+  {% endif %}
+</ul>
+
+{% block form_content %}{% endblock form_content %}  {# for inserting the editing forms #}
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+{% compress js %}
+<script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>  {# cool little JS that helps with formsets #}
+{% block form_js %}{% endblock form_js %}  {# for activating formset js #}
+{% endcompress %}
+{% endblock extra_js %}

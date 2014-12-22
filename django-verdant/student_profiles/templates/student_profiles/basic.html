@@ -1,10 +1,7 @@
-{% extends "rca/base.html" %}
-{% load static compress %}
-
-{% block title %}Student profile{% endblock title %}
+{% extends "student_profiles/edit_base.html" %}
 
 
-{% block content %}
+{% block form_content %}
 
 <h1>Basic profile</h1>
 
@@ -61,33 +58,25 @@
   <p><input type="submit" value="Continue &rarr;"></p>
 </form>
 
+{% endblock form_content %}
 
 
-{% endblock content %}
-
-
-{% block extra_js %}
-
-            {% compress js %}
-<script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>
-
+{% block form_js %}
 <script type="text/javascript">
-    $(function() {
-        $('#email_formset .field').formset({
-            prefix: '{{ email_formset.prefix }}',
-            formCssClass: 'dynamic-formset1'
-        });
-        $('#phone_formset .field').formset({
-            prefix: '{{ phone_formset.prefix }}',
-            formCssClass: 'dynamic-formset3'
-        });
-        $('#website_formset .field').formset({
-            prefix: '{{ website_formset.prefix }}',
-            formCssClass: 'dynamic-formset2'
-        });
-    })
+$(function() {
+  $('#email_formset .field').formset({
+      prefix: '{{ email_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ email_formset.prefix }}'
+  });
+  $('#phone_formset .field').formset({
+      prefix: '{{ phone_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ phone_formset.prefix }}'
+  });
+  $('#website_formset .field').formset({
+      prefix: '{{ website_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ website_formset.prefix }}'
+  });
+})
 </script>
+{% endblock form_js %}
 
-{% endcompress %}
-
-{% endblock extra_js %}

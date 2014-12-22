@@ -37,14 +37,13 @@ def basic_profile(request, page_id=None):
     if page_id is None:
         profile_page = NewStudentPage(owner=request.user)
         NEW_STUDENT_PAGE_INDEX.add_child(instance=profile_page)
-        data['basic_form'] = ProfileBasicForm(
-
-        )
+        data['basic_form'] = ProfileBasicForm()
         data['email_formset'] = EmailFormset(prefix='email')
         data['phone_formset'] = PhoneFormset(prefix='phone')
         data['website_formset'] = WebsiteFormset(prefix='website')
     else:
         profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+        data['page_id'] = page_id
         data['basic_form'] = ProfileBasicForm(instance=profile_page)
         data['email_formset'] = EmailFormset(
             prefix='email',
