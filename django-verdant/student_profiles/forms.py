@@ -4,11 +4,12 @@ from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
 
 from rca.help_text import help_text
+from rca.models import NewStudentPage
 
 ################################################################################
 ## internal classes
 
-class ReadonlyForm(forms.Form):
+class ReadonlyFormMixin(object):
     """Form that allows read-only fields.
     
     To make a field readonly, simply set the property `.readonly = True` on the
@@ -16,7 +17,7 @@ class ReadonlyForm(forms.Form):
     """
 
     def __init__(self, *args, **kwargs):
-        super(ReadonlyForm, self).__init__(*args, **kwargs)
+        super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
         
         for field in self.fields:
             ffield = self[field].field
@@ -24,7 +25,7 @@ class ReadonlyForm(forms.Form):
                 ffield.required = False
 
     def clean(self):
-        cleaned_data = super(ReadonlyForm, self).clean()
+        cleaned_data = super(ReadonlyFormMixin, self).clean()
 
         for field in self.fields:
             ffield = self[field].field
@@ -82,15 +83,15 @@ class RichTextField(forms.CharField):
 ################################################################################
 ## Basic Profile
 
-class ProfileBasicForm(ReadonlyForm):
+class ProfileBasicForm(ReadonlyFormMixin, forms.ModelForm):
     
+    """
     first_name = forms.CharField(
         max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name')
     )
     last_name = forms.CharField(
         max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name')
     )
-    last_name.readonly = True
     
     profile_image = forms.ImageField(
         required=False,
@@ -102,6 +103,14 @@ class ProfileBasicForm(ReadonlyForm):
         required=False,
         help_text=help_text('rca.NewStudentPage', 'statement'),
     )
+    """
+    
+    profile_image = forms.ImageField(
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
+    )
+    # saves as: models.ForeignKey('rca.RcaImage')
+    
     
     # remove this later!
     in_show = BooleanField(initial=True)
@@ -111,27 +120,32 @@ class ProfileBasicForm(ReadonlyForm):
     # email
     # phone
     # website
+    
+    class Meta:
+        model = NewStudentPage
+        fields = ['first_name', 'last_name', 'profile_image', 'statement']
+    
 
 class EmailForm(forms.Form):
     email = forms.EmailField(
         required=False,    # because we'll only save those that are there anyway
         #saves NewStudentPageContactsEmail
     )
-EmailFormset = formset_factory(EmailForm, extra=1, formset=RequiredFormSet)
+EmailFormset = formset_factory(EmailForm, extra=1)
     
 class PhoneForm(forms.Form):
     phone = PhoneNumberField(
         required=False,    # because we'll only save those that are there anyway
         #saves NewStudentPageContactsPhone
     )
-PhoneFormset = formset_factory(PhoneForm, extra=1, formset=RequiredFormSet)
+PhoneFormset = formset_factory(PhoneForm, extra=1)
 
 class WebsiteForm(forms.Form):
     website = forms.URLField(
         required=False,    # because we'll only save those that are there anyway
         #saves NewStudentPageContactsWebsite
     )
-WebsiteFormset = formset_factory(WebsiteForm, extra=1, formset=RequiredFormSet)
+WebsiteFormset = formset_factory(WebsiteForm, extra=1)
 
 
 ################################################################################

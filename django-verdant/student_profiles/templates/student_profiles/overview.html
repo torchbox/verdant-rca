@@ -1,0 +1,37 @@
+{% extends "rca/base.html" %}
+{% load static compress %}
+
+{% block title %}Student profiles{% endblock title %}
+
+
+{% block content %}
+
+<h1>Your profiles</h1>
+
+{% if not profile_pages %}
+<div>
+  There are currently no profile pages for you.
+</div>
+{% endif %}
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  {% for page in profile_pages %}
+    <tr>
+      <td>{{ page.title }}</td>
+      <td><a href="#">show preview</a></td>
+      <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
+      <td><a href="#" class="button" disabled=disabled>submit for moderation</a></td>
+    </tr>
+  {% endfor %}
+</table>
+
+<form action="{% url 'student-profiles:new-basic' %}" method="get">
+  <input type="submit" value="Create a new profile page">
+</form>
+
+{% endblock %}

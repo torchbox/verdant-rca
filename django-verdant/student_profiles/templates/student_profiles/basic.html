@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load static compress %}
 
-{% block title %}Student profile example{% endblock title %}
+{% block title %}Student profile{% endblock title %}
 
 
 {% block content %}
@@ -13,28 +13,30 @@
   {% include 'student_profiles/form_snippet.html' with form=basic_form %}
 
   {{ email_formset.management_form }}
-  <label id="email_formset" {% if email_formset.total_error_count > 0 %}class="error"{% endif %}>Email
+  <label {% if email_formset.total_error_count > 0 %}class="error"{% endif %}>Email
     {{ formset.non_form_errors }}
+  </label>
+  <div id="email_formset" >
   {% for emailform in email_formset %}
-    <div id="field">
+    <label class="field">
     {% for field in emailform %}
       {% include "student_profiles/form_field_unlabelled.html" with field=field %}
     {% endfor %}
-    </div>
+    </label>
   {% endfor %}
   {% for error in email_formset.non_form_errors %}
     <small class="error">{{ error }}</small>
   {% endfor %}
-  </label>
+  </div>
 
   {{ phone_formset.management_form }}
   <label id="phone_formset" {% if phone_formset.total_error_count > 0 %}class="error"{% endif %}>Phone number
   {% for phoneform in phone_formset %}
-    <div id="field">
+    <label class="field">
     {% for field in phoneform %}
       {% include "student_profiles/form_field_unlabelled.html" with field=field %}
     {% endfor %}
-    </div>
+    </label>
   {% endfor %}
   {% for error in phone_formset.non_form_errors %}
     <small class="error">{{ error }}</small>
@@ -44,11 +46,11 @@
   {{ website_formset.management_form }}
   <label id="website_formset" {% if website_formset.total_error_count > 0 %}class="error"{% endif %}>Website
   {% for websiteform in website_formset %}
-    <div id="field">
+    <label class="field">
     {% for field in websiteform %}
       {% include "student_profiles/form_field_unlabelled.html" with field=field %}
     {% endfor %}
-    </div>
+    </label>
   {% endfor %}
   {% for error in website_formset.non_form_errors %}
     <small class="error">{{ error }}</small>
@@ -71,15 +73,15 @@
 
 <script type="text/javascript">
     $(function() {
-        $('#email_formset #field').formset({
+        $('#email_formset .field').formset({
             prefix: '{{ email_formset.prefix }}',
             formCssClass: 'dynamic-formset1'
         });
-        $('#phone_formset #field').formset({
+        $('#phone_formset .field').formset({
             prefix: '{{ phone_formset.prefix }}',
             formCssClass: 'dynamic-formset3'
         });
-        $('#website_formset #field').formset({
+        $('#website_formset .field').formset({
             prefix: '{{ website_formset.prefix }}',
             formCssClass: 'dynamic-formset2'
         });
