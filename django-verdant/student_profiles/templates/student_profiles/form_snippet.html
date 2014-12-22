@@ -1,0 +1,15 @@
+{% for field in form %}
+<label {% if field.errors %}class="error"{% endif %}>{{ field.label }}
+  {% if field.help_text %} <p class="secondary label right">{{ field.help_text }}</p>{% endif %}
+
+  {% if field.field.readonly %}
+    {% include 'student_profiles/form_field_readonly_snippet.html' with field=field %}
+  {% else %}
+    {% include 'student_profiles/form_field_snippet.html' with field=field %}
+  {% endif %}
+
+</label>
+  {% for error in field.errors %}
+    <small class="error">{{ error }}</small>
+  {% endfor %}
+{% endfor %}
