@@ -1,0 +1,16 @@
+{{ formset.management_form }}
+<label {% if formset.total_error_count > 0 %}class="error"{% endif %}>{{ formset.title }}
+  {{ formset.non_form_errors }}
+</label>
+<div id="{{ formset.prefix }}" >
+{% for form in formset %}
+  <label class="field">
+  {% for field in form %}
+    {% include "student_profiles/form_field_unlabelled.html" with field=field %}
+  {% endfor %}
+  </label>
+{% endfor %}
+{% for error in formset.non_form_errors %}
+  <small class="error">{{ error }}</small>
+{% endfor %}
+</div>

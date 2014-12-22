@@ -4,7 +4,7 @@ and for allowing more customization
 """
 
 from django.conf.urls import patterns, url
-from .views import overview, basic_profile
+from .views import overview, basic_profile, academic_details
 
 
 urlpatterns = patterns(
@@ -14,5 +14,6 @@ urlpatterns = patterns(
 
     url(r'^new/basic/$', basic_profile, name='new-basic'),
     url(r'^(?P<page_id>\d+)/basic/$', basic_profile, name='edit-basic'),
+    url(r'^(?P<page_id>\d+)/academic/$', academic_details, name='edit-academic'),
     
 )

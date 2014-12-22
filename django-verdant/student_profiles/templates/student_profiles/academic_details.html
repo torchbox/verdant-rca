@@ -1,0 +1,59 @@
+{% extends "student_profiles/edit_base.html" %}
+
+
+{% block form_content %}
+
+<h1>Academic details</h1>
+
+<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+  
+  {% include 'student_profiles/form_snippet.html' with form=academic_form %}
+
+  {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=awards_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=publications_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=conferences_formset %}
+
+
+
+
+  <p><input type="submit" value="Continue &rarr;"></p>
+</form>
+
+{% endblock form_content %}
+
+
+{% block form_js %}
+<script type="text/javascript">
+$(function() {
+  $('#{{ previous_degrees_formset.prefix }} .field').formset({
+      prefix: '{{ previous_degrees_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ previous_degrees_formset.prefix }}'
+  });
+
+  $('#{{ exhibitions_formset.prefix }} .field').formset({
+      prefix: '{{ exhibitions_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ exhibitions_formset.prefix }}'
+  });
+
+  $('#{{ awards_formset.prefix }} .field').formset({
+      prefix: '{{ awards_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ awards_formset.prefix }}'
+  });
+
+  $('#{{ publications_formset.prefix }} .field').formset({
+      prefix: '{{ publications_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ publications_formset.prefix }}'
+  });
+
+  $('#{{ conferences_formset.prefix }} .field').formset({
+      prefix: '{{ conferences_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ conferences_formset.prefix }}'
+  });
+
+
+})
+</script>
+{% endblock form_js %}
+

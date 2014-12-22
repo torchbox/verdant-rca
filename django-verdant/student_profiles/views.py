@@ -9,16 +9,36 @@ from django.contrib.auth.decorators import login_required
 from wagtail.wagtailcore.models import Page
 from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
+from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
 
 from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
+from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 
 
 NEW_STUDENT_PAGE_INDEX = Page.objects.get(id=5)
 
 def slugify(value):
+    """
+    TODO: documentation
+    """
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
+
+
+def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model):
+    """
+    TODO: documentation
+    """
+    getattr(profile_page, fieldname).all().delete()
+    for values in formset.cleaned_data:
+        if values and values.get(form_fieldname, '').strip():
+            field_model.objects.create(**{
+                'page': profile_page,
+                form_fieldname: values.get(form_fieldname).strip()
+            })
+
+
 
 
 @login_required
@@ -114,3 +134,110 @@ def basic_profile(request, page_id=None):
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
 
     return render(request, 'student_profiles/basic.html', data)
+
+
+
+@login_required
+def academic_details(request, page_id=None):
+    data = {}
+
+    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+    data['page_id'] = page_id
+    
+    data['academic_form'] = ProfileAcademicDetailsForm(instance=profile_page)
+    
+    def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
+        
+        model_attr_name = model_attr_name or form_attr_name
+        
+        data[relname + '_formset'] = formset_class(
+            prefix=relname,
+            initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
+        )
+        data[relname + '_formset'].title = title
+
+    make_formset(
+        'Previous degrees',
+        PreviousDegreesFormset, 'previous_degrees',
+        'degree',
+    )
+
+    make_formset(
+        'Exhibitions',
+        ExhibitionsFormset, 'exhibitions',
+        'exhibition',
+    )
+
+    make_formset(
+        'Awards',
+        AwardsFormset, 'awards',
+        'award',
+    )
+
+    make_formset(
+        'Publications',
+        PublicationsFormset, 'publications',
+        'name',
+    )
+
+    make_formset(
+        'Conferences',
+        ConferencesFormset, 'conferences',
+        'name',
+    )
+    
+    if request.method == 'POST':
+        data['academic_form'] = pf = ProfileAcademicDetailsForm(request.POST)
+        data['previous_degrees_formset'] = pdfs = PreviousDegreesFormset(request.POST, prefix='previous_degrees')
+        data['exhibitions_formset'] = efs = ExhibitionsFormset(request.POST, prefix='exhibitions')
+        data['awards_formset'] = afs = AwardsFormset(request.POST, prefix='awards')
+        data['publications_formset'] = pfs = PublicationsFormset(request.POST, prefix='publications')
+        data['conferences_formset'] = cfs = ConferencesFormset(request.POST, prefix='conferences')
+        
+        if pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid():
+            profile_page.funding = pf.cleaned_data['funding']
+            
+            revision = profile_page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
+            
+            save_multiple(
+                profile_page, 
+                'previous_degrees',
+                pdfs, 'degree',
+                NewStudentPagePreviousDegree,
+            )
+            
+            save_multiple(
+                profile_page, 
+                'exhibitions',
+                efs, 'exhibition',
+                NewStudentPageExhibition,
+            )
+            
+            save_multiple(
+                profile_page, 
+                'awards',
+                afs, 'award',
+                NewStudentPageAward,
+            )
+            
+            save_multiple(
+                profile_page, 
+                'publications',
+                pfs, 'name',
+                NewStudentPagePublication,
+            )
+            
+            save_multiple(
+                profile_page, 
+                'conferences',
+                cfs, 'name',
+                NewStudentPageConference,
+            )
+            
+        
+            return redirect('student-profiles:edit-academic', page_id=profile_page.id)
+    
+    return render(request, 'student_profiles/academic_details.html', data)

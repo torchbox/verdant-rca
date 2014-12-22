@@ -10,7 +10,7 @@
 <ul>
   {% if page_id %}
   <li{% if nav_basic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a></li>
-  <li{% if nav_academic %}class="active"{% endif %}><a href="#">Academic details</a></li>
+  <li{% if nav_academic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a></li>
 
   {% if is_ma %}<li{% if nav_ma %}class="active"{% endif %}><a href="#">MA details</a></li>{% endif %}
   {% if is_mphil %}<li{% if nav_mphil %}class="active"{% endif %}><a href="#">MPhil details</a></li>{% endif %}

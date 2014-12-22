@@ -56,12 +56,12 @@ class PhoneNumberField(forms.RegexField):
     type = 'phonenumber'
 
     default_error_messages = {
-        'invalid': 'Please enter a valid telephone number. Phone numbers can only contain digits, spaces, "+" and dashes.',
+        'invalid': 'Please enter a valid telephone number. Phone numbers can only contain digits, spaces, "+", parens and dashes.',
     }
 
     def __init__(self, *args, **kwargs):
         super(PhoneNumberField, self).__init__(
-            r'^[+0][\d -]+$',
+            r'^[+0][()\d -]+$',
             *args, **kwargs)
             
     def clean(self, value):
@@ -111,15 +111,9 @@ class ProfileBasicForm(ReadonlyFormMixin, forms.ModelForm):
     )
     # saves as: models.ForeignKey('rca.RcaImage')
     
-    
     # remove this later!
     in_show = BooleanField(initial=True)
     in_show.readonly = True
-    
-    # formsets for:
-    # email
-    # phone
-    # website
     
     class Meta:
         model = NewStudentPage
@@ -127,23 +121,25 @@ class ProfileBasicForm(ReadonlyFormMixin, forms.ModelForm):
     
 
 class EmailForm(forms.Form):
+    #saves to NewStudentPageContactsEmail
     email = forms.EmailField(
         required=False,    # because we'll only save those that are there anyway
-        #saves NewStudentPageContactsEmail
+        help_text=help_text('rca.NewStudentPageContactsEmail', 'email', default="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
     )
 EmailFormset = formset_factory(EmailForm, extra=1)
     
 class PhoneForm(forms.Form):
+    #saves to NewStudentPageContactsPhone
     phone = PhoneNumberField(
         required=False,    # because we'll only save those that are there anyway
-        #saves NewStudentPageContactsPhone
+        help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
 PhoneFormset = formset_factory(PhoneForm, extra=1)
 
 class WebsiteForm(forms.Form):
+    #saves to NewStudentPageContactsWebsite
     website = forms.URLField(
         required=False,    # because we'll only save those that are there anyway
-        #saves NewStudentPageContactsWebsite
     )
 WebsiteFormset = formset_factory(WebsiteForm, extra=1)
 
@@ -151,30 +147,49 @@ WebsiteFormset = formset_factory(WebsiteForm, extra=1)
 ################################################################################
 ## Academic details
 
-class ProfileAcademicDetailsForm(forms.Form):
+class ProfileAcademicDetailsForm(forms.ModelForm):
+    
+    class Meta:
+        model = NewStudentPage
+        fields = ['funding']
+    
+class PreviousDegreeForm(forms.Form):
+    #saves to NewStudentPagePreviousDegree
+    degree = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"),
+    )
+PreviousDegreesFormset = formset_factory(PreviousDegreeForm, extra=1)
 
-    funding = forms.CharField(
-        max_length=255, required=False,
-        help_text=help_text('rca.NewStudentPage', 'funding', default="Please include major funding bodies, including research councils.")
+class ExhibitionForm(forms.Form):
+    #saves to NewStudentPageExhibition
+    exhibition = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"),
     )
-    previous_degree = forms.CharField(
-        #multiple values?
-        #saves to NewStudentPagePreviousDegree
+ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1)
+
+class AwardsForm(forms.Form):
+    #saves to NewStudentPageAward
+    award = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas"),
     )
-    exhibitions = forms.CharField(
-        #multiple values?
-        #saves to NewStudentPageExhibition
+AwardsFormset = formset_factory(AwardsForm, extra=1)
+    
+class PublicationsForm(forms.Form):
+    #saves to NewStudentPagePublication
+    name = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"),
     )
-    awards = forms.CharField(
-        #multiple values?
-        #saves to NewStudentPageAward
+PublicationsFormset = formset_factory(PublicationsForm, extra=1)
+
+class ConferencesForm(forms.Form):
+    #saves to NewStudentPageConference
+    name = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"),
     )
-    publications = forms.CharField(
-        #multiple values?
-        #saves to NewStudentPagePublication
-    )
-    conferences = forms.CharField(
-        #multiple values?
-        #saves to NewStudentPageConference
-    )
+ConferencesFormset = formset_factory(ConferencesForm, extra=1)
 
