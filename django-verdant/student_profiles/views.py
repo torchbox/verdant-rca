@@ -11,11 +11,14 @@ from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
 from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
 
-from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
+from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 
 
-NEW_STUDENT_PAGE_INDEX = Page.objects.get(id=5)
+# this is the ID of the page where new student pages are added as children
+# MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
+NEW_STUDENT_PAGE_INDEX_ID = 5
+
 
 def slugify(value):
     """
@@ -39,8 +42,6 @@ def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model)
             })
 
 
-
-
 @login_required
 def overview(request):
     data = {}
@@ -56,14 +57,16 @@ def basic_profile(request, page_id=None):
 
     if page_id is None:
         profile_page = NewStudentPage(owner=request.user)
-        NEW_STUDENT_PAGE_INDEX.add_child(instance=profile_page)
-        data['basic_form'] = ProfileBasicForm()
+        form_class = ProfileBasicNewForm
+        data['basic_form'] = ProfileBasicNewForm()
         data['email_formset'] = EmailFormset(prefix='email')
         data['phone_formset'] = PhoneFormset(prefix='phone')
         data['website_formset'] = WebsiteFormset(prefix='website')
     else:
         profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
         data['page_id'] = page_id
+        form_class = ProfileBasicForm
+        print profile_page.id, profile_page.first_name
         data['basic_form'] = ProfileBasicForm(instance=profile_page)
         data['email_formset'] = EmailFormset(
             prefix='email',
@@ -79,18 +82,23 @@ def basic_profile(request, page_id=None):
         )
 
     if request.method == 'POST':
-        data['basic_form'] = basic_form = ProfileBasicForm(request.POST, request.FILES)
+        data['basic_form'] = basic_form = form_class(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')
         data['phone_formset'] = phone_formset = PhoneFormset(request.POST, prefix='phone')
         data['website_formset'] = website_formset = WebsiteFormset(request.POST, prefix='website')
         if basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
             bcd = basic_form.cleaned_data
             
-            profile_page.first_name = bcd['first_name']
-            profile_page.last_name = bcd['last_name']
-            
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
             profile_page.slug = slugify(profile_page.title)
+            
+            if page_id is None:
+                # the following is the page where the new student pages are added as children
+                # MAKE SURE THIS IS THE CORRECT ID!
+                Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=profile_page)
+            
+            profile_page.first_name = bcd['first_name']
+            profile_page.last_name = bcd['last_name']
             
             profile_page.statement = bcd['statement']
 
@@ -100,33 +108,20 @@ def basic_profile(request, page_id=None):
                 )
                 profile_page.profile_image = profile_image
             
-            revision = profile_page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
+            profile_page.save()
 
-            # save additional contact data
-            def save_contact(fieldname, formset, form_fieldname, field_model):
-                getattr(profile_page, fieldname).all().delete()
-                for values in formset.cleaned_data:
-                    if values and values.get(form_fieldname, '').strip():
-                        field_model.objects.create(**{
-                            'page': profile_page,
-                            form_fieldname: values.get(form_fieldname).strip()
-                        })
-
-            save_contact(
-                'emails',
+            save_multiple(
+                profile_page, 'emails',
                 email_formset, 'email',
                 NewStudentPageContactsEmail,
             )
-            save_contact(
-                'phones',
+            save_multiple(
+                profile_page, 'phones',
                 phone_formset, 'phone',
                 NewStudentPageContactsPhone,
             )
-            save_contact(
-                'websites',
+            save_multiple(
+                profile_page, 'websites',
                 website_formset, 'website',
                 NewStudentPageContactsWebsite,
             )

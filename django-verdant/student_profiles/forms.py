@@ -83,42 +83,30 @@ class RichTextField(forms.CharField):
 ################################################################################
 ## Basic Profile
 
-class ProfileBasicForm(ReadonlyFormMixin, forms.ModelForm):
-    
-    """
-    first_name = forms.CharField(
-        max_length=255, help_text=help_text('rca.NewStudentPage', 'first_name')
-    )
-    last_name = forms.CharField(
-        max_length=255, help_text=help_text('rca.NewStudentPage', 'last_name')
-    )
+class ProfileBasicForm(forms.ModelForm):
     
     profile_image = forms.ImageField(
         required=False,
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
     )
     # saves as: models.ForeignKey('rca.RcaImage')
-    
-    statement = RichTextField(
-        required=False,
-        help_text=help_text('rca.NewStudentPage', 'statement'),
-    )
-    """
-    
-    profile_image = forms.ImageField(
-        required=False,
-        help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
-    )
-    # saves as: models.ForeignKey('rca.RcaImage')
-    
-    # remove this later!
-    in_show = BooleanField(initial=True)
-    in_show.readonly = True
     
     class Meta:
         model = NewStudentPage
         fields = ['first_name', 'last_name', 'profile_image', 'statement']
+
+
+class ProfileBasicNewForm(ReadonlyFormMixin, forms.ModelForm):
+
+    profile_image = forms.ImageField(
+        help_text='You must save this profile first before you can add an image.'
+    )
+    profile_image.readonly = True
     
+    class Meta:
+        model = NewStudentPage
+        fields = ['first_name', 'last_name', 'statement']
+
 
 class EmailForm(forms.Form):
     #saves to NewStudentPageContactsEmail
