@@ -335,17 +335,25 @@ def ma_show_details(request, page_id):
         data[relname + '_formset'].title = title
     
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
-    data['carouselitem_formset'] = MAShowCarouselItemFormset()
+    data['carouselitem_formset'] = MAShowCarouselItemFormset(queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
+    #data['carouselitem_formset'].extra = 0 if NewStudentPageShowCarouselItem.objects.filter(page=profile_page).count() > 0 else 1
     make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
     make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
     
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
+        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
         
-        if sf.is_valid() and scf.is_valid() and ssf.is_valid():
+        sf.is_valid()
+        scif.is_valid()
+        scf.is_valid()
+        ssf.is_valid()
+        
+        if sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
             sf.save()
+            scif.save()
             
             save_multiple(profile_page, 'show_collaborators', scf, 'name', NewStudentPageShowCollaborator)
             save_multiple(profile_page, 'show_sponsors', ssf, 'name', NewStudentPageShowSponsor)

@@ -227,6 +227,7 @@ class MAShowCarouselItemForm(forms.ModelForm):
             'embedly_url', 'poster_image'
         ]
 MAShowCarouselItemFormset = modelformset_factory(NewStudentPageShowCarouselItem, form=MAShowCarouselItemForm, extra=1)
+# TODO: make this an inlineformset
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator

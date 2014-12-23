@@ -10,11 +10,15 @@
   {% include 'student_profiles/form_snippet.html' with form=show_form %}
 
   {{ carouselitem_formset.management_form }}
+  Carousel images/videos
+  <div id="{{ carouselitem_formset.prefix }}">
   {% for carouselitem_form in carouselitem_formset %}
-    <div class="well">
-    {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+    <div class="well" style="padding: 1em; border: 1px solid black;">
+      {{ carouselitem_form.id }}
+      {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
     </div>
   {% endfor %}
+  </div>
 
   {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
   {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
@@ -40,13 +44,10 @@ $(function() {
       formCssClass: 'dynamic-formset-{{ show_sponsors_formset.prefix }}'
   });
 
-  {% comment %}
-  $('#{{ awards_formset.prefix }} .field').formset({
-      prefix: '{{ awards_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ awards_formset.prefix }}'
+  $('#{{ carouselitem_formset.prefix }} .well').formset({
+      prefix: '{{ carouselitem_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ carouselitem_formset.prefix }}'
   });
-  {% endcomment %}
-
 })
 </script>
 {% endblock form_js %}
