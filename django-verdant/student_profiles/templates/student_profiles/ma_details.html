@@ -1,0 +1,16 @@
+{% extends "student_profiles/edit_base.html" %}
+
+
+{% block form_content %}
+
+<h1>MA details</h1>
+
+<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+  
+  {% include 'student_profiles/form_snippet.html' with form=ma_form %}
+
+  <p><input type="submit" value="Save"></p>
+</form>
+
+{% endblock form_content %}
+

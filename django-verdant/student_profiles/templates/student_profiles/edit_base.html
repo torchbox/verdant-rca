@@ -12,11 +12,12 @@
   <li{% if nav_basic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a></li>
   <li{% if nav_academic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a></li>
 
-  {% if is_ma %}<li{% if nav_ma %}class="active"{% endif %}><a href="#">MA details</a></li>{% endif %}
+  {% if is_ma %}<li{% if nav_ma %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a></li>{% endif %}
   {% if is_mphil %}<li{% if nav_mphil %}class="active"{% endif %}><a href="#">MPhil details</a></li>{% endif %}
   {% if is_phd %}<li{% if nav_phd %}class="active"{% endif %}><a href="#">PhD details</a></li>{% endif %}
 
-  {% if in_show %}<li{% if nav_show_profile %}class="active"{% endif %}><a href="#">Profile for the show</a></li>{% endif %}
+  {# TODO: activate/deactivate this link based on whether the student is in the show #}
+  <li{% if nav_show_profile %}class="active"{% endif %}><a href="#">Profile for the show</a></li>
   {% endif %}
 </ul>
 

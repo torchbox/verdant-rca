@@ -3,6 +3,7 @@ import re
 import unicodedata
 
 from django import forms
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -13,12 +14,34 @@ from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, N
 
 from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
-
+from .forms import MADetailsForm
 
 # this is the ID of the page where new student pages are added as children
 # MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
 NEW_STUDENT_PAGE_INDEX_ID = 5
 
+
+################################################################################
+## LDAP data extraction functions
+
+def user_is_ma(request):
+    """Determine whether a user is an MA user and should be able to edit their MA page."""
+    # TODO: read this from LDAP
+    return True   
+
+def user_is_mphil(request):
+    """Determine whether a user is an MPhil user and should be able to edit their MPhil page."""
+    # TODO: read this from LDAP
+    return False
+
+def user_is_phd(request):
+    """Determine whether a user is an PhD user and should be able to edit their PhD page."""
+    # TODO: read this from LDAP
+    return True
+
+
+################################################################################
+## helper functions
 
 def slugify(value):
     """
@@ -42,8 +65,14 @@ def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model)
             })
 
 
+################################################################################
+## view functions
+
 @login_required
 def overview(request):
+    """
+    Profile overview page, probably unnecessary
+    """
     data = {}
 
     data['profile_pages'] = NewStudentPage.objects.filter(owner=request.user)
@@ -53,7 +82,12 @@ def overview(request):
 
 @login_required
 def basic_profile(request, page_id=None):
-    data = {}
+    """Basic profile creation/editing page"""
+    data = {
+        'is_ma': user_is_ma(request),
+        'is_mphil': user_is_mphil(request),
+        'is_phd': user_is_phd(request),
+    }
 
     if page_id is None:
         profile_page = NewStudentPage(owner=request.user)
@@ -134,7 +168,14 @@ def basic_profile(request, page_id=None):
 
 @login_required
 def academic_details(request, page_id=None):
-    data = {}
+    """
+    Academic details editing page.
+    """
+    data = {
+        'is_ma': user_is_ma(request),
+        'is_mphil': user_is_mphil(request),
+        'is_phd': user_is_phd(request),
+    }
 
     profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
     data['page_id'] = page_id
@@ -236,3 +277,30 @@ def academic_details(request, page_id=None):
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
     return render(request, 'student_profiles/academic_details.html', data)
+
+
+@login_required
+def ma_details(request, page_id):
+    if not user_is_ma(request):
+        raise Http404("You cannot view MA details because you're not in that same program")
+    data = {
+        'is_ma': user_is_ma(request),
+        'is_mphil': user_is_mphil(request),
+        'is_phd': user_is_phd(request),
+    }
+
+    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+    data['page_id'] = page_id
+    
+    data['ma_form'] = MADetailsForm(instance=profile_page)
+    
+    if request.method == 'POST':
+        data['ma_form'] = form = MADetailsForm(request.POST, instance=profile_page, )
+        
+        if form.is_valid():
+            form.save()
+            
+        return redirect('student-profiles:edit-ma', page_id=page_id)
+        
+
+    return render(request, 'student_profiles/ma_details.html', data)

@@ -181,3 +181,19 @@ class ConferencesForm(forms.Form):
     )
 ConferencesFormset = formset_factory(ConferencesForm, extra=1)
 
+
+################################################################################
+## MA details
+
+class MADetailsForm(forms.ModelForm):
+    
+    class Meta:
+        model = NewStudentPage
+        fields = [
+            'ma_in_show',
+            'ma_school', 'ma_programme',
+            'ma_graduation_year',
+            'ma_specialism',
+        ]
+
+
