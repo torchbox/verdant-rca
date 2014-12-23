@@ -11,10 +11,11 @@ from wagtail.wagtailcore.models import Page
 from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
 from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
+from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollaborator, NewStudentPageShowSponsor
 
 from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
-from .forms import MADetailsForm
+from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
 
 # this is the ID of the page where new student pages are added as children
 # MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
@@ -37,7 +38,11 @@ def user_is_mphil(request):
 def user_is_phd(request):
     """Determine whether a user is an PhD user and should be able to edit their PhD page."""
     # TODO: read this from LDAP
-    return True
+    return False
+
+def profile_is_in_show(profile_page):
+    """Determine whether this user is in the show or not."""
+    return profile_page.ma_in_show or profile_page.mphil_in_show or profile_page.phd_in_show
 
 
 ################################################################################
@@ -63,6 +68,20 @@ def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model)
                 'page': profile_page,
                 form_fieldname: values.get(form_fieldname).strip()
             })
+
+
+def initial_context(request, page_id):
+    """Context data that (almost) every view here needs."""
+    data = {
+        'is_ma': user_is_ma(request),
+        'is_mphil': user_is_mphil(request),
+        'is_phd': user_is_phd(request),
+    }
+
+    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+    data['page_id'] = page_id
+    data['is_in_show'] = profile_is_in_show(profile_page)
+    return data, profile_page
 
 
 ################################################################################
@@ -282,15 +301,8 @@ def academic_details(request, page_id=None):
 @login_required
 def ma_details(request, page_id):
     if not user_is_ma(request):
-        raise Http404("You cannot view MA details because you're not in that same program")
-    data = {
-        'is_ma': user_is_ma(request),
-        'is_mphil': user_is_mphil(request),
-        'is_phd': user_is_phd(request),
-    }
-
-    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
-    data['page_id'] = page_id
+        raise Http404("You cannot view MA details because you're not in the MA programme.")
+    data, profile_page = initial_context(request, page_id)
     
     data['ma_form'] = MADetailsForm(instance=profile_page)
     
@@ -301,6 +313,43 @@ def ma_details(request, page_id):
             form.save()
             
         return redirect('student-profiles:edit-ma', page_id=page_id)
-        
 
     return render(request, 'student_profiles/ma_details.html', data)
+
+
+@login_required
+def ma_show_details(request, page_id):
+    if not user_is_ma(request):
+        raise Http404("You cannot view MA show details because you're not in the MA programme.")
+
+    data, profile_page = initial_context(request, page_id)
+    
+    def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
+        
+        model_attr_name = model_attr_name or form_attr_name
+        
+        data[relname + '_formset'] = formset_class(
+            prefix=relname,
+            initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
+        )
+        data[relname + '_formset'].title = title
+    
+    data['show_form'] = MAShowDetailsForm(instance=profile_page)
+    data['carouselitem_formset'] = MAShowCarouselItemFormset()
+    make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
+    make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
+    
+    if request.method == 'POST':
+        data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
+        data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
+        data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
+        
+        if sf.is_valid() and scf.is_valid() and ssf.is_valid():
+            sf.save()
+            
+            save_multiple(profile_page, 'show_collaborators', scf, 'name', NewStudentPageShowCollaborator)
+            save_multiple(profile_page, 'show_sponsors', ssf, 'name', NewStudentPageShowSponsor)
+            
+            return redirect('student-profiles:edit-ma-show', page_id=page_id)
+    
+    return render(request, 'student_profiles/ma_show_details.html', data)

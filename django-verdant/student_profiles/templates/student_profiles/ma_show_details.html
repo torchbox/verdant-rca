@@ -1,0 +1,55 @@
+{% extends "student_profiles/edit_base.html" %}
+
+
+{% block form_content %}
+
+<h1>MA show details</h1>
+
+<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+  
+  {% include 'student_profiles/form_snippet.html' with form=show_form %}
+
+  {{ carouselitem_formset.management_form }}
+  {% for carouselitem_form in carouselitem_formset %}
+    <div class="well">
+    {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+    </div>
+  {% endfor %}
+
+  {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
+
+
+  <p><input type="submit" value="Save"></p>
+</form>
+
+{% endblock form_content %}
+
+
+
+{% block form_js %}
+<script type="text/javascript">
+$(function() {
+  $('#{{ show_collaborators_formset.prefix }} .field').formset({
+      prefix: '{{ show_collaborators_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ show_collaborators_formset.prefix }}'
+  });
+
+  $('#{{ show_sponsors_formset.prefix }} .field').formset({
+      prefix: '{{ show_sponsors_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ show_sponsors_formset.prefix }}'
+  });
+
+  {% comment %}
+  $('#{{ awards_formset.prefix }} .field').formset({
+      prefix: '{{ awards_formset.prefix }}',
+      formCssClass: 'dynamic-formset-{{ awards_formset.prefix }}'
+  });
+  {% endcomment %}
+
+})
+</script>
+{% endblock form_js %}
+
+
+

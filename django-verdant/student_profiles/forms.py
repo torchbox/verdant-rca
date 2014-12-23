@@ -2,9 +2,10 @@ from itertools import chain
 
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
+from django.forms.models import modelformset_factory
 
 from rca.help_text import help_text
-from rca.models import NewStudentPage
+from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 
 ################################################################################
 ## internal classes
@@ -197,3 +198,48 @@ class MADetailsForm(forms.ModelForm):
         ]
 
 
+class MAShowDetailsForm(forms.ModelForm):
+    
+    class Meta:
+        model = NewStudentPage
+        fields = [
+            'show_work_type',
+            'show_work_title',
+            'show_work_location',
+            'show_work_description',
+            'postcard_image',
+        ]
+
+class MAShowCarouselItemForm(forms.ModelForm):
+
+    item_type = forms.ChoiceField(
+        choices = (
+            (0, 'Image'),
+            (1, 'Video'),
+        )
+    )
+
+    class Meta:
+        model = NewStudentPageShowCarouselItem
+        fields = [
+            'item_type',
+            'image', 'overlay_text',
+            'embedly_url', 'poster_image'
+        ]
+MAShowCarouselItemFormset = modelformset_factory(NewStudentPageShowCarouselItem, form=MAShowCarouselItemForm, extra=1)
+
+class MACollaboratorForm(forms.Form):
+    #saves to NewStudentPageShowCollaborator
+    name = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas")
+    )
+MACollaboratorFormset = formset_factory(MACollaboratorForm, extra=1)
+    
+class MASponsorForm(forms.Form):
+    #saves to NewStudentPageShowSponsor
+    name = forms.CharField(
+        required=False,
+        help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
+    )
+MASponsorFormset = formset_factory(MASponsorForm, extra=1)

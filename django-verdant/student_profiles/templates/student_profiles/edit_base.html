@@ -17,7 +17,7 @@
   {% if is_phd %}<li{% if nav_phd %}class="active"{% endif %}><a href="#">PhD details</a></li>{% endif %}
 
   {# TODO: activate/deactivate this link based on whether the student is in the show #}
-  <li{% if nav_show_profile %}class="active"{% endif %}><a href="#">Profile for the show</a></li>
+  <li{% if nav_show_profile %}class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a></li>
   {% endif %}
 </ul>
 
