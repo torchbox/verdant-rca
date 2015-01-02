@@ -78,7 +78,7 @@ def initial_context(request, page_id):
         'is_phd': user_is_phd(request),
     }
 
-    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
     data['page_id'] = page_id
     data['is_in_show'] = profile_is_in_show(profile_page)
     return data, profile_page
@@ -116,10 +116,9 @@ def basic_profile(request, page_id=None):
         data['phone_formset'] = PhoneFormset(prefix='phone')
         data['website_formset'] = WebsiteFormset(prefix='website')
     else:
-        profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
+        profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
         data['page_id'] = page_id
         form_class = ProfileBasicForm
-        print profile_page.id, profile_page.first_name
         data['basic_form'] = ProfileBasicForm(instance=profile_page)
         data['email_formset'] = EmailFormset(
             prefix='email',
@@ -150,6 +149,8 @@ def basic_profile(request, page_id=None):
                 # MAKE SURE THIS IS THE CORRECT ID!
                 profile_page.live = False
                 Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=profile_page)
+            else:
+                profile_page.has_unpublished_changes = True
 
             if Page.objects.exclude(id=profile_page.id).filter(slug=profile_page.slug).exists():
                 profile_page.slug = '{}-{}'.format(
@@ -172,6 +173,8 @@ def basic_profile(request, page_id=None):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+            profile_page.save()
+            
 
             save_multiple(
                 profile_page, 'emails',
@@ -200,14 +203,7 @@ def academic_details(request, page_id=None):
     """
     Academic details editing page.
     """
-    data = {
-        'is_ma': user_is_ma(request),
-        'is_mphil': user_is_mphil(request),
-        'is_phd': user_is_phd(request),
-    }
-
-    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id)
-    data['page_id'] = page_id
+    data, profile_page = initial_context(request, page_id)
     
     data['academic_form'] = ProfileAcademicDetailsForm(instance=profile_page)
     
@@ -266,6 +262,7 @@ def academic_details(request, page_id=None):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+            profile_page.save()
             
             save_multiple(
                 profile_page,
@@ -320,7 +317,13 @@ def ma_details(request, page_id):
         data['ma_form'] = form = MADetailsForm(request.POST, instance=profile_page, )
 
         if form.is_valid():
-            form.save()
+            page = form.save(commit=False)
+            
+            revision = page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
+            
 
         return redirect('student-profiles:edit-ma', page_id=page_id)
 
@@ -356,13 +359,14 @@ def ma_show_details(request, page_id):
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
         
-        sf.is_valid()
-        scif.is_valid()
-        scf.is_valid()
-        ssf.is_valid()
-        
         if sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
-            sf.save()
+
+            page = sf.save(commit=False)
+            revision = page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
+
             scif.save()
             
             save_multiple(profile_page, 'show_collaborators', scf, 'name', NewStudentPageShowCollaborator)

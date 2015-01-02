@@ -4,6 +4,8 @@ from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
 from django.forms.models import modelformset_factory
 
+from wagtail.wagtailcore.fields import RichTextArea
+
 from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 
@@ -103,7 +105,7 @@ class ProfileBasicNewForm(ReadonlyFormMixin, forms.ModelForm):
         help_text='You must save this profile first before you can add an image.'
     )
     profile_image.readonly = True
-    
+
     class Meta:
         model = NewStudentPage
         fields = ['first_name', 'last_name', 'statement']
