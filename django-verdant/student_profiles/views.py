@@ -61,18 +61,21 @@ def slugify(value):
     value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
     return re.sub('[-\s]+', '-', value)
 
-
+#    save_multiple(page,         'show_collaborators', scf, 'name',  NewStudentPageShowCollaborator)
 def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model):
     """
     TODO: documentation
     """
-    getattr(profile_page, fieldname).all().delete()
+    manager = getattr(profile_page, fieldname)
+    for item in manager.all():
+        del item
     for values in formset.cleaned_data:
         if values and values.get(form_fieldname, '').strip():
-            field_model.objects.create(**{
+            f = manager.create(**{
                 'page': profile_page,
                 form_fieldname: values.get(form_fieldname).strip()
             })
+            
 
 
 def initial_context(request, page_id):
@@ -350,35 +353,46 @@ def ma_show_details(request, page_id):
             prefix=relname,
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
         )
+        
         data[relname + '_formset'].title = title
 
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
-    data['carouselitem_formset'] = MAShowCarouselItemFormset(queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
+    data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', queryset=profile_page.show_carousel_items.all())
     #data['carouselitem_formset'].extra = 0 if NewStudentPageShowCarouselItem.objects.filter(page=profile_page).count() > 0 else 1
     make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
     make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
 
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
-        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
+        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
+        
+        sf.is_valid()
+        scif.is_valid()
+        scf.is_valid()
+        ssf.is_valid()
         
         if sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
 
             page = sf.save(commit=False)
+
+            page.show_carousel_items = scif.save(commit=False)
+            
+            page.show_collaborators = [
+                NewStudentPageShowCollaborator(name=f['name'].strip()) for f in scf.cleaned_data if f.get('name')
+            ]
+            page.show_sponsors = [
+                NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.cleaned_data if f.get('name')
+            ]
+            
             revision = page.save_revision(
                 user=request.user,
                 submitted_for_moderation=False,
             )
 
-            scif.save()
-            
-            save_multiple(profile_page, 'show_collaborators', scf, 'name', NewStudentPageShowCollaborator)
-            save_multiple(profile_page, 'show_sponsors', ssf, 'name', NewStudentPageShowSponsor)
-            
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
-    
+
     return render(request, 'student_profiles/ma_show_details.html', data)
 
 

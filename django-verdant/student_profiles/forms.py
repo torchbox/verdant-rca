@@ -79,8 +79,7 @@ class BooleanField(forms.BooleanField):
 
 
 class ImageInput(forms.FileInput):
-    # TODO: define output so that it shows our nice functionality
-    
+
     def render(self, name, value, attrs=None):
         
         preview = ""
@@ -254,14 +253,26 @@ class MAShowDetailsForm(forms.ModelForm):
             'show_work_title',
             'show_work_location',
             'show_work_description',
-            'postcard_image',
+            #'postcard_image',
         ]
 
 class MAShowCarouselItemForm(forms.ModelForm):
 
+    image = forms.ImageField(
+        required=False,
+        help_text=help_text('rca.CarouselItemFields', 'image'),
+        widget=ImageInput,
+    )
+    
+    poster_image = forms.ImageField(
+        required=False,
+        help_text=help_text('rca.CarouselItemFields', 'poster_image'),
+        widget=ImageInput,
+    )
+
     item_type = forms.ChoiceField(
-        choices = (
-            (0, 'Image'),
+        choices = (   
+            (0, 'Image'),    # if you change these values, you must also change the values in the javascript!
             (1, 'Video'),
         )
     )
