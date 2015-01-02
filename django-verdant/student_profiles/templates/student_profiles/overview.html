@@ -16,16 +16,22 @@
 
 <table>
   <tr>
-    <th></th>
-    <th></th>
+    <th>Page title</th>
+    <th>Status</th>
     <th></th>
   </tr>
   {% for page in profile_pages %}
     <tr>
       <td>{{ page.title }}</td>
-      <td><a href="#">show preview</a></td>
+      <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
+        {% else %}
+        Draft{% endif %}
+      <td>
+        {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
+        {% if page.has_unpublished_changes %}<a href="#">Show preview</a>{% endif %}
+      </td>
       <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
-      <td><a href="#" class="button" disabled=disabled>submit for moderation</a></td>
+      <td>{% if page.has_unpublished_changes %}<a href="#" class="button">submit for moderation</a>{% endif %}</td>
     </tr>
   {% endfor %}
 </table>
