@@ -22,5 +22,6 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/ma-show/$', ma_show_details, name='edit-ma-show'),
 
     url(r'^(?P<page_id>\d+)/basic/image/$', image_upload, {'field': 'profile_image'}, name='edit-basic-image'),
+    url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload, {'field': 'postcard_image'}, name='edit-ma-show-image'),
     
 )

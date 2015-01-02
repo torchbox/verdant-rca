@@ -1,5 +1,5 @@
 {% extends "student_profiles/edit_base.html" %}
-
+{% load static compress %}
 
 {% block form_content %}
 
@@ -32,6 +32,7 @@
 
 
 {% block form_js %}
+<script src="{% static "student_profiles/js/image_handler.js" %}"></script>
 <script type="text/javascript">
 $(function() {
   $('#{{ show_collaborators_formset.prefix }} .field').formset({
@@ -49,6 +50,7 @@ $(function() {
       formCssClass: 'dynamic-formset-{{ carouselitem_formset.prefix }}'
   });
   makeRichTextEditable('id_show_work_description');
+  activateImageUpload('postcard_image');
 })
 </script>
 {% endblock form_js %}

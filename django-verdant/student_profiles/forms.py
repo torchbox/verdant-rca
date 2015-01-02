@@ -83,15 +83,16 @@ class ImageInput(forms.FileInput):
     
     def render(self, name, value, attrs=None):
         
-        image = RcaImage.objects.get(id=value)
-        rendition = image.get_rendition('max-130x100')
-        
-        preview = """
-            <img src="{url}" width="{width}" height="{height}" style="width: auto;">
-        """.format(
-            url=rendition.url,
-            width=rendition.width, height=rendition.height,
-        )
+        preview = ""
+        if value:
+            image = RcaImage.objects.get(id=value)
+            rendition = image.get_rendition('max-130x100')
+            preview = """
+                <img src="{url}" width="{width}" height="{height}" style="width: auto;">
+            """.format(
+                url=rendition.url,
+                width=rendition.width, height=rendition.height,
+            )
         
         return """
             <div id="{name}">
@@ -131,7 +132,6 @@ class ProfileBasicForm(forms.ModelForm):
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
         widget=ImageInput,
     )
-    # saves as: models.ForeignKey('rca.RcaImage')
     
     class Meta:
         model = NewStudentPage
@@ -240,6 +240,12 @@ class MADetailsForm(forms.ModelForm):
 
 
 class MAShowDetailsForm(forms.ModelForm):
+    
+    postcard_image = forms.ImageField(
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"),
+        widget=ImageInput,
+    )
     
     class Meta:
         model = NewStudentPage
