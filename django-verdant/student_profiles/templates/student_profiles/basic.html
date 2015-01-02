@@ -1,4 +1,5 @@
 {% extends "student_profiles/edit_base.html" %}
+{% load static compress %}
 
 
 {% block form_content %}
@@ -7,12 +8,6 @@
 
 <form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-<div id="preview" style="position: relative;"></div>
-  <input id="fileupload" type="file" name="image" data-url="image/">
-<div id="progress">
-    <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
-</div>
-  
   {% include 'student_profiles/form_snippet.html' with form=basic_form %}
 
   {{ email_formset.management_form }}
@@ -67,6 +62,7 @@
 
 
 {% block form_js %}
+<script src="{% static "student_profiles/js/image_handler.js" %}"></script>
 <script type="text/javascript">
 $(function() {
   $('#email_formset .field').formset({
@@ -82,94 +78,7 @@ $(function() {
       formCssClass: 'dynamic-formset-{{ website_formset.prefix }}'
   });
   makeRichTextEditable('id_statement');
-  
-  /**
-   * Load the given file to check whether this is a readable image.
-   */
-  function checkImageFile(file, dfd, data) {
-  
-    var reader = new FileReader();
-    var image  = new Image();
-  
-    reader.readAsDataURL(file);  
-    reader.onload = function(_file) {
-      image.src    = _file.target.result;
-      image.onload = function() {
-        dfd.resolveWith(this, [data]);
-      };
-      image.onerror= function() {
-        file.error = 'Invalid file type.';
-        dfd.rejectWith(this, [data]);
-      };
-    };
-    
-  }
-  
-  /**
-   * Put our image validation in the jquery-fileupload processing queue
-   */
-  $.blueimp.fileupload.prototype.processActions.validate = function (data, options) {
-    if (options.disabled) {
-      return data;
-    }
-    var dfd = $.Deferred(),
-    file = data.files[data.index];
-                
-    if (!options.acceptFileTypes.test(file.type)) {
-      file.error = 'Invalid file type.';
-      dfd.rejectWith(this, [data]);
-    } else {
-      checkImageFile(file, dfd, data);
-    }
-    return dfd.promise();
-  };
-  
-  // activate the file upload field
-  $('#fileupload').fileupload({
-    dataType: 'json',      {# this is the RETURN type! #}
-    imageMaxWidth: 800,
-    imageMaxHeight: 800,
-    imageMinWidth: 10,
-    imageMinHeight: 10,
-
-    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-
-    processfail: function (e, data) {
-      alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
-    },
-    
-    done: function (e, data) {
-      console.log(data);
-      
-      if (!data.result.ok)
-      {
-        console.log(data.result.errors);
-        alert("Could not upload the file. Please try again with a different file.");
-      }
-      else
-      {
-        console.log(data.files[0].preview);
-        $('#progress .bar').hide();
-        $('#preview').html(data.files[0].preview);
-        $('#preview').append('<span>' + data.files[0].name + '</span>');
-        $('#preview').append('<div id="info-flash" style="z-index: 100; background-color: #FF7B0A; position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 250%;">Saved</div>');
-        $('#preview #info-flash').fadeOut(2000);
-      }
-    },
-    fail: function (e, data) {
-      alert("Could not upload the file: the server responded with an error.");
-      $('#progress .bar').hide();
-    }
-    progressall: function (e, data) {
-      var progress = parseInt(data.loaded / data.total * 100, 10);
-      $('#progress .bar').css(
-        'width',
-        progress + '%'
-      );
-    }
-  });
-      
-  
+  activateImageUpload('profile_image');
 })
 </script>
 {% endblock form_js %}

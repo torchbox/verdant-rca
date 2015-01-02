@@ -8,6 +8,7 @@ from wagtail.wagtailcore.fields import RichTextArea
 
 from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
+from rca.models import RcaImage
 
 ################################################################################
 ## internal classes
@@ -80,7 +81,30 @@ class BooleanField(forms.BooleanField):
 class ImageInput(forms.FileInput):
     # TODO: define output so that it shows our nice functionality
     
-    pass
+    def render(self, name, value, attrs=None):
+        
+        image = RcaImage.objects.get(id=value)
+        rendition = image.get_rendition('max-130x100')
+        
+        preview = """
+            <img src="{url}" width="{width}" height="{height}" style="width: auto;">
+        """.format(
+            url=rendition.url,
+            width=rendition.width, height=rendition.height,
+        )
+        
+        return """
+            <div id="{name}">
+                <div id="preview" style="position: relative;">{preview}</div>
+                <input id="id_{name}" type="file" name="image" data-url="image/" />
+                <div id="progress">
+                    <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                </div>
+            </div>""".format(
+                name=name,
+                preview=preview
+            )
+    
 
 
 ################################################################################
