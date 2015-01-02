@@ -77,10 +77,24 @@ class BooleanField(forms.BooleanField):
     type = 'boolean'  # to make it easier in the template to distinguish what this is!
 
 
-class RichTextField(forms.CharField):
-    # TODO: make this actually render as a rich text!
+class ImageInput(forms.FileInput):
+    # TODO: define output so that it shows our nice functionality
     
-    type = 'richtext'
+    pass
+
+
+################################################################################
+## Helper Forms
+
+class ImageForm(forms.Form):
+    """This is a simple form that validates a single image.
+    
+    This is used in validating image uploads, obviously. It's needed because we upload images not with the forms
+    themselves but asynchronously by themselves.
+    """
+    
+    image = forms.ImageField()
+
 
 
 ################################################################################
@@ -91,6 +105,7 @@ class ProfileBasicForm(forms.ModelForm):
     profile_image = forms.ImageField(
         required=False,
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
+        widget=ImageInput,
     )
     # saves as: models.ForeignKey('rca.RcaImage')
     

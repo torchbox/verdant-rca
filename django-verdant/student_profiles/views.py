@@ -1,6 +1,7 @@
 
 import re
 import unicodedata
+import json
 
 from django import forms
 from django.http import Http404, HttpResponse
@@ -13,10 +14,13 @@ from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
 from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
 from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollaborator, NewStudentPageShowSponsor
+from rca.models import RcaImage
 
 from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
+
+from .forms import ImageForm
 
 # this is the ID of the page where new student pages are added as children
 # MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
@@ -382,8 +386,25 @@ def ma_show_details(request, page_id):
 @login_required
 def image_upload(request, page_id, field):
     
-    print page_id, field
+    data, profile_page = initial_context(request, page_id)
     
-    print request.POST, request.FILES
-    
-    return HttpResponse('{"files": ["something.jpg"]}')
+    form = ImageForm(request.POST, request.FILES)
+    if form.is_valid():
+        r = RcaImage.objects.create(
+            file=form.cleaned_data['image'],
+            uploaded_by_user=request.user,
+        )
+        # set the field to the image
+        setattr(profile_page, field, r)
+        revision = profile_page.save_revision(
+            user=request.user,
+            submitted_for_moderation=False,
+        )
+        profile_page.save()
+        
+        return HttpResponse('{"ok": true}', content_type='application/json')
+    else:
+        print form.errors.items()
+        errors = ', '.join(', '.join(el) for el in form.errors.values())
+        res = {'ok': False, 'errors': errors}
+        return HttpResponse(json.dumps(res), content_type='application/json')
