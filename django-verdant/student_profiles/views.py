@@ -3,9 +3,10 @@ import re
 import unicodedata
 
 from django import forms
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 
 from wagtail.wagtailcore.models import Page
 from rca.models import NewStudentPage
@@ -375,3 +376,14 @@ def ma_show_details(request, page_id):
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
     
     return render(request, 'student_profiles/ma_show_details.html', data)
+
+
+@require_POST
+@login_required
+def image_upload(request, page_id, field):
+    
+    print page_id, field
+    
+    print request.POST, request.FILES
+    
+    return HttpResponse('{"files": ["something.jpg"]}')

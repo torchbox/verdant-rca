@@ -6,6 +6,11 @@
 <h1>Basic profile</h1>
 
 <form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+  <input id="fileupload" type="file" name="files[]" data-url="image/">
+<div id="progress">
+    <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+</div>
   
   {% include 'student_profiles/form_snippet.html' with form=basic_form %}
 
@@ -54,7 +59,6 @@
   {% endfor %}
   </label>
 
-
   <p><input type="submit" value="Continue &rarr;"></p>
 </form>
 
@@ -77,6 +81,83 @@ $(function() {
       formCssClass: 'dynamic-formset-{{ website_formset.prefix }}'
   });
   makeRichTextEditable('id_statement');
+  
+  /**
+   * Load the given file to check whether this is a readable image.
+   */
+  function checkImageFile(file, dfd, data) {
+  
+    var reader = new FileReader();
+    var image  = new Image();
+  
+    reader.readAsDataURL(file);  
+    reader.onload = function(_file) {
+      image.src    = _file.target.result;
+      image.onload = function() {
+        dfd.resolveWith(this, [data]);
+      };
+      image.onerror= function() {
+        dfd.rejectWith(this, [data]);
+      };
+    };
+    
+  }
+  
+  /**
+   * Put our image validation in the jquery-fileupload processing queue
+   */
+  $.blueimp.fileupload.prototype.processActions.validate = function (data, options) {
+    if (options.disabled) {
+      return data;
+    }
+    var dfd = $.Deferred(),
+    file = data.files[data.index];
+                
+    if (!options.acceptFileTypes.test(file.type)) {
+      file.error = 'Invalid file type.';
+      dfd.rejectWith(this, [data]);
+    } else {
+      file.error = 'Invalid file type.';
+      checkImageFile(file, dfd, data);
+    }
+    return dfd.promise();
+  };
+  
+  // activate the file upload field
+  $('#fileupload').fileupload({
+    dataType: 'json',      {# this is the RETURN type! #}
+    imageMaxWidth: 800,
+    imageMaxHeight: 800,
+    imageMinWidth: 10,
+    imageMinHeight: 10,
+
+    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+    processQueue: [{
+      action: 'validate',
+      acceptFileTypes: '@',
+      disabled: false,
+    }],
+
+    processfail: function (e, data) {
+      alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
+    },
+    
+    done: function (e, data) {
+      console.log(data);
+      $.each(data.result.files, function (index, file) {
+        $('<p/>').text(file.name).appendTo(document.body);
+      });
+    },
+    progressall: function (e, data) {
+      var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#progress .bar').css(
+        'width',
+        progress + '%'
+      );
+    }
+  });
+      
+  
 })
 </script>
 {% endblock form_js %}
