@@ -19,7 +19,7 @@ from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, 
 
 # this is the ID of the page where new student pages are added as children
 # MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
-NEW_STUDENT_PAGE_INDEX_ID = 5
+NEW_STUDENT_PAGE_INDEX_ID = 6201
 
 
 ################################################################################
@@ -28,7 +28,7 @@ NEW_STUDENT_PAGE_INDEX_ID = 5
 def user_is_ma(request):
     """Determine whether a user is an MA user and should be able to edit their MA page."""
     # TODO: read this from LDAP
-    return True   
+    return True
 
 def user_is_mphil(request):
     """Determine whether a user is an MPhil user and should be able to edit their MPhil page."""
@@ -148,7 +148,14 @@ def basic_profile(request, page_id=None):
             if page_id is None:
                 # the following is the page where the new student pages are added as children
                 # MAKE SURE THIS IS THE CORRECT ID!
+                profile_page.live = False
                 Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=profile_page)
+
+            if Page.objects.exclude(id=profile_page.id).filter(slug=profile_page.slug).exists():
+                profile_page.slug = '{}-{}'.format(
+                    slugify(profile_page.title),
+                    profile_page.id,
+                )
             
             profile_page.first_name = bcd['first_name']
             profile_page.last_name = bcd['last_name']
@@ -161,7 +168,10 @@ def basic_profile(request, page_id=None):
                 )
                 profile_page.profile_image = profile_image
             
-            profile_page.save()
+            revision = profile_page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
 
             save_multiple(
                 profile_page, 'emails',
@@ -258,35 +268,35 @@ def academic_details(request, page_id=None):
             )
             
             save_multiple(
-                profile_page, 
+                profile_page,
                 'previous_degrees',
                 pdfs, 'degree',
                 NewStudentPagePreviousDegree,
             )
             
             save_multiple(
-                profile_page, 
+                profile_page,
                 'exhibitions',
                 efs, 'exhibition',
                 NewStudentPageExhibition,
             )
             
             save_multiple(
-                profile_page, 
+                profile_page,
                 'awards',
                 afs, 'award',
                 NewStudentPageAward,
             )
             
             save_multiple(
-                profile_page, 
+                profile_page,
                 'publications',
                 pfs, 'name',
                 NewStudentPagePublication,
             )
             
             save_multiple(
-                profile_page, 
+                profile_page,
                 'conferences',
                 cfs, 'name',
                 NewStudentPageConference,
@@ -303,15 +313,15 @@ def ma_details(request, page_id):
     if not user_is_ma(request):
         raise Http404("You cannot view MA details because you're not in the MA programme.")
     data, profile_page = initial_context(request, page_id)
-    
+
     data['ma_form'] = MADetailsForm(instance=profile_page)
-    
+
     if request.method == 'POST':
         data['ma_form'] = form = MADetailsForm(request.POST, instance=profile_page, )
-        
+
         if form.is_valid():
             form.save()
-            
+
         return redirect('student-profiles:edit-ma', page_id=page_id)
 
     return render(request, 'student_profiles/ma_details.html', data)
@@ -323,7 +333,7 @@ def ma_show_details(request, page_id):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
     data, profile_page = initial_context(request, page_id)
-    
+
     def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
         
         model_attr_name = model_attr_name or form_attr_name
@@ -333,13 +343,13 @@ def ma_show_details(request, page_id):
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
         )
         data[relname + '_formset'].title = title
-    
+
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
     data['carouselitem_formset'] = MAShowCarouselItemFormset(queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
     #data['carouselitem_formset'].extra = 0 if NewStudentPageShowCarouselItem.objects.filter(page=profile_page).count() > 0 else 1
     make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
     make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
-    
+
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
         data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
