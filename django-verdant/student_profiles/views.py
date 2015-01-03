@@ -306,10 +306,8 @@ def ma_details(request, page_id):
     return render(request, 'student_profiles/ma_details.html', data)
 
 
-# @login_required
+@login_required
 def ma_show_details(request, page_id):
-    from django.contrib.auth.models import User
-    request.user = User.objects.get(id=680)
     if not user_is_ma(request):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
