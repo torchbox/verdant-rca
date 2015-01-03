@@ -340,7 +340,7 @@ def ma_show_details(request, page_id):
 
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
-        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, request.FILES, prefix='carousel', initial=carousel_initial)
+        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
         
@@ -376,7 +376,7 @@ def ma_show_details(request, page_id):
 
 @require_POST
 @login_required
-def image_upload(request, page_id, field):
+def image_upload(request, page_id, field=None):
     
     data, profile_page = initial_context(request, page_id)
     
@@ -386,15 +386,16 @@ def image_upload(request, page_id, field):
             file=form.cleaned_data['image'],
             uploaded_by_user=request.user,
         )
-        # set the field to the image
-        setattr(profile_page, field, r)
-        revision = profile_page.save_revision(
-            user=request.user,
-            submitted_for_moderation=False,
-        )
-        profile_page.save()
         
-        return HttpResponse('{"ok": true}', content_type='application/json')
+        if field:
+            # set the field to the image
+            setattr(profile_page, field, r)
+            revision = profile_page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
+        
+        return HttpResponse('{{"ok": true, "id": {} }}'.format(r.id), content_type='application/json')
     else:
         print form.errors.items()
         errors = ', '.join(', '.join(el) for el in form.errors.values())

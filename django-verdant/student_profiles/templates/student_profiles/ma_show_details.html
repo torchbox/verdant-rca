@@ -30,11 +30,48 @@
 {% endblock form_content %}
 
 
+{% block extra_css %}
+<style type="text/css" media="screen">
+  .dropzone {
+      background: palegreen;
+      width: 150px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      font-weight: bold;
+  }
+  .dropzone.in {
+      width: 600px;
+      height: 200px;
+      line-height: 200px;
+      font-size: larger;
+  }
+  .dropzone.hover {
+      background: lawngreen;
+  }
+  .dropzone.fade {
+      -webkit-transition: all 0.3s ease-out;
+      -moz-transition: all 0.3s ease-out;
+      -ms-transition: all 0.3s ease-out;
+      -o-transition: all 0.3s ease-out;
+      transition: all 0.3s ease-out;
+      opacity: 1;
+  }
+</style>
+
+{{ block.super }}
+{% endblock extra_css %}
+
 
 {% block form_js %}
 <script src="{% static "student_profiles/js/image_handler.js" %}"></script>
 <script type="text/javascript">
 $(function() {
+
+  {# prevent default drop handling because we want specific drop zones for our individual file fields #}
+  $(document).bind('drop dragover', function (e) {
+      e.preventDefault();
+  });
 
   function updateSelects() {
     $('#carousel select').change(function() {
@@ -44,22 +81,22 @@ $(function() {
       
       if (value == 'image')        {# image, as defined in forms.py #}
       {
-        $('#id_carousel-' + id_number + '-image_id').parent().parent().show();     {# image fields are wrapped in a div because they contain some more elements #}
+        $('#carousel-' + id_number + '-image_id').show();
         $('#id_carousel-' + id_number + '-overlay_text').parent().show();
 
         $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
-        $('#id_carousel-' + id_number + '-poster_image_id').parent().parent().hide();
+        $('#carousel-' + id_number + '-poster_image_id').hide();
         $('#id_carousel-' + id_number + '-embedly_url').val('');
-        $('#id_carousel-' + id_number + '-poster_image_id').val('');
+        $('#carousel-' + id_number + '-poster_image_id input').val('');
       } else if (value == 'video') {# video #}
       {
-        $('#id_carousel-' + id_number + '-image_id').parent().parent().hide();
+        $('#carousel-' + id_number + '-image_id').hide();
         $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
-        $('#id_carousel-' + id_number + '-image_id').val('');
+        $('#carousel-' + id_number + '-image_id input').val('');
         $('#id_carousel-' + id_number + '-overlay_text').val('');
         
         $('#id_carousel-' + id_number + '-embedly_url').parent().show();
-        $('#id_carousel-' + id_number + '-poster_image_id').parent().parent().show();
+        $('#carousel-' + id_number + '-poster_image_id').show();
       }
     });
   };
@@ -77,10 +114,17 @@ $(function() {
   $('#{{ carouselitem_formset.prefix }} .well').formset({
       prefix: '{{ carouselitem_formset.prefix }}',
       formCssClass: 'dynamic-formset-{{ carouselitem_formset.prefix }}',
-    added: function(row) { updateSelects(); row.find('select').each(function(){ $(this).trigger('change')}); },
+    added: function(row) {
+      updateSelects();
+      row.find('select').each(function(){ $(this).trigger('change')});
+      row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+    },
   });
   makeRichTextEditable('id_show_work_description');
   activateImageUpload('postcard_image');
+  $('.image-uploader-block').each(function(i) {
+    activateImageUpload(this.id);
+  });
   
   updateSelects();
   $('#carousel select').each(function(i) {

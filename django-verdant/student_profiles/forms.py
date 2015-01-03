@@ -80,29 +80,41 @@ class BooleanField(forms.BooleanField):
 
 class ImageInput(forms.FileInput):
 
+    def value_from_datadict(self, data, files, name):
+        try:
+            return int(data.get('{}_val'.format(name)))
+        except ValueError:
+            return None
+
     def render(self, name, value, attrs=None):
-        
         preview = ""
         if value:
-            image = RcaImage.objects.get(id=value)
-            rendition = image.get_rendition('max-130x100')
-            preview = """
-                <img src="{url}" width="{width}" height="{height}" style="width: auto;">
-            """.format(
-                url=rendition.url,
-                width=rendition.width, height=rendition.height,
-            )
+            try:
+                value = int(value)
+                image = RcaImage.objects.get(id=value)
+                rendition = image.get_rendition('max-130x100')
+                preview = """
+                    <img src="{url}" width="{width}" height="{height}" style="width: auto;">
+                """.format(
+                    url=rendition.url,
+                    width=rendition.width, height=rendition.height,
+                )
+            except ValueError:
+                pass
         
         return """
-            <div id="{name}">
+            <div id="{name}" class="image-uploader-block" data-url="image/">
                 <div id="preview" style="position: relative;">{preview}</div>
-                <input id="id_{name}" type="file" name="image" data-url="image/" />
+                <!-- input id="id_{name}" type="file" name="image" value="" / -->
+                <div class="dropzone" style="width: 200px; height: 100px;">Drop files here</div>
+                <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
                 <div id="progress">
                     <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
                 </div>
             </div>""".format(
                 name=name,
-                preview=preview
+                preview=preview,
+                value_id=value,
             )
     
 
@@ -240,7 +252,8 @@ class MADetailsForm(forms.ModelForm):
 
 class MAShowDetailsForm(forms.ModelForm):
     
-    postcard_image = forms.ImageField(
+    postcard_image = forms.IntegerField(
+        label='Postcard image',
         required=False,
         help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"),
         widget=ImageInput,
@@ -268,7 +281,7 @@ class MAShowCarouselItemForm(forms.Form):
         )
     )
 
-    image_id = forms.ImageField(   # name is _id because that's what's going to be saved
+    image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
         label='Image',
         required=False,
         help_text=help_text('rca.CarouselItemFields', 'image'),
@@ -285,7 +298,7 @@ class MAShowCarouselItemForm(forms.Form):
         required=False,
         help_text=help_text('rca.CarouselItemFields', 'embedly_url'),
     )
-    poster_image_id = forms.ImageField(
+    poster_image_id = forms.IntegerField(
         label='Poster image',
         required=False,
         help_text=help_text('rca.CarouselItemFields', 'poster_image'),
