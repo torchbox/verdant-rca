@@ -5,7 +5,7 @@ function checkImageFile(file, dfd, data) {
 
     var reader = new FileReader();
     var image  = new Image();
-
+    
     reader.readAsDataURL(file);  
     reader.onload = function(_file) {
         image.src    = _file.target.result;
@@ -29,7 +29,7 @@ $.blueimp.fileupload.prototype.processActions.validate = function (data, options
     }
     var dfd = $.Deferred(),
     file = data.files[data.index];
-              
+
     if (!options.acceptFileTypes.test(file.type)) {
         file.error = 'Invalid file type.';
         dfd.rejectWith(this, [data]);
@@ -39,6 +39,9 @@ $.blueimp.fileupload.prototype.processActions.validate = function (data, options
     return dfd.promise();
 };
 
+/**
+ * Nice little hover-effect for file dropping.
+ */ 
 $(document).bind('dragover', function (e)
 {
     var dropZone = $('.dropzone'),
@@ -82,19 +85,18 @@ $(document).bind('dragover', function (e)
     }, 100);
 });
 
-
-function activateImageUpload(for_id) {
+/**
+ * The actual data-binding function that enables file uploads
+ */ 
+function activateImageUpload(for_id, options) {
 
     // remember the original add function for later because we're going to overwrite it
     var originalAdd = $.blueimp.fileupload.prototype.options.add;
     var containerElement = $($('#' + for_id));
     var dropElement = containerElement.find('.dropzone');
     var idElement = containerElement.find('#id_' + for_id + '_val');
-
-    console.log(idElement);
-
-    // activate the file upload field
-    $(containerElement).fileupload({
+    
+    var upload_options = {
         dataType: 'json',
         imageMaxWidth: 800,
         imageMaxHeight: 800,
@@ -110,7 +112,6 @@ function activateImageUpload(for_id) {
             alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
         },
         add: function(e, data) {
-            console.log('added' + data);
             containerElement.find('#progress .bar').show();
             originalAdd.call(this, e, data);
         },
@@ -139,7 +140,12 @@ function activateImageUpload(for_id) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
             containerElement.find('#progress .bar').css('width', progress + '%');
         }
-    });
+    };
+    options = options || {};
+    upload_options = $.extend(upload_options, options);
+
+    // activate the file upload field
+    $(containerElement).fileupload(upload_options);
 }
 
 /*
