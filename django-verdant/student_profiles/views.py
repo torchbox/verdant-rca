@@ -171,33 +171,22 @@ def basic_profile(request, page_id=None):
             
             profile_page.statement = bcd['statement']
 
-            if bcd['profile_image']:
-                profile_image = RcaImage.objects.create(
-                    image=bcd['profile_image'],
-                )
-                profile_page.profile_image = profile_image
+            # we do NOT process the profile image here because that was already done by the asynchronous handler
+            # possible problem: what if the user does not have javascript or the other upload handler didn't work?
+            
+            profile_page.emails = [
+                NewStudentPageContactsEmail(email=f['email']) for f in email_formset.cleaned_data if f.get('email')
+            ]
+            profile_page.phones = [
+                NewStudentPageContactsPhone(phone=f['phone']) for f in phone_formset.cleaned_data if f.get('phone')
+            ]
+            profile_page.websites = [
+                NewStudentPageContactsWebsite(website=f['website']) for f in website_formset.cleaned_data if f.get('website')
+            ]
             
             revision = profile_page.save_revision(
                 user=request.user,
                 submitted_for_moderation=False,
-            )
-            profile_page.save()
-            
-
-            save_multiple(
-                profile_page, 'emails',
-                email_formset, 'email',
-                NewStudentPageContactsEmail,
-            )
-            save_multiple(
-                profile_page, 'phones',
-                phone_formset, 'phone',
-                NewStudentPageContactsPhone,
-            )
-            save_multiple(
-                profile_page, 'websites',
-                website_formset, 'website',
-                NewStudentPageContactsWebsite,
             )
 
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
@@ -266,47 +255,26 @@ def academic_details(request, page_id=None):
         if pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid():
             profile_page.funding = pf.cleaned_data['funding']
             
+            profile_page.previous_degrees = [
+                NewStudentPagePreviousDegree(degree=f['degree']) for f in pdfs.cleaned_data if f.get('degree')
+            ]
+            profile_page.exhibitions = [
+                NewStudentPageExhibition(exhibition=f['exhibition']) for f in efs.cleaned_data if f.get('exhibition')
+            ]
+            profile_page.awards = [
+                NewStudentPageAward(award=f['award']) for f in afs.cleaned_data if f.get('award')
+            ]
+            profile_page.publications = [
+                NewStudentPagePublication(name=f['name']) for f in pfs.cleaned_data if f.get('name')
+            ]
+            profile_page.conferences = [
+                NewStudentPageConference(name=f['name']) for f in cfs.cleaned_data if f.get('name')
+            ]
+            
             revision = profile_page.save_revision(
                 user=request.user,
                 submitted_for_moderation=False,
             )
-            profile_page.save()
-            
-            save_multiple(
-                profile_page,
-                'previous_degrees',
-                pdfs, 'degree',
-                NewStudentPagePreviousDegree,
-            )
-            
-            save_multiple(
-                profile_page,
-                'exhibitions',
-                efs, 'exhibition',
-                NewStudentPageExhibition,
-            )
-            
-            save_multiple(
-                profile_page,
-                'awards',
-                afs, 'award',
-                NewStudentPageAward,
-            )
-            
-            save_multiple(
-                profile_page,
-                'publications',
-                pfs, 'name',
-                NewStudentPagePublication,
-            )
-            
-            save_multiple(
-                profile_page,
-                'conferences',
-                cfs, 'name',
-                NewStudentPageConference,
-            )
-            
         
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
@@ -367,11 +335,6 @@ def ma_show_details(request, page_id):
         data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
-        
-        sf.is_valid()
-        scif.is_valid()
-        scf.is_valid()
-        ssf.is_valid()
         
         if sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
 
