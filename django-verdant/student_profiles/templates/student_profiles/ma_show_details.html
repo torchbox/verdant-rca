@@ -35,29 +35,34 @@
 <script src="{% static "student_profiles/js/image_handler.js" %}"></script>
 <script type="text/javascript">
 $(function() {
-  
+
   function updateSelects() {
     $('#carousel select').change(function() {
       var value = $(this).val();
       var _match = this.id.match(/id_carousel-(\d+)-item_type/);
       var id_number = _match ? _match[1] : '';
-
-      if (value == 0)        {# image, as defined in forms.py #}
+      
+      if (value == 'image')        {# image, as defined in forms.py #}
       {
-        $('#id_carousel-' + id_number + '-image').parent().parent().show();     {# image fields are wrapped in a div because they contain some more elements #}
+        $('#id_carousel-' + id_number + '-image_id').parent().parent().show();     {# image fields are wrapped in a div because they contain some more elements #}
         $('#id_carousel-' + id_number + '-overlay_text').parent().show();
+
         $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
-        $('#id_carousel-' + id_number + '-poster_image').parent().parent().hide();
-      } else if (value == 1) {# video #}
+        $('#id_carousel-' + id_number + '-poster_image_id').parent().parent().hide();
+        $('#id_carousel-' + id_number + '-embedly_url').val('');
+        $('#id_carousel-' + id_number + '-poster_image_id').val('');
+      } else if (value == 'video') {# video #}
       {
-        $('#id_carousel-' + id_number + '-image').parent().parent().hide();
+        $('#id_carousel-' + id_number + '-image_id').parent().parent().hide();
         $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
+        $('#id_carousel-' + id_number + '-image_id').val('');
+        $('#id_carousel-' + id_number + '-overlay_text').val('');
+        
         $('#id_carousel-' + id_number + '-embedly_url').parent().show();
-        $('#id_carousel-' + id_number + '-poster_image').parent().parent().show();
+        $('#id_carousel-' + id_number + '-poster_image_id').parent().parent().show();
       }
     });
   };
-  
   
   $('#{{ show_collaborators_formset.prefix }} .field').formset({
       prefix: '{{ show_collaborators_formset.prefix }}',

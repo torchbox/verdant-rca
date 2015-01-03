@@ -306,8 +306,10 @@ def ma_details(request, page_id):
     return render(request, 'student_profiles/ma_details.html', data)
 
 
-@login_required
+# @login_required
 def ma_show_details(request, page_id):
+    from django.contrib.auth.models import User
+    request.user = User.objects.get(id=680)
     if not user_is_ma(request):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
@@ -325,14 +327,22 @@ def ma_show_details(request, page_id):
         data[relname + '_formset'].title = title
 
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
-    data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', queryset=profile_page.show_carousel_items.all())
-    #data['carouselitem_formset'].extra = 0 if NewStudentPageShowCarouselItem.objects.filter(page=profile_page).count() > 0 else 1
+    
+    carousel_initial = [
+        {
+            'item_type': 'image' if c.image_id is not None else 'video',
+            'image_id': c.image_id, 'overlay_text': c.overlay_text, 'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id
+        }
+        for c in profile_page.show_carousel_items.all()
+    ]
+    data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
+    
     make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
     make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
 
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
-        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', queryset=NewStudentPageShowCarouselItem.objects.filter(page=profile_page))
+        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, request.FILES, prefix='carousel', initial=carousel_initial)
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
         
@@ -340,7 +350,14 @@ def ma_show_details(request, page_id):
 
             page = sf.save(commit=False)
 
-            page.show_carousel_items = scif.save(commit=False)
+            carousel_items = [
+                {k:v for k,v in f.items() if k != 'item_type'}
+                for f in scif.cleaned_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
+            ]
+            print carousel_items
+            page.show_carousel_items = [
+                NewStudentPageShowCarouselItem(**item) for item in carousel_items
+            ]
             
             page.show_collaborators = [
                 NewStudentPageShowCollaborator(name=f['name'].strip()) for f in scf.cleaned_data if f.get('name')

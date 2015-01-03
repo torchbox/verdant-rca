@@ -246,6 +246,9 @@ class MAShowDetailsForm(forms.ModelForm):
         widget=ImageInput,
     )
     
+    def clean_postcard_image(self):
+        return self.instance.postcard_image
+    
     class Meta:
         model = NewStudentPage
         fields = [
@@ -253,39 +256,42 @@ class MAShowDetailsForm(forms.ModelForm):
             'show_work_title',
             'show_work_location',
             'show_work_description',
-            #'postcard_image',
+            'postcard_image',
         ]
 
-class MAShowCarouselItemForm(forms.ModelForm):
+class MAShowCarouselItemForm(forms.Form):
 
-    image = forms.ImageField(
+    item_type = forms.ChoiceField(
+        choices = (   
+            ('image', 'Image'),    # if you change these values, you must also change the values in the javascript and in the views!
+            ('video', 'Video'),
+        )
+    )
+
+    image_id = forms.ImageField(   # name is _id because that's what's going to be saved
+        label='Image',
         required=False,
         help_text=help_text('rca.CarouselItemFields', 'image'),
         widget=ImageInput,
     )
+    overlay_text = forms.CharField(
+        max_length=255,
+        required=False,
+        help_text=help_text('rca.CarouselItemFields', 'overlay_text')
+    )
     
-    poster_image = forms.ImageField(
+    embedly_url = forms.URLField(
+        label='Vimeo URL',
+        required=False,
+        help_text=help_text('rca.CarouselItemFields', 'embedly_url'),
+    )
+    poster_image_id = forms.ImageField(
+        label='Poster image',
         required=False,
         help_text=help_text('rca.CarouselItemFields', 'poster_image'),
         widget=ImageInput,
     )
-
-    item_type = forms.ChoiceField(
-        choices = (   
-            (0, 'Image'),    # if you change these values, you must also change the values in the javascript!
-            (1, 'Video'),
-        )
-    )
-
-    class Meta:
-        model = NewStudentPageShowCarouselItem
-        fields = [
-            'item_type',
-            'image', 'overlay_text',
-            'embedly_url', 'poster_image'
-        ]
-MAShowCarouselItemFormset = modelformset_factory(NewStudentPageShowCarouselItem, form=MAShowCarouselItemForm, extra=1)
-# TODO: make this an inlineformset
+MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1)
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
