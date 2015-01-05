@@ -112,34 +112,35 @@ function activateImageUpload(for_id, options) {
             alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
         },
         add: function(e, data) {
-            containerElement.find('#progress .bar').show();
+            containerElement.find('.progress .bar').show();
+            window.onbeforeunload = confirmOnPageExit;
             originalAdd.call(this, e, data);
         },
         done: function (e, data) {
     
-            containerElement.find('#progress .bar').hide();
+            containerElement.find('.progress .bar').hide();
             if (!data.result.ok)
             {
                 alert("Could not upload the file. Please try again with a different file.");
             }
             else
             {
-                containerElement.find('#preview').html(data.files[0].preview);
-                containerElement.find('#preview').append('<span>' + data.files[0].name + '</span>');
-                containerElement.find('#preview').append('<div id="info-flash" style="z-index: 100; background-color: #FF7B0A; position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 250%;">Saved</div>');
-                containerElement.find('#preview #info-flash').fadeOut(2000);
+                containerElement.find('.preview').html(data.files[0].preview);
+                containerElement.find('.preview').append('<span>' + data.files[0].name + '<br>Caution: not saved yet! You must click the save button below to save this file!</span>');
+                containerElement.find('.preview').append('<div class="info-flash" style="z-index: 100; background-color: #FF7B0A; position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 250%;">Upload finished</div>');
+                containerElement.find('.preview .info-flash').fadeOut(2000);
           
                 idElement.val(data.result.id);
             }
         },
         fail: function (e, data) {
+            containerElement.find('.progress .bar').hide();
             alert("Could not upload the file: the server responded with an error.");
-            containerElement.find('#progress .bar').hide();
         },
-        progressall: function (e, data) {
+        progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
-            containerElement.find('#progress .bar').css('width', progress + '%');
-        }
+            containerElement.find('.progress .bar').css('width', progress + '%');
+        },
     };
     options = options || {};
     upload_options = $.extend(upload_options, options);
@@ -147,6 +148,26 @@ function activateImageUpload(for_id, options) {
     // activate the file upload field
     $(containerElement).fileupload(upload_options);
 }
+
+/*
+ * Stop user from leaving the page without confirmation.
+ */
+var confirmOnPageExit = function (e) 
+{
+    // If we haven't been passed the event get the window.event
+    e = e || window.event;
+
+    var message = 'You have unsaved changes. Are you sure you want to leave this page?';
+
+    // For IE6-8 and Firefox prior to version 4
+    if (e) 
+    {
+        e.returnValue = message;
+    }
+
+    // For Chrome, Safari, IE8+ and Opera 12+
+    return message;
+};
 
 /*
 * Prepare for AJAX calls with a CSRF token cookie.

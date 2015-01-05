@@ -104,11 +104,11 @@ class ImageInput(forms.FileInput):
         
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
-                <div id="preview" style="position: relative;">{preview}</div>
+                <div class="preview" style="position: relative;">{preview}</div>
                 <!-- input id="id_{name}" type="file" name="image" value="" / -->
                 <div class="dropzone" style="width: 200px; height: 100px;">Drop files here</div>
                 <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
-                <div id="progress">
+                <div class="progress">
                     <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
                 </div>
             </div>""".format(
