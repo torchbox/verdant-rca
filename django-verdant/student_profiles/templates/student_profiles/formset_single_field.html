@@ -4,11 +4,16 @@
 </label>
 <div id="{{ formset.prefix }}" >
 {% for form in formset %}
-  <label class="field">
-  {% for field in form %}
-    {% include "student_profiles/form_field_unlabelled.html" with field=field %}
-  {% endfor %}
-  </label>
+  <div class="inline-form">
+    <label class="field">
+    {% for field in form %}
+      {% include "student_profiles/form_field_unlabelled.html" with field=field %}
+    {% endfor %}
+    </label>
+    <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
+    <a id="move-up"   class="icon text-replace white icon-order-up">↑</a>
+    <a id="move-down" class="icon text-replace white icon-order-down " href="javascript:void(0)">↓</a>
+  </div>
 {% endfor %}
 {% for error in formset.non_form_errors %}
   <small class="error">{{ error }}</small>

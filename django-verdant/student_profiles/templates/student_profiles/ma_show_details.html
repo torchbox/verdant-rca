@@ -16,6 +16,9 @@
     <div class="well" style="padding: 1em; border: 1px solid black;">
       {{ carouselitem_form.id }}
       {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+    <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
+    <a id="move-up"   class="icon text-replace white icon-order-up">↑</a>
+    <a id="move-down" class="icon text-replace white icon-order-down " href="javascript:void(0)">↓</a>
     </div>
   {% endfor %}
   </div>
@@ -101,12 +104,12 @@ $(function() {
     });
   };
   
-  $('#{{ show_collaborators_formset.prefix }} .field').formset({
+  $('#{{ show_collaborators_formset.prefix }} .inline-form').formset({
       prefix: '{{ show_collaborators_formset.prefix }}',
       formCssClass: 'dynamic-formset-{{ show_collaborators_formset.prefix }}'
   });
 
-  $('#{{ show_sponsors_formset.prefix }} .field').formset({
+  $('#{{ show_sponsors_formset.prefix }} .inline-form').formset({
       prefix: '{{ show_sponsors_formset.prefix }}',
       formCssClass: 'dynamic-formset-{{ show_sponsors_formset.prefix }}'
   });

@@ -141,6 +141,11 @@ def basic_profile(request, page_id=None):
             initial=[{'website': x.website} for x in profile_page.websites.all()]
         )
 
+    data['email_formset'].title = 'Email'
+    data['phone_formset'].title = 'Phone'
+    data['website_formset'].title = 'Website'
+
+
     if request.method == 'POST':
         data['basic_form'] = basic_form = form_class(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')

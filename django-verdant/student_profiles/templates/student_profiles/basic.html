@@ -10,50 +10,12 @@
 
   {% include 'student_profiles/form_snippet.html' with form=basic_form %}
 
-  {{ email_formset.management_form }}
-  <label {% if email_formset.total_error_count > 0 %}class="error"{% endif %}>Email
-    {{ formset.non_form_errors }}
-  </label>
-  <div id="email_formset" >
-  {% for emailform in email_formset %}
-    <label class="field">
-    {% for field in emailform %}
-      {% include "student_profiles/form_field_unlabelled.html" with field=field %}
-    {% endfor %}
-    </label>
-  {% endfor %}
-  {% for error in email_formset.non_form_errors %}
-    <small class="error">{{ error }}</small>
-  {% endfor %}
-  </div>
+  <hr>
+  {% include "student_profiles/formset_single_field.html" with formset=email_formset %}
+  <hr>
 
-  {{ phone_formset.management_form }}
-  <label id="phone_formset" {% if phone_formset.total_error_count > 0 %}class="error"{% endif %}>Phone number
-  {% for phoneform in phone_formset %}
-    <label class="field">
-    {% for field in phoneform %}
-      {% include "student_profiles/form_field_unlabelled.html" with field=field %}
-    {% endfor %}
-    </label>
-  {% endfor %}
-  {% for error in phone_formset.non_form_errors %}
-    <small class="error">{{ error }}</small>
-  {% endfor %}
-  </label>
-
-  {{ website_formset.management_form }}
-  <label id="website_formset" {% if website_formset.total_error_count > 0 %}class="error"{% endif %}>Website
-  {% for websiteform in website_formset %}
-    <label class="field">
-    {% for field in websiteform %}
-      {% include "student_profiles/form_field_unlabelled.html" with field=field %}
-    {% endfor %}
-    </label>
-  {% endfor %}
-  {% for error in website_formset.non_form_errors %}
-    <small class="error">{{ error }}</small>
-  {% endfor %}
-  </label>
+  {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
+  {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
 
   <p><input type="submit" class="profile-save" value="Save"></p>
 </form>
@@ -65,15 +27,19 @@
 <script src="{% static "student_profiles/js/image_handler.js" %}"></script>
 <script type="text/javascript">
 $(function() {
-  $('#email_formset .field').formset({
+  var emailTotalFormsElement = $('#id_{{ email_formset.prefix }}-TOTAL_FORMS');
+  $('#{{ email_formset.prefix }} .inline-form').formset({
       prefix: '{{ email_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ email_formset.prefix }}'
+      formCssClass: 'dynamic-formset-{{ email_formset.prefix }}',
+    added: function(row) {
+      row.find('input.order-value').val(emailTotalFormsElement.val());
+    }
   });
-  $('#phone_formset .field').formset({
+  $('#{{ phone_formset.prefix }} .inline-form').formset({
       prefix: '{{ phone_formset.prefix }}',
       formCssClass: 'dynamic-formset-{{ phone_formset.prefix }}'
   });
-  $('#website_formset .field').formset({
+  $('#{{ website_formset.prefix }} .inline-form').formset({
       prefix: '{{ website_formset.prefix }}',
       formCssClass: 'dynamic-formset-{{ website_formset.prefix }}'
   });
