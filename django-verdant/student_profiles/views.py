@@ -98,7 +98,7 @@ def initial_context(request, page_id):
 @login_required
 def overview(request):
     """
-    Profile overview page, probably unnecessary
+    Profile overview page, shows all pages that this user created.
     """
     data = {}
 
