@@ -263,7 +263,10 @@ class MAShowDetailsForm(forms.ModelForm):
     )
     
     def clean_postcard_image(self):
-        return self.instance.postcard_image
+        try:
+            return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
+        except RcaImage.DoesNotExist:
+            return None
     
     class Meta:
         model = NewStudentPage

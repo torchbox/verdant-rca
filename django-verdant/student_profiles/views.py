@@ -352,7 +352,6 @@ def ma_show_details(request, page_id):
                 {k:v for k,v in f.items() if k != 'item_type'}
                 for f in scif.cleaned_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
             ]
-            print carousel_items
             page.show_carousel_items = [
                 NewStudentPageShowCarouselItem(**item) for item in carousel_items
             ]
@@ -397,7 +396,6 @@ def image_upload(request, page_id, field=None):
         
         return HttpResponse('{{"ok": true, "id": {} }}'.format(r.id), content_type='application/json')
     else:
-        print form.errors.items()
         errors = ', '.join(', '.join(el) for el in form.errors.values())
         res = {'ok': False, 'errors': errors}
         return HttpResponse(json.dumps(res), content_type='application/json')
