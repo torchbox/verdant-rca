@@ -129,6 +129,7 @@ function activateImageUpload(for_id, options) {
                 containerElement.find('.preview').append('<span>' + data.files[0].name + '<br>Caution: not saved yet! You must click the save button below to save this file!</span>');
                 containerElement.find('.preview').append('<div class="info-flash" style="z-index: 100; background-color: #FF7B0A; position: absolute; top: 0; left: 0; width: 100%; height: 100%; text-align: center; font-size: 250%;">Upload finished</div>');
                 containerElement.find('.preview .info-flash').fadeOut(2000);
+                containerElement.find('.clearbutton').show();
           
                 idElement.val(data.result.id);
             }
@@ -145,8 +146,16 @@ function activateImageUpload(for_id, options) {
     options = options || {};
     upload_options = $.extend(upload_options, options);
 
-    // activate the file upload field
     $(containerElement).fileupload(upload_options);
+    
+    // set the "clear field" button action
+    containerElement.find('.clearbutton').click(function(e) {
+        $(this).hide();
+        containerElement.find('.preview').html('');
+        idElement.val('');
+        e.preventDefault();
+    });
+    
 }
 
 /*

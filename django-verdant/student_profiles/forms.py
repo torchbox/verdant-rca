@@ -105,8 +105,8 @@ class ImageInput(forms.FileInput):
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
                 <div class="preview" style="position: relative;">{preview}</div>
-                <!-- input id="id_{name}" type="file" name="image" value="" / -->
                 <div class="dropzone" style="width: 200px; height: 100px;">Drop files here</div>
+                <button class="clearbutton"{hidden_clear}>Clear image</button>
                 <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
                 <div class="progress">
                     <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
@@ -115,6 +115,7 @@ class ImageInput(forms.FileInput):
                 name=name,
                 preview=preview,
                 value_id=value,
+                hidden_clear='' if preview else ' style="display: none;"',
             )
     
 
@@ -143,7 +144,7 @@ class ProfileBasicForm(forms.ModelForm):
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
         widget=ImageInput,
     )
-    
+
     def clean_profile_image(self):
         return self.instance.profile_image
 
