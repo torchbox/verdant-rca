@@ -1,11 +1,11 @@
 {% extends "student_profiles/edit_base.html" %}
-
+{% load static %}
 
 {% block form_content %}
 
 <h1>MA details</h1>
 
-<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+<form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
   
   {% include 'student_profiles/form_snippet.html' with form=ma_form %}
 
@@ -14,3 +14,8 @@
 
 {% endblock form_content %}
 
+
+
+{% block form_js %}
+<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
+{% endblock form_js %}

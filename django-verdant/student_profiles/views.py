@@ -201,8 +201,12 @@ def basic_profile(request, page_id=None):
                 submitted_for_moderation=False,
             )
 
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
 
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/basic.html', data)
 
 
@@ -288,8 +292,12 @@ def academic_details(request, page_id=None):
                 submitted_for_moderation=False,
             )
         
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/academic_details.html', data)
 
 
@@ -312,9 +320,12 @@ def ma_details(request, page_id):
                 submitted_for_moderation=False,
             )
             
-
+        if request.is_ajax():
+            return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
         return redirect('student-profiles:edit-ma', page_id=page_id)
 
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/ma_details.html', data)
 
 
@@ -380,8 +391,12 @@ def ma_show_details(request, page_id):
                 submitted_for_moderation=False,
             )
 
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
 
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/ma_show_details.html', data)
 
 

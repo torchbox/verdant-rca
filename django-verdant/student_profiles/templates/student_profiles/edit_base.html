@@ -28,6 +28,7 @@
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
+    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "student_profiles/css/student_profiles.less" %}" />{% endcompress %}
 {% endblock %}
 {% block extra_js %}
     {% include "wagtailadmin/pages/_editor_js.html" %}

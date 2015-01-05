@@ -5,7 +5,7 @@
 
 <h1>Academic details</h1>
 
-<form method="POST" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+<form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
   
   {% include 'student_profiles/form_snippet.html' with form=academic_form %}
 
