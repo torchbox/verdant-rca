@@ -28,7 +28,7 @@
         Draft{% endif %}
       <td>
         {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-        {% if page.has_unpublished_changes %}<a href="#">Show preview</a>{% endif %}
+        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview</a>{% endif %}
       </td>
       <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
       <td>{% if page.has_unpublished_changes %}<a href="#" class="button">submit for moderation</a>{% endif %}</td>

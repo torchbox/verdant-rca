@@ -106,6 +106,13 @@ def overview(request):
 
     return render(request, 'student_profiles/overview.html', data)
 
+@login_required
+def preview(request, page_id=None):
+    """Preview of the profile page."""
+    data, profile_page = initial_context(request, page_id)
+    
+    return profile_page.serve(profile_page.dummy_request())
+
 
 @login_required
 def basic_profile(request, page_id=None):
