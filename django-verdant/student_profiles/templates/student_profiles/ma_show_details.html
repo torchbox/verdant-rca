@@ -13,12 +13,12 @@
   Carousel images/videos
   <div id="{{ carouselitem_formset.prefix }}">
   {% for carouselitem_form in carouselitem_formset %}
-    <div class="well" style="padding: 1em; border: 1px solid black;">
+    <div class="inline-form" style="padding: 1em; border: 1px solid black;">
       {{ carouselitem_form.id }}
       {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
     <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
-    <a id="move-up"   class="icon text-replace white icon-order-up">↑</a>
-    <a id="move-down" class="icon text-replace white icon-order-down " href="javascript:void(0)">↓</a>
+    <a class="move-up">↑</a>
+    <a class="move-down">↓</a>
     </div>
   {% endfor %}
   </div>
@@ -67,7 +67,7 @@
 
 
 {% block form_js %}
-<script src="{% static "student_profiles/js/image_handler.js" %}"></script>
+<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 <script type="text/javascript">
 $(function() {
 
@@ -104,25 +104,16 @@ $(function() {
     });
   };
   
-  $('#{{ show_collaborators_formset.prefix }} .inline-form').formset({
-      prefix: '{{ show_collaborators_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ show_collaborators_formset.prefix }}'
-  });
-
-  $('#{{ show_sponsors_formset.prefix }} .inline-form').formset({
-      prefix: '{{ show_sponsors_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ show_sponsors_formset.prefix }}'
-  });
-
-  $('#{{ carouselitem_formset.prefix }} .well').formset({
-      prefix: '{{ carouselitem_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ carouselitem_formset.prefix }}',
-    added: function(row) {
+  makeFormset('{{ show_collaborators_formset.prefix }}');
+  makeFormset('{{ show_sponsors_formset.prefix }}');
+  makeFormset('{{ carouselitem_formset.prefix }}',
+    addedFunc=function(row) {
       updateSelects();
       row.find('select').each(function(){ $(this).trigger('change')});
       row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
-    },
-  });
+    }
+  );
+  
   makeRichTextEditable('id_show_work_description');
   activateImageUpload('postcard_image');
   $('.image-uploader-block').each(function(i) {

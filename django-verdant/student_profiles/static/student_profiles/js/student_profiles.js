@@ -40,8 +40,8 @@ $.blueimp.fileupload.prototype.processActions.validate = function (data, options
 };
 
 /**
- * Nice little hover-effect for file dropping.
- */ 
+* Nice little hover-effect for file dropping.
+*/ 
 $(document).bind('dragover', function (e)
 {
     var dropZone = $('.dropzone'),
@@ -86,8 +86,8 @@ $(document).bind('dragover', function (e)
 });
 
 /**
- * The actual data-binding function that enables file uploads
- */ 
+* The actual data-binding function that enables file uploads
+*/ 
 function activateImageUpload(for_id, options) {
 
     // remember the original add function for later because we're going to overwrite it
@@ -158,9 +158,85 @@ function activateImageUpload(for_id, options) {
     
 }
 
+/**
+* A simple animation for swapping two elements.
+*/
+var animDuration = 600;
+function switchUp(elem) {
+    var e1 = $(elem), e2 = e1.prev();
+    var e1p = e1.position(), e2p = e2.position();
+
+    e1.insertBefore(e2);
+  
+    e1.css('position', 'relative');
+    e1.css('top', (e1p.top - e2p.top) + 'px');
+    e1.animate({top: (e1p.top - e2p.top)/2 + 'px', left: '-30px'}, animDuration/2)
+      .animate({top: '0px', left: '0px'}, animDuration/2);
+
+    e2.css('position', 'relative');
+    e2.css('top', (e2p.top - e1p.top) + 'px');
+    e2.animate({top: (e2p.top - e1p.top)/2 + 'px', left: '30px'}, animDuration/2)
+      .animate({top: '0px', left: '0px'}, animDuration/2);
+};
+function switchDown(elem) { switchUp($(elem).next()); };
+
+/**
+*  Given a list of jQuery element search terms, for each of the terms it will find all fitting elements and update
+*  their move-up/move-down buttons with click and update handlers.
+*  Example updateFormButtons('#myform .form-row');
+*/
+function updateFormButtons(search_term) {
+  
+    function updateIndividualButtonInForm(searchTerm, lastIndex) {
+        return function(index, row) {
+            if (index == 0) { $(row).find('.move-up').fadeOut(animDuration); }        // if we knew the width of the element, it would be nicer to have a width-animation
+            else {  // not the first element, activate the move-up button
+                $(row).find('.move-up').unbind('click').click(function() {
+                    switchUp(row);
+                    updateFormButtons(searchTerm);
+                }).fadeIn(animDuration);
+            }
+            if (index == lastIndex) { $(row).find('.move-down').fadeOut(animDuration); }
+            else {  // not the last element, activate the move-down button
+                $(row).find('.move-down').unbind('click').click(function() {
+                    switchDown(row);
+                    updateFormButtons(searchTerm);
+                }).fadeIn(animDuration);
+            }
+        }
+    }
+  
+    var elems = $(search_term);
+    elems.each(updateIndividualButtonInForm(search_term, elems.length-1));
+};
+
+
+/**
+*  Enabling a formset with all necessary options
+*/
+function makeFormset(prefix, addedFunc) {
+    var search_term = '#' + prefix + ' .inline-form';
+    $(search_term).formset({
+        prefix: prefix,
+        formCssClass: 'dynamic-formset-' + prefix,
+        added: function(row) {
+            row.find('input.order-value').val($('#id_' + prefix + '-TOTAL_FORMS').val());
+            updateFormButtons(search_term);
+            if (addedFunc) addedFunc(row);
+        },
+        removed: function(row) {
+            updateFormButtons(search_term);
+        },
+    });
+  
+    updateFormButtons(search_term);
+};
+
+
+
 /*
- * Stop user from leaving the page without confirmation.
- */
+* Stop user from leaving the page without confirmation.
+*/
 var confirmOnPageExit = function (e) 
 {
     // If we haven't been passed the event get the window.event
@@ -181,6 +257,7 @@ var confirmOnPageExit = function (e)
 $('input[type="submit"] .profile-save').click(function() {
     window.onbeforeunload = null;
 });
+
 
 /*
 * Prepare for AJAX calls with a CSRF token cookie.

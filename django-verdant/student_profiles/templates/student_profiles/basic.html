@@ -24,27 +24,17 @@
 
 
 {% block form_js %}
-<script src="{% static "student_profiles/js/image_handler.js" %}"></script>
+<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 <script type="text/javascript">
 $(function() {
-  var emailTotalFormsElement = $('#id_{{ email_formset.prefix }}-TOTAL_FORMS');
-  $('#{{ email_formset.prefix }} .inline-form').formset({
-      prefix: '{{ email_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ email_formset.prefix }}',
-    added: function(row) {
-      row.find('input.order-value').val(emailTotalFormsElement.val());
-    }
-  });
-  $('#{{ phone_formset.prefix }} .inline-form').formset({
-      prefix: '{{ phone_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ phone_formset.prefix }}'
-  });
-  $('#{{ website_formset.prefix }} .inline-form').formset({
-      prefix: '{{ website_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ website_formset.prefix }}'
-  });
+  
+  makeFormset('{{ email_formset.prefix }}');
+  makeFormset('{{ phone_formset.prefix }}');
+  makeFormset('{{ website_formset.prefix }}');
+  
   makeRichTextEditable('id_statement');
   activateImageUpload('profile_image');
+  
 })
 </script>
 {% endblock form_js %}

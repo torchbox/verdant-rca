@@ -1,5 +1,5 @@
 {% extends "student_profiles/edit_base.html" %}
-
+{% load static %}
 
 {% block form_content %}
 
@@ -25,33 +25,15 @@
 
 
 {% block form_js %}
+<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 <script type="text/javascript">
 $(function() {
-  $('#{{ previous_degrees_formset.prefix }} .field').formset({
-      prefix: '{{ previous_degrees_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ previous_degrees_formset.prefix }}'
-  });
-
-  $('#{{ exhibitions_formset.prefix }} .field').formset({
-      prefix: '{{ exhibitions_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ exhibitions_formset.prefix }}'
-  });
-
-  $('#{{ awards_formset.prefix }} .field').formset({
-      prefix: '{{ awards_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ awards_formset.prefix }}'
-  });
-
-  $('#{{ publications_formset.prefix }} .field').formset({
-      prefix: '{{ publications_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ publications_formset.prefix }}'
-  });
-
-  $('#{{ conferences_formset.prefix }} .field').formset({
-      prefix: '{{ conferences_formset.prefix }}',
-      formCssClass: 'dynamic-formset-{{ conferences_formset.prefix }}'
-  });
-
+  
+  makeFormset('{{ previous_degrees_formset.prefix }}');
+  makeFormset('{{ exhibitions_formset.prefix }}');
+  makeFormset('{{ awards_formset.prefix }}');
+  makeFormset('{{ publications_formset.prefix }}');
+  makeFormset('{{ conferences_formset.prefix }}');
 
 })
 </script>
