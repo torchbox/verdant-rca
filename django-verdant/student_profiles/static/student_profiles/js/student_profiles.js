@@ -152,7 +152,7 @@ function activateImageUpload(for_id, options) {
     containerElement.find('.clearbutton').click(function(e) {
         $(this).hide();
         containerElement.find('.preview').html('');
-        idElement.val('');
+        idElement.val(''); idElement.change();
         e.preventDefault();
     });
     
@@ -165,6 +165,11 @@ var animDuration = 600;
 function switchUp(elem) {
     var e1 = $(elem), e2 = e1.prev();
     var e1p = e1.position(), e2p = e2.position();
+
+    var e1f = e1.find('.order-value'), e2f = e2.find('.order-value');
+    var e1o = e1f.val(), e2o = e2f.val();
+    e1f.val(e2o); e2f.val(e1o);
+    e1f.change();
 
     e1.insertBefore(e2);
   
