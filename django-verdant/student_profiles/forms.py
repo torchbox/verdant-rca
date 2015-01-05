@@ -138,12 +138,15 @@ class ImageForm(forms.Form):
 
 class ProfileBasicForm(forms.ModelForm):
     
-    profile_image = forms.ImageField(
+    profile_image = forms.IntegerField(
         required=False,
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
         widget=ImageInput,
     )
     
+    def clean_profile_image(self):
+        return self.instance.profile_image
+
     class Meta:
         model = NewStudentPage
         fields = ['first_name', 'last_name', 'profile_image', 'statement']
