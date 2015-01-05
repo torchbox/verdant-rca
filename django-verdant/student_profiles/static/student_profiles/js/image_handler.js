@@ -177,6 +177,10 @@ var confirmOnPageExit = function (e)
     // For Chrome, Safari, IE8+ and Opera 12+
     return message;
 };
+// but allow leaving via the submit button
+$('input[type="submit"] .profile-save').click(function() {
+    window.onbeforeunload = null;
+});
 
 /*
 * Prepare for AJAX calls with a CSRF token cookie.
