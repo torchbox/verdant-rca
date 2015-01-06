@@ -269,6 +269,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('designproducts', 'Design Products'),
     ('industrialdesignengineering', 'Industrial Design Engineering'),
     ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('jewellerymetal', 'Jewellery & Metal'),
     ('visualcommunication', 'Visual Communication'),
     ('designinteractions', 'Design Interactions'),
     ('innovationdesignengineering', 'Innovation Design Engineering'),
@@ -300,7 +301,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofmaterial': ['ceramicsglass', 'jewellerymetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2013': {
         'schoolofarchitecture': ['architecture'],
