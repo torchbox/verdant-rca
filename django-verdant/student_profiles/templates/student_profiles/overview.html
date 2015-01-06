@@ -8,6 +8,22 @@
 
 <h1>Your profiles</h1>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<p>
+On this page, you can edit your profile pages and create new ones. Please fill in all relevant information
+on the editing forms. Any changes you make will be stored, but will not be visible on the actual homepage.
+Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
+will check your page and publish it if it meets all guidelines.
+</p>
+
 {% if not profile_pages %}
 <div>
   There are currently no profile pages for you.
@@ -28,10 +44,15 @@
         Draft{% endif %}
       <td>
         {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview</a>{% endif %}
+        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
       </td>
       <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
-      <td>{% if page.has_unpublished_changes %}<a href="#" class="button">submit for moderation</a>{% endif %}</td>
+      <td>{% if page.has_unpublished_changes %}
+        <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
+          <input type="submit" class="profile-save" value="Submit for publication">
+        </form>
+        {% endif %}
+      </td>
     </tr>
   {% endfor %}
 </table>

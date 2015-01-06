@@ -6,6 +6,8 @@
 
 {% block content %}
 
+<a href="{% url 'student-profiles:overview' %}">Back to the overview list</a>
+
 {# navbar #}
 <ul>
   {% if page_id %}
@@ -27,6 +29,13 @@
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
+{% endif %}
+
+{% if page.has_unpublished_changes %}
+This page has unpublished changes. These changes have to be approved by a moderator before they can be published on the homepage. <strong>Please save any edits before you submit for publication!</strong>
+<form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
+  <input type="submit" class="profile-save" value="Submit for publication">
+</form>
 {% endif %}
 
 {% block form_content %}{% endblock form_content %}  {# for inserting the editing forms #}

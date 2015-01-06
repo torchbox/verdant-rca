@@ -87,7 +87,7 @@ def initial_context(request, page_id):
         'is_phd': user_is_phd(request),
     }
 
-    profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
+    data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
     data['page_id'] = page_id
     data['is_in_show'] = profile_is_in_show(profile_page)
     return data, profile_page
@@ -115,6 +115,20 @@ def preview(request, page_id=None):
     return profile_page.serve(profile_page.dummy_request())
 
 
+@require_POST
+@login_required
+def submit(request, page_id):
+    data, page = initial_context(request, page_id)
+
+    page.save_revision(
+        user=request.user,
+        submitted_for_moderation=True,
+    )
+
+    messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
+
+    return redirect('student-profiles:overview')
+
 @login_required
 def basic_profile(request, page_id=None):
     """Basic profile creation/editing page"""
@@ -132,7 +146,7 @@ def basic_profile(request, page_id=None):
         data['phone_formset'] = PhoneFormset(prefix='phone')
         data['website_formset'] = WebsiteFormset(prefix='website')
     else:
-        profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
+        data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
         data['page_id'] = page_id
         form_class = ProfileBasicForm
         data['basic_form'] = ProfileBasicForm(instance=profile_page)
