@@ -103,7 +103,10 @@ def overview(request):
     """
     data = {}
 
-    data['profile_pages'] = NewStudentPage.objects.filter(owner=request.user)
+    raw_pages = NewStudentPage.objects.filter(owner=request.user)
+    data['profile_pages'] = [p.get_latest_revision_as_page() for p in raw_pages]
+    for p in data['profile_pages']:
+        p.waiting_for_moderation = p.revisions.filter(submitted_for_moderation=True).exists()
 
     return render(request, 'student_profiles/overview.html', data)
 
@@ -182,21 +185,19 @@ def basic_profile(request, page_id=None):
             bcd = basic_form.cleaned_data
             
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
-            profile_page.slug = slugify(profile_page.title)
             
             if page_id is None:
                 # the following is the page where the new student pages are added as children
                 # MAKE SURE THIS IS THE CORRECT ID!
                 profile_page.live = False
                 Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=profile_page)
-            else:
-                profile_page.has_unpublished_changes = True
-
-            if Page.objects.exclude(id=profile_page.id).filter(slug=profile_page.slug).exists():
-                profile_page.slug = '{}-{}'.format(
-                    slugify(profile_page.title),
-                    profile_page.id,
-                )
+                # the page slug must not be changed, lest all links go wrong!
+                profile_page.slug = slugify(profile_page.title)
+                if Page.objects.exclude(id=profile_page.id).filter(slug=profile_page.slug).exists():
+                    profile_page.slug = '{}-{}'.format(
+                        slugify(profile_page.title),
+                        profile_page.id,
+                    )
             
             profile_page.first_name = bcd['first_name']
             profile_page.last_name = bcd['last_name']
@@ -220,6 +221,9 @@ def basic_profile(request, page_id=None):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -315,6 +319,9 @@ def academic_details(request, page_id=None):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
         
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -347,6 +354,9 @@ def ma_details(request, page_id):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
             
         if request.is_ajax():
             return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -423,6 +433,9 @@ def ma_show_details(request, page_id):
                 submitted_for_moderation=False,
             )
 
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
@@ -455,6 +468,9 @@ def image_upload(request, page_id, field=None):
                 user=request.user,
                 submitted_for_moderation=False,
             )
+
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
         
         return HttpResponse('{{"ok": true, "id": {} }}'.format(r.id), content_type='application/json')
     else:
