@@ -2,12 +2,12 @@ from itertools import chain
 
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
-from django.forms.models import modelformset_factory
 
 from wagtail.wagtailcore.fields import RichTextArea
 
 from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
+from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import RcaImage
 
 ################################################################################
@@ -345,3 +345,53 @@ class MASponsorForm(forms.Form):
         help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
     )
 MASponsorFormset = formset_factory(MASponsorForm, extra=1, formset=OrderedFormset)
+
+
+# MPhil and PhD forms
+class MPhilForm(forms.ModelForm):
+    
+    class Meta:
+        model = NewStudentPage
+        fields = [
+            'mphil_in_show',
+            'mphil_school', 'mphil_programme',
+            'mphil_dissertation_title',
+            'mphil_statement',
+            'mphil_start_year', 'mphil_graduation_year',
+            'mphil_work_location',
+        ]
+# carousel items as above, sponsor and collaborator almost as above
+
+# we create new forms here because the labels and help_texts are slightly different
+class MPhilCollaboratorForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPageMPhilCollaborator
+        fields = ['name']
+MPhilCollaboratorFormset = formset_factory(
+    MPhilCollaboratorForm,
+    extra=1, formset=OrderedFormset
+)
+class MPhilSponsorForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPageMPhilSponsor
+        fields = ['name']
+MPhilSponsorFormset = formset_factory(
+    MPhilSponsorForm,
+    extra=1, formset=OrderedFormset
+)
+    
+class MPhilSupervisorForm(forms.ModelForm):
+    # needs javascript, like a carousel!
+    supervisor_type = forms.ChoiceField(
+        label='Type',
+        choices = (   
+            ('internal', 'Internal'),    # if you change these values, you must also change the values in the javascript and in the views!
+            ('other', 'Other'),
+        )
+    )
+    
+    class Meta:
+        model = NewStudentPageMPhilSupervisor
+        fields = ['supervisor', 'supervisor_other']
+MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, extra=1, formset=OrderedFormset)
+

@@ -15,11 +15,13 @@ from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
 from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
 from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollaborator, NewStudentPageShowSponsor
+from rca.models import NewStudentPageMPhilCarouselItem, NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import RcaImage
 
 from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
+from .forms import MPhilForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
 
 from .forms import ImageForm
 
@@ -462,6 +464,85 @@ def mphil_details(request, page_id):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
     data, profile_page = initial_context(request, page_id)
+
+    # MPhilCollaboratorForm, MPhilSponsorForm, MPhilSupervisorForm
+
+    data['mphil_form'] = MPhilForm(instance=profile_page)
+
+    carousel_initial = [
+        {
+            'item_type': 'image' if c.image_id is not None else 'video',
+            'image_id': c.image_id, 'overlay_text': c.overlay_text, 'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id
+        }
+        for c in profile_page.mphil_carousel_items.all()
+    ]
+    data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
+
+    data['collaborator'] = MPhilCollaboratorFormset(prefix='collaborator', initial=[
+        {'name': c.name} for c in profile_page.mphil_collaborators.all()
+    ])
+    data['sponsor'] = MPhilSponsorFormset(prefix='sponsor', initial=[
+        {'name': c.name} for c in profile_page.mphil_sponsors.all()
+    ])
+
+    data['collaborator'].title = 'Collaborator'
+    data['sponsor'].title = 'Sponsor'
+
+    supervisor_initial = [
+        {
+            'supervisor_type': 'internal' if s.supervisor is not None else 'other',
+            'supervisor': s.supervisor, 'supervisor_other': s.supervisor_other,
+        }
+        for s in profile_page.mphil_supervisors.all()
+    ]
+    data['supervisor'] = MPhilSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
+
+    if request.method == 'POST':
+        mpf = data['mphil_form'] = MPhilForm(request.POST, instance=profile_page)
+        cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
+        cof = data['collaborator'] = MPhilCollaboratorFormset(request.POST, prefix='collaborator')
+        spf = data['sponsor'] = MPhilSponsorFormset(request.POST, prefix='sponsor')
+        suf = data['supervisor'] = MPhilSupervisorFormset(request.POST, prefix='supervisor')
+
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not saved, it is currently locked')
+        elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
+            
+            page = mpf.save(commit=False)
+            
+            carousel_items = [
+                {k:v for k,v in f.items() if k not in ('item_type', 'order')}
+                for f in cif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
+            ]
+            page.mphil_carousel_items = [
+                NewStudentPageMPhilCarouselItem(**item) for item in carousel_items
+            ]
+            
+            page.mphil_collaborators = [
+                NewStudentPageMPhilCollaborator(name=f['name'].strip()) for f in cof.ordered_data if f.get('name')
+            ]
+            page.mphil_sponsors = [
+                NewStudentPageMPhilSponsor(name=f['name'].strip()) for f in spf.ordered_data if f.get('name')
+            ]
+            
+            page.mphil_supervisors = [
+                NewStudentPageMPhilSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
+                for c in suf.ordered_data
+            ]
+            
+            revision = page.save_revision(
+                user=request.user,
+                submitted_for_moderation=False,
+            )
+            profile_page.has_unpublished_changes = True
+            profile_page.save()
+            
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            return redirect('student-profiles:edit-mphil', page_id=page_id)
+
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
