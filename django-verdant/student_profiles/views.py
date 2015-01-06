@@ -529,7 +529,7 @@ def mphil_details(request, page_id):
             
             page.mphil_supervisors = [
                 NewStudentPageMPhilSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
-                for c in suf.ordered_data
+                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
             revision = page.save_revision(
@@ -619,7 +619,7 @@ def phd_details(request, page_id):
             
             page.phd_supervisors = [
                 NewStudentPagePhDSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
-                for c in suf.ordered_data
+                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
             revision = page.save_revision(
