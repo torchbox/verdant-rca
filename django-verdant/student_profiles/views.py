@@ -4,9 +4,10 @@ import unicodedata
 import json
 
 from django import forms
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 
 from wagtail.wagtailcore.models import Page
@@ -153,7 +154,11 @@ def basic_profile(request, page_id=None):
     data['website_formset'].title = 'Website'
 
 
-    if request.method == 'POST':
+    if profile_page.locked:
+        if not request.is_ajax():
+            # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+            messages.error(request, 'The page could not saved, it is currently locked')
+    elif request.method == 'POST':
         data['basic_form'] = basic_form = form_class(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')
         data['phone_formset'] = phone_formset = PhoneFormset(request.POST, prefix='phone')
@@ -268,7 +273,11 @@ def academic_details(request, page_id=None):
         data['publications_formset'] = pfs = PublicationsFormset(request.POST, prefix='publications')
         data['conferences_formset'] = cfs = ConferencesFormset(request.POST, prefix='conferences')
         
-        if pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid():
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not saved, it is currently locked')
+        elif pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid():
             profile_page.funding = pf.cleaned_data['funding']
             
             profile_page.previous_degrees = [
@@ -312,7 +321,11 @@ def ma_details(request, page_id):
     if request.method == 'POST':
         data['ma_form'] = form = MADetailsForm(request.POST, instance=profile_page, )
 
-        if form.is_valid():
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not saved, it is currently locked')
+        elif form.is_valid():
             page = form.save(commit=False)
             
             revision = page.save_revision(
@@ -367,7 +380,11 @@ def ma_show_details(request, page_id):
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
         
-        if sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not saved, it is currently locked')
+        elif sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
 
             page = sf.save(commit=False)
 
@@ -407,7 +424,10 @@ def image_upload(request, page_id, field=None):
     data, profile_page = initial_context(request, page_id)
     
     form = ImageForm(request.POST, request.FILES)
-    if form.is_valid():
+    if profile_page.locked:
+        res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
+        return HttpResponse(json.dumps(res), content_type='application/json')
+    elif form.is_valid():
         r = RcaImage.objects.create(
             file=form.cleaned_data['image'],
             uploaded_by_user=request.user,
