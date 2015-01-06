@@ -154,16 +154,17 @@ def basic_profile(request, page_id=None):
     data['website_formset'].title = 'Website'
 
 
-    if profile_page.locked:
-        if not request.is_ajax():
-            # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-            messages.error(request, 'The page could not saved, it is currently locked')
-    elif request.method == 'POST':
+    if request.method == 'POST':
         data['basic_form'] = basic_form = form_class(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')
         data['phone_formset'] = phone_formset = PhoneFormset(request.POST, prefix='phone')
         data['website_formset'] = website_formset = WebsiteFormset(request.POST, prefix='website')
-        if basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
+
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not saved, it is currently locked')
+        elif basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
             bcd = basic_form.cleaned_data
             
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
