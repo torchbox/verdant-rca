@@ -40,14 +40,31 @@ class ReadonlyFormMixin(object):
         return cleaned_data
 
 
-class RequiredFormSet(BaseFormSet):
+class OrderedFormset(BaseFormSet):
+    
+    def __init__(self, *args, **kwargs):
+        #print args, kwargs
+
+        #for index, value in enumerate(kwargs.get('initial', {})):
+        #    value['order'] = index
+        
+        super(OrderedFormset, self).__init__(*args, **kwargs)
+    
     def clean(self):
-        """Checks that at least one value is present."""
-        if any(self.errors):
-            # Don't bother validating the formset unless each form is valid on its own
-            return
-        if not any(chain(*[form.cleaned_data.values() for form in self.forms])):
-            raise forms.ValidationError("At least one value must be present.")
+        """Cleans the form and orders it by the hidden added order field."""
+        
+        order = lambda item: item.get('order', 10000)   # yes, 10000 = infinity!
+        self.ordered_data = sorted(self.cleaned_data, key=order)
+        
+        return
+
+    def add_fields(self, form, index):
+        """Add the necessary hidden ordering field."""
+        form.fields['order'] = forms.IntegerField(
+            initial=index + 1,
+            required=False,
+            widget=forms.HiddenInput(attrs={'class': 'order-value'})
+        )
 
 
 class PhoneNumberField(forms.RegexField):
@@ -171,22 +188,22 @@ class EmailForm(forms.Form):
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsEmail', 'email', default="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
     )
-EmailFormset = formset_factory(EmailForm, extra=1)
-    
+EmailFormset = formset_factory(EmailForm, extra=1, formset=OrderedFormset)
+
 class PhoneForm(forms.Form):
     #saves to NewStudentPageContactsPhone
     phone = PhoneNumberField(
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
-PhoneFormset = formset_factory(PhoneForm, extra=1)
+PhoneFormset = formset_factory(PhoneForm, extra=1, formset=OrderedFormset)
 
 class WebsiteForm(forms.Form):
     #saves to NewStudentPageContactsWebsite
     website = forms.URLField(
         required=False,    # because we'll only save those that are there anyway
     )
-WebsiteFormset = formset_factory(WebsiteForm, extra=1)
+WebsiteFormset = formset_factory(WebsiteForm, extra=1, formset=OrderedFormset)
 
 
 ################################################################################
@@ -204,7 +221,7 @@ class PreviousDegreeForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"),
     )
-PreviousDegreesFormset = formset_factory(PreviousDegreeForm, extra=1)
+PreviousDegreesFormset = formset_factory(PreviousDegreeForm, extra=1, formset=OrderedFormset)
 
 class ExhibitionForm(forms.Form):
     #saves to NewStudentPageExhibition
@@ -212,7 +229,7 @@ class ExhibitionForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"),
     )
-ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1)
+ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1, formset=OrderedFormset)
 
 class AwardsForm(forms.Form):
     #saves to NewStudentPageAward
@@ -220,7 +237,7 @@ class AwardsForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas"),
     )
-AwardsFormset = formset_factory(AwardsForm, extra=1)
+AwardsFormset = formset_factory(AwardsForm, extra=1, formset=OrderedFormset)
     
 class PublicationsForm(forms.Form):
     #saves to NewStudentPagePublication
@@ -228,7 +245,7 @@ class PublicationsForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"),
     )
-PublicationsFormset = formset_factory(PublicationsForm, extra=1)
+PublicationsFormset = formset_factory(PublicationsForm, extra=1, formset=OrderedFormset)
 
 class ConferencesForm(forms.Form):
     #saves to NewStudentPageConference
@@ -236,7 +253,7 @@ class ConferencesForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"),
     )
-ConferencesFormset = formset_factory(ConferencesForm, extra=1)
+ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFormset)
 
 
 ################################################################################
@@ -311,7 +328,7 @@ class MAShowCarouselItemForm(forms.Form):
         help_text=help_text('rca.CarouselItemFields', 'poster_image'),
         widget=ImageInput,
     )
-MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1)
+MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset)
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
@@ -319,7 +336,7 @@ class MACollaboratorForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas")
     )
-MACollaboratorFormset = formset_factory(MACollaboratorForm, extra=1)
+MACollaboratorFormset = formset_factory(MACollaboratorForm, extra=1, formset=OrderedFormset)
     
 class MASponsorForm(forms.Form):
     #saves to NewStudentPageShowSponsor
@@ -327,4 +344,4 @@ class MASponsorForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas")
     )
-MASponsorFormset = formset_factory(MASponsorForm, extra=1)
+MASponsorFormset = formset_factory(MASponsorForm, extra=1, formset=OrderedFormset)

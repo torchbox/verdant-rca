@@ -10,7 +10,6 @@
       {% include "student_profiles/form_field_unlabelled.html" with field=field %}
     {% endfor %}
     </label>
-    <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
     <a class="move-up">↑</a>
     <a class="move-down">↓</a>
   </div>

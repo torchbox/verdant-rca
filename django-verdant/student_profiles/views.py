@@ -187,13 +187,13 @@ def basic_profile(request, page_id=None):
             # possible problem: what if the user does not have javascript or the other upload handler didn't work?
             
             profile_page.emails = [
-                NewStudentPageContactsEmail(email=f['email']) for f in email_formset.cleaned_data if f.get('email')
+                NewStudentPageContactsEmail(email=f['email']) for f in email_formset.ordered_data if f.get('email')
             ]
             profile_page.phones = [
-                NewStudentPageContactsPhone(phone=f['phone']) for f in phone_formset.cleaned_data if f.get('phone')
+                NewStudentPageContactsPhone(phone=f['phone']) for f in phone_formset.ordered_data if f.get('phone')
             ]
             profile_page.websites = [
-                NewStudentPageContactsWebsite(website=f['website']) for f in website_formset.cleaned_data if f.get('website')
+                NewStudentPageContactsWebsite(website=f['website']) for f in website_formset.ordered_data if f.get('website')
             ]
             
             revision = profile_page.save_revision(
@@ -268,23 +268,23 @@ def academic_details(request, page_id=None):
         data['publications_formset'] = pfs = PublicationsFormset(request.POST, prefix='publications')
         data['conferences_formset'] = cfs = ConferencesFormset(request.POST, prefix='conferences')
         
-        if pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid():
+        if pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid():
             profile_page.funding = pf.cleaned_data['funding']
             
             profile_page.previous_degrees = [
-                NewStudentPagePreviousDegree(degree=f['degree']) for f in pdfs.cleaned_data if f.get('degree')
+                NewStudentPagePreviousDegree(degree=f['degree']) for f in pdfs.ordered_data if f.get('degree')
             ]
             profile_page.exhibitions = [
-                NewStudentPageExhibition(exhibition=f['exhibition']) for f in efs.cleaned_data if f.get('exhibition')
+                NewStudentPageExhibition(exhibition=f['exhibition']) for f in efs.ordered_data if f.get('exhibition')
             ]
             profile_page.awards = [
-                NewStudentPageAward(award=f['award']) for f in afs.cleaned_data if f.get('award')
+                NewStudentPageAward(award=f['award']) for f in afs.ordered_data if f.get('award')
             ]
             profile_page.publications = [
-                NewStudentPagePublication(name=f['name']) for f in pfs.cleaned_data if f.get('name')
+                NewStudentPagePublication(name=f['name']) for f in pfs.ordered_data if f.get('name')
             ]
             profile_page.conferences = [
-                NewStudentPageConference(name=f['name']) for f in cfs.cleaned_data if f.get('name')
+                NewStudentPageConference(name=f['name']) for f in cfs.ordered_data if f.get('name')
             ]
             
             revision = profile_page.save_revision(
@@ -293,7 +293,7 @@ def academic_details(request, page_id=None):
             )
         
             if request.is_ajax():
-                return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
     if request.is_ajax():
@@ -372,18 +372,18 @@ def ma_show_details(request, page_id):
             page = sf.save(commit=False)
 
             carousel_items = [
-                {k:v for k,v in f.items() if k != 'item_type'}
-                for f in scif.cleaned_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
+                {k:v for k,v in f.items() if k not in ('item_type', 'order')}
+                for f in scif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
             ]
             page.show_carousel_items = [
                 NewStudentPageShowCarouselItem(**item) for item in carousel_items
             ]
             
             page.show_collaborators = [
-                NewStudentPageShowCollaborator(name=f['name'].strip()) for f in scf.cleaned_data if f.get('name')
+                NewStudentPageShowCollaborator(name=f['name'].strip()) for f in scf.ordered_data if f.get('name')
             ]
             page.show_sponsors = [
-                NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.cleaned_data if f.get('name')
+                NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.ordered_data if f.get('name')
             ]
             
             revision = page.save_revision(
