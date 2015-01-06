@@ -15,11 +15,11 @@
   <li{% if nav_academic %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a></li>
 
   {% if is_ma %}<li{% if nav_ma %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a></li>{% endif %}
-  {% if is_mphil %}<li{% if nav_mphil %}class="active"{% endif %}><a href="#">MPhil details</a></li>{% endif %}
-  {% if is_phd %}<li{% if nav_phd %}class="active"{% endif %}><a href="#">PhD details</a></li>{% endif %}
-
   {# TODO: activate/deactivate this link based on whether the student is in the show #}
   <li{% if nav_show_profile %}class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a></li>
+
+  {% if is_mphil %}<li{% if nav_mphil %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil details</a></li>{% endif %}
+  {% if is_phd %}<li{% if nav_phd %}class="active"{% endif %}><a href="{% url 'student-profiles:edit-phd' page_id %}">PhD details</a></li>{% endif %}
   {% endif %}
 </ul>
 

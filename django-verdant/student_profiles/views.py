@@ -39,16 +39,17 @@ def user_is_ma(request):
 def user_is_mphil(request):
     """Determine whether a user is an MPhil user and should be able to edit their MPhil page."""
     # TODO: read this from LDAP
-    return False
+    return True
 
 def user_is_phd(request):
     """Determine whether a user is an PhD user and should be able to edit their PhD page."""
     # TODO: read this from LDAP
-    return False
+    return True
 
-def profile_is_in_show(profile_page):
+def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    return profile_page.ma_in_show or profile_page.mphil_in_show or profile_page.phd_in_show
+    # TODO: from LDAP?
+    return user_is_ma(request) and profile_page.ma_in_show
 
 
 ################################################################################
@@ -89,7 +90,7 @@ def initial_context(request, page_id):
 
     data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
     data['page_id'] = page_id
-    data['is_in_show'] = profile_is_in_show(profile_page)
+    data['is_in_show'] = profile_is_in_show(request, profile_page)
     return data, profile_page
 
 
@@ -131,6 +132,10 @@ def submit(request, page_id):
     messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
 
     return redirect('student-profiles:overview')
+
+
+################################################################################
+## basic stuff for everyone
 
 @login_required
 def basic_profile(request, page_id=None):
@@ -332,6 +337,9 @@ def academic_details(request, page_id=None):
     return render(request, 'student_profiles/academic_details.html', data)
 
 
+################################################################################
+## MA
+
 @login_required
 def ma_details(request, page_id):
     if not user_is_ma(request):
@@ -444,6 +452,39 @@ def ma_show_details(request, page_id):
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/ma_show_details.html', data)
 
+
+################################################################################
+## MPhil and PhD (they're almost the same)
+
+@login_required
+def mphil_details(request, page_id):
+    if not user_is_ma(request):
+        raise Http404("You cannot view MA show details because you're not in the MA programme.")
+
+    data, profile_page = initial_context(request, page_id)
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+    return render(request, 'student_profiles/mphil_details.html', data)
+
+
+
+@login_required
+def phd_details(request, page_id):
+    if not user_is_ma(request):
+        raise Http404("You cannot view MA show details because you're not in the MA programme.")
+
+    data, profile_page = initial_context(request, page_id)
+
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+    return render(request, 'student_profiles/phd_details.html', data)
+
+
+
+################################################################################
+## image handling
 
 @require_POST
 @login_required
