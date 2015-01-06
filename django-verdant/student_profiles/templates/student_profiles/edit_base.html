@@ -34,7 +34,7 @@
 {% if page.has_unpublished_changes %}
 This page has unpublished changes. These changes have to be approved by a moderator before they can be published on the homepage. <strong>Please save any edits before you submit for publication!</strong>
 <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
-  <input type="submit" class="profile-save" value="Submit for publication">
+  <input type="submit" class="submit-page" value="Submit for publication">
 </form>
 {% endif %}
 

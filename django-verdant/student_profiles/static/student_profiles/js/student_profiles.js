@@ -259,25 +259,30 @@ var confirmOnPageExit = function (e)
     return message;
 };
 // but allow leaving via the submit button
-$('input[type="submit"] .profile-save').click(function() {
+$('form.student-profile input[type="submit"]').click(function() {
     window.onbeforeunload = null;
+    stopAutosave();
 });
+
 
 
 /**
  *  Enable auto-saving for the given form.
  */
+var autosaveTimers = {}
 function enableAutosave(form) {
-    var timer = 0;
+    autosaveTimers[form] = 0;
     var delay = 4000;
     var delayShowSaved = 2000;
     var saveString = '';
     var overlay = $('<div id="overlay">Saving...</div>').appendTo(document.body).css('top', '-3em');
     
     function save(element) {
-        clearTimeout(timer);   // we clear the timeout because we only want to save n seconds after the last edit
+        clearTimeout(autosaveTimers[form]);   // we clear the timeout because we only want to save n seconds after the last edit
+        window.onbeforeunload = confirmOnPageExit;
 
-        timer = setTimeout(function() {
+        autosaveTimers[form] = setTimeout(function() {
+            window.onbeforeunload = null;
             var dataString = form.serialize();
             if (saveString == dataString)
             {
@@ -317,6 +322,13 @@ function enableAutosave(form) {
     $(form).find('select').each(function(i, val) {
         $(val).change(save);
     });
+}
+// stop any autosave timers that might be running at the moment
+function stopAutosave() {
+    for (i in autosaveTimers)
+    {
+        clearTimeout(autosaveTimers[i]);
+    }
 }
 // and then immediately enable it for the profile-form in the view
 enableAutosave($('form.student-profile'));

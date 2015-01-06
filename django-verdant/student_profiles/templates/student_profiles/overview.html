@@ -42,6 +42,7 @@ will check your page and publish it if it meets all guidelines.
       <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
         {% else %}
         Draft{% endif %}
+        {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
       <td>
         {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
         {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
@@ -49,7 +50,7 @@ will check your page and publish it if it meets all guidelines.
       <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
       <td>{% if page.has_unpublished_changes %}
         <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
-          <input type="submit" class="profile-save" value="Submit for publication">
+          <input type="submit" class="submit-page" value="Submit for publication">
         </form>
         {% endif %}
       </td>
