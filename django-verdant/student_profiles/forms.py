@@ -8,6 +8,7 @@ from wagtail.wagtailcore.fields import RichTextArea
 from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
+from rca.models import NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage
 
 ################################################################################
@@ -381,11 +382,10 @@ MPhilSponsorFormset = formset_factory(
 )
     
 class MPhilSupervisorForm(forms.ModelForm):
-    # needs javascript, like a carousel!
     supervisor_type = forms.ChoiceField(
         label='Type',
         choices = (   
-            ('internal', 'Internal'),    # if you change these values, you must also change the values in the javascript and in the views!
+            ('internal', 'Internal'),
             ('other', 'Other'),
         )
     )
@@ -395,3 +395,47 @@ class MPhilSupervisorForm(forms.ModelForm):
         fields = ['supervisor', 'supervisor_other']
 MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, extra=1, formset=OrderedFormset)
 
+
+# and the same once again with PhD instead of MPhil
+class PhDForm(forms.ModelForm):
+    
+    class Meta:
+        model = NewStudentPage
+        fields = [
+            'phd_in_show',
+            'phd_school', 'phd_programme',
+            'phd_dissertation_title',
+            'phd_statement',
+            'phd_start_year', 'phd_graduation_year',
+            'phd_work_location',
+        ]
+class PhDCollaboratorForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPagePhDCollaborator
+        fields = ['name']
+PhDCollaboratorFormset = formset_factory(
+    PhDCollaboratorForm,
+    extra=1, formset=OrderedFormset
+)
+class PhDSponsorForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPagePhDSponsor
+        fields = ['name']
+PhDSponsorFormset = formset_factory(
+    PhDSponsorForm,
+    extra=1, formset=OrderedFormset
+)
+    
+class PhDSupervisorForm(forms.ModelForm):
+    supervisor_type = forms.ChoiceField(
+        label='Type',
+        choices = (   
+            ('internal', 'Internal'),
+            ('other', 'Other'),
+        )
+    )
+    
+    class Meta:
+        model = NewStudentPagePhDSupervisor
+        fields = ['supervisor', 'supervisor_other']
+PhDSupervisorFormset = formset_factory(PhDSupervisorForm, extra=1, formset=OrderedFormset)

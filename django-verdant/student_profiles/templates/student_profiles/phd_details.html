@@ -7,7 +7,38 @@
 
 <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
   
-  {% include 'student_profiles/form_snippet.html' with form=ma_form %}
+  {% include 'student_profiles/form_snippet.html' with form=phd_form %}
+
+  {{ carouselitem_formset.management_form }}
+  Carousel images/videos
+  <div id="{{ carouselitem_formset.prefix }}">
+  {% for carouselitem_form in carouselitem_formset %}
+    <div class="inline-form" style="padding: 1em; border: 1px solid black;">
+      {{ carouselitem_form.id }}
+      {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+    <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
+    <a class="move-up">↑</a>
+    <a class="move-down">↓</a>
+    </div>
+  {% endfor %}
+  </div>
+
+  {% include "student_profiles/formset_single_field.html" with formset=collaborator %}
+  {% include "student_profiles/formset_single_field.html" with formset=sponsor %}
+
+  {{ supervisor.management_form }}
+  Supervisors
+  <div id="{{ supervisor.prefix }}">
+  {% for form in supervisor %}
+    <div class="inline-form" style="padding: 1em; border: 1px solid black;">
+      {{ form.id }}
+      {% include 'student_profiles/form_snippet.html' with form=form %}
+    <a class="move-up">↑</a>
+    <a class="move-down">↓</a>
+    </div>
+  {% endfor %}
+  </div>
+
 
   <p><input type="submit" class="profile-save" value="Save"></p>
 </form>
@@ -18,4 +49,63 @@
 
 {% block form_js %}
 <script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
+<script type="text/javascript">
+  
+{# prevent default drop handling because we want specific drop zones for our individual file fields #}
+$(document).bind('drop dragover', function (e) {
+    e.preventDefault();
+});
+
+function updateCarouselSelects() {
+  $('#{{ carouselitem_formset.prefix }} select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_carousel-(\d+)-item_type/);
+    var id_number = _match ? _match[1] : '';
+    
+    if (value == 'image')        {# image, as defined in forms.py #}
+    {
+      $('#carousel-' + id_number + '-image_id').show();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().show();
+
+      $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
+      $('#carousel-' + id_number + '-poster_image_id').hide();
+      $('#id_carousel-' + id_number + '-embedly_url').val('');
+      $('#carousel-' + id_number + '-poster_image_id input').val('');
+    } else if (value == 'video') {# video #}
+    {
+      $('#carousel-' + id_number + '-image_id').hide();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
+      $('#carousel-' + id_number + '-image_id input').val('');
+      $('#id_carousel-' + id_number + '-overlay_text').val('');
+      
+      $('#id_carousel-' + id_number + '-embedly_url').parent().show();
+      $('#carousel-' + id_number + '-poster_image_id').show();
+    }
+  });
+};
+
+makeFormset('{{ collaborator.prefix }}');
+makeFormset('{{ sponsor.prefix }}');
+makeFormset('{{ supervisor.prefix }}');
+makeFormset('{{ carouselitem_formset.prefix }}',
+  addedFunc=function(row) {
+    updateCarouselSelects();
+    row.find('select').each(function(){ $(this).trigger('change')});
+    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+  }
+);
+
+makeRichTextEditable('id_phd_statement');
+$('.image-uploader-block').each(function(i) {
+  activateImageUpload(this.id);
+});
+
+updateCarouselSelects();
+$('#carousel select').each(function(i) {
+  $(this).trigger('change');
+});
+  
+// TODO: javascript for supervisor forms
+  
+</script>
 {% endblock form_js %}
