@@ -1,0 +1,65 @@
+{% extends "rca/base.html" %}
+{% load static compress %}
+
+{% block title %}Student profiles{% endblock title %}
+
+
+{% block content %}
+
+<h1>Your RCA Now blog pages</h1>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<p>
+On this page, you can edit your blog posts for RCA Now and create new ones. Please fill in all relevant information
+on the editing forms. Any changes you make will be stored, but will not be visible on the actual homepage.
+Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
+will check your page and publish it if it meets all guidelines.
+</p>
+
+{% if not profile_pages %}
+<div>
+  There are currently no blog entries for you.
+</div>
+{% endif %}
+
+<table>
+  <tr>
+    <th>Page title</th>
+    <th>Status</th>
+    <th></th>
+  </tr>
+  {% for page in pages %}
+    <tr>
+      <td>{{ page.title }}</td>
+      <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
+        {% else %}
+        Draft{% endif %}
+        {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
+      <td>
+        {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
+        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
+      </td>
+      <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
+      <td>{% if page.has_unpublished_changes %}
+        <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
+          <input type="submit" class="submit-page" value="Submit for publication">
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+
+<form action="{% url 'student-profiles:new-basic' %}" method="get">
+  <input type="submit" value="Start a new blog entry">
+</form>
+
+{% endblock %}
