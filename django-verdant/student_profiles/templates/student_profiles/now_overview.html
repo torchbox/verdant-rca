@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load static compress %}
 
-{% block title %}Student profiles{% endblock title %}
+{% block title %}RCA Now pages{% endblock title %}
 
 
 {% block content %}
@@ -24,11 +24,11 @@ Once you are finished editing your page, please click "Submit for publication" i
 will check your page and publish it if it meets all guidelines.
 </p>
 
-{% if not profile_pages %}
+{% if not pages %}
 <div>
   There are currently no blog entries for you.
 </div>
-{% endif %}
+{% else %}
 
 <table>
   <tr>
@@ -45,11 +45,11 @@ will check your page and publish it if it meets all guidelines.
         {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
       <td>
         {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
+        {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your changes</a>{% endif %}
       </td>
-      <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
+      <td><a href="{% url 'nowpages:edit' page.id %}" class="button">edit</a></td>
       <td>{% if page.has_unpublished_changes %}
-        <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
+        <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
           <input type="submit" class="submit-page" value="Submit for publication">
         </form>
         {% endif %}
@@ -57,9 +57,13 @@ will check your page and publish it if it meets all guidelines.
     </tr>
   {% endfor %}
 </table>
+{% endif %}
 
-<form action="{% url 'student-profiles:new-basic' %}" method="get">
+
+<form action="{% url 'nowpages:create' %}" method="get">
   <input type="submit" value="Start a new blog entry">
 </form>
+
+
 
 {% endblock %}
