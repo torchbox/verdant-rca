@@ -11,8 +11,6 @@ function enableAutosave(formsel) {
     var overlay = $('<div id="overlay">Saving...</div>').appendTo(document.body).css('top', '-3em');
     
     function save(element) {
-        console.log('save called from:');
-        console.log(element);
         clearTimeout(autosaveTimers[formsel]);   // we clear the timeout because we only want to save n seconds after the last edit
         window.onbeforeunload = confirmOnPageExit;
 
@@ -34,7 +32,7 @@ function enableAutosave(formsel) {
                 success: function(msg) {
                     if (msg.ok)
                     {
-                        $('#overlay').html('Saved!');
+                        overlay.html('Saved!');
                         setTimeout(function() {
                             overlay.animate({'top': '-3em'}, 400);
                         }, 2000);
