@@ -5,7 +5,7 @@ and for allowing more customization
 
 from django.conf.urls import patterns, url
 
-from .now_views import overview, create, edit, preview, submit
+from .now_views import overview, edit, preview, submit
 
 urlpatterns = patterns(
     '',
@@ -14,7 +14,7 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/preview/$', preview, name='preview'),
     url(r'^(?P<page_id>\d+)/submit/$', submit, name='submit'),
 
-    url(r'^new/$', create, name='create'),
+    url(r'^new/$', edit, name='create'),
 
     url(r'^(?P<page_id>\d+)/edit/$', edit, name='edit'),
 

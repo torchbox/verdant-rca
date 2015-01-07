@@ -1,0 +1,26 @@
+{% extends "student_profiles/now_edit_base.html" %}
+
+
+{% block form_content %}
+
+<h1>Edit page</h1>
+
+<form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+  {% include 'student_profiles/form_snippet.html' with form=form %}
+
+  <p>
+    <input type="submit" class="page-save" value="Save as draft">
+    <input type="submit" class="submit-page" value="Save and submit for publication" name="submit_for_moderation">
+  </p>
+</form>
+
+{% endblock form_content %}
+
+
+{% block form_js %}
+<script type="text/javascript">
+  makeRichTextEditable('id_body');
+</script>
+
+{% endblock form_js %}

@@ -13,8 +13,8 @@ from wagtail.wagtailcore.models import Page
 from rca.models import RcaNowPage
 from rca.models import RcaImage
 
-
-from .forms import ImageForm
+from .now_forms import PageForm
+from .views import slugify
 
 
 # this is the ID of the page where new student pages are added as children
@@ -52,13 +52,60 @@ def overview(request):
 
 
 @login_required
-def create(request):
-    pass
+def edit(request, page_id=None):
+    if page_id is not None:
+        page = get_page_or_404(request, page_id)
+    else:
+        page = RcaNowPage(owner=request.user)
+    data = {
+        'page': page,
+    }
+    
+    data['form'] = PageForm(instance=page)
+    
+    if request.method == 'POST':
+        data['form'] = form = PageForm(request.POST, instance=page)
 
+        if page.locked:
+            if not request.is_ajax():
+                messages.error(request, 'The page could not be saved, it is currently locked.')
+                # fall through to regular rendering
+        elif form.is_valid():
+            page = form.save(commit=False)
+            submit_for_moderation = 'submit_for_moderation' in request.POST
+            
+            print page.tags
+            print form.cleaned_data
+            
+            if page_id is None:
+                page.live = False
+                page.show_on_homepage = False
+                Page.objects.get(id=RCA_NOW_INDEX_ID).add_child(instance=page)
+                page.slug = slugify(page.title)
+                if Page.objects.exclude(id=page.id).filter(slug=page.slug).exists():
+                    page.slug = '{}-{}'.format(
+                        slugify(page.title),
+                        page.id,
+                    )
+            
+            revision = page.save_revision(
+                user=request.user,
+                submitted_for_moderation=submit_for_moderation
+            )
 
-@login_required
-def edit(request, page_id):
-    pass
+            page.has_unpublished_changes = True
+            page.save()
+
+            if submit_for_moderation:
+                return redirect('nowpages:overview')
+            elif request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            else:
+                return redirect('nowpages:edit', page_id=page.id)
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+    return render(request, 'student_profiles/now_edit.html', data)
 
 
 @login_required
