@@ -58,6 +58,11 @@ This page has unpublished changes. These changes have to be approved by a modera
 <script src="{% static "student_profiles/js/vendor/jquery.fileupload-process.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.fileupload-image.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.fileupload-validate.js" %}"></script>
+
+{# we import the JS files here because every form uses them anyway #}
+<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
+<script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+
 {% endcompress %}
 {% endblock extra_js %}

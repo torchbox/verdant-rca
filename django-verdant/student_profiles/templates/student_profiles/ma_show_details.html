@@ -67,14 +67,8 @@
 
 
 {% block form_js %}
-<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 <script type="text/javascript">
 $(function() {
-
-  {# prevent default drop handling because we want specific drop zones for our individual file fields #}
-  $(document).bind('drop dragover', function (e) {
-      e.preventDefault();
-  });
 
   function updateSelects() {
     $('#carousel select').change(function() {
