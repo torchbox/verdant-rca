@@ -60,8 +60,6 @@ class PageForm(forms.ModelForm):
             'tags',
         ]
 
-u'<h1>This is the introduction!</h1>\n<h1></h1><h2><b>Can we not do an h1 here?!</b></h2>This is an introduction!\nAnd some more writing here! wow, save was called in the beginning?'
-
 # Author selection logic:
 # Credit ('by'):
 #    Choose type (select, values = Single student or Group of students)
