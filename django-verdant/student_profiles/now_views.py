@@ -9,6 +9,8 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
+from taggit.models import Tag
+
 from wagtail.wagtailcore.models import Page
 from rca.models import RcaNowPage
 from rca.models import RcaImage
@@ -73,6 +75,10 @@ def edit(request, page_id=None):
         elif form.is_valid():
             page = form.save(commit=False)
             submit_for_moderation = 'submit_for_moderation' in request.POST
+            
+            page.tags = [
+                Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']
+            ]
             
             print page.tags
             print form.cleaned_data
