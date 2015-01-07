@@ -65,7 +65,7 @@ function updateCarouselSelects() {
       $('#carousel-' + id_number + '-poster_image_id').hide();
       $('#id_carousel-' + id_number + '-embedly_url').val('');
       $('#carousel-' + id_number + '-poster_image_id input').val('');
-    } else if (value == 'video') {# video #}
+    } else if (value == 'video')
     {
       $('#carousel-' + id_number + '-image_id').hide();
       $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
@@ -77,6 +77,30 @@ function updateCarouselSelects() {
     }
   });
 };
+
+function updateSupervisorSelects() {
+  $('#{{ supervisor.prefix }} select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_supervisor-(\d+)-supervisor_type/);
+    var id_number = _match ? _match[1] : '';
+
+    if (value == 'internal') {
+      $('#id_supervisor-' + id_number + '-supervisor').parent().show();
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor_other').val('');
+      
+    }
+    else if (value == 'other')
+    {
+
+      $('#id_supervisor-' + id_number + '-supervisor').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor').val('');
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().show();
+    }
+  });
+}
 
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
@@ -98,8 +122,9 @@ updateCarouselSelects();
 $('#carousel select').each(function(i) {
   $(this).trigger('change');
 });
-  
-// TODO: javascript for supervisor forms
-  
+
+updateSupervisorSelects();
+$('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
+
 </script>
 {% endblock form_js %}
