@@ -370,9 +370,9 @@ def ma_details(request, page_id):
             profile_page.has_unpublished_changes = True
             profile_page.save()
             
-        if request.is_ajax():
-            return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
-        return redirect('student-profiles:edit-ma', page_id=page_id)
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            return redirect('student-profiles:edit-ma', page_id=page_id)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
