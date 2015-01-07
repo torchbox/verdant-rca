@@ -80,9 +80,6 @@ def edit(request, page_id=None):
                 Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']
             ]
             
-            print page.tags
-            print form.cleaned_data
-            
             if page_id is None:
                 page.live = False
                 page.show_on_homepage = False
