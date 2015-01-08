@@ -1,34 +1,58 @@
 {% extends "rca/base.html" %}
 {% load static compress %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static "student_profiles/css/student-profile.less" %}" />
+{% endblock %}
+
 {% block title %}Student profiles{% endblock title %}
 
 
 {% block content %}
 
-<h1>Your profiles</h1>
+<div class="page-content">
+    <div class="inner" id="maincontent">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h1 class="h1">Your student profiles</h1>
+        <section class="row">
+            <section class="body-text">
+                {% if not profile_pages %}
+                    <div>There are currently no profile pages for you.</div>
+                    <div class="profile-actions">
+                        <a class="button">Create Profile</a>
+                    </div>
+                {% else %}
+                    <div class="profile-actions">
+                        <a class="button">Create another Profile</a> 
+                    </div>         
+                {% endif %}
 
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+            </section>
+            <section class="four">
+                <div class="single borders">
+                    <h2 class="module-title">About</h2>
+                    On this page, you can edit your profile pages and create new ones. Please fill in all relevant information
+                    on the forms. Any changes you make will be stored, but will not be visible on the actual homepage, before moderation.
+                    Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
+                    will check your page and publish it if it meets all guidelines.
+                </div>
+            </section>
+        </section>
+    </div>
 
-
-<p>
-On this page, you can edit your profile pages and create new ones. Please fill in all relevant information
-on the editing forms. Any changes you make will be stored, but will not be visible on the actual homepage.
-Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
-will check your page and publish it if it meets all guidelines.
-</p>
-
-{% if not profile_pages %}
-<div>
-  There are currently no profile pages for you.
 </div>
-{% endif %}
+
+
+
+
+
+
 
 <table>
   <tr>
@@ -58,8 +82,6 @@ will check your page and publish it if it meets all guidelines.
   {% endfor %}
 </table>
 
-<form action="{% url 'student-profiles:new-basic' %}" method="get">
-  <input type="submit" value="Create a new profile page">
-</form>
+
 
 {% endblock %}
