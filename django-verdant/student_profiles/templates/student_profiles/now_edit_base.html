@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load static compress %}
+{% load compress static wagtailimages_tags wagtailuserbar rca_tags %}
 
 {% block title %}RCA Now: Edit page{% endblock title %}
 
@@ -33,15 +33,80 @@
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
     {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "student_profiles/css/student_profiles.less" %}" />{% endcompress %}
+    <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
 {% endblock %}
-{% block extra_js %}
+
+
+{% block js %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    <script type="text/javascript">
+        var domainroot = "{{ request.site.hostname }}";
+    </script>
+
+    {% use_lightbox %}
+
+    {% compress js %}
+        <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
+        <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
+{#      <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script> #}
+{# this previous line is the reason for including the block here: we want to remove that line, so we have to duplicate everything else #}
+        <script src="{% static "rca/js/vendor/history.js/scripts/bundled/html4+html5/jquery.history.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.pjax.js" %}"></script>
+        <script src="{% static "rca/js/vendor/froogaloop2.min.js" %}"></script>
+        <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
+        <script src="{% static "rca/js/carousel-news.js" %}"></script>
+        <script src="{% static "rca/js/tweets.js" %}"></script>
+        <script src="{% static "rca/js/site.js" %}"></script>
+        <script src="{% static "rca/js/nav.js" %}"></script>
+        <script src="{% static "rca/js/pushstate.js" %}"></script>
+
+        {% get_debug as DEBUG %}
+
+        {% if DEBUG %}
+            <script type="text/javascript">
+                //set global var for media_url so that it can be used by the script being called
+                var media_url = document.location.origin + "{{ MEDIA_URL }}";
+                // convenience feature for js switching during development
+                var debug = true;
+            </script>
+            <script src="{% static "rca/js/local_images.js" %}"></script>
+        {% endif %}
+    {% endcompress %}
+
+    <script type="text/javascript">
+    {# and here is a replacement for that missing customSelect #}
+    (function ($) {'use strict';$.fn.extend({customSelect: function (options) {}});})(jQuery);
+    
+        {% if not request.is_ajax %}
+            // onDocumentReady wraps all the startup code in site.js
+            jQuery(onDocumentReady);
+        {% endif %}
+    </script>
+
+
+{##############################################################################}
+{# custom code starts here #}
     {% include "wagtailadmin/pages/_editor_js.html" %}
     {% include "wagtailadmin/shared/tag_field_js.html" %}
 {% compress js %}
 
+
+
 {# we import the JS files here because every form uses them anyway #}
 
-
+<script src="{% static "student_profiles/select2/select2.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
 <script src="{% static "student_profiles/js/nowpages.js" %}"></script>
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
@@ -483,6 +548,6 @@
     }
   </style>
 
+{% endblock %}
 
 
-{% endblock extra_js %}
