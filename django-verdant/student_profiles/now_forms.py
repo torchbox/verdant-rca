@@ -54,6 +54,7 @@ class PageForm(forms.ModelForm):
         label='Author',
         required=False,
         queryset=NewStudentPage.objects.filter(live=True).order_by('last_name', 'first_name'),
+        widget=forms.Select(attrs={'width': '100%'})
     )
     
     def clean(self):
