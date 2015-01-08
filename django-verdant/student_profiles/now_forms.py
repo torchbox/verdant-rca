@@ -18,7 +18,7 @@ class PageForm(forms.ModelForm):
             initial['tags'] = ','.join([t.name for t in instance.tags.all()])
             
             # parse out the introduction here
-            r = re.compile('^(<h1>(.+?)</h1>)')
+            r = re.compile('^(<h1>(.*?)</h1>)')
             if r.search(instance.body):
                 match_groups = r.search(instance.body).groups()
                 intro_all = match_groups[0]
