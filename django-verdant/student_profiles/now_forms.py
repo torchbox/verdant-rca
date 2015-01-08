@@ -5,7 +5,7 @@ from django import forms
 from wagtail.wagtailcore.fields import RichTextArea
 
 from rca.help_text import help_text
-from rca.models import RcaNowPage
+from rca.models import RcaNowPage, NewStudentPage
 
 
 class PageForm(forms.ModelForm):
@@ -26,6 +26,10 @@ class PageForm(forms.ModelForm):
                 initial['intro_text'] = intro
                 initial['body'] = instance.body[len(intro_all):]
             
+            if NewStudentPage.objects.filter(live=True, title=instance.author).exists():
+                initial['by'] = 'single'
+                initial['author_single'] = NewStudentPage.objects.get(live=True, title=instance.author)
+            
             kwargs['initial'] = initial
         
         super(PageForm, self).__init__(*args, **kwargs)
@@ -34,6 +38,22 @@ class PageForm(forms.ModelForm):
         label="Introduction",
         required=False,
         widget=forms.Textarea,
+    )
+    
+    by = forms.ChoiceField(
+        label='by',
+        required=False,
+        choices=(
+            ('single', 'Single student'),
+            ('group', 'Group of students'),
+        ),
+        initial='group',
+    )
+    
+    author_single = forms.ModelChoiceField(
+        label='Author',
+        required=False,
+        queryset=NewStudentPage.objects.filter(live=True).order_by('last_name', 'first_name'),
     )
     
     def clean(self):
@@ -45,6 +65,9 @@ class PageForm(forms.ModelForm):
             body=body
         )
         
+        if self.cleaned_data.get('by') == 'single' and self.cleaned_data.get('author_single'):
+            self.cleaned_data['author'] = self.cleaned_data.get('author_single').title
+        
         return self.cleaned_data
     
     class Meta:
@@ -53,17 +76,10 @@ class PageForm(forms.ModelForm):
             'title',
             'intro_text',
             'body',
-            # author selection logic here
+            'by',
+            'author_single',
             'author',
             'date',
             'programme',
             'tags',
         ]
-
-# Author selection logic:
-# Credit ('by'):
-#    Choose type (select, values = Single student or Group of students)
-#      Conditional field if Single student selected:
-#        Name of Student (Wagtail page picker)
-#      Conditional field if Group of students selected:
-#        Name of Students (basic text)

@@ -7,8 +7,6 @@
 
 <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-  <input id="datetimepicker" type="text" >
-
   {% include 'student_profiles/form_snippet.html' with form=form %}
 
   <p>
@@ -31,6 +29,22 @@ $('#id_date').datetimepicker({
   scrollInput:false,
 });
   
+// make the selection between single author and group of authors
+
+$('#id_by').change(function() {
+  var value = $(this).val();
+  
+  if (value == 'single') {
+    $('#id_author_single').parent().show();
+    $('#id_author').parent().hide();
+  }
+  else if (value == 'group') {
+    $('#id_author_single').parent().hide();
+    $('#id_author').parent().show();
+  }
+});
+$('#id_by').change();
+
   
 </script>
 
