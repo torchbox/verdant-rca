@@ -2,7 +2,7 @@
 {% load static compress %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static "student_profiles/css/student-profile.less" %}" />
+        {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
 {% endblock %}
 
 {% block title %}Student profiles{% endblock title %}
@@ -25,11 +25,40 @@
                 {% if not profile_pages %}
                     <div>There are currently no profile pages for you.</div>
                     <div class="profile-actions">
-                        <a class="button">Create Profile</a>
+                        <a class="button" href="{% url 'student-profiles:new-basic' %}">Create Profile</a>
                     </div>
                 {% else %}
+                    {% if profile_pages %}
+                    <table>
+                      <tr>
+                        <th>Page title</th>
+                        <th>Status</th>
+                        <th></th>
+                      </tr>
+                      {% for page in profile_pages %}
+                        <tr>
+                          <td>{{ page.title }}</td>
+                          <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
+                            {% else %}
+                            Draft{% endif %}
+                            {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
+                          <td>
+                            {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
+                            {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
+                          </td>
+                          <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
+                          <td>{% if page.has_unpublished_changes %}
+                            <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
+                              <input type="submit" class="submit-page" value="Submit for publication">
+                            </form>
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+                    {% endif %}
                     <div class="profile-actions">
-                        <a class="button">Create another Profile</a> 
+                        <a class="button" href="{% url 'student-profiles:new-basic' %}">Create Profile</a>
                     </div>         
                 {% endif %}
 
@@ -54,33 +83,6 @@
 
 
 
-<table>
-  <tr>
-    <th>Page title</th>
-    <th>Status</th>
-    <th></th>
-  </tr>
-  {% for page in profile_pages %}
-    <tr>
-      <td>{{ page.title }}</td>
-      <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
-        {% else %}
-        Draft{% endif %}
-        {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
-      <td>
-        {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Show preview of your changes</a>{% endif %}
-      </td>
-      <td><a href="{% url 'student-profiles:edit-basic' page.id %}" class="button">edit</a></td>
-      <td>{% if page.has_unpublished_changes %}
-        <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
-          <input type="submit" class="submit-page" value="Submit for publication">
-        </form>
-        {% endif %}
-      </td>
-    </tr>
-  {% endfor %}
-</table>
 
 
 
