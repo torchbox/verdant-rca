@@ -122,7 +122,7 @@ class ImageInput(forms.FileInput):
         
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
-                <div class="preview" style="position: relative;">{preview}</div>
+                <div class="preview" style="position: relative; display: {preview_display};">{preview}</div>
                 <div class="dropzone" style="width: 200px; height: 100px;">Drop files here</div>
                 <button class="clearbutton"{hidden_clear}>Clear image</button>
                 <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
@@ -131,7 +131,7 @@ class ImageInput(forms.FileInput):
                 </div>
             </div>""".format(
                 name=name,
-                preview=preview,
+                preview=preview, preview_display='block' if preview else 'none',
                 value_id=value,
                 hidden_clear='' if preview else ' style="display: none;"',
             )
