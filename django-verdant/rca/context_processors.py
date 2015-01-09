@@ -5,7 +5,11 @@ from datetime import date
 
 def global_vars(request):
     year = date.today().year
-    schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
+    try:
+        schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
+    except KeyError:
+        year = 2014
+        schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
     schools_current_year = filter(lambda s: s[0] in schools_current_year, SCHOOL_CHOICES)
     years_until_current_year = [y for y in YEARS if int(y) <= year]
 
