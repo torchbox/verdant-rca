@@ -122,7 +122,7 @@ class ImageInput(forms.FileInput):
         
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
-                <div class="preview">
+                <div class="preview" style="display: {preview_display};">
                     {preview}
                     <div class="progress">
                         <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
@@ -134,7 +134,7 @@ class ImageInput(forms.FileInput):
 
             </div>""".format(
                 name=name,
-                preview=preview,
+                preview=preview, preview_display='block' if preview else 'none',
                 value_id=value,
                 hidden_clear='' if preview else ' style="display: none;"',
             )
