@@ -10,8 +10,8 @@
       {% include "student_profiles/form_field_unlabelled.html" with field=field %}
     {% endfor %}
     </label>
-    <a class="move-up">↑</a>
-    <a class="move-down">↓</a>
+    <i class="icon action ion-android-arrow-up move-up"></i>
+    <i class="icon action ion-android-arrow-down move-down"></i>
   </div>
 {% endfor %}
 {% for error in formset.non_form_errors %}

@@ -25,7 +25,9 @@
 form.student-profile {
     input[type=text], 
     input[type=tel], 
-    input[type=email], 
+    input[type=email],
+    input[type=url],
+    .richtext, 
     textarea {
         font-size: @font-size-15;
         max-width: 70%;
@@ -69,16 +71,42 @@ form.student-profile {
             width: 100%;
             height: auto;
         }
-        .ion-ios-trash {
+        .clearbutton {
             position: absolute;
             bottom: 0em;
             right: 0em;
             margin: 0.2em;
             padding: 0.5em;
-            width: 42px;
-            height: 45px;
+            width: 37px;
+            height: 38px;
             text-align: center;
-            font-size: @font-size-30;
+            font-size: @font-size-24;
+        }
+    }
+
+    .inline-form {
+        .move-up,
+        .move-down,
+        .delete-row {
+            font-size: @font-size-15;
+            width: 18px;
+            height: 19px;
+            text-align: center;
+            display: inline-block;
+        }
+        .delete-row {
+            text-indent: -9999%;
+            &:after {
+                color: @color-white;
+                background: @color-highlight-blue;
+                content: "\f37f";
+                font-family: @font-family-ion;
+                text-indent: 0;
+                width: 18px;
+                height: 19px;
+                float: left;
+                line-height: 1.18em;
+            }
         }
     }
 }

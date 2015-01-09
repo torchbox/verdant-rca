@@ -125,9 +125,9 @@ class ImageInput(forms.FileInput):
                 <div class="preview" style="display: {preview_display};">
                     {preview}
                     <div class="progress">
-                        <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                        <div class="bar" style="width: 0%; height: 3px; background: #0096ff;"></div>
                     </div> 
-                    <i class="icon clearbutton action ion-ios-trash" {hidden_clear} title="Remove"></i>
+                    <i class="icon clearbutton action ion-android-delete" {hidden_clear} title="Remove"></i>
                 </div>
                 <div class="dropzone">Drop files here</div>
                 <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
