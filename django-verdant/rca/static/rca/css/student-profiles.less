@@ -14,13 +14,106 @@
 .borders {
     border-top: 1px solid @color-light-grey;
     border-bottom: 1px solid @color-light-grey;
+    padding: 1em 0;
+    h2 {
+        margin-top: 0;
+    }
 }
+
+/* $PROFILE FORM OVERIDES */
+
+form.student-profile {
+    input[type=text], 
+    input[type=tel], 
+    input[type=email], 
+    textarea {
+        font-size: @font-size-15;
+        max-width: 70%;
+        display: block;
+        margin-top: 0.5em;
+    }
+    textarea,
+    .richtext {
+        background: @color-pale-grey;
+    }
+    label {
+        display: block;
+        margin-top: 0.5em;
+    }
+    // Image drag and drop uploader
+    .image-uploader-block {
+        .clearfix();
+    }
+    .image-uploader-block .dropzone {
+        border: 2px dashed @color-light-grey;
+        text-align: center;
+        line-height: 8em;
+        width: 150px;
+        height: 150px;
+        float: left;
+        margin-left: 2.5%;
+        &:first-child {
+            margin-left: 0;
+        }
+    }
+    .image-uploader-block .preview {
+        padding: 0.2em;
+        margin-bottom: 0.5em;
+        border: 2px solid @color-light-grey;
+        width: 150px;
+        height: 150px;
+        float: left;
+        background: @color-pale-grey;
+        position: relative;
+        canvas {
+            width: 100%;
+            height: auto;
+        }
+        .ion-ios-trash {
+            position: absolute;
+            bottom: 0em;
+            right: 0em;
+            margin: 0.2em;
+            padding: 0.5em;
+            width: 42px;
+            height: 45px;
+            text-align: center;
+            font-size: @font-size-30;
+        }
+    }
+}
+
+/* $PROFILE NAV */
+
+.student-profile-nav {
+    height: auto;
+    width: 100%;
+    padding-bottom: 1.2em;
+    margin-bottom: 1em;
+    ul {
+        position: static;
+        .clearfix();
+    }
+    ul li {
+        position: static;
+        float: left;
+    }
+}
+
+/* $PROFILE LIST */
+
+.profile-list {
+    td {
+        padding: 0 0.5em;
+    }
+}
+
 
 /* $PROFILE ACTIONS */
 
 .profile-actions {
     margin-top: 1em;
-    border: 1px solid @color-light-grey;
+    border-top: 1px solid @color-light-grey;
     padding-top: 0.5em;
 }
 
@@ -30,6 +123,15 @@ a.button {
     color: @color-white;
     &:hover {
         text-decoration: none;
+    }
+}
+
+i.icon.action {
+    background: @color-highlight-blue;
+    color: @color-white;
+    &:hover {
+        background: @color-pink;
+        cursor: pointer;
     }
 }
 

@@ -4,21 +4,33 @@
 
 {% block form_content %}
 
-<h1>Basic profile</h1>
+<div class="page-content">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Basic Profile</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-<form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+        {% include 'student_profiles/form_snippet.html' with form=basic_form %}
 
-  {% include 'student_profiles/form_snippet.html' with form=basic_form %}
+        {% include "student_profiles/formset_single_field.html" with formset=email_formset %}
 
-  <hr>
-  {% include "student_profiles/formset_single_field.html" with formset=email_formset %}
-  <hr>
+        {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
+        {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
 
-  {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
-
-  <p><input type="submit" class="profile-save" value="Save"></p>
-</form>
+        <div class="profile-actions">
+          <input type="submit" class="profile-save" value="Save">
+        </div>
+      </form>
+    </section>
+  </section>
+</div>
 
 {% endblock form_content %}
 

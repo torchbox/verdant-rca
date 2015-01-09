@@ -110,7 +110,7 @@ class ImageInput(forms.FileInput):
             try:
                 value = int(value)
                 image = RcaImage.objects.get(id=value)
-                rendition = image.get_rendition('max-130x100')
+                rendition = image.get_rendition('max-150x150')
                 preview = """
                     <img src="{url}" width="{width}" height="{height}" style="width: auto;">
                 """.format(
@@ -122,13 +122,16 @@ class ImageInput(forms.FileInput):
         
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
-                <div class="preview" style="position: relative;">{preview}</div>
-                <div class="dropzone" style="width: 200px; height: 100px;">Drop files here</div>
-                <button class="clearbutton"{hidden_clear}>Clear image</button>
-                <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
-                <div class="progress">
-                    <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                <div class="preview">
+                    {preview}
+                    <div class="progress">
+                        <div class="bar" style="width: 0%; height: 18px; background: green;"></div>
+                    </div> 
+                    <i class="icon clearbutton action ion-ios-trash" {hidden_clear} title="Remove"></i>
                 </div>
+                <div class="dropzone">Drop files here</div>
+                <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
+
             </div>""".format(
                 name=name,
                 preview=preview,
