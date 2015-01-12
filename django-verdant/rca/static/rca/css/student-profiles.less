@@ -67,9 +67,20 @@ form.student-profile {
         width: 150px;
         height: 150px;
         float: left;
-        margin-left: 2.5%;
+        position: relative;
         &:first-child {
             margin-left: 0;
+        }
+        &.hover:after {
+            content: "\f3c6";
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            left: 50%;
+            margin-left: -10px;
+            font-family: @font-family-ion;
+            font-size: @font-size-22;
+            color: @color-medium-grey;
         }
     }
     .image-uploader-block .preview {
@@ -81,6 +92,7 @@ form.student-profile {
         float: left;
         background: @color-pale-grey;
         position: relative;
+        margin-right: 2.5%;
         canvas {
             width: 100%;
             height: auto;
@@ -156,6 +168,11 @@ form.student-profile {
             margin-top: 0.5em;
             display: inline-block;
         }
+    }
+    .dynamic-formset-carousel {
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+        border-bottom: 1px solid @color-pale-grey;        
     }
 }
 

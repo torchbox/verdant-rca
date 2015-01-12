@@ -22,12 +22,12 @@
         Carousel images/videos
         <div id="{{ carouselitem_formset.prefix }}">
         {% for carouselitem_form in carouselitem_formset %}
-          <div class="inline-form" style="padding: 1em; border: 1px solid black;">
+          <div class="inline-form">
             {{ carouselitem_form.id }}
             {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
           <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
-          <a class="move-up">↑</a>
-          <a class="move-down">↓</a>
+          <i class="icon action ion-android-arrow-up move-up"></i>
+          <i class="icon action ion-android-arrow-down move-down"></i>
           </div>
         {% endfor %}
         </div>
