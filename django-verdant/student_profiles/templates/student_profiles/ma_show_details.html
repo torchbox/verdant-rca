@@ -3,64 +3,51 @@
 
 {% block form_content %}
 
-<h1>MA show details</h1>
+<div class="page-content">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>MA show details</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-<form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-  
-  {% include 'student_profiles/form_snippet.html' with form=show_form %}
+        {% include 'student_profiles/form_snippet.html' with form=show_form %}
 
-  {{ carouselitem_formset.management_form }}
-  Carousel images/videos
-  <div id="{{ carouselitem_formset.prefix }}">
-  {% for carouselitem_form in carouselitem_formset %}
-    <div class="inline-form" style="padding: 1em; border: 1px solid black;">
-      {{ carouselitem_form.id }}
-      {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
-    <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
-    <a class="move-up">↑</a>
-    <a class="move-down">↓</a>
-    </div>
-  {% endfor %}
-  </div>
+        {{ carouselitem_formset.management_form }}
+        Carousel images/videos
+        <div id="{{ carouselitem_formset.prefix }}">
+        {% for carouselitem_form in carouselitem_formset %}
+          <div class="inline-form" style="padding: 1em; border: 1px solid black;">
+            {{ carouselitem_form.id }}
+            {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+          <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
+          <a class="move-up">↑</a>
+          <a class="move-down">↓</a>
+          </div>
+        {% endfor %}
+        </div>
 
-  {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
+        {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
+        {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
 
 
-  <p><input type="submit" class="profile-save" value="Save"></p>
-</form>
+        <div class="profile-actions">
+          <input type="submit" class="profile-save" value="Save">
+        </div>
+      </form>
+    </section>
+  </section>
+</div>
 
 {% endblock form_content %}
 
 
 {% block extra_css %}
-<style type="text/css" media="screen">
-  .dropzone {
-      background: palegreen;
-      width: 150px;
-      height: 50px;
-      line-height: 50px;
-      text-align: center;
-      font-weight: bold;
-  }
-  .dropzone.in {
-      width: 600px;
-      height: 200px;
-      line-height: 200px;
-      font-size: larger;
-  }
-  .dropzone.hover {
-      background: lawngreen;
-  }
-  .dropzone.fade {
-      -webkit-transition: all 0.3s ease-out;
-      -moz-transition: all 0.3s ease-out;
-      -ms-transition: all 0.3s ease-out;
-      -o-transition: all 0.3s ease-out;
-      transition: all 0.3s ease-out;
-      opacity: 1;
-  }
-</style>
 
 {{ block.super }}
 {% endblock extra_css %}

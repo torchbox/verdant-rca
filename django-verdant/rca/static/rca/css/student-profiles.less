@@ -28,11 +28,21 @@ form.student-profile {
     input[type=email],
     input[type=url],
     .richtext, 
-    textarea {
-        font-size: @font-size-15;
+    textarea,
+    select {
+        font-size: @font-size-16;
         max-width: 70%;
         display: block;
         margin-top: 0.5em;
+    }
+    select {
+        content: "";
+        display: block;
+        background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+        background-repeat: no-repeat;
+        background-position: right 17px top 19px;
+        padding-right: 4.5em;
+        .border-box();
     }
     textarea,
     .richtext {
@@ -41,6 +51,10 @@ form.student-profile {
     label {
         display: block;
         margin-top: 0.5em;
+    }
+    .help-text {
+        text-transform: none;
+        max-width: 70%;
     }
     // Image drag and drop uploader
     .image-uploader-block {
@@ -83,7 +97,6 @@ form.student-profile {
             font-size: @font-size-24;
         }
     }
-
     .inline-form {
         .move-up,
         .move-down,
@@ -99,14 +112,49 @@ form.student-profile {
             &:after {
                 color: @color-white;
                 background: @color-highlight-blue;
-                content: "\f37f";
+                content: "\f2d7";
                 font-family: @font-family-ion;
-                text-indent: 0;
+                text-indent: 1px;
                 width: 18px;
                 height: 19px;
                 float: left;
-                line-height: 1.18em;
+                line-height: 1.35em;
+                text-align: center;
             }
+        }
+        .delete-row:hover:after {
+            background-color: @color-pink;
+        }
+    }
+    // Hide until needed
+    .inline-form {
+        .action,
+        .delete-row {
+            .opacity(0);
+            .transition(0.5s ease all);
+        }
+    }
+    // Show when form el is hovered
+    .inline-form:hover {
+        .action,
+        .delete-row {
+            .opacity(100);
+            .transition(0.8s ease all);
+        }
+    }
+    .field-set {
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+        border-bottom: 1px solid @color-pale-grey;
+        &:last-child {
+            border: none;
+        }
+        label {
+            margin-bottom: 0.2em;
+        }
+        .add-row.button {
+            margin-top: 0.5em;
+            display: inline-block;
         }
     }
 }

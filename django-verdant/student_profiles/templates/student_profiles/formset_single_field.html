@@ -2,7 +2,7 @@
 <label {% if formset.total_error_count > 0 %}class="error"{% endif %}>{{ formset.title }}
   {{ formset.non_form_errors }}
 </label>
-<div id="{{ formset.prefix }}" >
+<div id="{{ formset.prefix }}" class="field-set" >
 {% for form in formset %}
   <div class="inline-form">
     <label class="field">

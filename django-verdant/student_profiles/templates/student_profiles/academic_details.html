@@ -3,23 +3,34 @@
 
 {% block form_content %}
 
-<h1>Academic details</h1>
+<div class="page-content">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Academic details</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-<form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-  
-  {% include 'student_profiles/form_snippet.html' with form=academic_form %}
+      {% include 'student_profiles/form_snippet.html' with form=academic_form %}
 
-  {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=awards_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=publications_formset %}
-  {% include "student_profiles/formset_single_field.html" with formset=conferences_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=awards_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=publications_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=conferences_formset %}
 
-
-
-
-  <p><input type="submit" class="profile-save" value="Save"></p>
-</form>
+        <div class="profile-actions">
+          <input type="submit" class="profile-save" value="Save">
+        </div>
+      </form>
+    </section>
+  </section>
+</div>
 
 {% endblock form_content %}
 
