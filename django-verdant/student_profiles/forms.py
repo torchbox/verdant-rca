@@ -14,33 +14,6 @@ from rca.models import RcaImage
 ################################################################################
 ## internal classes
 
-class ReadonlyFormMixin(object):
-    """Form that allows read-only fields.
-    
-    To make a field readonly, simply set the property `.readonly = True` on the
-    field. The initial value of the field is copied into `cleaned_data`.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
-        
-        for field in self.fields:
-            ffield = self[field].field
-            if getattr(ffield, 'readonly', False):
-                ffield.required = False
-
-    def clean(self):
-        cleaned_data = super(ReadonlyFormMixin, self).clean()
-
-        for field in self.fields:
-            ffield = self[field].field
-            if getattr(ffield, 'readonly', False):
-                cleaned_data[field] = self.initial.get(field)
-                self.data[field] = self.initial.get(field)
-
-        return cleaned_data
-
-
 class OrderedFormset(BaseFormSet):
     
     def __init__(self, *args, **kwargs):
@@ -156,6 +129,17 @@ class ImageForm(forms.Form):
 
 
 ################################################################################
+## Starting out
+
+class StartingForm(forms.ModelForm):
+
+    class Meta:
+        model = NewStudentPage
+        fields = ['first_name', 'last_name']
+
+
+
+################################################################################
 ## Basic Profile
 
 class ProfileBasicForm(forms.ModelForm):
@@ -172,18 +156,6 @@ class ProfileBasicForm(forms.ModelForm):
     class Meta:
         model = NewStudentPage
         fields = ['first_name', 'last_name', 'profile_image', 'statement']
-
-
-class ProfileBasicNewForm(ReadonlyFormMixin, forms.ModelForm):
-
-    profile_image = forms.ImageField(
-        help_text='You must save this profile first before you can add an image.'
-    )
-    profile_image.readonly = True
-
-    class Meta:
-        model = NewStudentPage
-        fields = ['first_name', 'last_name', 'statement']
 
 
 class EmailForm(forms.Form):
