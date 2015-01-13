@@ -3,6 +3,7 @@
 
 {% block form_content %}
 
+
 <div class="page-content">
   {% if messages %}
   <ul class="messages">
@@ -20,7 +21,7 @@
 
         {{ carouselitem_formset.management_form }}
         <h4>Carousel images/videos</h4>
-        <div id="{{ carouselitem_formset.prefix }}">
+        <div id="{{ carouselitem_formset.prefix }}" class="field-set">
         {% for carouselitem_form in carouselitem_formset %}
           <div class="inline-form">
             {{ carouselitem_form.id }}
@@ -36,8 +37,8 @@
         {% include "student_profiles/formset_single_field.html" with formset=sponsor %}
 
         {{ supervisor.management_form }}
-        Supervisors
-        <div id="{{ supervisor.prefix }}">
+        <h4>Supervisors</h4>
+        <div id="{{ supervisor.prefix }}" class="field-set">
         {% for form in supervisor %}
           <div class="inline-form">
             {{ form.id }}

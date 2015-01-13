@@ -131,7 +131,6 @@ function activateImageUpload(for_id, options) {
             else
             {
                 containerElement.find('.preview').html(data.files[0].preview);
-                containerElement.find('.preview').append('<span>' + data.files[0].name + '<br>Caution: not saved yet! You must click the save button below to save this file!</span>');
                 containerElement.find('.clearbutton').show();
           
                 idElement.val(data.result.id);

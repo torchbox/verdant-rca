@@ -9,6 +9,18 @@
 @import "grid.less";
 @import "mixins.less";
 
+/* $HEADER*/
+
+.page-header {
+    margin-bottom: 20px;
+}
+
+.nav-wrapper {
+    display: none;
+}
+
+
+
 /* $BORDERS */
 
 .borders {
@@ -34,6 +46,7 @@ form.student-profile {
         max-width: 70%;
         display: block;
         margin-top: 0.5em;
+        outline: none;
     }
     select {
         content: "";
@@ -171,13 +184,44 @@ form.student-profile {
     }
 }
 
+/* $HALLO EDITOR TOOL BAR */
+
+.hallotoolbar {
+    background: @color-light-grey;
+    margin: 0;
+    button {
+        border: none;
+        height: 2.2em;
+        width: 3.2em;
+        padding: 0.5em;
+        display: inline-block;
+    }
+    .ui-button-text {
+        font-family: @font-family-benton-light;
+    }
+    .icon-bold:after {
+        content: "B";
+        font-family: @font-family-benton-bold;
+        font-style: normal;
+    }
+    .icon-italic:after {
+        content: "I";
+        font-style: italic;
+    }
+    .icon-list-ol:after {
+        content: "";
+    }
+}
+
 /* $PROFILE NAV */
 
 .student-profile-nav {
     height: auto;
     width: 100%;
+    padding-top: 1.2em;
     padding-bottom: 1.2em;
     margin-bottom: 1em;
+    border-top: 1px solid @color-light-grey;
     ul {
         position: static;
         .clearfix();

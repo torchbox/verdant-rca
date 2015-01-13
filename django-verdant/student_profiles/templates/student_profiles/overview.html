@@ -1,77 +1,35 @@
-{% extends "rca/base.html" %}
+{% extends "student_profiles/edit_base.html" %}
 {% load static compress %}
 
-{% block extra_css %}
-        {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
-{% endblock %}
 
-{% block title %}Student profiles{% endblock title %}
-
-
-{% block content %}
+{% block form_content %}
 
 <div class="page-content">
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    <h1 class="h1">Student Profile Dashboard</h1>
-    <section class="row">
-        <section class="body-text">
-            {% if not profile_pages %}
-                <div>There are currently no profile pages for you.</div>
-                <div class="profile-actions">
-                    <a class="button" href="{% url 'student-profiles:new-basic' %}">Create Profile</a>
-                </div>
-            {% else %}
-                {% if profile_pages %}
-                <table class="profile-list">
-                  <tr>
-                    <th>Page title</th>
-                    <th>Status</th>
-                    <th></th>
-                  </tr>
-                  {% for page in profile_pages %}
-                    <tr>
-                      <td>{{ page.title }}</td>
-                      <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
-                        {% else %}
-                        Draft{% endif %}
-                        {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
-                      <td>
-                        {% if page.live %}<a href="{{ page.url }}">Live</a><br>{% endif %}
-                        {% if page.has_unpublished_changes %}<a href="{% url 'student-profiles:preview' page.id %}">Preview</a>{% endif %}
-                      </td>
-                      <td><a href="{% url 'student-profiles:edit-basic' page.id %}">Edit</a></td>
-                      <td>{% if page.has_unpublished_changes %}
-                        <form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
-                          <input type="submit" class="submit-page" value="Submit">
-                        </form>
-                        {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                </table>
-                {% endif %}
-                <div class="profile-actions">
-                    <a class="button" href="{% url 'student-profiles:new-basic' %}">Create another Profile</a>
-                </div>         
-            {% endif %}
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Get started with your profile</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-        </section>
-        <section class="four">
-            <div class="single borders">
-                <h2 class="module-title">About</h2>
-                On this page, you can edit your profile pages and create new ones. Please fill in all relevant information
-                on the forms. Any changes you make will be stored, but will not be visible on the actual homepage, before moderation.
-                Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
-                will check your page and publish it if it meets all guidelines.
-            </div>
-        </section>
+        {% include 'student_profiles/form_snippet.html' with form=form %}
+
+        <div class="profile-actions">
+          <input type="submit" class="profile-save" value="Save and start editing">
+        </div>
+      </form>
     </section>
+  </section>
 </div>
+
+{% endblock form_content %}
+
+
+{% block js %}
 
 {% endblock %}

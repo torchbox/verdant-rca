@@ -7,41 +7,34 @@
 {% block content %}
 
 <div class="page-content">
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
     <nav class="student-profile-nav"> 
         {# navbar #}
         <ul>
             <li> 
-                <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
+                <a href="{% url 'student-profiles:preview' page_id %}" target="_blank">Preview</a>
             </li>
             {% if page_id %}
-            <li{% if nav_basic %}class="active"{% endif %}>
+            <li{% if nav_basic %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a>
             </li>
-            <li{% if nav_academic %}class="active"{% endif %}>    <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
+            <li{% if nav_academic %} class="active"{% endif %}>    <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
             </li>
             {% if is_ma %}
-            <li{% if nav_ma %}class="active"{% endif %}>
+            <li{% if nav_ma %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a>
             </li>
             {% endif %}
             {# TODO: activate/deactivate this link based on whether the student is in the show #}
-            <li{% if nav_show_profile %}class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}>
+            <li{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}>
                 <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a>
             </li>
             {% if is_mphil %}
-            <li{% if nav_mphil %}class="active"{% endif %}>
+            <li{% if nav_mphil %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil details</a>
             </li>
             {% endif %}
             {% if is_phd %}
-            <li{% if nav_phd %}class="active"{% endif %}>
+            <li{% if nav_phd %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD details</a>
             </li>
             {% endif %}
@@ -50,13 +43,6 @@
     </nav>
 </div>
 
-
-{% if page.has_unpublished_changes %}
-This page has unpublished changes. These changes have to be approved by a moderator before they can be published on the homepage. <strong>Please save any edits before you submit for publication!</strong>
-<form action="{% url 'student-profiles:submit' page.id %}" method="POST">{% csrf_token %}
-  <input type="submit" class="submit-page" value="Submit for publication">
-</form>
-{% endif %}
 
 {% block form_content %}{% endblock form_content %}  {# for inserting the editing forms #}
 

@@ -19,7 +19,8 @@ from rca.models import NewStudentPageMPhilCarouselItem, NewStudentPageMPhilColla
 from rca.models import NewStudentPagePhDCarouselItem, NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage
 
-from .forms import ProfileBasicForm, ProfileBasicNewForm, EmailFormset, PhoneFormset, WebsiteFormset
+from .forms import StartingForm
+from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
 from .forms import MPhilForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
@@ -98,20 +99,70 @@ def initial_context(request, page_id):
     return data, profile_page
 
 
+def save_page(page, request):
+    """
+    """
+
+    submit = False
+    if 'submit_for_publication' in request.POST:
+        submit = True
+        messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
+
+    revision = page.save_revision(
+        user=request.user,
+        submitted_for_moderation=submit,
+    )
+
+    page.has_unpublished_changes = True
+    page.save()
+
+    return revision
+
+
 ################################################################################
 ## view functions
 
 @login_required
 def overview(request):
     """
-    Profile overview page, shows all pages that this user created.
+    Starting page for student profile editing
+    If there already is a student profile page, we simply redirect to editing that one.
+    If none exists, we'll create a new one and redirect to that if possible.
     """
-    data = {}
+    if NewStudentPage.objects.filter(owner=request.user).exists():
+        page = NewStudentPage.objects.filter(owner=request.user)[0]
+        return redirect('student-profiles:edit-basic', page_id=page.id)
 
-    raw_pages = NewStudentPage.objects.filter(owner=request.user)
-    data['profile_pages'] = [p.get_latest_revision_as_page() for p in raw_pages]
-    for p in data['profile_pages']:
-        p.waiting_for_moderation = p.revisions.filter(submitted_for_moderation=True).exists()
+    data = {}
+    data['form'] = StartingForm()
+
+    if request.method == 'POST':
+        data['form'] = form = StartingForm(request.POST)
+
+        if form.is_valid():
+            page = NewStudentPage(owner=request.user)
+            page.live = False
+
+            page.title = u'{} {}'.format(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
+
+            page.first_name = form.cleaned_data['first_name']
+            page.last_name = form.cleaned_data['last_name']
+
+            # the following is the page where the new student pages are added as children
+            # MAKE SURE THIS IS THE CORRECT ID!
+            Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=page)
+            # the page slug should not be changed, lest all links go wrong!
+            page.slug = slugify(page.title)
+            if Page.objects.exclude(id=page.id).filter(slug=page.slug).exists():
+                page.slug = '{}-{}'.format(
+                    slugify(page.title),
+                    page.id,
+                )
+
+            page.has_unpublished_changes = True
+            page.save()
+
+            return redirect('student-profiles:edit-basic', page_id=page.id)
 
     return render(request, 'student_profiles/overview.html', data)
 
@@ -123,26 +174,11 @@ def preview(request, page_id=None):
     return profile_page.serve(profile_page.dummy_request())
 
 
-@require_POST
-@login_required
-def submit(request, page_id):
-    data, page = initial_context(request, page_id)
-
-    page.save_revision(
-        user=request.user,
-        submitted_for_moderation=True,
-    )
-
-    messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
-
-    return redirect('student-profiles:overview')
-
-
 ################################################################################
 ## basic stuff for everyone
 
 @login_required
-def basic_profile(request, page_id=None):
+def basic_profile(request, page_id):
     """Basic profile creation/editing page"""
     data = {
         'is_ma': user_is_ma(request),
@@ -150,30 +186,21 @@ def basic_profile(request, page_id=None):
         'is_phd': user_is_phd(request),
     }
 
-    if page_id is None:
-        profile_page = NewStudentPage(owner=request.user)
-        form_class = ProfileBasicNewForm
-        data['basic_form'] = ProfileBasicNewForm()
-        data['email_formset'] = EmailFormset(prefix='email')
-        data['phone_formset'] = PhoneFormset(prefix='phone')
-        data['website_formset'] = WebsiteFormset(prefix='website')
-    else:
-        data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
-        data['page_id'] = page_id
-        form_class = ProfileBasicForm
-        data['basic_form'] = ProfileBasicForm(instance=profile_page)
-        data['email_formset'] = EmailFormset(
-            prefix='email',
-            initial=[{'email': x.email} for x in profile_page.emails.all()]
-        )
-        data['phone_formset'] = PhoneFormset(
-            prefix='phone',
-            initial=[{'phone': x.phone} for x in profile_page.phones.all()]
-        )
-        data['website_formset'] = WebsiteFormset(
-            prefix='website',
-            initial=[{'website': x.website} for x in profile_page.websites.all()]
-        )
+    data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
+    data['page_id'] = page_id
+    data['basic_form'] = ProfileBasicForm(instance=profile_page)
+    data['email_formset'] = EmailFormset(
+        prefix='email',
+        initial=[{'email': x.email} for x in profile_page.emails.all()]
+    )
+    data['phone_formset'] = PhoneFormset(
+        prefix='phone',
+        initial=[{'phone': x.phone} for x in profile_page.phones.all()]
+    )
+    data['website_formset'] = WebsiteFormset(
+        prefix='website',
+        initial=[{'website': x.website} for x in profile_page.websites.all()]
+    )
 
     data['email_formset'].title = 'Email'
     data['phone_formset'].title = 'Phone'
@@ -181,7 +208,7 @@ def basic_profile(request, page_id=None):
 
 
     if request.method == 'POST':
-        data['basic_form'] = basic_form = form_class(request.POST, request.FILES)
+        data['basic_form'] = basic_form = ProfileBasicForm(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')
         data['phone_formset'] = phone_formset = PhoneFormset(request.POST, prefix='phone')
         data['website_formset'] = website_formset = WebsiteFormset(request.POST, prefix='website')
@@ -194,23 +221,10 @@ def basic_profile(request, page_id=None):
             bcd = basic_form.cleaned_data
             
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
-            
-            if page_id is None:
-                # the following is the page where the new student pages are added as children
-                # MAKE SURE THIS IS THE CORRECT ID!
-                profile_page.live = False
-                Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=profile_page)
-                # the page slug must not be changed, lest all links go wrong!
-                profile_page.slug = slugify(profile_page.title)
-                if Page.objects.exclude(id=profile_page.id).filter(slug=profile_page.slug).exists():
-                    profile_page.slug = '{}-{}'.format(
-                        slugify(profile_page.title),
-                        profile_page.id,
-                    )
-            
+
             profile_page.first_name = bcd['first_name']
             profile_page.last_name = bcd['last_name']
-            
+
             profile_page.statement = bcd['statement']
 
             # we do NOT process the profile image here because that was already done by the asynchronous handler
@@ -225,14 +239,8 @@ def basic_profile(request, page_id=None):
             profile_page.websites = [
                 NewStudentPageContactsWebsite(website=f['website']) for f in website_formset.ordered_data if f.get('website')
             ]
-            
-            revision = profile_page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
 
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(profile_page, request)
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -324,13 +332,7 @@ def academic_details(request, page_id=None):
                 NewStudentPageConference(name=f['name']) for f in cfs.ordered_data if f.get('name')
             ]
             
-            revision = profile_page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(profile_page, request)
         
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -362,13 +364,7 @@ def ma_details(request, page_id):
         elif form.is_valid():
             page = form.save(commit=False)
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -440,13 +436,7 @@ def ma_show_details(request, page_id):
                 NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.ordered_data if f.get('name')
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -532,12 +522,7 @@ def mphil_details(request, page_id):
                 for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -622,12 +607,7 @@ def phd_details(request, page_id):
                 for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
