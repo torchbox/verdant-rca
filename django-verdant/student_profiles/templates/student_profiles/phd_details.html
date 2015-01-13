@@ -3,6 +3,14 @@
 
 {% block form_content %}
 
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+
 <h1>PhD details</h1>
 
 <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
@@ -40,7 +48,11 @@
   </div>
 
 
-  <p><input type="submit" class="profile-save" value="Save"></p>
+  <p>
+      <input type="submit" class="profile-save" value="Save">
+      <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
+      <a class="button" href="{% url 'student-profiles:preview' page_id %}" target="_blank">Preview</a>
+  </p>
 </form>
 
 {% endblock form_content %}

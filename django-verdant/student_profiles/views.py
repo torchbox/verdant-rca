@@ -99,6 +99,26 @@ def initial_context(request, page_id):
     return data, profile_page
 
 
+def save_page(page, request):
+    """
+    """
+
+    submit = False
+    if 'submit_for_publication' in request.POST:
+        submit = True
+        messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
+
+    revision = page.save_revision(
+        user=request.user,
+        submitted_for_moderation=submit,
+    )
+
+    page.has_unpublished_changes = True
+    page.save()
+
+    return revision
+
+
 ################################################################################
 ## view functions
 
@@ -152,21 +172,6 @@ def preview(request, page_id=None):
     data, profile_page = initial_context(request, page_id)
     
     return profile_page.serve(profile_page.dummy_request())
-
-
-@require_POST
-@login_required
-def submit(request, page_id):
-    data, page = initial_context(request, page_id)
-
-    page.save_revision(
-        user=request.user,
-        submitted_for_moderation=True,
-    )
-
-    messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
-
-    return redirect('student-profiles:overview')
 
 
 ################################################################################
@@ -234,14 +239,8 @@ def basic_profile(request, page_id):
             profile_page.websites = [
                 NewStudentPageContactsWebsite(website=f['website']) for f in website_formset.ordered_data if f.get('website')
             ]
-            
-            revision = profile_page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
 
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(profile_page, request)
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -333,13 +332,7 @@ def academic_details(request, page_id=None):
                 NewStudentPageConference(name=f['name']) for f in cfs.ordered_data if f.get('name')
             ]
             
-            revision = profile_page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(profile_page, request)
         
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -371,13 +364,7 @@ def ma_details(request, page_id):
         elif form.is_valid():
             page = form.save(commit=False)
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -449,13 +436,7 @@ def ma_show_details(request, page_id):
                 NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.ordered_data if f.get('name')
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -541,12 +522,7 @@ def mphil_details(request, page_id):
                 for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -631,12 +607,7 @@ def phd_details(request, page_id):
                 for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
             
-            revision = page.save_revision(
-                user=request.user,
-                submitted_for_moderation=False,
-            )
-            profile_page.has_unpublished_changes = True
-            profile_page.save()
+            save_page(page, request)
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
