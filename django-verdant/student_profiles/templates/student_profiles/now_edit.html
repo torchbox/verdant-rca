@@ -12,6 +12,9 @@
   <p>
     <input type="submit" class="page-save" value="Save as draft">
     <input type="submit" class="submit-page" value="Save and submit for publication" name="submit_for_moderation">
+      {% if page %}
+      <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
+      {% endif %}
   </p>
 </form>
 
