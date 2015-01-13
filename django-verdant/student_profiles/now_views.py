@@ -75,11 +75,11 @@ def edit(request, page_id=None):
         elif form.is_valid():
             page = form.save(commit=False)
             submit_for_moderation = 'submit_for_moderation' in request.POST
-            
-            page.tags = [
-                Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']
-            ]
-            
+
+            page.tags.clear()
+            for tag in [Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']]:
+                page.tags.add(tag)
+
             if page_id is None:
                 page.live = False
                 page.show_on_homepage = False
