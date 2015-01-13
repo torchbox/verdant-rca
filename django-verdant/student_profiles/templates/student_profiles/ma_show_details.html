@@ -19,8 +19,8 @@
         {% include 'student_profiles/form_snippet.html' with form=show_form %}
 
         {{ carouselitem_formset.management_form }}
-        Carousel images/videos
-        <div id="{{ carouselitem_formset.prefix }}">
+        <h4>Carousel images/videos</h4>
+        <div id="{{ carouselitem_formset.prefix }}" class="field-set">
         {% for carouselitem_form in carouselitem_formset %}
           <div class="inline-form">
             {{ carouselitem_form.id }}
