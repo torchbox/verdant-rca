@@ -9,6 +9,24 @@
 @import "grid.less";
 @import "mixins.less";
 
+/* WAGTAIL FONT INCLUDE */
+
+@font-face {
+  font-family: "wagtail";
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot");
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot?#iefix") format("embedded-opentype"), url("../../wagtailadmin/scss/fonts/wagtail.ttf") format("truetype"), url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"), url("../../wagtailadmin/scss/fonts/wagtail.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+/* fix to make chrome on windows use svg, which renders better */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: "wagtail";
+    src: url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"); }
+ }
+
+@font-family-wagtail: "wagtail";
+
 /* $HEADER*/
 
 .page-header {
@@ -18,8 +36,6 @@
 .nav-wrapper {
     display: none;
 }
-
-
 
 /* $BORDERS */
 
@@ -186,9 +202,36 @@ form.student-profile {
 
 /* $HALLO EDITOR TOOL BAR */
 
+.richtext {
+    padding: 16px;
+}
+
+.richtext h1, 
+.richtext h2, 
+.richtext h3, 
+.richtext h4, 
+.richtext h5, 
+.richtext h6, 
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul,
+.richtext ol {
+    font-family: sans-serif;
+    text-transform: none;
+}
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul li,
+.richtext ol li {
+    font-size: @font-size-16;
+}
+
 .hallotoolbar {
     background: @color-light-grey;
-    margin: 0;
+    margin-left: 0.15em;
+    margin-top: 4.4em;
     button {
         border: none;
         height: 2.2em;
@@ -197,19 +240,50 @@ form.student-profile {
         display: inline-block;
     }
     .ui-button-text {
-        font-family: @font-family-benton-light;
+        display: block;
+        line-height: normal;
+        i {
+            font-style: normal;
+            font-weight: normal;
+            font-size: @font-size-16;
+            font-family: @font-family-wagtail;
+            -webkit-font-smoothing: antialiased;
+        }
+    }   
+    .icon-bold:before {
+        content: "C"; 
     }
-    .icon-bold:after {
-        content: "B";
-        font-family: @font-family-benton-bold;
-        font-style: normal;
+    .icon-italic:before {
+        content: "E"; 
     }
-    .icon-italic:after {
-        content: "I";
-        font-style: italic;
+    .icon-undo:before {
+        content: "H"; 
     }
-    .icon-list-ol:after {
-        content: "";
+    .icon-repeat:before {
+        content: "I"; 
+    }
+    .icon-list-ol:before {
+        content: "G"; 
+    }
+    .icon-list-ul:before {
+        content: "F"; 
+    }
+    .icon-media:before {
+        content: "P"; 
+    }
+    .icon-horizontalrule:before {
+        content: "_"; 
+    }
+    .icon-link:before {
+        content: "J"; 
+    }
+    .icon-file-text-alt:before {
+        content: "\f12e";
+        font-family: @font-family-ion; 
+    }
+    .icon-picture:before {
+        content: "\f147"; 
+        font-family: @font-family-ion; 
     }
 }
 
