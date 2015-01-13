@@ -6,9 +6,23 @@
 
 {% block content %}
 
-<p>
-<a href="{% url 'nowpages:overview' %}">Back to the page list</a>
-</p>
+    <nav class="student-profile-nav">
+        {# navbar #}
+        <ul>
+        <li>
+            <a href="{% url 'nowpages:overview' %}">Back to overview</a>
+        </li>
+            {% if page %}
+            <li>
+                <a href="{% url 'student-profiles:preview' page.id %}" target="_blank">Preview</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="/admin/logout/">Log out</a>
+            </li>
+        </ul>
+    </nav>
+
 
 {% if messages %}
 <ul class="messages">
@@ -32,7 +46,7 @@
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
-    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student_profiles.less" %}" />{% endcompress %}
+    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
     <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
 {% endblock %}
 
