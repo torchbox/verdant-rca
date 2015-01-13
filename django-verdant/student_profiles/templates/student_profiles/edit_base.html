@@ -17,7 +17,8 @@
             <li{% if nav_basic %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a>
             </li>
-            <li{% if nav_academic %} class="active"{% endif %}>    <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
+            <li{% if nav_academic %} class="active"{% endif %}>
+                <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
             </li>
             {% if is_ma %}
             <li{% if nav_ma %} class="active"{% endif %}>
@@ -39,6 +40,9 @@
             </li>
             {% endif %}
             {% endif %}
+            <li>
+                <a href="/admin/logout/">Log out</a>
+            </li>
         </ul>
     </nav>
 </div>

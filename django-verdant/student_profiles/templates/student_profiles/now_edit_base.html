@@ -6,9 +6,23 @@
 
 {% block content %}
 
-<p>
-<a href="{% url 'nowpages:overview' %}">Back to the page list</a>
-</p>
+    <nav class="student-profile-nav">
+        {# navbar #}
+        <ul>
+        <li>
+            <a href="{% url 'nowpages:overview' %}">Back to overview</a>
+        </li>
+            {% if page %}
+            <li>
+                <a href="{% url 'student-profiles:preview' page.id %}" target="_blank">Preview</a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="/admin/logout/">Log out</a>
+            </li>
+        </ul>
+    </nav>
+
 
 {% if messages %}
 <ul class="messages">
