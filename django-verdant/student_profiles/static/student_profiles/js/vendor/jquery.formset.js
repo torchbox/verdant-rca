@@ -9,6 +9,13 @@
  * Licensed under the New BSD License
  * See: http://www.opensource.org/licenses/bsd-license.php
  */
+/**
+ * Some additions
+ * @author Johannes Spielmann <johannes.spielmann@torchbox.com>
+ *
+ * Copyright (c) 2015, Torchbox Inc.
+ * All rights reserved.
+ */
 ;(function($) {
     $.fn.formset = function(opts)
     {
@@ -68,18 +75,28 @@
                         // We're dealing with an inline formset.
                         // Rather than remove this form from the DOM, we'll mark it as deleted
                         // and hide it, then let Django handle the deleting:
-                        del.val('on');
-                        row.hide();
                         forms = $('.' + options.formCssClass).not(':hidden');
+                        if (forms.length > options.minNumberOfForms) return;
+                        {
+                            del.val('on');
+                            row.hide();
+                            forms = $('.' + options.formCssClass).not(':hidden');
+                        }
                     } else {
-                        row.remove();
-                        // Update the TOTAL_FORMS count:
                         forms = $('.' + options.formCssClass).not('.formset-custom-template');
-                        totalForms.val(forms.length);
+                        if (forms.length > options.minNumberOfForms) {
+                            row.remove();
+                            // Update the TOTAL_FORMS count:
+                            forms = $('.' + options.formCssClass).not('.formset-custom-template');
+                            totalForms.val(forms.length);
+                        }
                     }
                     for (var i=0, formCount=forms.length; i<formCount; i++) {
                         // Apply `extraClasses` to form rows so they're nicely alternating:
                         applyExtraClasses(forms.eq(i), i);
+                        // hide the remove button if minimum number of forms is reached
+                        if (forms.length <= options.minNumberOfForms)
+                            forms.eq(i).find('.' + options.deleteCssClass).hide();
                         if (!del.length) {
                             // Also update names and IDs for all child controls (if this isn't
                             // a delete-able inline formset) so they remain in sequence:
@@ -126,7 +143,8 @@
 
         if ($$.length) {
             var hideAddButton = !showAddButton(),
-                addButton, template;
+                addButton, template,
+                hideDeleteButton = $$.length <= options.minNumberOfForms;
             if (options.formTemplate) {
                 // If a form template was specified, we'll clone it to generate new form instances:
                 template = (options.formTemplate instanceof $) ? options.formTemplate : $(options.formTemplate);
@@ -154,6 +172,11 @@
             }
             // FIXME: Perhaps using $.data would be a better idea?
             options.formTemplate = template;
+
+            if (hideDeleteButton)
+            {
+                $$.find('a.' + options.deleteCssClass).hide();
+            }
 
             if ($$.is('TR')) {
                 // If forms are laid out as table rows, insert the
@@ -203,6 +226,7 @@
         extraClasses: [],                // Additional CSS classes, which will be applied to each form in turn
         keepFieldValues: '',             // jQuery selector for fields whose values should be kept when the form is cloned
         added: null,                     // Function called each time a new form is added
-        removed: null                    // Function called each time a form is deleted
+        removed: null,                   // Function called each time a form is deleted
+        minNumberOfForms: 0,             // validation for disallowing removal of forms if minimum number is reached
     };
 })(jQuery);

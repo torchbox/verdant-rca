@@ -226,6 +226,7 @@ function updateFormButtons(search_term) {
 function makeFormset(prefix, addedFunc) {
     var search_term = '#' + prefix + ' .inline-form';
     $(search_term).formset({
+        minNumberOfForms: 1,
         prefix: prefix,
         formCssClass: 'dynamic-formset-' + prefix,
         added: function(row) {
