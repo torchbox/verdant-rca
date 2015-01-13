@@ -92,6 +92,8 @@ class ImageInput(forms.FileInput):
                 )
             except ValueError:
                 pass
+            except IOError:
+                pass
         
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
