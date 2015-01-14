@@ -135,6 +135,7 @@ function activateImageUpload(for_id, options) {
                 containerElement.find('.clearbutton').show();
           
                 idElement.val(data.result.id);
+                idElement.change();
             }
         },
         fail: function (e, data) {

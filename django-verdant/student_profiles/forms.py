@@ -153,7 +153,9 @@ class ProfileBasicForm(forms.ModelForm):
     )
 
     def clean_profile_image(self):
-        return self.instance.profile_image
+        if self.cleaned_data['profile_image']:
+            return RcaImage.objects.get(id=self.cleaned_data['profile_image'])
+        return None
 
     class Meta:
         model = NewStudentPage

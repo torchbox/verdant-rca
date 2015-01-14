@@ -125,9 +125,11 @@
 <script src="{% static "student_profiles/js/nowpages.js" %}"></script>
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
 <script src="{% static "student_profiles/js/autosave.js" %}"></script>
+    {% if page %}
 <script type="text/javascript">
-  // enableAutosave('form.now-page');
+  enableAutosave('form.now-page');
 </script>
+    {% endif %}
 
 {% endcompress %}
 
