@@ -9,37 +9,53 @@
 <div class="page-content">
     <nav class="student-profile-nav"> 
         {# navbar #}
+        {% if page_id %}
+        <ul> 
+            <li>Profile</li>
+            <ul class="inner-menu">
+                <li{% if nav_basic %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a>
+                </li>
+                <li{% if nav_academic %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
+                </li>
+            </ul>
+        </ul>
+        {% endif %}
+        {% if is_ma %}
+        <ul> 
+            <li>MA details</li>
+            <ul class="inner-menu">
+                <li{% if nav_ma %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a>
+                </li>
+                <li{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}>
+                    <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a>
+                </li>
+            </ul>
+        </ul>
+        {% endif %}
+        {% if is_mphil %}
         <ul>
-            <li> 
-                <a href="{% url 'student-profiles:preview' page_id %}" target="_blank">Preview</a>
-            </li>
-            {% if page_id %}
-            <li{% if nav_basic %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a>
-            </li>
-            <li{% if nav_academic %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
-            </li>
-            {% if is_ma %}
-            <li{% if nav_ma %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a>
-            </li>
-            {% endif %}
-            {# TODO: activate/deactivate this link based on whether the student is in the show #}
-            <li{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}>
-                <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a>
-            </li>
-            {% if is_mphil %}
-            <li{% if nav_mphil %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil details</a>
-            </li>
-            {% endif %}
-            {% if is_phd %}
-            <li{% if nav_phd %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD details</a>
-            </li>
-            {% endif %}
-            {% endif %}
+            <li>MPhil</li>
+            <ul class="inner-menu">
+                <li{% if nav_mphil %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil details</a>
+                </li>
+            </ul>
+        </ul>
+        {% endif %}
+        {% if is_phd %}
+        <ul>
+            <li>PhD</li>
+            <ul class="inner-menu">
+                <li{% if nav_phd %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD details</a>
+                </li>
+            </ul>
+        </ul>
+        {% endif %}
+        <ul>
             <li>
                 <a href="/admin/logout/">Log out</a>
             </li>

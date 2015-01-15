@@ -204,6 +204,8 @@ form.student-profile {
 
 .richtext {
     padding: 16px;
+    //Height of the buttons
+    padding-top: 66px;
 }
 
 .richtext h1, 
@@ -219,6 +221,7 @@ form.student-profile {
 .richtext ol {
     font-family: sans-serif;
     text-transform: none;
+    border: none;
 }
 .richtext p, 
 .richtext i, 
@@ -238,6 +241,10 @@ form.student-profile {
         width: 3.2em;
         padding: 0.5em;
         display: inline-block;
+        &.ui-state-active {
+            color: @color-white;
+            background-color: @color-pink-darker;
+        }
     }
     .ui-button-text {
         display: block;
@@ -296,13 +303,40 @@ form.student-profile {
     padding-bottom: 1.2em;
     margin-bottom: 1em;
     border-top: 1px solid @color-light-grey;
+    overflow: visible;
+    .clearfix();
     ul {
         position: static;
+        float: left;
+        max-width: 150px;
+        position: relative;
+        top: auto;
+        left: auto;
         .clearfix();
+        &:hover {
+            ul.inner-menu {
+                display: block;
+            }
+        }
     }
     ul li {
         position: static;
-        float: left;
+        width: 100%;
+        text-transform: uppercase;
+        font-size: @font-size-15;
+        color: @color-dark-grey;
+        padding: 0.4em;
+    }
+    ul.inner-menu {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        background-color: fadeout(@color-white, 15%);
+        padding: 0.4em;
+        li {
+            padding: 0.2em 0;
+            margin-top: 0.5em;
+        }
     }
 }
 
@@ -325,8 +359,12 @@ form.student-profile {
 
 /* $BUTTONS */
 
-a.button {
+a.button,
+button,
+input[type=submit] {
     color: @color-white;
+    font-family: @font-family-benton;
+    -webkit-font-smoothing: inherit;
     &:hover {
         text-decoration: none;
     }
