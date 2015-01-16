@@ -379,6 +379,11 @@ def ma_show_details(request, page_id):
 
     data, profile_page = initial_context(request, page_id)
 
+    if not profile_is_in_show(request, profile_page):
+        messages.warning(request, "You cannot view MA show details because you indicated that you're not in the show this year. If this is not correct, please tick the appropriate box in the detail page.")
+        return redirect('student-profiles:edit-ma', page_id=page_id)
+
+
     def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
         
         model_attr_name = model_attr_name or form_attr_name
