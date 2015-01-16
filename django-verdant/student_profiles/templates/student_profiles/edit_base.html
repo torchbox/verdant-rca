@@ -55,7 +55,7 @@
         {% endif %}
         <ul class="outer-menu rca-now-link">
             <li{% if nav_now %} class="active"{% endif %}>
-                <a href="/nowpages">RCA Now</a>
+                <a href="{% url 'nowpages:overview' %}">RCA Now</a>
             </li>
         </ul>
     </nav>
