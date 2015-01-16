@@ -66,7 +66,7 @@ $(function() {
       
       if (value == 'image')        {# image, as defined in forms.py #}
       {
-        $('#carousel-' + id_number + '-image_id').show();
+        $('#carousel-' + id_number + '-image_id').parent().show();
         $('#id_carousel-' + id_number + '-overlay_text').parent().show();
 
         $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
@@ -75,7 +75,7 @@ $(function() {
         $('#carousel-' + id_number + '-poster_image_id input').val('');
       } else if (value == 'video') {# video #}
       {
-        $('#carousel-' + id_number + '-image_id').hide();
+        $('#carousel-' + id_number + '-image_id').parent().hide();
         $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
         $('#carousel-' + id_number + '-image_id input').val('');
         $('#id_carousel-' + id_number + '-overlay_text').val('');

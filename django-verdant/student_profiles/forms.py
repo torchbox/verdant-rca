@@ -350,6 +350,18 @@ class MPhilForm(forms.ModelForm):
         help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'),
     )
 
+    def clean_mphil_start_year(self):
+        if self.cleaned_data['mphil_start_year']:
+            return self.cleaned_data['mphil_start_year']
+        else:
+            return ''
+    def clean_mphil_graduation_year(self):
+        if self.cleaned_data['mphil_graduation_year']:
+            return self.cleaned_data['mphil_graduation_year']
+        else:
+            return ''
+
+
     class Meta:
         model = NewStudentPage
         fields = [
@@ -410,6 +422,17 @@ class PhDForm(forms.ModelForm):
         required=False,
         help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'),
     )
+
+    def clean_phd_start_year(self):
+        if self.cleaned_data['phd_start_year']:
+            return self.cleaned_data['phd_start_year']
+        else:
+            return ''
+    def clean_phd_graduation_year(self):
+        if self.cleaned_data['phd_graduation_year']:
+            return self.cleaned_data['phd_graduation_year']
+        else:
+            return ''
 
     class Meta:
         model = NewStudentPage

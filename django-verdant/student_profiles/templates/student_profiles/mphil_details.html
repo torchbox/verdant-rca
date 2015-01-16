@@ -71,22 +71,22 @@ function updateCarouselSelects() {
     
     if (value == 'image')        {# image, as defined in forms.py #}
     {
-      $('#carousel-' + id_number + '-image_id').show();
+      $('#carousel-' + id_number + '-image_id').parent().show();
       $('#id_carousel-' + id_number + '-overlay_text').parent().show();
 
       $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
       $('#carousel-' + id_number + '-poster_image_id').hide();
       $('#id_carousel-' + id_number + '-embedly_url').val('');
-      $('#carousel-' + id_number + '-poster_image_id input').val('');
+      $('#carousel-' + id_number + '-poster_image_id input')parent().val('');
     } else if (value == 'video')
     {
-      $('#carousel-' + id_number + '-image_id').hide();
+      $('#carousel-' + id_number + '-image_id').parent().hide();
       $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
       $('#carousel-' + id_number + '-image_id input').val('');
       $('#id_carousel-' + id_number + '-overlay_text').val('');
       
       $('#id_carousel-' + id_number + '-embedly_url').parent().show();
-      $('#carousel-' + id_number + '-poster_image_id').show();
+      $('#carousel-' + id_number + '-poster_image_id').parent().show();
     }
   });
 };
