@@ -30,7 +30,11 @@
 /* $HEADER*/
 
 .page-header {
-    margin-bottom: 20px;
+    margin-bottom: 0;
+}
+
+header a.site-name p {
+    margin-bottom: 0;
 }
 
 .nav-wrapper {
@@ -111,6 +115,13 @@ form.student-profile {
             font-size: @font-size-22;
             color: @color-medium-grey;
         }
+    }
+    label span {
+        color: @color-pink;
+        font-weight: bold;
+        margin-left: 0.3em;
+        font-size: 1.3em;
+        vertical-align: middle;
     }
     .image-uploader-block .preview {
         padding: 0.2em;
@@ -305,6 +316,9 @@ form.student-profile {
     border-top: 1px solid @color-light-grey;
     overflow: visible;
     .clearfix();
+    a.active {
+        color: @color-pink-darker;
+    }
     ul {
         position: static;
         float: left;
@@ -319,9 +333,9 @@ form.student-profile {
             }
         }
         &.outer-menu.rca-now-link {
-            float: left;
+            float: right;
             padding-left: 0.5em;
-            border-left: 1px solid @color-light-grey;
+            max-width: 80px;
         }
     }
     ul li {
@@ -356,6 +370,17 @@ form.student-profile {
             padding: 0.2em 0;
             margin-top: 0.5em;
         }
+    }
+}
+
+/* $SESSION META */
+.session-meta {
+    text-align: right;
+    padding: 8px;
+    span {
+        margin-right: 0.4em;
+        padding-right: 0.4em;
+        border-right: 1px solid @color-medium-grey;
     }
 }
 
