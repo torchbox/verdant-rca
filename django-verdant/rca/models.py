@@ -269,6 +269,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('designproducts', 'Design Products'),
     ('industrialdesignengineering', 'Industrial Design Engineering'),
     ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('jewelleryandmetal', 'Jewellery & Metal'),
     ('visualcommunication', 'Visual Communication'),
     ('designinteractions', 'Design Interactions'),
     ('innovationdesignengineering', 'Innovation Design Engineering'),
@@ -300,7 +301,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2013': {
         'schoolofarchitecture': ['architecture'],
@@ -886,6 +887,14 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+
+class ProgrammePageProgramme(models.Model):
+    page = ParentalKey('rca.ProgrammePage', related_name='programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+
+    panels = [FieldPanel('programme')]
+
+
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
@@ -1011,6 +1020,7 @@ ProgrammePage.promote_panels = [
 
     FieldPanel('school'),
     FieldPanel('programme'),
+    InlinePanel(ProgrammePage, 'programmes', label="Programmes"),
 ]
 
 ProgrammePage.settings_panels = [
