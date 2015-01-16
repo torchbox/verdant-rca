@@ -317,4 +317,24 @@ $.ajaxSetup({
     }
 });
 
+/*
+* Sticky notice
+*/
+
+$('.notes').sticky({
+    topSpacing: 200,
+    bottomSpacing: 680
+});
+
+/*
+* Catch Save and Submit
+*/
+
+$('.submit-page').click(function(e) {
+    e.preventDefault();
+    if (window.confirm("Sending this form for moderation means you can no longer make changes, would you like to go ahead and send your details?")) {
+        $(this).submit();
+    }
+})
+
 
