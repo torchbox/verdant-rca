@@ -38,22 +38,18 @@ NEW_STUDENT_PAGE_INDEX_ID = 6201
 
 def user_is_ma(request):
     """Determine whether a user is an MA user and should be able to edit their MA page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='MA Students').exists()
 
 def user_is_mphil(request):
     """Determine whether a user is an MPhil user and should be able to edit their MPhil page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='MPhil Students').exists()
 
 def user_is_phd(request):
     """Determine whether a user is an PhD user and should be able to edit their PhD page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='PhD Students').exists()
 
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    # TODO: from LDAP?
     return user_is_ma(request) and profile_page.ma_in_show
 
 
