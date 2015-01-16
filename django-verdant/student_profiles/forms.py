@@ -240,7 +240,14 @@ ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFo
 ## MA details
 
 class MADetailsForm(forms.ModelForm):
-    
+
+    ma_graduation_year = forms.IntegerField(
+        label='Graduation year',
+        min_value=1950, max_value=2050,
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'),
+    )
+
     class Meta:
         model = NewStudentPage
         fields = [
@@ -329,7 +336,20 @@ MASponsorFormset = formset_factory(MASponsorForm, extra=1, formset=OrderedFormse
 
 # MPhil and PhD forms
 class MPhilForm(forms.ModelForm):
-    
+
+    mphil_start_year = forms.IntegerField(
+        label='Start year',
+        min_value=1950, max_value=2050,
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'mphil_start_year'),
+    )
+    mphil_graduation_year = forms.IntegerField(
+        label='Graduation year',
+        min_value=1950, max_value=2050,
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'),
+    )
+
     class Meta:
         model = NewStudentPage
         fields = [
@@ -377,7 +397,20 @@ MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, extra=1, formset=O
 
 # and the same once again with PhD instead of MPhil
 class PhDForm(forms.ModelForm):
-    
+
+    phd_start_year = forms.IntegerField(
+        label='Start year',
+        min_value=1950, max_value=2050,
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'phd_start_year'),
+    )
+    phd_graduation_year = forms.IntegerField(
+        label='Graduation year',
+        min_value=1950, max_value=2050,
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'),
+    )
+
     class Meta:
         model = NewStudentPage
         fields = [
