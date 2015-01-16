@@ -13,3 +13,7 @@
     <small class="error">{{ error }}</small>
   {% endfor %}
 {% endfor %}
+
+{% for hidden_field in form.hidden_fields %}
+{{ hidden_field }}
+{% endfor %}

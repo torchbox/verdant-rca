@@ -25,7 +25,6 @@
           <div class="inline-form">
             {{ carouselitem_form.id }}
             {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
-          <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
           <i class="icon action ion-android-arrow-up move-up"></i>
           <i class="icon action ion-android-arrow-down move-down"></i>
           </div>
@@ -71,7 +70,7 @@ $(function() {
         $('#id_carousel-' + id_number + '-overlay_text').parent().show();
 
         $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
-        $('#carousel-' + id_number + '-poster_image_id').hide();
+        $('#carousel-' + id_number + '-poster_image_id').parent().hide();
         $('#id_carousel-' + id_number + '-embedly_url').val('');
         $('#carousel-' + id_number + '-poster_image_id input').val('');
       } else if (value == 'video') {# video #}
@@ -82,7 +81,7 @@ $(function() {
         $('#id_carousel-' + id_number + '-overlay_text').val('');
         
         $('#id_carousel-' + id_number + '-embedly_url').parent().show();
-        $('#carousel-' + id_number + '-poster_image_id').show();
+        $('#carousel-' + id_number + '-poster_image_id').parent().show();
       }
     });
   };

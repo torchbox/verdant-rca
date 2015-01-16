@@ -42,7 +42,9 @@ def overview(request):
     """
     Profile overview page, shows all pages that this user created.
     """
-    data = {}
+    data = {
+        'nav_now': True,
+    }
 
     index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
     raw_pages = index_page.get_children().filter(owner=request.user)
@@ -64,6 +66,7 @@ def edit(request, page_id=None):
         page = RcaNowPage(owner=request.user)
         data = {}
 
+    data['nav_now'] = True
     data['form'] = PageForm(instance=page)
     
     if request.method == 'POST':
