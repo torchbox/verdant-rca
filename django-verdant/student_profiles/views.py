@@ -38,22 +38,18 @@ NEW_STUDENT_PAGE_INDEX_ID = 6201
 
 def user_is_ma(request):
     """Determine whether a user is an MA user and should be able to edit their MA page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='MA Students').exists()
 
 def user_is_mphil(request):
     """Determine whether a user is an MPhil user and should be able to edit their MPhil page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='MPhil Students').exists()
 
 def user_is_phd(request):
     """Determine whether a user is an PhD user and should be able to edit their PhD page."""
-    # TODO: read this from LDAP
-    return True
+    return request.user.groups.filter(name='PhD Students').exists()
 
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    # TODO: from LDAP?
     return user_is_ma(request) and profile_page.ma_in_show
 
 
@@ -382,6 +378,11 @@ def ma_show_details(request, page_id):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
     data, profile_page = initial_context(request, page_id)
+
+    if not profile_is_in_show(request, profile_page):
+        messages.warning(request, "You cannot view MA show details because you indicated that you're not in the show this year. If this is not correct, please tick the appropriate box in the detail page.")
+        return redirect('student-profiles:edit-ma', page_id=page_id)
+
 
     def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
         

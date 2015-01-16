@@ -31,6 +31,21 @@ def populate_user_signal_handler(user, ldap_user, **kwargs):
                 # Set groups
                 user.groups = groups
 
+    # additionally, check the student status (for profile editing)
+    # according to documentation in codebase, student group is determined by the "Job title" in active directory,
+    # which itself maps to 'title' in LDAP.
+    if 'title' in ldap_user._user_attrs:
+        title = ldap_user._user_attrs['title']
+
+        # for reference see the specification on ticket #645:
+        if title.lower().startswith('ma student'):
+            user.groups.add(Group.objects.get(name='MA Students'))
+        elif title.lower().startswith('mphil student'):
+            user.groups.add(Group.objects.get(name='MPhil Students'))
+        elif title.lower().startswith('phd student'):
+            user.groups.add(Group.objects.get(name='PhD Students'))
+
+
 
 def register_signal_handlers():
     populate_user.connect(populate_user_signal_handler)

@@ -29,5 +29,7 @@ urlpatterns = patterns(
 
     url(r'^(?P<page_id>\d+)/basic/image/$', image_upload, {'field': 'profile_image'}, name='edit-basic-image'),
     url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload, name='edit-ma-show-image'),
+    url(r'^(?P<page_id>\d+)/phd/image/$', image_upload, name='edit-phd-show-image'),
+    url(r'^(?P<page_id>\d+)/mphil/image/$', image_upload, name='edit-mphil-show-image'),
 
 )

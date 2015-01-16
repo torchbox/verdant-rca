@@ -34,7 +34,7 @@
                 <li{% if nav_ma %} class="active"{% endif %}>
                     <a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a>
                 </li>
-                <li{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} disabled=disabled{% endif %}>
+                <li id="in-show-menu"{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} style="display: none;"{% endif %}>
                     <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a>
                 </li>
             </ul>
