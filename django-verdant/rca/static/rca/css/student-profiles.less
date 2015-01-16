@@ -318,6 +318,11 @@ form.student-profile {
                 display: block;
             }
         }
+        &.outer-menu.rca-now-link {
+            float: left;
+            padding-left: 0.5em;
+            border-left: 1px solid @color-light-grey;
+        }
     }
     ul li {
         position: static;
@@ -326,6 +331,19 @@ form.student-profile {
         font-size: @font-size-15;
         color: @color-dark-grey;
         padding: 0.4em;
+        &.drop-down {
+            &:hover a:after {
+                color: @color-highlight-blue;
+            }
+            a:after {
+                font-family: @font-family-ion;
+                content: "\f3d0";
+                display: block;
+                float: right;
+                position: static;
+                visibility: visible;
+            }
+        }
     }
     ul.inner-menu {
         display: none;
@@ -333,6 +351,7 @@ form.student-profile {
         z-index: 100;
         background-color: fadeout(@color-white, 15%);
         padding: 0.4em;
+        top: 25px;
         li {
             padding: 0.2em 0;
             margin-top: 0.5em;
