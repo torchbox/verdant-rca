@@ -57,12 +57,13 @@ def overview(request):
 def edit(request, page_id=None):
     if page_id is not None:
         page = get_page_or_404(request, page_id)
+        data = {
+            'page': page,
+        }
     else:
         page = RcaNowPage(owner=request.user)
-    data = {
-        'page': page,
-    }
-    
+        data = {}
+
     data['form'] = PageForm(instance=page)
     
     if request.method == 'POST':
