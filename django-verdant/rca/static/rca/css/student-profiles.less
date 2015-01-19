@@ -1,0 +1,509 @@
+/**
+ * Author(s): James Morris
+ *
+ * Student-profiles and RCA Now
+ *
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/* WAGTAIL FONT INCLUDE */
+
+@font-face {
+  font-family: "wagtail";
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot");
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot?#iefix") format("embedded-opentype"), url("../../wagtailadmin/scss/fonts/wagtail.ttf") format("truetype"), url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"), url("../../wagtailadmin/scss/fonts/wagtail.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+/* fix to make chrome on windows use svg, which renders better */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: "wagtail";
+    src: url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"); }
+ }
+
+@font-family-wagtail: "wagtail";
+
+/* $HEADER*/
+
+.page-header {
+    margin-bottom: 0;
+}
+
+header a.site-name p {
+    margin-bottom: 0;
+}
+
+.nav-wrapper {
+    display: none;
+}
+
+/* $LAYOUT */
+
+.body-text {
+    margin-right: 5%;
+}
+.notes {
+    float: left;
+    display: inline;
+    width: 28.33334%;
+    margin-bottom: 58px;
+}
+
+/* $BORDERS */
+
+.borders {
+    border-top: 1px solid @color-light-grey;
+    border-bottom: 1px solid @color-light-grey;
+    padding: 1em 0;
+    h2 {
+        margin-top: 0;
+    }
+}
+
+/* $PROFILE FORM OVERIDES */
+
+form.student-profile,
+form.now-page {
+    input[type=text], 
+    input[type=tel], 
+    input[type=email],
+    input[type=url],
+    .richtext, 
+    textarea,
+    select {
+        font-size: @font-size-16;
+        max-width: 82%;
+        display: block;
+        margin-top: 0.5em;
+        outline: none;
+    }
+    select {
+        content: "";
+        display: block;
+        background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+        background-repeat: no-repeat;
+        background-position: right 17px top 19px;
+        padding-right: 4.5em;
+        .border-box();
+    }
+    textarea,
+    .richtext {
+        background: @color-pale-grey;
+    }
+    label {
+        display: block;
+        margin-top: 0.5em;
+    }
+    .help-text {
+        text-transform: none;
+        max-width: 82%;
+    }
+    // Image drag and drop uploader
+    .image-uploader-block {
+        .clearfix();
+    }
+    .image-uploader-block .dropzone {
+        border: 2px dashed @color-light-grey;
+        text-align: center;
+        line-height: 8em;
+        width: 150px;
+        height: 150px;
+        float: left;
+        position: relative;
+        &:first-child {
+            margin-left: 0;
+        }
+        &.hover:after {
+            content: "\f3c6";
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            left: 50%;
+            margin-left: -10px;
+            font-family: @font-family-ion;
+            font-size: @font-size-22;
+            color: @color-medium-grey;
+        }
+    }
+    label span {
+        color: @color-pink;
+        font-weight: bold;
+        margin-left: 0.3em;
+        font-size: 1.3em;
+        vertical-align: middle;
+    }
+    .image-uploader-block .preview {
+        padding: 0.2em;
+        margin-bottom: 0.5em;
+        border: 2px solid @color-light-grey;
+        width: 150px;
+        height: 150px;
+        float: left;
+        background: @color-pale-grey;
+        position: relative;
+        margin-right: 2.5%;
+        canvas {
+            width: 100%;
+            height: auto;
+        }
+        .clearbutton {
+            position: absolute;
+            bottom: 0em;
+            right: 0em;
+            margin: 0.2em;
+            padding: 0.5em;
+            width: 37px;
+            height: 38px;
+            text-align: center;
+            font-size: @font-size-24;
+        }
+    }
+    .inline-form {
+        .move-up,
+        .move-down,
+        .delete-row {
+            font-size: @font-size-15;
+            width: 18px;
+            height: 19px;
+            text-align: center;
+            display: inline-block;
+        }
+        .delete-row {
+            text-indent: -9999%;
+            &:after {
+                color: @color-white;
+                background: @color-highlight-blue;
+                content: "\f2d7";
+                font-family: @font-family-ion;
+                text-indent: 1px;
+                width: 18px;
+                height: 19px;
+                float: left;
+                line-height: 1.35em;
+                text-align: center;
+            }
+        }
+        .delete-row:hover:after {
+            background-color: @color-pink;
+        }
+    }
+    // Hide until needed
+    .inline-form {
+        .action,
+        .delete-row {
+            .opacity(0);
+            .transition(0.5s ease all);
+        }
+    }
+    // Show when form el is hovered
+    .inline-form:hover {
+        .action,
+        .delete-row {
+            .opacity(100);
+            .transition(0.8s ease all);
+        }
+    }
+    .field-set {
+        padding-top: 1em;
+        margin-top: 1em;
+        border-top: 1px solid @color-middle-column-lines;
+        &:last-child {
+            border: 0;
+        }
+        label {
+            margin-bottom: 0.2em;
+        }
+        .add-row.button {
+            margin-top: 0.5em;
+            display: inline-block;
+        }
+    }
+    #carousel .dynamic-formset-carousel {
+        border-top: 1px dashed darken(@color-pale-grey, 5%);
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        &:first-child {
+            border-top: 0;
+            padding-top: 0;
+            margin-top: 0;
+        }
+    }
+}
+
+/* $HALLO EDITOR TOOL BAR */
+
+.richtext {
+    padding: 16px;
+    //Height of the buttons
+    padding-top: 66px;
+}
+
+.richtext h1, 
+.richtext h2, 
+.richtext h3, 
+.richtext h4, 
+.richtext h5, 
+.richtext h6, 
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul,
+.richtext ol,
+.richtext {
+    font-family: sans-serif;
+    text-transform: none;
+    border: none;
+}
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul li,
+.richtext ol li {
+    font-size: @font-size-16;
+}
+
+.hallotoolbar {
+    background: @color-light-grey;
+    margin-left: 0.15em;
+    margin-top: 4.4em;
+    button {
+        border: none;
+        height: 2.2em;
+        width: 3.2em;
+        padding: 0.5em;
+        display: inline-block;
+        &.ui-state-active {
+            color: @color-white;
+            background-color: @color-pink-darker;
+        }
+    }
+    .ui-button-text {
+        display: block;
+        line-height: normal;
+        i {
+            font-style: normal;
+            font-weight: normal;
+            font-size: @font-size-16;
+            font-family: @font-family-wagtail;
+            -webkit-font-smoothing: antialiased;
+        }
+    }   
+    .icon-bold:before {
+        content: "C"; 
+    }
+    .icon-italic:before {
+        content: "E"; 
+    }
+    .icon-undo:before {
+        content: "H"; 
+    }
+    .icon-repeat:before {
+        content: "I"; 
+    }
+    .icon-list-ol:before {
+        content: "G"; 
+    }
+    .icon-list-ul:before {
+        content: "F"; 
+    }
+    .icon-media:before {
+        content: "P"; 
+    }
+    .icon-horizontalrule:before {
+        content: "_"; 
+    }
+    .icon-link:before {
+        content: "J"; 
+    }
+    .icon-file-text-alt:before {
+        content: "\f12e";
+        font-family: @font-family-ion; 
+    }
+    .icon-picture:before {
+        content: "\f147"; 
+        font-family: @font-family-ion; 
+    }
+}
+
+/* $PROFILE NAV */
+
+.student-profile-nav {
+    height: auto;
+    width: 100%;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    margin-bottom: 1em;
+    border-top: 1px solid @color-light-grey;
+    overflow: visible;
+    .clearfix();
+    a.active {
+        color: @color-pink-darker;
+    }
+    ul {
+        position: static;
+        float: left;
+        max-width: 150px;
+        position: relative;
+        top: auto;
+        left: auto;
+        .clearfix();
+        &:hover {
+            ul.inner-menu {
+                display: block;
+            }
+        }
+        &.outer-menu.rca-now-link {
+            float: right;
+            padding-left: 0.5em;
+            max-width: 80px;
+        }
+    }
+    ul li {
+        position: static;
+        width: 100%;
+        text-transform: uppercase;
+        font-size: @font-size-15;
+        color: @color-dark-grey;
+        padding: 0.4em;
+        &.drop-down {
+            &:hover a:after {
+                color: @color-highlight-blue;
+            }
+            a:after {
+                font-family: @font-family-ion;
+                content: "\f3d0";
+                display: block;
+                float: right;
+                position: static;
+                visibility: visible;
+            }
+        }
+    }
+    ul.inner-menu {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        background-color: fadeout(@color-white, 12%);
+        padding: 0.4em;
+        top: 25px;
+        li {
+            padding: 0.2em 0;
+            margin-top: 0.5em;
+        }
+    }
+}
+
+/* $SESSION META */
+.session-meta {
+    text-align: right;
+    padding: 8px;
+    color: @color-charcoal;
+    span {
+        margin-right: 0.4em;
+        padding-right: 0.4em;
+        border-right: 1px solid @color-medium-grey;
+    }
+}
+
+/* $PROFILE LIST */
+
+.profile-list {
+    td {
+        padding: 0 0.5em;
+    }
+}
+
+
+/* $PROFILE ACTIONS */
+
+.profile-actions {
+    margin-top: 1em;
+    border-top: 1px solid @color-light-grey;
+    padding-top: 0.5em;
+}
+
+/* $BUTTONS */
+
+a.button,
+button,
+input[type=submit] {
+    color: @color-white;
+    font-family: @font-family-benton;
+    -webkit-font-smoothing: inherit;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+i.icon.action {
+    background: @color-highlight-blue;
+    color: @color-white;
+    &:hover {
+        background: @color-pink;
+        cursor: pointer;
+    }
+}
+
+/* $TAGIT */
+form.now-page {
+    .tagit {
+        background: @color-pale-grey;
+        display: block;
+        padding: 16px;
+        max-width: 82%;
+        li {
+            padding: 0;
+            margin: 0;
+            margin-right: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    span.tagit-label.tag {
+        display: inline-block;
+        text-transform: normal;
+        font-size: @font-size-16;
+        background: @color-pink-darker;
+        color: @color-white;
+        padding: 0.2em 0.4em;
+    }
+
+    ul.tagit li.tagit-choice .tagit-close {
+        display: inline-block;
+        position: static;
+        padding: 0.1em 0em;
+        background: @color-pink-darker;
+    }
+
+    .ui-icon-close:after {
+        content: "\f2d7";
+        color: @color-white;
+        font-family: @font-family-ion;
+        display: inline-block;
+        padding: 0.2em 0.4em;
+        margin-right: 0.1em;
+    }
+}
+
+/* $OVERLAY */
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 24em;
+    height: 3em;
+    margin: 0 0 0 -12em;
+    padding-top: 1em;
+    background-color: #FF7F00;
+    filter:alpha(opacity=50);
+    -moz-opacity:0.5;
+    -khtml-opacity: 0.5;
+    opacity: 0.5;
+    z-index: 10000;
+    text-align: center;
+}

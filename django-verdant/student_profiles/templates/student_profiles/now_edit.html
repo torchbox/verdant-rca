@@ -1,0 +1,72 @@
+{% extends "student_profiles/now_edit_base.html" %}
+
+
+{% block form_content %}
+
+<div class="page-content rca-now">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Your post</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+        {% include 'student_profiles/form_snippet.html' with form=form %}
+
+        <p>
+          <input type="submit" class="page-save" value="Save as draft">
+          <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+            {% if page %}
+            <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
+            {% endif %}
+        </p>
+      </form>
+    </section>
+    <section class="notes">
+      <h3>Notes</h3>
+      <p>Create / Edit your blog post then when ready submit it for moderation. If the post is approved it will made live for everyone to enjoy.</p>
+
+    </section>
+  </section>
+</div>
+
+{% endblock form_content %}
+
+
+{% block form_js %}
+<script type="text/javascript">
+makeRichTextEditable('id_body');
+  
+$('#id_date').datetimepicker({
+  timepicker: false,
+  format: 'Y-m-d',
+  closeOnDateSelect: true,
+  scrollInput:false,
+});
+  
+// make the selection between single author and group of authors
+
+$('#id_by').change(function() {
+  var value = $(this).val();
+  
+  if (value == 'single') {
+    $('#id_author_single').parent().show();
+    $('#id_author').parent().hide();
+  }
+  else if (value == 'group') {
+    $('#id_author_single').parent().hide();
+    $('#id_author').parent().show();
+  }
+});
+$('#id_by').change();
+
+$('#id_author_single').select2({'width': '100%'});
+  
+</script>
+
+{% endblock form_js %}

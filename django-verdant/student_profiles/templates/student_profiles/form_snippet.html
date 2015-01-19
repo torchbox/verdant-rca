@@ -1,0 +1,19 @@
+{% for field in form %}
+<label {% if field.errors %}class="error"{% endif %}>{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+  {% if field.help_text %} <p class="help-text">{{ field.help_text }}</p>{% endif %}
+
+  {% if field.field.readonly %}
+    {% include 'student_profiles/form_field_readonly_snippet.html' with field=field %}
+  {% else %}
+    {% include 'student_profiles/form_field_snippet.html' with field=field %}
+  {% endif %}
+
+</label>
+  {% for error in field.errors %}
+    <small class="error">{{ error }}</small>
+  {% endfor %}
+{% endfor %}
+
+{% for hidden_field in form.hidden_fields %}
+{{ hidden_field }}
+{% endfor %}
