@@ -3,20 +3,37 @@
 
 {% block form_content %}
 
-<h1>Edit page</h1>
+<div class="page-content rca-now">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Your post</h1>
+  <section class="row">
+    <section class="body-text">
+      <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-<form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+        {% include 'student_profiles/form_snippet.html' with form=form %}
 
-  {% include 'student_profiles/form_snippet.html' with form=form %}
+        <p>
+          <input type="submit" class="page-save" value="Save as draft">
+          <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+            {% if page %}
+            <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
+            {% endif %}
+        </p>
+      </form>
+    </section>
+    <section class="notes">
+      <h3>Notes</h3>
+      <p>Create / Edit your blog post then when ready submit it for moderation. If the post is approved it will made live for everyone to enjoy.</p>
 
-  <p>
-    <input type="submit" class="page-save" value="Save as draft">
-    <input type="submit" class="submit-page" value="Save and submit for publication" name="submit_for_moderation">
-      {% if page %}
-      <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
-      {% endif %}
-  </p>
-</form>
+    </section>
+  </section>
+</div>
 
 {% endblock form_content %}
 
@@ -53,5 +70,3 @@ $('#id_author_single').select2({'width': '100%'});
 </script>
 
 {% endblock form_js %}
-
-

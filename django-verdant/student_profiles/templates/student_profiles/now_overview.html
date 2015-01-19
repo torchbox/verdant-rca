@@ -6,64 +6,63 @@
 
 {% block content %}
 
-<h1>Your RCA Now blog pages</h1>
-
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
-<p>
-On this page, you can edit your blog posts for RCA Now and create new ones. Please fill in all relevant information
-on the editing forms. Any changes you make will be stored, but will not be visible on the actual homepage.
-Once you are finished editing your page, please click "Submit for publication" in the list below. A moderator
-will check your page and publish it if it meets all guidelines.
-</p>
-
-{% if not pages %}
-<div>
-  There are currently no blog entries for you.
+<div class="page-content rca-now">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+  </ul>
+  {% endif %}
+  <h1>Your RCA Now blog</h1>
+  <section class="row">
+    <section class="body-text">
+      {% if not pages %}
+      <div>
+        You have no posts yet, time to <a href="{% url 'nowpages:create' %}">get writing</a>. 
+      </div>
+      {% else %}
+      <table>
+        <tr>
+          <th>Page title</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+        {% for page in pages %}
+          <tr>
+            <td>{{ page.title }}</td>
+            <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
+              {% else %}
+              Draft{% endif %}
+              {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
+            <td>
+              {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
+              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your changes</a>{% endif %}
+            </td>
+            <td><a href="{% url 'nowpages:edit' page.id %}" class="button">edit</a></td>
+            <td>{% if page.has_unpublished_changes %}
+              <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
+                <input type="submit" class="submit-page" value="Submit for publication">
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+    </section>
+    <section class="notes">
+      <h3>Notes</h3>
+      <p> Create, edit and submit your blog posts for moderation. </p>
+      <p> Get your best works out there for all to enjoy, RCA now. </p>
+    </section>
+  </section>
 </div>
-{% else %}
 
-<table>
-  <tr>
-    <th>Page title</th>
-    <th>Status</th>
-    <th></th>
-  </tr>
-  {% for page in pages %}
-    <tr>
-      <td>{{ page.title }}</td>
-      <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
-        {% else %}
-        Draft{% endif %}
-        {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
-      <td>
-        {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-        {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your changes</a>{% endif %}
-      </td>
-      <td><a href="{% url 'nowpages:edit' page.id %}" class="button">edit</a></td>
-      <td>{% if page.has_unpublished_changes %}
-        <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
-          <input type="submit" class="submit-page" value="Submit for publication">
-        </form>
-        {% endif %}
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-{% endif %}
+{% endblock %}
 
-
-<form action="{% url 'nowpages:create' %}" method="get">
-  <input type="submit" value="Start a new blog entry">
-</form>
-
-
-
+{% block extra_css %}
+    {% include "wagtailadmin/pages/_editor_css.html" %}
+    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
+    <link rel="stylesheet" type="text/less" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
