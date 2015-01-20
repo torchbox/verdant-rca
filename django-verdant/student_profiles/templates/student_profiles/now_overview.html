@@ -6,22 +6,6 @@
 
 {% block content %}
 
-<div class="session-meta">
-    <span>Hello, {{ user.username }}</span>
-    <a href="/admin/logout/">Log out</a>
-</div>
-
-    <nav class="student-profile-nav"></nav>
-
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-
 <div class="page-content rca-now">
   {% if messages %}
   <ul class="messages">
@@ -39,8 +23,8 @@
       </div>
       {% else %}
       <table>
-        <tr>
-          <th>Page title</th>
+        <tr class="first-row">
+          <th>Title</th>
           <th>Status</th>
           <th></th>
         </tr>
@@ -50,27 +34,36 @@
             <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
               {% else %}
               Draft{% endif %}
-              {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
+              {% if page.waiting_for_moderation %}<br>In moderation{% endif %}
+            {% if not page.live %}
             <td>
-              {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your post</a>{% endif %}
+              <form action="{% url 'nowpages:delete' page.id %}" method="POST">{% csrf_token %}
+                <button class="button-as-link delete-post">Delete</button>
+              </form>
             </td>
-            <td><a href="{% url 'nowpages:edit' page.id %}" class="button">edit</a></td>
+            {% endif %}
+            <td>
+              {% if page.live %}<a href="{{ page.url }}">Live</a>{% endif %}
+              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Preview</a>{% endif %}
+            </td>
+            <td><a href="{% url 'nowpages:edit' page.id %}">Edit</a></td>
             <td>{% if page.has_unpublished_changes %}
               <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
-                <input type="submit" class="submit-page" value="Submit for publication">
+                <input type="submit" class="submit-page button-as-link" value="Submit for moderation">
               </form>
               {% endif %}
             </td>
           </tr>
         {% endfor %}
       </table>
+      <div class="now-actions">
+          <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
+      </div>
       {% endif %}
     </section>
     <section class="notes">
       <h3>Notes</h3>
-      <p> Create, edit and submit your blog posts for moderation. </p>
-      <p> Get your best works out there for all to enjoy, RCA now. </p>
+      <p> Create, edit and submit your blog posts for moderation.</p>
     </section>
   </section>
 </div>

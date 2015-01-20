@@ -70,3 +70,49 @@ $.ajaxSetup({
         }
     }
 });
+
+/*
+* Catch Save dialog
+*/
+
+$('.submit-page').click(function(e) {
+    e.preventDefault();
+    if (window.confirm("Sending this post for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
+        $(this).submit();
+    }
+});
+
+/*
+* Catch delete dialog
+*/
+
+$('.delete-post').click(function(e) {
+    e.preventDefault();
+    if (window.confirm("Would you like to go ahead with deleting this post?")) {
+        $(this).submit();
+    }
+});
+
+/*
+* Sticky notes
+*/
+
+function stickyNote() {
+    if ($(window).width() < 1100) {
+        $('.note').unstick();
+        console.log("Unstick");
+    } else {
+        $('.notes').sticky({
+            topSpacing: 200,
+            bottomSpacing: 680
+        });
+        console.log("Stick");
+    }
+}
+
+$(window).resize(function() {
+    stickyNote();
+});
+
+stickyNote();
+

@@ -140,7 +140,7 @@ def submit(request, page_id):
 def delete(request, page_id):
     page = get_page_or_404(request, page_id)
 
-if page.live:
+    if page.live:
         raise Http404('Can only delete pages that are not yet live.')
 
     if request.method == 'POST':
