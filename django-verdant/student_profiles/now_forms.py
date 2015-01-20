@@ -58,8 +58,8 @@ class PageForm(forms.ModelForm):
     )
     
     def clean(self):
-        intro_text = self.cleaned_data['intro_text']
-        body = self.cleaned_data['body']
+        intro_text = self.cleaned_data.get('intro_text', '')
+        body = self.cleaned_data.get('body', '')
         
         self.cleaned_data['body'] = '<h1>{intro}</h1>{body}'.format(
             intro=intro_text,

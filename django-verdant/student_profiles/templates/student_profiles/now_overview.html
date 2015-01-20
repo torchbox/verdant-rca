@@ -1,10 +1,26 @@
-{% extends "rca/base.html" %}
+{% extends "student_profiles/now_edit_base.html" %}
 {% load static compress %}
 
 {% block title %}RCA Now pages{% endblock title %}
 
 
 {% block content %}
+
+<div class="session-meta">
+    <span>Hello, {{ user.username }}</span>
+    <a href="/admin/logout/">Log out</a>
+</div>
+
+    <nav class="student-profile-nav"></nav>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 
 <div class="page-content rca-now">
   {% if messages %}
@@ -37,7 +53,7 @@
               {% if page.waiting_for_moderation %}<br>Waiting for publication{% endif %}
             <td>
               {% if page.live %}<a href="{{ page.url }}">Show live page</a><br>{% endif %}
-              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your changes</a>{% endif %}
+              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Show preview of your post</a>{% endif %}
             </td>
             <td><a href="{% url 'nowpages:edit' page.id %}" class="button">edit</a></td>
             <td>{% if page.has_unpublished_changes %}
