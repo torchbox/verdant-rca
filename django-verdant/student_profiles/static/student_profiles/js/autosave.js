@@ -32,7 +32,7 @@ function enableAutosave(formsel) {
                 success: function(msg) {
                     if (msg.ok)
                     {
-                        overlay.html('Saved!');
+                        overlay.html('Saved! <i class="icon ion-pizza"></i>');
                         setTimeout(function() {
                             overlay.animate({'top': '-3em'}, 400);
                         }, 2000);
