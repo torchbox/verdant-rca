@@ -51,6 +51,12 @@ header a.site-name p {
     display: inline;
     width: 28.33334%;
     margin-bottom: 58px;
+    a {
+        color: @color-highlight-blue;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
 /* $BORDERS */
@@ -65,7 +71,6 @@ header a.site-name p {
 }
 
 /* $PROFILE FORM OVERIDES */
-
 form.student-profile,
 form.now-page {
     input[type=text], 
@@ -88,6 +93,7 @@ form.now-page {
         background-repeat: no-repeat;
         background-position: right 17px top 19px;
         padding-right: 4.5em;
+        -moz-appearance: none;
         .border-box();
     }
     textarea,
@@ -98,7 +104,8 @@ form.now-page {
         display: block;
         margin-top: 0.5em;
     }
-    // Select 2 drop downs
+    // Select2: faux select box '<select>'  
+    // The dropdown div layer (<option>) is not inside the form
     .select2-container {
         max-width: 82%;
         display: block;
@@ -134,14 +141,8 @@ form.now-page {
                 }
             }
         }
-        .select2-drop {
-            border: none;
-            background: @color-pale-grey;
-            color: @color-black;
-            .box-shadow(none);
-            .border-radius(0);
-        }
     }
+
     .help-text {
         text-transform: none;
         max-width: 82%;
@@ -278,10 +279,39 @@ form.now-page {
     }
 }
 
+/* $SELECT2 DROPDOWN */
+// The dropdown div layer is not inside the form
+// The faux select box is (see above code)
+
+
+//Dropdown box styling
+.select2-drop {
+    border: none;
+    background: @color-pale-grey;
+    color: @color-black;
+    .box-shadow(none);
+    .border-radius(0);
+}
+.select2-drop-active {
+    border: none;
+}
+//Search bar
+.select2-search input {
+    background-color: transparent;
+}
+.select2-result-label,
+.select2-results .select2-highlighted {
+    font-family: sans-serif;
+    &:hover {
+        background-color: @color-pink-darker;        
+    }
+}
+
 /* $HALLO EDITOR TOOL BAR */
 
 .richtext {
     padding: 16px;
+    height: 200px;
     //Height of the buttons
     padding-top: 66px;
 }
@@ -297,10 +327,12 @@ form.now-page {
 .richtext b,
 .richtext ul,
 .richtext ol,
+label .richtext span,
 .richtext {
     font-family: sans-serif;
     text-transform: none;
     border: none;
+    color: @color-black;
 }
 .richtext p, 
 .richtext i, 
@@ -462,12 +494,17 @@ form.now-page {
 }
 
 
-/* $PROFILE ACTIONS */
+/* $PROFILE ACTIONS / $NOW ACTIONS */
 
-.profile-actions {
+.profile-actions,
+.now-actions {
     margin-top: 1em;
     border-top: 1px solid @color-light-grey;
     padding-top: 0.5em;
+    input,
+    a {
+        margin-bottom: 0.2em;
+    }
 }
 
 /* $BUTTONS */
@@ -482,6 +519,23 @@ input[type=submit] {
         text-decoration: none;
     }
 }
+
+/* $BUTTON AS LINK */
+input.button-as-link,
+.button-as-link {
+    padding: 0;
+    color: @color-highlight-blue;
+    background: transparent;
+    text-transform: none;
+    border: none;
+    outline: none;
+    &:hover {
+        color: @color-highlight-blue;
+        text-decoration: underline;
+        background: transparent;  
+    }
+}
+
 
 i.icon.action {
     background: @color-highlight-blue;
@@ -514,12 +568,15 @@ form.now-page {
         background: @color-pink-darker;
         color: @color-white;
         padding: 0.2em 0.4em;
+        height: 25px;
     }
 
     ul.tagit li.tagit-choice .tagit-close {
         display: inline-block;
         position: static;
-        padding: 0.1em 0em;
+        height: 25px;
+        width: 25px;
+        line-height: 2em;
         background: @color-pink-darker;
     }
 
@@ -528,8 +585,32 @@ form.now-page {
         color: @color-white;
         font-family: @font-family-ion;
         display: inline-block;
-        padding: 0.2em 0.4em;
         margin-right: 0.1em;
+        height: 25px;
+        width: 25px;
+        line-height: 1em;
+    }
+}
+
+/* $TABLE */
+
+table {
+    th,
+    td {
+        padding: 0.8em 0.6em;
+    }
+    tr {
+        border-top: 1px solid @color-pale-grey;
+        margin-top: 0.25em;
+        &:hover {
+            background-color: @color-very-pale-blue;
+        }
+    }
+    tr.first-row {
+        border: none;
+        &:hover {
+            background-color: none;
+        }
     }
 }
 
@@ -543,11 +624,12 @@ form.now-page {
     height: 3em;
     margin: 0 0 0 -12em;
     padding-top: 1em;
-    background-color: #FF7F00;
+    background-color: @color-highlight-blue;
+    color: @color-white;
+    font-size: @font-size-18;
     filter:alpha(opacity=50);
-    -moz-opacity:0.5;
-    -khtml-opacity: 0.5;
-    opacity: 0.5;
+    .opacity(50);
     z-index: 10000;
     text-align: center;
+    font-weight: bold;
 }

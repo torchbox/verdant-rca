@@ -248,6 +248,12 @@ class MADetailsForm(forms.ModelForm):
         help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'),
     )
 
+    def clean_ma_graduation_year(self):
+        if self.cleaned_data['ma_graduation_year']:
+            return self.cleaned_data['ma_graduation_year']
+        else:
+            return ''
+
     class Meta:
         model = NewStudentPage
         fields = [

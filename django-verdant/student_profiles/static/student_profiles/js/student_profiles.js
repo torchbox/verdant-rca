@@ -318,13 +318,27 @@ $.ajaxSetup({
 });
 
 /*
-* Sticky notice
+* Sticky notes
 */
 
-$('.notes').sticky({
-    topSpacing: 200,
-    bottomSpacing: 680
+function stickyNote() {
+    if ($(window).width() < 1100) {
+        $('.note').unstick();
+        console.log("Unstick");
+    } else {
+        $('.notes').sticky({
+            topSpacing: 200,
+            bottomSpacing: 680
+        });
+        console.log("Stick");
+    }
+}
+
+$(window).resize(function() {
+    stickyNote();
 });
+
+stickyNote();
 
 /*
 * Catch Save and Submit
@@ -332,7 +346,7 @@ $('.notes').sticky({
 
 $('.submit-page').click(function(e) {
     e.preventDefault();
-    if (window.confirm("Sending this form for moderation means you can no longer make changes, would you like to go ahead and send your details?")) {
+    if (window.confirm("Sending this form for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
         $(this).submit();
     }
 })

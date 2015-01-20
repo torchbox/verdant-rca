@@ -18,18 +18,18 @@
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
 
-        <p>
+        <div class="now-actions">
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
             {% if page %}
             <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
             {% endif %}
-        </p>
+        </div>
       </form>
     </section>
     <section class="notes">
       <h3>Notes</h3>
-      <p>Create / Edit your blog post then when ready submit it for moderation. If the post is approved it will made live for everyone to enjoy.</p>
+      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
 
     </section>
   </section>
