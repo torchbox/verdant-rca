@@ -47,7 +47,7 @@ def overview(request):
     }
 
     index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
-    raw_pages = index_page.get_children().filter(owner=request.user)
+    raw_pages = index_page.get_children().filter(owner=request.user).order_by('-latest_revision_created_at')
     data['pages'] = [p.get_latest_revision_as_page() for p in raw_pages]
     for p in data['pages']:
         p.waiting_for_moderation = p.revisions.filter(submitted_for_moderation=True).exists()
