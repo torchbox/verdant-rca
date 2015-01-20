@@ -98,6 +98,50 @@ form.now-page {
         display: block;
         margin-top: 0.5em;
     }
+    // Select 2 drop downs
+    .select2-container {
+        max-width: 82%;
+        display: block;
+        color: @color-charcoal;
+        .select2-choice {
+            border: none;
+            text-transform: none;
+            background: @color-pale-grey;
+            padding: 16px;
+            padding-right: 4.5em;
+            height: auto;
+            text-decoration: none;
+            .box-sizing(border-box);
+            .box-shadow(none);
+            .border-radius(0);
+            .select2-chosen {
+                margin: 0;
+                font-size: @font-size-16;
+                color: @color-black;
+                font-weight: normal;
+                font-family: sans-serif;
+                line-height: normal;
+            }
+            .select2-arrow {
+                width: 40px;
+                background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+                background-repeat: no-repeat;
+                background-position: left center;
+                background-color: transparent;
+                border: none;
+                b {
+                    background: none;
+                }
+            }
+        }
+        .select2-drop {
+            border: none;
+            background: @color-pale-grey;
+            color: @color-black;
+            .box-shadow(none);
+            .border-radius(0);
+        }
+    }
     .help-text {
         text-transform: none;
         max-width: 82%;
@@ -465,7 +509,7 @@ form.now-page {
 
     span.tagit-label.tag {
         display: inline-block;
-        text-transform: normal;
+        text-transform: none;
         font-size: @font-size-16;
         background: @color-pink-darker;
         color: @color-white;
