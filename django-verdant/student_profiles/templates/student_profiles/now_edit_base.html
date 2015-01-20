@@ -43,15 +43,19 @@
 
 
 {% block css %}
-    <link rel="stylesheet" type="text/scss" href="{% static "student_profiles/css/vendor/jquery.datetimepicker.css" %}" />
+    {% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static "student_profiles/css/vendor/jquery.datetimepicker.css" %}" />
+    {% endcompress %}
 {{ block.super }}
 
 {% endblock css %}
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
-    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
-    <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+    {% endcompress %}
     <link rel="stylesheet" type="text/less" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
 
@@ -119,24 +123,26 @@
 {# custom code starts here #}
     {% include "wagtailadmin/pages/_editor_js.html" %}
     {% include "wagtailadmin/shared/tag_field_js.html" %}
-{% compress js %}
 
 
+    {% compress js %}
 
 {# we import the JS files here because every form uses them anyway #}
 
 <script src="{% static "student_profiles/select2/select2.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
 <script src="{% static "student_profiles/js/nowpages.js" %}"></script>
+{% endcompress %}
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
-<script src="{% static "student_profiles/js/autosave.js" %}"></script>
+
+{% compress js %}<script src="{% static "student_profiles/js/autosave.js" %}"></script>{% endcompress %}
     {% if page %}
 <script type="text/javascript">
   enableAutosave('form.now-page');
 </script>
     {% endif %}
 
-{% endcompress %}
+
 
 
 

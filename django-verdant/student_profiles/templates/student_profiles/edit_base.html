@@ -149,9 +149,12 @@
 <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
 {# we import the JS files here because every form uses them anyway #}
 <script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
-{% block form_js %}{% endblock form_js %}  {# for activating formset js #}
-<script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
-
-
 {% endcompress %}
+{% block form_js %}{% endblock form_js %}  {# for activating formset js #}
+
+    {% compress js %}
+<script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+{% endcompress %}
+
+
 {% endblock js %}
