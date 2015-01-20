@@ -224,8 +224,6 @@ def basic_profile(request, page_id):
             profile_page.statement = bcd['statement']
 
             profile_page.profile_image = bcd['profile_image']
-            print request.POST
-            print bcd
 
             profile_page.emails = [
                 NewStudentPageContactsEmail(email=f['email']) for f in email_formset.ordered_data if f.get('email')
