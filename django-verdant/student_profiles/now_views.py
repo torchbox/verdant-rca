@@ -134,3 +134,22 @@ def submit(request, page_id):
     messages.success(request, "Blog page '{}' was submitted for moderation".format(page.title))
 
     return redirect('nowpages:overview')
+
+
+@login_required()
+def delete(request, page_id):
+    page = get_page_or_404(request, page_id)
+
+if page.live:
+        raise Http404('Can only delete pages that are not yet live.')
+
+    if request.method == 'POST':
+        Page.objects.get(id=page_id).delete()
+        return redirect('nowpages:overview')
+
+    data = {
+        'page': page,
+        'page_id': page_id,
+    }
+
+    return render(request, 'student_profiles/now_delete.html', data)
