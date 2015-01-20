@@ -129,6 +129,11 @@
     }
 }
 
+.box-sizing(@box-model: border-box) {
+    -moz-box-sizing: @box-model;
+    box-sizing: @box-model;
+}
+
 .border-radius(@radius){
     -webkit-border-radius: @radius;
     border-radius: @radius;
