@@ -241,6 +241,12 @@ ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFo
 
 class MADetailsForm(forms.ModelForm):
 
+    ma_in_show = forms.BooleanField(
+        label='In show',
+        required=False,
+        help_text="Please tick only if you're in the Show this academic year.",
+    )
+
     ma_graduation_year = forms.IntegerField(
         label='Graduation year',
         min_value=1950, max_value=2050,
