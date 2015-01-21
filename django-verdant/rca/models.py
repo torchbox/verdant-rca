@@ -2236,12 +2236,14 @@ class StandardIndexTeaser(Orderable):
     page = ParentalKey('rca.StandardIndex', related_name='teasers')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndexTeaser', 'image'))
     link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndexTeaser', 'link'))
+    external_link = models.URLField(blank=True, help_text="Used only if the (internal) link above is not defined.")
     title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndexTeaser', 'title'))
     text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndexTeaser', 'text'))
 
     panels = [
         ImageChooserPanel('image'),
         PageChooserPanel('link'),
+        FieldPanel('external_link'),
         FieldPanel('title', classname="full title"),
         FieldPanel('text'),
     ]
