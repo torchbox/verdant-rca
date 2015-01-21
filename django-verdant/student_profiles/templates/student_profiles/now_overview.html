@@ -4,16 +4,9 @@
 {% block title %}RCA Now pages{% endblock title %}
 
 
-{% block content %}
+{% block form_content %}
 
-<div class="page-content rca-now">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
+
   <h1>Your RCA Now blog</h1>
   <section class="row">
     <section class="body-text">
@@ -66,7 +59,6 @@
       <p> Create, edit and submit your blog posts for moderation.</p>
     </section>
   </section>
-</div>
 
 {% endblock %}
 
