@@ -160,7 +160,7 @@ class ProfileBasicForm(forms.ModelForm):
 
     class Meta:
         model = NewStudentPage
-        fields = ['first_name', 'last_name', 'profile_image', 'statement']
+        fields = ['first_name', 'last_name', 'twitter_handle', 'profile_image', 'statement']
 
 
 class EmailForm(forms.Form):
