@@ -227,6 +227,7 @@ def basic_profile(request, page_id):
             request.user.last_name = profile_page.last_name = bcd['last_name']
 
             profile_page.statement = bcd['statement']
+            profile_page.twitter_handle = bcd['twitter_handle']
 
             profile_page.profile_image = bcd['profile_image']
 
