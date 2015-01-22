@@ -130,7 +130,10 @@ def overview(request):
         return redirect('student-profiles:edit-basic', page_id=page.id)
 
     data = {}
-    data['form'] = StartingForm()
+    data['form'] = StartingForm(initial={
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+    })
 
     if request.method == 'POST':
         data['form'] = form = StartingForm(request.POST)
@@ -141,8 +144,8 @@ def overview(request):
 
             page.title = u'{} {}'.format(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
 
-            page.first_name = form.cleaned_data['first_name']
-            page.last_name = form.cleaned_data['last_name']
+            request.user.first_name = page.first_name = form.cleaned_data['first_name']
+            request.user.last_name = page.last_name = form.cleaned_data['last_name']
 
             # the following is the page where the new student pages are added as children
             # MAKE SURE THIS IS THE CORRECT ID!
@@ -157,6 +160,8 @@ def overview(request):
 
             page.has_unpublished_changes = True
             page.save()
+
+            request.user.save()
 
             return redirect('student-profiles:edit-basic', page_id=page.id)
 
@@ -218,8 +223,8 @@ def basic_profile(request, page_id):
             
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
 
-            profile_page.first_name = bcd['first_name']
-            profile_page.last_name = bcd['last_name']
+            request.user.first_name = profile_page.first_name = bcd['first_name']
+            request.user.last_name = profile_page.last_name = bcd['last_name']
 
             profile_page.statement = bcd['statement']
 
@@ -236,6 +241,7 @@ def basic_profile(request, page_id):
             ]
 
             save_page(profile_page, request)
+            request.user.save()
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
