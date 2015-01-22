@@ -19,10 +19,10 @@
             <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}">Profile</a></li>
             <ul class="inner-menu">
                 <li{% if nav_basic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-basic' page_id %}">Basic profile</a>
+                    <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
                 </li>
                 <li{% if nav_academic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-academic' page_id %}">Academic details</a>
+                    <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
                 </li>
             </ul>
         </ul>
@@ -41,10 +41,10 @@
             <li class="drop-down"><a href="{% url 'student-profiles:edit-ma' page_id %}">MA</a></li>
             <ul class="inner-menu">
                 <li{% if nav_ma %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-ma' page_id %}">MA details</a>
+                    <a href="{% url 'student-profiles:edit-ma' page_id %}">MA Details</a>
                 </li>
                 <li id="in-show-menu"{% if nav_show_profile %} class="active"{% endif %}{% if not is_in_show %} style="display: none;"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Profile for the show</a>
+                    <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a>
                 </li>
             </ul>
         </ul>
@@ -52,14 +52,14 @@
         {% if is_mphil %}
         <ul class="outer-menu">
             <li{% if nav_mphil %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil details</a>
+                <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil Details</a>
             </li>
         </ul>
         {% endif %}
         {% if is_phd %}
         <ul class="outer-menu">
             <li{% if nav_phd %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD details</a>
+                <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
             </li>
         </ul>
         {% endif %}
