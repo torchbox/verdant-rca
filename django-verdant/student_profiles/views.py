@@ -13,7 +13,7 @@ from django.views.decorators.http import require_POST
 from wagtail.wagtailcore.models import Page
 from rca.models import NewStudentPage
 from rca.models import NewStudentPageContactsEmail, NewStudentPageContactsPhone, NewStudentPageContactsWebsite
-from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
+from rca.models import NewStudentPagePreviousDegree, NewStudentPageExhibition, NewStudentPageExperience, NewStudentPageAward, NewStudentPagePublication, NewStudentPageConference
 from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollaborator, NewStudentPageShowSponsor
 from rca.models import NewStudentPageMPhilCarouselItem, NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCarouselItem, NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
@@ -21,7 +21,7 @@ from rca.models import RcaImage
 
 from .forms import StartingForm
 from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
-from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
+from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExperiencesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
 from .forms import MPhilForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
 from .forms import PhDForm, PhDCollaboratorFormset, PhDSponsorFormset, PhDSupervisorFormset
@@ -130,7 +130,10 @@ def overview(request):
         return redirect('student-profiles:edit-basic', page_id=page.id)
 
     data = {}
-    data['form'] = StartingForm()
+    data['form'] = StartingForm(initial={
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+    })
 
     if request.method == 'POST':
         data['form'] = form = StartingForm(request.POST)
@@ -141,8 +144,8 @@ def overview(request):
 
             page.title = u'{} {}'.format(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
 
-            page.first_name = form.cleaned_data['first_name']
-            page.last_name = form.cleaned_data['last_name']
+            request.user.first_name = page.first_name = form.cleaned_data['first_name']
+            request.user.last_name = page.last_name = form.cleaned_data['last_name']
 
             # the following is the page where the new student pages are added as children
             # MAKE SURE THIS IS THE CORRECT ID!
@@ -157,6 +160,8 @@ def overview(request):
 
             page.has_unpublished_changes = True
             page.save()
+
+            request.user.save()
 
             return redirect('student-profiles:edit-basic', page_id=page.id)
 
@@ -218,10 +223,11 @@ def basic_profile(request, page_id):
             
             profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
 
-            profile_page.first_name = bcd['first_name']
-            profile_page.last_name = bcd['last_name']
+            request.user.first_name = profile_page.first_name = bcd['first_name']
+            request.user.last_name = profile_page.last_name = bcd['last_name']
 
             profile_page.statement = bcd['statement']
+            profile_page.twitter_handle = bcd['twitter_handle']
 
             profile_page.profile_image = bcd['profile_image']
 
@@ -236,6 +242,7 @@ def basic_profile(request, page_id):
             ]
 
             save_page(profile_page, request)
+            request.user.save()
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
@@ -278,6 +285,8 @@ def academic_details(request, page_id=None):
         'exhibition',
     )
 
+    make_formset('Experience', ExperiencesFormset, 'experiences', 'experience')
+
     make_formset(
         'Awards',
         AwardsFormset, 'awards',
@@ -303,12 +312,13 @@ def academic_details(request, page_id=None):
         data['awards_formset'] = afs = AwardsFormset(request.POST, prefix='awards')
         data['publications_formset'] = pfs = PublicationsFormset(request.POST, prefix='publications')
         data['conferences_formset'] = cfs = ConferencesFormset(request.POST, prefix='conferences')
+        data['experiences_formset'] = xfs = ExperiencesFormset(request.POST, prefix='experiences')
         
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not saved, it is currently locked')
-        elif pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid():
+        elif pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid() and xfs.is_valid():
             profile_page.funding = pf.cleaned_data['funding']
             
             profile_page.previous_degrees = [
@@ -325,6 +335,9 @@ def academic_details(request, page_id=None):
             ]
             profile_page.conferences = [
                 NewStudentPageConference(name=f['name']) for f in cfs.ordered_data if f.get('name')
+            ]
+            profile_page.experiences = [
+                NewStudentPageExperience(experience=f['experience']) for f in xfs.ordered_data if f.get('experience')
             ]
             
             save_page(profile_page, request)

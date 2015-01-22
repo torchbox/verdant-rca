@@ -10,6 +10,7 @@ from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage
+from rca.models import SCHOOL_PROGRAMME_MAP, ALL_PROGRAMMES
 
 ################################################################################
 ## internal classes
@@ -159,7 +160,7 @@ class ProfileBasicForm(forms.ModelForm):
 
     class Meta:
         model = NewStudentPage
-        fields = ['first_name', 'last_name', 'profile_image', 'statement']
+        fields = ['first_name', 'last_name', 'twitter_handle', 'profile_image', 'statement']
 
 
 class EmailForm(forms.Form):
@@ -211,6 +212,13 @@ class ExhibitionForm(forms.Form):
     )
 ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1, formset=OrderedFormset)
 
+class ExperienceForm(forms.Form):
+    experience = forms.CharField(
+        max_length=255, required=False,
+        help_text=help_text('rca.NewStudentPageExperience', 'experience', default="Please include job title, company name, city and year(s), separated by commas"),
+    )
+ExperiencesFormset = formset_factory(ExperienceForm, extra=1, formset=OrderedFormset)
+
 class AwardsForm(forms.Form):
     #saves to NewStudentPageAward
     award = forms.CharField(
@@ -241,6 +249,26 @@ ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFo
 
 class MADetailsForm(forms.ModelForm):
 
+    SCHOOL_CHOICES = (
+        ('', '---------'),
+        ('schoolofarchitecture', 'School of Architecture'),
+        ('schoolofcommunication', 'School of Communication'),
+        ('schoolofdesign', 'School of Design'),
+        ('schooloffineart', 'School of Fine Art'),
+        ('schoolofhumanities', 'School of Humanities'),
+        ('schoolofmaterial', 'School of Material'),
+    )
+
+    PROGRAMME_CHOICES_2015 = (('', '---------'), ) + tuple(sorted([
+        (
+            2015, tuple([
+                        (programme, dict(ALL_PROGRAMMES)[programme])
+                        for programme
+                        in sorted(set(sum(SCHOOL_PROGRAMME_MAP['2014'].values(), [])))
+                    ])
+        )
+    ], reverse=True))
+
     ma_in_show = forms.BooleanField(
         label='In show',
         required=False,
@@ -252,6 +280,18 @@ class MADetailsForm(forms.ModelForm):
         min_value=1950, max_value=2050,
         required=False,
         help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'),
+    )
+
+    ma_school = forms.ChoiceField(
+        label="School", help_text=help_text('rca.NewStudentPage', 'ma_school'),
+        choices=SCHOOL_CHOICES,
+        required=False,
+    )
+
+    ma_programme = forms.ChoiceField(
+        label="Programme",
+        choices=PROGRAMME_CHOICES_2015,
+        required=False,
     )
 
     def clean_ma_graduation_year(self):

@@ -12,7 +12,10 @@
     <section class="body-text">
       {% if not pages %}
       <div>
-        You have no posts yet, time to <a href="{% url 'nowpages:create' %}">get writing</a>. 
+        You have no posts yet.
+      </div>
+      <div class="now-actions">
+          <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
       </div>
       {% else %}
       <table>

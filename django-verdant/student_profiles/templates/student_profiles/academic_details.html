@@ -11,7 +11,7 @@
       {% endfor %}
   </ul>
   {% endif %}
-  <h1>Academic details</h1>
+  <h1>CV</h1>
   <section class="row">
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
@@ -20,6 +20,7 @@
 
       {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset %}
       {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=experiences_formset %}
       {% include "student_profiles/formset_single_field.html" with formset=awards_formset %}
       {% include "student_profiles/formset_single_field.html" with formset=publications_formset %}
       {% include "student_profiles/formset_single_field.html" with formset=conferences_formset %}
@@ -48,6 +49,7 @@ $(function() {
   
   makeFormset('{{ previous_degrees_formset.prefix }}');
   makeFormset('{{ exhibitions_formset.prefix }}');
+  makeFormset('{{ experiences_formset.prefix }}');
   makeFormset('{{ awards_formset.prefix }}');
   makeFormset('{{ publications_formset.prefix }}');
   makeFormset('{{ conferences_formset.prefix }}');
