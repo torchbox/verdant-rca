@@ -212,6 +212,13 @@ class ExhibitionForm(forms.Form):
     )
 ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1, formset=OrderedFormset)
 
+class ExperienceForm(forms.Form):
+    experience = forms.CharField(
+        max_length=255, required=False,
+        help_text=help_text('rca.NewStudentPageExperience', 'experience', default="Please include job title, company name, city and year(s), separated by commas"),
+    )
+ExperiencesFormset = formset_factory(ExperienceForm, extra=1, formset=OrderedFormset)
+
 class AwardsForm(forms.Form):
     #saves to NewStudentPageAward
     award = forms.CharField(
