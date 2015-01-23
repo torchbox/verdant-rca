@@ -245,6 +245,30 @@ ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFo
 
 
 ################################################################################
+## postcard upload
+
+class PostcardUploadForm(forms.ModelForm):
+    postcard_image = forms.IntegerField(
+        label='Postcard image',
+        required=False,
+        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"),
+        widget=ImageInput,
+    )
+
+    def clean_postcard_image(self):
+        try:
+            return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
+        except RcaImage.DoesNotExist:
+            return None
+
+    class Meta:
+        model = NewStudentPage
+        fields = [
+            'postcard_image',
+        ]
+
+
+################################################################################
 ## MA details
 
 class MADetailsForm(forms.ModelForm):
@@ -312,18 +336,7 @@ class MADetailsForm(forms.ModelForm):
 
 class MAShowDetailsForm(forms.ModelForm):
     
-    postcard_image = forms.IntegerField(
-        label='Postcard image',
-        required=False,
-        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"),
-        widget=ImageInput,
-    )
-    
-    def clean_postcard_image(self):
-        try:
-            return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
-        except RcaImage.DoesNotExist:
-            return None
+
     
     class Meta:
         model = NewStudentPage
@@ -332,8 +345,8 @@ class MAShowDetailsForm(forms.ModelForm):
             'show_work_title',
             'show_work_location',
             'show_work_description',
-            'postcard_image',
         ]
+
 
 class MAShowCarouselItemForm(forms.Form):
 

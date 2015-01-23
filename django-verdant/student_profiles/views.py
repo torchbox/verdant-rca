@@ -22,6 +22,7 @@ from rca.models import RcaImage
 from .forms import StartingForm
 from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExperiencesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
+from .forms import PostcardUploadForm
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
 from .forms import MPhilForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
 from .forms import PhDForm, PhDCollaboratorFormset, PhDSponsorFormset, PhDSupervisorFormset
@@ -349,6 +350,35 @@ def academic_details(request, page_id=None):
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/academic_details.html', data)
+
+
+@login_required
+def postcard_upload(request, page_id):
+    """
+    Academic details editing page.
+    """
+    data, page = initial_context(request, page_id)
+    data['nav_postcard'] = True
+
+    data['form'] = PostcardUploadForm(instance=page)
+
+    if request.method == 'POST':
+        data['form'] = form = PostcardUploadForm(request.POST, instance=page)
+
+        if page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not be saved, it is currently locked')
+        elif form.is_valid():
+            page = form.save(commit=False)
+            save_page(page, request)
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            return redirect('student-profiles:edit-ma', page_id=page_id)
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+    return render(request, 'student_profiles/postcard_upload.html', data)
 
 
 ################################################################################

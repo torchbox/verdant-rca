@@ -26,16 +26,11 @@
                 </li>
             </ul>
         </ul>
-        {% else %}
         <ul class="outer-menu">
-            <li class="drop-down"><a href="{% url 'student-profiles:new-basic' %}">Profile</a></li>
-            <ul class="inner-menu">
-                <li{% if nav_basic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:new-basic' %}">Get started</a>
-                </li>
-            </ul>
+            <li{% if nav_postcard %} class="active"{% endif %}>
+                <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
+            </li>
         </ul>
-        {% endif %}
         {% if is_ma %}
         <ul class="outer-menu"> 
             <li class="drop-down"><a href="{% url 'student-profiles:edit-ma' page_id %}">MA</a></li>
@@ -61,6 +56,16 @@
             <li{% if nav_phd %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
             </li>
+        </ul>
+        {% endif %}
+        {% else %}
+        <ul class="outer-menu">
+            <li class="drop-down"><a href="{% url 'student-profiles:new-basic' %}">Profile</a></li>
+            <ul class="inner-menu">
+                <li{% if nav_basic %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:new-basic' %}">Get started</a>
+                </li>
+            </ul>
         </ul>
         {% endif %}
         <ul class="outer-menu rca-now-link">
