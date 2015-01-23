@@ -269,29 +269,33 @@ class PostcardUploadForm(forms.ModelForm):
 
 
 ################################################################################
+## custom school and programme choices for 2015
+
+SCHOOL_CHOICES = (
+    ('', '---------'),
+    ('schoolofarchitecture', 'School of Architecture'),
+    ('schoolofcommunication', 'School of Communication'),
+    ('schoolofdesign', 'School of Design'),
+    ('schooloffineart', 'School of Fine Art'),
+    ('schoolofhumanities', 'School of Humanities'),
+    ('schoolofmaterial', 'School of Material'),
+)
+
+PROGRAMME_CHOICES_2015 = (('', '---------'), ) + tuple(sorted([
+    (
+        2015, tuple([
+                    (programme, dict(ALL_PROGRAMMES)[programme])
+                    for programme
+                    in sorted(set(sum(SCHOOL_PROGRAMME_MAP['2014'].values(), [])))
+                ])
+    )
+], reverse=True))
+
+
+################################################################################
 ## MA details
 
 class MADetailsForm(forms.ModelForm):
-
-    SCHOOL_CHOICES = (
-        ('', '---------'),
-        ('schoolofarchitecture', 'School of Architecture'),
-        ('schoolofcommunication', 'School of Communication'),
-        ('schoolofdesign', 'School of Design'),
-        ('schooloffineart', 'School of Fine Art'),
-        ('schoolofhumanities', 'School of Humanities'),
-        ('schoolofmaterial', 'School of Material'),
-    )
-
-    PROGRAMME_CHOICES_2015 = (('', '---------'), ) + tuple(sorted([
-        (
-            2015, tuple([
-                        (programme, dict(ALL_PROGRAMMES)[programme])
-                        for programme
-                        in sorted(set(sum(SCHOOL_PROGRAMME_MAP['2014'].values(), [])))
-                    ])
-        )
-    ], reverse=True))
 
     ma_in_show = forms.BooleanField(
         label='In show',
@@ -400,6 +404,18 @@ MASponsorFormset = formset_factory(MASponsorForm, extra=1, formset=OrderedFormse
 # MPhil and PhD forms
 class MPhilForm(forms.ModelForm):
 
+    mphil_school = forms.ChoiceField(
+        label="School", help_text=help_text('rca.NewStudentPage', 'mphil_school'),
+        choices=SCHOOL_CHOICES,
+        required=False,
+    )
+
+    mphil_programme = forms.ChoiceField(
+        label="Programme", help_text=help_text('rca.NewStudentPage', 'mphil_programme'),
+        choices=PROGRAMME_CHOICES_2015,
+        required=False,
+    )
+
     mphil_start_year = forms.IntegerField(
         label='Start year',
         min_value=1950, max_value=2050,
@@ -480,6 +496,18 @@ MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, extra=1, formset=O
 
 # and the same once again with PhD instead of MPhil
 class PhDForm(forms.ModelForm):
+
+    phd_school = forms.ChoiceField(
+        label="School", help_text=help_text('rca.NewStudentPage', 'phd_school'),
+        choices=SCHOOL_CHOICES,
+        required=False,
+    )
+
+    phd_programme = forms.ChoiceField(
+        label="Programme", help_text=help_text('rca.NewStudentPage', 'phd_programme'),
+        choices=PROGRAMME_CHOICES_2015,
+        required=False,
+    )
 
     phd_start_year = forms.IntegerField(
         label='Start year',
