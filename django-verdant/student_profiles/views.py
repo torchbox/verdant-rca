@@ -224,8 +224,6 @@ def basic_profile(request, page_id):
         elif basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
             bcd = basic_form.cleaned_data
             
-            profile_page.title = u'{} {}'.format(bcd['first_name'], bcd['last_name'])
-
             request.user.first_name = profile_page.first_name = bcd['first_name']
             request.user.last_name = profile_page.last_name = bcd['last_name']
 
