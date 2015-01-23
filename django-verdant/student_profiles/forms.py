@@ -29,7 +29,8 @@ class OrderedFormset(BaseFormSet):
         """Cleans the form and orders it by the hidden added order field."""
         
         order = lambda item: item.get('order', 10000)   # yes, 10000 = infinity!
-        self.ordered_data = sorted(self.cleaned_data, key=order)
+        if hasattr(self, 'cleaned_data'):
+            self.ordered_data = sorted(self.cleaned_data, key=order)
         
         return
 
