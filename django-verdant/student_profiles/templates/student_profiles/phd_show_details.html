@@ -3,6 +3,7 @@
 
 {% block form_content %}
 
+
 <div class="page-content">
   {% if messages %}
   <ul class="messages">
@@ -16,7 +17,7 @@
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
         
-        {% include 'student_profiles/form_snippet.html' with form=mphil_show_form %}
+        {% include 'student_profiles/form_snippet.html' with form=phd_show_form %}
 
         {{ carouselitem_formset.management_form }}
         <h4>Carousel images/videos</h4>
@@ -25,9 +26,8 @@
           <div class="inline-form">
             {{ carouselitem_form.id }}
             {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
-          <input type="hidden" class="order-value" name="{{ form.prefix }}-ORDER" value="{{ forloop.counter0 }}">
-          <i class="icon action ion-android-arrow-up move-up"></i>
-          <i class="icon action ion-android-arrow-down move-down"></i>
+            <i class="icon action ion-android-arrow-up move-up"></i>
+            <i class="icon action ion-android-arrow-down move-down"></i>
           </div>
         {% endfor %}
         </div>
@@ -56,9 +56,9 @@
       </form>
     </section>
     <section class="notes">
-      <h3>Notes</h3>
-      <p>Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on your Profile page in the Show catalogue.</p>
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+        <h3>Notes</h3>
+        <p>Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on your Profile page in the Show catalogue.</p>
+        <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
     </section>
   </section>
 </div>
@@ -82,9 +82,9 @@ function updateCarouselSelects() {
       $('#id_carousel-' + id_number + '-overlay_text').parent().show();
 
       $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
-      $('#carousel-' + id_number + '-poster_image_id').hide();
+      $('#carousel-' + id_number + '-poster_image_id').parent().hide();
       $('#id_carousel-' + id_number + '-embedly_url').val('');
-      $('#carousel-' + id_number + '-poster_image_id input').parent().val('');
+      $('#carousel-' + id_number + '-poster_image_id input').val('');
     } else if (value == 'video')
     {
       $('#carousel-' + id_number + '-image_id').parent().hide();
@@ -133,7 +133,7 @@ makeFormset('{{ carouselitem_formset.prefix }}',
   }
 );
 
-makeRichTextEditable('id_mphil_statement');
+makeRichTextEditable('id_phd_statement');
 $('.image-uploader-block').each(function(i) {
   activateImageUpload(this.id);
 });
@@ -142,9 +142,9 @@ updateCarouselSelects();
 $('#carousel select').each(function(i) {
   $(this).trigger('change');
 });
-  
+
 updateSupervisorSelects();
 $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
-  
+
 </script>
 {% endblock form_js %}

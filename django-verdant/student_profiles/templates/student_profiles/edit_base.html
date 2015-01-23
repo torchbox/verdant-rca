@@ -59,9 +59,15 @@
         {% endif %}
         {% if is_phd %}
         <ul class="outer-menu">
-            <li{% if nav_phd %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
-            </li>
+            <li class="drop-down"><a href="{% url 'student-profiles:edit-phd' page_id %}">PhD</a></li>
+            <ul class="inner-menu">
+                <li{% if nav_phd %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
+                </li>
+                <li class="in-show-menu{% if nav_phd_show %} active{% endif %}" {% if not is_in_show %} style="display: none;"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a>
+                </li>
+            </ul>
         </ul>
         {% endif %}
         {% else %}

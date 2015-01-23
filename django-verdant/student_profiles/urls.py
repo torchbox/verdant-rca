@@ -4,7 +4,7 @@ and for allowing more customization
 """
 
 from django.conf.urls import patterns, url
-from .views import overview, preview, postcard_upload, mphil_show_details
+from .views import overview, preview, postcard_upload, mphil_show_details, phd_show_details
 from .views import basic_profile, academic_details, ma_details, ma_show_details
 from .views import mphil_details, phd_details
 from .views import image_upload
@@ -28,11 +28,12 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/mphil/$', mphil_details, name='edit-mphil'),
     url(r'^(?P<page_id>\d+)/mphil_show/$', mphil_show_details, name='edit-mphil-show'),
     url(r'^(?P<page_id>\d+)/phd/$', phd_details, name='edit-phd'),
+    url(r'^(?P<page_id>\d+)/phd_show/$', phd_show_details, name='edit-phd-show'),
 
     url(r'^(?P<page_id>\d+)/basic/image/$', image_upload, {'field': 'profile_image'}, name='edit-basic-image'),
     url(r'^(?P<page_id>\d+)/postcard/image/$', image_upload),
-    url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload, name='edit-ma-show-image'),
-    url(r'^(?P<page_id>\d+)/phd/image/$', image_upload, name='edit-phd-show-image'),
-    url(r'^(?P<page_id>\d+)/mphil_show/image/$', image_upload, name='edit-mphil-show-image'),
+    url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload),
+    url(r'^(?P<page_id>\d+)/phd_show/image/$', image_upload),
+    url(r'^(?P<page_id>\d+)/mphil_show/image/$', image_upload),
 
 )

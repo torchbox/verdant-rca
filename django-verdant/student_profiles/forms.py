@@ -510,11 +510,20 @@ class PhDForm(forms.ModelForm):
         fields = [
             'phd_in_show',
             'phd_school', 'phd_programme',
+            'phd_start_year', 'phd_graduation_year',
+        ]
+
+
+class PhDShowForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPage
+        fields = [
             'phd_dissertation_title',
             'phd_statement',
-            'phd_start_year', 'phd_graduation_year',
             'phd_work_location',
         ]
+
+
 class PhDCollaboratorForm(forms.ModelForm):
     class Meta:
         model = NewStudentPagePhDCollaborator
