@@ -1,8 +1,7 @@
 {% extends "student_profiles/edit_base.html" %}
-{% load static %}
+{% load static compress %}
 
 {% block form_content %}
-
 
 <div class="page-content">
   {% if messages %}
@@ -12,12 +11,12 @@
       {% endfor %}
   </ul>
   {% endif %}
-  <h1>PhD Details</h1>
+  <h1>Postcard Image Upload</h1>
   <section class="row">
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
-        {% include 'student_profiles/form_snippet.html' with form=phd_form %}
+
+        {% include 'student_profiles/form_snippet.html' with form=form %}
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save Draft">
@@ -27,10 +26,10 @@
       </form>
     </section>
     <section class="notes">
-        <h3>Notes</h3>
-        <p>Information about your MPhil at the RCA.<p>
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a>.</p>
-        <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+      <h3>Notes</h3>
+      <p>Upload your postcard image. The postcard image will be used to print a set of postcards with your contact details, for you tu use during the show.</p>
+</p>
+      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
     </section>
   </section>
 </div>
@@ -38,15 +37,21 @@
 {% endblock form_content %}
 
 
+{% block extra_css %}
+
+{{ block.super }}
+{% endblock extra_css %}
+
 
 {% block form_js %}
 <script type="text/javascript">
-$('input#id_phd_in_show').change(function() {
-    if($(this).is(':checked')) {
-        $('.in-show-menu').show();
-    } else {
-        $('.in-show-menu').hide();
-    }
-});
+$(function() {
+
+  activateImageUpload('postcard_image');
+
+})
 </script>
 {% endblock form_js %}
+
+
+

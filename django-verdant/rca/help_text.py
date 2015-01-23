@@ -94,7 +94,7 @@ HELP_TEXT = {
     ('rca.NewStudentPage', 'show_work_type'): "CWA&D and History of Design students should select 'dissertation'. All other students should select 'project'.",
     ('rca.NewStudentPage', 'show_work_description'): 'Description of your work or project featured in the show',
     ('rca.NewStudentPage', 'mphil_start_year'): 'The year you began your MPhil',
-    ('rca.NewStudentPage', 'mphil_statement'): 'Description of your MPhil dissertaition or project',
+    ('rca.NewStudentPage', 'mphil_statement'): 'Description of your MPhil dissertation or project',
     ('rca.NewStudentPage', 'mphil_in_show'): "Please tick only if you're an MPhil in the Show this year",
     ('rca.NewStudentPage', 'phd_start_year'): 'The year you began your PhD',
     ('rca.NewStudentPage', 'phd_statement'): 'Description of your PhD dissertation or project',
