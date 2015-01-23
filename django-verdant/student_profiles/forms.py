@@ -335,9 +335,7 @@ class MADetailsForm(forms.ModelForm):
 
 
 class MAShowDetailsForm(forms.ModelForm):
-    
 
-    
     class Meta:
         model = NewStudentPage
         fields = [
@@ -432,9 +430,17 @@ class MPhilForm(forms.ModelForm):
         fields = [
             'mphil_in_show',
             'mphil_school', 'mphil_programme',
+            'mphil_start_year',
+            'mphil_graduation_year',
+        ]
+
+
+class MPhilShowForm(forms.ModelForm):
+    class Meta:
+        model = NewStudentPage
+        fields = [
             'mphil_dissertation_title',
             'mphil_statement',
-            'mphil_start_year', 'mphil_graduation_year',
             'mphil_work_location',
         ]
 # carousel items as above, sponsor and collaborator almost as above

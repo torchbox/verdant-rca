@@ -24,7 +24,7 @@ from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
 from .forms import ProfileAcademicDetailsForm, PreviousDegreesFormset, ExperiencesFormset, ExhibitionsFormset, AwardsFormset, PublicationsFormset, ConferencesFormset
 from .forms import PostcardUploadForm
 from .forms import MADetailsForm, MAShowDetailsForm, MAShowCarouselItemFormset, MACollaboratorFormset, MASponsorFormset
-from .forms import MPhilForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
+from .forms import MPhilForm, MPhilShowForm, MPhilCollaboratorFormset, MPhilSponsorFormset, MPhilSupervisorFormset
 from .forms import PhDForm, PhDCollaboratorFormset, PhDSponsorFormset, PhDSupervisorFormset
 
 from .forms import ImageForm
@@ -51,8 +51,10 @@ def user_is_phd(request):
 
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    return user_is_ma(request) and profile_page.ma_in_show
-
+    return \
+        user_is_ma(request) and profile_page.ma_in_show \
+        or user_is_mphil(request) and profile_page.mphil_in_show \
+        or user_is_phd(request) and profile_page.phd_in_show
 
 ################################################################################
 ## helper functions
@@ -496,11 +498,40 @@ def ma_show_details(request, page_id):
 @login_required
 def mphil_details(request, page_id):
     if not user_is_mphil(request):
-        raise Http404("You cannot view MA show details because you're not in the MA programme.")
+        raise Http404("You cannot view MPhil details because you're not in the MPhil programme.")
 
     data, profile_page = initial_context(request, page_id)
 
     data['mphil_form'] = MPhilForm(instance=profile_page)
+
+    if request.method == 'POST':
+        mpf = data['mphil_form'] = MPhilForm(request.POST, instance=profile_page)
+
+        if profile_page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not be saved, it is currently locked')
+        elif mpf.is_valid():
+            page = mpf.save(commit=False)
+            save_page(page, request)
+            
+            if request.is_ajax():
+                return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            return redirect('student-profiles:edit-mphil', page_id=page_id)
+
+    if request.is_ajax():
+        return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
+    return render(request, 'student_profiles/mphil_details.html', data)
+
+
+@login_required
+def mphil_show_details(request, page_id):
+    if not user_is_mphil(request):
+        raise Http404("You cannot view MPhil details because you're not in the MPhil programme.")
+
+    data, profile_page = initial_context(request, page_id)
+
+    data['mphil_show_form'] = MPhilShowForm(instance=profile_page)
 
     carousel_initial = [
         {
@@ -531,7 +562,7 @@ def mphil_details(request, page_id):
     data['supervisor'] = MPhilSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
 
     if request.method == 'POST':
-        mpf = data['mphil_form'] = MPhilForm(request.POST, instance=profile_page)
+        mpf = data['mphil_show_form'] = MPhilShowForm(request.POST, instance=profile_page)
         cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
         cof = data['collaborator'] = MPhilCollaboratorFormset(request.POST, prefix='collaborator')
         spf = data['sponsor'] = MPhilSponsorFormset(request.POST, prefix='sponsor')
@@ -542,9 +573,9 @@ def mphil_details(request, page_id):
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
-            
+
             page = mpf.save(commit=False)
-            
+
             carousel_items = [
                 {k:v for k,v in f.items() if k not in ('item_type', 'order')}
                 for f in cif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
@@ -552,29 +583,28 @@ def mphil_details(request, page_id):
             page.mphil_carousel_items = [
                 NewStudentPageMPhilCarouselItem(**item) for item in carousel_items
             ]
-            
+
             page.mphil_collaborators = [
                 NewStudentPageMPhilCollaborator(name=f['name'].strip()) for f in cof.ordered_data if f.get('name')
             ]
             page.mphil_sponsors = [
                 NewStudentPageMPhilSponsor(name=f['name'].strip()) for f in spf.ordered_data if f.get('name')
             ]
-            
+
             page.mphil_supervisors = [
                 NewStudentPageMPhilSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
                 for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
-            
+
             save_page(page, request)
-            
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
-            return redirect('student-profiles:edit-mphil', page_id=page_id)
-
+            return redirect('student-profiles:edit-mphil-show', page_id=page_id)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
-    return render(request, 'student_profiles/mphil_details.html', data)
+    return render(request, 'student_profiles/mphil_show_details.html', data)
 
 
 
