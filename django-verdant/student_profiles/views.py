@@ -217,7 +217,7 @@ def basic_profile(request, page_id):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
             bcd = basic_form.cleaned_data
             
@@ -317,7 +317,7 @@ def academic_details(request, page_id=None):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid() and xfs.is_valid():
             profile_page.funding = pf.cleaned_data['funding']
             
@@ -368,7 +368,7 @@ def ma_details(request, page_id):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif form.is_valid():
             page = form.save(commit=False)
             
@@ -429,7 +429,7 @@ def ma_show_details(request, page_id):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
 
             page = sf.save(commit=False)
@@ -510,7 +510,7 @@ def mphil_details(request, page_id):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
             
             page = mpf.save(commit=False)
@@ -595,7 +595,7 @@ def phd_details(request, page_id):
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not saved, it is currently locked')
+                messages.error(request, 'The page could not be saved, it is currently locked')
         elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
             
             page = mpf.save(commit=False)
