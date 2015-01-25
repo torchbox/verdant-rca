@@ -180,6 +180,7 @@ class PhoneForm(forms.Form):
         help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
 PhoneFormset = formset_factory(PhoneForm, extra=1, formset=OrderedFormset)
+PhoneFormset.help_text = 'Enter your phone number(s) in international format with country code: +44 (0) 12345 678910'
 
 class WebsiteForm(forms.Form):
     #saves to NewStudentPageContactsWebsite
