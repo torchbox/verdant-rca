@@ -518,6 +518,7 @@ class MPhilSupervisorForm(forms.ModelForm):
         queryset=StaffPage.objects.all().order_by('last_name'),
         required=False,
         help_text=help_text('rca.NewStudentPageMPhilSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+        widget=forms.Select(attrs={'width': '100%', 'class': 'supervisor-select'}),
     )
 
     class Meta:
@@ -614,6 +615,7 @@ class PhDSupervisorForm(forms.ModelForm):
         queryset=StaffPage.objects.all().order_by('last_name'),
         required=False,
         help_text=help_text('rca.NewStudentPagePhDSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+        widget=forms.Select(attrs={'width': '100%', 'class': 'supervisor-select'}),
     )
 
     class Meta:

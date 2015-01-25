@@ -96,7 +96,10 @@
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
-    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+    {% endcompress %}
     <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
 
@@ -194,6 +197,7 @@
 {% endcompress %}
 
 {% compress js %}
+<script src="{% static "student_profiles/select2/select2.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>  {# cool little JS that helps with formsets #}
 <script src="{% static "student_profiles/js/vendor/load-image.all.min.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>

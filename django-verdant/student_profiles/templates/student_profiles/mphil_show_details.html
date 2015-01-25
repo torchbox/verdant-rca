@@ -145,6 +145,8 @@ $('#carousel select').each(function(i) {
   
 updateSupervisorSelects();
 $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
-  
+
+$('.supervisor-select').select2();
+
 </script>
 {% endblock form_js %}
