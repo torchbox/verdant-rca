@@ -324,13 +324,11 @@ $.ajaxSetup({
 function stickyNote() {
     if ($(window).width() < 1100) {
         $('.note').unstick();
-        console.log("Unstick");
     } else {
         $('.notes').sticky({
             topSpacing: 200,
             bottomSpacing: 680
         });
-        console.log("Stick");
     }
 }
 
