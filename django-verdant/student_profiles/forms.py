@@ -160,6 +160,16 @@ class ProfileBasicForm(forms.ModelForm):
             return RcaImage.objects.get(id=self.cleaned_data['profile_image'])
         return None
 
+    def clean_twitter_handle(self):
+        if self.cleaned_data.get('twitter_handle'):
+            handle = self.cleaned_data.get('twitter_handle', '')
+            if handle.startswith('@'):
+                return handle[1:]
+            else:
+                return handle
+        else:
+            return ''
+
     class Meta:
         model = NewStudentPage
         fields = ['title', 'first_name', 'last_name', 'twitter_handle', 'profile_image', 'statement']
