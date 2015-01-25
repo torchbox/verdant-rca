@@ -391,12 +391,16 @@ class MAShowCarouselItemForm(forms.Form):
         help_text=help_text('rca.CarouselItemFields', 'image'),
         widget=ImageInput,
     )
-    overlay_text = forms.CharField(
-        max_length=255,
-        required=False,
-        help_text=help_text('rca.CarouselItemFields', 'overlay_text')
-    )
-    
+
+    # image type fields (there are a lot of them!)
+    title = forms.CharField(max_length=255, required=False, label='Title', )
+    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
+    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
+    year = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'year'))
+    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
+    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
+    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+
     embedly_url = forms.URLField(
         label='Vimeo URL',
         required=False,
@@ -408,6 +412,12 @@ class MAShowCarouselItemForm(forms.Form):
         help_text='Add a still image as a placeholder for your video when it is not playing.',
         widget=ImageInput,
     )
+
+    def clean_title(self):
+        if self.cleaned_data.get('item_type') == 'image' and self.cleaned_data.get('image_id') and not self.cleaned_data.get('title'):
+            raise forms.ValidationError('This field is required.')
+        else:
+            return self.cleaned_data.get('title', '')
 MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset)
 
 class MACollaboratorForm(forms.Form):

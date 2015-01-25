@@ -242,6 +242,87 @@ function makeFormset(prefix, addedFunc) {
     updateFormButtons(search_term);
 };
 
+/**
+ * Update the carousel select items so that only the fields for the selection
+ * that is active are shown.
+ */
+function updateCarouselSelects(prefix) {
+  $('#' + prefix + ' select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_carousel-(\d+)-item_type/);
+    var id_number = _match ? _match[1] : '';
+
+    if (value == 'image')
+    {
+      $('#carousel-' + id_number + '-image_id').parent().show();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().show();
+      $('#id_carousel-' + id_number + '-title').parent().show();
+      $('#id_carousel-' + id_number + '-alt').parent().show();
+      $('#id_carousel-' + id_number + '-creator').parent().show();
+      $('#id_carousel-' + id_number + '-year').parent().show();
+      $('#id_carousel-' + id_number + '-medium').parent().show();
+      $('#id_carousel-' + id_number + '-dimensions').parent().show();
+      $('#id_carousel-' + id_number + '-photographer').parent().show();
+
+      $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
+      $('#carousel-' + id_number + '-poster_image_id').parent().hide();
+
+      $('#id_carousel-' + id_number + '-embedly_url').val('');
+      $('#carousel-' + id_number + '-poster_image_id input').val('');
+    } else if (value == 'video')
+    {
+      $('#carousel-' + id_number + '-image_id').parent().hide();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
+      $('#id_carousel-' + id_number + '-title').parent().hide();
+      $('#id_carousel-' + id_number + '-alt').parent().hide();
+      $('#id_carousel-' + id_number + '-creator').parent().hide();
+      $('#id_carousel-' + id_number + '-year').parent().hide();
+      $('#id_carousel-' + id_number + '-medium').parent().hide();
+      $('#id_carousel-' + id_number + '-dimensions').parent().hide();
+      $('#id_carousel-' + id_number + '-photographer').parent().hide();
+
+      $('#id_carousel-' + id_number + '-embedly_url').parent().show();
+      $('#carousel-' + id_number + '-poster_image_id').parent().show();
+
+      $('#carousel-' + id_number + '-image_id').val('');
+      $('#id_carousel-' + id_number + '-overlay_text').val('');
+      $('#id_carousel-' + id_number + '-title').val('');
+      $('#id_carousel-' + id_number + '-alt').val('');
+      $('#id_carousel-' + id_number + '-creator').val('');
+      $('#id_carousel-' + id_number + '-year').val('');
+      $('#id_carousel-' + id_number + '-medium').val('');
+      $('#id_carousel-' + id_number + '-dimensions').val('');
+      $('#id_carousel-' + id_number + '-photographer').val('');
+    }
+  });
+};
+
+/**
+ * Update the supervisor fields to only show those that are necessary for the selected type.
+ */
+function updateSupervisorSelects(prefix) {
+  $('#' + prefix + ' select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_supervisor-(\d+)-supervisor_type/);
+    var id_number = _match ? _match[1] : '';
+
+    if (value == 'internal') {
+      $('#id_supervisor-' + id_number + '-supervisor').parent().show();
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor_other').val('');
+
+    }
+    else if (value == 'other')
+    {
+
+      $('#id_supervisor-' + id_number + '-supervisor').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor').val('');
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().show();
+    }
+  });
+}
 
 
 /*
