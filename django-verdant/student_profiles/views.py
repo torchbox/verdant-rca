@@ -146,6 +146,8 @@ def overview(request):
             page.live = False
 
             page.title = u'{} {}'.format(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
+            page.first_name = form.cleaned_data['first_name']
+            page.last_name = form.cleaned_data['last_name']
 
             request.user.first_name = page.first_name = form.cleaned_data['first_name']
             request.user.last_name = page.last_name = form.cleaned_data['last_name']
@@ -227,6 +229,9 @@ def basic_profile(request, page_id):
             request.user.first_name = profile_page.first_name = bcd['first_name']
             request.user.last_name = profile_page.last_name = bcd['last_name']
 
+            profile_page.title = bcd['title']
+            profile_page.first_name = bcd['first_name']
+            profile_page.last_name = bcd['last_name']
             profile_page.statement = bcd['statement']
             profile_page.twitter_handle = bcd['twitter_handle']
 
