@@ -9,7 +9,7 @@ from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
-from rca.models import RcaImage
+from rca.models import RcaImage, StaffPage
 from rca.models import SCHOOL_PROGRAMME_MAP, ALL_PROGRAMMES
 
 ################################################################################
@@ -513,7 +513,13 @@ class MPhilSupervisorForm(forms.ModelForm):
             ('other', 'Other'),
         )
     )
-    
+
+    supervisor = forms.ModelChoiceField(
+        queryset=StaffPage.objects.all().order_by('last_name'),
+        required=False,
+        help_text=help_text('rca.NewStudentPageMPhilSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+    )
+
     class Meta:
         model = NewStudentPageMPhilSupervisor
         fields = ['supervisor', 'supervisor_other']
@@ -604,6 +610,12 @@ class PhDSupervisorForm(forms.ModelForm):
         )
     )
     
+    supervisor = forms.ModelChoiceField(
+        queryset=StaffPage.objects.all().order_by('last_name'),
+        required=False,
+        help_text=help_text('rca.NewStudentPagePhDSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+    )
+
     class Meta:
         model = NewStudentPagePhDSupervisor
         fields = ['supervisor', 'supervisor_other']
