@@ -452,7 +452,7 @@ class MPhilForm(forms.ModelForm):
         label='Graduation year',
         min_value=1950, max_value=2050,
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'),
+        help_text='If unknown, enter current year',
     )
 
     def clean_mphil_start_year(self):
@@ -552,7 +552,7 @@ class PhDForm(forms.ModelForm):
         label='Graduation year',
         min_value=1950, max_value=2050,
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'),
+        help_text='If unknown, enter current year'
     )
 
     def clean_phd_start_year(self):
