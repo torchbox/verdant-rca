@@ -400,12 +400,12 @@ class MAShowCarouselItemForm(forms.Form):
     embedly_url = forms.URLField(
         label='Vimeo URL',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'embedly_url'),
+        help_text='You cannot upload a video directly; you must upload any video content to Vimeo, and you can then paste the URL to your video in here.',
     )
     poster_image_id = forms.IntegerField(
         label='Poster image',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'poster_image'),
+        help_text='Add a still image as a placeholder for your video when it is not playing.',
         widget=ImageInput,
     )
 MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset)
