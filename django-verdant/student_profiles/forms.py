@@ -1,4 +1,4 @@
-from itertools import chain
+# -*- encoding: utf-8 -*-
 
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
@@ -22,6 +22,7 @@ class OrderedFormset(BaseFormSet):
 
         #for index, value in enumerate(kwargs.get('initial', {})):
         #    value['order'] = index
+
         
         super(OrderedFormset, self).__init__(*args, **kwargs)
     
@@ -184,8 +185,21 @@ class WebsiteForm(forms.Form):
     #saves to NewStudentPageContactsWebsite
     website = forms.URLField(
         required=False,    # because we'll only save those that are there anyway
+        error_messages={'invalid': 'Please enter a full URL, including the ‘http://’!'},
+        widget=forms.TextInput,
     )
+
+    def clean_website(self):
+        website = self.cleaned_data.get('website')
+        if not website:
+            return None
+        if not website.startswith(u'http://') or website.startswith(u'https://'):
+            return u'http://' + website
+        else:
+            return website
+
 WebsiteFormset = formset_factory(WebsiteForm, extra=1, formset=OrderedFormset)
+WebsiteFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
 
 
 ################################################################################
