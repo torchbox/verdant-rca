@@ -16,7 +16,7 @@ from rca.models import RcaNowPage, NewStudentPage
 from rca.models import RcaImage
 
 from .now_forms import PageForm
-from .views import slugify, user_is_ma, user_is_mphil, user_is_phd
+from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show
 
 
 # this is the ID of the page where new student pages are added as children
@@ -48,6 +48,7 @@ def initial_data(request, page_id=None):
     if NewStudentPage.objects.filter(owner=request.user).exists():
         profile_page = NewStudentPage.objects.filter(owner=request.user)[0]
         data['page_id'] = profile_page.id
+        data['is_in_show'] = profile_is_in_show(request, profile_page)
 
     if page_id is not None:
         page = get_page_or_404(request, page_id)

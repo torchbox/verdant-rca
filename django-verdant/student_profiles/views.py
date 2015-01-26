@@ -151,6 +151,7 @@ def initial_context(request, page_id):
     data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
     data['page_id'] = page_id
     data['is_in_show'] = profile_is_in_show(request, profile_page)
+    data['profile_name'] = profile_page.title
     return data, profile_page
 
 
@@ -242,15 +243,8 @@ def preview(request, page_id=None):
 @login_required
 def basic_profile(request, page_id):
     """Basic profile creation/editing page"""
-    data = {
-        'is_ma': user_is_ma(request),
-        'is_mphil': user_is_mphil(request),
-        'is_phd': user_is_phd(request),
-    }
+    data, profile_page = initial_context(request, page_id)
 
-    data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
-    data['page_id'] = page_id
-    data['basic_form'] = ProfileBasicForm(instance=profile_page)
     data['email_formset'] = EmailFormset(
         prefix='email',
         initial=[{'email': x.email} for x in profile_page.emails.all()]
