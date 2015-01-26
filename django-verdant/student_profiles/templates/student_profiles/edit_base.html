@@ -9,7 +9,7 @@
 <div class="page-content">
 
     <div class="session-meta">
-        <span>logged in as {{ user.username }}</span>
+        <span>Hello, {% if profile_name %}{{ profile_name }}{% else %}{{ user.username }}{% endif %}</span>
         <a href="/admin/logout/">Log out</a>
     </div>
     <nav class="student-profile-nav"> 

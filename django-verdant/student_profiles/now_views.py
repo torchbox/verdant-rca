@@ -49,6 +49,7 @@ def initial_data(request, page_id=None):
         profile_page = NewStudentPage.objects.filter(owner=request.user)[0]
         data['page_id'] = profile_page.id
         data['is_in_show'] = profile_is_in_show(request, profile_page)
+        data['profile_name'] = profile_page.title
 
     if page_id is not None:
         page = get_page_or_404(request, page_id)
