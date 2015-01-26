@@ -76,9 +76,12 @@ $.ajaxSetup({
 */
 
 $('.submit-page').click(function(e) {
-    e.preventDefault();
+    // e.preventDefault();
     if (window.confirm("Sending this post for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
-        $(this).submit();
+        $(this).parent().submit();
+        return true;
+    } else {
+        return false;
     }
 });
 
@@ -89,7 +92,10 @@ $('.submit-page').click(function(e) {
 $('.delete-post').click(function(e) {
     e.preventDefault();
     if (window.confirm("Would you like to go ahead with deleting this post?")) {
-        $(this).submit();
+        $(this).parent().submit();
+        return true;
+    } else {
+        return false;
     }
 });
 
@@ -100,13 +106,11 @@ $('.delete-post').click(function(e) {
 function stickyNote() {
     if ($(window).width() < 1100) {
         $('.note').unstick();
-        console.log("Unstick");
     } else {
         $('.notes').sticky({
             topSpacing: 200,
             bottomSpacing: 680
         });
-        console.log("Stick");
     }
 }
 

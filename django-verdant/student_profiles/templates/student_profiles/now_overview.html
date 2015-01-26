@@ -42,7 +42,12 @@
               {% if page.live %}<a href="{{ page.url }}">Live</a>{% endif %}
               {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Preview</a>{% endif %}
             </td>
-            <td><a href="{% url 'nowpages:edit' page.id %}">Edit</a></td>
+            <td>
+                {% if page.locked %}
+                    can not edit, page is locked
+                {% else %}
+                     <a href="{% url 'nowpages:edit' page.id %}">Edit</a></td>
+                {% endif %}
             <td>{% if page.has_unpublished_changes %}
               <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
                 <input type="submit" class="submit-page button-as-link" value="Submit for moderation">

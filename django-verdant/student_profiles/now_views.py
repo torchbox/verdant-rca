@@ -88,7 +88,7 @@ def edit(request, page_id=None):
 
     data['nav_now'] = True
     data['form'] = PageForm(instance=page)
-    
+
     if request.method == 'POST':
         data['form'] = form = PageForm(request.POST, instance=page)
 
@@ -120,6 +120,7 @@ def edit(request, page_id=None):
                 submitted_for_moderation=submit_for_moderation
             )
 
+            page.locked = page.locked or submit_for_moderation
             page.has_unpublished_changes = True
             page.save()
 
@@ -151,7 +152,7 @@ def submit(request, page_id):
         submitted_for_moderation=True,
     )
 
-    messages.success(request, "Blog page '{}' was submitted for moderation".format(page.title))
+    messages.success(request, u"Blog page '{}' was submitted for moderation".format(page.title))
 
     return redirect('nowpages:overview')
 

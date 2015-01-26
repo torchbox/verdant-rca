@@ -162,6 +162,7 @@ def save_page(page, request):
     submit = False
     if 'submit_for_publication' in request.POST:
         submit = True
+        page.locked = True
         messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
 
     revision = page.save_revision(
