@@ -138,6 +138,7 @@ function activateImageUpload(for_id, options) {
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 
         processfail: function (e, data) {
+            $('.uploadModal').hide();
             res = 'Could not upload ' + data.files[data.index].name + ': ';
             if (data.error)
                 res += data.error;
@@ -155,6 +156,7 @@ function activateImageUpload(for_id, options) {
             originalAdd.call(this, e, data);
         },
         done: function (e, data) {
+            $('.uploadModal').fadeOut(animDuration);
             containerElement.find('.progress .bar').hide();
             if (!data.result.ok)
             {
@@ -177,11 +179,15 @@ function activateImageUpload(for_id, options) {
             }
         },
         fail: function (e, data) {
+            console.log('!!!');
+            $('.uploadModal').hide();
             containerElement.find('.progress .bar').hide();
             alert("Could not upload the file: the server responded with an error.");
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
+            console.log('process' + progress);
+            $('div.uploadModal #content .progress .bar').css('width', progress + '%');
             containerElement.find('.progress .bar').css('width', progress + '%');
         },
     };
