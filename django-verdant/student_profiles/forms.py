@@ -418,7 +418,7 @@ class MAShowCarouselItemForm(forms.Form):
             raise forms.ValidationError('This field is required.')
         else:
             return self.cleaned_data.get('title', '')
-MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset)
+MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset, max_num=12, validate_max=True)
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
