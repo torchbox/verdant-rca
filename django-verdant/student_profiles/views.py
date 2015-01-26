@@ -745,11 +745,16 @@ def phd_show_details(request, page_id):
 
 @require_POST
 @login_required
-def image_upload(request, page_id, field=None):
+def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
+    """Upload an image file and create an RcaImage out of it.
+
+    If field is given it'll be attached to the page in the given field.
+    If max_size or min_dim (2-tuple) are given, filesize and image dimensions are checked.
+    """
     
     data, profile_page = initial_context(request, page_id)
     
-    form = ImageForm(request.POST, request.FILES)
+    form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
     if profile_page.locked:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
         return HttpResponse(json.dumps(res), content_type='application/json')

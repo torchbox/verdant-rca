@@ -122,14 +122,38 @@ class ImageInput(forms.FileInput):
 ################################################################################
 ## Helper Forms
 
+from django.template.defaultfilters import filesizeformat
+
+
 class ImageForm(forms.Form):
     """This is a simple form that validates a single image.
     
     This is used in validating image uploads, obviously. It's needed because we upload images not with the forms
     themselves but asynchronously by themselves.
     """
-    
+
+    def __init__(self, *args, **kwargs):
+
+        self.max_size = None
+        self.min_dim = None
+        if 'max_size' in kwargs:
+            self.max_size = kwargs.pop('max_size')
+        if 'min_dim' in kwargs:
+            self.min_dim = kwargs.pop('min_dim')
+
+        super(ImageForm, self).__init__(*args, **kwargs)
+
     image = forms.ImageField()
+
+    def clean_image(self):
+        img = self.cleaned_data['image']
+        print img.size
+        if self.max_size and img.size > self.max_size:
+            raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
+
+        print dir(img)
+
+        return img
 
 
 

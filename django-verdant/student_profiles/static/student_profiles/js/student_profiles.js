@@ -1,19 +1,30 @@
 /**
 * Load the given file to check whether this is a readable image.
 */
-function checkImageFile(file, dfd, data) {
+function checkImageFile(file, dfd, data, options) {
 
     var reader = new FileReader();
     var image  = new Image();
+    var minWidth = options.imageMinWidth;
+    var minHeight = options.imageMinHeight;
     
     reader.readAsDataURL(file);  
     reader.onload = function(_file) {
         image.src    = _file.target.result;
         image.onload = function() {
+
+            if (
+                (image.width < minWidth || image.height < minHeight)
+                && (image.height < minWidth || image.width < minHeight))
+            {
+                data.error = 'Minimum image size is: ' + minWidth + 'x' + minHeight + '.';
+                dfd.rejectWith(this, [data]);
+            } else {
             dfd.resolveWith(this, [data]);
+            }
         };
         image.onerror= function() {
-            file.error = 'Invalid file type.';
+            data.error = 'Invalid file type: only gif, jpg and png are allowed. Changing file extension does not change the file type.';
             dfd.rejectWith(this, [data]);
         };
     };
@@ -23,18 +34,22 @@ function checkImageFile(file, dfd, data) {
 /**
 * Put our image validation in the jquery-fileupload processing queue
 */
-$.blueimp.fileupload.prototype.processActions.validate = function (data, options) {
+$.blueimp.fileupload.prototype.processActions.validate_img = function (data, options) {
     if (options.disabled) {
         return data;
     }
     var dfd = $.Deferred(),
     file = data.files[data.index];
 
-    if (!options.acceptFileTypes.test(file.type)) {
-        file.error = 'Invalid file type.';
+    if (options.maxFileSize < file.size)
+    {
+        data.error = 'File is too large. Please make sure your file is smaller than ' + Math.floor(options.maxFileSize / 1024 / 1024) + ' MB.';
+        dfd.rejectWith(this, [data]);
+    } else if (!options.acceptFileTypes.test(file.type)) {
+        data.error = 'Invalid file type: only gif, jpg and png are allowed.';
         dfd.rejectWith(this, [data]);
     } else {
-        checkImageFile(file, dfd, data);
+        checkImageFile(file, dfd, data, options);
     }
     return dfd.promise();
 };
@@ -103,30 +118,53 @@ function activateImageUpload(for_id, options) {
     
     var upload_options = {
         dataType: 'json',
-        imageMaxWidth: 800,
-        imageMaxHeight: 800,
-        imageMinWidth: 10,
-        imageMinHeight: 10,
+        imageMinWidth: 0,
+        imageMinHeight: 0,
+        maxFileSize: 99999999999999999999,  // TO INFINITY AND BEYOND!!
         sequentialUploads: true,
         dropZone: dropElement,
         paramName: 'image',
 
+        processQueue: [
+            {
+                action: 'validate_img',
+                acceptFileTypes: '@',
+                maxFileSize: '@',
+                imageMinWidth: '@',
+                imageMinHeight: '@',
+                disabled: '@disableValidation'
+            }
+        ],
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 
         processfail: function (e, data) {
-            alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
+            res = 'Could not upload ' + data.files[data.index].name + ': ';
+            if (data.error)
+                res += data.error;
+            else
+                res += 'This is not a valid file.';
+
+            alert(res);
         },
         add: function(e, data) {
+            $('div.uploadModal #content .progress .bar').css('width', '0%');
+            containerElement.find('.progress .bar').css('width', '0%');
+            $('.uploadModal').show();
             containerElement.find('.progress .bar').show();
             window.onbeforeunload = confirmOnPageExit;
             originalAdd.call(this, e, data);
         },
         done: function (e, data) {
-    
             containerElement.find('.progress .bar').hide();
             if (!data.result.ok)
             {
-                alert("Could not upload the file. Please try again with a different file.");
+                res = 'Could not upload the file. Please try again with a different file. ';
+                if (data.result.errors)
+                {
+                    res += data.result.errors;
+                }
+                alert(res);
+
             }
             else
             {

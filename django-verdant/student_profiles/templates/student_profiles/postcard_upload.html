@@ -46,7 +46,11 @@
 <script type="text/javascript">
 $(function() {
 
-  activateImageUpload('postcard_image');
+  activateImageUpload('postcard_image', {
+      imageMinWidth: 1240,
+      imageMinHeight: 1748,
+      maxFileSize: 10485760
+  });
 
 })
 </script>
