@@ -2,6 +2,9 @@
 
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
+from django.template.defaultfilters import filesizeformat
+
+from PIL import image
 
 from wagtail.wagtailcore.fields import RichTextArea
 
@@ -122,9 +125,6 @@ class ImageInput(forms.FileInput):
 ################################################################################
 ## Helper Forms
 
-from django.template.defaultfilters import filesizeformat
-
-
 class ImageForm(forms.Form):
     """This is a simple form that validates a single image.
     
@@ -147,11 +147,15 @@ class ImageForm(forms.Form):
 
     def clean_image(self):
         img = self.cleaned_data['image']
-        print img.size
         if self.max_size and img.size > self.max_size:
             raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
 
-        print dir(img)
+        if self.min_dim:
+            dt = Image.open(img)
+            minX, minY = self.min_dim
+            width, height = dt.size
+            if (width < minX or height < minY) and (height < minX or width < minY):
+                raise forms.ValidationError(u'Minimum image size is {}x{} pixels.'.format(minX, minY))
 
         return img
 
