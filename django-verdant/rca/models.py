@@ -421,6 +421,16 @@ STAFF_LOCATION_CHOICES = (
     ('rapidform', 'Rapidform'),
 )
 
+STATUS_CHOICES = (
+    ('fulltime', 'Full time'),
+    ('parttime', 'Part time'),
+)
+
+DEGREE_TYPE_CHOICES = (
+    ('practicebased', 'Practice based'),
+    ('thesisonly', 'Thesis only'),
+)
+
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
 # Generic fields to opt out of events and twitter blocks
 class OptionalBlockFields(models.Model):
@@ -3698,6 +3708,8 @@ class NewStudentPage(Page, SocialFields):
     mphil_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_dissertation_title'))
     mphil_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'mphil_statement'), blank=True)
     mphil_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'mphil_in_show', default="Please tick only if you're in the Show this academic year"))
+    mphil_status = models.CharField("Status", max_length=255, choices=STATUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_status', default=''))
+    mphil_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_degree_type'))
 
     # PhD details
     phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_school'))
@@ -3708,6 +3720,8 @@ class NewStudentPage(Page, SocialFields):
     phd_dissertation_title = models.CharField("Dissertation title", max_length=255, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_dissertation_title'))
     phd_statement = RichTextField(help_text=help_text('rca.NewStudentPage', 'phd_statement'), blank=True)
     phd_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'phd_in_show', default="Please tick only if you're in the Show this academic year"))
+    phd_status = models.CharField("Status", max_length=255, choices=STATUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_status', default=''))
+    phd_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_degree_type'))
 
     search_fields = Page.search_fields + (
         index.SearchField('first_name', partial_match=True, boost=50),
@@ -3737,6 +3751,8 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('mphil_school'),
         index.FilterField('mphil_programme'),
         index.FilterField('mphil_graduation_year'),
+        index.FilterField('mphil_status'),
+        index.FilterField('mphil_degree_type'),
 
         index.SearchField('get_phd_school_display'),
         index.SearchField('get_phd_programme_display'),
@@ -3747,6 +3763,8 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('phd_school'),
         index.FilterField('phd_programme'),
         index.FilterField('phd_graduation_year'),
+        index.FilterField('phd_status'),
+        index.FilterField('phd_degree_type'),
     )
 
     @property
@@ -3976,6 +3994,8 @@ NewStudentPage.content_panels = [
         FieldPanel('mphil_start_year'),
         FieldPanel('mphil_graduation_year'),
         FieldPanel('mphil_work_location'),
+        FieldPanel('mphil_status'),
+        FieldPanel('mphil_degree_type'),
         InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
@@ -3992,6 +4012,8 @@ NewStudentPage.content_panels = [
         FieldPanel('phd_start_year'),
         FieldPanel('phd_graduation_year'),
         FieldPanel('phd_work_location'),
+        FieldPanel('phd_status'),
+        FieldPanel('phd_degree_type'),
         InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel image/video"),
         InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
         InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
