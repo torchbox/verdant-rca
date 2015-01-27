@@ -6,6 +6,7 @@ and for allowing more customization
 from django.conf.urls import patterns, url
 
 from .now_views import overview, edit, preview, submit, delete
+from .now_views import image_upload
 
 urlpatterns = patterns(
     '',
@@ -19,4 +20,5 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/edit/$', edit, name='edit'),
     url(r'^(?P<page_id>\d+)/delete/$', delete, name='delete'),
 
+    url(r'^(?P<page_id>\d+)/edit/image/$', image_upload),
 )

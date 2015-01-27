@@ -18,6 +18,19 @@
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
 
+        {{ carouselitem_formset.management_form }}
+        <h4>Carousel images/videos</h4>
+        <div id="{{ carouselitem_formset.prefix }}" class="field-set">
+        {% for carouselitem_form in carouselitem_formset %}
+          <div class="inline-form">
+            {{ carouselitem_form.id }}
+            {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
+            <i class="icon action ion-android-arrow-up move-up"></i>
+            <i class="icon action ion-android-arrow-down move-down"></i>
+          </div>
+        {% endfor %}
+        </div>
+
         <div class="now-actions">
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
@@ -46,9 +59,23 @@ $('#id_date').datetimepicker({
   closeOnDateSelect: true,
   scrollInput:false,
 });
-  
-// make the selection between single author and group of authors
 
+makeFormset('{{ carouselitem_formset.prefix }}',
+  addedFunc=function(row) {
+    updateCarouselSelects();
+    row.find('select').each(function(){ $(this).trigger('change')});
+    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+  }
+);
+updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+$('#carousel select').each(function(i) {
+  $(this).trigger('change');
+});
+$('.image-uploader-block').each(function(i) {
+  activateImageUpload(this.id);
+});
+
+// make the selection between single author and group of authors
 $('#id_by').change(function() {
   var value = $(this).val();
   
