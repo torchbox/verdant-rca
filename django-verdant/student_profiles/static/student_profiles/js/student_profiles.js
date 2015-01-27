@@ -566,11 +566,15 @@ stickyNote();
 */
 $('.submit-page').click(function(e) {
     if (window.confirm("Sending this form for moderation means you can no longer make changes or add content to your profile. Please check you have completed all sections before clicking OK.")) {
-        $(this).parent().submit();
+        $(this).parents('form').submit();
         return true;
     } else {
         return false;
     }
+});
+
+$('.preview-post').click(function(e) {
+    $(this).parents('form').attr('target', '_blank');
 });
 
 
