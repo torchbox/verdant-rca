@@ -43,10 +43,10 @@ function makeRichTextEditable(id) {
         $('span.ui-button-text').each(function(i, el) {
             var jel = $(el);
             if (jel.text() == 'P'){
-                jel.text('PARAGRAPH');
+                jel.html('PARAGRAPH <i></i>');  // this one is a hack to add the <i> element: it changes the way the button is laid out and moves it into alignment with the other buttons
                 jel.parent().css('width', '7em');
             } else if (jel.text() == 'H4'){
-                jel.text('HEADING');
+                jel.html('HEADING<i></i>');
                 jel.parent().css('width', '7em');
             }
         });
