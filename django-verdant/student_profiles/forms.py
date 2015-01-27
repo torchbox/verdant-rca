@@ -526,6 +526,8 @@ class MPhilForm(forms.ModelForm):
             'mphil_school', 'mphil_programme',
             'mphil_start_year',
             'mphil_graduation_year',
+            'mphil_status',
+            'mphil_degree_type',
         ]
 
 
@@ -624,6 +626,8 @@ class PhDForm(forms.ModelForm):
             'phd_in_show',
             'phd_school', 'phd_programme',
             'phd_start_year', 'phd_graduation_year',
+            'phd_status',
+            'phd_degree_type',
         ]
 
 
