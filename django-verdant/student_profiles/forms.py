@@ -446,7 +446,7 @@ class MAShowCarouselItemForm(forms.Form):
     embedly_url = forms.URLField(
         label='Vimeo URL',
         required=False,
-        help_text='You cannot upload a video directly; you must upload any video content to Vimeo, and you can then paste the URL to your video in here.',
+        help_text='Video content must first be uploaded to a Vimeo account. Then simply cut and paste the Vimeo URL in full, e.g. http://vimeo.com/117377525',
     )
     poster_image_id = forms.IntegerField(
         label='Poster image',
