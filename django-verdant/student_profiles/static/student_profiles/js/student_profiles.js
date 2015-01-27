@@ -13,6 +13,7 @@ function makeRichTextEditable(id) {
     var input = $('#' + id);
     var richText = $('<div class="richtext"></div>').html(input.val());
     richText.insertBefore(input);
+    $('<p class="help-text">If you paste formatted text into this field (for example from a Word document) and it doesn’t look right, please use the ‘Save as Draft’ button at the bottom of the screen, which should clean up any problems.</p>').insertAfter(input);
     input.hide();
 
     var removeStylingPending = false;
