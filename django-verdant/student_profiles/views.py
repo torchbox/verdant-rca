@@ -303,6 +303,8 @@ def basic_profile(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
 
     if request.is_ajax():
@@ -401,6 +403,8 @@ def academic_details(request, page_id=None):
         
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
     if request.is_ajax():
@@ -430,6 +434,8 @@ def postcard_upload(request, page_id):
             save_page(page, request)
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma', page_id=page_id)
 
     if request.is_ajax():
@@ -462,6 +468,8 @@ def ma_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma', page_id=page_id)
 
     if request.is_ajax():
@@ -528,6 +536,8 @@ def ma_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
 
     if request.is_ajax():
@@ -560,6 +570,8 @@ def mphil_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil', page_id=page_id)
 
     if request.is_ajax():
@@ -631,6 +643,8 @@ def mphil_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil-show', page_id=page_id)
 
     if request.is_ajax():
@@ -660,6 +674,8 @@ def phd_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd', page_id=page_id)
 
     if request.is_ajax():
@@ -731,6 +747,8 @@ def phd_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd-show', page_id=page_id)
 
     if request.is_ajax():

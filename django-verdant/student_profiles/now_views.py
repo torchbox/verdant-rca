@@ -129,6 +129,8 @@ def edit(request, page_id=None):
             elif request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             else:
+                if 'preview' in request.POST:
+                    return redirect('nowpages:preview', page_id=page.id)
                 return redirect('nowpages:edit', page_id=page.id)
 
     if request.is_ajax():

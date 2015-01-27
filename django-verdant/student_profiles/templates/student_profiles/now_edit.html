@@ -21,9 +21,7 @@
         <div class="now-actions">
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
-            {% if page %}
-            <a href="{% url 'nowpages:preview' page.id %}" class="button" target="_blank">Preview</a>
-            {% endif %}
+          <input type="submit" class="" value="Preview" name="preview">
         </div>
       </form>
     </section>
