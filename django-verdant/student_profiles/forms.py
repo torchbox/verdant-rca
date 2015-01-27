@@ -309,11 +309,25 @@ class PostcardUploadForm(forms.ModelForm):
         widget=ImageInput,
     )
 
+    title = forms.CharField(max_length=255, required=True, label='Title')
+    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
+    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
+    year = forms.IntegerField(min_value=1950, max_value=2050, required=False, help_text=help_text('rca.RcaImage', 'year'))
+    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
+    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
+    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+
     def clean_postcard_image(self):
         try:
             return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
         except RcaImage.DoesNotExist:
             return None
+
+    def clean_year(self):
+        if self.cleaned_data['year']:
+            return self.cleaned_data['year']
+        else:
+            return ''
 
     class Meta:
         model = NewStudentPage

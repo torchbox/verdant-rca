@@ -121,7 +121,6 @@ def make_carousel_items(d, carousel_type):
                 img = RcaImage.objects.get(id=f.get('image_id'))
             except RcaImage.DoesNotExist:
                 continue
-            print f
             img.title = f.get('title') or ''
             img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
             img.save()
@@ -420,10 +419,15 @@ def postcard_upload(request, page_id):
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
 
-    data['form'] = PostcardUploadForm(instance=page)
+    img = page.postcard_image
+    initial = {
+        'title': img.title,
+        'alt': img.alt, 'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
+    }
+    data['form'] = PostcardUploadForm(instance=page, initial=initial)
 
     if request.method == 'POST':
-        data['form'] = form = PostcardUploadForm(request.POST, instance=page)
+        data['form'] = form = PostcardUploadForm(request.POST, instance=page, initial=initial)
 
         if page.locked:
             if not request.is_ajax():
@@ -431,12 +435,19 @@ def postcard_upload(request, page_id):
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif form.is_valid():
             page = form.save(commit=False)
+
+            img = page.postcard_image
+            f = form.cleaned_data
+            img.title = f['title']
+            img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+            img.save()
+
             save_page(page, request)
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
-            return redirect('student-profiles:edit-ma', page_id=page_id)
+            return redirect('student-profiles:edit-postcard', page_id=page_id)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -522,7 +533,6 @@ def ma_show_details(request, page_id):
 
             page = sf.save(commit=False)
 
-            print make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
             page.show_carousel_items = make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
 
             page.show_collaborators = [
