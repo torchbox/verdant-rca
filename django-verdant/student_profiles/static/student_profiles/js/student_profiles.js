@@ -520,12 +520,24 @@ stickyNote();
 /*
 * Catch Save and Submit
 */
-
 $('.submit-page').click(function(e) {
-    e.preventDefault();
-    if (window.confirm("Sending this form for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
+    if (window.confirm("Sending this post for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
         $(this).parent().submit();
+        return true;
+    } else {
+        return false;
     }
-})
+});
 
 
+/*
+* Catch delete dialog
+*/
+$('.delete-post').click(function(e) {
+    if (window.confirm("Would you like to go ahead with deleting this post?")) {
+        $(this).parent().submit();
+        return true;
+    } else {
+        return false;
+    }
+});
