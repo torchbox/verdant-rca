@@ -165,35 +165,14 @@
 
 {##############################################################################}
 {# custom code starts here #}
-    {# we've inlined this: {% include "wagtailadmin/pages/_editor_js.html" %} #}
-    {# and modified its output because there was too much stuff in it for us #}
 {% compress js %}
     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/rangy-core.js"></script>
     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/hallo.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>
-
-    <script>  {# there is even more inlining here to brutally remove the link edit buttons from hallo.js #}
-    (function() {
-  (function($) {
-    return $.widget("IKS.hallowagtaillink", {
-      options: {
-        uuid: '',
-        editable: null
-      },
-      populateToolbar: function(toolbar) {
-      }
-    });
-  })(jQuery);
-
-}).call(this);
-</script>
-
     <script src="{{ STATIC_URL }}wagtailadmin/js/hallo-plugins/hallo-hr.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/page-editor.js"></script>
-    <script src="{{ STATIC_URL }}admin/js/urlify.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/privacy-indicator.js"></script>
+{#     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>  #}
+{#    <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>  #}
+{#    <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>  #}
+
 {% endcompress %}
 
 {% compress js %}

@@ -1,3 +1,60 @@
+/**
+ * Make a given 'id' into a hallo.js rich text editor with our plugins and stylings.
+ */
+function makeRichTextEditable(id) {
+
+    var halloPlugins = {
+        'halloformat': {},
+        'halloheadings': {formatBlocks: ["p", "h4", ]},
+        'hallohr': {},
+        'halloreundo': {},
+    };
+
+    var input = $('#' + id);
+    var richText = $('<div class="richtext"></div>').html(input.val());
+    richText.insertBefore(input);
+    input.hide();
+
+    var removeStylingPending = false;
+    function removeStyling() {
+        /* Strip the 'style' attribute from spans that have no other attributes.
+        (we don't remove the span entirely as that messes with the cursor position,
+        and spans will be removed anyway by our whitelisting)
+        */
+        $('span[style]', richText).filter(function() {
+            return this.attributes.length === 1;
+        }).removeAttr('style');
+        removeStylingPending = false;
+    }
+
+    richText.hallo({
+        toolbar: 'halloToolbarFixed',
+        toolbarCssClass: (input.closest('.object').hasClass('full')) ? 'full' : '',
+        plugins: halloPlugins
+    }).bind('hallomodified', function(event, data) {
+        input.val(data.content);
+        if (!removeStylingPending) {
+            setTimeout(removeStyling, 100);
+            removeStylingPending = true;
+        }
+    }).bind('paste', function(event, data) {
+        setTimeout(removeStyling, 1);
+    }).bind('halloactivated', function(event, data) {
+        $('span.ui-button-text').each(function(i, el) {
+            var jel = $(el);
+            if (jel.text() == 'P'){
+                jel.text('PARAGRAPH');
+                jel.parent().css('width', '7em');
+            } else if (jel.text() == 'H4'){
+                jel.text('HEADING');
+                jel.parent().css('width', '7em');
+            }
+        });
+    });
+}
+
+
+
 /*
 * Stop user from leaving the page without confirmation.
 */
