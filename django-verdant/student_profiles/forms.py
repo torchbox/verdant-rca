@@ -80,7 +80,7 @@ class ImageInput(forms.FileInput):
     def value_from_datadict(self, data, files, name):
         try:
             return int(data.get('{}_val'.format(name)))
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
     def render(self, name, value, attrs=None):
