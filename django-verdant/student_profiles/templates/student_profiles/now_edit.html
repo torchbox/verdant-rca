@@ -34,7 +34,9 @@
         <div class="now-actions">
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+          {% if page %}
           <input type="submit" class="" value="Preview" name="preview">
+          {% endif %}
         </div>
       </form>
     </section>
