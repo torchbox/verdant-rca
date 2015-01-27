@@ -4,7 +4,7 @@ from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
 from django.template.defaultfilters import filesizeformat
 
-from PIL import image
+from PIL import Image
 
 from wagtail.wagtailcore.fields import RichTextArea
 
