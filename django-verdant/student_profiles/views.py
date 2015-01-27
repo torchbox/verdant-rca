@@ -245,6 +245,7 @@ def basic_profile(request, page_id):
     """Basic profile creation/editing page"""
     data, profile_page = initial_context(request, page_id)
 
+    data['basic_form'] = ProfileBasicForm(instance=profile_page)
     data['email_formset'] = EmailFormset(
         prefix='email',
         initial=[{'email': x.email} for x in profile_page.emails.all()]
