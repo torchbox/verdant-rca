@@ -4064,6 +4064,13 @@ class RcaNowPageArea(models.Model):
     panels = [FieldPanel('area')]
 
 
+class RcaNowPageRelatedLink(Orderable):
+    page = ParentalKey('rca.RcaNowPage', related_name='related_links')
+    link = models.URLField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPageRelatedLink', 'link'))
+
+    panels = [FieldPanel('link')]
+
+
 class RcaNowPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaNowPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'author'))
@@ -4110,6 +4117,7 @@ RcaNowPage.content_panels = [
     FieldPanel('school'),
     FieldPanel('programme'),
     InlinePanel(RcaNowPage, 'areas', label="Areas"),
+    InlinePanel(RcaNowPage, 'related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
