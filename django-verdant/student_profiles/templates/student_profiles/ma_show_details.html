@@ -37,7 +37,7 @@
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save Draft">
-          <a class="button" href="{% url 'student-profiles:preview' page_id %}" target="_blank">Preview</a>
+          <input type="submit" class="" value="Preview" name="preview">
           <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
         </div>
       </form>
@@ -63,34 +63,6 @@
 <script type="text/javascript">
 $(function() {
 
-  function updateSelects() {
-    $('#carousel select').change(function() {
-      var value = $(this).val();
-      var _match = this.id.match(/id_carousel-(\d+)-item_type/);
-      var id_number = _match ? _match[1] : '';
-      
-      if (value == 'image')        {# image, as defined in forms.py #}
-      {
-        $('#carousel-' + id_number + '-image_id').parent().show();
-        $('#id_carousel-' + id_number + '-overlay_text').parent().show();
-
-        $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
-        $('#carousel-' + id_number + '-poster_image_id').parent().hide();
-        $('#id_carousel-' + id_number + '-embedly_url').val('');
-        $('#carousel-' + id_number + '-poster_image_id input').val('');
-      } else if (value == 'video') {# video #}
-      {
-        $('#carousel-' + id_number + '-image_id').parent().hide();
-        $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
-        $('#carousel-' + id_number + '-image_id input').val('');
-        $('#id_carousel-' + id_number + '-overlay_text').val('');
-        
-        $('#id_carousel-' + id_number + '-embedly_url').parent().show();
-        $('#carousel-' + id_number + '-poster_image_id').parent().show();
-      }
-    });
-  };
-  
   makeFormset('{{ show_collaborators_formset.prefix }}');
   makeFormset('{{ show_sponsors_formset.prefix }}');
   makeFormset('{{ carouselitem_formset.prefix }}',
@@ -105,8 +77,8 @@ $(function() {
   $('.image-uploader-block').each(function(i) {
     activateImageUpload(this.id);
   });
-  
-  updateSelects();
+
+  updateCarouselSelects('{{ carouselitem_formset.prefix }}');
   $('#carousel select').each(function(i) {
     $(this).trigger('change');
   });

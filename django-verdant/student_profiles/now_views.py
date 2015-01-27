@@ -13,10 +13,12 @@ from taggit.models import Tag
 
 from wagtail.wagtailcore.models import Page
 from rca.models import RcaNowPage, NewStudentPage
-from rca.models import RcaImage
+from rca.models import RcaImage, RcaNowPagePageCarouselItem
 
 from .now_forms import PageForm
-from .views import slugify, user_is_ma, user_is_mphil, user_is_phd
+from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show, make_carousel_initial, \
+    make_carousel_items
+from .forms import MAShowCarouselItemFormset, ImageForm
 
 
 # this is the ID of the page where new student pages are added as children
@@ -48,6 +50,8 @@ def initial_data(request, page_id=None):
     if NewStudentPage.objects.filter(owner=request.user).exists():
         profile_page = NewStudentPage.objects.filter(owner=request.user)[0]
         data['page_id'] = profile_page.id
+        data['is_in_show'] = profile_is_in_show(request, profile_page)
+        data['profile_name'] = profile_page.title
 
     if page_id is not None:
         page = get_page_or_404(request, page_id)
@@ -86,21 +90,27 @@ def edit(request, page_id=None):
 
     data['nav_now'] = True
     data['form'] = PageForm(instance=page)
-    
+
+    carousel_initial = make_carousel_initial(page.carousel_items.all())
+    data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
+
     if request.method == 'POST':
         data['form'] = form = PageForm(request.POST, instance=page)
+        data['carouselitem_formset'] = cif = MAShowCarouselItemFormset(request.POST, request.FILES, prefix='carousel', initial=carousel_initial)
 
         if page.locked:
             if not request.is_ajax():
                 messages.error(request, 'The page could not be saved, it is currently locked.')
                 # fall through to regular rendering
-        elif form.is_valid():
+        elif form.is_valid() and cif.is_valid():
             page = form.save(commit=False)
             submit_for_moderation = 'submit_for_moderation' in request.POST
 
             page.tags.clear()
             for tag in [Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']]:
                 page.tags.add(tag)
+
+            page.carousel_items = make_carousel_items(cif.ordered_data, RcaNowPagePageCarouselItem)
 
             if page_id is None:
                 page.live = False
@@ -118,6 +128,7 @@ def edit(request, page_id=None):
                 submitted_for_moderation=submit_for_moderation
             )
 
+            page.locked = page.locked or submit_for_moderation
             page.has_unpublished_changes = True
             page.save()
 
@@ -126,6 +137,8 @@ def edit(request, page_id=None):
             elif request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             else:
+                if 'preview' in request.POST:
+                    return redirect('nowpages:preview', page_id=page.id)
                 return redirect('nowpages:edit', page_id=page.id)
 
     if request.is_ajax():
@@ -149,7 +162,7 @@ def submit(request, page_id):
         submitted_for_moderation=True,
     )
 
-    messages.success(request, "Blog page '{}' was submitted for moderation".format(page.title))
+    messages.success(request, u"Blog page '{}' was submitted for moderation".format(page.title))
 
     return redirect('nowpages:overview')
 
@@ -171,3 +184,31 @@ def delete(request, page_id):
     }
 
     return render(request, 'student_profiles/now_delete.html', data)
+
+
+
+@require_POST
+@login_required
+def image_upload(request, page_id, max_size=None, min_dim=None):
+    """Upload an image file and create an RcaImage out of it. Specific for NowPages
+
+    If max_size or min_dim (2-tuple) are given, filesize and image dimensions are checked.
+    """
+
+    page = get_page_or_404(request, page_id)
+
+    form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
+    if page.locked:
+        res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
+        return HttpResponse(json.dumps(res), content_type='application/json')
+    elif form.is_valid():
+        r = RcaImage.objects.create(
+            file=form.cleaned_data['image'],
+            uploaded_by_user=request.user,
+        )
+
+        return HttpResponse('{{"ok": true, "id": {} }}'.format(r.id), content_type='application/json')
+    else:
+        errors = ', '.join(', '.join(el) for el in form.errors.values())
+        res = {'ok': False, 'errors': errors}
+        return HttpResponse(json.dumps(res), content_type='application/json')

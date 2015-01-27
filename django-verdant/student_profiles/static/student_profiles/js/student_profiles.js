@@ -1,19 +1,86 @@
 /**
+ * Make a given 'id' into a hallo.js rich text editor with our plugins and stylings.
+ */
+function makeRichTextEditable(id) {
+
+    var halloPlugins = {
+        'halloformat': {},
+        'halloheadings': {formatBlocks: ["p", "h4", ]},
+        'hallohr': {},
+        'halloreundo': {},
+    };
+
+    var input = $('#' + id);
+    var richText = $('<div class="richtext"></div>').html(input.val());
+    richText.insertBefore(input);
+    input.hide();
+
+    var removeStylingPending = false;
+    function removeStyling() {
+        /* Strip the 'style' attribute from spans that have no other attributes.
+        (we don't remove the span entirely as that messes with the cursor position,
+        and spans will be removed anyway by our whitelisting)
+        */
+        $('span[style]', richText).filter(function() {
+            return this.attributes.length === 1;
+        }).removeAttr('style');
+        removeStylingPending = false;
+    }
+
+    richText.hallo({
+        toolbar: 'halloToolbarFixed',
+        toolbarCssClass: (input.closest('.object').hasClass('full')) ? 'full' : '',
+        plugins: halloPlugins
+    }).bind('hallomodified', function(event, data) {
+        input.val(data.content);
+        if (!removeStylingPending) {
+            setTimeout(removeStyling, 100);
+            removeStylingPending = true;
+        }
+    }).bind('paste', function(event, data) {
+        setTimeout(removeStyling, 1);
+    }).bind('halloactivated', function(event, data) {
+        $('span.ui-button-text').each(function(i, el) {
+            var jel = $(el);
+            if (jel.text() == 'P'){
+                jel.html('PARAGRAPH <i></i>');  // this one is a hack to add the <i> element: it changes the way the button is laid out and moves it into alignment with the other buttons
+                jel.parent().css('width', '7em');
+            } else if (jel.text() == 'H4'){
+                jel.html('HEADING<i></i>');
+                jel.parent().css('width', '7em');
+            }
+        });
+    });
+}
+
+
+/**
 * Load the given file to check whether this is a readable image.
 */
-function checkImageFile(file, dfd, data) {
+function checkImageFile(file, dfd, data, options) {
 
     var reader = new FileReader();
     var image  = new Image();
+    var minWidth = options.imageMinWidth;
+    var minHeight = options.imageMinHeight;
     
     reader.readAsDataURL(file);  
     reader.onload = function(_file) {
         image.src    = _file.target.result;
         image.onload = function() {
+
+            if (
+                (image.width < minWidth || image.height < minHeight)
+                && (image.height < minWidth || image.width < minHeight))
+            {
+                data.error = 'Minimum image size is: ' + minWidth + 'x' + minHeight + '.';
+                dfd.rejectWith(this, [data]);
+            } else {
             dfd.resolveWith(this, [data]);
+            }
         };
         image.onerror= function() {
-            file.error = 'Invalid file type.';
+            data.error = 'Invalid file type: only gif, jpg and png are allowed. Changing file extension does not change the file type.';
             dfd.rejectWith(this, [data]);
         };
     };
@@ -23,18 +90,22 @@ function checkImageFile(file, dfd, data) {
 /**
 * Put our image validation in the jquery-fileupload processing queue
 */
-$.blueimp.fileupload.prototype.processActions.validate = function (data, options) {
+$.blueimp.fileupload.prototype.processActions.validate_img = function (data, options) {
     if (options.disabled) {
         return data;
     }
     var dfd = $.Deferred(),
     file = data.files[data.index];
 
-    if (!options.acceptFileTypes.test(file.type)) {
-        file.error = 'Invalid file type.';
+    if (options.maxFileSize < file.size)
+    {
+        data.error = 'File is too large. Please make sure your file is smaller than ' + Math.floor(options.maxFileSize / 1024 / 1024) + ' MB.';
+        dfd.rejectWith(this, [data]);
+    } else if (!options.acceptFileTypes.test(file.type)) {
+        data.error = 'Invalid file type: only gif, jpg and png are allowed.';
         dfd.rejectWith(this, [data]);
     } else {
-        checkImageFile(file, dfd, data);
+        checkImageFile(file, dfd, data, options);
     }
     return dfd.promise();
 };
@@ -103,30 +174,98 @@ function activateImageUpload(for_id, options) {
     
     var upload_options = {
         dataType: 'json',
-        imageMaxWidth: 800,
-        imageMaxHeight: 800,
-        imageMinWidth: 10,
-        imageMinHeight: 10,
+        imageMinWidth: 0,
+        imageMinHeight: 0,
+        maxFileSize: 99999999999999999999,  // TO INFINITY AND BEYOND!!
         sequentialUploads: true,
         dropZone: dropElement,
         paramName: 'image',
 
+        processQueue: [
+            {
+                action: 'validate_img',
+                acceptFileTypes: '@',
+                maxFileSize: '@',
+                imageMinWidth: '@',
+                imageMinHeight: '@',
+                disabled: '@disableValidation'
+            },
+            {
+                action: 'loadImageMetaData',
+                disableImageHead: '@',
+                disableExif: '@',
+                disableExifThumbnail: '@',
+                disableExifSub: '@',
+                disableExifGps: '@',
+                disabled: '@disableImageMetaDataLoad'
+            },
+            {
+                action: 'loadImage',
+                // Use the action as prefix for the "@" options:
+                prefix: true,
+                fileTypes: '@',
+                maxFileSize: '@',
+                noRevoke: '@',
+                disabled: '@disableImageLoad'
+            },
+            {
+                action: 'saveImage',
+                quality: '@imageQuality',
+                type: '@imageType',
+                disabled: '@disableImageResize'
+            },
+            {
+                action: 'resizeImage',
+                // Use "preview" as prefix for the "@" options:
+                prefix: 'preview',
+                maxWidth: '@',
+                maxHeight: '@',
+                minWidth: '@',
+                minHeight: '@',
+                crop: '@',
+                orientation: '@',
+                thumbnail: '@',
+                canvas: '@',
+                disabled: '@disableImagePreview'
+            },
+            {
+                action: 'setImage',
+                name: '@imagePreviewName',
+                disabled: '@disableImagePreview'
+            },
+        ],
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 
         processfail: function (e, data) {
-            alert('Could not upload ' + data.files[data.index].name + ': this file is not a valid image.');
+            $('.uploadModal').hide();
+            res = 'Could not upload ' + data.files[data.index].name + ': ';
+            if (data.error)
+                res += data.error;
+            else
+                res += 'This is not a valid file.';
+
+            alert(res);
         },
         add: function(e, data) {
+            $('div.uploadModal #content .progress .bar').css('width', '0%');
+            containerElement.find('.progress .bar').css('width', '0%');
+            $('.uploadModal').show();
             containerElement.find('.progress .bar').show();
             window.onbeforeunload = confirmOnPageExit;
             originalAdd.call(this, e, data);
         },
         done: function (e, data) {
-    
+            $('.uploadModal').fadeOut(animDuration);
             containerElement.find('.progress .bar').hide();
             if (!data.result.ok)
             {
-                alert("Could not upload the file. Please try again with a different file.");
+                res = 'Could not upload the file. Please try again with a different file. ';
+                if (data.result.errors)
+                {
+                    res += data.result.errors;
+                }
+                alert(res);
+
             }
             else
             {
@@ -139,11 +278,13 @@ function activateImageUpload(for_id, options) {
             }
         },
         fail: function (e, data) {
+            $('.uploadModal').hide();
             containerElement.find('.progress .bar').hide();
             alert("Could not upload the file: the server responded with an error.");
         },
         progress: function (e, data) {
             var progress = parseInt(data.loaded / data.total * 100, 10);
+            $('div.uploadModal #content .progress .bar').css('width', progress + '%');
             containerElement.find('.progress .bar').css('width', progress + '%');
         },
     };
@@ -242,6 +383,87 @@ function makeFormset(prefix, addedFunc) {
     updateFormButtons(search_term);
 };
 
+/**
+ * Update the carousel select items so that only the fields for the selection
+ * that is active are shown.
+ */
+function updateCarouselSelects(prefix) {
+  $('#' + prefix + ' select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_carousel-(\d+)-item_type/);
+    var id_number = _match ? _match[1] : '';
+
+    if (value == 'image')
+    {
+      $('#carousel-' + id_number + '-image_id').parent().show();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().show();
+      $('#id_carousel-' + id_number + '-title').parent().show();
+      $('#id_carousel-' + id_number + '-alt').parent().show();
+      $('#id_carousel-' + id_number + '-creator').parent().show();
+      $('#id_carousel-' + id_number + '-year').parent().show();
+      $('#id_carousel-' + id_number + '-medium').parent().show();
+      $('#id_carousel-' + id_number + '-dimensions').parent().show();
+      $('#id_carousel-' + id_number + '-photographer').parent().show();
+
+      $('#id_carousel-' + id_number + '-embedly_url').parent().hide();
+      $('#carousel-' + id_number + '-poster_image_id').parent().hide();
+
+      $('#id_carousel-' + id_number + '-embedly_url').val('');
+      $('#carousel-' + id_number + '-poster_image_id input').val('');
+    } else if (value == 'video')
+    {
+      $('#carousel-' + id_number + '-image_id').parent().hide();
+      $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
+      $('#id_carousel-' + id_number + '-title').parent().hide();
+      $('#id_carousel-' + id_number + '-alt').parent().hide();
+      $('#id_carousel-' + id_number + '-creator').parent().hide();
+      $('#id_carousel-' + id_number + '-year').parent().hide();
+      $('#id_carousel-' + id_number + '-medium').parent().hide();
+      $('#id_carousel-' + id_number + '-dimensions').parent().hide();
+      $('#id_carousel-' + id_number + '-photographer').parent().hide();
+
+      $('#id_carousel-' + id_number + '-embedly_url').parent().show();
+      $('#carousel-' + id_number + '-poster_image_id').parent().show();
+
+      $('#carousel-' + id_number + '-image_id').val('');
+      $('#id_carousel-' + id_number + '-overlay_text').val('');
+      $('#id_carousel-' + id_number + '-title').val('');
+      $('#id_carousel-' + id_number + '-alt').val('');
+      $('#id_carousel-' + id_number + '-creator').val('');
+      $('#id_carousel-' + id_number + '-year').val('');
+      $('#id_carousel-' + id_number + '-medium').val('');
+      $('#id_carousel-' + id_number + '-dimensions').val('');
+      $('#id_carousel-' + id_number + '-photographer').val('');
+    }
+  });
+};
+
+/**
+ * Update the supervisor fields to only show those that are necessary for the selected type.
+ */
+function updateSupervisorSelects(prefix) {
+  $('#' + prefix + ' select').change(function() {
+    var value = $(this).val();
+    var _match = this.id.match(/id_supervisor-(\d+)-supervisor_type/);
+    var id_number = _match ? _match[1] : '';
+
+    if (value == 'internal') {
+      $('#id_supervisor-' + id_number + '-supervisor').parent().show();
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor_other').val('');
+
+    }
+    else if (value == 'other')
+    {
+
+      $('#id_supervisor-' + id_number + '-supervisor').parent().hide();
+      $('#id_supervisor-' + id_number + '-supervisor').val('');
+
+      $('#id_supervisor-' + id_number + '-supervisor_other').parent().show();
+    }
+  });
+}
 
 
 /*
@@ -324,13 +546,11 @@ $.ajaxSetup({
 function stickyNote() {
     if ($(window).width() < 1100) {
         $('.note').unstick();
-        console.log("Unstick");
     } else {
         $('.notes').sticky({
             topSpacing: 200,
             bottomSpacing: 680
         });
-        console.log("Stick");
     }
 }
 
@@ -343,12 +563,24 @@ stickyNote();
 /*
 * Catch Save and Submit
 */
-
 $('.submit-page').click(function(e) {
-    e.preventDefault();
-    if (window.confirm("Sending this form for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
-        $(this).submit();
+    if (window.confirm("Sending this post for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
+        $(this).parent().submit();
+        return true;
+    } else {
+        return false;
     }
-})
+});
 
 
+/*
+* Catch delete dialog
+*/
+$('.delete-post').click(function(e) {
+    if (window.confirm("Would you like to go ahead with deleting this post?")) {
+        $(this).parent().submit();
+        return true;
+    } else {
+        return false;
+    }
+});

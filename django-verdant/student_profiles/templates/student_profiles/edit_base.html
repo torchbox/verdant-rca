@@ -9,7 +9,7 @@
 <div class="page-content">
 
     <div class="session-meta">
-        <span>logged in as {{ user.username }}</span>
+        <span>Hello, {% if profile_name %}{{ profile_name }}{% else %}{{ user.username }}{% endif %}</span>
         <a href="/admin/logout/">Log out</a>
     </div>
     <nav class="student-profile-nav"> 
@@ -25,11 +25,6 @@
                     <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
                 </li>
             </ul>
-        </ul>
-        <ul class="outer-menu">
-            <li{% if nav_postcard %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
-            </li>
         </ul>
         {% if is_ma %}
         <ul class="outer-menu"> 
@@ -69,6 +64,11 @@
                 </li>
             </ul>
         </ul>
+        <ul class="outer-menu rca-now-link">
+            <li{% if nav_postcard %} class="active"{% endif %}>
+                <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
+            </li>
+        </ul>
         {% endif %}
         {% else %}
         <ul class="outer-menu">
@@ -96,7 +96,10 @@
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
-    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+    {% endcompress %}
     <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
 
@@ -162,38 +165,19 @@
 
 {##############################################################################}
 {# custom code starts here #}
-    {# we've inlined this: {% include "wagtailadmin/pages/_editor_js.html" %} #}
-    {# and modified its output because there was too much stuff in it for us #}
 {% compress js %}
     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/rangy-core.js"></script>
     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/hallo.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>
-
-    <script>  {# there is even more inlining here to brutally remove the link edit buttons from hallo.js #}
-    (function() {
-  (function($) {
-    return $.widget("IKS.hallowagtaillink", {
-      options: {
-        uuid: '',
-        editable: null
-      },
-      populateToolbar: function(toolbar) {
-      }
-    });
-  })(jQuery);
-
-}).call(this);
-</script>
-
     <script src="{{ STATIC_URL }}wagtailadmin/js/hallo-plugins/hallo-hr.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/page-editor.js"></script>
-    <script src="{{ STATIC_URL }}admin/js/urlify.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/privacy-indicator.js"></script>
+{#     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>  #}
+{#    <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>  #}
+{#    <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>  #}
+
 {% endcompress %}
 
 {% compress js %}
+<script src="{% static "student_profiles/select2/select2.js" %}"></script>
+<script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>  {# cool little JS that helps with formsets #}
 <script src="{% static "student_profiles/js/vendor/load-image.all.min.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>
@@ -214,3 +198,6 @@
 
 
 {% endblock js %}
+
+
+{% block footer_inclusion %}{% endblock %}

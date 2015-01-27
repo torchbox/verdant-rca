@@ -343,10 +343,21 @@ label .richtext span,
     font-size: @font-size-16;
 }
 
+.richtext b
+{
+  font-weight: bold;
+}
+.richtext i b
+{
+  font-weight: bold;
+  font-style: italic;
+}
+
+
 .hallotoolbar {
     background: @color-light-grey;
     margin-left: 0.15em;
-    margin-top: 2.4em;
+    margin-top: 2.2em;
     button {
         border: none;
         height: 2.2em;
@@ -361,6 +372,7 @@ label .richtext span,
     .ui-button-text {
         display: block;
         line-height: normal;
+        font-size: @font-size-16;
         i {
             font-style: normal;
             font-weight: normal;

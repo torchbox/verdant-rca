@@ -20,7 +20,6 @@
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save Draft">
-          <a class="button" href="{% url 'student-profiles:preview' page_id %}" target="_blank">Preview</a>
           <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
         </div>
       </form>
@@ -33,6 +32,48 @@
     </section>
   </section>
 </div>
+
+    <style>
+    div.uploadModal {
+        display: none;
+      background: rgba(0, 0, 0, 0.5);
+      width:      100%;
+      height:     100%;
+      z-index:    1000;
+      top:        0;
+      left:       0;
+      position:   fixed;
+    }
+
+    div.uploadModal #content {
+        opacity: 1;
+        color: white;
+        font-size: 200%;
+        text-align: center;
+        position: absolute;
+        height: 20%;
+        top: 50%;
+        margin-top: -10%; /* half the height */
+        width: 50%;
+        left: 50%;
+        margin-left: -25%; /* half the width */
+        z-index: 1001;
+    }
+    div.uploadModal #content .progress {
+        background-color: #444;
+    }
+
+    </style>
+
+<div class="uploadModal">
+    <div id="content">
+        Image is being uploaded.
+        <div class="progress">
+            <div class="bar" style="width: 0%; height: 1em; background: #0096ff;"></div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock form_content %}
 
@@ -47,7 +88,11 @@
 <script type="text/javascript">
 $(function() {
 
-  activateImageUpload('postcard_image');
+  activateImageUpload('postcard_image', {
+      imageMinWidth: 1240,
+      imageMinHeight: 1748,
+      maxFileSize: 10485760
+  });
 
 })
 </script>

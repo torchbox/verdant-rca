@@ -81,7 +81,63 @@ def save_multiple(profile_page, fieldname, formset, form_fieldname, field_model)
                 'page': profile_page,
                 form_fieldname: values.get(form_fieldname).strip()
             })
-            
+
+
+def make_carousel_initial(queryset):
+    """Given a queryset of carousel items, create the initial data for the forms for each of the carousel items."""
+    carousel_initial_r = []
+    for c in queryset:
+        if c.image_id is not None:
+            ini = {
+                'item_type': 'image',
+                'image_id': c.image_id,
+                'title': c.image.title,
+                'alt': c.image.alt,
+                'creator': c.image.creator,
+                'year': c.image.year,
+                'medium': c.image.medium,
+                'dimensions': c.image.dimensions,
+                'photographer': c.image.photographer,
+            }
+        else:
+            ini = {
+                'item_type': 'video',
+                'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id,
+            }
+
+        carousel_initial_r.append(ini)
+
+    return carousel_initial_r
+
+
+def make_carousel_items(d, carousel_type):
+    """From the data entered in a form, create a list of carousel items for the DB."""
+    carousel_items = []
+    for f in d:
+        if not f.get('item_type'):
+            continue
+        elif f.get('image_id'):
+            try:
+                img = RcaImage.objects.get(id=f.get('image_id'))
+            except RcaImage.DoesNotExist:
+                continue
+            print f
+            img.title = f.get('title') or ''
+            img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+            img.save()
+            carousel_items.append({
+                'image_id': f.get('image_id')
+            })
+        elif f.get('embedly_url'):
+            carousel_items.append({
+                'embedly_url': f.get('embedly_url'),
+                'poster_image_id': f.get('poster_image_id'),
+            })
+            pass
+        else:
+            continue
+
+    return [carousel_type(**item) for item in carousel_items]
 
 
 def initial_context(request, page_id):
@@ -95,6 +151,7 @@ def initial_context(request, page_id):
     data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
     data['page_id'] = page_id
     data['is_in_show'] = profile_is_in_show(request, profile_page)
+    data['profile_name'] = profile_page.title
     return data, profile_page
 
 
@@ -105,6 +162,7 @@ def save_page(page, request):
     submit = False
     if 'submit_for_publication' in request.POST:
         submit = True
+        page.locked = True
         messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
 
     revision = page.save_revision(
@@ -146,6 +204,8 @@ def overview(request):
             page.live = False
 
             page.title = u'{} {}'.format(form.cleaned_data['first_name'], form.cleaned_data['last_name'])
+            page.first_name = form.cleaned_data['first_name']
+            page.last_name = form.cleaned_data['last_name']
 
             request.user.first_name = page.first_name = form.cleaned_data['first_name']
             request.user.last_name = page.last_name = form.cleaned_data['last_name']
@@ -184,15 +244,8 @@ def preview(request, page_id=None):
 @login_required
 def basic_profile(request, page_id):
     """Basic profile creation/editing page"""
-    data = {
-        'is_ma': user_is_ma(request),
-        'is_mphil': user_is_mphil(request),
-        'is_phd': user_is_phd(request),
-    }
+    data, profile_page = initial_context(request, page_id)
 
-    data['page'] = profile_page = get_object_or_404(NewStudentPage, owner=request.user, id=page_id).get_latest_revision_as_page()
-    data['page_id'] = page_id
-    data['basic_form'] = ProfileBasicForm(instance=profile_page)
     data['email_formset'] = EmailFormset(
         prefix='email',
         initial=[{'email': x.email} for x in profile_page.emails.all()]
@@ -227,6 +280,9 @@ def basic_profile(request, page_id):
             request.user.first_name = profile_page.first_name = bcd['first_name']
             request.user.last_name = profile_page.last_name = bcd['last_name']
 
+            profile_page.title = bcd['title']
+            profile_page.first_name = bcd['first_name']
+            profile_page.last_name = bcd['last_name']
             profile_page.statement = bcd['statement']
             profile_page.twitter_handle = bcd['twitter_handle']
 
@@ -247,6 +303,8 @@ def basic_profile(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
 
     if request.is_ajax():
@@ -345,6 +403,8 @@ def academic_details(request, page_id=None):
         
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
     
     if request.is_ajax():
@@ -374,6 +434,8 @@ def postcard_upload(request, page_id):
             save_page(page, request)
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma', page_id=page_id)
 
     if request.is_ajax():
@@ -406,6 +468,8 @@ def ma_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma', page_id=page_id)
 
     if request.is_ajax():
@@ -437,14 +501,8 @@ def ma_show_details(request, page_id):
         data[relname + '_formset'].title = title
 
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
-    
-    carousel_initial = [
-        {
-            'item_type': 'image' if c.image_id is not None else 'video',
-            'image_id': c.image_id, 'overlay_text': c.overlay_text, 'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id
-        }
-        for c in profile_page.show_carousel_items.all()
-    ]
+
+    carousel_initial = make_carousel_initial(profile_page.show_carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
     
     make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
@@ -455,7 +513,7 @@ def ma_show_details(request, page_id):
         data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
-        
+
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
@@ -464,14 +522,9 @@ def ma_show_details(request, page_id):
 
             page = sf.save(commit=False)
 
-            carousel_items = [
-                {k:v for k,v in f.items() if k not in ('item_type', 'order')}
-                for f in scif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
-            ]
-            page.show_carousel_items = [
-                NewStudentPageShowCarouselItem(**item) for item in carousel_items
-            ]
-            
+            print make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
+            page.show_carousel_items = make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
+
             page.show_collaborators = [
                 NewStudentPageShowCollaborator(name=f['name'].strip()) for f in scf.ordered_data if f.get('name')
             ]
@@ -483,6 +536,8 @@ def ma_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
 
     if request.is_ajax():
@@ -515,6 +570,8 @@ def mphil_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil', page_id=page_id)
 
     if request.is_ajax():
@@ -531,13 +588,7 @@ def mphil_show_details(request, page_id):
 
     data['mphil_show_form'] = MPhilShowForm(instance=profile_page)
 
-    carousel_initial = [
-        {
-            'item_type': 'image' if c.image_id is not None else 'video',
-            'image_id': c.image_id, 'overlay_text': c.overlay_text, 'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id
-        }
-        for c in profile_page.mphil_carousel_items.all()
-    ]
+    carousel_initial = make_carousel_initial(profile_page.mphil_carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
 
     data['collaborator'] = MPhilCollaboratorFormset(prefix='collaborator', initial=[
@@ -574,13 +625,7 @@ def mphil_show_details(request, page_id):
 
             page = mpf.save(commit=False)
 
-            carousel_items = [
-                {k:v for k,v in f.items() if k not in ('item_type', 'order')}
-                for f in cif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
-            ]
-            page.mphil_carousel_items = [
-                NewStudentPageMPhilCarouselItem(**item) for item in carousel_items
-            ]
+            page.mphil_carousel_items = make_carousel_items(cif.ordered_data, NewStudentPageMPhilCarouselItem)
 
             page.mphil_collaborators = [
                 NewStudentPageMPhilCollaborator(name=f['name'].strip()) for f in cof.ordered_data if f.get('name')
@@ -598,6 +643,8 @@ def mphil_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil-show', page_id=page_id)
 
     if request.is_ajax():
@@ -627,6 +674,8 @@ def phd_details(request, page_id):
             
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd', page_id=page_id)
 
     if request.is_ajax():
@@ -643,13 +692,7 @@ def phd_show_details(request, page_id):
 
     data['phd_show_form'] = PhDShowForm(instance=profile_page)
 
-    carousel_initial = [
-        {
-            'item_type': 'image' if c.image_id is not None else 'video',
-            'image_id': c.image_id, 'overlay_text': c.overlay_text, 'embedly_url': c.embedly_url, 'poster_image_id': c.poster_image_id
-        }
-        for c in profile_page.phd_carousel_items.all()
-    ]
+    carousel_initial = make_carousel_initial(profile_page.phd_carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
 
     data['collaborator'] = PhDCollaboratorFormset(prefix='collaborator', initial=[
@@ -686,13 +729,7 @@ def phd_show_details(request, page_id):
 
             page = mpf.save(commit=False)
 
-            carousel_items = [
-                {k:v for k,v in f.items() if k not in ('item_type', 'order')}
-                for f in cif.ordered_data if f.get('item_type') and (f.get('image_id') or f.get('embedly_url'))
-            ]
-            page.phd_carousel_items = [
-                NewStudentPagePhDCarouselItem(**item) for item in carousel_items
-            ]
+            page.phd_carousel_items = make_carousel_items(cif.ordered_data, NewStudentPagePhDCarouselItem)
 
             page.phd_collaborators = [
                 NewStudentPagePhDCollaborator(name=f['name'].strip()) for f in cof.ordered_data if f.get('name')
@@ -710,6 +747,8 @@ def phd_show_details(request, page_id):
 
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
+            if 'preview' in request.POST:
+                return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd-show', page_id=page_id)
 
     if request.is_ajax():
@@ -724,11 +763,16 @@ def phd_show_details(request, page_id):
 
 @require_POST
 @login_required
-def image_upload(request, page_id, field=None):
+def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
+    """Upload an image file and create an RcaImage out of it.
+
+    If field is given it'll be attached to the page in the given field.
+    If max_size or min_dim (2-tuple) are given, filesize and image dimensions are checked.
+    """
     
     data, profile_page = initial_context(request, page_id)
     
-    form = ImageForm(request.POST, request.FILES)
+    form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
     if profile_page.locked:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
         return HttpResponse(json.dumps(res), content_type='application/json')

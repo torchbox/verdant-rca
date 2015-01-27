@@ -1,7 +1,8 @@
 {{ formset.management_form }}
 <div id="{{ formset.prefix }}" class="field-set">
 <label {% if formset.total_error_count > 0 %}class="error"{% endif %}>{{ formset.title }}
-  {{ formset.non_form_errors }}
+    {% if formset.help_text %}<p class="help-text">{{ formset.help_text }}</p>{% endif %}
+    {{ formset.non_form_errors }}
 </label>
 {% for form in formset %}
   <div class="inline-form">

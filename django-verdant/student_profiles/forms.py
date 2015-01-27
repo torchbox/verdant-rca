@@ -1,7 +1,10 @@
-from itertools import chain
+# -*- encoding: utf-8 -*-
 
 from django import forms
 from django.forms.formsets import formset_factory, BaseFormSet
+from django.template.defaultfilters import filesizeformat
+
+from PIL import Image
 
 from wagtail.wagtailcore.fields import RichTextArea
 
@@ -9,7 +12,7 @@ from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
-from rca.models import RcaImage
+from rca.models import RcaImage, StaffPage
 from rca.models import SCHOOL_PROGRAMME_MAP, ALL_PROGRAMMES
 
 ################################################################################
@@ -22,6 +25,7 @@ class OrderedFormset(BaseFormSet):
 
         #for index, value in enumerate(kwargs.get('initial', {})):
         #    value['order'] = index
+
         
         super(OrderedFormset, self).__init__(*args, **kwargs)
     
@@ -29,7 +33,8 @@ class OrderedFormset(BaseFormSet):
         """Cleans the form and orders it by the hidden added order field."""
         
         order = lambda item: item.get('order', 10000)   # yes, 10000 = infinity!
-        self.ordered_data = sorted(self.cleaned_data, key=order)
+        if hasattr(self, 'cleaned_data'):
+            self.ordered_data = sorted(self.cleaned_data, key=order)
         
         return
 
@@ -126,8 +131,33 @@ class ImageForm(forms.Form):
     This is used in validating image uploads, obviously. It's needed because we upload images not with the forms
     themselves but asynchronously by themselves.
     """
-    
+
+    def __init__(self, *args, **kwargs):
+
+        self.max_size = None
+        self.min_dim = None
+        if 'max_size' in kwargs:
+            self.max_size = kwargs.pop('max_size')
+        if 'min_dim' in kwargs:
+            self.min_dim = kwargs.pop('min_dim')
+
+        super(ImageForm, self).__init__(*args, **kwargs)
+
     image = forms.ImageField()
+
+    def clean_image(self):
+        img = self.cleaned_data['image']
+        if self.max_size and img.size > self.max_size:
+            raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
+
+        if self.min_dim:
+            dt = Image.open(img)
+            minX, minY = self.min_dim
+            width, height = dt.size
+            if (width < minX or height < minY) and (height < minX or width < minY):
+                raise forms.ValidationError(u'Minimum image size is {}x{} pixels.'.format(minX, minY))
+
+        return img
 
 
 
@@ -158,6 +188,16 @@ class ProfileBasicForm(forms.ModelForm):
             return RcaImage.objects.get(id=self.cleaned_data['profile_image'])
         return None
 
+    def clean_twitter_handle(self):
+        if self.cleaned_data.get('twitter_handle'):
+            handle = self.cleaned_data.get('twitter_handle', '')
+            if handle.startswith('@'):
+                return handle[1:]
+            else:
+                return handle
+        else:
+            return ''
+
     class Meta:
         model = NewStudentPage
         fields = ['title', 'first_name', 'last_name', 'twitter_handle', 'profile_image', 'statement']
@@ -178,13 +218,27 @@ class PhoneForm(forms.Form):
         help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
 PhoneFormset = formset_factory(PhoneForm, extra=1, formset=OrderedFormset)
+PhoneFormset.help_text = 'Enter your phone number(s) in international format with country code: +44 (0) 12345 678910'
 
 class WebsiteForm(forms.Form):
     #saves to NewStudentPageContactsWebsite
     website = forms.URLField(
         required=False,    # because we'll only save those that are there anyway
+        error_messages={'invalid': 'Please enter a full URL, including the ‘http://’!'},
+        widget=forms.TextInput,
     )
+
+    def clean_website(self):
+        website = self.cleaned_data.get('website')
+        if not website:
+            return None
+        if not website.startswith(u'http://') or website.startswith(u'https://'):
+            return u'http://' + website
+        else:
+            return website
+
 WebsiteFormset = formset_factory(WebsiteForm, extra=1, formset=OrderedFormset)
+WebsiteFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
 
 
 ################################################################################
@@ -365,24 +419,34 @@ class MAShowCarouselItemForm(forms.Form):
         help_text=help_text('rca.CarouselItemFields', 'image'),
         widget=ImageInput,
     )
-    overlay_text = forms.CharField(
-        max_length=255,
-        required=False,
-        help_text=help_text('rca.CarouselItemFields', 'overlay_text')
-    )
-    
+
+    # image type fields (there are a lot of them!)
+    title = forms.CharField(max_length=255, required=False, label='Title', )
+    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
+    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
+    year = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'year'))
+    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
+    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
+    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+
     embedly_url = forms.URLField(
         label='Vimeo URL',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'embedly_url'),
+        help_text='You cannot upload a video directly; you must upload any video content to Vimeo, and you can then paste the URL to your video in here.',
     )
     poster_image_id = forms.IntegerField(
         label='Poster image',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'poster_image'),
+        help_text='Add a still image as a placeholder for your video when it is not playing.',
         widget=ImageInput,
     )
-MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset)
+
+    def clean_title(self):
+        if self.cleaned_data.get('item_type') == 'image' and self.cleaned_data.get('image_id') and not self.cleaned_data.get('title'):
+            raise forms.ValidationError('This field is required.')
+        else:
+            return self.cleaned_data.get('title', '')
+MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset, max_num=12, validate_max=True)
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
@@ -426,7 +490,7 @@ class MPhilForm(forms.ModelForm):
         label='Graduation year',
         min_value=1950, max_value=2050,
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'),
+        help_text='If unknown, enter current year',
     )
 
     def clean_mphil_start_year(self):
@@ -487,7 +551,14 @@ class MPhilSupervisorForm(forms.ModelForm):
             ('other', 'Other'),
         )
     )
-    
+
+    supervisor = forms.ModelChoiceField(
+        queryset=StaffPage.objects.all().order_by('last_name'),
+        required=False,
+        help_text=help_text('rca.NewStudentPageMPhilSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+        widget=forms.Select(attrs={'width': '100%', 'class': 'supervisor-select'}),
+    )
+
     class Meta:
         model = NewStudentPageMPhilSupervisor
         fields = ['supervisor', 'supervisor_other']
@@ -519,7 +590,7 @@ class PhDForm(forms.ModelForm):
         label='Graduation year',
         min_value=1950, max_value=2050,
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'),
+        help_text='If unknown, enter current year'
     )
 
     def clean_phd_start_year(self):
@@ -578,6 +649,13 @@ class PhDSupervisorForm(forms.ModelForm):
         )
     )
     
+    supervisor = forms.ModelChoiceField(
+        queryset=StaffPage.objects.all().order_by('last_name'),
+        required=False,
+        help_text=help_text('rca.NewStudentPagePhDSupervisor', 'supervisor', default="Please select your RCA supervisor's profile page or enter the name of an external supervisor"),
+        widget=forms.Select(attrs={'width': '100%', 'class': 'supervisor-select'}),
+    )
+
     class Meta:
         model = NewStudentPagePhDSupervisor
         fields = ['supervisor', 'supervisor_other']
