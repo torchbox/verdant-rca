@@ -33,9 +33,11 @@
                 <li{% if nav_ma %} class="active"{% endif %}>
                     <a href="{% url 'student-profiles:edit-ma' page_id %}">MA Details</a>
                 </li>
+            {% if SHOW_PAGES_ENABLED %}
                 <li class="in-show-menu{% if nav_mphil_show %} active{% endif %}" {% if not is_in_show %} style="display: none;"{% endif %}>
                     <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a>
                 </li>
+            {% endif %}
             </ul>
         </ul>
         {% endif %}
@@ -46,9 +48,11 @@
                 <li{% if nav_mphil %} class="active"{% endif %}>
                     <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil Details</a>
                 </li>
+            {% if SHOW_PAGES_ENABLED %}
                 <li class="in-show-menu{% if nav_mphil_show %} active{% endif %}" {% if not is_in_show %} style="display: none;"{% endif %}>
                     <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a>
                 </li>
+            {% endif %}
             </ul>
         </ul>
         {% endif %}
@@ -59,11 +63,15 @@
                 <li{% if nav_phd %} class="active"{% endif %}>
                     <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
                 </li>
+            {% if SHOW_PAGES_ENABLED %}
                 <li class="in-show-menu{% if nav_phd_show %} active{% endif %}" {% if not is_in_show %} style="display: none;"{% endif %}>
                     <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a>
                 </li>
+            {% endif %}
             </ul>
         </ul>
+        {% endif %}
+        {% if SHOW_PAGES_ENABLED %}
         <ul class="outer-menu rca-now-link">
             <li{% if nav_postcard %} class="active"{% endif %}>
                 <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
