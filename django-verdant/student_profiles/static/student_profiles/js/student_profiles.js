@@ -189,7 +189,50 @@ function activateImageUpload(for_id, options) {
                 imageMinWidth: '@',
                 imageMinHeight: '@',
                 disabled: '@disableValidation'
-            }
+            },
+            {
+                action: 'loadImageMetaData',
+                disableImageHead: '@',
+                disableExif: '@',
+                disableExifThumbnail: '@',
+                disableExifSub: '@',
+                disableExifGps: '@',
+                disabled: '@disableImageMetaDataLoad'
+            },
+            {
+                action: 'loadImage',
+                // Use the action as prefix for the "@" options:
+                prefix: true,
+                fileTypes: '@',
+                maxFileSize: '@',
+                noRevoke: '@',
+                disabled: '@disableImageLoad'
+            },
+            {
+                action: 'saveImage',
+                quality: '@imageQuality',
+                type: '@imageType',
+                disabled: '@disableImageResize'
+            },
+            {
+                action: 'resizeImage',
+                // Use "preview" as prefix for the "@" options:
+                prefix: 'preview',
+                maxWidth: '@',
+                maxHeight: '@',
+                minWidth: '@',
+                minHeight: '@',
+                crop: '@',
+                orientation: '@',
+                thumbnail: '@',
+                canvas: '@',
+                disabled: '@disableImagePreview'
+            },
+            {
+                action: 'setImage',
+                name: '@imagePreviewName',
+                disabled: '@disableImagePreview'
+            },
         ],
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
 
