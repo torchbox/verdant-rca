@@ -84,14 +84,14 @@ class ImageInput(forms.FileInput):
             return None
 
     def render(self, name, value, attrs=None):
-        preview = ""
+        preview = '<div class="preview_canvas"></div>'
         if value:
             try:
                 value = int(value)
                 image = RcaImage.objects.get(id=value)
                 rendition = image.get_rendition('max-150x150')
                 preview = """
-                    <img src="{url}" width="{width}" height="{height}" style="width: auto;">
+                    <img src="{url}" class="preview_canvas" width="{width}" height="{height}" style="width: auto;">
                 """.format(
                     url=rendition.url,
                     width=rendition.width, height=rendition.height,
@@ -117,7 +117,7 @@ class ImageInput(forms.FileInput):
                 name=name,
                 preview=preview, preview_display='block' if preview else 'none',
                 value_id=value,
-                hidden_clear='' if preview else ' style="display: none;"',
+                hidden_clear='' if value else ' style="display: none;"',
             )
     
 

@@ -270,8 +270,10 @@ function activateImageUpload(for_id, options) {
             }
             else
             {
-                containerElement.find('.preview').html(data.files[0].preview);
-                containerElement.find('.preview').show();
+                var new_canvas = $(data.files[0].preview);
+                new_canvas.attr('class', 'preview_canvas');
+                containerElement.find('.preview_canvas').replaceWith(new_canvas);
+                containerElement.find('.preview_canvas').show();
                 containerElement.find('.clearbutton').show();
           
                 idElement.val(data.result.id);
@@ -297,7 +299,7 @@ function activateImageUpload(for_id, options) {
     // set the "clear field" button action
     containerElement.find('.clearbutton').click(function(e) {
         $(this).hide();
-        containerElement.find('.preview').html('');
+        containerElement.find('.preview_canvas').replaceWith("<div class='preview_canvas'></div>");
         idElement.val(''); idElement.change();
         e.preventDefault();
     });
