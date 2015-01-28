@@ -78,6 +78,7 @@ function checkImageFile(file, dfd, data, options) {
                 dfd.rejectWith(this, [data]);
             } else {
             dfd.resolveWith(this, [data]);
+                $(".preview").addClass("has-image");
             }
         };
         image.onerror= function() {
@@ -585,3 +586,38 @@ $('.delete-post').click(function(e) {
         return false;
     }
 });
+
+/*
+* Check for preview image
+*/
+
+if ($('.image-uploader-block .preview').children('img').length > 0 || $('.image-uploader-block .preview').children('canvas').length > 0) {
+    $('.image-uploader-block .preview').addClass('has-image');
+}
+
+/*
+* Remove image uploaded
+*/
+$('.preview.has-image').on('click',function() {
+    $(this).removeClass('has-image');
+});
+
+/*
+* Label is for checkbox
+*/
+
+$('input[type=checkbox]').closest('label').addClass('checkbox-label').children().first().before('<i class="icon ion-android-checkbox-blank"></i>');
+$('input[type=checkbox]:checked').closest('label').children('.icon').removeClass('ion-android-checkbox-blank').addClass('ion-android-checkbox');
+
+/*
+* Handle checkedbox label status on change
+*/
+
+$('input[type=checkbox]').on('change',function() {
+    if ($(this).is(':checked')) {
+        $(this).parent().children('.icon').removeClass('ion-android-checkbox-blank').addClass('ion-android-checkbox');
+    } else {
+        $(this).parent().children('.icon').removeClass('ion-android-checkbox').addClass('ion-android-checkbox-blank');
+    }
+});
+
