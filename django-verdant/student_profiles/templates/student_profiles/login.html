@@ -1,4 +1,4 @@
-{% extends "wagtailadmin/admin_base.html" %}
+{% extends "student_profiles/admin_base.html" %}
 {% load compress %}
 {% load i18n %}
 {% block titletag %}{% trans "Sign in" %}{% endblock %}
@@ -15,17 +15,16 @@
         {% if form.errors %}
             <div class="messages">
                 <ul>
-                    <li class="error">{% blocktrans %}Your {{ username_field }} and password didn't match. Please try again.{% endblocktrans %}</li>
+                    <li class="error">Your username and password didn't match. Please try again.</li>
                 </ul>
             </div>
         {% endif %}
 
-        <form action="{% url 'wagtailadmin_login' %}" method="post" autocomplete="off">
+        <form action="{% url 'student-profiles:login' %}" method="post" autocomplete="off">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ next }}" />
-            <h1>{% trans "Sign in to Wagtail" %}</h1>
+            <h1>Sign in to RCA</h1>
 
-          
             <ul class="fields">
                 <li class="full">
                     <div class="field iconfield">
@@ -42,18 +41,7 @@
                             {{ form.password }}
                         </div>
                     </div>
-                    {% if show_password_reset %}
-                        <p class="help"><a href="{% url 'django.contrib.auth.views.password_reset' %}">{% trans "Forgotten it?" %}</a></p>
-                    {% endif %}
                 </li>
-                {% comment %}
-                    Removed until functionality exists
-                    <li class="checkbox">
-                        <div class="field">
-                            <label><input type="checkbox" />{% trans "Remember me" %}</label>
-                        </div>
-                    </li>
-                {% endcomment %}
                 <li class="submit">
                     <input type="submit" value="{% trans 'Sign in' %}" tabindex="3"/>
                 </li>

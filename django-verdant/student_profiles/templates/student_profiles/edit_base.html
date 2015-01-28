@@ -10,7 +10,7 @@
 
     <div class="session-meta">
         <span>Hello, {% if profile_name %}{{ profile_name }}{% else %}{{ user.username }}{% endif %}</span>
-        <a href="/admin/logout/">Log out</a>
+        <a href="{% url 'student-profiles:logout' %}">Log out</a>
     </div>
     <nav class="student-profile-nav"> 
         {# navbar #}

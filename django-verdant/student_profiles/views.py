@@ -36,6 +36,9 @@ NEW_STUDENT_PAGE_INDEX_ID = 6201
 # module-global setting determining whether show pages and postcard upload is enabled or not
 SHOW_PAGES_ENABLED = True
 
+# we override login_required with our own login_required because we want to control the login URL
+login_required = login_required(login_url='student-profiles:login')
+
 ################################################################################
 ## LDAP data extraction functions
 
