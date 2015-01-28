@@ -20,7 +20,6 @@ def login(request):
             request.POST = request.POST.copy()
             request.POST['username'] = request.POST['username'][:request.POST['username'].index('@')]
 
-        from django.contrib.auth import get_user_model
         return auth_login(request,
             template_name='student_profiles/login.html',
             authentication_form=forms.LoginForm,
