@@ -435,13 +435,34 @@ class MAShowCarouselItemForm(forms.Form):
     )
 
     # image type fields (there are a lot of them!)
-    title = forms.CharField(max_length=255, required=False, label='Title', )
-    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
-    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
-    year = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'year'))
-    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
-    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
-    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+    title = forms.CharField(
+        max_length=255, required=False, label='Title',
+    )
+    title.half = True
+    alt = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'),
+    )
+    alt.half = True
+    creator = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.',
+    )
+    creator.half = True
+    year = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'year'),
+    )
+    year.half = True
+    medium = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'),
+    )
+    medium.half = True
+    dimensions = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'),
+    )
+    dimensions.half = True
+    photographer = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'),
+    )
+    photographer.half = True
 
     embedly_url = forms.URLField(
         label='Vimeo URL',
