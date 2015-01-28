@@ -18,6 +18,8 @@
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
 
+        {% include "student_profiles/formset_single_field.html" with formset=link_formset %}
+
         {{ carouselitem_formset.management_form }}
         <h4>Carousel images/videos</h4>
         <div id="{{ carouselitem_formset.prefix }}" class="field-set">
@@ -35,7 +37,7 @@
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
           {% if page %}
-          <input type="submit" class="" value="Preview" name="preview">
+          <input type="submit" class="preview-post" value="Preview" name="preview">
           {% endif %}
         </div>
       </form>
@@ -62,6 +64,7 @@ $('#id_date').datetimepicker({
   scrollInput:false,
 });
 
+makeFormset('{{ link_formset.prefix }}');
 makeFormset('{{ carouselitem_formset.prefix }}',
   addedFunc=function(row) {
     updateCarouselSelects();

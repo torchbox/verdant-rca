@@ -8,7 +8,7 @@ from .views import overview, preview, postcard_upload, mphil_show_details, phd_s
 from .views import basic_profile, academic_details, ma_details, ma_show_details
 from .views import mphil_details, phd_details
 from .views import image_upload
-
+from .auth import login, logout
 
 urlpatterns = patterns(
     '',
@@ -35,5 +35,8 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/phd_show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/mphil_show/image/$', image_upload),
+
+    url(r'^login/$', login, name='login'),
+    url(r'^logout/$', logout, name='logout'),
 
 )

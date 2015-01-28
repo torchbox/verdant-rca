@@ -1,12 +1,13 @@
+# -*- encoding: utf-8 -*-
 from __future__ import unicode_literals
 import re
 
 from django import forms
-
-from wagtail.wagtailcore.fields import RichTextArea
+from django.forms.formsets import formset_factory
 
 from rca.help_text import help_text
 from rca.models import RcaNowPage, NewStudentPage
+from .forms import OrderedFormset
 
 
 class PageForm(forms.ModelForm):
@@ -85,3 +86,23 @@ class PageForm(forms.ModelForm):
             'programme',
             'tags',
         ]
+
+class RelatedLinkForm(forms.Form):
+    link = forms.URLField(
+        required=False,    # because we'll only save those that are there anyway
+        error_messages={'invalid': 'Please enter a full URL, including the ‘http://’!'},
+        widget=forms.TextInput,
+    )
+
+    def clean_link(self):
+        link = self.cleaned_data.get('link')
+        if not link:
+            return None
+        if not link.startswith('http://') or link.startswith('https://'):
+            return 'http://' + link
+        else:
+            return link
+
+RelatedLinkFormset = formset_factory(RelatedLinkForm, extra=1, formset=OrderedFormset)
+RelatedLinkFormset.title = 'Related links'
+RelatedLinkFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
