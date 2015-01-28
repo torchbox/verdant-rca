@@ -1728,6 +1728,7 @@ class Migration(SchemaMigration):
         },
         u'rca.standardindexteaser': {
             'Meta': {'ordering': "['sort_order']", 'object_name': 'StandardIndexTeaser'},
+            'external_link': ('django.db.models.fields.URLField', [], {'max_length': '200', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
             'link': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['wagtailcore.Page']"}),
