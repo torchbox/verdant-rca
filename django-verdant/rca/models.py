@@ -242,6 +242,26 @@ INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
 )
 
 SPECIALISM_CHOICES = (
+    ('ads1', 'ADS1'),
+    ('ads2', 'ADS2'),
+    ('ads3', 'ADS3'),
+    ('ads4', 'ADS4'),
+    ('ads5', 'ADS5'),
+    ('ads6', 'ADS6'),
+    ('ads7', 'ADS7'),
+    ('ads9', 'ADS9'),
+    ('knit', 'Knit'),
+    ('mixed media', 'Mixed media'),
+    ('print', 'Print'),
+    ('weave', 'Weave'),
+    ('performance', 'Performance'),
+    ('movingimage', 'Moving Image'),
+    ('platform13', 'Platform 13'),
+    ('platform14', 'Platform 14'),
+    ('platform15', 'Platform 15'),
+    ('platform17', 'Platform 17'),
+    ('platform18', 'Platform 18'),
+    ('platform21', 'Platform 21'),
 )
 
 SCHOOL_CHOICES = (
