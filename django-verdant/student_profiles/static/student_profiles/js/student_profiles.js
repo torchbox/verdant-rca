@@ -13,6 +13,7 @@ function makeRichTextEditable(id) {
     var input = $('#' + id);
     var richText = $('<div class="richtext"></div>').html(input.val());
     richText.insertBefore(input);
+    $('<p class="help-text">If you paste formatted text into this field (for example from a Word document) and it doesn’t look right, please use the ‘Save as Draft’ button at the bottom of the screen, which should clean up any problems.</p>').insertAfter(input);
     input.hide();
 
     var removeStylingPending = false;
@@ -44,10 +45,10 @@ function makeRichTextEditable(id) {
             var jel = $(el);
             if (jel.text() == 'P'){
                 jel.html('PARAGRAPH <i></i>');  // this one is a hack to add the <i> element: it changes the way the button is laid out and moves it into alignment with the other buttons
-                jel.parent().css('width', '7em');
+                jel.parent().css('width', '8em');
             } else if (jel.text() == 'H4'){
                 jel.html('HEADING<i></i>');
-                jel.parent().css('width', '7em');
+                jel.parent().css('width', '8em');
             }
         });
     });
@@ -564,12 +565,16 @@ stickyNote();
 * Catch Save and Submit
 */
 $('.submit-page').click(function(e) {
-    if (window.confirm("Sending this post for moderation means you can no longer make changes, would you like to go ahead and send it for moderation?")) {
-        $(this).parent().submit();
+    if (window.confirm("Sending this form for moderation means you can no longer make changes or add content to your profile. Please check you have completed all sections before clicking OK.")) {
+        $(this).parents('form').submit();
         return true;
     } else {
         return false;
     }
+});
+
+$('.preview-post').click(function(e) {
+    $(this).parents('form').attr('target', '_blank');
 });
 
 

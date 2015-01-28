@@ -33,6 +33,11 @@ from .forms import ImageForm
 # MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
 NEW_STUDENT_PAGE_INDEX_ID = 6201
 
+# module-global setting determining whether show pages and postcard upload is enabled or not
+SHOW_PAGES_ENABLED = True
+
+# we override login_required with our own login_required because we want to control the login URL
+login_required = login_required(login_url='student-profiles:login')
 
 ################################################################################
 ## LDAP data extraction functions
@@ -52,9 +57,10 @@ def user_is_phd(request):
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
     return \
-        user_is_ma(request) and profile_page.ma_in_show \
+        SHOW_PAGES_ENABLED and \
+        (user_is_ma(request) and profile_page.ma_in_show \
         or user_is_mphil(request) and profile_page.mphil_in_show \
-        or user_is_phd(request) and profile_page.phd_in_show
+        or user_is_phd(request) and profile_page.phd_in_show)
 
 ################################################################################
 ## helper functions
@@ -121,7 +127,6 @@ def make_carousel_items(d, carousel_type):
                 img = RcaImage.objects.get(id=f.get('image_id'))
             except RcaImage.DoesNotExist:
                 continue
-            print f
             img.title = f.get('title') or ''
             img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
             img.save()
@@ -143,6 +148,7 @@ def make_carousel_items(d, carousel_type):
 def initial_context(request, page_id):
     """Context data that (almost) every view here needs."""
     data = {
+        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
         'is_ma': user_is_ma(request),
         'is_mphil': user_is_mphil(request),
         'is_phd': user_is_phd(request),
@@ -246,6 +252,7 @@ def basic_profile(request, page_id):
     """Basic profile creation/editing page"""
     data, profile_page = initial_context(request, page_id)
 
+    data['basic_form'] = ProfileBasicForm(instance=profile_page)
     data['email_formset'] = EmailFormset(
         prefix='email',
         initial=[{'email': x.email} for x in profile_page.emails.all()]
@@ -417,13 +424,20 @@ def postcard_upload(request, page_id):
     """
     Academic details editing page.
     """
+    if not SHOW_PAGES_ENABLED:
+        raise Http404()
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
 
-    data['form'] = PostcardUploadForm(instance=page)
+    img = page.postcard_image
+    initial = {
+        'title': img.title,
+        'alt': img.alt, 'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
+    }
+    data['form'] = PostcardUploadForm(instance=page, initial=initial)
 
     if request.method == 'POST':
-        data['form'] = form = PostcardUploadForm(request.POST, instance=page)
+        data['form'] = form = PostcardUploadForm(request.POST, instance=page, initial=initial)
 
         if page.locked:
             if not request.is_ajax():
@@ -431,12 +445,19 @@ def postcard_upload(request, page_id):
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif form.is_valid():
             page = form.save(commit=False)
+
+            img = page.postcard_image
+            f = form.cleaned_data
+            img.title = f['title']
+            img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+            img.save()
+
             save_page(page, request)
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
-            return redirect('student-profiles:edit-ma', page_id=page_id)
+            return redirect('student-profiles:edit-postcard', page_id=page_id)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -479,6 +500,8 @@ def ma_details(request, page_id):
 
 @login_required
 def ma_show_details(request, page_id):
+    if not SHOW_PAGES_ENABLED:
+        raise Http404()
     if not user_is_ma(request):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
 
@@ -522,7 +545,6 @@ def ma_show_details(request, page_id):
 
             page = sf.save(commit=False)
 
-            print make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
             page.show_carousel_items = make_carousel_items(scif.ordered_data, NewStudentPageShowCarouselItem)
 
             page.show_collaborators = [
@@ -581,6 +603,8 @@ def mphil_details(request, page_id):
 
 @login_required
 def mphil_show_details(request, page_id):
+    if not SHOW_PAGES_ENABLED:
+        raise Http404()
     if not user_is_mphil(request):
         raise Http404("You cannot view MPhil details because you're not in the MPhil programme.")
 
@@ -685,6 +709,8 @@ def phd_details(request, page_id):
 
 @login_required
 def phd_show_details(request, page_id):
+    if not SHOW_PAGES_ENABLED:
+        raise Http404()
     if not user_is_phd(request):
         raise Http404("You cannot view PhD Show details because you're not in the PhD programme.")
 

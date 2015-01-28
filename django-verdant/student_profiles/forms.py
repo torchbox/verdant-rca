@@ -80,7 +80,7 @@ class ImageInput(forms.FileInput):
     def value_from_datadict(self, data, files, name):
         try:
             return int(data.get('{}_val'.format(name)))
-        except ValueError:
+        except (ValueError, TypeError):
             return None
 
     def render(self, name, value, attrs=None):
@@ -309,11 +309,25 @@ class PostcardUploadForm(forms.ModelForm):
         widget=ImageInput,
     )
 
+    title = forms.CharField(max_length=255, required=True, label='Title')
+    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
+    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
+    year = forms.IntegerField(min_value=1950, max_value=2050, required=False, help_text=help_text('rca.RcaImage', 'year'))
+    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
+    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
+    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+
     def clean_postcard_image(self):
         try:
             return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
         except RcaImage.DoesNotExist:
             return None
+
+    def clean_year(self):
+        if self.cleaned_data['year']:
+            return self.cleaned_data['year']
+        else:
+            return ''
 
     class Meta:
         model = NewStudentPage
@@ -432,7 +446,7 @@ class MAShowCarouselItemForm(forms.Form):
     embedly_url = forms.URLField(
         label='Vimeo URL',
         required=False,
-        help_text='You cannot upload a video directly; you must upload any video content to Vimeo, and you can then paste the URL to your video in here.',
+        help_text='Video content must first be uploaded to a Vimeo account. Then simply cut and paste the Vimeo URL in full, e.g. http://vimeo.com/117377525',
     )
     poster_image_id = forms.IntegerField(
         label='Poster image',
@@ -512,6 +526,8 @@ class MPhilForm(forms.ModelForm):
             'mphil_school', 'mphil_programme',
             'mphil_start_year',
             'mphil_graduation_year',
+            'mphil_status',
+            'mphil_degree_type',
         ]
 
 
@@ -610,6 +626,8 @@ class PhDForm(forms.ModelForm):
             'phd_in_show',
             'phd_school', 'phd_programme',
             'phd_start_year', 'phd_graduation_year',
+            'phd_status',
+            'phd_degree_type',
         ]
 
 

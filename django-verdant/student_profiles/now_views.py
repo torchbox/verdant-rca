@@ -13,9 +13,9 @@ from taggit.models import Tag
 
 from wagtail.wagtailcore.models import Page
 from rca.models import RcaNowPage, NewStudentPage
-from rca.models import RcaImage, RcaNowPagePageCarouselItem
+from rca.models import RcaImage, RcaNowPagePageCarouselItem, RcaNowPageRelatedLink
 
-from .now_forms import PageForm
+from .now_forms import PageForm, RelatedLinkFormset
 from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show, make_carousel_initial, \
     make_carousel_items
 from .forms import MAShowCarouselItemFormset, ImageForm
@@ -90,19 +90,24 @@ def edit(request, page_id=None):
 
     data['nav_now'] = True
     data['form'] = PageForm(instance=page)
+    data['link_formset'] = RelatedLinkFormset(
+        prefix='links',
+        initial=[{'link': x.link} for x in page.related_links.all()]
+    )
 
     carousel_initial = make_carousel_initial(page.carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
 
     if request.method == 'POST':
         data['form'] = form = PageForm(request.POST, instance=page)
+        data['link_formset'] = lif = RelatedLinkFormset(request.POST, prefix='links')
         data['carouselitem_formset'] = cif = MAShowCarouselItemFormset(request.POST, request.FILES, prefix='carousel', initial=carousel_initial)
 
         if page.locked:
             if not request.is_ajax():
                 messages.error(request, 'The page could not be saved, it is currently locked.')
                 # fall through to regular rendering
-        elif form.is_valid() and cif.is_valid():
+        elif form.is_valid() and cif.is_valid() and lif.is_valid():
             page = form.save(commit=False)
             submit_for_moderation = 'submit_for_moderation' in request.POST
 
@@ -110,6 +115,9 @@ def edit(request, page_id=None):
             for tag in [Tag.objects.get_or_create(name=tagname)[0] for tagname in form.cleaned_data['tags']]:
                 page.tags.add(tag)
 
+            page.related_links = [
+                RcaNowPageRelatedLink(link=f['link']) for f in lif.ordered_data if f.get('link')
+            ]
             page.carousel_items = make_carousel_items(cif.ordered_data, RcaNowPagePageCarouselItem)
 
             if page_id is None:
