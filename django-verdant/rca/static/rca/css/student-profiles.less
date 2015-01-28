@@ -43,6 +43,11 @@ header a.site-name p {
 
 /* $LAYOUT */
 
+.mobile-content-wrapper {
+    padding-bottom: 3em;
+    border-bottom: 10px solid @color-charcoal;
+}
+
 .body-text {
     margin-right: 5%;
 }
@@ -55,6 +60,23 @@ header a.site-name p {
         color: @color-highlight-blue;
         &:hover {
             text-decoration: underline;
+        }
+    }
+}
+
+.form-col {
+    &.form-col-half {
+        width: 50%;
+        float: left;
+        input[type=text],
+        input[type=tel],
+        input[type=email],
+        input[type=url],
+        input[type=number],
+        .richtext,
+        textarea,
+        select {
+            max-width: 90%;
         }
     }
 }
@@ -104,6 +126,17 @@ form.now-page {
     label {
         display: block;
         margin-top: 0.5em;
+    }
+    // Hide checkboxes 
+    .checkbox-label input[type=checkbox] {
+        display: none;
+    }
+    // Styling 
+    .checkbox-label .icon {
+        font-size: @font-size-30;
+        color: @color-highlight-blue;
+        vertical-align: middle;
+        margin-left: 0.4em;
     }
     // Select2: faux select box '<select>'  
     // The dropdown div layer (<option>) is not inside the form
@@ -192,9 +225,17 @@ form.now-page {
         background: @color-pale-grey;
         position: relative;
         margin-right: 2.5%;
+        &.has-image + .dropzone {
+            display: none;
+        }
         canvas {
             width: 100%;
             height: auto;
+        }
+        img {
+            width: auto;
+            max-height: 142px;
+            text-align: center;
         }
         .clearbutton {
             position: absolute;
@@ -314,7 +355,7 @@ form.now-page {
     padding: 16px;
     height: 200px;
     //Height of the buttons
-    padding-top: 66px;
+    padding-top: 42px;
 }
 
 .richtext h1, 
@@ -448,7 +489,7 @@ label .richtext span,
         &.outer-menu.rca-now-link {
             float: right;
             padding-left: 0.5em;
-            max-width: 80px;
+            max-width: 145px;
         }
     }
     ul li {
@@ -486,15 +527,28 @@ label .richtext span,
     }
 }
 
-/* $SESSION META */
-.session-meta {
-    text-align: right;
-    padding: 8px;
-    color: @color-charcoal;
-    span {
-        margin-right: 0.4em;
-        padding-right: 0.4em;
-        border-right: 1px solid @color-medium-grey;
+/* $APP DETAILS */
+.app-details {
+    position: relative;
+    h2 {
+        position: absolute;
+        right: 0;
+        top: -95px;
+        font-size: @font-size-36;
+    }
+    .session-meta {
+        text-align: right;
+        padding: 8px;
+        color: @color-charcoal;
+        .icon {
+            margin-right: 0.5em;
+            color: @color-light-grey;
+        }
+        span {
+            margin-right: 0.4em;
+            padding-right: 0.4em;
+            border-right: 1px solid @color-medium-grey;
+        }
     }
 }
 
@@ -548,7 +602,6 @@ input.button-as-link,
         background: transparent;  
     }
 }
-
 
 i.icon.action {
     background: @color-highlight-blue;
@@ -608,11 +661,16 @@ form.now-page {
 /* $TABLE */
 
 table {
+    margin-top: 1.8em;
+    margin-bottom: 4em;
+    background: @color-pale-grey;
+    border-bottom: 1px solid @color-pale-grey;
     th,
     td {
         padding: 0.8em 0.6em;
     }
     tr {
+        background: @color-white;
         border-top: 1px solid @color-pale-grey;
         margin-top: 0.25em;
         &:hover {
@@ -620,6 +678,7 @@ table {
         }
     }
     tr.first-row {
+        background: transparent;
         border: none;
         &:hover {
             background-color: none;
@@ -632,10 +691,8 @@ table {
 #overlay {
     position: fixed;
     top: 0;
-    left: 50%;
-    width: 24em;
+    width: 100%;
     height: 3em;
-    margin: 0 0 0 -12em;
     padding-top: 1em;
     background-color: @color-highlight-blue;
     color: @color-white;
