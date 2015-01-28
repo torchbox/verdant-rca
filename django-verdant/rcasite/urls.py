@@ -43,8 +43,8 @@ urlpatterns = patterns('',
         'json_attrs': ['title', 'url', 'search_name', 'search_url']
     }, name='wagtailsearch_suggest'),
 
-    url(r'^student-profiles/', include(student_profiles.urls, namespace='student-profiles')),
-    url(r'^nowpages/', include(student_profiles.now_urls, namespace='nowpages')),
+    url(r'^my-rca/', include(student_profiles.urls, namespace='student-profiles')),
+    url(r'^my-rca/nowpages/', include(student_profiles.now_urls, namespace='nowpages')),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism

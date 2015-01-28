@@ -257,6 +257,7 @@ class PreviousDegreeForm(forms.Form):
         help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"),
     )
 PreviousDegreesFormset = formset_factory(PreviousDegreeForm, extra=1, formset=OrderedFormset)
+PreviousDegreesFormset.help_text = u'Include degree level, subject, institution name and year of graduation, separated by commas e.g. BA Fine Art, University of Brighton, 2011'
 
 class ExhibitionForm(forms.Form):
     #saves to NewStudentPageExhibition
@@ -265,6 +266,7 @@ class ExhibitionForm(forms.Form):
         help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"),
     )
 ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1, formset=OrderedFormset)
+ExhibitionsFormset.help_text = u'Include exhibition title, gallery, city and year, separated by commas'
 
 class ExperienceForm(forms.Form):
     experience = forms.CharField(
@@ -272,6 +274,7 @@ class ExperienceForm(forms.Form):
         help_text=help_text('rca.NewStudentPageExperience', 'experience', default="Please include job title, company name, city and year(s), separated by commas"),
     )
 ExperiencesFormset = formset_factory(ExperienceForm, extra=1, formset=OrderedFormset)
+ExperiencesFormset.help_text = u'Relevant professional experience. Include job title, company name, city and year(s), separated by commas'
 
 class AwardsForm(forms.Form):
     #saves to NewStudentPageAward
@@ -288,6 +291,7 @@ class PublicationsForm(forms.Form):
         help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"),
     )
 PublicationsFormset = formset_factory(PublicationsForm, extra=1, formset=OrderedFormset)
+PublicationsFormset.help_text = u'Include author (if not you), article title, journal title, issue number, year, pages, separated by commas'
 
 class ConferencesForm(forms.Form):
     #saves to NewStudentPageConference
@@ -296,7 +300,7 @@ class ConferencesForm(forms.Form):
         help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"),
     )
 ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFormset)
-
+ConferencesFormset.help_text = u'Include paper title, conference, institution, date, separated by commas'
 
 ################################################################################
 ## postcard upload
@@ -309,13 +313,34 @@ class PostcardUploadForm(forms.ModelForm):
         widget=ImageInput,
     )
 
-    title = forms.CharField(max_length=255, required=True, label='Title')
-    alt = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'))
-    creator = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.')
-    year = forms.IntegerField(min_value=1950, max_value=2050, required=False, help_text=help_text('rca.RcaImage', 'year'))
-    medium = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'))
-    dimensions = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'))
-    photographer = forms.CharField(max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'))
+    title = forms.CharField(
+        max_length=255, required=False, label='Title',
+    )
+    title.half = True
+    alt = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt', default=u'Description of image for web users using screen readers'),
+    )
+    alt.half = True
+    creator = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.',
+    )
+    creator.half = True
+    year = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'year'),
+    )
+    year.half = True
+    medium = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'),
+    )
+    medium.half = True
+    dimensions = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'),
+    )
+    dimensions.half = True
+    photographer = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'),
+    )
+    photographer.half = True
 
     def clean_postcard_image(self):
         try:
@@ -440,7 +465,7 @@ class MAShowCarouselItemForm(forms.Form):
     )
     title.half = True
     alt = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt'),
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt', default=u'Description of image for web users using screen readers'),
     )
     alt.half = True
     creator = forms.CharField(

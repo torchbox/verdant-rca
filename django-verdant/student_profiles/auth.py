@@ -1,5 +1,6 @@
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.views import logout as auth_logout, login as auth_login
 from django.views.decorators.debug import sensitive_post_parameters
@@ -20,6 +21,8 @@ def login(request):
             request.POST = request.POST.copy()
             request.POST['username'] = request.POST['username'][:request.POST['username'].index('@')]
 
+        request.GET = request.GET.copy()
+        request.GET.setdefault('next', reverse('student-profiles:overview'))
         return auth_login(request,
             template_name='student_profiles/login.html',
             authentication_form=forms.LoginForm,
@@ -27,7 +30,7 @@ def login(request):
 
 
 def logout(request):
-    response = auth_logout(request, next_page = 'student-profiles:login')
+    response = auth_logout(request, next_page='student-profiles:login')
 
     # By default, logging out will generate a fresh sessionid cookie. We want to use the
     # absence of sessionid as an indication that front-end pages are being viewed by a
