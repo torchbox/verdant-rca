@@ -430,10 +430,12 @@ def postcard_upload(request, page_id):
     data['nav_postcard'] = True
 
     img = page.postcard_image
-    initial = {
-        'title': img.title,
-        'alt': img.alt, 'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
-    }
+    initial = {}
+    if img:
+        initial = {
+            'title': img.title,
+            'alt': img.alt, 'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
+        }
     data['form'] = PostcardUploadForm(instance=page, initial=initial)
 
     if request.method == 'POST':
