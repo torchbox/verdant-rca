@@ -449,10 +449,11 @@ def postcard_upload(request, page_id):
             page = form.save(commit=False)
 
             img = page.postcard_image
-            f = form.cleaned_data
-            img.title = f['title']
-            img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
-            img.save()
+            if img:
+                f = form.cleaned_data
+                img.title = f['title']
+                img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+                img.save()
 
             save_page(page, request)
             if request.is_ajax():
