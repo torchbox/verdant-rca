@@ -309,7 +309,7 @@ class PostcardUploadForm(forms.ModelForm):
     postcard_image = forms.IntegerField(
         label='Postcard image',
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards. "),
+        help_text="Image will be used to print a set of postcards with your contact details, for you to use during the show. The image will not appear in your Show online catalogue. Image must be A6 plus 2mm 'bleed' on each edge (1748 x 1240px, ie. 152 x 109mm @ 300 dpi). This must be uploaded at the correct size and before the deadline for postcards to be printed.",
         widget=ImageInput,
     )
 
