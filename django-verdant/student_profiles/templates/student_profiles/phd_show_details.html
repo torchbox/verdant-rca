@@ -50,7 +50,7 @@
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview">
+          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
           <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
         </div>
       </form>
@@ -75,9 +75,9 @@ makeFormset('{{ sponsor.prefix }}');
 makeFormset('{{ supervisor.prefix }}');
 makeFormset('{{ carouselitem_formset.prefix }}',
   addedFunc=function(row) {
-    updateCarouselSelects();
-    row.find('select').each(function(){ $(this).trigger('change')});
-    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+      updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+      row.find('select').each(function(){ $(this).trigger('change')});
+      row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
   }
 );
 

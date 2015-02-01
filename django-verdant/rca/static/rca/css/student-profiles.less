@@ -187,8 +187,9 @@ form.now-page {
     }
     .image-uploader-block .dropzone {
         border: 2px dashed @color-light-grey;
+        border-left: 0;
         text-align: center;
-        line-height: 8em;
+        padding-top: 4em;
         width: 150px;
         height: 150px;
         float: left;
@@ -208,7 +209,7 @@ form.now-page {
             color: @color-medium-grey;
         }
     }
-    label span {
+    label > span {
         color: @color-pink;
         font-weight: bold;
         margin-left: 0.3em;
@@ -224,13 +225,11 @@ form.now-page {
         float: left;
         background: @color-pale-grey;
         position: relative;
-        margin-right: 2.5%;
-        &.has-image + .dropzone {
-            display: none;
-        }
         canvas {
             width: 100%;
             height: auto;
+            max-width: 142px;
+            max-height: 142px;
         }
         img {
             width: auto;
@@ -353,7 +352,7 @@ form.now-page {
 
 .richtext {
     padding: 16px;
-    height: 200px;
+    min-height: 200px;
     //Height of the buttons
     padding-top: 42px;
 }

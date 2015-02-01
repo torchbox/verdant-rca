@@ -104,5 +104,5 @@ class RelatedLinkForm(forms.Form):
             return link
 
 RelatedLinkFormset = formset_factory(RelatedLinkForm, extra=1, formset=OrderedFormset)
-RelatedLinkFormset.title = 'Related links'
+RelatedLinkFormset.title = 'Web links'
 RelatedLinkFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
