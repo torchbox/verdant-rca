@@ -17,6 +17,7 @@
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
+          <div style="clear: both"></div>
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save Draft">

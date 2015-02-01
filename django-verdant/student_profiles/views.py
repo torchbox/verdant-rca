@@ -434,7 +434,7 @@ def postcard_upload(request, page_id):
     if img:
         initial = {
             'title': img.title,
-            'alt': img.alt, 'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
+            'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
         }
     data['form'] = PostcardUploadForm(instance=page, initial=initial)
 
@@ -452,7 +452,7 @@ def postcard_upload(request, page_id):
             if img:
                 f = form.cleaned_data
                 img.title = f['title']
-                img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+                img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
                 img.save()
 
             save_page(page, request)

@@ -317,10 +317,6 @@ class PostcardUploadForm(forms.ModelForm):
         max_length=255, required=False, label='Title',
     )
     title.half = True
-    alt = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'alt', default=u'Description of image for web users using screen readers'),
-    )
-    alt.half = True
     creator = forms.CharField(
         max_length=255, required=False, help_text=help_text('rca.RcaImage', 'creator') + 'If this work was a collaboration with others, list them here after your own name in brackets.',
     )
