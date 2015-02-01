@@ -494,7 +494,10 @@ $('form.student-profile input[type="submit"]').click(function() {
     window.onbeforeunload = null;
     stopAutosave();
 });
-
+$('form.now-page input[type="submit"]').click(function() {
+    window.onbeforeunload = null;
+    stopAutosave();
+});
 
 /*
 * Prepare for AJAX calls with a CSRF token cookie.

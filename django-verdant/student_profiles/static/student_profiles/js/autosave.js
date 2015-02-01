@@ -69,3 +69,4 @@ function stopAutosave() {
 }
 // and then immediately enable it for the profile-form in the view
 enableAutosave('form.student-profile');
+enableAutosave('form.now-page');
