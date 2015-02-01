@@ -309,7 +309,7 @@ class PostcardUploadForm(forms.ModelForm):
     postcard_image = forms.IntegerField(
         label='Postcard image',
         required=False,
-        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"),
+        help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards. "),
         widget=ImageInput,
     )
 
@@ -330,11 +330,11 @@ class PostcardUploadForm(forms.ModelForm):
     )
     year.half = True
     medium = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'),
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium', default='e.g. Bronze, copper wire and plaster'),
     )
     medium.half = True
     dimensions = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'),
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions', default='e.g. 100 cm x 145 cm'),
     )
     dimensions.half = True
     photographer = forms.CharField(
@@ -455,7 +455,7 @@ class MAShowCarouselItemForm(forms.Form):
     image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
         label='Image',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'image'),
+        help_text=help_text('rca.CarouselItemFields', 'image', default='Landscape images will display better within the carousel than portrait images. Consider sizing all your images to the same dimension - ideally 2000 x 1125 pixels.'),
         widget=ImageInput,
     )
 
