@@ -110,7 +110,7 @@ class ImageInput(forms.FileInput):
                     </div> 
                     <i class="icon clearbutton action ion-android-delete" {hidden_clear} title="Remove"></i>
                 </div>
-                <div class="dropzone">Drop file here</div>
+                <div class="dropzone">Drop file here<br>to set image</div>
                 <input type="hidden" id="id_{name}_val" name="{name}_val" value="{value_id}">
 
             </div>""".format(
