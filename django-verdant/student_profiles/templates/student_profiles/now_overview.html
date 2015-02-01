@@ -40,7 +40,7 @@
             {% endif %}
             <td>
               {% if page.live %}<a href="{{ page.url }}">Live</a>{% endif %}
-              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}">Preview</a>{% endif %}
+              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}" target="_blank">Preview</a>{% endif %}
             </td>
             <td>
                 {% if page.locked %}
