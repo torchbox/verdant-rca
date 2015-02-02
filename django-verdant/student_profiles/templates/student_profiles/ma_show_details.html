@@ -18,18 +18,7 @@
 
         {% include 'student_profiles/form_snippet.html' with form=show_form %}
 
-        {{ carouselitem_formset.management_form }}
-        <h4>Carousel images/videos</h4>
-        <div id="{{ carouselitem_formset.prefix }}" class="field-set">
-        {% for carouselitem_form in carouselitem_formset %}
-          <div class="inline-form">
-            {{ carouselitem_form.id }}
-            {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
-          <i class="icon action ion-android-arrow-up move-up"></i>
-          <i class="icon action ion-android-arrow-down move-down"></i>
-          </div>
-        {% endfor %}
-        </div>
+        {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
 
         {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
         {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
