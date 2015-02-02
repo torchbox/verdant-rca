@@ -11,27 +11,20 @@
       {% endfor %}
   </ul>
   {% endif %}
+    {% if form.errors or link_formset.errors or carouselitem_formset.errors %}
+    <div class="warning">The data you submitted could not be saved. Please check the form below for error messages.</div>
+    {% endif %}
   <h1>Your post</h1>
   <section class="row">
     <section class="body-text">
+
       <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
 
         {% include "student_profiles/formset_single_field.html" with formset=link_formset %}
 
-        {{ carouselitem_formset.management_form }}
-        <h4>Carousel images/videos</h4>
-        <div id="{{ carouselitem_formset.prefix }}" class="field-set">
-        {% for carouselitem_form in carouselitem_formset %}
-          <div class="inline-form">
-            {{ carouselitem_form.id }}
-            {% include 'student_profiles/form_snippet.html' with form=carouselitem_form %}
-            <i class="icon action ion-android-arrow-up move-up"></i>
-            <i class="icon action ion-android-arrow-down move-down"></i>
-          </div>
-        {% endfor %}
-        </div>
+        {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
 
         <div class="now-actions">
           <input type="submit" class="page-save" value="Save as draft">
