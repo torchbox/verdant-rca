@@ -12,7 +12,7 @@
       {% endfor %}
   </ul>
   {% endif %}
-    {% if form.errors or link_formset.errors or carouselitem_formset.errors %}
+    {% if basic_form.errors or email_formset.errors or phone_formset.errors or website_formset.errors %}
     <div class="warning">The data you submitted could not be saved. Please check the form below for error messages.</div>
     {% endif %}
   <h1>About You</h1>

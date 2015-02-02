@@ -12,6 +12,9 @@
       {% endfor %}
   </ul>
   {% endif %}
+    {% if phd_show_form.errors or carouselitem_formset.errors or collaborator.errors or sponsor.errors %}
+    <div class="warning">The data you submitted could not be saved. Please check the form below for error messages.</div>
+    {% endif %}
   <h1>Show Project Details</h1>
   <section class="row">
     <section class="body-text">
@@ -80,7 +83,7 @@ $('#carousel select').each(function(i) {
   $(this).trigger('change');
 });
 
-updateSupervisorSelects();
+updateSupervisorSelects('{{ supervisor.prefix }}');
 $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
 
 $('.supervisor-select').select2();

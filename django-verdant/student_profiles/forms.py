@@ -473,11 +473,11 @@ class MAShowCarouselItemForm(forms.Form):
     )
     year.half = True
     medium = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium'),
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'medium', default='e.g. Bronze, copper wire and plaster'),
     )
     medium.half = True
     dimensions = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions'),
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'dimensions', default='e.g. 100 cm x 145 cm'),
     )
     dimensions.half = True
     photographer = forms.CharField(
