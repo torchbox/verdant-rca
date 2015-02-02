@@ -83,7 +83,7 @@ $('#carousel select').each(function(i) {
   $(this).trigger('change');
 });
 
-updateSupervisorSelects();
+updateSupervisorSelects('{{ supervisor.prefix }}');
 $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
 
 $('.supervisor-select').select2();
