@@ -944,7 +944,6 @@ class ProgrammePageProgramme(models.Model):
 
 
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme', default="Select the profile page of the head of this programme."))
@@ -972,6 +971,14 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     )
 
     search_name = 'Programme'
+
+    def get_programme_display(self):
+        programmes = ProgrammePageProgramme.objects\
+            .filter(page=self)\
+            .only('programme')\
+            .distinct()\
+            .values_list('programme', flat=True)
+        return ", ".join(list(programmes))
 
     @property
     def staff_feed(self):
@@ -1067,7 +1074,6 @@ ProgrammePage.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('school'),
-    FieldPanel('programme'),
     InlinePanel(ProgrammePage, 'programmes', label="Programmes"),
 ]
 
@@ -4576,7 +4582,7 @@ class ResearchItem(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=([self.programme] if self.programme else None),
+            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -5276,7 +5282,7 @@ class InnovationRCAProject(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=([self.programme] if self.programme else None),
+            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -5537,7 +5543,7 @@ class ReachOutRCAProject(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=([self.programme] if self.programme else None),
+            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
         )

@@ -4,7 +4,7 @@
 {% block body_class %}type-programme{% endblock %}
 
 {% block content %}
-    
+
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
     {% include "rca/includes/modules/carousel.html" %}
@@ -35,7 +35,7 @@
                     </a>
                 {% endif %}
             {% endif %}
-                    
+
             <div class="content bc2{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
                 <strong>
                     {% if self.head_of_programme %}
@@ -57,22 +57,22 @@
 
     <!-- news carousel -->
 
-    {% news_carousel programme=self.programme %}
+    {% news_carousel programme=self.programmes.all.0 %}
 
     <!-- events -->
-    {% upcoming_events_related programme=self.programme display_name=self.get_programme_display %}
+    {% upcoming_events_related programme=self.programmes.all.0 display_name=self.get_programme_display %}
 
     <!-- staff -->
-    <!-- {# staff_by_programme programme=self.programme #} -->
+    <!-- {# staff_by_programme programme=self.programmes.all.0 #} -->
 
     <!-- staff feed -->
     {% include "rca/includes/modules/staff_feed.html" %}
 
     <!-- open days -->
-    {% upcoming_events_related opendays=1 programme=self.programme %}
+    {% upcoming_events_related opendays=1 programme=self.programmes.all.0 %}
 
     <!-- tabs -->
-    
+
     {% tabdeck moduletitle="Student info" %}
 
         <!-- links and ids added by javascript -->
@@ -95,9 +95,9 @@
         {% endtab %}
 
         <!-- links and ids added by javascript -->
-        {% tab "Student stories" %}    
+        {% tab "Student stories" %}
             {% with self.student_stories.all as student_stories %}
-                {% if student_stories %} 
+                {% if student_stories %}
                     <ul class="two-cols">
                         {% for story in student_stories %}
                             {% cycle '<li class="newrow">' '<li>' %}
@@ -127,7 +127,7 @@
                                         {% image facility.facilities_image width-1000 %}
                                     {% if facility.facilities_link %}</a>{% endif %}
                                 </div>
-                                
+
                                 {% if facility.facilities_text %}
                                     <div class="content footer-content">
                                         {% if facility.facilities_text %}
@@ -168,10 +168,10 @@
 
 
     <!-- alumni -->
-    {% alumni_by_programme programme=self.programme %}
+    {% alumni_by_programme programme=self.programmes.all.0 %}
 
     <!-- rca now -->
-    {% rca_now_related programme=self.programme %}
+    {% rca_now_related programme=self.programmes.all.0 %}
 
     <!-- research -->
     <div id="listing">
@@ -179,9 +179,9 @@
     </div>
 
     <!-- our sites -->
-    {% include "rca/includes/modules/our_sites.html" %}   
-    
-    {% include "rca/includes/modules/contact.html" %}   
+    {% include "rca/includes/modules/our_sites.html" %}
+
+    {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/twitter-feed.html" %}
 
 {% endblock %}
