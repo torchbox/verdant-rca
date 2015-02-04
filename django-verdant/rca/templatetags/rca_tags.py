@@ -36,7 +36,7 @@ def news_carousel(context, area="", programme="", school="", count=5):
     if area:
         news_items = NewsItem.objects.filter(live=True, areas__area=area)
     elif programme:
-        news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)
+        news_items = NewsItem.objects.filter(live=True, related_programmes__programme__in=get_programme_synonyms(programme))
     elif school:
         news_items = NewsItem.objects.filter(live=True, related_schools__school=school)
     else:
@@ -58,7 +58,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
     if school:
         events = events.filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = events.filter(related_programmes__programme=programme).order_by('start_date')
+        events = events.filter(related_programmes__programme__in=get_programme_synonyms(programme)).order_by('start_date')
     elif area:
         events = events.filter(area=area).order_by('start_date')
     elif audience:
@@ -89,7 +89,7 @@ def programme_by_school(context, school):
 
 @register.inclusion_tag('rca/tags/staff_by_programme.html', takes_context=True)
 def staff_by_programme(context, programme):
-    staff = StaffPage.objects.filter(live=True, roles__programme=programme)
+    staff = StaffPage.objects.filter(live=True, roles__programme__in=get_programme_synonyms(programme))
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -100,7 +100,7 @@ def related_staff(context, programme="", school=""):
     if school:
         staff = StaffPage.objects.filter(live=True, roles__school=school)
     if programme:
-        staff = StaffPage.objects.filter(live=True, roles__programme=programme)
+        staff = StaffPage.objects.filter(live=True, roles__programme__in=get_programme_synonyms(programme))
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -108,7 +108,7 @@ def related_staff(context, programme="", school=""):
 
 @register.inclusion_tag('rca/tags/alumni_by_programme.html', takes_context=True)
 def alumni_by_programme(context, programme):
-    alumni = AlumniPage.objects.filter(live=True, programme=programme)
+    alumni = AlumniPage.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     return {
         'alumni': alumni,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -117,7 +117,7 @@ def alumni_by_programme(context, programme):
 @register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
 def rca_now_related(context, programme="", author=""):
     if programme:
-        rcanow = RcaNowPage.objects.filter(live=True).filter(programme=programme)
+        rcanow = RcaNowPage.objects.filter(live=True).filter(programme__in=get_programme_synonyms(programme))
     elif author:
         rcanow = RcaNowPage.objects.filter(live=True, author=author)
     return {
@@ -128,7 +128,7 @@ def rca_now_related(context, programme="", author=""):
 @register.inclusion_tag('rca/tags/research_related.html', takes_context=True)
 def research_related(context, programme="", person="", school="", exclude=None):
     if programme:
-        research_items = ResearchItem.objects.filter(live=True, programme=programme)
+        research_items = ResearchItem.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     elif person:
         research_items = ResearchItem.objects.filter(live=True, creator__person=person)
     elif school:
@@ -146,7 +146,7 @@ def research_related(context, programme="", person="", school="", exclude=None):
 @register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
 def innovation_rca_related(context, programme="", person="", school="", exclude=None):
     if programme:
-        projects = InnovationRCAProject.objects.filter(live=True, programme=programme)
+        projects = InnovationRCAProject.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     elif person:
         projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
     elif school:
@@ -199,9 +199,9 @@ def get_related_students(programme=None, year=None, exclude=None, has_work=False
         phd_students_q &= (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
 
     if programme:
-        ma_students_q &= Q(ma_programme=programme)
-        mphil_students_q &= Q(mphil_programme=programme)
-        phd_students_q &= Q(phd_programme=programme)
+        ma_students_q &= Q(ma_programme__in=get_programme_synonyms(programme))
+        mphil_students_q &= Q(mphil_programme__in=get_programme_synonyms(programme))
+        phd_students_q &= Q(phd_programme__in=get_programme_synonyms(programme))
 
     if year:
         ma_students_q &= Q(ma_graduation_year=year)
@@ -236,6 +236,7 @@ def staff_random(context, exclude=None, programmes=None, count=4):
     if exclude:
         staff = staff.exclude(id=exclude.id)
     if programmes:
+        programmes = sum([list(get_programme_synonyms(programme)) for programme in programmes], [])
         staff = staff.filter(roles__programme__in=programmes)
     return {
         'staff': staff[:count],
@@ -247,7 +248,8 @@ def staff_related(context, staff_page, count=4):
     staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
     # import pdb; pdb.set_trace()
     if staff_page.programmes:
-        staff = staff.filter(roles__programme__in=staff_page.programmes)
+        programmes = sum([list(get_programme_synonyms(programme)) for programme in staff_page.programmes], [])
+        staff = staff.filter(roles__programme__in=programmes)
     elif staff_page.school:
         staff = staff.filter(school=staff_page.school)
     return {

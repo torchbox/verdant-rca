@@ -289,6 +289,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('designproducts', 'Design Products'),
     ('industrialdesignengineering', 'Industrial Design Engineering'),
     ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
+    ('jewelleryandmetal', 'Jewellery & Metal'),
     ('visualcommunication', 'Visual Communication'),
     ('designinteractions', 'Design Interactions'),
     ('innovationdesignengineering', 'Innovation Design Engineering'),
@@ -320,7 +321,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2013': {
         'schoolofarchitecture': ['architecture'],
@@ -383,6 +384,24 @@ PROGRAMME_CHOICES = sorted([
     for year, mapping
     in SCHOOL_PROGRAMME_MAP.items()
 ], reverse=True)
+
+
+def get_programme_synonyms(programme):
+    """ Find all programme identifiers that appear on the same programme page.
+        E.g. jewelleryandmetal and goldsmithingsilversmithingmetalworkjewellery
+        are both associated with the same ProgrammePage and if one of them
+        is selected in a filter then we want to return results for both.
+    """
+    programmes = ProgrammePageProgramme.objects\
+        .filter(page__programmes__programme=programme)\
+        .only('programme')\
+        .distinct()\
+        .values_list('programme', flat=True)
+
+    if programmes.exists():
+        return programmes
+    else:
+        return [programme]
 
 
 # Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
@@ -916,6 +935,14 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad', Advert),
     ]
 
+
+class ProgrammePageProgramme(models.Model):
+    page = ParentalKey('rca.ProgrammePage', related_name='programmes')
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+
+    panels = [FieldPanel('programme')]
+
+
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
@@ -962,7 +989,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        research_items = ResearchItem.objects.filter(live=True, programme=self.programme).order_by('random_order')
+        research_items = ResearchItem.objects.filter(live=True, programme__in=self.programmes.values('programme')).order_by('random_order')
 
         per_page = 4
         paginator = Paginator(research_items, per_page)
@@ -1041,6 +1068,7 @@ ProgrammePage.promote_panels = [
 
     FieldPanel('school'),
     FieldPanel('programme'),
+    InlinePanel(ProgrammePage, 'programmes', label="Programmes"),
 ]
 
 ProgrammePage.settings_panels = [
@@ -1083,7 +1111,7 @@ class NewsIndex(Page, SocialFields):
         # Run school and programme filters
         news, filters = run_filters(news, [
             ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme', programme),
+            ('programme', 'related_programmes__programme__in', get_programme_synonyms(programme)),
             ('areas', 'areas__area', area)
         ])
 
@@ -1804,7 +1832,7 @@ class EventIndex(Page, SocialFields):
         # Run filters
         events, filters = run_filters(events, [
             ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme', programme),
+            ('programme', 'related_programmes__programme__in', get_programme_synonyms(programme)),
             ('location', 'location', location),
             ('area', 'related_areas__area', area),
             ('audience', 'audience', audience),
@@ -2599,7 +2627,7 @@ class HomePage(Page, SocialFields):
         #     events = self.future_events()
 
         # if programme and programme != '':
-        #     events = events.filter(related_programmes__programme=programme)
+             # events = events.filter(related_programmes__programme__in=get_programme_synonyms(programme))
         # if school and school != 'all':
         #     events = events.filter(related_schools__school=school)
         # if location and location != '':
@@ -2843,7 +2871,7 @@ class AlumniIndex(Page, SocialFields):
         # Run school and programme filters
         alumni_pages, filters = run_filters(alumni_pages, [
             ('school', 'school', school),
-            ('programme', 'programme', programme),
+            ('programme', 'programme__in', get_programme_synonyms(programme)),
         ])
 
         alumni_pages = alumni_pages.order_by('random_order')
@@ -3125,7 +3153,7 @@ class StaffIndex(Page, SocialFields):
         # Run filters
         staff_pages, filters = run_filters(staff_pages, [
             ('school', 'roles__school', school),
-            ('programme', 'roles__programme', programme),
+            ('programme', 'roles__programme__in', get_programme_synonyms(programme)),
             ('staff_type', 'staff_type', staff_type),
             ('area', 'roles__area', area),
         ])
@@ -3240,11 +3268,11 @@ class ResearchStudentIndex(Page, SocialFields):
         # Run filters
         phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
             ('school', 'phd_school', school),
-            ('programme', 'phd_programme', programme),
+            ('programme', 'phd_programme__in', get_programme_synonyms(programme)),
         ])
         mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
             ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme', programme),
+            ('programme', 'mphil_programme__in', get_programme_synonyms(programme)),
         ])
 
         # Combine filters
@@ -4192,7 +4220,7 @@ class RcaNowIndex(Page, SocialFields):
         # Run school, area and programme filters
         rca_now_items, filters = run_filters(rca_now_items, [
             ('school', 'school', school),
-            ('programme', 'programme', programme),
+            ('programme', 'programme__in', get_programme_synonyms(programme)),
             ('area', 'area', area),
         ])
 
@@ -4388,7 +4416,7 @@ class RcaBlogIndex(Page, SocialFields):
         # Run school, area and programme filters
         # rca_blog_items, filters = run_filters(rca_blog_items, [
         #     ('school', 'school', school),
-        #     ('programme', 'programme', programme),
+        #     ('programme', 'programme__in', get_programme_synonyms(programme)),
         #     ('area', 'area', area),
         # ])
 
@@ -4518,7 +4546,7 @@ class ResearchItem(Page, SocialFields):
         # Get related research
         research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
         if self.programme:
-            research_items = research_items.filter(programme=self.programme)
+            research_items = research_items.filter(programme__in=get_programme_synonyms(self.programme))
         else:
             research_items = research_items.filter(school=self.school)
 
@@ -4842,17 +4870,17 @@ class GalleryPage(Page, SocialFields):
         # Run filters
         ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
             ('school', 'ma_school', school),
-            ('programme', 'ma_programme', programme),
+            ('programme', 'ma_programme__in', get_programme_synonyms(programme)),
             ('year', 'ma_graduation_year', year),
         ])
         mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
             ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme', programme),
+            ('programme', 'mphil_programme__in', get_programme_synonyms(programme)),
             ('year', 'mphil_graduation_year', year),
         ])
         phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
             ('school', 'phd_school', school),
-            ('programme', 'phd_programme', programme),
+            ('programme', 'phd_programme__in', get_programme_synonyms(programme)),
             ('year', 'phd_graduation_year', year),
         ])
 
@@ -5218,7 +5246,7 @@ class InnovationRCAProject(Page, SocialFields):
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
         projects = projects.filter(project_type=self.project_type)
         if self.programme:
-            projects = projects.filter(programme=self.programme)
+            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
         elif self.school:
             projects = projects.filter(school=self.school)
 
@@ -5479,7 +5507,7 @@ class ReachOutRCAProject(Page, SocialFields):
         projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
         projects = projects.filter(project=self.project)
         if self.programme:
-            projects = projects.filter(programme=self.programme)
+            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
         elif self.school:
             projects = projects.filter(school=self.school)
 
