@@ -978,7 +978,8 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
             .only('programme')\
             .distinct()\
             .values_list('programme', flat=True)
-        return ", ".join(list(programmes))
+        programme_labels = dict(ALL_PROGRAMMES)
+        return ", ".join([programme_labels[p] for p in programmes])
 
     @property
     def staff_feed(self):
