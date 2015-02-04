@@ -1045,7 +1045,9 @@ ProgrammePage.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('school'),
-    InlinePanel(ProgrammePage, 'programmes', label="Programmes"),
+
+    # TODO: can't enforce the minumum number of inlines just yet: https://github.com/torchbox/wagtail/issues/669
+    InlinePanel(ProgrammePage, 'programmes', label="Programmes (*at least one is required)"),
 ]
 
 ProgrammePage.settings_panels = [
