@@ -98,7 +98,6 @@ def make_carousel_initial(queryset):
                 'item_type': 'image',
                 'image_id': c.image_id,
                 'title': c.image.title,
-                'alt': c.image.alt,
                 'creator': c.image.creator,
                 'year': c.image.year,
                 'medium': c.image.medium,
@@ -128,7 +127,7 @@ def make_carousel_items(d, carousel_type):
             except RcaImage.DoesNotExist:
                 continue
             img.title = f.get('title') or ''
-            img.alt, img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('alt'), f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+            img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
             img.save()
             carousel_items.append({
                 'image_id': f.get('image_id')

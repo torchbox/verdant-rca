@@ -16,7 +16,6 @@
                 </label>
                 {% for error in form.title.errors %}<small class="error">{{ error }}</small>{% endfor %}
 
-                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.alt %}
                 {% include "student_profiles/form_field_labelled_snippet.html" with field=form.creator %}
                 {% include "student_profiles/form_field_labelled_snippet.html" with field=form.year %}
                 {% include "student_profiles/form_field_labelled_snippet.html" with field=form.medium %}
