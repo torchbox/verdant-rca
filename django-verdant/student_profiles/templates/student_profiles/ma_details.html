@@ -42,17 +42,3 @@
 
 {% endblock form_content %}
 
-{% block form_js %}
-<script type="text/javascript">
-
-$('input#id_ma_in_show').change(function() {
-    if($(this).is(':checked')) {
-        $('.in-show-menu').show();
-    } else {
-        $('.in-show-menu').hide();
-    }
-});
-
-</script>
-{% endblock %}
-
