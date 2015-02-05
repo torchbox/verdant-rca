@@ -38,7 +38,7 @@ function enableAutosave(formsel) {
                         }, 2000);
                     }
                     else {
-                        overlay.css('background-color', '#f00').html('There might messages for this form. Please save manually!');
+                        overlay.css('background-color', '#f00').html('There might be messages for this form. Please save manually!');
                     }
                 },
                 error: function(msg) {
