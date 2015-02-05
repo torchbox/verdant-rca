@@ -20,7 +20,6 @@
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
         {% include 'student_profiles/form_snippet.html' with form=form %}
-          <div style="clear: both"></div>
 
         <div class="profile-actions">
           <input type="submit" class="profile-save" value="Save postcard image">
@@ -30,8 +29,6 @@
     <section class="notes">
       <h3>Notes</h3>
       <p>Upload your postcard image. The postcard image will be used to print a set of postcards with your contact details, for you to use during the show.</p>
-</p>
-      <p>The form will save automatically every so often. Before you log out, click 'Save postcard image'.</p>
     </section>
   </section>
 </div>

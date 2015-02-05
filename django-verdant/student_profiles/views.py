@@ -421,17 +421,10 @@ def postcard_upload(request, page_id):
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
 
-    img = page.postcard_image
-    initial = {}
-    if img:
-        initial = {
-            'title': img.title,
-            'creator': img.creator, 'year': img.year, 'medium': img.medium, 'dimensions': img.dimensions, 'photographer': img.photographer,
-        }
-    data['form'] = PostcardUploadForm(instance=page, initial=initial)
+    data['form'] = PostcardUploadForm(instance=page)
 
     if request.method == 'POST':
-        data['form'] = form = PostcardUploadForm(request.POST, instance=page, initial=initial)
+        data['form'] = form = PostcardUploadForm(request.POST, instance=page)
 
         if page.locked:
             if not request.is_ajax():
@@ -442,9 +435,7 @@ def postcard_upload(request, page_id):
 
             img = page.postcard_image
             if img:
-                f = form.cleaned_data
-                img.title = f['title']
-                img.creator, img.year, img.medium, img.dimensions, img.photographer = f.get('creator'), f.get('year'), f.get('medium'), f.get('dimensions'), f.get('photographer')
+                img.title = '<Postcard image>'
                 img.save()
 
             save_page(page, request)
