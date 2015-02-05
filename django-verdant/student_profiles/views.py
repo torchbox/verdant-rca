@@ -266,11 +266,6 @@ def basic_profile(request, page_id):
         initial=[{'website': x.website} for x in profile_page.websites.all()]
     )
 
-    data['email_formset'].title = 'Email'
-    data['phone_formset'].title = 'Phone'
-    data['website_formset'].title = 'Website'
-
-
     if request.method == 'POST':
         data['basic_form'] = basic_form = ProfileBasicForm(request.POST, request.FILES)
         data['email_formset'] = email_formset = EmailFormset(request.POST, prefix='email')
@@ -329,7 +324,7 @@ def academic_details(request, page_id=None):
     
     data['academic_form'] = ProfileAcademicDetailsForm(instance=profile_page)
     
-    def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
+    def make_formset(formset_class, relname, form_attr_name, model_attr_name=None):
         
         model_attr_name = model_attr_name or form_attr_name
         
@@ -337,36 +332,33 @@ def academic_details(request, page_id=None):
             prefix=relname,
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
         )
-        data[relname + '_formset'].title = title
 
     make_formset(
-        'Previous degrees',
         PreviousDegreesFormset, 'previous_degrees',
         'degree',
     )
 
     make_formset(
-        'Exhibitions',
         ExhibitionsFormset, 'exhibitions',
         'exhibition',
     )
 
-    make_formset('Experience', ExperiencesFormset, 'experiences', 'experience')
+    make_formset(
+        ExperiencesFormset, 'experiences',
+        'experience'
+    )
 
     make_formset(
-        'Awards',
         AwardsFormset, 'awards',
         'award',
     )
 
     make_formset(
-        'Publications',
         PublicationsFormset, 'publications',
         'name',
     )
 
     make_formset(
-        'Conferences',
         ConferencesFormset, 'conferences',
         'name',
     )
@@ -515,7 +507,7 @@ def ma_show_details(request, page_id):
         return redirect('student-profiles:edit-ma', page_id=page_id)
 
 
-    def make_formset(title, formset_class, relname, form_attr_name, model_attr_name=None):
+    def make_formset(formset_class, relname, form_attr_name, model_attr_name=None):
         
         model_attr_name = model_attr_name or form_attr_name
         
@@ -523,16 +515,14 @@ def ma_show_details(request, page_id):
             prefix=relname,
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
         )
-        
-        data[relname + '_formset'].title = title
 
     data['show_form'] = MAShowDetailsForm(instance=profile_page)
 
     carousel_initial = make_carousel_initial(profile_page.show_carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
     
-    make_formset('Collaborator', MACollaboratorFormset, 'show_collaborators', 'name')
-    make_formset('Sponsor', MASponsorFormset, 'show_sponsors', 'name')
+    make_formset(MACollaboratorFormset, 'show_collaborators', 'name')
+    make_formset(MASponsorFormset, 'show_sponsors', 'name')
 
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
@@ -624,9 +614,6 @@ def mphil_show_details(request, page_id):
     data['sponsor'] = MPhilSponsorFormset(prefix='sponsor', initial=[
         {'name': c.name} for c in profile_page.mphil_sponsors.all()
     ])
-
-    data['collaborator'].title = 'Collaborator'
-    data['sponsor'].title = 'Sponsor'
 
     supervisor_initial = [
         {
@@ -730,9 +717,6 @@ def phd_show_details(request, page_id):
     data['sponsor'] = PhDSponsorFormset(prefix='sponsor', initial=[
         {'name': c.name} for c in profile_page.phd_sponsors.all()
     ])
-
-    data['collaborator'].title = 'Collaborator'
-    data['sponsor'].title = 'Sponsor'
 
     supervisor_initial = [
         {
