@@ -34,11 +34,13 @@ function enableAutosave(formsel) {
                     }, delayShowSaved);
                 }
                 else {
-                    overlay.css('background-color', '#f00').html('There might be messages for this form. Please save manually!');
+                    overlay.animate({'height': '5em'});
+                    overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
                 }
             },
             error: function (msg) {
-                overlay.css('background-color', '#f00').html('There might be messages for this form. Please save manually!');
+                overlay.animate({'height': '5em'});
+                overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
             }
         });
     };
