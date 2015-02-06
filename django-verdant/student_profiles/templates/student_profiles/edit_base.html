@@ -16,6 +16,11 @@
     </div>
     <nav class="student-profile-nav"> 
         {# navbar #}
+        <ul class="outer-menu">
+            <li>
+                <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
+            </li>
+        </ul>
         {% if page_id %}
         <ul class="outer-menu"> 
             <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}">Profile</a></li>

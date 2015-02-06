@@ -193,7 +193,8 @@ def overview(request):
     """
     if NewStudentPage.objects.filter(owner=request.user).exists():
         page = NewStudentPage.objects.filter(owner=request.user)[0]
-        return redirect('student-profiles:edit-basic', page_id=page.id)
+        data, page = initial_context(request, page.id)
+        return render(request, 'student_profiles/overview.html', data)
 
     data = {}
     data['form'] = StartingForm(initial={
@@ -231,9 +232,9 @@ def overview(request):
 
             request.user.save()
 
-            return redirect('student-profiles:edit-basic', page_id=page.id)
+            return redirect('student-profiles:overview')
 
-    return render(request, 'student_profiles/overview.html', data)
+    return render(request, 'student_profiles/start.html', data)
 
 @login_required
 def preview(request, page_id=None):
