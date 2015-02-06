@@ -402,7 +402,6 @@ function updateCarouselSelects(prefix) {
       $('#carousel-' + id_number + '-image_id').parent().show();
       $('#id_carousel-' + id_number + '-overlay_text').parent().show();
       $('#id_carousel-' + id_number + '-title').parent().show();
-      $('#id_carousel-' + id_number + '-alt').parent().show();
       $('#id_carousel-' + id_number + '-creator').parent().show();
       $('#id_carousel-' + id_number + '-year').parent().show();
       $('#id_carousel-' + id_number + '-medium').parent().show();
@@ -419,7 +418,6 @@ function updateCarouselSelects(prefix) {
       $('#carousel-' + id_number + '-image_id').parent().hide();
       $('#id_carousel-' + id_number + '-overlay_text').parent().hide();
       $('#id_carousel-' + id_number + '-title').parent().hide();
-      $('#id_carousel-' + id_number + '-alt').parent().hide();
       $('#id_carousel-' + id_number + '-creator').parent().hide();
       $('#id_carousel-' + id_number + '-year').parent().hide();
       $('#id_carousel-' + id_number + '-medium').parent().hide();
@@ -432,7 +430,6 @@ function updateCarouselSelects(prefix) {
       $('#carousel-' + id_number + '-image_id').val('');
       $('#id_carousel-' + id_number + '-overlay_text').val('');
       $('#id_carousel-' + id_number + '-title').val('');
-      $('#id_carousel-' + id_number + '-alt').val('');
       $('#id_carousel-' + id_number + '-creator').val('');
       $('#id_carousel-' + id_number + '-year').val('');
       $('#id_carousel-' + id_number + '-medium').val('');

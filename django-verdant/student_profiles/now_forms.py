@@ -7,6 +7,7 @@ from django.forms.formsets import formset_factory
 
 from rca.help_text import help_text
 from rca.models import RcaNowPage, NewStudentPage
+from rca.models import AREA_CHOICES
 from .forms import OrderedFormset
 
 
@@ -58,7 +59,17 @@ class PageForm(forms.ModelForm):
         queryset=NewStudentPage.objects.filter(live=True).order_by('last_name', 'first_name'),
         widget=forms.Select(attrs={'width': '100%'})
     )
-    
+
+    def clean_twitter_feed(self):
+        if self.cleaned_data.get('twitter_feed'):
+            handle = self.cleaned_data.get('twitter_feed', '')
+            if handle.startswith('@'):
+                return handle[1:]
+            else:
+                return handle
+        else:
+            return ''
+
     def clean(self):
         intro_text = self.cleaned_data.get('intro_text', '')
         body = self.cleaned_data.get('body', '')
@@ -83,9 +94,12 @@ class PageForm(forms.ModelForm):
             'author_single',
             'author',
             'date',
+            'school',
             'programme',
+            'twitter_feed',
             'tags',
         ]
+
 
 class RelatedLinkForm(forms.Form):
     link = forms.URLField(
@@ -102,7 +116,15 @@ class RelatedLinkForm(forms.Form):
             return 'http://' + link
         else:
             return link
-
 RelatedLinkFormset = formset_factory(RelatedLinkForm, extra=1, formset=OrderedFormset)
 RelatedLinkFormset.title = 'Web links'
 RelatedLinkFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
+
+
+class AreaForm(forms.Form):
+    area = forms.ChoiceField(
+        choices=(('', '---------'),) + AREA_CHOICES,
+    )
+AreaFormSet = formset_factory(AreaForm, extra=1, formset=OrderedFormset)
+AreaFormSet.title = 'Areas'
+AreaFormSet.help_text = help_text=help_text('rca.RcaNowPageArea', 'area')
