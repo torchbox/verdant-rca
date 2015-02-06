@@ -11,8 +11,8 @@
             <div class="form-col-holder">
                 {# inlined because we want to add the required marker here (without the field technically being required) #}
                 <label class="form-col form-col-half{% if form.title.errors %} error{% endif %}">{{ form.title.label }}:<span>*</span>
-                    {% if form.title.help_text %}<p class="help-text">{{ form.title.help_text }}</p>{% endif %}
                     {% render_field form.title %}
+                    {% if form.title.help_text %}<p class="help-text">{{ form.title.help_text }}</p>{% endif %}
                 </label>
                 {% for error in form.title.errors %}<small class="error">{{ error }}</small>{% endfor %}
 

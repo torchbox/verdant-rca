@@ -325,6 +325,12 @@ form.now-page {
             padding-top: 0;
             margin-top: 0;
         }
+        .form-col-holder {
+            padding-bottom: 1em;
+            border-bottom: 1px dashed darken(@color-pale-grey, 5%);
+            margin-bottom: 1em;
+            .clearfix();
+        }
     }
 }
 
@@ -703,10 +709,13 @@ table {
     padding-top: 1em;
     background-color: @color-highlight-blue;
     color: @color-white;
-    font-size: @font-size-18;
-    filter:alpha(opacity=50);
-    .opacity(50);
+    font-size: @font-size-16;
+    font-weight: bold;
     z-index: 10000;
     text-align: center;
-    font-weight: bold;
+    filter:alpha(opacity=35);
+    .opacity(35);
+    strong {
+        font-size: @font-size-18;
+    }
 }
