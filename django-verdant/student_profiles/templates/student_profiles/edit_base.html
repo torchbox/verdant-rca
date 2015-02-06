@@ -23,7 +23,7 @@
         </ul>
         {% if page_id %}
         <ul class="outer-menu"> 
-            <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}">Profile</a></li>
+            <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}" id="tour-menu1">Profile</a></li>
             <ul class="inner-menu">
                 <li{% if nav_basic %} class="active"{% endif %}>
                     <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
@@ -80,7 +80,7 @@
         {% endif %}
         {% if SHOW_PAGES_ENABLED %}
         <ul class="outer-menu rca-now-link">
-            <li{% if nav_postcard %} class="active"{% endif %}>
+            <li{% if nav_postcard %} class="active"{% endif %} id="menu-postcard">
                 <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
             </li>
         </ul>
@@ -95,7 +95,7 @@
             </ul>
         </ul>
         {% endif %}
-        <ul class="outer-menu rca-now-link">
+        <ul class="outer-menu rca-now-link" id="menu-rcanow">
             <li{% if nav_now %} class="active"{% endif %}>
                 <a href="{% url 'nowpages:overview' %}">RCA Now</a>
             </li>
@@ -114,6 +114,7 @@
     {% compress css %}
         <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
         <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/css/vendor/joyride-2.1.css" %}">
     {% endcompress %}
     <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
@@ -202,6 +203,7 @@
 <script src="{% static "student_profiles/js/vendor/jquery.fileupload-image.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.fileupload-validate.js" %}"></script>
 <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
+<script src="{% static "student_profiles/js/vendor/jquery.joyride-2.1.js" %}"></script>
 {# we import the JS files here because every form uses them anyway #}
 <script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 {% endcompress %}

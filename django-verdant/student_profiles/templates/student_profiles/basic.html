@@ -28,9 +28,9 @@
         {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
 
         <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
+          <input type="submit" class="profile-save" value="Save Draft" id="submit-save-draft">
+          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank" id="submit-preview">
+          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication" id="submit-save-and-submit">
         </div>
       </form>
     </section>
@@ -42,6 +42,75 @@
     </section>
   </section>
 </div>
+
+
+<ol id="joyride-tour" style="display: none;">
+  /* This tip will be display as a modal */
+  <li><p>Welcome!<br>You seem to be here for the first time, so we'd like to give you a short tour.<br/>
+    You can stop this tour at any time by clicking on the little 'X' in the corner.<br/>
+    On these pages, you can edit the information that's shown on your student profile pages, you can create blog posts for "RCA Now" and
+    you can upload an image to be used in RCA Show as a postcard.<br/>
+    Let's get started!
+  </p></li>
+
+  <li data-id="tour-menu1"><p>
+    In this menu point you find your basic profile details. We're here right now, so let's have a look at the info here.
+  </p></li>
+
+  <li data-id="id_title" data-options="tipLocation:left;"><p>
+    Start by filling out the basic information: the page title, your name, your twitter handle and your profile image.<br/>
+    Also add the main text that will appear in your profile page. Write a bit about yourself!
+  </p></li>
+
+  <li data-id="id_email-0-email" data-options="tipLocation:left;"><p>
+    If you want, you can add more contact data: email addresses, phone numbers and web links.
+  </p></li>
+
+  <li data-id="submit-preview" data-options="tipLocation:top;"><p>
+    When you've filled in some information, you can see how it looks on the page by clicking this button. A new tab will open with a preview of your page.<br/>
+    You can have a look at your preview whenever you want.
+  </p></li>
+
+  <li data-id="submit-save-draft" data-options="tipLocation:top;"><p>
+    Whenever you want to save data that you've written, click this button. If there are problems with your inputs, for example when a format isn't right, you'll get a message saying so.<br/>
+    Don't worry about forgetting to save: the form automatically saves every so often.
+  </p></li>
+
+
+  <li data-id="submit-save-and-submit" data-options="tipLocation:top;"><p>
+    When you have filled out all your pages (don't forget the other menu items!), you can submit your page for publication.
+    Once that is done, you can <strong>not</strong> make any more changes. A moderator will review your page and publish it if it meets the guidelines.
+  </p></li>
+
+  <li data-id="tour-menu1"><p>
+    When you're finished with this page, fill in your CV details and, depending on your programme, MA, MPhil or PhD details.
+  </p></li>
+
+
+  <li data-id="menu-postcard"><p>
+    You can upload an image to be used as a postcard for the show with this menu entry.
+  </p></li>
+
+  <li data-id="menu-rcanow"><p>
+    In this menu entry, you can add, edit and review your blog posts for RCA Now. The process is the same as here, so you'll find your way around!
+  </p></li>
+
+  <li data-button="Finish">
+    <p>That's all you need to know. Happy editing!</p>
+  </li>
+
+  {% comment %}
+  /* data-id needs to be the same as the parent it will attach to */
+  <li data-id="newHeader">Tip content...</li>
+
+
+  /* using 'data-button' lets you have custom button text */
+  <li data-class="parent-element-class" data-options="tipLocation:top;tipAnimation:fade" data-button="Second Button">Content...</li>
+
+  /* you can put a class for custom styling */
+  <li data-id="parentElementID" class="custom-class">Content...</li>
+  {% endcomment %}
+</ol>
 
 {% endblock form_content %}
 
@@ -57,7 +126,17 @@ $(function() {
   makeRichTextEditable('id_statement');
   activateImageUpload('profile_image');
 
-})
+  $(window).load(function() {
+    console.log('joyride1?');
+    $("#joyride-tour").joyride({
+    });
+  });
+});
+  $(window).load(function() {
+    console.log('joyride2?');
+    $("#joyride-tour").joyride({
+    });
+  });
 </script>
 {% endblock form_js %}
 
