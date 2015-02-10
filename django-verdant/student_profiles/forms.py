@@ -16,7 +16,32 @@ from rca.models import RcaImage, StaffPage
 from rca.models import SCHOOL_PROGRAMME_MAP, ALL_PROGRAMMES
 
 ################################################################################
-## internal classes
+## internal classes and functions
+
+
+def formset_factory(form, formset=BaseFormSet, extra=None, can_order=False,
+                    can_delete=False, max_num=None, validate_max=False,
+                    min_num=None, validate_min=False):
+    """Return a FormSet for the given form class.
+
+    This is duplicated from Django because we need a specific handling of the extra attribute.
+    In our OrderedFormset, extra is a property that should only be overriden if the extra attribute
+    is specified explicitly.
+    """
+    if min_num is None:
+        min_num = 0
+    if max_num is None:
+        max_num = 1000
+    absolute_max = max_num + 1000
+    attrs = {'form': form,
+             'can_order': can_order, 'can_delete': can_delete,
+             'min_num': min_num, 'max_num': max_num,
+             'absolute_max': absolute_max, 'validate_min': validate_min,
+             'validate_max': validate_max}
+    if extra is not None:
+        attrs['extra'] = extra
+    return type(form.__name__ + str('FormSet'), (formset,), attrs)
+
 
 class OrderedFormset(BaseFormSet):
     
@@ -25,7 +50,7 @@ class OrderedFormset(BaseFormSet):
 
         #for index, value in enumerate(kwargs.get('initial', {})):
         #    value['order'] = index
-
+        self._extra = 1
         
         super(OrderedFormset, self).__init__(*args, **kwargs)
     
@@ -45,6 +70,19 @@ class OrderedFormset(BaseFormSet):
             required=False,
             widget=forms.HiddenInput(attrs={'class': 'order-value'})
         )
+
+    def get_extra(self):
+        print "getting extra"
+        if self.initial:
+            return 0
+        else:
+            return self._extra
+
+    def set_extra(self, extra):
+        self._extra = extra
+
+    extra = property(get_extra, set_extra)
+
 
 
 class PhoneNumberField(forms.RegexField):
@@ -209,7 +247,7 @@ class EmailForm(forms.Form):
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsEmail', 'email', default="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
     )
-EmailFormset = formset_factory(EmailForm, extra=1, formset=OrderedFormset)
+EmailFormset = formset_factory(EmailForm, formset=OrderedFormset)
 EmailFormset.title = 'Email'
 
 class PhoneForm(forms.Form):
@@ -218,7 +256,7 @@ class PhoneForm(forms.Form):
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
-PhoneFormset = formset_factory(PhoneForm, extra=1, formset=OrderedFormset)
+PhoneFormset = formset_factory(PhoneForm, formset=OrderedFormset)
 PhoneFormset.title = 'Phone'
 PhoneFormset.help_text = 'Enter your phone number(s) in international format with country code: +44 (0) 12345 678910'
 
@@ -239,7 +277,7 @@ class WebsiteForm(forms.Form):
         else:
             return website
 
-WebsiteFormset = formset_factory(WebsiteForm, extra=1, formset=OrderedFormset)
+WebsiteFormset = formset_factory(WebsiteForm, formset=OrderedFormset)
 WebsiteFormset.title = 'Website'
 WebsiteFormset.help_text = 'Paste in the URL of the website in full, including the ‘http://’'
 
@@ -259,7 +297,7 @@ class PreviousDegreeForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"),
     )
-PreviousDegreesFormset = formset_factory(PreviousDegreeForm, extra=1, formset=OrderedFormset)
+PreviousDegreesFormset = formset_factory(PreviousDegreeForm, formset=OrderedFormset)
 PreviousDegreesFormset.title = 'Previous degrees'
 PreviousDegreesFormset.help_text = u'Include degree level, subject, institution name and year of graduation, separated by commas e.g. BA Fine Art, University of Brighton, 2011'
 
@@ -269,7 +307,7 @@ class ExhibitionForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"),
     )
-ExhibitionsFormset = formset_factory(ExhibitionForm, extra=1, formset=OrderedFormset)
+ExhibitionsFormset = formset_factory(ExhibitionForm, formset=OrderedFormset)
 ExhibitionsFormset.title = 'Exhibitions'
 ExhibitionsFormset.help_text = u'Include exhibition title, gallery, city and year, separated by commas'
 
@@ -278,7 +316,7 @@ class ExperienceForm(forms.Form):
         max_length=255, required=False,
         help_text=help_text('rca.NewStudentPageExperience', 'experience', default="Please include job title, company name, city and year(s), separated by commas"),
     )
-ExperiencesFormset = formset_factory(ExperienceForm, extra=1, formset=OrderedFormset)
+ExperiencesFormset = formset_factory(ExperienceForm, formset=OrderedFormset)
 ExperiencesFormset.title = 'Experience'
 ExperiencesFormset.help_text = u'Relevant professional experience. Include job title, company name, city and year(s), separated by commas'
 
@@ -288,7 +326,7 @@ class AwardsForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas"),
     )
-AwardsFormset = formset_factory(AwardsForm, extra=1, formset=OrderedFormset)
+AwardsFormset = formset_factory(AwardsForm, formset=OrderedFormset)
 AwardsFormset.title = 'Awards'
 AwardsFormset.help_text = help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas")
     
@@ -298,7 +336,7 @@ class PublicationsForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"),
     )
-PublicationsFormset = formset_factory(PublicationsForm, extra=1, formset=OrderedFormset)
+PublicationsFormset = formset_factory(PublicationsForm, formset=OrderedFormset)
 PublicationsFormset.title = 'Publications'
 PublicationsFormset.help_text = u'Include author (if not you), article title, journal title, issue number, year, pages, separated by commas'
 
@@ -308,7 +346,7 @@ class ConferencesForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"),
     )
-ConferencesFormset = formset_factory(ConferencesForm, extra=1, formset=OrderedFormset)
+ConferencesFormset = formset_factory(ConferencesForm, formset=OrderedFormset)
 ConferencesFormset.title = 'Conferences'
 ConferencesFormset.help_text = u'Include paper title, conference, institution, date, separated by commas'
 
@@ -477,7 +515,7 @@ class MAShowCarouselItemForm(forms.Form):
             raise forms.ValidationError('This field is required.')
         else:
             return self.cleaned_data.get('title', '')
-MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, extra=1, formset=OrderedFormset, max_num=12, validate_max=True)
+MAShowCarouselItemFormset = formset_factory(form=MAShowCarouselItemForm, formset=OrderedFormset, max_num=12, validate_max=True)
 
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
@@ -485,7 +523,7 @@ class MACollaboratorForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"),
     )
-MACollaboratorFormset = formset_factory(MACollaboratorForm, extra=1, formset=OrderedFormset)
+MACollaboratorFormset = formset_factory(MACollaboratorForm, formset=OrderedFormset)
 MACollaboratorFormset.title = 'Collaborators'
 MACollaboratorFormset.help_text = help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA).")
     
@@ -495,7 +533,7 @@ class MASponsorForm(forms.Form):
         required=False,
         help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas"),
     )
-MASponsorFormset = formset_factory(MASponsorForm, extra=1, formset=OrderedFormset)
+MASponsorFormset = formset_factory(MASponsorForm, formset=OrderedFormset)
 MASponsorFormset.title = 'Sponsors'
 MASponsorFormset.help_text = help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project.")
 
@@ -569,7 +607,7 @@ class MPhilCollaboratorForm(forms.ModelForm):
         fields = ['name']
 MPhilCollaboratorFormset = formset_factory(
     MPhilCollaboratorForm,
-    extra=1, formset=OrderedFormset
+    formset=OrderedFormset
 )
 MPhilCollaboratorFormset.title = 'Collaborators'
 MPhilCollaboratorFormset.help_text = help_text('rca.NewStudentPageMPhilCollaborator', 'name', default="Please include collaborator's name and programme (if RCA).")
@@ -580,7 +618,7 @@ class MPhilSponsorForm(forms.ModelForm):
         fields = ['name']
 MPhilSponsorFormset = formset_factory(
     MPhilSponsorForm,
-    extra=1, formset=OrderedFormset
+    formset=OrderedFormset
 )
 MPhilSponsorFormset.title = 'Sponsors'
 MPhilSponsorFormset.help_text = help_text('rca.NewStudentPageMPhilSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project.")
@@ -604,7 +642,7 @@ class MPhilSupervisorForm(forms.ModelForm):
     class Meta:
         model = NewStudentPageMPhilSupervisor
         fields = ['supervisor', 'supervisor_other']
-MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, extra=1, formset=OrderedFormset)
+MPhilSupervisorFormset = formset_factory(MPhilSupervisorForm, formset=OrderedFormset)
 MPhilSupervisorFormset.title = 'Supervisors'
 
 # and the same once again with PhD instead of MPhil
@@ -673,7 +711,7 @@ class PhDCollaboratorForm(forms.ModelForm):
         fields = ['name']
 PhDCollaboratorFormset = formset_factory(
     PhDCollaboratorForm,
-    extra=1, formset=OrderedFormset
+    formset=OrderedFormset
 )
 PhDCollaboratorFormset.title = 'Collaborators'
 PhDCollaboratorFormset.help_text = help_text('rca.NewStudentPagePhDCollaborator', 'name', default="Please include collaborator's name and programme (if RCA).")
@@ -684,7 +722,7 @@ class PhDSponsorForm(forms.ModelForm):
         fields = ['name']
 PhDSponsorFormset = formset_factory(
     PhDSponsorForm,
-    extra=1, formset=OrderedFormset
+    formset=OrderedFormset
 )
 PhDSponsorFormset.title = 'Sponsors'
 PhDSponsorFormset.help_text = help_text('rca.NewStudentPagePhDSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project.")
@@ -708,5 +746,5 @@ class PhDSupervisorForm(forms.ModelForm):
     class Meta:
         model = NewStudentPagePhDSupervisor
         fields = ['supervisor', 'supervisor_other']
-PhDSupervisorFormset = formset_factory(PhDSupervisorForm, extra=1, formset=OrderedFormset)
+PhDSupervisorFormset = formset_factory(PhDSupervisorForm, formset=OrderedFormset)
 PhDSupervisorFormset.title = 'Supervisors'

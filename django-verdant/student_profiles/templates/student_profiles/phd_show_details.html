@@ -70,6 +70,7 @@ makeFormset('{{ carouselitem_formset.prefix }}',
       updateCarouselSelects('{{ carouselitem_formset.prefix }}');
       row.find('select').each(function(){ $(this).trigger('change')});
       row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+      row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
   }
 );
 
