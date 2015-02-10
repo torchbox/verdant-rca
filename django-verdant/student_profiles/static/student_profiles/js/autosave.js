@@ -12,6 +12,15 @@ function enableAutosave(formsel) {
     var saveString = '';
     var overlay = $('<div id="overlay">Saving...</div>').appendTo(document.body).css('top', '-3em');
 
+    if (window.form_errors)
+    {
+        overlay.css({'background-color': '#f00', 'height': '5em', 'top': 0}).html(
+            'The data you entered could not be saved.<br/>Please check ' + window.form_errors + '.'
+            + ' Afterwards, click "Save draft" at the bottom of the page again.'
+        )
+        return;
+    }
+
     autosave_last_form_now = function() {
         window.onbeforeunload = null;
         var dataString = form.serialize();
@@ -35,12 +44,12 @@ function enableAutosave(formsel) {
                 }
                 else {
                     overlay.animate({'height': '5em'});
-                    overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
+                    overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking "Save draft" at the bottom of the form.');
                 }
             },
             error: function (msg) {
                 overlay.animate({'height': '5em'});
-                overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
+                overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking "Save draft" at the bottom of the form.');
             }
         });
     };

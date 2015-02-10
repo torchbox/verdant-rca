@@ -208,6 +208,12 @@
 {# we import the JS files here because every form uses them anyway #}
 <script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
 {% endcompress %}
+  {% if errors %}
+<script>
+  window.form_errors = '{{ errors }}';
+</script>
+  {% endif %}
+
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
 
     {% compress js %}

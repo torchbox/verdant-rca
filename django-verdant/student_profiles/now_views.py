@@ -113,7 +113,7 @@ def edit(request, page_id=None):
             if not request.is_ajax():
                 messages.error(request, 'The page could not be saved, it is currently locked.')
                 # fall through to regular rendering
-        elif form.is_valid() and cif.is_valid() and lif.is_valid() and aef.is_valid():
+        elif all((form.is_valid(), cif.is_valid(), lif.is_valid(), aef.is_valid())):
             page = form.save(commit=False)
             submit_for_moderation = 'submit_for_moderation' in request.POST
 
@@ -157,6 +157,13 @@ def edit(request, page_id=None):
                 if 'preview' in request.POST:
                     return redirect('nowpages:preview', page_id=page.id)
                 return redirect('nowpages:edit', page_id=page.id)
+        else:
+            e = []
+            if not form.is_valid(): e.append('your post content and fields')
+            if not cif.is_valid(): e.append('the carousel items')
+            if not aef.is_valid(): e.append('the post area')
+            if not lif.is_valid(): e.append('your website links')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
