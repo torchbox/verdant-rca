@@ -35,12 +35,12 @@ function enableAutosave(formsel) {
                 }
                 else {
                     overlay.animate({'height': '5em'});
-                    overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
+                    overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking "Save draft" at the bottom of the form.');
                 }
             },
             error: function (msg) {
                 overlay.animate({'height': '5em'});
-                overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking save at the bottom of the form.');
+                overlay.css('background-color', '#f00').html('<strong>Autosave failed:</strong><br>Field(s) require attention. View the form field(s) that need attention by clicking "Save draft" at the bottom of the form.');
             }
         });
     };
