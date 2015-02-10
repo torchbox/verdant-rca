@@ -57,19 +57,19 @@
 
     <!-- news carousel -->
 
-    {% news_carousel programme=self.programmes.all.0 %}
+    {% news_carousel programme=self.programmes.all.0.programme %}
 
     <!-- events -->
-    {% upcoming_events_related programme=self.programmes.all.0 display_name=self.get_programme_display %}
+    {% upcoming_events_related programme=self.programmes.all.0.programme display_name=self.get_programme_display %}
 
     <!-- staff -->
-    <!-- {# staff_by_programme programme=self.programmes.all.0 #} -->
+    <!-- {# staff_by_programme programme=self.programmes.all.0.programme #} -->
 
     <!-- staff feed -->
     {% include "rca/includes/modules/staff_feed.html" %}
 
     <!-- open days -->
-    {% upcoming_events_related opendays=1 programme=self.programmes.all.0 %}
+    {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme %}
 
     <!-- tabs -->
 
@@ -168,10 +168,10 @@
 
 
     <!-- alumni -->
-    {% alumni_by_programme programme=self.programmes.all.0 %}
+    {% alumni_by_programme programme=self.programmes.all.0.programme %}
 
     <!-- rca now -->
-    {% rca_now_related programme=self.programmes.all.0 %}
+    {% rca_now_related programme=self.programmes.all.0.programme %}
 
     <!-- research -->
     <div id="listing">
