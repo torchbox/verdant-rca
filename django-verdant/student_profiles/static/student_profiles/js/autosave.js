@@ -12,6 +12,15 @@ function enableAutosave(formsel) {
     var saveString = '';
     var overlay = $('<div id="overlay">Saving...</div>').appendTo(document.body).css('top', '-3em');
 
+    if (window.form_errors)
+    {
+        overlay.css({'background-color': '#f00', 'height': '5em', 'top': 0}).html(
+            'The data you entered could not be saved.<br/>Please check ' + window.form_errors + '.'
+            + ' Afterwards, click "Save draft" at the bottom of the page again.'
+        )
+        return;
+    }
+
     autosave_last_form_now = function() {
         window.onbeforeunload = null;
         var dataString = form.serialize();

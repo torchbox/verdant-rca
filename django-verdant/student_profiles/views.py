@@ -276,7 +276,7 @@ def basic_profile(request, page_id):
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif basic_form.is_valid() and email_formset.is_valid() and phone_formset.is_valid() and website_formset.is_valid():
+        elif all((basic_form.is_valid(), email_formset.is_valid(), phone_formset.is_valid(), website_formset.is_valid())):
             bcd = basic_form.cleaned_data
             
             request.user.first_name = profile_page.first_name = bcd['first_name']
@@ -308,6 +308,13 @@ def basic_profile(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-basic', page_id=profile_page.id)
+        else:
+            e = []
+            if not basic_form.is_valid(): e.append('your details')
+            if not email_formset.is_valid(): e.append('your email addresses')
+            if not phone_formset.is_valid(): e.append('your phone numbers')
+            if not website_formset.is_valid(): e.append('your website links')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -376,7 +383,7 @@ def academic_details(request, page_id=None):
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif pf.is_valid() and pdfs.is_valid() and efs.is_valid() and pfs.is_valid() and cfs.is_valid() and afs.is_valid() and xfs.is_valid():
+        elif all((pf.is_valid(), pdfs.is_valid(), efs.is_valid(), pfs.is_valid(), cfs.is_valid(), afs.is_valid(), xfs.is_valid())):
             profile_page.funding = pf.cleaned_data['funding']
             
             profile_page.previous_degrees = [
@@ -405,7 +412,17 @@ def academic_details(request, page_id=None):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-academic', page_id=profile_page.id)
-    
+        else:
+            e = []
+            if not pf.is_valid(): e.append('your details')
+            if not pdfs.is_valid(): e.append('previous degree fields')
+            if not efs.is_valid(): e.append('exhibition fields')
+            if not afs.is_valid(): e.append('award fields')
+            if not pfs.is_valid(): e.append('publication fields')
+            if not cfs.is_valid(): e.append('conference fields')
+            if not xfs.is_valid(): e.append('experience fields')
+            data['errors'] = ' and '.join(e)
+
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
     return render(request, 'student_profiles/academic_details.html', data)
@@ -444,6 +461,8 @@ def postcard_upload(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-postcard', page_id=page_id)
+        else:
+            data['errors'] = 'the form fields'
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -478,6 +497,8 @@ def ma_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma', page_id=page_id)
+        else:
+            data['errors'] = 'the form fields'
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -496,7 +517,6 @@ def ma_show_details(request, page_id):
     if not profile_is_in_show(request, profile_page):
         messages.warning(request, "You cannot view MA show details because you indicated that you're not in the show this year. If this is not correct, please tick the appropriate box in the detail page.")
         return redirect('student-profiles:edit-ma', page_id=page_id)
-
 
     def make_formset(formset_class, relname, form_attr_name, model_attr_name=None):
         
@@ -525,7 +545,7 @@ def ma_show_details(request, page_id):
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif sf.is_valid() and scif.is_valid() and scf.is_valid() and ssf.is_valid():
+        elif all((sf.is_valid(), scif.is_valid(), scf.is_valid(), ssf.is_valid())):
 
             page = sf.save(commit=False)
 
@@ -545,6 +565,13 @@ def ma_show_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-ma-show', page_id=page_id)
+        else:
+            e = []
+            if not sf.is_valid(): e.append('your details')
+            if not scif.is_valid(): e.append('the carousel items')
+            if not scf.is_valid(): e.append('collaborator fields')
+            if not ssf.is_valid(): e.append('sponsor fields')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -579,6 +606,10 @@ def mphil_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil', page_id=page_id)
+        else:
+            e = []
+            if not mpf.is_valid(): e.append('the form fields')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -651,6 +682,14 @@ def mphil_show_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-mphil-show', page_id=page_id)
+        else:
+            e = []
+            if not mpf.is_valid(): e.append('your details')
+            if not cif.is_valid(): e.append('the carousel items')
+            if not cof.is_valid(): e.append('collaborator fields')
+            if not spf.is_valid(): e.append('sponsor fields')
+            if not suf.is_valid(): e.append('supervisor fields')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -682,6 +721,10 @@ def phd_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd', page_id=page_id)
+        else:
+            e = []
+            if not mpf.is_valid(): e.append('the form fields')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
@@ -754,6 +797,14 @@ def phd_show_details(request, page_id):
             if 'preview' in request.POST:
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-phd-show', page_id=page_id)
+        else:
+            e = []
+            if not mpf.is_valid(): e.append('your details')
+            if not cif.is_valid(): e.append('the carousel items')
+            if not cof.is_valid(): e.append('collaborator fields')
+            if not spf.is_valid(): e.append('sponsor fields')
+            if not suf.is_valid(): e.append('supervisor fields')
+            data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')
