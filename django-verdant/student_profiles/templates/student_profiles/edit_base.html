@@ -14,70 +14,64 @@
             <a href="{% url 'student-profiles:logout' %}">Log out</a>
         </div>
     </div>
-    <nav class="student-profile-nav"> 
-        {# navbar #}
+    <nav class="student-profile-nav">
+      {# navbar #}
+      <ul class="outer-menu">
+        <li>
+          <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
+        </li>
+      </ul>
+      {% if page_id %}
         <ul class="outer-menu">
-            <li>
-                <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
+          <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}" id="tour-menu1">Profile</a></li>
+          <ul class="inner-menu">
+            <li{% if nav_basic %} class="active"{% endif %}>
+              <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
             </li>
-        </ul>
-        {% if page_id %}
-        <ul class="outer-menu"> 
-            <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}" id="tour-menu1">Profile</a></li>
-            <ul class="inner-menu">
-                <li{% if nav_basic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
-                </li>
-                <li{% if nav_academic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
-                </li>
-            </ul>
-        </ul>
-        {% if is_ma %}
-        <ul class="outer-menu"> 
-            <li class="drop-down"><a href="{% url 'student-profiles:edit-ma' page_id %}">MA</a></li>
-            <ul class="inner-menu">
-                <li{% if nav_ma %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-ma' page_id %}">MA Details</a>
-                </li>
-            {% if SHOW_PAGES_ENABLED %}
-                <li class="in-show-menu{% if nav_mphil_show %} active{% endif %}">
-                    <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a>
-                </li>
-            {% endif %}
-            </ul>
-        </ul>
-        {% endif %}
-        {% if is_mphil %}
-        <ul class="outer-menu">
-            <li class="drop-down"><a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil</a></li>
-            <ul class="inner-menu">
+            <li{% if nav_academic %} class="active"{% endif %}>
+              <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
+            </li>
+
+            {% if is_phd %}
+              <li{% if nav_phd %} class="active"{% endif %}>
+                <a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree</a>
+              </li>
+            {% else %}
+              {% if is_mphil %}
                 <li{% if nav_mphil %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-mphil' page_id %}">MPhil Details</a>
+                  <a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree</a>
                 </li>
-            {% if SHOW_PAGES_ENABLED %}
-                <li class="in-show-menu{% if nav_mphil_show %} active{% endif %}">
-                    <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a>
-                </li>
+              {% else %}
+                {% if is_ma %}
+                  <li{% if nav_ma %} class="active"{% endif %}>
+                    <a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree</a>
+                  </li>
+                {% endif %}
+              {% endif %}
             {% endif %}
-            </ul>
+
+          </ul>
         </ul>
-        {% endif %}
+
         {% if is_phd %}
         <ul class="outer-menu">
-            <li class="drop-down"><a href="{% url 'student-profiles:edit-phd' page_id %}">PhD</a></li>
-            <ul class="inner-menu">
-                <li{% if nav_phd %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-phd' page_id %}">PhD Details</a>
-                </li>
-            {% if SHOW_PAGES_ENABLED %}
-                <li class="in-show-menu{% if nav_phd_show %} active{% endif %}">
-                    <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a>
-                </li>
-            {% endif %}
-            </ul>
+          <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
         </ul>
+        {% else %}
+          {% if is_mphil %}
+        <ul class="outer-menu">
+          <li><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a></li>
+        </ul>
+          {% else %}
+            {% if is_ma %}
+        <ul class="outer-menu">
+          <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
+        </ul>
+            {% endif %}
+          {% endif %}
         {% endif %}
+
+
         {% if SHOW_PAGES_ENABLED %}
         <ul class="outer-menu rca-now-link">
             <li{% if nav_postcard %} class="active"{% endif %} id="menu-postcard">
