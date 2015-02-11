@@ -443,11 +443,7 @@ def postcard_upload(request, page_id):
     if request.method == 'POST':
         data['form'] = form = PostcardUploadForm(request.POST, instance=page)
 
-        if page.locked:
-            if not request.is_ajax():
-                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not be saved, it is currently locked')
-        elif form.is_valid():
+        if form.is_valid():
             page = form.save(commit=False)
 
             img = page.postcard_image
@@ -818,7 +814,7 @@ def phd_show_details(request, page_id):
 
 @require_POST
 @login_required
-def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
+def image_upload(request, page_id, field=None, max_size=None, min_dim=None, force=False):
     """Upload an image file and create an RcaImage out of it.
 
     If field is given it'll be attached to the page in the given field.
@@ -828,7 +824,7 @@ def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
     data, profile_page = initial_context(request, page_id)
     
     form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
-    if profile_page.locked:
+    if profile_page.locked and not force:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
         return HttpResponse(json.dumps(res), content_type='application/json')
     elif form.is_valid():
