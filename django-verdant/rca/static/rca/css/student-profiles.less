@@ -1,0 +1,729 @@
+/**
+ * Author(s): James Morris
+ *
+ * Student-profiles and RCA Now
+ *
+ */
+
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+/* WAGTAIL FONT INCLUDE */
+
+@font-face {
+  font-family: "wagtail";
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot");
+  src: url("../../wagtailadmin/scss/fonts/wagtail.eot?#iefix") format("embedded-opentype"), url("../../wagtailadmin/scss/fonts/wagtail.ttf") format("truetype"), url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"), url("../../wagtailadmin/scss/fonts/wagtail.woff") format("woff");
+  font-weight: normal;
+  font-style: normal; }
+
+/* fix to make chrome on windows use svg, which renders better */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  @font-face {
+    font-family: "wagtail";
+    src: url("../../wagtailadmin/scss/fonts/wagtail.svg#wagtail") format("svg"); }
+ }
+
+@font-family-wagtail: "wagtail";
+
+/* $HEADER*/
+
+.page-header {
+    margin-bottom: 0;
+}
+
+header a.site-name p {
+    margin-bottom: 0;
+}
+
+.nav-wrapper {
+    display: none;
+}
+
+/* $LAYOUT */
+
+.mobile-content-wrapper {
+    padding-bottom: 3em;
+    border-bottom: 10px solid @color-charcoal;
+}
+
+.body-text {
+    margin-right: 5%;
+}
+.notes {
+    float: left;
+    display: inline;
+    width: 28.33334%;
+    margin-bottom: 58px;
+    a {
+        color: @color-highlight-blue;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.form-col {
+    &.form-col-half {
+        width: 50%;
+        float: left;
+        input[type=text],
+        input[type=tel],
+        input[type=email],
+        input[type=url],
+        input[type=number],
+        .richtext,
+        textarea,
+        select {
+            max-width: 90%;
+        }
+    }
+}
+
+/* $BORDERS */
+
+.borders {
+    border-top: 1px solid @color-light-grey;
+    border-bottom: 1px solid @color-light-grey;
+    padding: 1em 0;
+    h2 {
+        margin-top: 0;
+    }
+}
+
+/* $MESSAGES */
+.warning {
+  background-color: orange;
+  border: 1px solid darken(orange, 15%);
+  padding: 0.5em;
+}
+
+/* $PROFILE FORM OVERRIDES */
+form.student-profile,
+form.now-page {
+    input[type=text],
+    input[type=tel],
+    input[type=email],
+    input[type=url],
+    input[type=number],
+    .richtext,
+    textarea,
+    select {
+        font-size: @font-size-16;
+        max-width: 82%;
+        display: block;
+        margin-top: 0.5em;
+        outline: none;
+    }
+    select {
+        content: "";
+        display: block;
+        background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+        background-repeat: no-repeat;
+        background-position: right 17px top 19px;
+        padding-right: 4.5em;
+        -moz-appearance: none;
+        .border-box();
+    }
+    textarea,
+    .richtext {
+        background: @color-pale-grey;
+    }
+    label {
+        display: block;
+        margin-top: 0.5em;
+    }
+    // Hide checkboxes 
+    .checkbox-label input[type=checkbox] {
+        display: none;
+    }
+    // Styling 
+    .checkbox-label .icon {
+        font-size: @font-size-30;
+        color: @color-highlight-blue;
+        vertical-align: middle;
+        margin-left: 0.4em;
+    }
+    // Select2: faux select box '<select>'  
+    // The dropdown div layer (<option>) is not inside the form
+    .select2-container {
+        max-width: 82%;
+        display: block;
+        color: @color-charcoal;
+        .select2-choice {
+            border: none;
+            text-transform: none;
+            background: @color-pale-grey;
+            padding: 16px;
+            padding-right: 4.5em;
+            height: auto;
+            text-decoration: none;
+            .box-sizing(border-box);
+            .box-shadow(none);
+            .border-radius(0);
+            .select2-chosen {
+                margin: 0;
+                font-size: @font-size-16;
+                color: @color-black;
+                font-weight: normal;
+                font-family: sans-serif;
+                line-height: normal;
+            }
+            .select2-arrow {
+                width: 40px;
+                background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+                background-repeat: no-repeat;
+                background-position: left center;
+                background-color: transparent;
+                border: none;
+                b {
+                    background: none;
+                }
+            }
+        }
+    }
+
+    .help-text {
+        text-transform: none;
+        max-width: 82%;
+    }
+    // Image drag and drop uploader
+    .image-uploader-block {
+        .clearfix();
+    }
+    .image-uploader-block .dropzone {
+        border: 2px dashed @color-light-grey;
+        border-left: 0;
+        text-align: center;
+        padding-top: 4em;
+        width: 150px;
+        height: 150px;
+        float: left;
+        position: relative;
+        &:first-child {
+            margin-left: 0;
+        }
+        &.hover:after {
+            content: "\f3c6";
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            left: 50%;
+            margin-left: -10px;
+            font-family: @font-family-ion;
+            font-size: @font-size-22;
+            color: @color-medium-grey;
+        }
+    }
+    label > span {
+        color: @color-pink;
+        font-weight: bold;
+        margin-left: 0.3em;
+        font-size: 1.3em;
+        vertical-align: middle;
+    }
+    // If there are errors
+    label.error > span {
+        color: @color-red;
+    }
+    label.error {
+        input,
+        textarea {
+            border: 1px solid @color-red;
+        }
+    }
+    .image-uploader-block .preview {
+        padding: 0.2em;
+        margin-bottom: 0.5em;
+        border: 2px solid @color-light-grey;
+        width: 150px;
+        height: 150px;
+        float: left;
+        background: @color-pale-grey;
+        position: relative;
+        canvas {
+            width: 100%;
+            height: auto;
+            max-width: 142px;
+            max-height: 142px;
+        }
+        img {
+            width: auto;
+            max-height: 142px;
+            text-align: center;
+        }
+        .clearbutton {
+            position: absolute;
+            bottom: 0em;
+            right: 0em;
+            margin: 0.2em;
+            padding: 0.5em;
+            width: 37px;
+            height: 38px;
+            text-align: center;
+            font-size: @font-size-24;
+        }
+    }
+    .inline-form {
+        .clearfix();
+        .move-up,
+        .move-down,
+        .delete-row {
+            font-size: @font-size-15;
+            width: 18px;
+            height: 19px;
+            text-align: center;
+            display: inline-block;
+        }
+        .delete-row {
+            text-indent: -9999%;
+            &:after {
+                color: @color-white;
+                background: @color-highlight-blue;
+                content: "\f2d7";
+                font-family: @font-family-ion;
+                text-indent: 1px;
+                width: 18px;
+                height: 19px;
+                float: left;
+                line-height: 1.35em;
+                text-align: center;
+            }
+        }
+        .delete-row:hover:after {
+            background-color: @color-pink;
+        }
+    }
+    // Hide until needed
+    .inline-form {
+        .action,
+        .delete-row {
+            .opacity(0);
+            .transition(0.5s ease all);
+        }
+    }
+    // Show when form el is hovered
+    .inline-form:hover {
+        .action,
+        .delete-row {
+            .opacity(100);
+            .transition(0.8s ease all);
+        }
+    }
+    .field-set {
+        padding-top: 1em;
+        margin-top: 1em;
+        border-top: 1px solid @color-middle-column-lines;
+        &:last-child {
+            border: 0;
+        }
+        label {
+            margin-bottom: 0.2em;
+        }
+        .add-row.button {
+            margin-top: 0.5em;
+            display: inline-block;
+        }
+    }
+    #carousel .dynamic-formset-carousel {
+        border-top: 1px dashed darken(@color-pale-grey, 5%);
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        &:first-child {
+            border-top: 0;
+            padding-top: 0;
+            margin-top: 0;
+        }
+        .form-col-holder {
+            padding-bottom: 1em;
+            border-bottom: 1px dashed darken(@color-pale-grey, 5%);
+            margin-bottom: 1em;
+            .clearfix();
+        }
+    }
+}
+
+/* $SELECT2 DROPDOWN */
+// The dropdown div layer is not inside the form
+// The faux select box is (see above code)
+
+
+//Dropdown box styling
+.select2-drop {
+    border: none;
+    background: @color-pale-grey;
+    color: @color-black;
+    .box-shadow(none);
+    .border-radius(0);
+}
+.select2-drop-active {
+    border: none;
+}
+//Search bar
+.select2-search input {
+    background-color: transparent;
+}
+.select2-result-label,
+.select2-results .select2-highlighted {
+    font-family: sans-serif;
+    &:hover {
+        background-color: @color-pink-darker;        
+    }
+}
+
+/* $HALLO EDITOR TOOL BAR */
+
+.richtext {
+    padding: 16px;
+    min-height: 200px;
+    //Height of the buttons
+    padding-top: 42px;
+}
+
+.richtext h1, 
+.richtext h2, 
+.richtext h3, 
+.richtext h4, 
+.richtext h5, 
+.richtext h6, 
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul,
+.richtext ol,
+label .richtext span,
+.richtext {
+    font-family: sans-serif;
+    text-transform: none;
+    border: none;
+    color: @color-black;
+}
+.richtext p, 
+.richtext i, 
+.richtext b,
+.richtext ul li,
+.richtext ol li {
+    font-size: @font-size-16;
+}
+
+.richtext b
+{
+  font-weight: bold;
+}
+.richtext i b
+{
+  font-weight: bold;
+  font-style: italic;
+}
+
+
+.hallotoolbar {
+    background: @color-light-grey;
+    margin-left: 0.15em;
+    margin-top: 2.2em;
+    button {
+        border: none;
+        height: 2.2em;
+        width: 3.2em;
+        padding: 0.5em;
+        display: inline-block;
+        &.ui-state-active {
+            color: @color-white;
+            background-color: @color-pink-darker;
+        }
+    }
+    .ui-button-text {
+        display: block;
+        line-height: normal;
+        font-size: @font-size-16;
+        i {
+            font-style: normal;
+            font-weight: normal;
+            font-size: @font-size-16;
+            font-family: @font-family-wagtail;
+            -webkit-font-smoothing: antialiased;
+        }
+    }   
+    .icon-bold:before {
+        content: "C"; 
+    }
+    .icon-italic:before {
+        content: "E"; 
+    }
+    .icon-undo:before {
+        content: "H"; 
+    }
+    .icon-repeat:before {
+        content: "I"; 
+    }
+    .icon-list-ol:before {
+        content: "G"; 
+    }
+    .icon-list-ul:before {
+        content: "F"; 
+    }
+    .icon-media:before {
+        content: "P"; 
+    }
+    .icon-horizontalrule:before {
+        content: "_"; 
+    }
+    .icon-link:before {
+        content: "J"; 
+    }
+    .icon-file-text-alt:before {
+        content: "\f12e";
+        font-family: @font-family-ion; 
+    }
+    .icon-picture:before {
+        content: "\f147"; 
+        font-family: @font-family-ion; 
+    }
+}
+
+/* $PROFILE NAV */
+
+.student-profile-nav {
+    height: auto;
+    width: 100%;
+    padding-top: 1.2em;
+    padding-bottom: 1.2em;
+    margin-bottom: 1em;
+    border-top: 1px solid @color-light-grey;
+    overflow: visible;
+    .clearfix();
+    a.active {
+        color: @color-pink-darker;
+    }
+    ul {
+        position: static;
+        float: left;
+        max-width: 150px;
+        position: relative;
+        top: auto;
+        left: auto;
+        .clearfix();
+        &:hover {
+            ul.inner-menu {
+                display: block;
+            }
+        }
+        &.outer-menu.rca-now-link {
+            float: right;
+            padding-left: 0.5em;
+            max-width: 145px;
+        }
+    }
+    ul li {
+        position: static;
+        width: 100%;
+        text-transform: uppercase;
+        font-size: @font-size-15;
+        color: @color-dark-grey;
+        padding: 0.4em;
+        &.drop-down {
+            &:hover a:after {
+                color: @color-highlight-blue;
+            }
+            a:after {
+                font-family: @font-family-ion;
+                content: "\f3d0";
+                display: block;
+                float: right;
+                position: static;
+                visibility: visible;
+            }
+        }
+    }
+    ul.inner-menu {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        background-color: fadeout(@color-white, 12%);
+        padding: 0.4em;
+        top: 25px;
+        li {
+            padding: 0.2em 0;
+            margin-top: 0.5em;
+        }
+    }
+}
+
+/* $APP DETAILS */
+.app-details {
+    position: relative;
+    h2 {
+        position: absolute;
+        right: 0;
+        top: -95px;
+        font-size: @font-size-36;
+    }
+    .session-meta {
+        text-align: right;
+        padding: 8px;
+        color: @color-charcoal;
+        .icon {
+            margin-right: 0.5em;
+            color: @color-light-grey;
+        }
+        span {
+            margin-right: 0.4em;
+            padding-right: 0.4em;
+            border-right: 1px solid @color-medium-grey;
+        }
+    }
+}
+
+/* $PROFILE LIST */
+
+.profile-list {
+    td {
+        padding: 0 0.5em;
+    }
+}
+
+
+/* $PROFILE ACTIONS / $NOW ACTIONS */
+
+.profile-actions,
+.now-actions {
+    margin-top: 1em;
+    border-top: 1px solid @color-light-grey;
+    padding-top: 0.5em;
+    input,
+    a {
+        margin-bottom: 0.2em;
+    }
+}
+
+/* $BUTTONS */
+
+a.button,
+button,
+input[type=submit] {
+    color: @color-white;
+    font-family: @font-family-benton;
+    -webkit-font-smoothing: inherit;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+/* $BUTTON AS LINK */
+input.button-as-link,
+.button-as-link {
+    padding: 0;
+    color: @color-highlight-blue;
+    background: transparent;
+    text-transform: none;
+    border: none;
+    outline: none;
+    &:hover {
+        color: @color-highlight-blue;
+        text-decoration: underline;
+        background: transparent;  
+    }
+}
+
+i.icon.action {
+    background: @color-highlight-blue;
+    color: @color-white;
+    &:hover {
+        background: @color-pink;
+        cursor: pointer;
+    }
+}
+
+/* $TAGIT */
+form.now-page {
+    .tagit {
+        background: @color-pale-grey;
+        display: block;
+        padding: 16px;
+        max-width: 82%;
+        li {
+            padding: 0;
+            margin: 0;
+            margin-right: 0.5em;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    span.tagit-label.tag {
+        display: inline-block;
+        text-transform: none;
+        font-size: @font-size-16;
+        background: @color-pink-darker;
+        color: @color-white;
+        padding: 0.2em 0.4em;
+        height: 25px;
+    }
+
+    ul.tagit li.tagit-choice .tagit-close {
+        display: inline-block;
+        position: static;
+        height: 25px;
+        width: 25px;
+        line-height: 2em;
+        background: @color-pink-darker;
+    }
+
+    .ui-icon-close:after {
+        content: "\f2d7";
+        color: @color-white;
+        font-family: @font-family-ion;
+        display: inline-block;
+        margin-right: 0.1em;
+        height: 25px;
+        width: 25px;
+        line-height: 1em;
+    }
+}
+
+/* $TABLE */
+
+table {
+    margin-top: 1.8em;
+    margin-bottom: 4em;
+    background: @color-pale-grey;
+    border-bottom: 1px solid @color-pale-grey;
+    th,
+    td {
+        padding: 0.8em 0.6em;
+    }
+    tr {
+        background: @color-white;
+        border-top: 1px solid @color-pale-grey;
+        margin-top: 0.25em;
+        &:hover {
+            background-color: @color-very-pale-blue;
+        }
+    }
+    tr.first-row {
+        background: transparent;
+        border: none;
+        &:hover {
+            background-color: none;
+        }
+    }
+}
+
+/* $OVERLAY */
+
+#overlay {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 3em;
+    padding-top: 1em;
+    background-color: fadeout(@color-highlight-blue, 10%);
+    color: @color-white;
+    font-size: @font-size-16;
+    font-weight: bold;
+    z-index: 10000;
+    text-align: center;
+    strong {
+        font-size: @font-size-18;
+    }
+}

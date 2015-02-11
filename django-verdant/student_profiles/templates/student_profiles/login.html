@@ -1,0 +1,59 @@
+{% extends "student_profiles/admin_base.html" %}
+{% load compress %}
+{% load i18n %}
+{% block titletag %}{% trans "Sign in" %}{% endblock %}
+{% block bodyclass %}login{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}wagtailadmin/scss/layouts/login.scss" type="text/x-scss" />
+    {% endcompress %}
+{% endblock %}
+
+{% block furniture %}
+    <div class="content-wrapper">
+        {% if form.errors %}
+            <div class="messages">
+                <ul>
+                    <li class="error">Your username and password didn't match. Please try again.</li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <form action="{% url 'student-profiles:login' %}" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+            <h1>Sign in to My RCA</h1>
+
+            <ul class="fields">
+                <li class="full">
+                    <div class="field iconfield">
+                        {{ form.username.label_tag }}
+                        <div class="input icon-user">
+                            {{ form.username }}
+                        </div>
+                    </div>
+                </li>
+                <li class="full">
+                    <div class="field iconfield">
+                        {{ form.password.label_tag }}
+                        <div class="input icon-password">
+                            {{ form.password }}
+                        </div>
+                    </div>
+                </li>
+                <li class="submit">
+                    <input type="submit" value="{% trans 'Sign in' %}" tabindex="3"/>
+                </li>
+            </ul>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(function(){
+        $('form input[name=username]').focus();
+    })
+</script>
+{% endblock %}
