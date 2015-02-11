@@ -215,7 +215,13 @@ class StartingForm(forms.ModelForm):
 ## Basic Profile
 
 class ProfileBasicForm(forms.ModelForm):
-    
+
+    title = forms.CharField(
+        required=True,
+        label='Full Name',
+        help_text="Your name in full, as you'd like it to be seen by the public, e.g, Joe Smith",
+    )
+
     profile_image = forms.IntegerField(
         required=False,
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
@@ -341,7 +347,7 @@ class PostcardUploadForm(forms.ModelForm):
     postcard_image = forms.IntegerField(
         label='Postcard image',
         required=False,
-        help_text="Image will be used to print a set of postcards with your contact details, for you to use during the show. The image will not appear in your Show online catalogue. Image must be A6 plus 2mm 'bleed' on each edge (1801 x 1287px, ie. 152 x 109mm @ 300 dpi). This must be uploaded at the correct size and before the deadline for postcards to be printed.",
+        help_text="Image will be used to print a set of postcards with your contact details, for you to use during the Show. The image will not appear in your Show online catalogue. Image must be A6 plus 2mm 'bleed' on each edge (1801 x 1287px, ie. 152 x 109mm @ 300 dpi). This must be uploaded at the correct size and before the deadline for postcards to be printed.",
         widget=ImageInput,
     )
 

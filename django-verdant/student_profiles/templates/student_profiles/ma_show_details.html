@@ -33,7 +33,15 @@
     </section>
     <section class="notes">
       <h3>Notes</h3>
-      <p>Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on your Profile page in the Show catalogue.</p>
+      <p>
+        Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on
+        your Profile page in the Show catalogue.
+      </p>
+      <p>
+        Don't forget to complete <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>,
+        <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
+        and <a href="{% url 'student-profiles:edit-ma' page_id %}">Your Degree</a>.
+      </p>
       <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
     </section>
   </section>

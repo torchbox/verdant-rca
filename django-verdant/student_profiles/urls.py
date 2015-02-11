@@ -19,7 +19,7 @@ urlpatterns = patterns(
     url(r'^new/basic/$', basic_profile, name='new-basic'),
 
     url(r'^(?P<page_id>\d+)/basic/$', basic_profile, name='edit-basic'),
-    url(r'^(?P<page_id>\d+)/academic/$', academic_details, name='edit-academic'),
+    url(r'^(?P<page_id>\d+)/cv/$', academic_details, name='edit-academic'),
     url(r'^(?P<page_id>\d+)/postcard/$', postcard_upload, name='edit-postcard'),
 
     url(r'^(?P<page_id>\d+)/ma/$', ma_details, name='edit-ma'),
