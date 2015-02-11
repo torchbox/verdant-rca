@@ -36,11 +36,7 @@
         {% endfor %}
         </div>
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
-        </div>
+        {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
@@ -66,6 +62,7 @@
 {% block form_js %}
 <script type="text/javascript">
 
+  {% if not page.locked %}
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
 makeFormset('{{ supervisor.prefix }}');
@@ -82,6 +79,12 @@ makeRichTextEditable('id_mphil_statement');
 $('.image-uploader-block').each(function(i) {
   activateImageUpload(this.id);
 });
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
 
 updateCarouselSelects('{{ carouselitem_formset.prefix }}');
 $('#carousel select').each(function(i) {

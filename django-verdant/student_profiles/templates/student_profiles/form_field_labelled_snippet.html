@@ -5,7 +5,11 @@
         <p class="help-text">{{ field.help_text }}</p>
     {% endif %}
 
+  {% if page.locked %}
+    {% render_field field disabled="disabled" %}
+  {% else %}
     {% render_field field %}
+  {% endif %}
 
     {% if field.field.half and field.help_text %}
         <p class="help-text">{{ field.help_text }}</p>

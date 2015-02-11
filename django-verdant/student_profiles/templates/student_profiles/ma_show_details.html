@@ -23,12 +23,7 @@
         {% include "student_profiles/formset_single_field.html" with formset=show_collaborators_formset %}
         {% include "student_profiles/formset_single_field.html" with formset=show_sponsors_formset %}
 
-
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
-        </div>
+        {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
@@ -60,6 +55,7 @@
 <script type="text/javascript">
 $(function() {
 
+  {% if not page.locked %}
   makeFormset('{{ show_collaborators_formset.prefix }}');
   makeFormset('{{ show_sponsors_formset.prefix }}');
   makeFormset('{{ carouselitem_formset.prefix }}',
@@ -75,6 +71,12 @@ $(function() {
   $('.image-uploader-block').each(function(i) {
     activateImageUpload(this.id);
   });
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
 
   updateCarouselSelects('{{ carouselitem_formset.prefix }}');
   $('#carousel select').each(function(i) {

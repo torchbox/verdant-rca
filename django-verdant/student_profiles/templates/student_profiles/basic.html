@@ -24,11 +24,7 @@
         {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
         {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft" id="submit-save-draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank" id="submit-preview">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication" id="submit-save-and-submit">
-        </div>
+        {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
@@ -110,12 +106,19 @@
 <script type="text/javascript">
 $(function() {
 
+  {% if not page.locked %}
   makeFormset('{{ email_formset.prefix }}');
   makeFormset('{{ phone_formset.prefix }}');
   makeFormset('{{ website_formset.prefix }}');
 
   makeRichTextEditable('id_statement');
   activateImageUpload('profile_image');
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
 
   $(window).load(function() {
     $("#joyride-tour").joyride({

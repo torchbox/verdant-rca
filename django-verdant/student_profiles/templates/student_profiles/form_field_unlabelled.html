@@ -1,4 +1,4 @@
-{% if field.field.readonly %}
+{% if field.field.readonly or page.locked %}
   {% include 'student_profiles/form_field_readonly_snippet.html' with field=field %}
 {% else %}
   {% include 'student_profiles/form_field_snippet.html' with field=field %}

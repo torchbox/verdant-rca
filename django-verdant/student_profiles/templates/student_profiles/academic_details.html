@@ -16,20 +16,16 @@
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-      {% include 'student_profiles/form_snippet.html' with form=academic_form %}
+      {% include 'student_profiles/form_snippet.html' with form=academic_form page=page %}
 
-      {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset %}
-      {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset %}
-      {% include "student_profiles/formset_single_field.html" with formset=experiences_formset %}
-      {% include "student_profiles/formset_single_field.html" with formset=awards_formset %}
-      {% include "student_profiles/formset_single_field.html" with formset=publications_formset %}
-      {% include "student_profiles/formset_single_field.html" with formset=conferences_formset %}
+      {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset page=page %}
+      {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset page=page %}
+      {% include "student_profiles/formset_single_field.html" with formset=experiences_formset page=page %}
+      {% include "student_profiles/formset_single_field.html" with formset=awards_formset page=page %}
+      {% include "student_profiles/formset_single_field.html" with formset=publications_formset page=page %}
+      {% include "student_profiles/formset_single_field.html" with formset=conferences_formset page=page %}
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
-        </div>
+      {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
@@ -56,12 +52,19 @@
 <script type="text/javascript">
 $(function() {
   
+  {% if not page.locked %}
   makeFormset('{{ previous_degrees_formset.prefix }}');
   makeFormset('{{ exhibitions_formset.prefix }}');
   makeFormset('{{ experiences_formset.prefix }}');
   makeFormset('{{ awards_formset.prefix }}');
   makeFormset('{{ publications_formset.prefix }}');
   makeFormset('{{ conferences_formset.prefix }}');
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
 
 })
 </script>

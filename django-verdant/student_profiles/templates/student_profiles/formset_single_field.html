@@ -8,7 +8,7 @@
   <div class="inline-form">
     <label class="field">
     {% for field in form %}
-      {% include "student_profiles/form_field_unlabelled.html" with field=field %}
+      {% include "student_profiles/form_field_unlabelled.html" with field=field page=page %}
     {% endfor %}
     </label>
     <i class="icon action ion-android-arrow-up move-up"></i>

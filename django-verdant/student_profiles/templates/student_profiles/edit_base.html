@@ -103,6 +103,12 @@
     </nav>
 </div>
 
+  {% if page.locked %}
+    <div>
+      This page is locked for editing, because it is being reviewed. Please wait with further edits until the page is published or returned for editing.
+    </div>
+  {% endif %}
+
 
 {% block form_content %}{% endblock form_content %}  {# for inserting the editing forms #}
 
@@ -216,9 +222,11 @@
 
 {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
 
+  {% if not page.locked %}
     {% compress js %}
-<script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
-{% endcompress %}
+      <script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+    {% endcompress %}
+  {% endif %}
 
 
 {% endblock js %}
