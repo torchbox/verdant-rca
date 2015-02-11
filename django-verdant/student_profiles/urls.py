@@ -19,7 +19,7 @@ urlpatterns = patterns(
     url(r'^new/basic/$', basic_profile, name='new-basic'),
 
     url(r'^(?P<page_id>\d+)/basic/$', basic_profile, name='edit-basic'),
-    url(r'^(?P<page_id>\d+)/academic/$', academic_details, name='edit-academic'),
+    url(r'^(?P<page_id>\d+)/cv/$', academic_details, name='edit-academic'),
     url(r'^(?P<page_id>\d+)/postcard/$', postcard_upload, name='edit-postcard'),
 
     url(r'^(?P<page_id>\d+)/ma/$', ma_details, name='edit-ma'),
@@ -31,7 +31,7 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/phd_show/$', phd_show_details, name='edit-phd-show'),
 
     url(r'^(?P<page_id>\d+)/basic/image/$', image_upload, {'field': 'profile_image'}, name='edit-basic-image'),
-    url(r'^(?P<page_id>\d+)/postcard/image/$', image_upload, {'field': 'postcard_image', 'max_size': 10 * 1024 * 1024, 'min_dim': (1278, 1801)}),
+    url(r'^(?P<page_id>\d+)/postcard/image/$', image_upload, {'field': 'postcard_image', 'max_size': 10 * 1024 * 1024, 'min_dim': (1278, 1801), 'force': True}),
     url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/phd_show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/mphil_show/image/$', image_upload),

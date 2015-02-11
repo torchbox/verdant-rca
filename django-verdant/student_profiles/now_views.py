@@ -185,6 +185,8 @@ def submit(request, page_id):
         user=request.user,
         submitted_for_moderation=True,
     )
+    page.locked = True
+    page.save()
 
     messages.success(request, u"Blog page '{}' was submitted for moderation".format(page.title))
 

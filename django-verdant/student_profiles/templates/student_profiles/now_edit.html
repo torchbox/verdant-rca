@@ -25,8 +25,10 @@
         {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
 
         <div class="now-actions">
+        {% if not page.locked %}
           <input type="submit" class="page-save" value="Save as draft">
           <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+        {% endif %}
           {% if page %}
           <input type="submit" class="preview-post" value="Preview" name="preview" formtarget="_blank">
           {% endif %}
@@ -46,8 +48,11 @@
 
 {% block form_js %}
 <script type="text/javascript">
+
 makeRichTextEditable('id_body');
-  
+
+  {% if not page.locked %}
+
 $('#id_date').datetimepicker({
   timepicker: false,
   format: 'Y-m-d',
@@ -89,7 +94,27 @@ $('#id_by').change(function() {
 $('#id_by').change();
 
 $('#id_author_single').select2({'width': '100%'});
-  
+  {% else %}
+    updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+    $('#id_by').change(function() {
+      var value = $(this).val();
+
+      if (value == 'single') {
+        $('#id_author_single').parent().show();
+        $('#id_author').parent().hide();
+      }
+      else if (value == 'group') {
+        $('#id_author_single').parent().hide();
+        $('#id_author').parent().show();
+      }
+    });
+    $('#id_by').change();
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
+
 </script>
 
 {% endblock form_js %}

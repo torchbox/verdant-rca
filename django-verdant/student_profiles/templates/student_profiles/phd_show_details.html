@@ -37,17 +37,21 @@
         {% endfor %}
         </div>
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication">
-        </div>
+        {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
         <h3>Notes</h3>
-        <p>Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on your Profile page in the Show catalogue.</p>
-        <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+      <p>
+        Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on
+        your Profile page in the Show catalogue.
+      </p>
+      <p>
+        Don't forget to complete <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>,
+        <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
+        and <a href="{% url 'student-profiles:edit-phd' page_id %}">Your Degree</a>.
+      </p>
+      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
     </section>
   </section>
 </div>
@@ -59,6 +63,9 @@
 {% block form_js %}
 <script type="text/javascript">
 
+makeRichTextEditable('id_phd_statement');
+
+  {% if not page.locked %}
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
 makeFormset('{{ supervisor.prefix }}');
@@ -71,10 +78,15 @@ makeFormset('{{ carouselitem_formset.prefix }}',
   }
 );
 
-makeRichTextEditable('id_phd_statement');
 $('.image-uploader-block').each(function(i) {
   activateImageUpload(this.id);
 });
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
 
 updateCarouselSelects('{{ carouselitem_formset.prefix }}');
 $('#carousel select').each(function(i) {
