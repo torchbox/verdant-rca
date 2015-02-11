@@ -399,7 +399,7 @@ def get_programme_synonyms(programme):
         .values_list('programme', flat=True)
 
     if programmes.exists():
-        return programmes
+        return list(programmes)
     else:
         return [programme]
 
@@ -4585,7 +4585,7 @@ class ResearchItem(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
+            programmes=get_programme_synonyms(self.programme) if self.programme else None,
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -5285,7 +5285,7 @@ class InnovationRCAProject(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
+            programmes=get_programme_synonyms(self.programme) if self.programme else None,
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -5546,7 +5546,7 @@ class ReachOutRCAProject(Page, SocialFields):
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=(list(get_programme_synonyms(self.programme)) if self.programme else None),
+            programmes=get_programme_synonyms(self.programme) if self.programme else None,
             schools=([self.school] if self.school else None),
             count=count,
         )
