@@ -67,7 +67,6 @@ $(function() {
     }
   );
   
-  makeRichTextEditable('id_show_work_description');
   $('.image-uploader-block').each(function(i) {
     activateImageUpload(this.id);
   });
@@ -77,6 +76,8 @@ $(function() {
     $('.dropzone').remove();
     $('.clearbutton').remove();
   {% endif %}
+
+  makeRichTextEditable('id_show_work_description');
 
   updateCarouselSelects('{{ carouselitem_formset.prefix }}');
   $('#carousel select').each(function(i) {

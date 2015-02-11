@@ -48,8 +48,10 @@
 
 {% block form_js %}
 <script type="text/javascript">
-  {% if not page.locked %}
+
 makeRichTextEditable('id_body');
+
+  {% if not page.locked %}
 
 $('#id_date').datetimepicker({
   timepicker: false,

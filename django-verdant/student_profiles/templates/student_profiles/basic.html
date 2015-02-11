@@ -106,12 +106,13 @@
 <script type="text/javascript">
 $(function() {
 
+  makeRichTextEditable('id_statement');
+
   {% if not page.locked %}
   makeFormset('{{ email_formset.prefix }}');
   makeFormset('{{ phone_formset.prefix }}');
   makeFormset('{{ website_formset.prefix }}');
 
-  makeRichTextEditable('id_statement');
   activateImageUpload('profile_image');
   {% else %}
     $('.move-up').remove();
@@ -119,6 +120,7 @@ $(function() {
     $('.dropzone').remove();
     $('.clearbutton').remove();
   {% endif %}
+
 
   $(window).load(function() {
     $("#joyride-tour").joyride({

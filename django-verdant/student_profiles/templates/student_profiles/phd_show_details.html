@@ -63,6 +63,8 @@
 {% block form_js %}
 <script type="text/javascript">
 
+makeRichTextEditable('id_phd_statement');
+
   {% if not page.locked %}
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
@@ -76,7 +78,6 @@ makeFormset('{{ carouselitem_formset.prefix }}',
   }
 );
 
-makeRichTextEditable('id_phd_statement');
 $('.image-uploader-block').each(function(i) {
   activateImageUpload(this.id);
 });

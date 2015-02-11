@@ -75,7 +75,6 @@ makeFormset('{{ carouselitem_formset.prefix }}',
   }
 );
 
-makeRichTextEditable('id_mphil_statement');
 $('.image-uploader-block').each(function(i) {
   activateImageUpload(this.id);
 });
@@ -86,15 +85,17 @@ $('.image-uploader-block').each(function(i) {
     $('.clearbutton').remove();
   {% endif %}
 
-updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-$('#carousel select').each(function(i) {
-  $(this).trigger('change');
-});
-  
-updateSupervisorSelects('{{ supervisor.prefix }}');
-$('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
+  makeRichTextEditable('id_mphil_statement');
 
-$('.supervisor-select').select2();
+  updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+  $('#carousel select').each(function(i) {
+    $(this).trigger('change');
+  });
+
+  updateSupervisorSelects('{{ supervisor.prefix }}');
+  $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
+
+  $('.supervisor-select').select2();
 
 </script>
 {% endblock form_js %}
