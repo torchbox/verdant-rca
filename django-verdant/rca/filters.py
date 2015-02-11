@@ -3,6 +3,8 @@ import json
 
 
 def run_filters_q(cls, q, filters):
+    from rca.models import get_programme_synonyms
+
     filters_out = []
 
     # Iterate through filters
@@ -11,19 +13,24 @@ def run_filters_q(cls, q, filters):
         queryset = cls.objects.filter(q)
 
         # Get options
-        options_field = field.rstrip('__in')
         options = [
-            values[options_field]
-            for values in queryset.order_by(options_field).distinct(options_field).values(options_field)
+            values[field]
+            for values in queryset.order_by(field).distinct(field).values(field)
         ]
 
         # Apply filter to queryset
         if current_value:
-            queryset_filtered = queryset.filter(**{field: current_value})
+
+            if field.endswith('programme'):
+                filter_dict = {'%s__in' % field: get_programme_synonyms(current_value)}
+            else:
+                filter_dict = {field: current_value}
+
+            queryset_filtered = queryset.filter(**filter_dict)
 
             # Only apply the filter if there are values
             if queryset_filtered.exists():
-                q &= Q(**{field: current_value})
+                q &= Q(**filter_dict)
             else:
                 current_value = None
 
@@ -34,6 +41,7 @@ def run_filters_q(cls, q, filters):
 
 
 def run_filters(queryset, filters):
+    from rca.models import get_programme_synonyms
     filters_out = []
 
     # Iterate through filters
@@ -46,7 +54,13 @@ def run_filters(queryset, filters):
 
         # Apply filter to queryset
         if current_value:
-            queryset_filtered = queryset.filter(**{field: current_value})
+
+            if field.endswith('programme'):
+                filter_dict = {'%s__in' % field: get_programme_synonyms(current_value)}
+            else:
+                filter_dict = {field: current_value}
+
+            queryset_filtered = queryset.filter(**filter_dict)
 
             # Only apply the filter if there are values
             if queryset_filtered.exists():

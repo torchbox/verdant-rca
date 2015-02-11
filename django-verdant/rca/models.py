@@ -1090,7 +1090,7 @@ class NewsIndex(Page, SocialFields):
         # Run school and programme filters
         news, filters = run_filters(news, [
             ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme__in', get_programme_synonyms(programme)),
+            ('programme', 'related_programmes__programme', programme),
             ('areas', 'areas__area', area)
         ])
 
@@ -1811,7 +1811,7 @@ class EventIndex(Page, SocialFields):
         # Run filters
         events, filters = run_filters(events, [
             ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme__in', get_programme_synonyms(programme)),
+            ('programme', 'related_programmes__programme', programme),
             ('location', 'location', location),
             ('area', 'related_areas__area', area),
             ('audience', 'audience', audience),
@@ -2848,7 +2848,7 @@ class AlumniIndex(Page, SocialFields):
         # Run school and programme filters
         alumni_pages, filters = run_filters(alumni_pages, [
             ('school', 'school', school),
-            ('programme', 'programme__in', get_programme_synonyms(programme)),
+            ('programme', 'programme', programme),
         ])
 
         alumni_pages = alumni_pages.order_by('random_order')
@@ -3130,7 +3130,7 @@ class StaffIndex(Page, SocialFields):
         # Run filters
         staff_pages, filters = run_filters(staff_pages, [
             ('school', 'roles__school', school),
-            ('programme', 'roles__programme__in', get_programme_synonyms(programme)),
+            ('programme', 'roles__programme', programme),
             ('staff_type', 'staff_type', staff_type),
             ('area', 'roles__area', area),
         ])
@@ -3245,11 +3245,11 @@ class ResearchStudentIndex(Page, SocialFields):
         # Run filters
         phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
             ('school', 'phd_school', school),
-            ('programme', 'phd_programme__in', get_programme_synonyms(programme)),
+            ('programme', 'phd_programme', programme),
         ])
         mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
             ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme__in', get_programme_synonyms(programme)),
+            ('programme', 'mphil_programme', programme),
         ])
 
         # Combine filters
@@ -4177,7 +4177,7 @@ class RcaNowIndex(Page, SocialFields):
         # Run school, area and programme filters
         rca_now_items, filters = run_filters(rca_now_items, [
             ('school', 'school', school),
-            ('programme', 'programme__in', get_programme_synonyms(programme)),
+            ('programme', 'programme', programme),
             ('area', 'area', area),
         ])
 
@@ -4373,7 +4373,7 @@ class RcaBlogIndex(Page, SocialFields):
         # Run school, area and programme filters
         # rca_blog_items, filters = run_filters(rca_blog_items, [
         #     ('school', 'school', school),
-        #     ('programme', 'programme__in', get_programme_synonyms(programme)),
+        #     ('programme', 'programme', programme),
         #     ('area', 'area', area),
         # ])
 
@@ -4827,17 +4827,17 @@ class GalleryPage(Page, SocialFields):
         # Run filters
         ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
             ('school', 'ma_school', school),
-            ('programme', 'ma_programme__in', get_programme_synonyms(programme)),
+            ('programme', 'ma_programme', programme),
             ('year', 'ma_graduation_year', year),
         ])
         mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
             ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme__in', get_programme_synonyms(programme)),
+            ('programme', 'mphil_programme', programme),
             ('year', 'mphil_graduation_year', year),
         ])
         phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
             ('school', 'phd_school', school),
-            ('programme', 'phd_programme__in', get_programme_synonyms(programme)),
+            ('programme', 'phd_programme', programme),
             ('year', 'phd_graduation_year', year),
         ])
 
