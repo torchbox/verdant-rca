@@ -11,9 +11,10 @@ def run_filters_q(cls, q, filters):
         queryset = cls.objects.filter(q)
 
         # Get options
+        options_field = field.rstrip('__in')
         options = [
-            values[field]
-            for values in queryset.order_by(field).distinct(field).values(field)
+            values[options_field]
+            for values in queryset.order_by(options_field).distinct(options_field).values(options_field)
         ]
 
         # Apply filter to queryset
