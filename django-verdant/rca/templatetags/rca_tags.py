@@ -236,7 +236,7 @@ def staff_random(context, exclude=None, programmes=None, count=4):
     if exclude:
         staff = staff.exclude(id=exclude.id)
     if programmes:
-        programmes = sum([list(get_programme_synonyms(programme)) for programme in programmes], [])
+        programmes = sum([get_programme_synonyms(programme) for programme in programmes], [])
         staff = staff.filter(roles__programme__in=programmes)
     return {
         'staff': staff[:count],
@@ -248,7 +248,7 @@ def staff_related(context, staff_page, count=4):
     staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
     # import pdb; pdb.set_trace()
     if staff_page.programmes:
-        programmes = sum([list(get_programme_synonyms(programme)) for programme in staff_page.programmes], [])
+        programmes = sum([get_programme_synonyms(programme) for programme in staff_page.programmes], [])
         staff = staff.filter(roles__programme__in=programmes)
     elif staff_page.school:
         staff = staff.filter(school=staff_page.school)
