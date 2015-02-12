@@ -4,6 +4,7 @@ import unicodedata
 import json
 
 from django import forms
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
@@ -34,7 +35,7 @@ from .forms import ImageForm
 NEW_STUDENT_PAGE_INDEX_ID = 6201
 
 # module-global setting determining whether show pages and postcard upload is enabled or not
-SHOW_PAGES_ENABLED = True
+SHOW_PAGES_ENABLED = bool(getattr(settings, 'STUDENT_UPLOADS_SHOW_PAGES_ENABLED', False))
 
 # we override login_required with our own login_required because we want to control the login URL
 login_required = login_required(login_url='student-profiles:login')

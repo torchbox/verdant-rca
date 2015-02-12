@@ -53,6 +53,7 @@
           </ul>
         </ul>
 
+        {% if SHOW_PAGES_ENABLED %}
         {% if is_phd %}
         <ul class="outer-menu">
           <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
@@ -69,6 +70,7 @@
         </ul>
             {% endif %}
           {% endif %}
+        {% endif %}
         {% endif %}
 
 

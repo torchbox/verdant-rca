@@ -48,11 +48,13 @@
       {% endif %}
       {% endif %}
 
+
     <h3>RCA Now</h3>
     <p>
       <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add and edit blog posts featuring your work-in-progress for RCANow</a>
     </p>
 
+        {% if SHOW_PAGES_ENABLED %}
       <h3>Show project Details</h3>
       {% if is_phd %}
         <p>
@@ -78,6 +80,7 @@
         Upload an image to request 200 postcards for your own use during the Show
       </a>
     </p>
+        {% endif %}
 
 
     </section>
