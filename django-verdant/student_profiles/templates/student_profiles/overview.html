@@ -30,20 +30,22 @@
       <p>
         <strong><a href="{% url 'student-profiles:edit-academic' page_id %}">CV:</a></strong> your experience and academic background
       </p>
-      {% if is_ma %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-ma' page_id %}">Your MA degree:</a></strong> details about your programme and dissertation
-        </p>
-      {% endif %}
-      {% if is_mphil %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-mphil' page_id %}">Your MPhil degree:</a></strong> details about your programme and dissertation
-        </p>
-      {% endif %}
       {% if is_phd %}
         <p>
-          <strong><a href="{% url 'student-profiles:edit-phd' page_id %}">Your PhD degree:</a></strong> details about your programme and dissertation
+          <strong><a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree:</a></strong> details about your programme and dissertation
         </p>
+      {% else %}
+      {% if is_mphil %}
+        <p>
+          <strong><a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree:</a></strong> details about your programme and dissertation
+        </p>
+      {% else %}
+      {% if is_ma %}
+        <p>
+          <strong><a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree:</a></strong> details about your programme and dissertation
+        </p>
+      {% endif %}
+      {% endif %}
       {% endif %}
 
     <h3>RCA Now</h3>
@@ -52,20 +54,22 @@
     </p>
 
       <h3>Show project Details</h3>
-      {% if is_ma %}
-      <p>
-        <strong><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
-      </p>
-      {% endif %}
-      {% if is_mphil %}
-      <p>
-        <strong><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
-      </p>
-      {% endif %}
       {% if is_phd %}
-      <p>
-        <strong><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
-      </p>
+        <p>
+          <strong><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+        </p>
+      {% else %}
+        {% if is_mphil %}
+          <p>
+            <strong><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+          </p>
+        {% else %}
+          {% if is_ma %}
+            <p>
+              <strong><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+            </p>
+          {% endif %}
+        {% endif %}
       {% endif %}
 
     <h3>Postcard upload</h3>

@@ -24,11 +24,7 @@
         {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
         {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save Draft" id="submit-save-draft">
-          <input type="submit" class="" value="Preview" name="preview" formtarget="_blank" id="submit-preview">
-          <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication" id="submit-save-and-submit">
-        </div>
+        {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
     <section class="notes">
@@ -37,14 +33,16 @@
         Essential information about you and your contact information, which will all appear on your website profile and
         Show digital catalogue entry.
       </p>
-      {% if is_ma %}
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show</a> project details.</p>
-      {% endif %}
-      {% if is_mphil %}
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show</a> project details.</p>
-      {% endif %}
       {% if is_phd %}
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show</a> project details.</p>
+        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
+      {% else %}
+        {% if is_mphil %}
+          <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
+        {% else %}
+          {% if is_ma %}
+            <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
+          {% endif %}
+        {% endif %}
       {% endif %}
       <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
     </section>
@@ -110,12 +108,21 @@
 <script type="text/javascript">
 $(function() {
 
+  makeRichTextEditable('id_statement');
+
+  {% if not page.locked %}
   makeFormset('{{ email_formset.prefix }}');
   makeFormset('{{ phone_formset.prefix }}');
   makeFormset('{{ website_formset.prefix }}');
 
-  makeRichTextEditable('id_statement');
   activateImageUpload('profile_image');
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
+
 
   $(window).load(function() {
     $("#joyride-tour").joyride({

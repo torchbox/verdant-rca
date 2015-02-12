@@ -443,11 +443,7 @@ def postcard_upload(request, page_id):
     if request.method == 'POST':
         data['form'] = form = PostcardUploadForm(request.POST, instance=page)
 
-        if page.locked:
-            if not request.is_ajax():
-                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
-                messages.error(request, 'The page could not be saved, it is currently locked')
-        elif form.is_valid():
+        if form.is_valid():
             page = form.save(commit=False)
 
             img = page.postcard_image
@@ -589,16 +585,31 @@ def mphil_details(request, page_id):
     data, profile_page = initial_context(request, page_id)
 
     data['mphil_form'] = MPhilForm(instance=profile_page)
+    supervisor_initial = [
+        {
+            'supervisor_type': 'internal' if s.supervisor is not None else 'other',
+            'supervisor': s.supervisor, 'supervisor_other': s.supervisor_other,
+        }
+        for s in profile_page.mphil_supervisors.all()
+    ]
+    data['supervisor'] = MPhilSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
 
     if request.method == 'POST':
         mpf = data['mphil_form'] = MPhilForm(request.POST, instance=profile_page)
+        suf = data['supervisor'] = MPhilSupervisorFormset(request.POST, prefix='supervisor')
 
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif mpf.is_valid():
+        elif all((mpf.is_valid(), suf.is_valid())):
             page = mpf.save(commit=False)
+
+            page.mphil_supervisors = [
+                NewStudentPageMPhilSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
+                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
+            ]
+
             save_page(page, request)
             
             if request.is_ajax():
@@ -609,6 +620,7 @@ def mphil_details(request, page_id):
         else:
             e = []
             if not mpf.is_valid(): e.append('the form fields')
+            if not suf.is_valid(): e.append('supervisor fields')
             data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
@@ -637,27 +649,17 @@ def mphil_show_details(request, page_id):
         {'name': c.name} for c in profile_page.mphil_sponsors.all()
     ])
 
-    supervisor_initial = [
-        {
-            'supervisor_type': 'internal' if s.supervisor is not None else 'other',
-            'supervisor': s.supervisor, 'supervisor_other': s.supervisor_other,
-        }
-        for s in profile_page.mphil_supervisors.all()
-    ]
-    data['supervisor'] = MPhilSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
-
     if request.method == 'POST':
         mpf = data['mphil_show_form'] = MPhilShowForm(request.POST, instance=profile_page)
         cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
         cof = data['collaborator'] = MPhilCollaboratorFormset(request.POST, prefix='collaborator')
         spf = data['sponsor'] = MPhilSponsorFormset(request.POST, prefix='sponsor')
-        suf = data['supervisor'] = MPhilSupervisorFormset(request.POST, prefix='supervisor')
 
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
+        elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf))):
 
             page = mpf.save(commit=False)
 
@@ -668,11 +670,6 @@ def mphil_show_details(request, page_id):
             ]
             page.mphil_sponsors = [
                 NewStudentPageMPhilSponsor(name=f['name'].strip()) for f in spf.ordered_data if f.get('name')
-            ]
-
-            page.mphil_supervisors = [
-                NewStudentPageMPhilSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
-                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
 
             save_page(page, request)
@@ -688,7 +685,6 @@ def mphil_show_details(request, page_id):
             if not cif.is_valid(): e.append('the carousel items')
             if not cof.is_valid(): e.append('collaborator fields')
             if not spf.is_valid(): e.append('sponsor fields')
-            if not suf.is_valid(): e.append('supervisor fields')
             data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
@@ -705,15 +701,31 @@ def phd_details(request, page_id):
 
     data['phd_form'] = PhDForm(instance=profile_page)
 
+    supervisor_initial = [
+        {
+            'supervisor_type': 'internal' if s.supervisor is not None else 'other',
+            'supervisor': s.supervisor, 'supervisor_other': s.supervisor_other,
+        }
+        for s in profile_page.phd_supervisors.all()
+    ]
+    data['supervisor'] = PhDSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
+
     if request.method == 'POST':
         mpf = data['phd_form'] = PhDForm(request.POST, instance=profile_page)
+        suf = data['supervisor'] = PhDSupervisorFormset(request.POST, prefix='supervisor')
 
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif mpf.is_valid():
+        elif all((mpf.is_valid(), suf.is_valid())):
             page = mpf.save(commit=False)
+
+            page.phd_supervisors = [
+                NewStudentPagePhDSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
+                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
+            ]
+
             save_page(page, request)
             
             if request.is_ajax():
@@ -724,6 +736,7 @@ def phd_details(request, page_id):
         else:
             e = []
             if not mpf.is_valid(): e.append('the form fields')
+            if not suf.is_valid(): e.append('supervisor fields')
             data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
@@ -752,27 +765,17 @@ def phd_show_details(request, page_id):
         {'name': c.name} for c in profile_page.phd_sponsors.all()
     ])
 
-    supervisor_initial = [
-        {
-            'supervisor_type': 'internal' if s.supervisor is not None else 'other',
-            'supervisor': s.supervisor, 'supervisor_other': s.supervisor_other,
-        }
-        for s in profile_page.phd_supervisors.all()
-    ]
-    data['supervisor'] = PhDSupervisorFormset(prefix='supervisor', initial=supervisor_initial)
-
     if request.method == 'POST':
         mpf = data['phd_show_form'] = PhDShowForm(request.POST, instance=profile_page)
         cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
         cof = data['collaborator'] = PhDCollaboratorFormset(request.POST, prefix='collaborator')
         spf = data['sponsor'] = PhDSponsorFormset(request.POST, prefix='sponsor')
-        suf = data['supervisor'] = PhDSupervisorFormset(request.POST, prefix='supervisor')
 
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
-        elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf, suf))):
+        elif all(map(lambda f: f.is_valid(), (mpf, cif, cof, spf))):
 
             page = mpf.save(commit=False)
 
@@ -783,11 +786,6 @@ def phd_show_details(request, page_id):
             ]
             page.phd_sponsors = [
                 NewStudentPagePhDSponsor(name=f['name'].strip()) for f in spf.ordered_data if f.get('name')
-            ]
-
-            page.phd_supervisors = [
-                NewStudentPagePhDSupervisor(supervisor=c['supervisor'], supervisor_other=c['supervisor_other'])
-                for c in suf.ordered_data if c['supervisor'] or c['supervisor_other']
             ]
 
             save_page(page, request)
@@ -803,7 +801,6 @@ def phd_show_details(request, page_id):
             if not cif.is_valid(): e.append('the carousel items')
             if not cof.is_valid(): e.append('collaborator fields')
             if not spf.is_valid(): e.append('sponsor fields')
-            if not suf.is_valid(): e.append('supervisor fields')
             data['errors'] = ' and '.join(e)
 
     if request.is_ajax():
@@ -818,7 +815,7 @@ def phd_show_details(request, page_id):
 
 @require_POST
 @login_required
-def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
+def image_upload(request, page_id, field=None, max_size=None, min_dim=None, force=False):
     """Upload an image file and create an RcaImage out of it.
 
     If field is given it'll be attached to the page in the given field.
@@ -828,7 +825,7 @@ def image_upload(request, page_id, field=None, max_size=None, min_dim=None):
     data, profile_page = initial_context(request, page_id)
     
     form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
-    if profile_page.locked:
+    if profile_page.locked and not force:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
         return HttpResponse(json.dumps(res), content_type='application/json')
     elif form.is_valid():

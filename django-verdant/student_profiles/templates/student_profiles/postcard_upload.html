@@ -94,6 +94,10 @@ $(function() {
 
 })
 </script>
+  {% if page.locked %}
+    {# override the inclusion of autosave because we actually *do* want autosave here even for locked pages #}
+    <script src="{% static "student_profiles/js/autosave.js" %}"></script>
+  {% endif %}
 {% endblock form_js %}
 
 
