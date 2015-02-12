@@ -23,19 +23,6 @@
         {% include "student_profiles/formset_single_field.html" with formset=collaborator %}
         {% include "student_profiles/formset_single_field.html" with formset=sponsor %}
 
-        {{ supervisor.management_form }}
-        <h4>Supervisors</h4>
-        <div id="{{ supervisor.prefix }}" class="field-set">
-        {% for form in supervisor %}
-          <div class="inline-form">
-            {{ form.id }}
-            {% include 'student_profiles/form_snippet.html' with form=form %}
-            <i class="icon action ion-android-arrow-up move-up"></i>
-            <i class="icon action ion-android-arrow-down move-down"></i>
-          </div>
-        {% endfor %}
-        </div>
-
         {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
@@ -65,7 +52,6 @@
   {% if not page.locked %}
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
-makeFormset('{{ supervisor.prefix }}');
 makeFormset('{{ carouselitem_formset.prefix }}',
   addedFunc=function(row) {
     updateCarouselSelects('{{ carouselitem_formset.prefix }}');
@@ -91,11 +77,6 @@ $('.image-uploader-block').each(function(i) {
   $('#carousel select').each(function(i) {
     $(this).trigger('change');
   });
-
-  updateSupervisorSelects('{{ supervisor.prefix }}');
-  $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
-
-  $('.supervisor-select').select2();
 
 </script>
 {% endblock form_js %}

@@ -19,6 +19,19 @@
         
         {% include 'student_profiles/form_snippet.html' with form=phd_form %}
 
+        {{ supervisor.management_form }}
+        <h4>Supervisors</h4>
+        <div id="{{ supervisor.prefix }}" class="field-set">
+        {% for form in supervisor %}
+          <div class="inline-form">
+            {{ form.id }}
+            {% include 'student_profiles/form_snippet.html' with form=form %}
+            <i class="icon action ion-android-arrow-up move-up"></i>
+            <i class="icon action ion-android-arrow-down move-down"></i>
+          </div>
+        {% endfor %}
+        </div>
+
         {% include "student_profiles/profile-actions.html" with page=page %}
       </form>
     </section>
@@ -35,3 +48,28 @@
 
 {% endblock form_content %}
 
+{% block form_js %}
+<script type="text/javascript">
+
+
+  {% if not page.locked %}
+  makeFormset('{{ supervisor.prefix }}',
+  addedFunc=function(row) {
+    updateSupervisorSelects('{{ supervisor.prefix }}');
+    row.find('select').each(function(i) {$(this).trigger('change');});
+    row.find('.supervisor-select').select2();;
+  });
+  {% else %}
+    $('.move-up').remove();
+    $('.move-down').remove();
+    $('.dropzone').remove();
+    $('.clearbutton').remove();
+  {% endif %}
+
+updateSupervisorSelects('{{ supervisor.prefix }}');
+$('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
+
+$('.supervisor-select').select2();
+
+</script>
+{% endblock form_js %}
