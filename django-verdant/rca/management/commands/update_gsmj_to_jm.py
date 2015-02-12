@@ -55,8 +55,7 @@ def update_page(page, programme_field):
         revision.save()
     else:
         # if there aren't any drafts then just publish a new revision normally
-        page.save_revision()
-        page.publish()
+        page.save_revision().publish()
 
 
 def update_related(page, related_field):
