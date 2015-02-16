@@ -55,6 +55,7 @@
 @font-weight-knockout: 400;
 @font-family-benton-bold: "Benton Sans", "BentonSans", "Helvetica Neue", Arial, Helvetica, Sans-Serif;
 @font-family-arial: Arial,sans-serif;
+@font-family-ion: 'Ionicons';
 
 /* Important note: italic versions of Benton Sans Medium and Benton Sans Light are automatically picked up by applying the css property font-style:italic.
 The bold font is a variant of Benton Sans which is not otherwise used on the site, therefore the font-family has to be specifically applied for this. Wherever
@@ -137,7 +138,7 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 @color-pink: #ff00dc;
 
 /* error red */
-@color-red: #ee0054;
+@color-red: #E85151;
 
 /*background colours */
 @color-light-pink: #fff1fe;
@@ -166,6 +167,10 @@ you would use 'font-weight:bold;', use the '.bold()' mixin instead */
 /* extra ad colours */
 @color-advert-pink: #b6a2a2;
 @color-advert-pale-blue: #d5edfd;
+
+@color-very-pale-blue: lighten(@color-advert-pale-blue, 5%);
+
+@color-pink-darker: darken(@color-pink, 7%);
 
 @color-divider: @color-medium-grey; /* all dark horizontal rules */
 

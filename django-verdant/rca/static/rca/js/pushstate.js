@@ -109,6 +109,12 @@ $(function(){
                             fragment: ".page-content > .inner"
                         });
 
+                        // if page called is unexpectedly invalid e.g the fragment selector above doesn't exist
+                        // load the page normally
+                        if(!obj.contents){
+                            location.href = state.url;
+                        }
+
                         // Cache for reuse later
                         cache[url] = obj;
 
