@@ -150,6 +150,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
+    'djcelery',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
