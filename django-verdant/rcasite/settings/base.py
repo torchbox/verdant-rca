@@ -148,8 +148,6 @@ INSTALLED_APPS = (
     'template_timings_panel',
     'taggit',
     'gunicorn',
-    'djcelery',
-    'kombu.transport.django',
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
 
@@ -268,8 +266,6 @@ WAGTAILSEARCH_BACKENDS = {
 WAGTAIL_PASSWORD_MANAGEMENT_ENABLED = False
 
 # CELERY SETTINGS
-import djcelery
-djcelery.setup_loader()
 
 # Use separate queues on each host if uploads should be processed by celery
 # import socket
