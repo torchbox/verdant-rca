@@ -5,7 +5,7 @@ django-auth-ldap==1.1.7
 celery-with-redis==2.5
 django-celery==2.5.5
 Embedly==0.5.0
-elasticsearch>=1.0.0
+elasticsearch==1.4.0
 psycopg2==2.5.2
 stripe==1.9.8
 tweepy==2.1
