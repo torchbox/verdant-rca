@@ -13,6 +13,7 @@ humanize==0.5
 python-dateutil==1.5
 celery==3.1.17
 django-celery==3.1.16
+simplejson==3.6.5
 
 # Developer requirements
 django-debug-toolbar==0.11.0
