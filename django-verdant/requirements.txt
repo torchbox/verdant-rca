@@ -1,6 +1,6 @@
-Django==1.6.7
+Django==1.6.10
 South==1.0.0
-wagtail==0.8.1
+wagtail==0.8.5
 django-auth-ldap==1.1.7
 celery-with-redis==2.5
 django-celery==2.5.5
