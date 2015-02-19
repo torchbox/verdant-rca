@@ -147,7 +147,6 @@ INSTALLED_APPS = (
     'compressor',
     'template_timings_panel',
     'taggit',
-    'gunicorn',
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
     'djcelery',
