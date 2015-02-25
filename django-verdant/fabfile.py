@@ -1,3 +1,4 @@
+# vim:sw=4 ts=4 et:
 from __future__ import with_statement
 from fabric.api import *
 
@@ -11,9 +12,9 @@ env.roledefs = {
     'db-notroot': ['rca1.dh.bytemark.co.uk'],
 
     # All hosts will be listed here.
-    'production': ['root@rca2.dh.bytemark.co.uk', 'root@rca3.dh.bytemark.co.uk'],
+    'production': ['root@rca2.torchbox.com', 'root@rca3.torchbox.com'],
 }
-MIGRATION_SERVER = 'rca2.dh.bytemark.co.uk'
+MIGRATION_SERVER = 'rca2.torchbox.com'
 
 @roles('staging')
 def deploy_staging(branch="staging", gitonly=False):
@@ -40,26 +41,23 @@ def deploy_staging(branch="staging", gitonly=False):
 
 @roles('production')
 def deploy():
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            sudo("git pull")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
+    with cd('/usr/local/django/rcawagtail/'):
+        sudo("git pull")
+        sudo("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
 
-            if env['host'] == MIGRATION_SERVER:
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
+        if env['host'] == MIGRATION_SERVER:
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
 
-                # FOR WAGTAIL 0.4 UPDATE
-                # sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
+            # FOR WAGTAIL 0.4 UPDATE
+            # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
 
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-            run("supervisorctl restart verdant-rca")
-            run("supervisorctl restart rca-celeryd")
-            if env['host'] == MIGRATION_SERVER:
-                run("supervisorctl restart rca-celerybeat")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
+        run("touch -h /usr/local/etc/uwsgi/conf.d/rcawagtail.ini")
+        if env['host'] == MIGRATION_SERVER:
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
 @roles('squid')
