@@ -12,7 +12,7 @@ env.roledefs = {
     'db-notroot': ['rca1.dh.bytemark.co.uk'],
 
     # All hosts will be listed here.
-    'production': ['root@rca2.torchbox.com', 'root@rca3.torchbox.com'],
+    'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
 }
 MIGRATION_SERVER = 'rca2.torchbox.com'
 
@@ -42,8 +42,8 @@ def deploy_staging(branch="staging", gitonly=False):
 @roles('production')
 def deploy():
     with cd('/usr/local/django/rcawagtail/'):
-        sudo("git pull")
-        sudo("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
+        run("git pull")
+        run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
 
         if env['host'] == MIGRATION_SERVER:
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
