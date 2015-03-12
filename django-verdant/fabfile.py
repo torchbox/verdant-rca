@@ -1,13 +1,14 @@
 # vim:sw=4 ts=4 et:
 from __future__ import with_statement
 from fabric.api import *
+from fabric.colors import red
 
 import uuid
 
 env.roledefs = {
-    'staging': ['django-staging.torchbox.com'],
+    'staging': ['rcawagtail@django-staging.torchbox.com'],
 
-    'squid': ['root@rca1.dh.bytemark.co.uk'],
+    'nginx': ['root@rca1.dh.bytemark.co.uk'],
     'db': ['root@rca1.dh.bytemark.co.uk'],
     'db-notroot': ['rca1.dh.bytemark.co.uk'],
 
@@ -15,6 +16,7 @@ env.roledefs = {
     'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
 }
 MIGRATION_SERVER = 'rca2.torchbox.com'
+
 
 @roles('staging')
 def deploy_staging(branch="staging", gitonly=False):
@@ -60,9 +62,10 @@ def deploy():
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
-@roles('squid')
+@roles('nginx')
 def clear_cache():
-    run('squidclient -p 80 -m PURGE http://www.rca.ac.uk')
+    puts(red('WARNING: clearing the nginx cache requires sudo, ask sysadmin if it fails'))
+    run('find /var/cache/nginx -type f -delete')
 
 
 @roles('db')
@@ -79,7 +82,7 @@ def fetch_live_data():
     local('createdb -Upostgres verdant')
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
-    local ('rm %s' % local_path)
+    local('rm %s' % local_path)
 
 
 @roles('db-notroot')
@@ -96,7 +99,7 @@ def fetch_live_data_notroot():
     local('createdb -Upostgres verdant')
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
-    local ('rm %s' % local_path)
+    local('rm %s' % local_path)
 
 
 @roles('production')
