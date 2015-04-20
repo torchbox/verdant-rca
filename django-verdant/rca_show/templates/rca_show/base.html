@@ -19,7 +19,6 @@
 {% endblock %}
 
 {% block logo %}
-    
     <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
     <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
 {% endblock %}
@@ -30,7 +29,7 @@
         <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
     </div>
 
-    <div class="showrca2014-footer full-width-footer">
+    <div class="footer full-width-footer">
         <div class="footer-wrapper">
             <footer>
                 <ul>
@@ -63,7 +62,7 @@
     </div>
 
     {% if self.show_index.overlay_intro %}
-        <div id="showrca2014-overlay" class="fade">
+        <div id="overlay" class="fade">
             <div class="logo repos">Logo</div>
             <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
             <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
