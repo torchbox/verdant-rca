@@ -8,7 +8,8 @@
 // set new rail font as globally as possible
 .page-content .inner,
 #overlay,
-h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6{
     .font-family-newrail-medium();
 }
 
@@ -86,17 +87,21 @@ i{
     .crest{
         bottom:5%;
         left:5%;
-
         text-indent:-2000px;
-        background-image: url('@{path-static-show}images/logo-rca-footer.png');
+        background-image: url('@{path-static-show}images/logo-rca-footer-inverse.png');
         width: 180px;
         height: 90px;
     }
-    .intro{
+    .content{
         position:absolute;
-        width:50%;
-        left:5%;
-        top:250px; 
+        top:0; right:0; bottom:0; left:0;
+    }
+    .full-screen-video{
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
     }
 }
 

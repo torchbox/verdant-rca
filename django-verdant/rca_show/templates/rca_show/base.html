@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags wagtailcore_tags %}
 
-{% block body_class %}showrca{% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+{% block body_class %}showrca theme-show2015 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -63,12 +63,14 @@
 
     {% if self.show_index.overlay_intro %}
         <div id="overlay" class="fade">
-            <div class="logo repos">Logo</div>
             <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
             <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
-            <div class="intro col-detect body-text">
-                {{ self.show_index.overlay_intro|richtext }}
-                <div class="crest col-detect"></div>
+            <div class="content">
+                <video autoplay="autoplay" loop="loop" class="full-screen-video">
+                    <source src="http://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&profile_id=113" type="video/mp4">
+                </video>
+                
+                <div class="crest"></div>
             </div>
         </div>
     {% endif %}
@@ -95,4 +97,6 @@
         <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
         <script src="{% static "rca_show/js/site.js" %}"></script>
     {% endcompress %}
+
+    <script>var coverVid=function(a,b,c){function d(a,b){var c=null;return function(){var d=this,e=arguments;window.clearTimeout(c),c=window.setTimeout(function(){a.apply(d,e)},b)}}function e(){var d=a.parentNode.offsetHeight,e=a.parentNode.offsetWidth,f=b,g=c,h=d/g,i=e/f;i>h?(a.style.height="auto",a.style.width=e+"px"):(a.style.height=d+"px",a.style.width="auto")}document.addEventListener("DOMContentLoaded",e),window.onresize=function(){d(e(),50)},a.style.position="absolute",a.style.top="50%",a.style.left="50%",a.style["-webkit-transform"]="translate(-50%, -50%)",a.style["-ms-transform"]="translate(-50%, -50%)",a.style.transform="translate(-50%, -50%)",a.parentNode.style.overflow="hidden"};window.jQuery&&jQuery.fn.extend({coverVid:function(){return coverVid(this[0],arguments[0],arguments[1]),this}});</script>
 {% endblock %}

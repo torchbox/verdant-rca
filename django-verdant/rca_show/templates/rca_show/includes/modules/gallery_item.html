@@ -12,9 +12,13 @@
                     {% image gallery_image height-300 %}
                 {% endif %}
             {% else %}
+                {% comment %}
+                {# Commented out 2015-04-20. Used to be coloured. Now black. #}
                 {% with 'rca_show/images/placeholders/'|add:student.school|add:'.jpg' as placeholder_filename %}
                     <img src="{% static placeholder_filename %}">
                 {% endwith %}
+                {% endcomment %}
+                <img src="{% static 'rca_show/images/placeholders/schooldefault.jpg' %}">
             {% endif %}
         </div>
         <div class="content">

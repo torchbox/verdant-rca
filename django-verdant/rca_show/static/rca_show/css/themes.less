@@ -26,7 +26,6 @@
     #overlay {
         color:@colorsecondary;
         background-color: @colorprimary; /* fallback for ie8 */
-        background-color: fade(@colorprimary, 95%);
 
         .exhibition-date,
         .exhibition-name{
@@ -151,6 +150,10 @@ body{
     background-color:#F7F7F7;
 }
 
+.theme-show2015{
+    .theme(2015, #000000, #FFFFFF, 209px, 226px)
+}
+
 /*.theme-schoolofarchitecture{
     .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
 }
@@ -210,4 +213,5 @@ body{
 .color-schoolofmaterial, a.hovercolor-schoolofmaterial:hover{
     color:@color-mat-1;
 }*/
+
 

@@ -66,6 +66,9 @@ function displayShowOverlay(){
     var showOverlayTimeout = setTimeout(function(){
         overlay.addClass('in');
         $('body').addClass('showoverlay');
+        var vid = $('video', overlay).get()[0];
+        vid.play();
+        $('video', overlay).coverVid(500, 281);
     }, 400)
 }
 
@@ -74,7 +77,7 @@ $(function(){
 
     if(overlay.length){
         var cookieName = '2015';
-        
+
         randTheme();
 
         if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
