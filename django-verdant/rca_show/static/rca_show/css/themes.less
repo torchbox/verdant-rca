@@ -31,33 +31,6 @@
         .exhibition-name{
             color:@colorsecondary;
         }
-
-        .logo{
-            background-image:url('@{path-static-show}images/logo-@{code}.png');
-            background-size:(@logowidth * @mobile-reduction-factor) (@logoheight * @mobile-reduction-factor)*2;
-            background-position:0px -@logoheight * @mobile-reduction-factor;
-            width:@logowidth * @mobile-reduction-factor;
-            height:@logoheight * @mobile-reduction-factor;
-
-            @media @media-retina {
-                background-size:@logowidth * @mobile-reduction-factor (@logoheight * @mobile-reduction-factor)*2;
-            }
-        }
-    }
-
-    .site-name {
-        width:@logowidth * @mobile-reduction-factor;
-        
-        p{
-            background-image:url('@{path-static-show}images/logo-@{code}.png');
-            background-size:(@logowidth * @mobile-reduction-factor) (@logoheight * @mobile-reduction-factor)*2;
-            width:@logowidth * @mobile-reduction-factor;
-            height:@logoheight * @mobile-reduction-factor;
-
-            @media @media-retina {
-                background-size:@logowidth * @mobile-reduction-factor (@logoheight * @mobile-reduction-factor)*2;
-            }
-        }
     }
 
     a:hover,a:active,
@@ -92,11 +65,6 @@
     body&.type-login{
         background-color:@colorprimary;
         color:@colorsecondary;
-        .site-name {
-            p{
-                background-position:0px -@logoheight * @mobile-reduction-factor;
-            }
-        }
 
         h1,.exhibition-date, .exhibition-name{
             color:@colorsecondary;
@@ -106,44 +74,6 @@
             background-color:@colorsecondary;
         }
     }
-
-    @media @media-desktop-small {
-        #overlay {
-            .logo{
-                background-size:auto;
-                background-position:0px -@logoheight;
-                width:@logowidth;
-                height:@logoheight;
-
-                @media @media-retina {
-                    background-size:@logowidth @logoheight*2;
-                }
-            }
-        }
-
-        .site-name {
-            width:@logowidth;
-            
-            p{
-                background-size:auto;
-                width:@logowidth;
-                height:@logoheight;
-
-                @media @media-retina {
-                    background-size:@logowidth @logoheight*2;
-                }
-            }
-        }
-
-        /* specific login forms */ 
-        body&.type-login{           
-            .site-name {
-                p{
-                    background-position:0px -@logoheight;
-                }
-            }
-        }
-    }
 }
 
 body{
@@ -151,7 +81,7 @@ body{
 }
 
 .theme-show2015{
-    .theme(2015, #000000, #FFFFFF, 209px, 226px)
+    .theme(2015, #000000, #FFFFFF, 600px, 152px)
 }
 
 /*.theme-schoolofarchitecture{

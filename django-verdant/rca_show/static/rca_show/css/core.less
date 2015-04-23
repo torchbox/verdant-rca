@@ -64,12 +64,11 @@ i{
         position:fixed;
     }
 
-    .logo{
-        position:absolute;
-        text-indent:-2000px;
-        left:5%;
-        top:30px;
+    .exhibition-date,
+    .exhibition-name{
+        z-index:5;
     }
+
     .exhibition-date{
         right:0%;
         top:30px;
@@ -112,14 +111,17 @@ header {
         margin-top:70px;
     }
 
-    .site-name{
-        margin-left:0;
+    a.site-name{
+        padding:2em 0;
+        width:50%;
+        margin-left:15px;
         background-color:transparent;
     }
 }
 
     .exhibition-date{
-        margin:0;
+
+        margin:0 0 0 1em;
         position:absolute;
         right:5%;
         top:30px;
@@ -257,15 +259,6 @@ form .error-message{
 
 section.row{
     margin-bottom:@spacing-one;
-}
-
-
-@media screen and (min-width:480px){
-    #overlay{
-        .intro{
-            width:70%;
-        }
-    }
 }
 
 @import "modules.less";
