@@ -80,11 +80,11 @@ $(function(){
 
         randTheme();
 
-        if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
+        //if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
             setupOverlay();
             displayShowOverlay();
-            $.cookie(cookieName, '1', { expires: 0.04, path: '/' });
-        }
+        //    $.cookie(cookieName, '1', { expires: 0.04, path: '/' });
+        //}
         
         $('.toggleoverlay').click(function(){
             displayShowOverlay();
