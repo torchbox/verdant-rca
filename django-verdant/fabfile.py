@@ -38,23 +38,25 @@ def deploy_staging(branch="staging", gitonly=False):
 
 
 @roles('production')
-def deploy():
+def deploy(gitonly=False):
     with cd('/usr/local/django/rcawagtail/'):
         run("git pull")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
 
         if env['host'] == MIGRATION_SERVER:
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
+            if not gitonly:
+                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
 
-            # FOR WAGTAIL 0.4 UPDATE
-            # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
+                # FOR WAGTAIL 0.4 UPDATE
+                # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
 
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+            
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
         run("touch -h /usr/local/etc/uwsgi/conf.d/rcawagtail.ini")
-        if env['host'] == MIGRATION_SERVER:
+        if env['host'] == MIGRATION_SERVER and not gitonly:
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
