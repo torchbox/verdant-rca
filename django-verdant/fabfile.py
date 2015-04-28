@@ -8,14 +8,17 @@ import uuid
 env.roledefs = {
     'staging': ['rcawagtail@django-staging.torchbox.com'],
 
-    'nginx': ['root@rca1.dh.bytemark.co.uk'],
-    'db': ['root@rca1.dh.bytemark.co.uk'],
-    'db-notroot': ['rca1.dh.bytemark.co.uk'],
+    'nginx': ['root@rca1.torchbox.com'],
+    'db': ['root@rca1.torchbox.com'],
+    'db-notroot': ['rca1.torchbox.com'],
+    'rca2': ['rcawagtail@rca2.torchbox.com'],
 
     # All hosts will be listed here.
     'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
 }
 MIGRATION_SERVER = 'rca2.torchbox.com'
+
+RCA1_IP = '5.153.227.116'  # we need to use the IP address for pg_dump because of the .pgpass file
 
 
 @roles('staging')
@@ -51,7 +54,7 @@ def deploy(gitonly=False):
                 # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
 
                 run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
-            
+
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
@@ -83,13 +86,13 @@ def fetch_live_data():
     local('rm %s' % local_path)
 
 
-@roles('db-notroot')
+@roles('rca2')
 def fetch_live_data_notroot():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/home/vagrant/verdant/%s" % filename
-    remote_path = "~/dumps/%s" % filename
+    remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s verdant_rca' % remote_path)
+    run('pg_dump -cf %s verdant_rca -h %s -Uverdant_rca' % (remote_path, RCA1_IP))
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
