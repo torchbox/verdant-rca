@@ -47,18 +47,19 @@ header {
         }
     }
 
-.showrca2014-footer footer{
+.footer footer{
     padding:1em 0;
 }
 
-.showrca2014-footer ul li{
+.footer ul li{
     .column(4);
 }
-#showrca2014-overlay{
-    .intro{
-        top:300px;
-        width:60%;    
+#overlay{
+    .exhibition-date, 
+    .exhibition-name{
+        z-index:10;
     }
+
     .exhibition-date{
         right:5%;
     }
@@ -104,7 +105,7 @@ header {
     }
 }
 
-.csstransforms #showrca2014-overlay .exhibition-name{
+.csstransforms #overlay .exhibition-name{
     left:95%;
 }
 
@@ -121,12 +122,9 @@ header {
 
 /* HEIGHT-based media query to prevent date and exhibition name clashing on screens that aren't very tall */
 @media screen and (max-height:690px){
-    #showrca2014-overlay{
+    #overlay{
         .slot-5,.slot-6,.slot-7,.slot-8{
             top:30px;
-        }
-        .intro{
-            top:250px;
         }
     }
 }

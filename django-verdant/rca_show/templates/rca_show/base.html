@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags wagtailcore_tags %}
 
-{% block body_class %}showrca{% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+{% block body_class %}showrca theme-show2015 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -19,8 +19,7 @@
 {% endblock %}
 
 {% block logo %}
-    
-    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><p>Show RCA 2014</p></a>
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2015.svg' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
     <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
 {% endblock %}
 
@@ -30,7 +29,7 @@
         <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
     </div>
 
-    <div class="showrca2014-footer full-width-footer">
+    <div class="footer full-width-footer">
         <div class="footer-wrapper">
             <footer>
                 <ul>
@@ -63,13 +62,15 @@
     </div>
 
     {% if self.show_index.overlay_intro %}
-        <div id="showrca2014-overlay" class="fade">
-            <div class="logo repos">Logo</div>
+        <div id="overlay" class="fade">
             <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
             <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
-            <div class="intro col-detect body-text">
-                {{ self.show_index.overlay_intro|richtext }}
-                <div class="crest col-detect"></div>
+            <div class="content">
+                <video autoplay="autoplay" loop="loop" class="full-screen-video">
+                    <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&profile_id=113" type="video/mp4">
+                </video>
+                
+                <div class="crest"></div>
             </div>
         </div>
     {% endif %}
@@ -86,7 +87,6 @@
             wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
             '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
             wf.type = 'text/javascript';
-            wf.async = 'true';
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(wf, s);
         })();
@@ -96,4 +96,6 @@
         <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
         <script src="{% static "rca_show/js/site.js" %}"></script>
     {% endcompress %}
+
+    <script>var coverVid=function(a,b,c){function d(a,b){var c=null;return function(){var d=this,e=arguments;window.clearTimeout(c),c=window.setTimeout(function(){a.apply(d,e)},b)}}function e(){var d=a.parentNode.offsetHeight,e=a.parentNode.offsetWidth,f=b,g=c,h=d/g,i=e/f;i>h?(a.style.height="auto",a.style.width=e+"px"):(a.style.height=d+"px",a.style.width="auto")}document.addEventListener("DOMContentLoaded",e),window.onresize=function(){d(e(),50)},a.style.position="absolute",a.style.top="50%",a.style.left="50%",a.style["-webkit-transform"]="translate(-50%, -50%)",a.style["-ms-transform"]="translate(-50%, -50%)",a.style.transform="translate(-50%, -50%)",a.parentNode.style.overflow="hidden"};window.jQuery&&jQuery.fn.extend({coverVid:function(){return coverVid(this[0],arguments[0],arguments[1]),this}});</script>
 {% endblock %}

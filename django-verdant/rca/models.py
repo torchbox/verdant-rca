@@ -2423,11 +2423,16 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
 
         # Get from source feed and append first role title
         # for selected school of feed
-        feed_source=[]
         if self.staff_feed_source:
-            feed_source = StaffPage.objects.filter(school=self.staff_feed_source)
-            for staffpage in feed_source:
-                staffpage.staff_role = staffpage.roles.filter(school=self.staff_feed_source)[0].title
+            feed_source = StaffPage.objects.filter(school=self.staff_feed_source).live()
+
+            for staffpage in StaffPage.objects.filter(school=self.staff_feed_source):
+                role = staffpage.roles.filter(school=self.staff_feed_source).first()
+
+                if role:
+                    staffpage.staff_role = role.title
+        else:
+            feed_source = StaffPage.objects.none()
 
         # Chain manual_feed + feed_source (any or both may be empty)
         feed = chain(manual_feed, feed_source)

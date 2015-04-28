@@ -7,8 +7,9 @@
 
 // set new rail font as globally as possible
 .page-content .inner,
-#showrca2014-overlay,
-h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6{
+#overlay,
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6{
     .font-family-newrail-medium();
 }
 
@@ -40,7 +41,7 @@ i{
     font-style:normal;
 }
 
-#showrca2014-overlay {
+#overlay {
     display:none;
     overflow:auto;
     position: fixed;
@@ -63,12 +64,11 @@ i{
         position:fixed;
     }
 
-    .logo{
-        position:absolute;
-        text-indent:-2000px;
-        left:5%;
-        top:30px;
+    .exhibition-date,
+    .exhibition-name{
+        z-index:5;
     }
+
     .exhibition-date{
         right:0%;
         top:30px;
@@ -86,17 +86,21 @@ i{
     .crest{
         bottom:5%;
         left:5%;
-
         text-indent:-2000px;
-        background-image: url('@{path-static-show}images/logo-rca-footer.png');
+        background-image: url('@{path-static-show}images/logo-rca-footer-inverse.png');
         width: 180px;
-        height: 90px;
+        height: 91px;
     }
-    .intro{
+    .content{
         position:absolute;
-        width:50%;
-        left:5%;
-        top:250px; 
+        top:0; right:0; bottom:0; left:0;
+    }
+    .full-screen-video{
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 100%;
+        min-height: 100%;
     }
 }
 
@@ -107,14 +111,17 @@ header {
         margin-top:70px;
     }
 
-    .site-name{
-        margin-left:0;
+    a.site-name{
+        padding:2em 0;
+        width:50%;
+        margin-left:15px;
         background-color:transparent;
     }
 }
 
     .exhibition-date{
-        margin:0;
+
+        margin:0 0 0 1em;
         position:absolute;
         right:5%;
         top:30px;
@@ -162,7 +169,7 @@ header {
 .full-width-footer{
     margin-top:0;
 
-    &.showrca2014-footer{
+    &.footer{
         margin-top:@spacing-two;
     }
 }
@@ -171,7 +178,7 @@ header {
     top:20em;
 }
 
-.showrca2014-footer{
+.footer{
     footer{
         padding:1em;
     }
@@ -208,7 +215,7 @@ header {
         text-indent:-2000px;
         background-image: url('@{path-static-show}images/logo-rca-footer.png');
         width: 180px;
-        height: 90px;
+        height: 91px;
         padding:0;
     }
 }
@@ -252,15 +259,6 @@ form .error-message{
 
 section.row{
     margin-bottom:@spacing-one;
-}
-
-
-@media screen and (min-width:480px){
-    #showrca2014-overlay{
-        .intro{
-            width:70%;
-        }
-    }
 }
 
 @import "modules.less";

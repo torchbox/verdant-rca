@@ -23,41 +23,13 @@
 .theme(@code:'', @colorprimary, @colorsecondary, @logowidth, @logoheight){
     @mobile-reduction-factor: 0.6;
 
-    #showrca2014-overlay {
+    #overlay {
         color:@colorsecondary;
         background-color: @colorprimary; /* fallback for ie8 */
-        background-color: fade(@colorprimary, 95%);
 
         .exhibition-date,
         .exhibition-name{
             color:@colorsecondary;
-        }
-
-        .logo{
-            background-image:url('@{path-static-show}images/logo-@{code}.png');
-            background-size:(@logowidth * @mobile-reduction-factor) (@logoheight * @mobile-reduction-factor)*2;
-            background-position:0px -@logoheight * @mobile-reduction-factor;
-            width:@logowidth * @mobile-reduction-factor;
-            height:@logoheight * @mobile-reduction-factor;
-
-            @media @media-retina {
-                background-size:@logowidth * @mobile-reduction-factor (@logoheight * @mobile-reduction-factor)*2;
-            }
-        }
-    }
-
-    .site-name {
-        width:@logowidth * @mobile-reduction-factor;
-        
-        p{
-            background-image:url('@{path-static-show}images/logo-@{code}.png');
-            background-size:(@logowidth * @mobile-reduction-factor) (@logoheight * @mobile-reduction-factor)*2;
-            width:@logowidth * @mobile-reduction-factor;
-            height:@logoheight * @mobile-reduction-factor;
-
-            @media @media-retina {
-                background-size:@logowidth * @mobile-reduction-factor (@logoheight * @mobile-reduction-factor)*2;
-            }
         }
     }
 
@@ -72,7 +44,7 @@
     }
     .shownav .jumplist.open .toggle,
     .shownav .jumplist:hover .toggle,
-    .showrca2014-footer,
+    .footer,
     .showgallery .content,
     .bx-wrapper .bx-next:hover, 
     .bx-wrapper .bx-prev:hover,
@@ -84,7 +56,7 @@
     }
 
     .showgallery .content h2,
-    .showrca2014-footer a:hover,
+    .footer a:hover,
     .programme-list a:hover{
         color:@colorsecondary;
     }
@@ -93,11 +65,6 @@
     body&.type-login{
         background-color:@colorprimary;
         color:@colorsecondary;
-        .site-name {
-            p{
-                background-position:0px -@logoheight * @mobile-reduction-factor;
-            }
-        }
 
         h1,.exhibition-date, .exhibition-name{
             color:@colorsecondary;
@@ -107,51 +74,17 @@
             background-color:@colorsecondary;
         }
     }
-
-    @media @media-desktop-small {
-        #showrca2014-overlay {
-            .logo{
-                background-size:auto;
-                background-position:0px -@logoheight;
-                width:@logowidth;
-                height:@logoheight;
-
-                @media @media-retina {
-                    background-size:@logowidth @logoheight*2;
-                }
-            }
-        }
-
-        .site-name {
-            width:@logowidth;
-            
-            p{
-                background-size:auto;
-                width:@logowidth;
-                height:@logoheight;
-
-                @media @media-retina {
-                    background-size:@logowidth @logoheight*2;
-                }
-            }
-        }
-
-        /* specific login forms */ 
-        body&.type-login{           
-            .site-name {
-                p{
-                    background-position:0px -@logoheight;
-                }
-            }
-        }
-    }
 }
 
 body{
     background-color:#F7F7F7;
 }
 
-.theme-schoolofarchitecture{
+.theme-show2015{
+    .theme(2015, #000000, #FFFFFF, 600px, 152px)
+}
+
+/*.theme-schoolofarchitecture{
     .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
 }
 .theme-schoolofcommunication{
@@ -168,10 +101,10 @@ body{
 }
 .theme-schoolofmaterial{
     .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
-}
+}*/
 
 /* .school-* must come after .theme-* otherwise school cannot trump the random theme assigned */
-.school-schoolofarchitecture,{
+/*.school-schoolofarchitecture,{
     .theme(arc, @color-arc-1, @color-arc-2, 209px, 226px);
 }
 .school-schoolofcommunication{
@@ -188,56 +121,11 @@ body{
 }
 .school-schoolofmaterial{
     .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
-}
-
-/* CCA show specific */
-.programme-curatingcontemporaryart{
-    /*.theme(cca, #e0413e, #F9A09F, 180px, 225px);*/
-}
-
-/* Fasion show specific */
-.programme-fashionmenswear,
-.programme-fashionwomenswear{
-    /*.theme(fas, #000000, #783CAC, 295px, 225px);*/
-/*    .theme(fas, #000000, #FFFFFF, 295px, 225px);*/
-}
-
-/* Animation show specific */
-.programme-animation {
-    .theme(com, @color-com-1, @color-com-2, 318px, 226px);
-}
-
-/* some more specific overrides for the fashion show */
-/*.programme-fashionmenswear,
-.programme-fashionwomenswear{
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle{
-        color:white;
-    }
-    #showrca2014-overlay {
-        color:white;
-
-        .crest{
-            background-image:url('/static/rca_show/images/logo-rca-footer-inverse.png');
-        }
-    }
-    a.active {
-        color:#000000;
-    }
-    a:hover {
-        color:#783CAC;
-    }
-    a .active { 
-        color: white;
-    }
-    .showgallery .content h2 {
-        color:#FFFFFF;
-    }
 }*/
 
 /* generic "make this text a themed colour" stuff. */
 
-.color-schoolofarchitecture, a.hovercolor-schoolofarchitecture:hover{
+/*.color-schoolofarchitecture, a.hovercolor-schoolofarchitecture:hover{
     color:@color-arc-1;
 }
 .color-schoolofcommunication, a.hovercolor-schoolofcommunication:hover{
@@ -254,5 +142,6 @@ body{
 }
 .color-schoolofmaterial, a.hovercolor-schoolofmaterial:hover{
     color:@color-mat-1;
-}
+}*/
+
 

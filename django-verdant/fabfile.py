@@ -1,70 +1,69 @@
+# vim:sw=4 ts=4 et:
 from __future__ import with_statement
 from fabric.api import *
+from fabric.colors import red
 
 import uuid
 
 env.roledefs = {
-    'staging': ['django-staging.torchbox.com'],
+    'staging': ['rcawagtail@django-staging.torchbox.com'],
 
-    'squid': ['root@rca1.dh.bytemark.co.uk'],
+    'nginx': ['root@rca1.dh.bytemark.co.uk'],
     'db': ['root@rca1.dh.bytemark.co.uk'],
     'db-notroot': ['rca1.dh.bytemark.co.uk'],
 
     # All hosts will be listed here.
-    'production': ['root@rca2.dh.bytemark.co.uk', 'root@rca3.dh.bytemark.co.uk'],
+    'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
 }
-MIGRATION_SERVER = 'rca2.dh.bytemark.co.uk'
+MIGRATION_SERVER = 'rca2.torchbox.com'
+
 
 @roles('staging')
 def deploy_staging(branch="staging", gitonly=False):
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            sudo("git fetch")
-            sudo("git checkout %s" % branch)
-            sudo("git pull")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
-            if not gitonly:
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
+    with cd('/usr/local/django/rcawagtail/'):
+        run("git fetch")
+        run("git checkout %s" % branch)
+        run("git pull")
+        run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
+        if not gitonly:
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
+        run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
+        run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
 
-        sudo("supervisorctl restart verdant-rca")
-        sudo("supervisorctl restart rca-celeryd")
-        sudo("supervisorctl restart rca-celerybeat")
+        run('restart')
 
         if not gitonly:
-            with settings(sudo_user='verdant-rca'):
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
 
 
 @roles('production')
-def deploy():
-    with cd('/usr/local/django/verdant-rca/'):
-        with settings(sudo_user='verdant-rca'):
-            sudo("git pull")
-            sudo("/usr/local/django/virtualenvs/verdant-rca/bin/pip install -r django-verdant/requirements.txt")
+def deploy(gitonly=False):
+    with cd('/usr/local/django/rcawagtail/'):
+        run("git pull")
+        run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
 
-            if env['host'] == MIGRATION_SERVER:
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
+        if env['host'] == MIGRATION_SERVER:
+            if not gitonly:
+                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
 
                 # FOR WAGTAIL 0.4 UPDATE
-                # sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
+                # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
 
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
+                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+            
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-            run("supervisorctl restart verdant-rca")
-            run("supervisorctl restart rca-celeryd")
-            if env['host'] == MIGRATION_SERVER:
-                run("supervisorctl restart rca-celerybeat")
-                sudo("/usr/local/django/virtualenvs/verdant-rca/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
+        run("touch -h /usr/local/etc/uwsgi/conf.d/rcawagtail.ini")
+        if env['host'] == MIGRATION_SERVER and not gitonly:
+            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
-@roles('squid')
+@roles('nginx')
 def clear_cache():
-    run('squidclient -p 80 -m PURGE http://www.rca.ac.uk')
+    puts(red('WARNING: clearing the nginx cache requires sudo, ask sysadmin if it fails'))
+    run('find /var/cache/nginx -type f -delete')
 
 
 @roles('db')
@@ -81,7 +80,7 @@ def fetch_live_data():
     local('createdb -Upostgres verdant')
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
-    local ('rm %s' % local_path)
+    local('rm %s' % local_path)
 
 
 @roles('db-notroot')
@@ -98,7 +97,7 @@ def fetch_live_data_notroot():
     local('createdb -Upostgres verdant')
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
-    local ('rm %s' % local_path)
+    local('rm %s' % local_path)
 
 
 @roles('production')

@@ -66,45 +66,25 @@ function displayShowOverlay(){
     var showOverlayTimeout = setTimeout(function(){
         overlay.addClass('in');
         $('body').addClass('showoverlay');
+        var vid = $('video', overlay).get()[0];
+        vid.play();
+        $('video', overlay).coverVid(500, 281);
     }, 400)
 }
 
 $(function(){
-    Harvey.attach(breakpoints.mobile, {
-        setup: function(){
-          
-        },
-        on: function(){
-            
-        },
-        off: function(){
-          
-        }
-    });
-
-    Harvey.attach(breakpoints.desktopSmall, {
-        setup: function(){
-
-        },
-        on: function(){
-          
-        },
-        off: function(){
-            
-        }
-    });
-
-    overlay = $('#showrca2014-overlay');
+    overlay = $('#overlay');
 
     if(overlay.length){
+        var cookieName = '2015';
+
         randTheme();
 
-        // if(window.debug || !$.cookie('showrca2014')){
-        if(!$('body').hasClass('type-login') && !$.cookie('showrca2014')){
+        //if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
             setupOverlay();
             displayShowOverlay();
-            $.cookie('showrca2014', '1', { expires: 0.04, path: '/' });
-        }
+        //    $.cookie(cookieName, '1', { expires: 0.04, path: '/' });
+        //}
         
         $('.toggleoverlay').click(function(){
             displayShowOverlay();
