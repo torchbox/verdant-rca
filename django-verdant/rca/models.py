@@ -315,6 +315,14 @@ ALL_PROGRAMMES = tuple(sorted([
 
 
 SCHOOL_PROGRAMME_MAP = {
+    '2015': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
     '2014': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
