@@ -261,7 +261,7 @@ class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
 class ShowIndexPage(SuperPage, SocialFields):
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.CharField(max_length=255, blank=True)
+    exhibition_date = models.TextField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
     password_prompt = models.CharField(max_length=255, blank=True, help_text="A custom message asking the user to log in, on protected pages")
 
