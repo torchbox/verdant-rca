@@ -63,9 +63,9 @@ def update_related(page, related_field):
 
         # modify the live page directly
         if related_field == 'roles':
-            pages.roles.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
+            page.roles.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
         if related_field == 'related_programmes':
-            pages.related_programmes.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
+            page.related_programmes.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
 
         # update latest draft revision too
         revision = page.get_latest_revision()
