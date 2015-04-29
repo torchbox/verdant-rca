@@ -37,17 +37,17 @@ def get_programmes(school=None, year=None):
 
     If the school is unspecified, all programmes for the year will be returned
     If year is unspecified, the latest year in the SCHOOL_PROGRAMME_MAP will be used
-    If the school or year does not exist, this function will return None
+    If the school or year does not exist, this function will return an empty list
     """
     school_programme_map = get_school_programme_map(year)
     if not school_programme_map:
-        return
+        return []
 
     if school:
         if school in school_programme_map:
             return school_programme_map[school]
         else:
-            return
+            return []
     else:
         programmes = []
         for extra_programmes in school_programme_map.values():
