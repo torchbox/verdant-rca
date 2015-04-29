@@ -58,7 +58,7 @@ def deploy(gitonly=False):
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-        run("touch -h /usr/local/etc/uwsgi/conf.d/rcawagtail.ini")
+        run("restart")
         if env['host'] == MIGRATION_SERVER and not gitonly:
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
