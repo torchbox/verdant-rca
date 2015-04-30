@@ -73,18 +73,19 @@ function displayShowOverlay(){
 }
 
 $(function(){
-    overlay = $('#overlay');
+    // Only enable overlay for non-touch devices
+    overlay = $('.no-touch #overlay');
 
     if(overlay.length){
         var cookieName = '2015';
 
         randTheme();
 
-        //if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
+        if(window.debug || (!$('body').hasClass('type-login') && !$.cookie(cookieName))){
             setupOverlay();
             displayShowOverlay();
-        //    $.cookie(cookieName, '1', { expires: 0.04, path: '/' });
-        //}
+           $.cookie(cookieName, '1', { expires: 0.04, path: '/' });
+        }
         
         $('.toggleoverlay').click(function(){
             displayShowOverlay();
