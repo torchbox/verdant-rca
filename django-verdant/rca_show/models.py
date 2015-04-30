@@ -124,7 +124,7 @@ class ShowStandardPageContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -173,7 +173,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -374,7 +374,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.is_programme_page:
             return False
 
-        if rca_utils.get_programmes(school, year=self.year) is None:
+        if len(rca_utils.get_programmes(school, year=self.year)) == 0:
             return False
 
         return self.check_school_has_students(school)
