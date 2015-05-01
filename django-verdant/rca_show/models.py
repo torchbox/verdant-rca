@@ -496,6 +496,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
+    FieldPanel('body'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),
