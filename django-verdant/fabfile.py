@@ -67,30 +67,13 @@ def clear_cache():
     run('find /var/cache/nginx -type f -delete')
 
 
-@roles('db')
-def fetch_live_data():
-    filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/home/vagrant/verdant/%s" % filename
-    remote_path = "/root/dumps/%s" % filename
-
-    run('pg_dump -Upostgres -cf %s verdant_rca' % remote_path)
-    run('gzip %s' % remote_path)
-    get("%s.gz" % remote_path, "%s.gz" % local_path)
-    run('rm %s.gz' % remote_path)
-    local('dropdb -Upostgres verdant')
-    local('createdb -Upostgres verdant')
-    local('gunzip %s.gz' % local_path)
-    local('psql -Upostgres verdant -f %s' % local_path)
-    local('rm %s' % local_path)
-
-
 @roles('rca2')
-def fetch_live_data_notroot():
+def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/home/vagrant/verdant/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s verdant_rca -h rca1.torchbox.com -Uverdant_rca' % remote_path)
+    run('pg_dump -cf %s verdant_rca' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
@@ -99,6 +82,8 @@ def fetch_live_data_notroot():
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
     local('rm %s' % local_path)
+
+fetch_live_data_notroot = fetch_live_data
 
 
 @roles('production')
