@@ -259,6 +259,7 @@ class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
 
 class ShowIndexPage(SuperPage, SocialFields):
+    body = RichTextField(blank=True, help_text="Optional body text. Useful for holding pages prior to Show launch.")
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
     exhibition_date = models.TextField(max_length=255, blank=True)
@@ -280,9 +281,10 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Schools & Programmes link
         if len(show_index.get_programmes()) == 0:
-            menu_items.append(
-                (show_index.reverse_subpage('school_index'), "Schools & Students"),
-            )
+            if self.get_schools() and self.get_students():
+                menu_items.append(
+                    (show_index.reverse_subpage('school_index'), "Schools & Students"),
+                )
 
         # Links to show index subpages
         menu_items.extend([
@@ -494,6 +496,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
+    FieldPanel('body'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),

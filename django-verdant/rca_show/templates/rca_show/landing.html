@@ -19,6 +19,12 @@
         {% include "rca_show/includes/menus/menu.html" %}
     {% endif %}
 
+    <section class="body-text">
+        {% if self.body %}
+            {{ self.body|richtext }}
+        {% endif %}
+    </section>
+
     {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}
 
 {% endblock %}
