@@ -18,8 +18,6 @@ env.roledefs = {
 }
 MIGRATION_SERVER = 'rca2.torchbox.com'
 
-RCA1_IP = '5.153.227.116'  # we need to use the IP address for pg_dump because of the .pgpass file
-
 
 @roles('staging')
 def deploy_staging(branch="staging", gitonly=False):
@@ -92,7 +90,7 @@ def fetch_live_data_notroot():
     local_path = "/home/vagrant/verdant/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s verdant_rca -h %s -Uverdant_rca' % (remote_path, RCA1_IP))
+    run('pg_dump -cf %s verdant_rca -h rca1.torchbox.com -Uverdant_rca' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
