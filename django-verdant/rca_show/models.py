@@ -124,7 +124,7 @@ class ShowStandardPageContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -173,7 +173,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -259,9 +259,10 @@ class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
 
 class ShowIndexPage(SuperPage, SocialFields):
+    body = RichTextField(blank=True, help_text="Optional body text. Useful for holding pages prior to Show launch.")
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.CharField(max_length=255, blank=True)
+    exhibition_date = models.TextField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
     password_prompt = models.CharField(max_length=255, blank=True, help_text="A custom message asking the user to log in, on protected pages")
 
@@ -280,9 +281,10 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Schools & Programmes link
         if len(show_index.get_programmes()) == 0:
-            menu_items.append(
-                (show_index.reverse_subpage('school_index'), "Schools & Students"),
-            )
+            if self.get_schools() and self.get_students():
+                menu_items.append(
+                    (show_index.reverse_subpage('school_index'), "Schools & Students"),
+                )
 
         # Links to show index subpages
         menu_items.extend([
@@ -374,7 +376,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.is_programme_page:
             return False
 
-        if rca_utils.get_programmes(school, year=self.year) is None:
+        if len(rca_utils.get_programmes(school, year=self.year)) == 0:
             return False
 
         return self.check_school_has_students(school)
@@ -494,6 +496,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
+    FieldPanel('body'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),

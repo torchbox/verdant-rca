@@ -18,8 +18,6 @@ env.roledefs = {
 }
 MIGRATION_SERVER = 'rca2.torchbox.com'
 
-RCA1_IP = '5.153.227.116'  # we need to use the IP address for pg_dump because of the .pgpass file
-
 
 @roles('staging')
 def deploy_staging(branch="staging", gitonly=False):
@@ -58,7 +56,7 @@ def deploy(gitonly=False):
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-        run("touch -h /usr/local/etc/uwsgi/conf.d/rcawagtail.ini")
+        run("restart")
         if env['host'] == MIGRATION_SERVER and not gitonly:
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
@@ -69,30 +67,13 @@ def clear_cache():
     run('find /var/cache/nginx -type f -delete')
 
 
-@roles('db')
-def fetch_live_data():
-    filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/home/vagrant/verdant/%s" % filename
-    remote_path = "/root/dumps/%s" % filename
-
-    run('pg_dump -Upostgres -cf %s verdant_rca' % remote_path)
-    run('gzip %s' % remote_path)
-    get("%s.gz" % remote_path, "%s.gz" % local_path)
-    run('rm %s.gz' % remote_path)
-    local('dropdb -Upostgres verdant')
-    local('createdb -Upostgres verdant')
-    local('gunzip %s.gz' % local_path)
-    local('psql -Upostgres verdant -f %s' % local_path)
-    local('rm %s' % local_path)
-
-
 @roles('rca2')
-def fetch_live_data_notroot():
+def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/home/vagrant/verdant/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s verdant_rca -h %s -Uverdant_rca' % (remote_path, RCA1_IP))
+    run('pg_dump -cf %s verdant_rca' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
@@ -101,6 +82,8 @@ def fetch_live_data_notroot():
     local('gunzip %s.gz' % local_path)
     local('psql -Upostgres verdant -f %s' % local_path)
     local('rm %s' % local_path)
+
+fetch_live_data_notroot = fetch_live_data
 
 
 @roles('production')

@@ -20,7 +20,6 @@
 
 {% block logo %}
     <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2015.svg' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
-    <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
 {% endblock %}
 
 {% block extra_footer %}
@@ -63,10 +62,10 @@
 
     {% if self.show_index.overlay_intro %}
         <div id="overlay" class="fade">
-            <div class="exhibition-date repos">{{ self.show_index.exhibition_date|linebreaks }}</div>
+            <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
             <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
             <div class="content">
-                <video autoplay="autoplay" loop="loop" class="full-screen-video">
+                <video autoplay="autoplay" class="full-screen-video">
                     <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&profile_id=113" type="video/mp4">
                 </video>
                 
