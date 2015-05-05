@@ -217,6 +217,7 @@ class StartingForm(forms.ModelForm):
 class ProfileBasicForm(forms.ModelForm):
 
     title = forms.CharField(
+        max_length=255,
         required=True,
         label='Full Name',
         help_text="Your name in full, as you'd like it to be seen by the public, e.g, Joe Smith",
@@ -251,6 +252,7 @@ class ProfileBasicForm(forms.ModelForm):
 class EmailForm(forms.Form):
     #saves to NewStudentPageContactsEmail
     email = forms.EmailField(
+        max_length=255,
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsEmail', 'email', default="Students can use personal email as well as firstname.surname@network.rca.ac.uk")
     )
@@ -259,6 +261,7 @@ EmailFormset = make_formset(EmailForm, 'Email')
 class PhoneForm(forms.Form):
     #saves to NewStudentPageContactsPhone
     phone = PhoneNumberField(
+        max_length=255,
         required=False,    # because we'll only save those that are there anyway
         help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX")
     )
@@ -296,6 +299,7 @@ class ProfileAcademicDetailsForm(forms.ModelForm):
 class PreviousDegreeForm(forms.Form):
     #saves to NewStudentPagePreviousDegree
     degree = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"),
     )
@@ -304,6 +308,7 @@ PreviousDegreesFormset = make_formset(PreviousDegreeForm, 'Previous degrees', u'
 class ExhibitionForm(forms.Form):
     #saves to NewStudentPageExhibition
     exhibition = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"),
     )
@@ -319,6 +324,7 @@ ExperiencesFormset = make_formset(ExperienceForm, 'Experience', u'Relevant profe
 class AwardsForm(forms.Form):
     #saves to NewStudentPageAward
     award = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas"),
     )
@@ -327,6 +333,7 @@ AwardsFormset = make_formset(AwardsForm, 'Awards', help_text('rca.NewStudentPage
 class PublicationsForm(forms.Form):
     #saves to NewStudentPagePublication
     name = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"),
     )
@@ -335,6 +342,7 @@ PublicationsFormset = make_formset(PublicationsForm, 'Publications', u'Include a
 class ConferencesForm(forms.Form):
     #saves to NewStudentPageConference
     name = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"),
     )
@@ -510,6 +518,7 @@ MAShowCarouselItemFormset = make_formset(MAShowCarouselItemForm, max_num=12, val
 class MACollaboratorForm(forms.Form):
     #saves to NewStudentPageShowCollaborator
     name = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"),
     )
@@ -518,6 +527,7 @@ MACollaboratorFormset = make_formset(MACollaboratorForm, 'Collaborators', help_t
 class MASponsorForm(forms.Form):
     #saves to NewStudentPageShowSponsor
     name = forms.CharField(
+        max_length=255,
         required=False,
         help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas"),
     )
