@@ -70,7 +70,7 @@ def clear_cache():
 @roles('rca2')
 def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/home/vagrant/verdant/%s" % filename
+    local_path = "/tmp/%s" % filename
     remote_path = "/tmp/%s" % filename
 
     run('pg_dump -cf %s verdant_rca' % remote_path)
