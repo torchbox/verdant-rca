@@ -97,7 +97,7 @@ class Command(NoArgsCommand):
             return
         count = 0
 
-        commit = False
+        commit = True
 
         # The page types below should be changed based on the date in the 'year' field:
         for ptype in [ResearchItem, AlumniPage, InnovationRCAProject, ReachOutRCAProject]:
