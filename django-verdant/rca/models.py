@@ -262,6 +262,7 @@ SPECIALISM_CHOICES = (
     ('platform17', 'Platform 17'),
     ('platform18', 'Platform 18'),
     ('platform21', 'Platform 21'),
+    ('footwear-accessories-millinery', "Footwear, Accessories & Millinery"),
 )
 
 SCHOOL_CHOICES = (
