@@ -177,7 +177,7 @@ class ImageForm(forms.Form):
         self.min_dim = None
         if 'max_size' in kwargs:
             self.max_size = kwargs.pop('max_size')
-        else:
+        elif:
             self.max_size = 1024 * 1024
         if 'min_dim' in kwargs:
             self.min_dim = kwargs.pop('min_dim')
