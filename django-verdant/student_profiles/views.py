@@ -186,16 +186,23 @@ def save_page(page, request):
 ## view functions
 
 @login_required
-def overview(request):
+def overview(request, page_id=None):
     """
     Starting page for student profile editing
     If there already is a student profile page, we simply redirect to editing that one.
     If none exists, we'll create a new one and redirect to that if possible.
     """
-    if NewStudentPage.objects.filter(owner=request.user).exists():
+    if page_id is None and NewStudentPage.objects.filter(owner=request.user).exists():
+        if NewStudentPage.objects.filter(owner=request.user).count() >= 2:
+            return redirect('student-profiles:disambiguate')
         page = NewStudentPage.objects.filter(owner=request.user)[0]
         data, page = initial_context(request, page.id)
         return render(request, 'student_profiles/overview.html', data)
+    elif page_id is not None:
+        page = NewStudentPage.objects.filter(owner=request.user)[0]
+        data, page = initial_context(request, page.id)
+        return render(request, 'student_profiles/overview.html', data)
+
 
     data = {}
     data['form'] = StartingForm(initial={
@@ -243,6 +250,22 @@ def preview(request, page_id=None):
     data, profile_page = initial_context(request, page_id)
     
     return profile_page.serve(profile_page.dummy_request())
+
+@login_required
+def disambiguate(request):
+    """There are two profiles for this user, let them choose which one they want to edit."""
+    data = {
+        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
+        'is_ma': user_is_ma(request),
+        'is_mphil': user_is_mphil(request),
+        'is_phd': user_is_phd(request),
+        'is_in_show': False,
+        'profile_name': request.user.username,
+        'pages': NewStudentPage.objects.filter(owner=request.user),
+    }
+
+    return render(request, 'student_profiles/disambiguate.html', data)
+    
 
 
 ################################################################################

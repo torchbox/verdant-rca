@@ -5,6 +5,7 @@ and for allowing more customization
 
 from django.conf.urls import patterns, url
 from .views import overview, preview, postcard_upload, mphil_show_details, phd_show_details
+from .views import disambiguate
 from .views import basic_profile, academic_details, ma_details, ma_show_details
 from .views import mphil_details, phd_details
 from .views import image_upload
@@ -14,6 +15,8 @@ urlpatterns = patterns(
     '',
 
     url(r'^$', overview, name='overview'),
+    url(r'^(?P<page_id>\d+)/$', overview, name='overview-specific'),
+    url(r'^disambiguate/$', disambiguate, name='disambiguate'),
     url(r'^(?P<page_id>\d+)/preview/$', preview, name='preview'),
 
     url(r'^new/basic/$', basic_profile, name='new-basic'),
