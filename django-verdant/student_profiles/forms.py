@@ -177,8 +177,6 @@ class ImageForm(forms.Form):
         self.min_dim = None
         if 'max_size' in kwargs:
             self.max_size = kwargs.pop('max_size')
-        elif:
-            self.max_size = 1024 * 1024
         if 'min_dim' in kwargs:
             self.min_dim = kwargs.pop('min_dim')
 
@@ -189,16 +187,8 @@ class ImageForm(forms.Form):
     def clean_image(self):
         img = self.cleaned_data['image']
         if self.max_size and img.size > self.max_size:
-            raise forms.ValidationError(u'Please keep file size under 10MB. Current file size is {}'.format(filesizeformat(img.size)))
+            raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
 
-        try:
-            dt = Image.open(img)
-            if image.format.upper() not in ('PNG', 'JPEG', 'GIF', 'MPO'):
-                raise forms.ValidationError(u'Only images of types JPEG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.')
-                
-        except IOError:
-            raise forms.ValidationError(u'Only images of types JPEG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.')
-        
         if self.min_dim:
             dt = Image.open(img)
             minX, minY = self.min_dim
