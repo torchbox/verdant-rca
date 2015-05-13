@@ -34,7 +34,10 @@ def get_page_or_404(request, page_id):
     Get the page with the given id if it belongs to the user in the request, otherwise throw a 404.
     """
     index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
-    return get_object_or_404(index_page.get_children(), owner=request.user, id=page_id).get_latest_revision_as_page()
+    child_page = get_object_or_404(index_page.get_children(), owner=request.user, id=page_id).get_latest_revision_as_page()
+    if not isinstance(child_page, RcaNowPage):
+        raise Http404("Page of correct type could not be found")
+    return child_page
 
 
 def initial_data(request, page_id=None):
@@ -74,7 +77,7 @@ def overview(request):
 
     index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
     raw_pages = index_page.get_children().filter(owner=request.user).order_by('-latest_revision_created_at')
-    data['pages'] = [p.get_latest_revision_as_page() for p in raw_pages]
+    data['pages'] = [p.get_latest_revision_as_page() for p in raw_pages if isinstance(p, RcaNowPage)]
     for p in data['pages']:
         p.waiting_for_moderation = p.revisions.filter(submitted_for_moderation=True).exists()
 
