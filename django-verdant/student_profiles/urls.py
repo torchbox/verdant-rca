@@ -19,8 +19,6 @@ urlpatterns = patterns(
     url(r'^disambiguate/$', disambiguate, name='disambiguate'),
     url(r'^(?P<page_id>\d+)/preview/$', preview, name='preview'),
 
-    url(r'^new/basic/$', basic_profile, name='new-basic'),
-
     url(r'^(?P<page_id>\d+)/basic/$', basic_profile, name='edit-basic'),
     url(r'^(?P<page_id>\d+)/cv/$', academic_details, name='edit-academic'),
     url(r'^(?P<page_id>\d+)/postcard/$', postcard_upload, name='edit-postcard'),

@@ -81,15 +81,6 @@
             </li>
         </ul>
         {% endif %}
-        {% else %}
-        <ul class="outer-menu">
-            <li class="drop-down"><a href="{% url 'student-profiles:new-basic' %}">Profile</a></li>
-            <ul class="inner-menu">
-                <li{% if nav_basic %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:new-basic' %}">Get started</a>
-                </li>
-            </ul>
-        </ul>
         {% endif %}
         <ul class="outer-menu rca-now-link" id="menu-rcanow">
             <li{% if nav_now %} class="active"{% endif %}>
