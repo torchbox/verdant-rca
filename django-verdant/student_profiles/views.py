@@ -195,14 +195,11 @@ def overview(request, page_id=None):
     if page_id is None and NewStudentPage.objects.filter(owner=request.user).exists():
         if NewStudentPage.objects.filter(owner=request.user).count() >= 2:
             return redirect('student-profiles:disambiguate')
-        page = NewStudentPage.objects.filter(owner=request.user)[0]
-        data, page = initial_context(request, page.id)
-        return render(request, 'student_profiles/overview.html', data)
+        return redirect('student-profiles:overview-specific', NewStudentPage.objects.get(owner=request.user).id)
     elif page_id is not None:
         page = NewStudentPage.objects.filter(owner=request.user)[0]
         data, page = initial_context(request, page.id)
         return render(request, 'student_profiles/overview.html', data)
-
 
     data = {}
     data['form'] = StartingForm(initial={
