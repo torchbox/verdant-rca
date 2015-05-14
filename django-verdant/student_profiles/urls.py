@@ -32,7 +32,7 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/phd_show/$', phd_show_details, name='edit-phd-show'),
 
     url(r'^(?P<page_id>\d+)/basic/image/$', image_upload, {'field': 'profile_image'}, name='edit-basic-image'),
-    url(r'^(?P<page_id>\d+)/postcard/image/$', image_upload, {'field': 'postcard_image', 'max_size': 10 * 1024 * 1024, 'min_dim': (1278, 1801), 'force': True}),
+    url(r'^(?P<page_id>\d+)/postcard/image/$', image_upload, {'field': 'postcard_image', 'max_size': 10 * 1024 * 1024, 'min_dim': (1278, 1795), 'force': True}),
     url(r'^(?P<page_id>\d+)/ma-show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/phd_show/image/$', image_upload),
     url(r'^(?P<page_id>\d+)/mphil_show/image/$', image_upload),
