@@ -6,7 +6,7 @@ from fabric.colors import red
 import uuid
 
 env.roledefs = {
-    'staging': ['rcawagtail@django-staging.torchbox.com'],
+    'staging': ['rcawagtail@by-staging-1.torchbox.com'],
 
     'nginx': ['root@rca1.torchbox.com'],
     'db': ['root@rca1.torchbox.com'],
