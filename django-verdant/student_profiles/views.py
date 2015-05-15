@@ -166,9 +166,10 @@ def save_page(page, request):
     """
 
     submit = False
+    locked = page.locked
     if 'submit_for_publication' in request.POST:
         submit = True
-        page.locked = True
+        locked = True
         messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
 
     revision = page.save_revision(
@@ -179,9 +180,10 @@ def save_page(page, request):
     if page.live:
         # To avoid overwriting the live version, we only save the page
         # to the revisions table
-        Page.objects.filter(id=page.id).update(has_unpublished_changes=True)
+        Page.objects.filter(id=page.id).update(has_unpublished_changes=True, locked=locked)
     else:
         page.has_unpublished_changes = True
+        page.locked = locked
         page.save()
 
     return revision
