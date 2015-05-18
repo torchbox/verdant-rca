@@ -193,6 +193,7 @@ class ImageForm(forms.Form):
 
         try:
             dt = Image.open(img)
+            dt.load()
             if dt.format.upper() not in ('PNG', 'JPEG', 'GIF', 'MPO'):
                 raise forms.ValidationError(u'Only images of types JPEG and GIF are allowed. Please make sure that you save the image file as the specified format, instead of simply changing the file extension.')
 
