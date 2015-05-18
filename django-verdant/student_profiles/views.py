@@ -167,7 +167,7 @@ def save_page(page, request):
 
     submit = False
     locked = page.locked
-    if 'submit_for_publication' in request.POST:
+    if 'submit_for_publication' in request.POST or request.POST.get('js_submit_for_moderation') == 'submit_for_moderation':
         submit = True
         locked = True
         messages.success(request, "Profile page '{}' was submitted for moderation".format(page.title))
