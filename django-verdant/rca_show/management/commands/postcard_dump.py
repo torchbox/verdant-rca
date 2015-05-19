@@ -306,6 +306,11 @@ class Command(BaseCommand):
             dest='no_fashion',
             default=False,
             help='Remove fashion students from dump'),
+        make_option('--fashion-only',
+            action='store_true',
+            dest='yes_fashion',
+            default=False,
+            help='Only include fashion students'),
         make_option('--exclude',
             action='store',
             type='string',
@@ -328,6 +333,12 @@ class Command(BaseCommand):
                         models.Q(mphil_programme='fashionmenswear') | models.Q(mphil_programme='fashionwomenswear') | \
                         models.Q(ma_programme='fashionmenswear') | models.Q(ma_programme='fashionwomenswear')
             students = students.exclude(fashion_q)
+
+        if options['yes_fashion']:
+            fashion_q = models.Q(phd_programme='fashionmenswear') | models.Q(phd_programme='fashionwomenswear') | \
+                        models.Q(mphil_programme='fashionmenswear') | models.Q(mphil_programme='fashionwomenswear') | \
+                        models.Q(ma_programme='fashionmenswear') | models.Q(ma_programme='fashionwomenswear')
+            students = students.filter(fashion_q)
 
         # Remove any excluded students
         if options['exclude'] is not None:
