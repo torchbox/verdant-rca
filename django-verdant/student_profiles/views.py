@@ -561,7 +561,7 @@ def ma_show_details(request, page_id):
 
     if request.method == 'POST':
         data['show_form'] = sf = MAShowDetailsForm(request.POST, instance=profile_page)
-        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
+        data['carouselitem_formset'] = scif = MAShowCarouselItemFormset(request.POST, prefix='carousel')
         data['show_collaborators_formset'] = scf = MACollaboratorFormset(request.POST, prefix='show_collaborators')
         data['show_sponsors_formset'] = ssf = MASponsorFormset(request.POST, prefix='show_sponsors')
 
@@ -679,7 +679,7 @@ def mphil_show_details(request, page_id):
 
     if request.method == 'POST':
         mpf = data['mphil_show_form'] = MPhilShowForm(request.POST, instance=profile_page)
-        cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
+        cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel')
         cof = data['collaborator'] = MPhilCollaboratorFormset(request.POST, prefix='collaborator')
         spf = data['sponsor'] = MPhilSponsorFormset(request.POST, prefix='sponsor')
 
@@ -795,7 +795,7 @@ def phd_show_details(request, page_id):
 
     if request.method == 'POST':
         mpf = data['phd_show_form'] = PhDShowForm(request.POST, instance=profile_page)
-        cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel', initial=carousel_initial)
+        cif = data['carouselitem_formset'] = MAShowCarouselItemFormset(request.POST, prefix='carousel')
         cof = data['collaborator'] = PhDCollaboratorFormset(request.POST, prefix='collaborator')
         spf = data['sponsor'] = PhDSponsorFormset(request.POST, prefix='sponsor')
 
