@@ -568,7 +568,7 @@ stickyNote();
 * Catch Save and Submit
 */
 $('.submit-page').click(function(e) {
-    if (window.confirm("Sending this form for moderation means you can no longer make changes or add content to your profile. Please check you have completed all sections before clicking OK.")) {
+    if (window.confirm("DO NOT CLICK YES UNLESS YOUR PROFILE IS COMPLETE!\n\nSending this form for moderation means you can no longer make changes or add content to your profile. Please check you have completed all sections before clicking OK.")) {
         $('#js_submit_for_moderation').val('submit_for_moderation');
         $(this).parents('form').submit();
         return true;
