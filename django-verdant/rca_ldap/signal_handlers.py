@@ -20,16 +20,12 @@ def populate_user_signal_handler(user, ldap_user, **kwargs):
             # Groups
             if 'groups' in role:
                 # Get group list
-                groups = []
                 for group_name in role['groups']:
                     try:
                         group_obj = Group.objects.get(name=group_name)
-                        groups.append(group_obj.pk)
+                        user.groups.add(group_obj)
                     except Group.DoesNotExist:
                         continue
-
-                # Set groups
-                user.groups = groups
 
     # additionally, check the student status (for profile editing)
     # according to documentation in codebase, student group is determined by the "Job title" in active directory,
