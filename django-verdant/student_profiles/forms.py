@@ -371,11 +371,46 @@ class PostcardUploadForm(forms.ModelForm):
         widget=ImageInput,
     )
 
+    photographer = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'),
+    )
+    permission = forms.CharField(
+        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'permission'),
+    )
+
+
     def clean_postcard_image(self):
         try:
             return RcaImage.objects.get(id=self.cleaned_data.get('postcard_image'))
         except RcaImage.DoesNotExist:
             return None
+
+    def __init__(self, *args, **kwargs):
+        if 'instance' in kwargs:
+            page = kwargs.get('instance')
+            if page.postcard_image is not None:
+                initial_update = {
+                    'permission': page.postcard_image.permission,
+                    'photographer': page.postcard_image.photographer,
+                }
+                initial = kwargs.get('initial', {})
+                initial.update(initial_update)
+                kwargs['initial'] = initial
+
+        super(PostcardUploadForm, self).__init__(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        res = super(PostcardUploadForm, self).save(*args, **kwargs)
+
+        # now also save the photographer and permission fields
+        # ignoring whether commit is True or False, we save these fields right away, because the user will not save them
+        pci = self.cleaned_data.get('postcard_image')
+        if pci is not None:
+            pci.photographer = self.cleaned_data.get('photographer')
+            pci.permission = self.cleaned_data.get('permission')
+            pci.save()
+
+        return res
 
     class Meta:
         model = NewStudentPage
