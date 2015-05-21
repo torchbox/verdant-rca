@@ -461,7 +461,7 @@ def academic_details(request, page_id=None):
 @login_required
 def postcard_upload(request, page_id):
     """
-    Academic details editing page.
+    Single page for just uploading postcard images.
     """
     if not SHOW_PAGES_ENABLED:
         raise Http404()
