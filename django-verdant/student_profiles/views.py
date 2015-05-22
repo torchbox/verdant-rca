@@ -473,7 +473,11 @@ def postcard_upload(request, page_id):
     if request.method == 'POST':
         data['form'] = form = PostcardUploadForm(request.POST, instance=page)
 
-        if form.is_valid():
+        if page.locked:
+            if not request.is_ajax():
+                # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
+                messages.error(request, 'The page could not be saved, it is currently locked')
+        elif form.is_valid():
             page = form.save(commit=False)
 
             img = page.postcard_image
@@ -488,7 +492,7 @@ def postcard_upload(request, page_id):
                 return redirect('student-profiles:preview', page_id=page_id)
             return redirect('student-profiles:edit-postcard', page_id=page_id)
         else:
-            data['errors'] = 'the form fields'
+            data['errors'] = 'occurred'
 
     if request.is_ajax():
         return HttpResponse(json.dumps({'ok': False}), content_type='application/json')

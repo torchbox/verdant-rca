@@ -6,6 +6,9 @@
 <div class="page-content">
   {% if messages %}
   <ul class="messages">
+    <style>
+      li.error { background-color: red; padding: 1em; color: white; font-weight: bold; }
+    </style>
       {% for message in messages %}
       <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
       {% endfor %}
