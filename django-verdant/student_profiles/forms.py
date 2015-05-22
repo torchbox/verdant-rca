@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import re
+
 from django import forms
 from django.forms.formsets import BaseFormSet
 from django.template.defaultfilters import filesizeformat
@@ -188,8 +190,31 @@ class ImageForm(forms.Form):
 
     image = forms.ImageField()
 
+    def _clean_filename(self, filename):
+        """Clean the filename of special chars and make it to a safe length."""
+        filename = re.sub(r'[^a-zA-Z0-9_.-]', '_', filename)
+
+        MAX_LENGTH = 70
+        # why not 100? Well, we need lots of safety margin for:
+        # the path name where the file will be stored (which is of unknown size, but most likely len('original_images/') == 16
+        # the multiple-filename disambiguation tag at the end, len('_dDsDztn') == 8
+        if len(filename) > MAX_LENGTH:
+            if filename.rfind('.'):
+                filename_no_ext = filename[:filename.rfind('.')]
+                extension = filename[filename.rfind('.'):]
+            else:
+                filename_no_ext = filename
+                extension = ''
+
+            filename_no_ext = filename_no_ext[:MAX_LENGTH - len(extension)]
+
+            filename = filename_no_ext + extension
+
+        return filename
+
     def clean_image(self):
         img = self.cleaned_data['image']
+        img.name = self._clean_filename(img.name)
         if self.max_size and img.size > self.max_size:
             raise forms.ValidationError(u'Please keep file size under 10MB. Current file size {}'.format(filesizeformat(img.size)))
 
