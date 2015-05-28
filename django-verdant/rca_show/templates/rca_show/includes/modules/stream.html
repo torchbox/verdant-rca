@@ -1,29 +1,22 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
-    <section class="row">
-
-<div id='my-video'></div>
-<script type='text/javascript'>
- 
-jwplayer('my-video').setup({
-    playlist: [{
-        image: "",
-        sources: [{
-            file: "rtmp://uh8w7w.live.cloud.influxis.com/_definst_/live",
-           
-        },{
-            file: "http://uh8w7w.live.cloud.influxis.com/live/playlist.m3u8"
-
-        }]
-    }],
-    height: 600,
-    width: 900,
-    'controls': 'true',
-    'title': '',
-    autostart: 'true'
-fallback: false
-});
-</script>
+<section class="row">
+    <div id='playerofeAeYdLaGHz'></div>
+    <script type='text/javascript'>
+        jwplayer('playerofeAeYdLaGHz').setup({
+            file: 'http://uh8w7w.cloud.influxis.com:1935/live/ngrp:myStream_all/playlist.m3u8',
+            {% if poster_image %}
+                {% image poster_image original as poster_image_rendition %}
+                image: '{{ poster_image_rendition.url }}',
+            {% endif %}
+            width: '100%',
+            aspectratio: '16:9',
+            autostart: 'true',
+            ga: '{}',
+            sharing: '{}',
+            androidhls: 'true'
+        });
+    </script>
 </section>
 
 
