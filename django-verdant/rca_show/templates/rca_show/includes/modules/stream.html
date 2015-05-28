@@ -1,29 +1,16 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
-    <section class="row">
-
-<div id='my-video'></div>
-<script type='text/javascript'>
- 
-jwplayer('my-video').setup({
-    playlist: [{
-        image: "",
-        sources: [{
-            file: "rtmp://uh8w7w.live.cloud.influxis.com/_definst_/live",
-           
-        },{
-            file: "http://uh8w7w.live.cloud.influxis.com/live/playlist.m3u8"
-
-        }]
-    }],
-    height: 600,
-    width: 900,
-    'controls': 'true',
-    'title': '',
-    autostart: 'true'
-fallback: false
-});
-</script>
+<section class="row">
+    <div id='playerhyQDHHyixNyf'></div>
+    <script type='text/javascript'>
+        jwplayer('playerhyQDHHyixNyf').setup({
+            file: 'rtmp://uh8w7w.live.cloud.influxis.com:1935/uh8w7w/_definst_/live',
+            image: '//www.longtailvideo.com/content/images/jw-player/lWMJeVvV-876.jpg',
+            width: '100%',
+            aspectratio: '16:9',
+            autostart: 'true'
+        });
+    </script>
 </section>
 
 
