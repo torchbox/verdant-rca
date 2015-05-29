@@ -1,14 +1,44 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
 <section class="row">
-    <div id='playerhyQDHHyixNyf'></div>
+    <div id='my-video'></div>
+
     <script type='text/javascript'>
-        jwplayer('playerhyQDHHyixNyf').setup({
-            file: 'rtmp://uh8w7w.live.cloud.influxis.com:1935/uh8w7w/_definst_/live',
-            image: '//www.longtailvideo.com/content/images/jw-player/lWMJeVvV-876.jpg',
-            width: '100%',
-            aspectratio: '16:9',
-            autostart: 'true'
+        jwplayer('my-video').setup({
+            playlist: [{
+                image: "",
+                sources: [{
+                    file: "rtmp://uh8w7w.cloud.influxis.com/live/_definst_/myStream",
+                },{
+                    file: "http://uh8w7w.cloud.influxis.com/live/myStream/playlist.m3u8"
+                }]
+            }],
+            height: 600,
+            width: 900,
+            'controls': 'true',
+            'title': '',
+            autostart: 'true',
+            repeat: 'false',
+        });
+        jwplayer().onError(function(){
+            jwplayer().load({
+                file:"http://content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
+                image:"http://www.kratosgroup.tv/templates/white-theme/images/channel-player/offline.png"});
+            jwplayer().play();
+        });
+        jwplayer().onComplete(function(){
+            window.location = window.location.href;
+        });
+        jwplayer().onBuffer(function(){
+            theTimeout = setTimeout(function(){
+                jwplayer().load({
+                    file:"http://content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
+                    image:"http://www.kratosgroup.tv/templates/white-theme/images/channel-player/offline.png"});
+                jwplayer().play();
+            },10000);
+        });
+        jwplayer().onPlay(function(){
+            clearTimeout(theTimeout);
         });
     </script>
 </section>
