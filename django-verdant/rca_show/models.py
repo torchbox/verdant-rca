@@ -82,6 +82,12 @@ class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
 
 class ShowStreamPage(Page, SocialFields):
     body = RichTextField(blank=True)
+    poster_image = models.ForeignKey(
+        'rca.RcaImage',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
 
     @property
     def show_index(self):
@@ -93,6 +99,7 @@ ShowStreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
     FieldPanel('body'),
+    ImageChooserPanel('poster_image'),
 ]
 
 ShowStreamPage.promote_panels = [

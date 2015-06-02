@@ -1,44 +1,17 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
 <section class="row">
-    <div id='my-video'></div>
-
+    <div id='playerWCKTUtxOlOQx'></div>
     <script type='text/javascript'>
-        jwplayer('my-video').setup({
-            playlist: [{
-                image: "",
-                sources: [{
-                    file: "rtmp://uh8w7w.cloud.influxis.com/live/myStream",
-                },{
-                    file: "http://uh8w7w.cloud.influxis.com:1935/live/myStream/playlist.m3u8"
-                }]
-            }],
-            height: 600,
-            width: 900,
-            'controls': 'true',
-            'title': '',
-            autostart: 'true',
-            repeat: 'false',
-        });
-        jwplayer().onError(function(){
-            jwplayer().load({
-                file:"http://content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
-                image:"http://www.kratosgroup.tv/templates/white-theme/images/channel-player/offline.png"});
-            jwplayer().play();
-        });
-        jwplayer().onComplete(function(){
-            window.location = window.location.href;
-        });
-        jwplayer().onBuffer(function(){
-            theTimeout = setTimeout(function(){
-                jwplayer().load({
-                    file:"http://content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
-                    image:"http://www.kratosgroup.tv/templates/white-theme/images/channel-player/offline.png"});
-                jwplayer().play();
-            },10000);
-        });
-        jwplayer().onPlay(function(){
-            clearTimeout(theTimeout);
+        jwplayer('playerWCKTUtxOlOQx').setup({
+            file: 'http://uh8w7w.cloud.influxis.com:1935/live/myStream/playlist.m3u8',
+            {% if poster_image %}
+                {% image poster_image original as poster_image_rendition %}
+                image: '{{ poster_image_rendition.url }}',
+            {% endif %}
+            width: '100%',
+            aspectratio: '16:9',
+            ga: '{}'
         });
     </script>
 </section>
