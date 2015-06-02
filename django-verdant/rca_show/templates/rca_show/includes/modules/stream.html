@@ -1,19 +1,24 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
 <section class="row">
-    <div id='playerxeYRNDObLGpW'></div>
+    <div id='playerWCKTUtxOlOQx'></div>
+
     <script type='text/javascript'>
-        jwplayer('playerxeYRNDObLGpW').setup({
-            file: 'http://uh8w7w.cloud.influxis.com:1935/live/myStream/playlist.m3u8',
-            {% if poster_image %}
-                {% image poster_image original as poster_image_rendition %}
-                image: '{{ poster_image_rendition.url }}',
-            {% endif %}
-            title: 'Fashion Show 2015',
+        jwplayer('playerWCKTUtxOlOQx').setup({
+            playlist: [{
+                image: '/media/images/FashionStream.HoldingImage.focus-none.original.jpg',
+                sources: [{
+                file: 'http://uh8w7w.cloud.influxis.com:1935/live/smil:playlist.smil/playlist.m3u8',
+                },{
+                file: "rtsp://uh8w7w.cloud.influxis.com:1935/live/myStream"
+                },{
+                file: "rtmp://uh8w7w.live.cloud.influxis.com/live/myStream"
+                }]
+            }],
             width: '100%',
             aspectratio: '16:9',
-            ga: '{}',
-            androidhls: 'true'
+            androidhls: ‘true’
+            ga: '{}'
         });
     </script>
 </section>

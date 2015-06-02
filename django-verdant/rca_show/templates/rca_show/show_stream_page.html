@@ -5,29 +5,28 @@
 
 
 {% block extra_js_head %}
+
     <script src="http://jwpsrv.com/library/ZQUkUgkgEeWx+A4AfQhyIQ.js"></script>
 
     <script type="text/javascript">
-        var file = "http://uh8w7w.cloud.influxis.com:1935/live/myStream/playlist.m3u8";
+        var file = "http://uh8w7w.cloud.influxis.com:1935/live/smil:playlist.smil/playlist.m3u8";
         if ((navigator.userAgent.indexOf('Android 4') != -1) ||
-        (navigator.userAgent.indexOf('Android 4') != -1))  {
-
-
-        document.write("<video width= '");
-                document.write( 900 + "'")
-                document.write("height='");
-                document.write( 600 + "'");
-                document.write("poster preload='true' controls>");
-                document.write("<source src=" + file + ">");
+        (navigator.userAgent.indexOf('Android 4') != -1)) {
+            document.write("<video width= '");
+            document.write( 900 + "'")
+            document.write("height='");
+            document.write( 600 + "'");
+            document.write("poster preload='true' controls>");
+            document.write("<source src=" + file + ">");
         }
-        </script>
-        <script type="text/javascript">
+    </script>
 
+    <script type="text/javascript">
         if ((navigator.userAgent.indexOf('Android 2') != -1) ||
         (navigator.userAgent.indexOf('BlackBerry') != -1) ||
-        (navigator.userAgent.indexOf('Android 3') != -1))  {
-
+        (navigator.userAgent.indexOf('Android 3') != -1)) {
         window.location = "rtsp://uh8w7w.cloud.influxis.com:1935/live/myStream";
+        }
     </script>
 {% endblock %}
 
