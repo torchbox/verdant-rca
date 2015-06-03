@@ -7,11 +7,11 @@
         {% endfor %}
     {% elif "animation" in self.get_programmes %}
         {% for student in students %}
-            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.show_carousel_items.all|first image_format="video" %}
+            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.show_carousel_items.all|first.poster_image image_format="video" %}
         {% endfor %}
     {% else %}
         {% for student in students %}
-            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.get_profile.carousel_items.all|first image_format="carousel-image" %}
+            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.get_profile.carousel_items.all|first.image %}
         {% endfor %}
     {% endif %}
 </ul>
