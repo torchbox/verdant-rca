@@ -7,13 +7,9 @@ from rca.models import NewStudentPage
 
 class Command(BaseCommand):
     def find_student_page(self, student):
-        # Student info
-        programme = student[0]
-        first_name = student[2]
-        last_name = student[1]
-        email = student[3]
+        email = student[0].strip()
 
-        print first_name, last_name
+        print email
 
         # Get list of possible pages
         students = NewStudentPage.objects.all()
@@ -28,10 +24,6 @@ class Command(BaseCommand):
         # Find by owner email
         if page is None and email:
             page = students.filter(owner__email=email).first()
-
-        # Find by name
-        if page is None:
-            page = students.filter(last_name__iexact=last_name, first_name__iexact=first_name).first()
 
         return page
 
