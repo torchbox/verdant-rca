@@ -11,7 +11,7 @@
         {% endfor %}
     {% else %}
         {% for student in students %}
-            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.show_carousel_items.all|first %}
+            {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=student.get_profile.carousel_items.all|first %}
         {% endfor %}
     {% endif %}
 </ul>
