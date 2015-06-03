@@ -21,11 +21,11 @@ SUB_EXPRESSIONS = (
     # Removes trailing spaces
     (r' $', ''),
 
-    # Removes spaces around '-' characters
+    # Removes spaces around hyphens
     (r' - ', '-'),
 
-    # Converts spaces to underscores
-    (r' ', '_'),
+    # Converts spaces to hyphens
+    (r' ', '-'),
 )
 
 
