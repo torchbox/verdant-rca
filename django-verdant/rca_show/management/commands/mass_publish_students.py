@@ -42,15 +42,37 @@ class Command(BaseCommand):
 
             # Publish them
             for student in students:
-                if student:
-                    # Find latest revision that is in moderation
-                    revision = student.revisions.filter(submitted_for_moderation=True).order_by('-created_at').first()
-
-                    if revision:
-                        revision.publish()
-
-                        print "PUBLISHED:", student.id
-                    else:
-                        print "NOT IN MODERATION:", student.id
-                else:
+                if not student:
                     print "CANNOT FIND PAGE"
+                    continue
+
+                # Find latest revision that is in moderation
+                revision = student.revisions.filter(submitted_for_moderation=True).order_by('-created_at').first()
+
+                if not revision:
+                    print "NOT IN MODERATION:", student.id
+                    continue
+
+                # Check it's valid
+                page = revision.as_page_object()
+                error = False
+
+                if not page.programme:
+                    print "NOT SET PROGRAMME:", student.id
+                    error = True
+
+                if not page.school:
+                    print "NOT SET SCHOOL:", student.id
+                    error = True
+
+                if not page.get_profile() or not page.get_profile()['graduation_year']:
+                    print "NOT SET GRADUATION YEAR:", student.id
+                    error = True
+
+                # Skip if error found
+                if error:
+                    continue
+
+                # Publish!
+                revision.publish()
+                print "PUBLISHED:", student.id
