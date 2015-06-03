@@ -16,6 +16,17 @@
             sharing: '{}',
             androidhls: 'true'
         });
+
+        jwplayer().onError(function(){
+            jwplayer().load({
+                file:"{% static 'rca_show/stream-error.mp4' %}",
+                {% if poster_image %}
+                    {% image poster_image original as poster_image_rendition %}
+                    image: '{{ poster_image_rendition.url }}',
+                {% endif %}
+            });
+            jwplayer().play();
+        });
     </script>
 </section>
 
