@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from django.db import models
 from django.conf import settings
 from rca.models import NewStudentPage
-from rca.report_generator import Report
+from rca_show.management.report_generator import Report
 import csv
 from zipfile import ZipFile
 import os

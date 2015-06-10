@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand
 from django.db import models
 from django.conf import settings
 from rca.models import NewStudentPage
-from rca.report_generator import Report
+from rca_show.management.report_generator import Report
 from PIL import Image
 from zipfile import ZipFile
 from optparse import make_option
@@ -101,7 +101,7 @@ class PostcardDumpReport(Report):
         profile = student.get_profile()
         if profile is not None and profile['name'] == "MA":
             return (
-                student.ma_specialism or "Not set",
+                student.get_ma_specialism_display() or "Not set",
                 'error' if not student.ma_specialism else None,
                 None,
             )
