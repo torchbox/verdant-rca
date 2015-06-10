@@ -236,6 +236,20 @@ class PostcardDumpReport(Report):
                 None,
             )
 
+    def permission_field(self, student):
+        if student.postcard_image and student.postcard_image.permission:
+            return (
+                student.postcard_image.permission,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if student.postcard_image else "",
+                'error',
+                None,
+            )
+
     title = "Postcard image dump"
 
     fields = (
@@ -256,6 +270,7 @@ class PostcardDumpReport(Report):
         ("Image Width", width_field),
         ("Image Height", height_field),
         ("Image Colour Format", colour_format_field),
+        ("Image Permission", permission_field),
     )
 
     extra_css = """
