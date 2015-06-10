@@ -77,7 +77,7 @@ class Report(object):
         return self.fields
 
     def get_footer(self):
-        return "Generated: " + dateformat.format(timezone.now(), 'l dS F Y P')
+        return "Generated: " + dateformat.format(timezone.now(), 'l dS F Y P') + " UTC"
 
     def get_headings(self):
         return [field[0] for field in self.get_fields()]
