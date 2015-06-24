@@ -1,6 +1,6 @@
 Django==1.6.10
 South==1.0.0
-wagtail==0.8.5
+wagtail==0.8.8
 django-auth-ldap==1.1.7
 Embedly==0.5.0
 elasticsearch==1.4.0
