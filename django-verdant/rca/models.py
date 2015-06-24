@@ -3594,6 +3594,13 @@ def reassign_student_pages(sender, request, user, **kwargs):
 
 # == New Student page ==
 
+class CarouselItemManager(models.Manager):
+    use_for_related_fields = True
+
+    def no_videos(self):
+        return self.all().filter(embedly_url='')
+
+
 # General
 class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
@@ -3654,6 +3661,8 @@ class NewStudentPageAward(Orderable):
 class NewStudentPageShowCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewStudentPage', related_name='show_carousel_items')
 
+    objects = CarouselItemManager()
+
 class NewStudentPageShowCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_collaborators')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"))
@@ -3670,6 +3679,8 @@ class NewStudentPageShowSponsor(Orderable):
 # MPhil
 class NewStudentPageMPhilCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_carousel_items')
+
+    objects = CarouselItemManager()
 
 class NewStudentPageMPhilCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_collaborators')
@@ -3709,6 +3720,8 @@ class NewStudentPageMPhilSupervisor(Orderable):
 # PhD
 class NewStudentPagePhDCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_carousel_items')
+
+    objects = CarouselItemManager()
 
 class NewStudentPagePhDCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_collaborators')

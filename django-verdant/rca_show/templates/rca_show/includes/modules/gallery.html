@@ -13,7 +13,7 @@
         {% endfor %}
     {% else %}
         {% for student in students %}
-            {% with student.get_profile.carousel_items.all|first as carousel_item %}
+            {% with student.get_profile.carousel_items.no_videos|first as carousel_item %}
                 {% include "rca_show/includes/modules/gallery_item.html" with student=student galleryitem=student gallery_image=carousel_item.image %}
             {% endwith %}
         {% endfor %}
