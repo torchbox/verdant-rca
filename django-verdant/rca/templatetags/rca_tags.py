@@ -617,9 +617,8 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
     profile = student.get_profile(degree)
     carousel_items = profile['carousel_items'].all()
 
-    # If this is a 2014 animation student, remove first carousel item
-    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
-        # Remove first two carousel items if they are vimeo videos
+    # If this is an animation student, remove first two carousel items if they are vimeo videos
+    if show_animation_videos == False and student.programme in ['animation', 'visualcommunication']:
         for i in range(2):
             try:
                 first_carousel_item = carousel_items[0]
