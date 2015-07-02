@@ -5724,6 +5724,12 @@ class StreamPageAd(Orderable):
 class StreamPage(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.StreamPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StreamPage', 'body'))
+    poster_image = models.ForeignKey(
+        'rca.RcaImage',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StreamPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5736,6 +5742,7 @@ StreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
+    ImageChooserPanel('poster_image'),
     InlinePanel(StreamPage, 'related_links', label="Related links"),
     InlinePanel(StreamPage, 'manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
