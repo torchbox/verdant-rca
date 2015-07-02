@@ -14,16 +14,16 @@
           <ul>
               <li class="filter">
                   <label for="year">Year</label>
-                  <select name="year">
+                  <select name="year" id="year">
                       <option value="">All years</option>
-                      {% for key, value in global_years %}
-                        <option value="{{ key }}" {% if request.GET.year == key %}selected="selected"{% endif %}>{{ value }}</option>
+                      {% for year in years %}
+                        <option value="{{ year }}" {% if request.GET.year == year %}selected="selected"{% endif %}>{{ year }}</option>
                       {% endfor %}
                   </select>
               </li>
               <li class="filter">
-                  <label for="category">category</label>
-                  <select name="category">
+                  <label for="category">Category</label>
+                  <select name="category" id="category">
                       <option value="">All categories</option>
                       {% for key, value in global_categories %}
                         <option value="{{ key }}" {% if request.GET.category == key %}selected="selected"{% endif %}>{{ value }}</option>
@@ -31,8 +31,8 @@
                   </select>
               </li>
               <li class="filter">
-                  <label for="programmes">Programmes</label>
-                  <select name="programmes">
+                  <label for="programme">Programmes</label>
+                  <select name="programme" id="programme">
                       <option value="">All programmes</option>
                       {% for key, value in global_programmes %}
                         <option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
@@ -60,6 +60,7 @@
   <script type="text/javascript">
     //global var for current_page set here so that it can be used by the script being called
     var current_page = window.location.pathname;
+    var filters = {{ filters|safe }};
   </script>
   <script src="/static/rca/js/filters.js"></script>
 {% endblock %}

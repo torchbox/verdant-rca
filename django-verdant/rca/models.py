@@ -1150,7 +1150,7 @@ class NewsIndex(Page, SocialFields):
             # If page is not an integer, deliver first page.
             news = paginator.page(1)
         except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
+            # If page is out of range (e.g. 9999), deliver lst page of results.
             news = paginator.page(paginator.num_pages)
 
         if request.is_ajax() and 'pjax' not in request.GET:
@@ -5607,26 +5607,7 @@ class SustainRCAIndex(Page, SocialFields):
         ])
         projects = projects.order_by('random_order')
 
-        #years = projects.values_list('year', flat=True).distinct()
-
-        # if selected_year:
-        #     projects = projects.filter(year=selected_year)
-        # if selected_category:
-        #     projects = projects.filter(category=selected_category)
-        # if selected_programme:
-        #     projects = projects.filter(programme=selected_programme)
-
-        # categories = projects.values_list('category', flat=True).distinct()
-        # categories = list(((category[0], category[1]) for category in SUSTAINRCA_CATEGORY_CHOICES
-        #               if category[0] in categories))
-
-        # programmes = projects.values_list('programme', flat=True).distinct()
-        # programme_accumulator = set([])
-        # for k, v in PROGRAMME_CHOICES:
-        #     for x in v:
-        #         if x[0] in programmes:
-        #             programme_accumulator.add(x)
-        # programmes = programme_accumulator
+        years = projects.values_list('year', flat=True).distinct()
 
         # Pagination
         page = request.GET.get('page')
@@ -5648,6 +5629,7 @@ class SustainRCAIndex(Page, SocialFields):
         return render(request, template, {
             'self': self,
             'projects': projects,
+            'years': years,
             'filters': json.dumps(filters),
         })
 
