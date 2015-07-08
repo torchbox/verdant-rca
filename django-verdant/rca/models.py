@@ -5874,8 +5874,6 @@ class ReachOutRCAIndex(Page, SocialFields):
             ('partnership', 'partnerships__partnership', partnership),
         ])
 
-        print projects
-
         #pagination
 
         page = request.GET.get('page')

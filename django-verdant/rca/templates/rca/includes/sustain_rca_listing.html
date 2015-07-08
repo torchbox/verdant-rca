@@ -29,9 +29,4 @@
             <li class="next"><a href="?page={{ projects.next_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&amp;{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">Next</a></li>
         {% endif %}
     </ul>
-
 {% endif %}
-
-<script type="text/javascript">
-    var filters = {{ filters|safe }};
-</script>
