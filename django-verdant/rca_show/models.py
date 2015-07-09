@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.db import models
 from django.http import Http404
@@ -437,12 +438,31 @@ class ShowIndexPage(SuperPage, SocialFields):
         except ShowIndexProgrammeIntro.DoesNotExist:
             intro = ''
 
+        # Pagination
+        page = request.GET.get('page')
+        paginator = Paginator(self.get_students(
+            programme=programme
+        ), 6)
+        try:
+            students = paginator.page(page)
+        except PageNotAnInteger:
+            students = paginator.page(1)
+        except EmptyPage:
+            students = paginator.page(paginator.num_pages)
+
+        # Get template
+        if request.is_ajax() and 'pjax' not in request.GET:
+            template = 'rca_show/includes/modules/gallery.html'
+        else:
+            template = self.programme_template
+
         # Render response
-        return render(request, self.programme_template, {
+        return render(request, template, {
             'self': self,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
             'intro': intro,
+            'students': students
         })
 
     def serve_student(self, request, programme, slug, school=None):
