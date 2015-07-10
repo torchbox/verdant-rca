@@ -30,3 +30,9 @@
         {% endif %}
     </ul>
 {% endif %}
+
+{% if filters %}
+    <script type="text/javascript">
+        var filters = {{ filters|safe }};
+    </script>
+{% endif %}
