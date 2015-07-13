@@ -1,0 +1,70 @@
+{% extends "rca/base.html" %}
+{% load rca_tags wagtailcore_tags %}
+
+{% block body_class %}type-innovationrca-index{% endblock %}
+
+{% block content %}
+
+  {% include "rca/includes/modules/h1-major.html" %}
+
+  {% include "rca/includes/modules/intro-large.html" %}
+
+  <section class="filters three-filters row">
+      <form id="filters" action="{% pageurl self %}" method="GET">
+          <ul>
+              <li class="filter">
+                  <label for="year">Year</label>
+                  <select name="year" id="year">
+                      <option value="">All years</option>
+                      {% for year in years %}
+                        <option value="{{ year }}" {% if request.GET.year == year %}selected="selected"{% endif %}>{{ year }}</option>
+                      {% endfor %}
+                  </select>
+              </li>
+              <li class="filter">
+                  <label for="category">Category</label>
+                  <select name="category" id="category">
+                      <option value="">All categories</option>
+                      {% for key, value in global_categories %}
+                        <option value="{{ key }}" {% if request.GET.category == key %}selected="selected"{% endif %}>{{ value }}</option>
+                      {% endfor %}
+                  </select>
+              </li>
+              <li class="filter">
+                  <label for="programme">Programmes</label>
+                  <select name="programme" id="programme">
+                      <option value="">All programmes</option>
+                      {% for key, value in global_programmes %}
+                        <option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
+                      {% endfor %}
+                  </select>
+              </li>
+          </ul>
+          <input type="submit" />
+      </form>
+  </section>
+
+  <div id="listing">
+      {% include "rca/includes/sustain_rca_listing.html" %}
+  </div>
+
+  {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showAdverts="true" %}
+{% endblock %}
+
+
+{% block extra_js %}
+  <script type="text/javascript">
+    //global var for current_page set here so that it can be used by the script being called
+    var current_page = window.location.pathname;
+    var filters = {{ filters|safe }};
+  </script>
+  <script src="/static/rca/js/filters.js"></script>
+{% endblock %}
+
+<!-- TODO:
+- filter of programmes when school is selected (or other filtering to be discussed)
+ -->
