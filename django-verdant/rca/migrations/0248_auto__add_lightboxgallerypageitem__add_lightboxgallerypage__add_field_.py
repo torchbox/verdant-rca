@@ -30,11 +30,6 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'rca', ['LightboxGalleryPage'])
 
-        # Adding field 'StreamPage.poster_image'
-        db.add_column(u'rca_streampage', 'poster_image',
-                      self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, on_delete=models.SET_NULL, to=orm['rca.RcaImage']),
-                      keep_default=False)
-
 
     def backwards(self, orm):
         # Deleting model 'LightboxGalleryPageItem'
@@ -42,9 +37,6 @@ class Migration(SchemaMigration):
 
         # Deleting model 'LightboxGalleryPage'
         db.delete_table(u'rca_lightboxgallerypage')
-
-        # Deleting field 'StreamPage.poster_image'
-        db.delete_column(u'rca_streampage', 'poster_image_id')
 
 
     models = {
