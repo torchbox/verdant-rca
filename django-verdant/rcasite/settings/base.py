@@ -147,10 +147,9 @@ INSTALLED_APPS = (
     'compressor',
     'template_timings_panel',
     'taggit',
-    'gunicorn',
-    'djcelery',
-    'kombu.transport.django',
     'twitter',  # the app used to proxy the Twitter REST API
+    'widget_tweaks',
+    'djcelery',
 
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -161,6 +160,7 @@ INSTALLED_APPS = (
     'wagtail.wagtaildocs',
     'wagtail.wagtailsnippets',
     'wagtail.wagtailusers',
+    'wagtail.wagtailsites',
     'wagtail.wagtailimages',
     'wagtail.wagtailembeds',
     'wagtail.wagtailsearch',
@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     'rca_signage',
     'rca_ldap',
     'rca_show',
+    'student_profiles',
 )
 
 EMAIL_SUBJECT_PREFIX = '[wagtail] '
@@ -265,8 +266,6 @@ WAGTAILSEARCH_BACKENDS = {
 WAGTAIL_PASSWORD_MANAGEMENT_ENABLED = False
 
 # CELERY SETTINGS
-import djcelery
-djcelery.setup_loader()
 
 # Use separate queues on each host if uploads should be processed by celery
 # import socket

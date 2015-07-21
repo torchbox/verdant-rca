@@ -5,7 +5,7 @@
     > ul{
         .row();
     }
-    
+
     .jumplist .toggle, a{
         padding:@grid-gutter-width;
         display:block;
@@ -41,7 +41,7 @@
             color:@color-black;
             font-weight:normal;
             border-bottom:1px solid @color-black;
-            position:relative;  
+            position:relative;
 
             &:hover{
                 color:white;
@@ -122,7 +122,7 @@
             border-bottom:2px solid @color-dark-grey;
             padding:@spacing-one 0 0 0;
             display:inline-block;
-            margin:0 0 @spacing-one @spacing-one;  
+            margin:0 0 @spacing-one @spacing-one;
         }
     }
 }
@@ -151,7 +151,7 @@
 
 .showgallery{
     .clearfix();
-    
+
     li{
         position:relative;
         float:left;
@@ -183,6 +183,14 @@
 
         &:hover{
             opacity:1;
+        }
+    }
+    .load-more{
+        display:inline;
+        height: auto;
+        a{
+            height:126px;
+            width:126px;
         }
     }
 
@@ -390,7 +398,7 @@
         padding-bottom:100%;
         height:auto;
     }
-    
+
     .content{
         opacity:1;
 
@@ -399,7 +407,7 @@
         }
 
         h2{
-            word-spacing:300px; 
+            word-spacing:300px;
         }
     }
 }
@@ -413,6 +421,52 @@
     .programme-curatingcontemporaryart .showgallery{
         li{
             .column(4);
+        }
+    }
+}
+
+
+.load-more{
+    a{
+        .transition(background-color 0.2s ease);
+        text-indent:-2000px;
+        display:block;
+        background-color:@color-pale-grey;
+        position:relative;
+
+        &:after{
+            content:"";
+            display:block;
+            margin:auto;
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            .sprite-load-63(
+                @positionX: -433px,
+                @positionY: -85px,
+                @retinaPositionX: -866px,
+                @retinaPositionY: -170px,
+                @width: 62px,
+                @height: 62px
+            );
+            opacity:0.6;
+        }
+
+        &:hover{
+            background-color:@color-pink;
+            &:after{
+                .sprite-load-63(
+                    @positionX: -433px,
+                    @positionY: -13px,
+                    @retinaPositionX: -866px,
+                    @retinaPositionY: -26px,
+                    @width: 62px,
+                    @height: 62px
+                );
+                opacity:1;
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ from django.utils import dateformat
 from django.conf import settings
 from django.contrib.auth.models import User
 from rca.models import NewStudentPage, RcaImage
-from rca.report_generator import Report
+from rca_show.management.report_generator import Report
 from optparse import make_option
 import dateutil.parser
 from zipfile import ZipFile

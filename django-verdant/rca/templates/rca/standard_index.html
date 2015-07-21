@@ -18,12 +18,12 @@
          <section class='row {% if self.hide_body %}hide-body{% endif %}'>
              {% include "rca/includes/modules/body-text.html" with body=self.body %}
          </section>
-         {% if self.hide_body %}<span class="bc4 caps showmore showbody">Read more</span>{% endif %}
+         {% if self.hide_body %}<a href="#" class="bc4 caps showmore showbody">Read more</a>{% endif %}
     {% endif %}
 
 
     {% include "rca/includes/modules/staff_feed.html" %}
-    
+
     <!--custom module block-->
     {% with self.custom_content_modules.all as custom_modules %}
         {% if custom_modules|length > 0 %}
@@ -88,12 +88,16 @@
                      	{% else %}
                      		<li>
                      	{% endif %}
-                     		{% if teaser.url %}
-                     		<a href="{{ teaser.url }}">
-                     		{% endif %}
-                     			{% if teaser.image %}
+
+                            {% if teaser.link %}
+                                <a href="{% pageurl teaser.link %}">
+                            {% elif teaser.external_link %}
+                                <a href="{{ teaser.external_link }}">
+                            {% endif %}
+
+                 			{% if teaser.image %}
                      			<div class="image">{% image teaser.image width-400 %}</div>
-                     			{% endif %}
+                 			{% endif %}
 			                    <div class="content">
 			                    	{% if teaser.title %}
 			                        <h3 class="h8">{{ teaser.title }}</h3>
@@ -102,7 +106,7 @@
 			                        <p class="bc5">{{ teaser.text }}</p>
 			                        {% endif %}
 			                    </div>
-			                {% if teaser.url %}
+			                {% if teaser.link or teaser.external %}
 			                </a>
 			                {% endif %}
                     {% endfor %}
@@ -133,7 +137,7 @@
 
     {% include "rca/includes/modules/contact.html" %}
     {% include "rca/includes/modules/contact_snippet.html" %}
-    
+
     {% if self.exclude_twitter_block != True %}
         {% include "rca/includes/modules/twitter-feed.html" %}
     {% endif %}

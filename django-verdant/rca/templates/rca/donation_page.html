@@ -44,15 +44,15 @@
                     <ul>
                         {% with form.amounts as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.amount as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        
+
                         {% with form.donation_for as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
+
                         {% with form.number as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.expiration as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
                         {% with form.cvc as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        
+
                         {% with form.not_included_in_supporters_list as field %}{% include "rca/includes/field_as_li.html" %}{% endwith %}
-                        {% with form.is_gift_aid as field %}{% include "rca/includes/field_as_li.html" with field_title="Gift Aid" intro="If you are a UK taxpayer, the RCA can claim an extra 25p from HM Revenue and Customs for every &pound;1 you donate through the Gift Aid scheme." %}{% endwith %}
-                        
+
                     </ul>
                 </fieldset>
 

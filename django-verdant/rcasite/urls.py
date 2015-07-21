@@ -12,12 +12,13 @@ from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
+import student_profiles.urls, student_profiles.now_urls
 
 admin.autodiscover()
 
 
 # Signal handlers
-from wagtail.wagtailsearch import register_signal_handlers as wagtailsearch_register_signal_handlers
+from wagtail.wagtailsearch.signal_handlers import register_signal_handlers as wagtailsearch_register_signal_handlers
 wagtailsearch_register_signal_handlers()
 
 from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_register_signal_handlers
@@ -41,6 +42,9 @@ urlpatterns = patterns('',
         'use_json': True,
         'json_attrs': ['title', 'url', 'search_name', 'search_url']
     }, name='wagtailsearch_suggest'),
+
+    url(r'^my-rca/', include(student_profiles.urls, namespace='student-profiles')),
+    url(r'^my-rca/nowpages/', include(student_profiles.now_urls, namespace='nowpages')),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism

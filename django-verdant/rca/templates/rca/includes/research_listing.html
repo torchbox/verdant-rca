@@ -33,5 +33,7 @@
 {% endif %}
 
 <script type="text/javascript">
-    var filters = {{ filters|safe }};
+    {% if filters %}
+        var filters = {{ filters|safe }};
+    {% endif %}
 </script>

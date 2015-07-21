@@ -1,11 +1,15 @@
-from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES, INNOVATIONRCA_PROJECT_TYPES_CHOICES, SHOW_SCHOOLS
+from rca.models import YEARS, SCHOOL_PROGRAMME_MAP, SCHOOL_CHOICES, ALL_PROGRAMMES, PROGRAMME_CHOICES, EVENT_LOCATION_CHOICES, AREA_CHOICES, EVENT_AUDIENCE_CHOICES, RESEARCH_TYPES_CHOICES, WORK_THEME_CHOICES, WORK_TYPES_CHOICES, STAFF_TYPES_CHOICES, INNOVATIONRCA_PROJECT_TYPES_CHOICES, SHOW_SCHOOLS, SUSTAINRCA_CATEGORY_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 from datetime import date
 
 
 def global_vars(request):
     year = date.today().year
-    schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
+    try:
+        schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
+    except KeyError:
+        year = 2014
+        schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
     schools_current_year = filter(lambda s: s[0] in schools_current_year, SCHOOL_CHOICES)
     years_until_current_year = [y for y in YEARS if int(y) <= year]
 
@@ -31,4 +35,5 @@ def global_vars(request):
         'global_reachout_participants': REACHOUT_PARTICIPANTS_CHOICES,
         'global_reachout_themes': REACHOUT_THEMES_CHOICES,
         'global_reachout_partnerships': REACHOUT_PARTNERSHIPS_CHOICES,
+        'global_categories': SUSTAINRCA_CATEGORY_CHOICES,
     }

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.db import models
 from django.http import Http404
@@ -82,6 +83,12 @@ class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
 
 class ShowStreamPage(Page, SocialFields):
     body = RichTextField(blank=True)
+    poster_image = models.ForeignKey(
+        'rca.RcaImage',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
 
     @property
     def show_index(self):
@@ -93,6 +100,7 @@ ShowStreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
     InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
     FieldPanel('body'),
+    ImageChooserPanel('poster_image'),
 ]
 
 ShowStreamPage.promote_panels = [
@@ -124,7 +132,7 @@ class ShowStandardPageContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -173,7 +181,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
 
     panels = [
-        FieldPanel('body'), 
+        FieldPanel('body'),
         FieldPanel('map_coords')
     ]
 
@@ -259,9 +267,10 @@ class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
 
 class ShowIndexPage(SuperPage, SocialFields):
+    body = RichTextField(blank=True, help_text="Optional body text. Useful for holding pages prior to Show launch.")
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
-    exhibition_date = models.CharField(max_length=255, blank=True)
+    exhibition_date = models.TextField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
     password_prompt = models.CharField(max_length=255, blank=True, help_text="A custom message asking the user to log in, on protected pages")
 
@@ -280,9 +289,10 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Schools & Programmes link
         if len(show_index.get_programmes()) == 0:
-            menu_items.append(
-                (show_index.reverse_subpage('school_index'), "Schools & Students"),
-            )
+            if self.get_schools() and self.get_students():
+                menu_items.append(
+                    (show_index.reverse_subpage('school_index'), "Schools & Students"),
+                )
 
         # Links to show index subpages
         menu_items.extend([
@@ -329,8 +339,8 @@ class ShowIndexPage(SuperPage, SocialFields):
             if programmes:
                 q &= models.Q(programme__in=programmes)
 
-        # If this is the 2014 visual communication show, make that the first carousel item is an embed
-        if self.year == '2014' and 'visualcommunication' in self.get_programmes():
+        # If this is the 2015 visual communication show, make that the first carousel item is an embed
+        if self.year == '2015' and 'visualcommunication' in self.get_programmes():
             q &= models.Q(carousel_items__sort_order=0) & models.Q(carousel_items__embedly_url__startswith='http')
 
         return rca_utils.get_students(degree_q=q).order_by(orderby).distinct()
@@ -374,7 +384,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.is_programme_page:
             return False
 
-        if rca_utils.get_programmes(school, year=self.year) is None:
+        if len(rca_utils.get_programmes(school, year=self.year)) == 0:
             return False
 
         return self.check_school_has_students(school)
@@ -428,12 +438,31 @@ class ShowIndexPage(SuperPage, SocialFields):
         except ShowIndexProgrammeIntro.DoesNotExist:
             intro = ''
 
+        # Pagination
+        page = request.GET.get('page')
+        paginator = Paginator(self.get_students(
+            programme=programme
+        ), 6)
+        try:
+            students = paginator.page(page)
+        except PageNotAnInteger:
+            students = paginator.page(1)
+        except EmptyPage:
+            students = paginator.page(paginator.num_pages)
+
+        # Get template
+        if request.is_ajax() and 'pjax' not in request.GET:
+            template = 'rca_show/includes/modules/gallery.html'
+        else:
+            template = self.programme_template
+
         # Render response
-        return render(request, self.programme_template, {
+        return render(request, template, {
             'self': self,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
             'intro': intro,
+            'students': students
         })
 
     def serve_student(self, request, programme, slug, school=None):
@@ -494,6 +523,7 @@ ShowIndexPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
+    FieldPanel('body'),
     InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
     InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),

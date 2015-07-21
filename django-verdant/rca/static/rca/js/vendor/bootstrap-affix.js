@@ -123,4 +123,7 @@
     })
   })
 
+  // we need to make this class public in order to add enable/disable methods in site.js
+  window.Affix = Affix;
+
 }(window.jQuery);

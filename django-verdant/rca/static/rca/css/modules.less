@@ -629,6 +629,13 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
             padding-left: 0;
         }
     }
+
+    &.head-of-programme-double{
+        .content{
+            .row();
+            .column(12);
+        }
+    }
 }
 
 /**
@@ -1938,12 +1945,17 @@ input[type=submit],input[type=reset],input[type=button], button, .button{
         background-color:@color-pink;
     }
 }
+.button-small {
+    padding: 8px;
+    font-size: @font-size-12;
+}
+
 form li{
     padding-bottom:@grid-gutter-width;
 }
 form li.error{
     input,textarea,select{
-        border:1px solid @color-pink;
+        border:1px solid @color-red;
     }
 
 }
@@ -1962,12 +1974,12 @@ form .divider{
     border-top:1px solid @color-light-grey;
 }
 form .error-message{
-    color:@color-pink;
+    color:@color-red;
     margin:@grid-gutter-width/2 0 0 0 ;
 }
 form {
-    .messages.error h2, .errorlist, .errorlist li, .error{
-        color:@color-pink;
+    .messages.error h2, .errorlist, .errorlist li, .error, {
+        color:@color-red;
     }
 }
 form .heading{

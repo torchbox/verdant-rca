@@ -3,7 +3,7 @@ from django.db import models
 from django.utils import dateformat
 from django.conf import settings
 from rca.models import NewStudentPage
-from rca.report_generator import Report
+from rca_show.management.report_generator import Report
 from optparse import make_option
 import dateutil.parser
 from zipfile import ZipFile

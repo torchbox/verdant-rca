@@ -1,0 +1,81 @@
+{% extends "rca/base.html" %}
+{% load compress static rca_tags wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}type-forms{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms.less" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms-desktop.less" %}" media="screen and (min-width:768px)" />
+
+        <!--[if lt IE 9]>
+            <link rel="stylesheet" type="text/less" href="{% static "rca/css/bb-forms-desktop.less" %}" />
+        <![endif]-->
+    {% endcompress %}
+{% endblock extra_css %}
+
+{% block extra_js %}
+    <script>
+        window.bboxInit = function () {
+           bbox.showForm('{{ self.form_id }}');
+        };
+        (function () {
+           var e = document.createElement('script'); e.async = true;
+           e.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js';
+           //console.log(e);
+           document.getElementsByTagName('head')[0].appendChild(e);
+        } ());
+    </script>
+    <script type="text/javascript" src="{% static 'rca/js/bb-forms.js' %}"></script>
+{% endblock extra_js %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+
+    {% include "rca/includes/modules/strapline.html" %}
+    {% include "rca/includes/modules/carousel.html" %}
+
+    <section class="row">
+
+        {% include "rca/includes/modules/body-text.html" with showIntro="true" showReusableText="true" body=self.body %}
+
+        <div id="bbox-root"></div>
+
+        <section class="four">
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+                    {{ self.middle_column_body|richtext }}
+                </div>
+            {% endif %}
+            
+            {% include "rca/includes/modules/downloads.html" %}
+            {% include "rca/includes/modules/quotation.html" %}
+
+            {% with self.images.all as images %}
+                {% if images %}
+                    {% for image in images %}
+                        <figure>
+                            <div class="image">{% image image.image width-400 %}</div>
+                            <figcaption class="a4">{{ image.image.caption_html }}</figcaption>
+                        </figure>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+
+    <div class="row">
+        <section class="bc5 body-text">
+            {{ self.data_protection|richtext }}
+        </section>
+    </div>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}

@@ -38,8 +38,11 @@ def get_tweets(screen_name="RCAevents", count=10):
 
     count = count if count < 50 else 50
 
-    if api.get_user(screen_name=screen_name)["protected"]:
-        return
+    try:
+        if api.get_user(screen_name=screen_name)["protected"]:
+            return
+    except tweepy.TweepError:
+        return  # ignore 404 errors
 
     for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
         Tweet.save_from_dict(status)

@@ -4,17 +4,6 @@
 {% block body_class %}{{ block.super }} type-programme school-{{ school }}{% endblock %}
 
 {% block content %}
-    {% get_programme_students self.show_index programme as students %}
-    {% if "fashionmenswear" in self.get_programmes %}
-        {# NON-random students for fashion show #}
-        {% get_programme_students self.show_index programme as rand_students %}
-    {% elif "animation" in self.get_programmes or "visualcommunication" in self.get_programmes %}
-        {# NON-random students for Animation show #}
-        {% get_programme_students self.show_index programme as rand_students %}
-    {% else %}
-        {% get_programme_students self.show_index programme True as rand_students %}
-    {% endif %}
-
     {% include "rca_show/includes/menus/menu.html" %}
 
     {% include "rca/includes/modules/carousel.html" with overlayvisible=0 %}
@@ -25,7 +14,7 @@
 
     {{ intro|safe }}
 
-    {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}    
+    {% include "rca_show/includes/modules/gallery.html" with students=students %}
 {% endblock %}
 
 {% block sidebar %}

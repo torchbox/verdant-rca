@@ -1,8 +1,9 @@
 from django import template
+from django.core.cache import cache
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max, Q
+from django.db.models import Min, Max, Q, get_app, get_models, get_model
 from django.template.base import parse_bits
-from wagtail.wagtailcore.util import camelcase_to_underscore
+from wagtail.wagtailcore.utils import camelcase_to_underscore
 
 from datetime import date
 from itertools import chain
@@ -23,7 +24,7 @@ def upcoming_events(context, exclude=None, count=3, collapse_by_default=False):
     events = EventItem.future_not_current_objects.filter(live=True).only('id', 'url_path', 'title', 'audience').annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
     if exclude:
         events = events.exclude(id=exclude.id)
-    
+
     return {
         'collapse_by_default': collapse_by_default,
         'events': events[:count],
@@ -35,7 +36,7 @@ def news_carousel(context, area="", programme="", school="", count=5):
     if area:
         news_items = NewsItem.objects.filter(live=True, areas__area=area)
     elif programme:
-        news_items = NewsItem.objects.filter(live=True, related_programmes__programme=programme)
+        news_items = NewsItem.objects.filter(live=True, related_programmes__programme__in=get_programme_synonyms(programme))
     elif school:
         news_items = NewsItem.objects.filter(live=True, related_schools__school=school)
     else:
@@ -57,7 +58,7 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
     if school:
         events = events.filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = events.filter(related_programmes__programme=programme).order_by('start_date')
+        events = events.filter(related_programmes__programme__in=get_programme_synonyms(programme)).order_by('start_date')
     elif area:
         events = events.filter(area=area).order_by('start_date')
     elif audience:
@@ -88,7 +89,7 @@ def programme_by_school(context, school):
 
 @register.inclusion_tag('rca/tags/staff_by_programme.html', takes_context=True)
 def staff_by_programme(context, programme):
-    staff = StaffPage.objects.filter(live=True, roles__programme=programme)
+    staff = StaffPage.objects.filter(live=True, roles__programme__in=get_programme_synonyms(programme))
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -99,7 +100,7 @@ def related_staff(context, programme="", school=""):
     if school:
         staff = StaffPage.objects.filter(live=True, roles__school=school)
     if programme:
-        staff = StaffPage.objects.filter(live=True, roles__programme=programme)  
+        staff = StaffPage.objects.filter(live=True, roles__programme__in=get_programme_synonyms(programme))
     return {
         'staff': staff,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -107,7 +108,7 @@ def related_staff(context, programme="", school=""):
 
 @register.inclusion_tag('rca/tags/alumni_by_programme.html', takes_context=True)
 def alumni_by_programme(context, programme):
-    alumni = AlumniPage.objects.filter(live=True, programme=programme)
+    alumni = AlumniPage.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     return {
         'alumni': alumni,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
@@ -116,7 +117,7 @@ def alumni_by_programme(context, programme):
 @register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
 def rca_now_related(context, programme="", author=""):
     if programme:
-        rcanow = RcaNowPage.objects.filter(live=True).filter(programme=programme)
+        rcanow = RcaNowPage.objects.filter(live=True).filter(programme__in=get_programme_synonyms(programme))
     elif author:
         rcanow = RcaNowPage.objects.filter(live=True, author=author)
     return {
@@ -127,7 +128,7 @@ def rca_now_related(context, programme="", author=""):
 @register.inclusion_tag('rca/tags/research_related.html', takes_context=True)
 def research_related(context, programme="", person="", school="", exclude=None):
     if programme:
-        research_items = ResearchItem.objects.filter(live=True, programme=programme)
+        research_items = ResearchItem.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     elif person:
         research_items = ResearchItem.objects.filter(live=True, creator__person=person)
     elif school:
@@ -145,7 +146,7 @@ def research_related(context, programme="", person="", school="", exclude=None):
 @register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
 def innovation_rca_related(context, programme="", person="", school="", exclude=None):
     if programme:
-        projects = InnovationRCAProject.objects.filter(live=True, programme=programme)
+        projects = InnovationRCAProject.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
     elif person:
         projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
     elif school:
@@ -198,9 +199,9 @@ def get_related_students(programme=None, year=None, exclude=None, has_work=False
         phd_students_q &= (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
 
     if programme:
-        ma_students_q &= Q(ma_programme=programme)
-        mphil_students_q &= Q(mphil_programme=programme)
-        phd_students_q &= Q(phd_programme=programme)
+        ma_students_q &= Q(ma_programme__in=get_programme_synonyms(programme))
+        mphil_students_q &= Q(mphil_programme__in=get_programme_synonyms(programme))
+        phd_students_q &= Q(phd_programme__in=get_programme_synonyms(programme))
 
     if year:
         ma_students_q &= Q(ma_graduation_year=year)
@@ -235,6 +236,7 @@ def staff_random(context, exclude=None, programmes=None, count=4):
     if exclude:
         staff = staff.exclude(id=exclude.id)
     if programmes:
+        programmes = sum([get_programme_synonyms(programme) for programme in programmes], [])
         staff = staff.filter(roles__programme__in=programmes)
     return {
         'staff': staff[:count],
@@ -246,7 +248,8 @@ def staff_related(context, staff_page, count=4):
     staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
     # import pdb; pdb.set_trace()
     if staff_page.programmes:
-        staff = staff.filter(roles__programme__in=staff_page.programmes)
+        programmes = sum([get_programme_synonyms(programme) for programme in staff_page.programmes], [])
+        staff = staff.filter(roles__programme__in=programmes)
     elif staff_page.school:
         staff = staff.filter(school=staff_page.school)
     return {
@@ -615,7 +618,7 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
     carousel_items = profile['carousel_items'].all()
 
     # If this is a 2014 animation student, remove first carousel item
-    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2014, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
+    if show_animation_videos == False and get_students(degree_filters=dict(graduation_year=2015, programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
         # Remove first two carousel items if they are vimeo videos
         for i in range(2):
             try:
@@ -626,3 +629,45 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
                 pass
 
     return carousel_items
+
+
+def get_lightbox_config():
+
+    excluded = []
+
+    DONT_OPEN_IN_LIGHTBOX = ['rca.ProgrammePage', 'rca.SchoolPage', 'rca.GalleryPage', 'rca.DonationPage']  # 'rca.OEFormPage'
+
+    for path in DONT_OPEN_IN_LIGHTBOX:
+        app, model_name = path.split('.')
+        for m in get_models(get_app(app)):
+            if not issubclass(m, Page):
+                continue
+            if m.__name__.lower() == model_name.lower():
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+            if 'index' in m.__name__.lower() and m.__name__.lower() != 'standardindex':
+                excluded += list(m.objects.all().only('slug').values_list('slug', flat=True).distinct())
+
+    excluded1 = '/(%s)/?[\?#]?[^/]*$' % '|'.join(excluded)
+
+    # don't open anything that's under a ShowIndexPage
+    slugs = get_model('rca_show', 'ShowIndexPage').objects.all().only('slug').values_list('slug', flat=True).distinct()
+    excluded2 = '/(%s)/.*' % '|'.join(slugs)
+
+    return {
+        'excluded1': excluded1,
+        'excluded2': excluded2,
+    }
+
+
+@register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
+def use_lightbox(context):
+    if not 'self' in context:
+        return {}
+
+    cache_key = 'lightbox_config'
+    lightbox_config = cache.get(cache_key)
+    if not lightbox_config:
+        lightbox_config = get_lightbox_config()
+        cache.set(cache_key, lightbox_config, 60 * 60)
+
+    return lightbox_config

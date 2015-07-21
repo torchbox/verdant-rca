@@ -7,13 +7,9 @@ from rca.models import NewStudentPage
 
 class Command(BaseCommand):
     def find_student_page(self, student):
-        # Student info
-        programme = student[0]
-        first_name = student[2]
-        last_name = student[1]
-        email = student[3]
+        email = student[0].strip()
 
-        print first_name, last_name
+        print email
 
         # Get list of possible pages
         students = NewStudentPage.objects.all()
@@ -29,10 +25,6 @@ class Command(BaseCommand):
         if page is None and email:
             page = students.filter(owner__email=email).first()
 
-        # Find by name
-        if page is None:
-            page = students.filter(last_name__iexact=last_name, first_name__iexact=first_name).first()
-
         return page
 
     def handle(self, filename, **options):
@@ -42,15 +34,37 @@ class Command(BaseCommand):
 
             # Publish them
             for student in students:
-                if student:
-                    # Find latest revision that is in moderation
-                    revision = student.revisions.filter(submitted_for_moderation=True).order_by('-created_at').first()
-
-                    if revision:
-                        revision.publish()
-
-                        print "PUBLISHED:", student.id
-                    else:
-                        print "NOT IN MODERATION:", student.id
-                else:
+                if not student:
                     print "CANNOT FIND PAGE"
+                    continue
+
+                # Find latest revision that is in moderation
+                revision = student.revisions.filter(submitted_for_moderation=True).order_by('-created_at').first()
+
+                if not revision:
+                    print "NOT IN MODERATION:", student.id
+                    continue
+
+                # Check it's valid
+                page = revision.as_page_object()
+                error = False
+
+                if not page.programme:
+                    print "NOT SET PROGRAMME:", student.id
+                    error = True
+
+                if not page.school:
+                    print "NOT SET SCHOOL:", student.id
+                    error = True
+
+                if not page.get_profile() or not page.get_profile()['graduation_year']:
+                    print "NOT SET GRADUATION YEAR:", student.id
+                    error = True
+
+                # Skip if error found
+                if error:
+                    continue
+
+                # Publish!
+                revision.publish()
+                print "PUBLISHED:", student.id

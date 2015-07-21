@@ -17,16 +17,16 @@ class DonationForm(forms.Form):
 
     required_css_class = 'required'
 
-    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'is_gift_aid', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
+    METADATA_FIELDS = ['title', 'first_name', 'last_name', 'email', 'phone', 'class_year', 'donation_for', 'affiliation', 'not_included_in_supporters_list']  # 'phone_type'
 
     UNREADABLE_FIELDS = ['number', 'cvc', 'expiration']
 
     amounts = forms.ChoiceField(label="Please select one of our suggested donation amounts or specify another amount", widget=forms.RadioSelect(), required=False, initial=50, choices=(
-        ("50", "£50"),
-        ("100", "£100"),
-        ("250", "£250"),
-        ("500", "£500"),
-        ("1000", "£1000"),
+        ("50", "$50"),
+        ("100", "$100"),
+        ("250", "$250"),
+        ("500", "$500"),
+        ("1000", "$1000"),
         ("", "Other"),
     ))
     amount = forms.FloatField(label="Other amount", required=False)
@@ -34,7 +34,6 @@ class DonationForm(forms.Form):
     number = CreditCardField(label="Card number", required=False)
     expiration = ExpiryDateField(required=False)
     cvc = VerificationValueField(required=False, help_text="The 3-digit security code printed on the signature strip on the reverse")
-    is_gift_aid = forms.BooleanField(label="I would like the royal college of art to claim gift aid on all my qualifying donations from the date of this declaration until I notify the college otherwise. I confirm that I have paid an amount of UK income tax or capital gains tax at least equal to the amount of tax that all the charities or community amateur sports clubs I donate to will reclaim on my donations for the tax year.", required=False)
     email = forms.EmailField(required=True)
     not_included_in_supporters_list = forms.BooleanField(label="Please tick this box if you do not wish to be included in our list of supporters", required=False, help_text="")
 
@@ -44,8 +43,8 @@ class DonationForm(forms.Form):
     address_line1   = forms.CharField(label="Address line 1", required=True, max_length=255)
     address_line2   = forms.CharField(label="Address line 2", required=False, max_length=255)
     address_city    = forms.CharField(label="Town", required=True, max_length=255)
-    address_state   = forms.CharField(label="County", required=False, max_length=255)
-    address_zip     = forms.CharField(label="Postcode", required=True, max_length=255)
+    address_state   = forms.CharField(label="State / Province", required=False, max_length=255)
+    address_zip     = forms.CharField(label="ZIP / Postal code", required=True, max_length=255)
     address_country = forms.CharField(label="Country", required=True, max_length=255)
     phone           = forms.CharField(required=True, max_length=255)
 
@@ -62,14 +61,16 @@ class DonationForm(forms.Form):
             ("parent", "Parent"),
     ))
 
-    donation_for = forms.ChoiceField(label="Please direct my gift towards", required=True, choices=(
-            ("scholarships", "Scholarships"),
-            ("storm_thorgerson_scholarship", "Storm Thorgerson Scholarship"),
-            ("wendy_dagworthy_scholarship_fund", "Wendy Dagworthy Scholarship Fund"),
-            ("in_memory_of_dorothy_kemp", "In memory of Dorothy Kemp"),
-            ("college_greatest_need", "College’s greatest need"),
-    ))
     class_year = forms.CharField(label="Class year", required=False, max_length=255)
+
+    donation_for = forms.ChoiceField(label="Please direct my gift towards", required=True, choices=(
+            # ("scholarships", "Scholarships"),
+            # ("storm_thorgerson_scholarship", "Storm Thorgerson Scholarship"),
+            # ("wendy_dagworthy_scholarship_fund", "Wendy Dagworthy Scholarship Fund"),
+            # ("in_memory_of_dorothy_kemp", "In memory of Dorothy Kemp"),
+            # ("college_greatest_need", "College’s greatest need"),
+            ("rca_fund", "RCA Fund"),
+    ), initial="rca_fund")
 
     name = forms.CharField(required=False, max_length=255)
     stripe_token = forms.CharField(required=False, max_length=255)
@@ -95,4 +96,3 @@ class DonationForm(forms.Form):
                 del self.cleaned_data[f]
 
         return self.cleaned_data
-

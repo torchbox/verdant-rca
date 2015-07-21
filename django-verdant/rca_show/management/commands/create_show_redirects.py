@@ -21,11 +21,11 @@ SUB_EXPRESSIONS = (
     # Removes trailing spaces
     (r' $', ''),
 
-    # Removes spaces around '-' characters
+    # Removes spaces around hyphens
     (r' - ', '-'),
 
-    # Converts spaces to underscores
-    (r' ', '_'),
+    # Converts spaces to hyphens
+    (r' ', '-'),
 )
 
 
@@ -43,7 +43,7 @@ class Command(BaseCommand):
             for sub_expr in sub_expressions_compiled:
                 name = sub_expr[0].sub(sub_expr[1], name)
 
-            from_url = 'show2014/' + slugify(name) + '/'
+            from_url = 'show2015/' + slugify(name) + '/'
 
             # Find students url inside 
             if show_index.is_programme_page:

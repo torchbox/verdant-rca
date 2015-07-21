@@ -20,6 +20,7 @@
 /**
  * Contents...................You’re reading it!
  * Reset and body styles......Any remaining browser reset styles, body text style
+ * Lightbox styles............Used when navigating with push-state
  * Typography.................reusable typographical styles
  * Structure..................structure and layout
  * Footer styles..............footer and bottom nav
@@ -41,6 +42,186 @@ body {
 .mobile-menu-wrapper, .mobile-menu-button{
     display: none;
 }
+
+
+/*
+ * Lightbox styles
+ */
+
+.pjax-wrapper, .page-overlay {
+    .transition(opacity 0.5s ease);
+}
+
+body.lightbox-view{
+
+    // need to make header pos:absolute so that it remains above the lightbox background overlay
+    .header-wrapper{
+        z-index: 5002;
+        position: absolute;
+        width: 90%;
+        left:0;
+        right:0;
+    }
+    .header-wrapper.affix{
+        position: fixed;  // overriding mobile styles, which makes this absolute to bring it in fron of the overlay
+    }
+    .header-wrapper .page-header{
+        // we have to make the whole header opaque, so that the fixed page content won't bleed through
+        // TODO: this is not compatible with background images
+        background: #fff;
+    }
+
+    .mobile-content-wrapper > .page-wrapper{
+        // make the main page content fixed so that it remains in place when scrolling the lightbox
+        position: fixed;
+        left:0;
+        right:0;
+    }
+
+    .page-overlay {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        background-color: #FFF;
+        opacity: 0.85;
+    }
+
+    .pjax-close{
+        background-color: @color-pale-grey;
+        border:0;
+        position:absolute;
+        top:1px; right:1px;
+        width:53px;
+        &:after{
+            content:"";
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            right:0;
+            margin:auto;
+            .sprite-load-23(
+                @positionX: -156px,
+                @positionY: -48px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -97px,
+                @width: 23px,
+                @height: 23px
+            );
+        }
+
+        &:hover{
+            background-color:@color-pink;
+            color:@color-pink;
+
+            &:after{
+                background-position:-156px -13px;
+            }
+        }
+    }
+
+    .pjax-wrapper{
+        top: 206px;
+        padding-bottom:206px + 50;
+        display: block;
+        position: relative;
+        width: 75%;
+        margin: 0 auto 50px;
+        overflow: visible;
+        z-index:55;
+        opacity: 0;
+
+        &:focus{
+            outline:none;
+        }
+    }
+        .pjax-wrapper.affix{
+            margin-top: 200px;
+        }
+
+        .pjax-content{
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 5001;
+            background:white;
+            border:1px solid @color-divider;
+            padding:28px 54px 28px 28px;
+            display: block;
+        }
+
+        #loading-spinner {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            z-index: 51;
+            margin:auto;
+            height: 48px;
+            width: 48px;
+            background: url('@{path-static}images/spinner.png') 0 0 no-repeat;
+            -webkit-animation: spin 1s steps(12) infinite;
+            -moz-animation: spin 1s steps(12) infinite;
+            animation: spin 1s steps(12) inifinite;
+        }
+
+        @keyframes spin{
+            from {
+                transform:rotate(0deg);
+            }
+            to {
+                transform:rotate(360deg);
+            }
+        }
+        @-webkit-keyframes spin {
+            from {
+                -webkit-transform:rotate(0deg);
+            }
+            to {
+                -webkit-transform:rotate(360deg);
+            }
+        }
+        @-moz-keyframes spin {
+            from {
+                -moz-transform: rotate(0deg);
+            }
+            to {
+                -moz-transform: rotate(360deg);
+            }
+        }
+
+
+    .full-width-footer{
+        display: none;
+    }
+}
+
+/* only adding gpu-intensive effects for sufficiently powered browsers. It's not an exact science to identify "low powered" browsers, but no-webgl and touch are a fairly good indicator */
+.webgl.no-touch body.lightbox-view{
+    .page-overlay {
+        opacity: 0.6; //less opacity required when we're applying blur. It looks better.
+    }
+    .mobile-content-wrapper > .page-wrapper{
+        .filter(blur(1px));
+    }
+    .pjax-content{
+        .box-shadow(0 0 50px 0 rgba(0,0,0,0.5));
+    }
+}
+
+
+body.lightbox-visible {
+    #loading-spinner {
+        display: none;
+    }
+    .pjax-wrapper{
+        opacity: 1;
+    }
+}
+
 
 /**
  * $Typography
@@ -170,7 +351,7 @@ nav {
         border-right:1px solid fade(@color-medium-grey, 40%);
         .bold();
         a {
-            padding:9px 45px 8px @grid-gutter-width;
+            padding:9px 45px 5px @grid-gutter-width;
             display: block;
             position: relative;
             &:hover {
@@ -212,7 +393,7 @@ nav {
                 //color: #454545;
             }
         }
-        
+
     }
    nav.open h2{
         &:after{
@@ -541,6 +722,59 @@ footer {
 }
 
 .type-news {
+
+}
+
+.type-forms {
+    .four {
+        float: none;
+        padding-left: 0;
+    }
+    #divName .grouped-form-items .grouped-form-items,
+    .BBFieldBillingStateZip .grouped-form-items {
+      width: 47.5%;
+      float: left;
+      &:last-child {
+        margin-left: 5%; 
+      }
+    }
+    #bboxdonation_billing_billingAddress_lblCAProvincePostCode {
+        display: none;
+    }
+    .BBFieldBillingStateZip .grouped-form-items {
+        width: 30%;
+    }
+    #bboxdonation_billing_fldOrgGift,
+    #bboxdonation_billing_fldAnonymous {
+      width: 40%;
+    }
+
+    //Div Table
+    #bbox-root {
+        .BBFormContainer {
+            .BBFormTable {
+                display: table;
+            }
+            .BBFormTableHeader {
+                display: table-header-group;
+                font-weight: bold;
+            }
+            .BBFormTableFooter {
+                display: table-footer-group;
+            }
+            .BBFormTableHeaderCell,
+            .BBFormTableRowCell,
+            .BBFormTableFooterCell {
+                display: table-cell;
+                margin-right: 1em;
+                padding: 0.8em 1em;
+            }
+            .BBFormTableRow {
+                display: table-row;
+            }
+        }
+    }
+
 
 }
 
