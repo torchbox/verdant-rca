@@ -6006,8 +6006,9 @@ class LightboxGalleryPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.LightboxGalleryPage', 'listing_intro', default="Used only on pages listing Lightbox Galleries"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
+    
     search_fields = Page.search_fields + (
-        indexed.SearchField('intro'),
+        index.SearchField('intro'),
     )
 
 LightboxGalleryPage.content_panels = [
