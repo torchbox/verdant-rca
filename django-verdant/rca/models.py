@@ -137,16 +137,27 @@ def rendition_delete(sender, instance, **kwargs):
 
 
 AREA_CHOICES = (
-    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
-    ('innovationrca', 'InnovationRCA'),
-    ('research-knowledgeexchange', "Research & Knowledge Exchange"),
-    ('showrca', 'Show RCA'),
-    ('fuelrca', 'Fuel RCA'),
-    ('sustainrca', 'SustainRCA'),
-    ('reachoutrca', 'ReachOutRCA'),
-    ('support', 'Support'),
-    ('drawingstudio', 'Drawing Studio'),
+    ('administration', 'Administration'),
     ('alumnirca', 'AlumniRCA'),
+    ('communicationsmarketing', 'Communications & Marketing'),
+    ('development', 'Development'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('executiveeducation', 'Executive Education'),
+    ('fuelrca', 'Fuel RCA'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
+    ('informationlearningtechnicalservices', 'Information, Learning & Technical Services'),
+    ('innovationrca', 'InnovationRCA'),
+    ('reachoutrca', 'ReachOutRCA'),
+    ('research-knowledgeexchange', "Research, Knowledge Exchange & Innovation"),
+    ('schoolofarchitecture', 'School of Architecture'),
+    ('schoolofcommunication', 'School of Communication'),
+    ('schoolofdesign', 'School of Design'),
+    ('schooloffineart', 'School of Fine Art'),
+    ('schoolofhumanities', 'School of Humanities'),
+    ('schoolofmaterial', 'School of Material'),
+    ('showrca', 'Show RCA'),
+    ('support', 'Support'),
+    ('sustainrca', 'SustainRCA'),
 )
 
 STAFF_AREA_CHOICES = AREA_CHOICES + (
@@ -272,11 +283,6 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
-    ('schoolofappliedart', 'School of Applied Art'),
-    ('schoolofarchitecturedesign', 'School of Architecture & Design'),
-    ('schoolofcommunications', 'School of Communications'),
-    ('schooloffashiontextiles', 'School of Fashion & Textiles'),
-    ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
     ('innovationrca', 'InnovationRCA'),
@@ -365,17 +371,17 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2009': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2008': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2007': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
@@ -3067,7 +3073,7 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text=help_text('rca.StaffPage', 'school', default="Please complete this field for academic and administrative staff only"))
+    school = models.CharField(max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school', default="Please complete this field for academic and administrative staff only"))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
     staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location', default="Please complete this field for technical staff only"))
