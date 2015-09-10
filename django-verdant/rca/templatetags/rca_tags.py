@@ -634,7 +634,14 @@ def get_lightbox_config():
 
     excluded = []
 
-    DONT_OPEN_IN_LIGHTBOX = ['rca.ProgrammePage', 'rca.SchoolPage', 'rca.GalleryPage', 'rca.DonationPage']  # 'rca.OEFormPage'
+    DONT_OPEN_IN_LIGHTBOX = [
+        'rca.ProgrammePage',
+        'rca.SchoolPage',
+        'rca.GalleryPage',
+        'rca.DonationPage',
+        'rca.StreamPage',
+        'rca_show.ShowStreamPage',
+    ]  # 'rca.OEFormPage'
 
     for path in DONT_OPEN_IN_LIGHTBOX:
         app, model_name = path.split('.')
