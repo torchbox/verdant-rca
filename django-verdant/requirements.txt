@@ -14,6 +14,7 @@ python-dateutil==1.5
 celery==3.1.17
 django-celery==3.1.16
 simplejson==3.6.5
+django-modelcluster==0.6.2
 
 # Developer requirements
 django-debug-toolbar==0.11.0
