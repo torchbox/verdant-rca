@@ -1,4 +1,5 @@
 {% load wagtailcore_tags %}
+{% load cycle from future %}
 
 {% comment %} The cycle of colours is needed by both adverts and open days. Open days only appear on the programme page where there are already adverts, so it is safe to start the cycle within the adverts block.{% endcomment %}
 <div class="adverts">

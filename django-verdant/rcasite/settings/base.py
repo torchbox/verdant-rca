@@ -139,7 +139,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'south',
     'compressor',
     'template_timings_panel',
     'taggit',
@@ -199,10 +198,6 @@ COMPRESS_PRECOMPILERS = (
     ('text/less', 'lesspress.LessCompiler'),
 )
 COMPRESS_OFFLINE = True
-
-# Auth settings
-LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'wagtailadmin_home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

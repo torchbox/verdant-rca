@@ -11,7 +11,7 @@ from .models import Tweet
 
 def statuses_user_timeline(request):
     if not settings.TWITTER_CONSUMER_KEY:
-        return HttpResponse("[]", content_type="application/json; charset=utf-8", mimetype="application/json")
+        return HttpResponse("[]", content_type="application/json")
 
     callback = request.GET.get("callback")
     screen_name = request.GET.get("screen_name", "RCAevents").strip().strip('@')
@@ -45,9 +45,7 @@ def statuses_user_timeline(request):
     if callback:
         result = "%s(%s)" % (callback, result or "[]")
 
-    response = HttpResponse(result or "[]",
-                        content_type="application/json; charset=utf-8",
-                        mimetype="application/json")
+    response = HttpResponse(result or "[]", content_type="application/json")
     # tell the browser and / or reverse proxy to cache this response
     response['Expires'] = http_date(time.time() + settings.CELERYBEAT_CACHE_SHORT_TIME)
 
