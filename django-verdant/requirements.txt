@@ -1,5 +1,4 @@
-Django==1.6.11
-South==1.0.2
+Django==1.7.10
 wagtail==0.8.10
 django-auth-ldap==1.1.7
 Embedly==0.5.0
