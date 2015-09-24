@@ -77,10 +77,10 @@ def fetch_live_data():
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
-    local('dropdb -Upostgres verdant')
-    local('createdb -Upostgres verdant')
+    local('dropdb verdant')
+    local('createdb verdant')
     local('gunzip %s.gz' % local_path)
-    local('psql -Upostgres verdant -f %s' % local_path)
+    local('psql verdant -f %s' % local_path)
     local('rm %s' % local_path)
 
 fetch_live_data_notroot = fetch_live_data
