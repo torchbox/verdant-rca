@@ -35,7 +35,7 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
 
-from modelcluster.tags import ClusterTaggableManager
+from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase, Tag
 
 from donations.forms import DonationForm
