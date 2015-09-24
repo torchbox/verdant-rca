@@ -623,7 +623,7 @@ class CustomContentModule(models.Model):
 
 CustomContentModule.panels = [
     FieldPanel('title'),
-    InlinePanel(CustomContentModule, 'blocks', label=""),
+    InlinePanel('blocks', label=""),
 ]
 
 register_snippet(CustomContentModule)
@@ -684,8 +684,8 @@ ContactSnippet.panels = [
     FieldPanel('contact_address'),
     FieldPanel('contact_link'),
     FieldPanel('contact_link_text'),
-    InlinePanel(ContactSnippet, 'contact_email', label="Contact phone numbers/emails"),
-    InlinePanel(ContactSnippet, 'contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact phone numbers/emails"),
+    InlinePanel('contact_phone', label="Contact phone number"),
 ]
 
 
@@ -790,7 +790,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(SchoolPage, 'carousel_items', label="Carousel content", help_text="test"),
+    InlinePanel('carousel_items', label="Carousel content", help_text="test"),
     PageChooserPanel('head_of_school', 'rca.StaffPage'),
     FieldPanel('head_of_school_statement', classname="full"),
     PageChooserPanel('head_of_school_link'),
@@ -801,14 +801,14 @@ SchoolPage.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ], 'Contact'),
-    InlinePanel(SchoolPage, 'contact_tel_email', label="Contact phone numbers/emails"),
-    InlinePanel(SchoolPage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(SchoolPage, 'contact_email', label="Contact email"),
+    InlinePanel('contact_tel_email', label="Contact phone numbers/emails"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
-    InlinePanel(SchoolPage, 'related_links', label="Related links"),
-    InlinePanel(SchoolPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 SchoolPage.promote_panels = [
@@ -1023,24 +1023,24 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(ProgrammePage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         PageChooserPanel('head_of_programme', 'rca.StaffPage',),
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of Programme details'),
-    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
-    InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
+    InlinePanel('manual_staff_feed', label="Manual staff feed"),
+    InlinePanel('our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Programme video'),
-    InlinePanel(ProgrammePage, 'student_stories', label="Student stories"),
-    InlinePanel(ProgrammePage, 'facilities_carousel_items', label="Facilities"),
-    InlinePanel(ProgrammePage, 'documents', label="Documents"),
-    InlinePanel(ProgrammePage, 'related_links', label="Related links"),
-    InlinePanel(ProgrammePage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('student_stories', label="Student stories"),
+    InlinePanel('facilities_carousel_items', label="Facilities"),
+    InlinePanel('documents', label="Documents"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
@@ -1048,8 +1048,8 @@ ProgrammePage.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ], 'Contact'),
-    InlinePanel(ProgrammePage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(ProgrammePage, 'contact_email', label="Contact email"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email"),
 ]
 
 ProgrammePage.promote_panels = [
@@ -1072,7 +1072,7 @@ ProgrammePage.promote_panels = [
     FieldPanel('school'),
 
     # TODO: can't enforce the minumum number of inlines just yet: https://github.com/torchbox/wagtail/issues/669
-    InlinePanel(ProgrammePage, 'programmes', label="Programmes (*at least one is required)"),
+    InlinePanel('programmes', label="Programmes (*at least one is required)"),
 ]
 
 ProgrammePage.settings_panels = [
@@ -1148,7 +1148,7 @@ class NewsIndex(Page, SocialFields):
 NewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(NewsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1296,8 +1296,8 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(NewsItem, 'related_links', label="Links"),
-    InlinePanel(NewsItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Links"),
+    InlinePanel('carousel_items', label="Carousel content"),
 ]
 
 NewsItem.promote_panels = [
@@ -1319,9 +1319,9 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('show_on_news_index'),
-    InlinePanel(NewsItem, 'areas', label="Areas"),
-    InlinePanel(NewsItem, 'related_schools', label="Related schools"),
-    InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
 ]
 
 # == Press Release Index ==
@@ -1377,7 +1377,7 @@ PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1462,8 +1462,8 @@ PressRelease.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(PressRelease, 'related_links', label="Links"),
-    InlinePanel(PressRelease, 'carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Links"),
+    InlinePanel('carousel_items', label="Carousel content"),
 ]
 
 PressRelease.promote_panels = [
@@ -1484,9 +1484,9 @@ PressRelease.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
-    InlinePanel(PressRelease, 'areas', label="Areas"),
-    InlinePanel(PressRelease, 'related_schools', label="Related schools"),
-    InlinePanel(PressRelease, 'related_programmes', label="Related programmes"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
 ]
 
 
@@ -1740,21 +1740,21 @@ EventItem.content_panels = [
         FieldPanel('gallery'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
-        InlinePanel(EventItem, 'external_links', label="External links"),
+        InlinePanel('external_links', label="External links"),
         FieldPanel('middle_column_body')
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
-    InlinePanel(EventItem, 'dates_times', label="Dates and times"),
-    InlinePanel(EventItem, 'speakers', label="Speaker"),
-    InlinePanel(EventItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('dates_times', label="Dates and times"),
+    InlinePanel('speakers', label="Speaker"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
-    InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
-    InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
 ]
 
 EventItem.promote_panels = [
@@ -1778,11 +1778,11 @@ EventItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('special_event'),
-        InlinePanel(EventItem, 'screens', label="Screen on which to highlight"),
+        InlinePanel('screens', label="Screen on which to highlight"),
         ], 'Special event signage'),
-    InlinePanel(EventItem, 'related_schools', label="Related schools"),
-    InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
-    InlinePanel(EventItem, 'related_areas', label="Related areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
+    InlinePanel('related_areas', label="Related areas"),
 ]
 
 
@@ -1878,8 +1878,8 @@ EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(EventIndex, 'related_links', label="Related links"),
-    InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1958,7 +1958,7 @@ TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2039,7 +2039,7 @@ ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2134,13 +2134,13 @@ ReviewPage.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
-    InlinePanel(ReviewPage, 'related_links', label="Related links"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
-    InlinePanel(ReviewPage, 'documents', label="Document"),
-    InlinePanel(ReviewPage, 'quotations', label="Quotation"),
-    InlinePanel(ReviewPage, 'images', label="Middle column image"),
-    InlinePanel(ReviewPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('documents', label="Document"),
+    InlinePanel('quotations', label="Quotation"),
+    InlinePanel('images', label="Middle column image"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 ReviewPage.promote_panels = [
@@ -2247,14 +2247,14 @@ StandardPage.content_panels = [
     FieldPanel('strapline', classname="full"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardPage, 'carousel_items', label="Carousel content"),
-    InlinePanel(StandardPage, 'related_links', label="Related links"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
-    InlinePanel(StandardPage, 'reusable_text_snippets', label="Reusable text snippet"),
-    InlinePanel(StandardPage, 'documents', label="Document"),
-    InlinePanel(StandardPage, 'quotations', label="Quotation"),
-    InlinePanel(StandardPage, 'images', label="Middle column image"),
-    InlinePanel(StandardPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('reusable_text_snippets', label="Reusable text snippet"),
+    InlinePanel('documents', label="Document"),
+    InlinePanel('quotations', label="Quotation"),
+    InlinePanel('images', label="Middle column image"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ]
 
@@ -2475,14 +2475,14 @@ StandardIndex.content_panels = [
         PageChooserPanel('intro_link'),
     ],'Introduction'),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
-    InlinePanel(StandardIndex, 'manual_staff_feed', label="Manual staff feed"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
-    InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
-    InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
-    InlinePanel(StandardIndex, 'our_sites', label="Our sites"),
-    InlinePanel(StandardIndex, 'related_links', label="Related links"),
-    InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('teasers', label="Teaser content"),
+    InlinePanel('custom_content_modules', label="Modules"),
+    InlinePanel('our_sites', label="Our sites"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
@@ -2490,9 +2490,9 @@ StandardIndex.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
-    InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
-    InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
-    InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_snippets', label="Contacts"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
     FieldPanel('staff_feed_source'),
     FieldPanel('news_carousel_area'),
     MultiFieldPanel([
@@ -2674,7 +2674,7 @@ class HomePage(Page, SocialFields):
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(HomePage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
     MultiFieldPanel([
@@ -2690,8 +2690,8 @@ HomePage.content_panels = [
         FieldPanel('packery_events'),
         FieldPanel('packery_blog'),
     ], 'Packery content'),
-    InlinePanel(HomePage, 'related_links', label="Related links"),
-    InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 HomePage.promote_panels = [
@@ -2766,7 +2766,7 @@ JobPage.content_panels = [
     FieldPanel('grade'),
     FieldPanel('description', classname="full"),
     DocumentChooserPanel('download_info'),
-    InlinePanel(StandardPage, 'reusable_text_snippets', label="Application and equal opportunities monitoring form text"),
+    InlinePanel('reusable_text_snippets', label="Application and equal opportunities monitoring form text"),
 ]
 
 JobPage.promote_panels = [
@@ -2819,8 +2819,8 @@ JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(JobsIndex, 'related_links', label="Related links"),
-    InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2914,8 +2914,8 @@ AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(AlumniIndex, 'related_links', label="Related links"),
-    InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3094,7 +3094,7 @@ StaffPage.content_panels = [
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
     FieldPanel('staff_location'),
-    InlinePanel(StaffPage, 'roles', label="Roles"),
+    InlinePanel('roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     FieldPanel('practice'),
@@ -3106,9 +3106,9 @@ StaffPage.content_panels = [
     FieldPanel('research_interests', classname="full"),
     FieldPanel('supervised_student_other'),
 
-    InlinePanel(StaffPage, 'carousel_items', label="Selected Work Carousel Content"),
-    InlinePanel(StaffPage, 'collaborations', label="Collaborations"),
-    InlinePanel(StaffPage, 'publications_exhibitions', label="Publications and Exhibitions"),
+    InlinePanel('carousel_items', label="Selected Work Carousel Content"),
+    InlinePanel('collaborations', label="Collaborations"),
+    InlinePanel('publications_exhibitions', label="Publications and Exhibitions"),
 ]
 
 StaffPage.promote_panels = [
@@ -3202,7 +3202,7 @@ StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3354,7 +3354,7 @@ class ResearchStudentIndex(Page, SocialFields):
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3527,28 +3527,28 @@ StudentPage.content_panels = [
     FieldPanel('degree_year'),
     FieldPanel('graduation_year'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, 'supervisors', label="Supervisor"),
-    InlinePanel(StudentPage, 'email', label="Email"),
-    InlinePanel(StudentPage, 'phone', label="Phone"),
-    InlinePanel(StudentPage, 'website', label="Website"),
+    InlinePanel('supervisors', label="Supervisor"),
+    InlinePanel('email', label="Email"),
+    InlinePanel('phone', label="Phone"),
+    InlinePanel('website', label="Website"),
     FieldPanel('student_twitter_feed'),
     FieldPanel('twitter_feed'),
-    InlinePanel(StudentPage, 'degrees', label="Previous degrees"),
-    InlinePanel(StudentPage, 'exhibitions', label="Exhibition"),
-    InlinePanel(StudentPage, 'experiences', label="Experience"),
-    InlinePanel(StudentPage, 'publications', label="Publications"),
-    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    InlinePanel('degrees', label="Previous degrees"),
+    InlinePanel('exhibitions', label="Exhibition"),
+    InlinePanel('experiences', label="Experience"),
+    InlinePanel('publications', label="Publications"),
+    InlinePanel('conferences', label="Conferences"),
     FieldPanel('funding'),
-    InlinePanel(StudentPage, 'awards', label="Awards"),
+    InlinePanel('awards', label="Awards"),
     FieldPanel('statement', classname="full"),
-    InlinePanel(StudentPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         FieldPanel('work_description', classname="full"),
         FieldPanel('work_type'),
         FieldPanel('work_location'),
     ], 'Show RCA work'),
-    InlinePanel(StudentPage, 'collaborators', label="Show RCA work collaborator"),
-    InlinePanel(StudentPage, 'sponsor', label="Show RCA work sponsor"),
+    InlinePanel('collaborators', label="Show RCA work collaborator"),
+    InlinePanel('sponsor', label="Show RCA work sponsor"),
     FieldPanel('work_awards'),
 ]
 
@@ -4026,15 +4026,15 @@ NewStudentPage.content_panels = [
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
     FieldPanel('innovation_rca_fellow'),
-    InlinePanel(NewStudentPage, 'emails', label="Email"),
-    InlinePanel(NewStudentPage, 'phones', label="Phone"),
-    InlinePanel(NewStudentPage, 'websites', label="Website"),
-    InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degrees"),
-    InlinePanel(NewStudentPage, 'exhibitions', label="Exhibitions"),
-    InlinePanel(NewStudentPage, 'experiences', label="Experience"),
-    InlinePanel(NewStudentPage, 'awards', label="Awards"),
-    InlinePanel(NewStudentPage, 'publications', label="Publications"),
-    InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
+    InlinePanel('emails', label="Email"),
+    InlinePanel('phones', label="Phone"),
+    InlinePanel('websites', label="Website"),
+    InlinePanel('previous_degrees', label="Previous degrees"),
+    InlinePanel('exhibitions', label="Exhibitions"),
+    InlinePanel('experiences', label="Experience"),
+    InlinePanel('awards', label="Awards"),
+    InlinePanel('publications', label="Publications"),
+    InlinePanel('conferences', label="Conferences"),
 
     # MA details
     MultiFieldPanel([
@@ -4051,9 +4051,9 @@ NewStudentPage.content_panels = [
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
         FieldPanel('show_work_description'),
-        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
+        InlinePanel('show_carousel_items', label="Carousel image/video"),
+        InlinePanel('show_collaborators', label="Collaborator"),
+        InlinePanel('show_sponsors', label="Sponsor"),
     ], "MA Show details", classname="collapsible collapsed"),
 
     # MPhil details
@@ -4068,10 +4068,10 @@ NewStudentPage.content_panels = [
         FieldPanel('mphil_work_location'),
         FieldPanel('mphil_status'),
         FieldPanel('mphil_degree_type'),
-        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
+        InlinePanel('mphil_carousel_items', label="Carousel image/video"),
+        InlinePanel('mphil_collaborators', label="Collaborator"),
+        InlinePanel('mphil_sponsors', label="Sponsor"),
+        InlinePanel('mphil_supervisors', label="Supervisor"),
     ], "MPhil details", classname="collapsible collapsed"),
 
     # PhD details
@@ -4086,10 +4086,10 @@ NewStudentPage.content_panels = [
         FieldPanel('phd_work_location'),
         FieldPanel('phd_status'),
         FieldPanel('phd_degree_type'),
-        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
+        InlinePanel('phd_carousel_items', label="Carousel image/video"),
+        InlinePanel('phd_collaborators', label="Collaborator"),
+        InlinePanel('phd_sponsors', label="Sponsor"),
+        InlinePanel('phd_supervisors', label="Supervisor"),
     ], "PhD details", classname="collapsible collapsed"),
 ]
 
@@ -4181,15 +4181,15 @@ class RcaNowPage(Page, SocialFields):
 
 
 RcaNowPage.content_panels = [
-    InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(RcaNowPage, 'areas', label="Areas"),
-    InlinePanel(RcaNowPage, 'related_links', label="Related links"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4210,7 +4210,7 @@ RcaNowPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    # InlinePanel(RcaNowPage, 'tagged_items', label='tag'),
+    # InlinePanel('tagged_items', label='tag'),
     FieldPanel('tags'),
 ]
 
@@ -4365,14 +4365,14 @@ class RcaBlogPage(Page, SocialFields):
 
 
 RcaBlogPage.content_panels = [
-    InlinePanel(RcaBlogPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(RcaBlogPage, 'areas', label="Areas"),
+    InlinePanel('areas', label="Areas"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4393,7 +4393,7 @@ RcaBlogPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    # InlinePanel(RcaBlogPage, 'tagged_items', label='tag'),
+    # InlinePanel('tagged_items', label='tag'),
     FieldPanel('tags'),
 ]
 
@@ -4606,9 +4606,9 @@ class ResearchItem(Page, SocialFields):
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
-    InlinePanel(ResearchItem, 'creator', label="Creator"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('ref'),
     FieldPanel('year'),
     FieldPanel('school'),
@@ -4617,7 +4617,7 @@ ResearchItem.content_panels = [
     FieldPanel('work_type_other'),
     FieldPanel('theme'),
     FieldPanel('description'),
-    InlinePanel(ResearchItem, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4725,12 +4725,12 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    InlinePanel(ResearchInnovationPage, 'current_research', label="Current research"),
-    InlinePanel(ResearchInnovationPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('current_research', label="Current research"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
-    InlinePanel(ResearchInnovationPage, 'teasers', label="Teaser content"),
-    InlinePanel(ResearchInnovationPage, 'related_links', label="Related links"),
-    InlinePanel(ResearchInnovationPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('teasers', label="Teaser content"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -4740,8 +4740,8 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('contact_link_text'),
 
     ],'Contact'),
-    InlinePanel(ResearchInnovationPage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(ResearchInnovationPage, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
 ]
 
@@ -4829,7 +4829,7 @@ class CurrentResearchPage(Page, SocialFields):
 CurrentResearchPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(CurrentResearchPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5184,13 +5184,13 @@ DonationPage.content_panels = [
         FieldPanel('payment_description', classname="full"),
         PageChooserPanel('redirect_to_when_done'),
     ], "Donation details")
-    # InlinePanel(DonationPage, 'carousel_items', label="Carousel content"),
-    # InlinePanel(DonationPage, 'related_links', label="Related links"),
-    # InlinePanel(DonationPage, 'reusable_text_snippets', label="Reusable text snippet"),
-    # InlinePanel(DonationPage, 'documents', label="Document"),
-    # InlinePanel(DonationPage, 'quotations', label="Quotation"),
-    # InlinePanel(DonationPage, 'images', label="Middle column image"),
-    # InlinePanel(DonationPage, 'manual_adverts', label="Manual adverts"),
+    # InlinePanel('carousel_items', label="Carousel content"),
+    # InlinePanel('related_links', label="Related links"),
+    # InlinePanel('reusable_text_snippets', label="Reusable text snippet"),
+    # InlinePanel('documents', label="Document"),
+    # InlinePanel('quotations', label="Quotation"),
+    # InlinePanel('images', label="Middle column image"),
+    # InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 DonationPage.promote_panels = [
@@ -5309,15 +5309,15 @@ class InnovationRCAProject(Page, SocialFields):
 InnovationRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(InnovationRCAProject, 'carousel_items', label="Carousel content"),
-    InlinePanel(InnovationRCAProject, 'creator', label="Creator"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('project_type'),
     FieldPanel('project_ended'),
     FieldPanel('description'),
-    InlinePanel(InnovationRCAProject, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5407,7 +5407,7 @@ class InnovationRCAIndex(Page, SocialFields):
 InnovationRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(InnovationRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5524,14 +5524,14 @@ class SustainRCAProject(Page, SocialFields):
 SustainRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(SustainRCAProject, 'carousel_items', label="Carousel content"),
-    InlinePanel(SustainRCAProject, 'creator', label="Creator"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('description'),
     FieldPanel('category'),
-    InlinePanel(SustainRCAProject, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5618,7 +5618,7 @@ class SustainRCAIndex(Page, SocialFields):
 SustainRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(SustainRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5782,19 +5782,19 @@ class ReachOutRCAProject(Page, SocialFields):
 ReachOutRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(ReachOutRCAProject, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('project'),
-    InlinePanel(ReachOutRCAProject, 'leader', label="Project leaders"),
-    InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
-    InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
-    InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
-    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project partnerships"),
+    InlinePanel('leader', label="Project leaders"),
+    InlinePanel('assistant', label="Project assistants"),
+    InlinePanel('themes', label="Project themes"),
+    InlinePanel('participants', label="Project participants"),
+    InlinePanel('partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(ReachOutRCAProject, 'links', label="Links"),
-    InlinePanel(ReachOutRCAProject, 'quotations', label="Middle column quotations"),
+    InlinePanel('links', label="Links"),
+    InlinePanel('quotations', label="Middle column quotations"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5883,7 +5883,7 @@ class ReachOutRCAIndex(Page, SocialFields):
 ReachOutRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(ReachOutRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5941,8 +5941,8 @@ StreamPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     ImageChooserPanel('poster_image'),
-    InlinePanel(StreamPage, 'related_links', label="Related links"),
-    InlinePanel(StreamPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ]
 

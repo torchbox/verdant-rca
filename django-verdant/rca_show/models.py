@@ -98,7 +98,7 @@ class ShowStreamPage(Page, SocialFields):
 
 ShowStreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
-    InlinePanel(ShowStreamPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('body'),
     ImageChooserPanel('poster_image'),
 ]
@@ -150,10 +150,10 @@ class ShowStandardPage(Page, SocialFields):
 
 ShowStandardPage.content_panels = [
     FieldPanel('title', classname="full title"),
-    InlinePanel(ShowStandardPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('body'),
     FieldPanel('map_coords'),
-    InlinePanel(ShowStandardPage, 'content_block', label="Content block"),
+    InlinePanel('content_block', label="Content block"),
 ]
 
 ShowStandardPage.promote_panels = [
@@ -194,7 +194,7 @@ class ShowExhibitionMapIndex(Page, SocialFields):
 
 ShowExhibitionMapIndex.content_panels = [
     FieldPanel('title', classname="full title"),
-    InlinePanel(ShowExhibitionMapIndex, 'content_block', label="Content block"),
+    InlinePanel('content_block', label="Content block"),
 ]
 
 ShowExhibitionMapIndex.promote_panels = [
@@ -524,10 +524,10 @@ ShowIndexPage.content_panels = [
     FieldPanel('year'),
     FieldPanel('exhibition_date'),
     FieldPanel('body'),
-    InlinePanel(ShowIndexPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('overlay_intro'),
-    InlinePanel(ShowIndexPage, 'programme_intros', label="Programme intros"),
-    InlinePanel(ShowIndexPage, 'programmes', label="Programmes"),
+    InlinePanel('programme_intros', label="Programme intros"),
+    InlinePanel('programmes', label="Programmes"),
     PageChooserPanel('parent_show_index'),
     FieldPanel('password_prompt'),
 ]
