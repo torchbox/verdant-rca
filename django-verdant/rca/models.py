@@ -4341,7 +4341,7 @@ class RcaBlogPage(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
@@ -4421,7 +4421,7 @@ class RcaBlogIndex(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'intro'), null=True, blank=True)
     body = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'body'), null=True, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
@@ -5077,7 +5077,7 @@ class OEFormPage(Page, SocialFields):
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
     show_on_homepage = models.BooleanField(default=False)
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     data_protection = RichTextField(blank=True)
 
     search_fields = Page.search_fields + (
