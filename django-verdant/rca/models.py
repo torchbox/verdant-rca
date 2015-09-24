@@ -12,7 +12,6 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
-import django.db.models.options as options
 
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -52,9 +51,6 @@ from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHO
 
 from .help_text import help_text
 
-
-# TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
-options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
 # RCA defines its own custom image class to replace wagtailimages.Image,
 # providing various additional data fields
@@ -594,9 +590,6 @@ class Advert(models.Model):
         FieldPanel('show_globally'),
     ]
 
-    class Meta:
-        description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
-
     def __unicode__(self):
         return self.text
 
@@ -625,9 +618,6 @@ class CustomContentModuleBlock(Orderable):
 class CustomContentModule(models.Model):
     title = models.CharField(max_length=255, help_text=help_text('rca.CustomContentModule', 'title'))
 
-    class Meta:
-        description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
-
     def __unicode__(self):
         return self.title
 
@@ -650,9 +640,6 @@ class ReusableTextSnippet(models.Model):
         FieldPanel('name'),
         FieldPanel('text', classname="full")
     ]
-
-    class Meta:
-        description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
 
     def __unicode__(self):
         return self.name
@@ -687,9 +674,6 @@ class ContactSnippet(models.Model):
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link_text'))
-
-    class Meta:
-        description = "Displayed in main body. Usable on standard index page only. "
 
     def __unicode__(self):
         return self.title

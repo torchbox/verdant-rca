@@ -33,7 +33,6 @@ class Migration(migrations.Migration):
                 ('show_globally', models.BooleanField(default=False, help_text=b'')),
             ],
             options={
-                'description': 'Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages.',
                 'permissions': (('change_advert', 'Can edit adverts'),),
             },
             bases=(models.Model,),
@@ -120,7 +119,6 @@ class Migration(migrations.Migration):
                 ('contact_link_text', models.CharField(help_text=b'', max_length=255, blank=True)),
             ],
             options={
-                'description': 'Displayed in main body. Usable on standard index page only. ',
                 'permissions': (('change_contactsnippet', 'Can edit contact snippets'),),
             },
             bases=(models.Model,),
@@ -208,7 +206,6 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(help_text=b'', max_length=255)),
             ],
             options={
-                'description': 'Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page',
                 'permissions': (('change_customcontentmodule', 'Can edit custom content modules'),),
             },
             bases=(models.Model,),
@@ -2073,7 +2070,6 @@ class Migration(migrations.Migration):
                 ('text', wagtail.wagtailcore.fields.RichTextField(help_text=b'')),
             ],
             options={
-                'description': 'Rich text field with title. Displayed in main body. Usable only on standard page and job page.',
                 'permissions': (('change_reusabletextsnippet', 'Can edit reusable text snippets'),),
             },
             bases=(models.Model,),
