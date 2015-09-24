@@ -12,7 +12,6 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
-import django.db.models.options as options
 
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -52,9 +51,6 @@ from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHO
 
 from .help_text import help_text
 
-
-# TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
-options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
 
 # RCA defines its own custom image class to replace wagtailimages.Image,
 # providing various additional data fields
@@ -594,12 +590,6 @@ class Advert(models.Model):
         FieldPanel('show_globally'),
     ]
 
-    class Meta:
-        description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
-        permissions = (
-            ("change_advert", "Can edit adverts"),
-        )
-
     def __unicode__(self):
         return self.text
 
@@ -628,12 +618,6 @@ class CustomContentModuleBlock(Orderable):
 class CustomContentModule(models.Model):
     title = models.CharField(max_length=255, help_text=help_text('rca.CustomContentModule', 'title'))
 
-    class Meta:
-        description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
-        permissions = (
-            ("change_customcontentmodule", "Can edit custom content modules"),
-        )
-
     def __unicode__(self):
         return self.title
 
@@ -656,12 +640,6 @@ class ReusableTextSnippet(models.Model):
         FieldPanel('name'),
         FieldPanel('text', classname="full")
     ]
-
-    class Meta:
-        description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
-        permissions = (
-            ("change_reusabletextsnippet", "Can edit reusable text snippets"),
-        )
 
     def __unicode__(self):
         return self.name
@@ -696,12 +674,6 @@ class ContactSnippet(models.Model):
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link_text'))
-
-    class Meta:
-        description = "Displayed in main body. Usable on standard index page only. "
-        permissions = (
-            ("change_contactsnippet", "Can edit contact snippets"),
-        )
 
     def __unicode__(self):
         return self.title
@@ -1238,7 +1210,7 @@ class NewsItem(Page, SocialFields):
     date = models.DateField(help_text=help_text('rca.NewsItem', 'date'))
     intro = RichTextField(help_text=help_text('rca.NewsItem', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.NewsItem', 'body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.NewsItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.NewsItem', 'show_on_homepage'))
     show_on_news_index = models.BooleanField(default=True, help_text=help_text('rca.NewsItem', 'show_on_news_index'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
@@ -1468,7 +1440,7 @@ class PressRelease(Page, SocialFields):
     date = models.DateField(help_text=help_text('rca.PressRelease', 'date'))
     intro = RichTextField(help_text=help_text('rca.PressRelease', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.PressRelease', 'body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.PressRelease', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PressRelease', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressRelease', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
@@ -1607,15 +1579,15 @@ class EventItemExternalLink(Orderable):
     ]
 
 class FutureEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
 class FutureNotCurrentEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureNotCurrentEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
         ).extra(
@@ -1625,8 +1597,8 @@ class FutureNotCurrentEventItemManager(models.Manager):
         )
 
 class PastEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(PastEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(PastEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
@@ -1643,7 +1615,7 @@ class EventItem(Page, SocialFields):
     special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text=help_text('rca.EventItem', 'special_event', default="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below"))
     cost = RichTextField(help_text=help_text('rca.EventItem', 'cost'), blank=True)
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'eventbrite_id', default="Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID."))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.EventItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.EventItem', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.EventItem', 'listing_intro', default="Used only on pages listing event items"))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.EventItem', 'middle_column_body',))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_title'))
@@ -2144,7 +2116,7 @@ class ReviewPage(Page, SocialFields):
     date = models.DateField(null=True, blank=True, help_text=help_text('rca.ReviewPage', 'date'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewPage', 'author'))
     listing_intro = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewPage', 'listing_intro', default="Used only on pages listing jobs"))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ReviewPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReviewPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReviewPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -2249,7 +2221,7 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.StandardPage', 'middle_column_body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.StandardPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StandardPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
     related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
@@ -2766,7 +2738,7 @@ class JobPage(Page, SocialFields):
     description = RichTextField(help_text=help_text('rca.JobPage', 'description'))
     download_info = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'download_info'))
     listing_intro = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobPage', 'listing_intro', default="Used only on pages listing jobs"))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.JobPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.JobPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -2976,7 +2948,7 @@ class AlumniPage(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.AlumniPage', 'intro'), blank=True)
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.AlumniPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
     biography = RichTextField(help_text=help_text('rca.AlumniPage', 'biography'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -3086,8 +3058,8 @@ class StaffPage(Page, SocialFields):
     external_collaborations_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'external_collaborations_placeholder'), blank=True)
     current_recent_research = RichTextField(help_text=help_text('rca.StaffPage', 'current_recent_research'), blank=True)
     awards_and_grants = RichTextField(help_text=help_text('rca.StaffPage', 'awards_and_grants'), blank=True)
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_homepage'))
-    show_on_programme_page = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_homepage'))
+    show_on_programme_page = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
     research_interests = RichTextField(help_text=help_text('rca.StaffPage', 'research_interests'), blank=True)
     title_prefix = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'title_prefix'))
@@ -3508,7 +3480,7 @@ class StudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    show_on_homepage = models.BooleanField()
+    show_on_homepage = models.BooleanField(default=False)
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
@@ -4177,7 +4149,7 @@ class RcaNowPage(Page, SocialFields):
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4351,9 +4323,9 @@ class RcaBlogPage(Page, SocialFields):
     date = models.DateField("Creation date", help_text=help_text('rca.RcaBlogPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
@@ -4433,7 +4405,7 @@ class RcaBlogIndex(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'intro'), null=True, blank=True)
     body = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'body'), null=True, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
@@ -4574,7 +4546,7 @@ class ResearchItem(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5088,8 +5060,8 @@ class OEFormPage(Page, SocialFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
-    show_on_homepage = models.BooleanField()
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    show_on_homepage = models.BooleanField(default=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     data_protection = RichTextField(blank=True)
 
     search_fields = Page.search_fields + (
@@ -5140,7 +5112,7 @@ class DonationPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.DonationPage', 'body'), blank=True)
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.DonationPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.DonationPage', 'middle_column_body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.DonationPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.DonationPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.DonationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -5273,7 +5245,7 @@ class InnovationRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.InnovationRCAProject', 'project_type'))
     project_ended = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'project_ended'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
@@ -5490,7 +5462,7 @@ class SustainRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SustainRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5747,7 +5719,7 @@ class ReachOutRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
     project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES, help_text=help_text('rca.ReachOutRCAProject', 'project'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReachOutRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))

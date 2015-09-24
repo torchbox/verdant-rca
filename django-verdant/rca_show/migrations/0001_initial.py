@@ -1,129 +1,238 @@
 # -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import wagtail.wagtailcore.fields
+import modelcluster.fields
+import django.db.models.deletion
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'ShowIndexPage'
-        db.create_table(u'rca_show_showindexpage', (
-            (u'page_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['wagtailcore.Page'], unique=True, primary_key=True)),
-            ('social_image', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, on_delete=models.SET_NULL, to=orm['rca.RcaImage'])),
-            ('social_text', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
-            ('year', self.gf('django.db.models.fields.CharField')(max_length=4, blank=True)),
-        ))
-        db.send_create_signal(u'rca_show', ['ShowIndexPage'])
+    dependencies = [
+        ('rca', '0001_initial'),
+        ('wagtailcore', '0010_change_page_owner_to_null_on_delete'),
+    ]
 
-        # Adding model 'ShowSchoolPage'
-        db.create_table(u'rca_show_showschoolpage', (
-            (u'page_ptr', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['wagtailcore.Page'], unique=True, primary_key=True)),
-            ('social_image', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='+', null=True, on_delete=models.SET_NULL, to=orm['rca.RcaImage'])),
-            ('social_text', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
-            ('school', self.gf('django.db.models.fields.CharField')(max_length=255)),
-            ('body', self.gf('wagtail.wagtailcore.fields.RichTextField')()),
-        ))
-        db.send_create_signal(u'rca_show', ['ShowSchoolPage'])
-
-
-    def backwards(self, orm):
-        # Deleting model 'ShowIndexPage'
-        db.delete_table(u'rca_show_showindexpage')
-
-        # Deleting model 'ShowSchoolPage'
-        db.delete_table(u'rca_show_showschoolpage')
-
-
-    models = {
-        u'auth.group': {
-            'Meta': {'object_name': 'Group'},
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '80'}),
-            'permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'})
-        },
-        u'auth.permission': {
-            'Meta': {'ordering': "(u'content_type__app_label', u'content_type__model', u'codename')", 'unique_together': "((u'content_type', u'codename'),)", 'object_name': 'Permission'},
-            'codename': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['contenttypes.ContentType']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        u'auth.user': {
-            'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
-            'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
-            'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
-            'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
-            'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
-            'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
-        },
-        u'contenttypes.contenttype': {
-            'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
-            'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
-        u'rca.rcaimage': {
-            'Meta': {'object_name': 'RcaImage'},
-            'alt': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'created_at': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'creator': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'dimensions': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'eprint_docid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'file': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'height': ('django.db.models.fields.IntegerField', [], {}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'medium': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'permission': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'photographer': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'rca_content_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'uploaded_by_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']", 'null': 'True', 'blank': 'True'}),
-            'width': ('django.db.models.fields.IntegerField', [], {}),
-            'year': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
-        },
-        u'rca_show.showindexpage': {
-            'Meta': {'object_name': 'ShowIndexPage', '_ormbases': [u'wagtailcore.Page']},
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
-            'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
-            'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'year': ('django.db.models.fields.CharField', [], {'max_length': '4', 'blank': 'True'})
-        },
-        u'rca_show.showschoolpage': {
-            'Meta': {'object_name': 'ShowSchoolPage', '_ormbases': [u'wagtailcore.Page']},
-            'body': ('wagtail.wagtailcore.fields.RichTextField', [], {}),
-            u'page_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['wagtailcore.Page']", 'unique': 'True', 'primary_key': 'True'}),
-            'school': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'social_image': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'+'", 'null': 'True', 'on_delete': 'models.SET_NULL', 'to': u"orm['rca.RcaImage']"}),
-            'social_text': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
-        },
-        u'wagtailcore.page': {
-            'Meta': {'object_name': 'Page'},
-            'content_type': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'pages'", 'to': u"orm['contenttypes.ContentType']"}),
-            'depth': ('django.db.models.fields.PositiveIntegerField', [], {}),
-            'has_unpublished_changes': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'live': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
-            'numchild': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'owned_pages'", 'null': 'True', 'to': u"orm['auth.User']"}),
-            'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'}),
-            'search_description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
-            'seo_title': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'}),
-            'show_in_menus': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '50'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'url_path': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
-        }
-    }
-
-    complete_apps = ['rca_show']
+    operations = [
+        migrations.CreateModel(
+            name='ShowExhibitionMapIndex',
+            fields=[
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('social_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('social_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=('wagtailcore.page', models.Model),
+        ),
+        migrations.CreateModel(
+            name='ShowExhibitionMapIndexContent',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('map_coords', models.CharField(help_text=b'Lat lon coordinates for centre of map e.g 51.501533, -0.179284', max_length=255, blank=True)),
+                ('page', modelcluster.fields.ParentalKey(related_name='content_block', to='rca_show.ShowExhibitionMapIndex')),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowExhibitionMapPage',
+            fields=[
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('social_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('campus', models.CharField(blank=True, max_length=255, null=True, choices=[(b'kensington', b'Kensington'), (b'battersea', b'Battersea')])),
+                ('social_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=('wagtailcore.page', models.Model),
+        ),
+        migrations.CreateModel(
+            name='ShowIndexPage',
+            fields=[
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('social_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(help_text=b'Optional body text. Useful for holding pages prior to Show launch.', blank=True)),
+                ('year', models.CharField(max_length=4, blank=True)),
+                ('overlay_intro', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('exhibition_date', models.TextField(max_length=255, blank=True)),
+                ('password_prompt', models.CharField(help_text=b'A custom message asking the user to log in, on protected pages', max_length=255, blank=True)),
+                ('parent_show_index', models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca_show.ShowIndexPage', null=True)),
+                ('social_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=('wagtailcore.page', models.Model),
+        ),
+        migrations.CreateModel(
+            name='ShowIndexPageCarouselItem',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('overlay_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('link', models.URLField(help_text=b'', verbose_name=b'External link', blank=True)),
+                ('embedly_url', models.URLField(help_text=b'', verbose_name=b'Vimeo URL', blank=True)),
+                ('image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowIndexPageProgramme',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('programme', models.CharField(max_length=255, choices=[(b'2015', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'globalinnovationdesign', b'Global Innovation Design'), (b'historyofdesign', b'History of Design'), (b'informationexperiencedesign', b'Information Experience Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'interiordesign', b'Interior Design'), (b'jewelleryandmetal', b'Jewellery & Metal'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2014', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'globalinnovationdesign', b'Global Innovation Design'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'informationexperiencedesign', b'Information Experience Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'interiordesign', b'Interior Design'), (b'jewelleryandmetal', b'Jewellery & Metal'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2013', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2012', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2011', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'communicationartdesign', b'Communication Art & Design'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'))), (b'2010', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'communicationartdesign', b'Communication Art & Design'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'))), (b'2009', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'))), (b'2008', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'))), (b'2007', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture')))])),
+                ('page', modelcluster.fields.ParentalKey(related_name='programmes', to='rca_show.ShowIndexPage')),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowIndexProgrammeIntro',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('programme', models.CharField(max_length=255, choices=[(b'2015', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'globalinnovationdesign', b'Global Innovation Design'), (b'historyofdesign', b'History of Design'), (b'informationexperiencedesign', b'Information Experience Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'interiordesign', b'Interior Design'), (b'jewelleryandmetal', b'Jewellery & Metal'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2014', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'globalinnovationdesign', b'Global Innovation Design'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'informationexperiencedesign', b'Information Experience Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'interiordesign', b'Interior Design'), (b'jewelleryandmetal', b'Jewellery & Metal'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2013', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'servicedesign', b'Service Design'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2012', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'), (b'visualcommunication', b'Visual Communication'))), (b'2011', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'communicationartdesign', b'Communication Art & Design'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'))), (b'2010', ((b'animation', b'Animation'), (b'architecture', b'Architecture'), (b'ceramicsglass', b'Ceramics & Glass'), (b'communicationartdesign', b'Communication Art & Design'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'criticalwritinginartdesign', b'Critical Writing in Art & Design'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'designinteractions', b'Design Interactions'), (b'designproducts', b'Design Products'), (b'fashionmenswear', b'Fashion Menswear'), (b'fashionwomenswear', b'Fashion Womenswear'), (b'goldsmithingsilversmithingmetalworkjewellery', b'Goldsmithing, Silversmithing, Metalwork & Jewellery'), (b'historyofdesign', b'History of Design'), (b'innovationdesignengineering', b'Innovation Design Engineering'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'), (b'textiles', b'Textiles'), (b'vehicledesign', b'Vehicle Design'))), (b'2009', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'))), (b'2008', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture'))), (b'2007', ((b'animation', b'Animation'), (b'communicationartdesign', b'Communication Art & Design'), (b'conservation', b'Conservation'), (b'criticalhistoricalstudies', b'Critical & Historical Studies'), (b'curatingcontemporaryart', b'Curating Contemporary Art'), (b'historyofdesign', b'History of Design'), (b'painting', b'Painting'), (b'photography', b'Photography'), (b'printmaking', b'Printmaking'), (b'sculpture', b'Sculpture')))])),
+                ('intro', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('page', modelcluster.fields.ParentalKey(related_name='programme_intros', to='rca_show.ShowIndexPage')),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowStandardPage',
+            fields=[
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('social_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('map_coords', models.CharField(help_text=b'Lat lon coordinates for centre of map e.g 51.501533, -0.179284', max_length=255, blank=True)),
+                ('listing_intro', models.CharField(help_text=b'Used only on pages listing news items', max_length=100, blank=True)),
+                ('feed_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.', null=True)),
+                ('social_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=('wagtailcore.page', models.Model),
+        ),
+        migrations.CreateModel(
+            name='ShowStandardPageCarouselItem',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('overlay_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('link', models.URLField(help_text=b'', verbose_name=b'External link', blank=True)),
+                ('embedly_url', models.URLField(help_text=b'', verbose_name=b'Vimeo URL', blank=True)),
+                ('image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowStandardPageContent',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('map_coords', models.CharField(help_text=b'Lat lon coordinates for centre of map e.g 51.501533, -0.179284', max_length=255, blank=True)),
+                ('page', modelcluster.fields.ParentalKey(related_name='content_block', to='rca_show.ShowStandardPage')),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ShowStreamPage',
+            fields=[
+                ('page_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
+                ('social_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('poster_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', null=True)),
+                ('social_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+            bases=('wagtailcore.page', models.Model),
+        ),
+        migrations.CreateModel(
+            name='ShowStreamPageCarouselItem',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('sort_order', models.IntegerField(null=True, editable=False, blank=True)),
+                ('overlay_text', models.CharField(help_text=b'', max_length=255, blank=True)),
+                ('link', models.URLField(help_text=b'', verbose_name=b'External link', blank=True)),
+                ('embedly_url', models.URLField(help_text=b'', verbose_name=b'Vimeo URL', blank=True)),
+                ('image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+                ('link_page', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailcore.Page', help_text=b'', null=True)),
+                ('page', modelcluster.fields.ParentalKey(related_name='carousel_items', to='rca_show.ShowStreamPage')),
+                ('poster_image', models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True)),
+            ],
+            options={
+                'ordering': ['sort_order'],
+                'abstract': False,
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='showstandardpagecarouselitem',
+            name='link_page',
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailcore.Page', help_text=b'', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='showstandardpagecarouselitem',
+            name='page',
+            field=modelcluster.fields.ParentalKey(related_name='carousel_items', to='rca_show.ShowStandardPage'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='showstandardpagecarouselitem',
+            name='poster_image',
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='showindexpagecarouselitem',
+            name='link_page',
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='wagtailcore.Page', help_text=b'', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='showindexpagecarouselitem',
+            name='page',
+            field=modelcluster.fields.ParentalKey(related_name='carousel_items', to='rca_show.ShowIndexPage'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='showindexpagecarouselitem',
+            name='poster_image',
+            field=models.ForeignKey(related_name='+', on_delete=django.db.models.deletion.SET_NULL, blank=True, to='rca.RcaImage', help_text=b'', null=True),
+            preserve_default=True,
+        ),
+    ]
