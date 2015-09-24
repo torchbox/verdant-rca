@@ -1,10 +1,10 @@
-Django==1.6.10
-South==1.0.0
-wagtail==0.8.8
+Django==1.6.11
+South==1.0.2
+wagtail==0.8.10
 django-auth-ldap==1.1.7
 Embedly==0.5.0
 elasticsearch==1.4.0
-psycopg2==2.5.2
+psycopg2==2.6.1
 stripe==1.9.8
 tweepy==2.1
 django-redis==3.8.2
