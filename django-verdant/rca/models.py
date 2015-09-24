@@ -1607,15 +1607,15 @@ class EventItemExternalLink(Orderable):
     ]
 
 class FutureEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
 class FutureNotCurrentEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureNotCurrentEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
         ).extra(
@@ -1625,8 +1625,8 @@ class FutureNotCurrentEventItemManager(models.Manager):
         )
 
 class PastEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(PastEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(PastEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
