@@ -28,7 +28,7 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
+from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
@@ -64,6 +64,10 @@ class RcaImage(AbstractImage):
     photographer = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaImage', 'photographer'))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
+
+    admin_form_fields = Image.admin_form_fields + (
+        'alt', 'creator', 'year', 'medium', 'dimensions', 'permission', 'photographer'
+    )
 
     search_fields = AbstractImage.search_fields + (
         index.SearchField('creator'),
