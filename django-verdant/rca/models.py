@@ -2566,7 +2566,8 @@ class HomePage(Page, SocialFields):
     packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_research'))
     packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni'))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_review'))
-    packery_events = models.IntegerField("Number of events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
+    packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
+    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
     packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
 
 
@@ -2602,23 +2603,36 @@ class HomePage(Page, SocialFields):
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        events = EventItem.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        events = EventItem.objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
+        events_rcatalks = EventItem.objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
-        tweets = [[],[],[],[],[]]
+        tweets = [[], [], [], [], []]
 
         if exclude:
-            news = news.exclude(id__in=exclude);
-            staff = staff.exclude(id__in=exclude);
-            student = student.exclude(id__in=exclude);
-            news = news.exclude(id__in=exclude);
-            rcanow = rcanow.exclude(id__in=exclude);
-            research = research.exclude(id__in=exclude);
-            alumni = alumni.exclude(id__in=exclude);
-            review = review.exclude(id__in=exclude);
-            events = events.exclude(id__in=exclude);
-            blog = blog.exclude(id__in=exclude);
+            news = news.exclude(id__in=exclude)
+            staff = staff.exclude(id__in=exclude)
+            student = student.exclude(id__in=exclude)
+            news = news.exclude(id__in=exclude)
+            rcanow = rcanow.exclude(id__in=exclude)
+            research = research.exclude(id__in=exclude)
+            alumni = alumni.exclude(id__in=exclude)
+            review = review.exclude(id__in=exclude)
+            events = events.exclude(id__in=exclude)
+            events_rcatalks = events_rcatalks.exclude(id__in=exclude)
+            blog = blog.exclude(id__in=exclude)
 
-        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], blog[:self.packery_blog]))
+        packery = list(chain(
+            news[:self.packery_news],
+            staff[:self.packery_staff],
+            student[:self.packery_student_work],
+            rcanow[:self.packery_rcanow],
+            research[:self.packery_research],
+            alumni[:self.packery_alumni],
+            review[:self.packery_review],
+            events[:self.packery_events],
+            events_rcatalks[:self.packery_events_rcatalks],
+            blog[:self.packery_blog],
+        ))
 
         # only add tweets to the packery content if not using the plus button
         if not exclude:
@@ -2692,6 +2706,7 @@ HomePage.content_panels = [
         FieldPanel('packery_alumni'),
         FieldPanel('packery_review'),
         FieldPanel('packery_events'),
+        FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
     ], 'Packery content'),
     InlinePanel('related_links', label="Related links"),
