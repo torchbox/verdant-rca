@@ -2603,8 +2603,8 @@ class HomePage(Page, SocialFields):
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        events = EventItem.objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
-        events_rcatalks = EventItem.objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
+        events = EventItem.future_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
+        events_rcatalks = EventItem.future_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         tweets = [[], [], [], [], []]
 
