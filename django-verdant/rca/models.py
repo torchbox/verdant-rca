@@ -2567,7 +2567,7 @@ class HomePage(Page, SocialFields):
     packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni'))
     packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_review'))
     packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
-    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
+    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
     packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
 
 
