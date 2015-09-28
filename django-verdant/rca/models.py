@@ -2233,7 +2233,7 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
     related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-    tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'))
+    tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
