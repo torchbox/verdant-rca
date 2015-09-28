@@ -2579,8 +2579,8 @@ class HomePage(Page, SocialFields):
     packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
     packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
     packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
-    student_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'student_stories'))
-    alumni_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'alumni_stories'))
+    packery_student_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_student_stories'))
+    packery_alumni_stories = models.IntegerField("Number of alumni stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni_stories'))
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
@@ -2618,9 +2618,15 @@ class HomePage(Page, SocialFields):
         events = EventItem.future_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
         events_rcatalks = EventItem.future_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
-        student_stories = StandardPage.objects.filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
-            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG).order_by('?')
-        alumni_stories = StandardPage.objects.filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG).order_by('?')
+        student_stories = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .extra(select={'is_student_story': True})\
+            .order_by('?')
+        alumni_stories = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .extra(select={'is_alumni_story': True})\
+            .order_by('?')
         tweets = [[], [], [], [], []]
 
         if exclude:
@@ -2649,8 +2655,8 @@ class HomePage(Page, SocialFields):
             events[:self.packery_events],
             events_rcatalks[:self.packery_events_rcatalks],
             blog[:self.packery_blog],
-            student_stories[:self.student_stories],
-            alumni_stories[:self.alumni_stories],
+            student_stories[:self.packery_student_stories],
+            alumni_stories[:self.packery_alumni_stories],
         ))
 
         # only add tweets to the packery content if not using the plus button
@@ -2727,8 +2733,8 @@ HomePage.content_panels = [
         FieldPanel('packery_events'),
         FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
-        FieldPanel('student_stories'),
-        FieldPanel('alumni_stories'),
+        FieldPanel('packery_student_stories'),
+        FieldPanel('packery_alumni_stories'),
     ], 'Packery content'),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),

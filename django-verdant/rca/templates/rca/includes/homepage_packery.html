@@ -164,9 +164,11 @@
                             <div class="image">{% image item.specific.feed_image width-304 %}</div>
                             <div class="content">
                                 <h3 class="h6">{{ item.title }}</h3>
-                                {% for tag in item.tags.all %}
-                                    <p class="a2">{{ tag.name }}</p>
-                                {% endfor %}
+                                {% if item.is_student_story %}
+                                    <p class="a2">Student Story</p>
+                                {% elif item.is_alumni_story %}
+                                    <p class="a2">Alumni Story</p>
+                                {% endif %}
                             </div>
                         </a>
                     </div>
