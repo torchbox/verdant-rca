@@ -83,7 +83,27 @@ def fetch_live_data():
     local('psql verdant -f %s' % local_path)
     local('rm %s' % local_path)
 
-fetch_live_data_notroot = fetch_live_data
+
+@roles('rca2')
+def staging_fetch_live_data():
+    filename = "verdant_rca_%s.sql" % uuid.uuid4()
+    local_path = "/usr/local/django/rcawagtail/tmp/%s" % filename
+    remote_path = "/tmp/%s" % filename
+
+    run('pg_dump -cf %s verdant_rca' % remote_path)
+    run('gzip %s' % remote_path)
+    get("%s.gz" % remote_path, "%s.gz" % local_path)
+    run('rm %s.gz' % remote_path)
+#    local('dropdb verdant')
+#    local('createdb verdant')
+#    local('gunzip %s.gz' % local_path)
+#    local('psql verdant -f %s' % local_path)
+    local('rm %s' % local_path)
+
+
+@roles('staging')
+def sync_staging_with_live():
+    run('fab staging_fetch_live_data')
 
 
 @roles('production')
