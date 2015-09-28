@@ -2220,6 +2220,9 @@ class StandardPageReusableTextSnippet(Orderable):
         SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
     ]
 
+class StandardPageTag(TaggedItemBase):
+    content_object = ParentalKey('rca.StandardPage', related_name='tagged_items')
+
 class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
@@ -2230,11 +2233,17 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
     related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
         index.SearchField('body'),
     )
+
+    # StandardPages with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the homepage packery separately.
+    # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
+    STUDENT_STORY_TAG = 'student-story'
+    ALUMNI_STORY_TAG = 'alumni-story'
 
     @property
     def search_name(self):
@@ -2284,6 +2293,7 @@ StandardPage.promote_panels = [
         FieldPanel('related_school'),
         FieldPanel('related_programme'),
     ], 'Related pages'),
+    FieldPanel('tags'),
 ]
 
 StandardPage.settings_panels = [
@@ -2569,6 +2579,8 @@ class HomePage(Page, SocialFields):
     packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
     packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
     packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
+    student_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'student_stories'))
+    alumni_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'alumni_stories'))
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
@@ -2606,6 +2618,9 @@ class HomePage(Page, SocialFields):
         events = EventItem.future_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
         events_rcatalks = EventItem.future_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
+        student_stories = StandardPage.objects.filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG).order_by('?')
+        alumni_stories = StandardPage.objects.filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG).order_by('?')
         tweets = [[], [], [], [], []]
 
         if exclude:
@@ -2620,6 +2635,8 @@ class HomePage(Page, SocialFields):
             events = events.exclude(id__in=exclude)
             events_rcatalks = events_rcatalks.exclude(id__in=exclude)
             blog = blog.exclude(id__in=exclude)
+            student_stories = student_stories.exclude(id__in=exclude)
+            alumni_stories = alumni_stories.exclude(id__in=exclude)
 
         packery = list(chain(
             news[:self.packery_news],
@@ -2632,6 +2649,8 @@ class HomePage(Page, SocialFields):
             events[:self.packery_events],
             events_rcatalks[:self.packery_events_rcatalks],
             blog[:self.packery_blog],
+            student_stories[:self.student_stories],
+            alumni_stories[:self.alumni_stories],
         ))
 
         # only add tweets to the packery content if not using the plus button
@@ -2708,6 +2727,8 @@ HomePage.content_panels = [
         FieldPanel('packery_events'),
         FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
+        FieldPanel('student_stories'),
+        FieldPanel('alumni_stories'),
     ], 'Packery content'),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),

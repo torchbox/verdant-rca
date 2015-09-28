@@ -31,7 +31,7 @@
                 </li>
             {% elif item|content_type = 'studentpage' %}
                 {# NB: this is not really displaying a student page, but rather their work #}
-                
+
                 {% with item.carousel_items.all|first as carouselitem %}
                     <li class="item {% if carouselitem.image.is_landscape %}half{% else %}double{% endif %}" data-id="{{ item.id }}">
                         <div class="inner">
@@ -154,7 +154,23 @@
                             </div>
                         </a>
                     </div>
-                </li>                
+                </li>
+             {% elif item|content_type = 'standardpage' %}
+                {# standard pages tagged with either student-story or alumni-story #}
+                {# TODO: should be done with proxy models once PR #1736 is merged #}
+                <li class="item double" data-id="{{ item.id }}">
+                    <div class="inner">
+                        <a href="{% pageurl item %}">
+                            <div class="image">{% image item.specific.feed_image width-304 %}</div>
+                            <div class="content">
+                                <h3 class="h6">{{ item.title }}</h3>
+                                {% for tag in item.tags.all %}
+                                    <p class="a2">{{ tag.name }}</p>
+                                {% endfor %}
+                            </div>
+                        </a>
+                    </div>
+                </li>
             {% else %}
                 <!-- tweets-->
                 <li class="item double tweet" data-twitter-feed="{{ self.twitter_feed }}" data-twitter-count="{{ self.packery_tweets }}">
