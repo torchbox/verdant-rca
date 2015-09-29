@@ -11,12 +11,12 @@ env.roledefs = {
     'nginx': ['root@rca1.torchbox.com'],
     'db': ['root@rca1.torchbox.com'],
     'db-notroot': ['rca1.torchbox.com'],
-    'rca2': ['rcawagtail@rca2.torchbox.com'],
+    'rca2': ['rcawagtail@rca2.bmyrk.torchbox.net'],
 
     # All hosts will be listed here.
-    'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
+    'production': ['rcawagtail@rca2.bmyrk.torchbox.net', 'rcawagtail@rca3.bmyrk.torchbox.net'],
 }
-MIGRATION_SERVER = 'rca2.torchbox.com'
+MIGRATION_SERVER = 'rca2.bmyrk.torchbox.net'
 
 
 @roles('staging')
@@ -104,7 +104,7 @@ def sync_staging_with_live():
     env.forward_agent = True
     run('fab staging_fetch_live_data')
     run("django-admin.py migrate --settings=rcasite.settings.staging --noinput")
-    run("rsync -avz rcawagtail@rca2.torchbox.com:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
+    run("rsync -avz rcawagtail@rca2.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
 
 
 @roles('production')
