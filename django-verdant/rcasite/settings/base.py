@@ -275,6 +275,8 @@ CELERYD_LOG_COLOR = False
 
 PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
 
+GOOGLE_ANALYTICS_ACCOUNT = ''
+
 # The scheduler used by this app needs to be defined in the settings.
 # It also contains some additional configuration options, some need to be set in the local settings.
 from twitter.settings import *

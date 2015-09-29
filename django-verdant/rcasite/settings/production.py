@@ -46,6 +46,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+GOOGLE_ANALYTICS_ACCOUNT = 'UA-3809199-5'
 
 try:
 	from .local import *
