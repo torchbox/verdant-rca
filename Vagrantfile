@@ -10,11 +10,6 @@ Vagrant.configure(2) do |config|
   # Port forwarding
   config.vm.network "forwarded_port", guest: 8000, host: 8000
 
-  # More memory
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = "2048"
-  end
-
   # Provision with bash script
   config.vm.provision :shell, :path => "vagrant/provision.sh"
 
