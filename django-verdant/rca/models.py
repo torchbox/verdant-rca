@@ -2565,22 +2565,23 @@ class HomePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.HomePage', related_name='related_links')
 
 class HomePage(Page, SocialFields):
+    PACKERY_CHOICES = zip(range(11), range(11))
+
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'background_image', default="The full bleed image in the background"))
     news_item_1 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'news_item_1'))
     news_item_2 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'news_item_2'))
-    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_news'))
-    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_staff'))
-    packery_student_work = models.IntegerField("Number of student work items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_student_work', default="Student pages flagged to Show On Homepage must have at least one carousel item"))
-    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_tweets'))
-    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_rcanow'))
-    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_research'))
-    packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni'))
-    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_review'))
-    packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
-    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
-    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
-    packery_student_stories = models.IntegerField("Number of student stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_student_stories'))
-    packery_alumni_stories = models.IntegerField("Number of alumni stories to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni_stories'))
+    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_news'))
+    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_staff'))
+    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_tweets'))
+    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_research'))
+    packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_events'))
+    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
+    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_blog'))
+    packery_student_stories = models.IntegerField("Number of student stories to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_student_stories'))
+    packery_alumni_stories = models.IntegerField("Number of alumni stories to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_alumni_stories'))
+    packery_student_work = models.IntegerField("Number of student work items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_student_work', default="Student pages flagged to Show On Homepage must have at least one carousel item"))
+    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_rcanow'))
+    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_review'))
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
@@ -2610,12 +2611,8 @@ class HomePage(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        events = EventItem.future_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
+        events = EventItem.past_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
         events_rcatalks = EventItem.future_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         student_stories = StandardPage.objects\
@@ -2627,36 +2624,37 @@ class HomePage(Page, SocialFields):
             .filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .extra(select={'is_alumni_story': True})\
             .order_by('?')
+        student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
+        review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
         tweets = [[], [], [], [], []]
 
         if exclude:
             news = news.exclude(id__in=exclude)
             staff = staff.exclude(id__in=exclude)
-            student = student.exclude(id__in=exclude)
             news = news.exclude(id__in=exclude)
-            rcanow = rcanow.exclude(id__in=exclude)
             research = research.exclude(id__in=exclude)
-            alumni = alumni.exclude(id__in=exclude)
-            review = review.exclude(id__in=exclude)
             events = events.exclude(id__in=exclude)
             events_rcatalks = events_rcatalks.exclude(id__in=exclude)
             blog = blog.exclude(id__in=exclude)
             student_stories = student_stories.exclude(id__in=exclude)
             alumni_stories = alumni_stories.exclude(id__in=exclude)
+            student = student.exclude(id__in=exclude)
+            rcanow = rcanow.exclude(id__in=exclude)
+            review = review.exclude(id__in=exclude)
 
         packery = list(chain(
             news[:self.packery_news],
             staff[:self.packery_staff],
-            student[:self.packery_student_work],
-            rcanow[:self.packery_rcanow],
             research[:self.packery_research],
-            alumni[:self.packery_alumni],
-            review[:self.packery_review],
             events[:self.packery_events],
             events_rcatalks[:self.packery_events_rcatalks],
             blog[:self.packery_blog],
             student_stories[:self.packery_student_stories],
             alumni_stories[:self.packery_alumni_stories],
+            student[:self.packery_student_work],
+            rcanow[:self.packery_rcanow],
+            review[:self.packery_review],
         ))
 
         # only add tweets to the packery content if not using the plus button
@@ -2723,18 +2721,17 @@ HomePage.content_panels = [
     MultiFieldPanel([
         FieldPanel('packery_news'),
         FieldPanel('packery_staff'),
-        FieldPanel('packery_student_work'),
         FieldPanel('packery_tweets'),
         FieldPanel('twitter_feed'),
-        FieldPanel('packery_rcanow'),
         FieldPanel('packery_research'),
-        FieldPanel('packery_alumni'),
-        FieldPanel('packery_review'),
         FieldPanel('packery_events'),
         FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
         FieldPanel('packery_student_stories'),
         FieldPanel('packery_alumni_stories'),
+        FieldPanel('packery_student_work'),
+        FieldPanel('packery_rcanow'),
+        FieldPanel('packery_review'),
     ], 'Packery content'),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
@@ -5051,7 +5048,7 @@ GalleryPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
-    InlinePanel(GalleryPage, "related_links", label="Related links")
+    InlinePanel("related_links", label="Related links")
 ]
 
 GalleryPage.promote_panels = [
