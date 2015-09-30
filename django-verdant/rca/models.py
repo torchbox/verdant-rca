@@ -2613,7 +2613,7 @@ class HomePage(Page, SocialFields):
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         events = EventItem.past_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('?')
-        events_rcatalks = EventItem.future_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
+        events_rcatalks = EventItem.past_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('?')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         student_stories = StandardPage.objects\
             .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
