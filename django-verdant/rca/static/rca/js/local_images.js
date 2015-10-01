@@ -7,7 +7,7 @@ $(function(){
     //than the request getting cancelled which throws a load of errors to the terminal
     setTimeout(function(){
         $("img").each(function(){
-            $(this).on("error", function(){
+            $(this).one("error", function(){
                 this.src = this.src.replace(production_url, local_url);
             });
             this.src = this.src.replace(local_url, production_url);

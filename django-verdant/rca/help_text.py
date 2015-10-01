@@ -40,6 +40,7 @@ HELP_TEXT = {
     ('rca.ReviewPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.StandardPage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.StandardPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    ('rca.StandardPage', 'tags'): 'Use the "student-story" or "alumni-story" tags to make this page appear in the homepage packery (if "Show on homepage" is ticked too).',
     ('rca.StandardIndex', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.StandardIndex', 'background_image'): 'The full bleed image in the background',
     ('rca.StandardIndex', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
