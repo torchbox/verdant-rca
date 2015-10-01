@@ -139,7 +139,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'south',
     'compressor',
     'template_timings_panel',
     'taggit',
