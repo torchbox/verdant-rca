@@ -34,6 +34,7 @@ WAGTAILSEARCH_BACKENDS = {
         'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
         'INDEX': 'rca',
         'URLS': ['http://localhost:8938/es1.3'],
+        'ATOMIC_REBUILD': True,
     },
 }
 
