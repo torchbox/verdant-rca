@@ -46,11 +46,6 @@ def deploy(gitonly=False):
 
         if env['host'] == MIGRATION_SERVER:
             if not gitonly:
-                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
-
-                # FOR WAGTAIL 0.4 UPDATE
-                # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
-
                 run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
 
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
