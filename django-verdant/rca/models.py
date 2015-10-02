@@ -2444,7 +2444,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
             feed_source = StaffPage.objects.none()
 
         # Chain manual_feed + feed_source (any or both may be empty)
-        feed = chain(manual_feed, feed_source)
+        feed = list(chain(manual_feed, feed_source))
 
         if manual_feed or self.staff_feed_source:
             return feed
