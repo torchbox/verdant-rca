@@ -133,7 +133,13 @@
                                         {% endif %}
                                     {% endwith %}
                                 </p>
-                                <p class="a2">Event</p>
+                                <p class="a2">
+                                    {% if item.is_rca_talk %}
+                                        RCA Talk
+                                    {% else %}
+                                        Event
+                                    {% endif %}
+                                </p>
                             </div>
                         </a>
                     </div>

@@ -2612,8 +2612,20 @@ class HomePage(Page, SocialFields):
         news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        events = EventItem.past_objects.filter(live=True, show_on_homepage=True).exclude(audience='rcatalks').order_by('-dates_times__date_from')
-        events_rcatalks = EventItem.past_objects.filter(live=True, show_on_homepage=True, audience='rcatalks').order_by('-dates_times__date_from')
+        events = EventItem.past_objects\
+            .filter(live=True, show_on_homepage=True)\
+            .exclude(audience='rcatalks')\
+            .extra(select={
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
+        events_rcatalks = EventItem.past_objects\
+            .filter(live=True, show_on_homepage=True, audience='rcatalks')\
+            .extra(select={
+                'is_rca_talk': True,
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         student_stories = StandardPage.objects\
             .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
