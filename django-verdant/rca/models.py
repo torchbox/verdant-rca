@@ -148,6 +148,7 @@ AREA_CHOICES = (
     ('informationlearningtechnicalservices', 'Information, Learning & Technical Services'),
     ('innovationrca', 'InnovationRCA'),
     ('reachoutrca', 'ReachOutRCA'),
+    ('rectorate', 'Rectorate'),
     ('research-knowledgeexchange', "Research, Knowledge Exchange & Innovation"),
     ('schoolofarchitecture', 'School of Architecture'),
     ('schoolofcommunication', 'School of Communication'),
