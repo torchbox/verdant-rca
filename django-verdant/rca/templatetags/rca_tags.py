@@ -8,6 +8,7 @@ from wagtail.wagtailcore.utils import camelcase_to_underscore
 from datetime import date
 from itertools import chain
 import random
+import re
 
 from rca.models import *
 from rca.utils import get_students
@@ -334,6 +335,8 @@ def content_type(value):
 
 @register.filter
 def paragraph_split(value, sep = "</p>"):
+    value = re.sub('\n', ' ', value)
+    value = re.sub('<p>\s*</p>', ' ', value)
     parts = value.split(sep)
     return (parts[0], sep.join(parts[1:]))
 
