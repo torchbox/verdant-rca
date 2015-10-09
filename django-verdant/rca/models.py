@@ -323,12 +323,22 @@ ALL_PROGRAMMES = tuple(sorted([
 ], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
+# TODO: use academic years as keys, e.g. 2015/16 instead of 2016,
+# where 2016 refers to the end date: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
 SCHOOL_PROGRAMME_MAP = {
-    '2015': {
+    '2016': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
         'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
+    '2015': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
