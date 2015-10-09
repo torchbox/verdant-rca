@@ -302,7 +302,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('innovationdesignengineering', 'Innovation Design Engineering'),
     ('historyofdesign', 'History of Design'),
     ('fashionmenswear', 'Fashion Menswear'),
-    ('printmaking', 'Print'),
+    ('printmaking', 'Printmaking'),
     ('globalinnovationdesign', 'Global Innovation Design'),
     ('architecture', 'Architecture'),
     ('interiordesign', 'Interior Design'),
