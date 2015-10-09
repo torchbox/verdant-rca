@@ -61,7 +61,8 @@
     {% news_carousel programme=self.programmes.all.0.programme %}
 
     <!-- events -->
-    {% upcoming_events_related programme=self.programmes.all.0.programme display_name=self.get_programme_display %}
+    {# use self.title instead of self.get_programme_display, which would return a list of all ralted programme names, but we only need the latest one, i.e. the title #}
+    {% upcoming_events_related programme=self.programmes.all.0.programme display_name=self.title %}
 
     <!-- staff -->
     <!-- {# staff_by_programme programme=self.programmes.all.0.programme #} -->
