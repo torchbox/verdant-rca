@@ -303,6 +303,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('historyofdesign', 'History of Design'),
     ('fashionmenswear', 'Fashion Menswear'),
     ('printmaking', 'Printmaking'),
+    ('print', 'Print'),
     ('globalinnovationdesign', 'Global Innovation Design'),
     ('architecture', 'Architecture'),
     ('interiordesign', 'Interior Design'),
@@ -318,7 +319,8 @@ ALL_PROGRAMMES = tuple(sorted([
     ('conservation', 'Conservation'),
     ('vehicledesign', 'Vehicle Design'),
     ('communicationartdesign', 'Communication Art & Design'),
-], key=lambda programme: programme[0])) # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
+    ('contemporaryartpractice', 'Contemporary Art Practice'),
+], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
 SCHOOL_PROGRAMME_MAP = {
@@ -326,7 +328,7 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
+        'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice'],
         'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
         'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },

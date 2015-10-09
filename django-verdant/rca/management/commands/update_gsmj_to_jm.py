@@ -130,7 +130,8 @@ class Command(NoArgsCommand):
             ):
                 print page.id
                 count += 1
-                update_page(page, 'programme')
+                if commit:
+                    update_page(page, 'programme')
 
         for page in StaffPage.objects.filter(
             live=True,
