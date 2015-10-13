@@ -323,8 +323,8 @@ ALL_PROGRAMMES = tuple(sorted([
 ], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
-# TODO: use academic years as keys, e.g. 2015/16 instead of 2016,
-# where 2016 refers to the end date: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
+# N.B. here the years refer to the end date of the academic year, e.g. 2016 stands for 2015/16
+# But in PROGRAMME_CHOICES we use academic years as keys: 2015/16 instead of 2016.
 SCHOOL_PROGRAMME_MAP = {
     '2016': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
@@ -406,14 +406,16 @@ SUSTAINRCA_CATEGORY_CHOICES = (
     ('movingminds', 'Moving Minds')
 )
 
-# generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP
+# Generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP,
+# using academic years as optgroup labels: e.g. 2015/16 instead of 2016.
 PROGRAMME_CHOICES = sorted([
     (
-        year,   tuple([
-                    (programme, dict(ALL_PROGRAMMES)[programme])
-                    for programme
-                    in sorted(set(sum(mapping.values(), [])))
-                ])
+        '%s/%s' % (int(year) - 1, str(year)[2:]),  # 2015 -> 2014/15
+        tuple([
+            (programme, dict(ALL_PROGRAMMES)[programme])
+            for programme
+            in sorted(set(sum(mapping.values(), [])))
+        ])
     )
     for year, mapping
     in SCHOOL_PROGRAMME_MAP.items()

@@ -7,20 +7,27 @@ from datetime import date
 
 def global_vars(request):
     year = date.today().year
+
     try:
         schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
     except KeyError:
-        year = 2014
+        # If there's no academic year specified for the current year then choose the last one.
+        year = int(sorted(SCHOOL_PROGRAMME_MAP.keys())[-1])
         schools_current_year = SCHOOL_PROGRAMME_MAP[str(year)].keys()
+
     schools_current_year = filter(lambda s: s[0] in schools_current_year, SCHOOL_CHOICES)
+
     years_until_current_year = [y for y in YEARS if int(y) <= year]
+
+    academic_year = '%s/%s' % (year - 1, str(year)[2:])  # 2015 -> 2014/15
+    global_programmes = dict(PROGRAMME_CHOICES)[academic_year]
 
     return {
         'global_all_schools': SCHOOL_CHOICES,
         'global_schools': schools_current_year,
         'global_show_schools': SHOW_SCHOOLS,
         'global_all_programmes': ALL_PROGRAMMES,
-        'global_programmes': dict(PROGRAMME_CHOICES)[str(year)],
+        'global_programmes': global_programmes,
         'global_locations': EVENT_LOCATION_CHOICES,
         'global_areas': AREA_CHOICES,
         'global_years': years_until_current_year,
