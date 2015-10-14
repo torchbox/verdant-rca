@@ -11,11 +11,17 @@ TEMPLATE_LOADERS = (
     )),
 )
 
+EMAIL_SUBJECT_PREFIX = '[rca-staging]'
+
 DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = DEFAULT_FROM_EMAIL
+EMAIL_HOST_PASSWORD = ''
 
 # BASE_URL required for notification emails
 BASE_URL = 'http://rca-staging.torchboxapps.com'
-VERDANTADMIN_NOTIFICATION_FROM_EMAIL = 'karl@torchbox.com'
 
 # LDAP
 from rca_ldap.settings import *
@@ -40,6 +46,6 @@ WAGTAILSEARCH_BACKENDS = {
 
 
 try:
-	from .local import *
+    from .local import *
 except ImportError:
-	pass
+    pass

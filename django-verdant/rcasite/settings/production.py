@@ -25,9 +25,16 @@ WAGTAILSEARCH_BACKENDS = {
     },
 }
 
-EMAIL_SUBJECT_PREFIX = "[rca-production] "
+EMAIL_SUBJECT_PREFIX = '[rca-production - %s] ' % socket.gethostname().split('.')[0]
 DEFAULT_FROM_EMAIL = 'publications@rca.ac.uk'
-SERVER_EMAIL = "root@%s.dh.bytemark.co.uk" % socket.gethostname().split('.')[0]
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = DEFAULT_FROM_EMAIL
+EMAIL_HOST_PASSWORD = ''
+
+# SERVER_EMAIL = "root@%s.dh.bytemark.co.uk" % socket.gethostname().split('.')[0]
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 MEDIA_ROOT = "/verdant-shared/media/"
 STATIC_ROOT = "/verdant-shared/static/"
