@@ -148,6 +148,7 @@ AREA_CHOICES = (
     ('informationlearningtechnicalservices', 'Information, Learning & Technical Services'),
     ('innovationrca', 'InnovationRCA'),
     ('reachoutrca', 'ReachOutRCA'),
+    ('rectorate', 'Rectorate'),
     ('research-knowledgeexchange', "Research, Knowledge Exchange & Innovation"),
     ('schoolofarchitecture', 'School of Architecture'),
     ('schoolofcommunication', 'School of Communication'),
@@ -323,8 +324,9 @@ ALL_PROGRAMMES = tuple(sorted([
 ], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
-# N.B. here the years refer to the end date of the academic year, e.g. 2016 stands for 2015/16
-# But in PROGRAMME_CHOICES we use academic years as keys: 2015/16 instead of 2016.
+# TODO: we should use academic years as keys, e.g. 2015/16 instead of 2016,
+# Currently 2016 refers to the academic year ending in 2016: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
+# See also: student_profiles.forms.PROGRAMME_CHOICES_2015
 SCHOOL_PROGRAMME_MAP = {
     '2016': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
@@ -3115,10 +3117,11 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school', default="Please complete this field for academic and administrative staff only"))
+    # N.B. the `school` field has been relabeled as 'Area', and it's using AREA_CHOICES, which includes all the schools too.  See #727
+    school = models.CharField(verbose_name='Area', max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
-    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location', default="Please complete this field for technical staff only"))
+    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'twitter_feed'))
     intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'), blank=True)
     biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'), blank=True)
@@ -3129,13 +3132,13 @@ class StaffPage(Page, SocialFields):
     awards_and_grants = RichTextField(help_text=help_text('rca.StaffPage', 'awards_and_grants'), blank=True)
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_homepage'))
     show_on_programme_page = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
-    listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
+    listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro'))
     research_interests = RichTextField(help_text=help_text('rca.StaffPage', 'research_interests'), blank=True)
     title_prefix = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'title_prefix'))
     first_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'last_name'))
-    supervised_student_other = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'supervised_student_other', default="Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically."))
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    supervised_student_other = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'supervised_student_other'))
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
