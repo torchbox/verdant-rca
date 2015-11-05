@@ -6,7 +6,7 @@ $(function() {
 
     function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
-            // Make sure we have window.filter is specified. By default it will refer to the the element with id="filters" on the page.
+            // Check if window.filter is actually specified. By default it will refer to the the element with id="filters" on the page.
             if(window.debug)
             if(filters.nodeType === 1){
                 var warning = 'RCA: window.filter is not specified, instead it refers to the element with id="filters".' +
