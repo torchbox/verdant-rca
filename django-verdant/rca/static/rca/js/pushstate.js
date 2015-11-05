@@ -100,9 +100,10 @@ $(function(){
                     // use different url for ajax in order to avoid the browser caching the ajax response,
                     // and displaying it instead of the real page
                     url: state.url + "?pjax=1",
+                    timeout: 5 * 1000,  // milliseconds
                     success: function(data, status, xhr){
                         var url = this.url.replace("?pjax=1", "");
-                       
+
                         // extractContainer is a local function exported from jquery.pjax.js
                         var obj = extractContainer(data, xhr, {
                             requestUrl: url,
@@ -124,6 +125,14 @@ $(function(){
                         }
 
                         showLightbox(obj);
+                    },
+                    error: function(){
+                        // at this point the current url already points to the destination page
+                        if(window.debug && window.console){
+                            console.warn('RCA: There was an error loading the lightbox.');
+                            console.warn('RCA: Reloading page...');
+                        }
+                        location.reload();
                     }
                 });
             }
