@@ -5433,8 +5433,11 @@ class InnovationRCAIndex(Page, SocialFields):
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
 
         # Apply filters
-        project_type = request.GET.get('project_type', None)
-        current_past = request.GET.get('current_past', None)
+        project_type = request.GET.get('project_type')
+        current_past = request.GET.get('current_past')
+
+        if current_past:
+            current_past = current_past.lower()
 
         if current_past == 'past':
             project_ended = True

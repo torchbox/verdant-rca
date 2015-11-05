@@ -6,6 +6,14 @@ $(function() {
 
     function updateFilters() {
         $('#listing').load(current_page, $('#filters').serialize(), function() {
+            // Make sure we have window.filter is specified. By default it will refer to the the element with id="filters" on the page.
+            if(window.debug)
+            if(filters.nodeType === 1){
+                var warning = 'RCA: window.filter is not specified, instead it refers to the element with id="filters".' +
+                    'Depending on the page type, you might need to call run_filters() from python and pass the resulting filterspecs to the template.';
+                console.warn(warning);
+            }
+
             // Run filters
             $(filters).each(function(idx, filter) {
                 $('#filters li.filter > label[for=' + filter['name'] + ']').each(function() {
