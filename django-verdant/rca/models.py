@@ -35,6 +35,7 @@ from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase, Tag
 
 from donations.forms import DonationForm
@@ -635,7 +636,7 @@ class CustomContentModuleBlock(Orderable):
         FieldPanel('text')
     ]
 
-class CustomContentModule(models.Model):
+class CustomContentModule(ClusterableModel):
     title = models.CharField(max_length=255, help_text=help_text('rca.CustomContentModule', 'title'))
 
     def __unicode__(self):
@@ -688,7 +689,7 @@ class ContactSnippetEmail(Orderable):
         FieldPanel('email_address')
     ]
 
-class ContactSnippet(models.Model):
+class ContactSnippet(ClusterableModel):
     title = models.CharField(max_length=255, help_text=help_text('rca.ContactSnippet', 'title', default="This is the reference name for the contact. This is not displayed on the frontend."))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactSnippet', 'contact_title', default="This is the optional title, displayed on the frontend"))
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_address'))

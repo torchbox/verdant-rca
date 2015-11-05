@@ -27,7 +27,6 @@ def deploy_staging(branch="staging", gitonly=False):
         run("git pull")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
         if not gitonly:
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")

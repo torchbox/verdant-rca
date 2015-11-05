@@ -1,5 +1,5 @@
 Django==1.8.4
-http://wagtailnightly.kaed.uk/unofficial/wagtail-1.1.post2-py2.py3-none-any.whl
+wagtail==1.2rc1
 django-auth-ldap==1.2.6
 Embedly==0.5.0
 elasticsearch==1.4.0
@@ -13,7 +13,7 @@ python-dateutil==1.5
 celery==3.1.17
 django-celery==3.1.16
 simplejson==3.6.5
-django-modelcluster==0.6.2
+django-modelcluster==1.0
 django-compressor==1.5
 
 # Developer requirements
