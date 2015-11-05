@@ -5329,6 +5329,9 @@ class InnovationRCAProject(Page, SocialFields):
         index.SearchField('get_project_type_display'),
     )
 
+    # InnovationRCAProjects are listed according to the sort order in the wagtail admin, and each InnovationRCAIndex lists only its subpages
+    parent_page_types = ['rca.InnovationRCAIndex']
+
     search_name = 'InnovationRCA Project'
 
     @vary_on_headers('X-Requested-With')
@@ -5430,11 +5433,14 @@ class InnovationRCAIndex(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of live projects
-        projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = InnovationRCAProject.objects.filter(live=True, path__startswith=self.path)
 
         # Apply filters
-        project_type = request.GET.get('project_type', None)
-        current_past = request.GET.get('current_past', None)
+        project_type = request.GET.get('project_type')
+        current_past = request.GET.get('current_past')
+
+        if current_past:
+            current_past = current_past.lower()
 
         if current_past == 'past':
             project_ended = True
@@ -5447,6 +5453,9 @@ class InnovationRCAIndex(Page, SocialFields):
             projects = projects.filter(project_type=project_type)
         if project_ended is not None:
             projects = projects.filter(project_ended=project_ended)
+
+        # order project subpages based on the sort order in the wagtail admin
+        projects = projects.order_by('path')
 
         # Pagination
         page = request.GET.get('page')

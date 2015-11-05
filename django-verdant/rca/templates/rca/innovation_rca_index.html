@@ -24,9 +24,9 @@
             <li class="filter">
                   <label for="current_past">Current / Past</label>
                   <select id="current_past" name="current_past">
-                      <option value="">Both</option>
-                      <option value="current">Current</option>
-                      <option value="past">Past</option>
+                      <option value="both" {% if request.GET.current_past == 'both' %}selected="selected"{% endif %}>Current / Past</option>
+                      <option value="current" {% if request.GET.current_past == 'current' or not request.GET.current_past %}selected="selected"{% endif %}>Current</option> {# show current items by default #}
+                      <option value="past" {% if request.GET.current_past == 'past' %}selected="selected"{% endif %}>Past</option>
                   </select>
               </li>
           </ul>
