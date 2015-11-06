@@ -7,6 +7,7 @@
 {% block content %}
 
 <div class="page-content">
+
     <div class="app-details">
         <h2 class="app-title">My RCA</h2>
         <div class="session-meta">
@@ -14,87 +15,91 @@
             <a href="{% url 'student-profiles:logout' %}">Log out</a>
         </div>
     </div>
+
     <nav class="student-profile-nav">
-      {# navbar #}
-      <ul class="outer-menu">
-        <li>
-          <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
-        </li>
-      </ul>
-      {% if page_id %}
+        {# navbar #}
         <ul class="outer-menu">
-          <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}" id="tour-menu1">Profile</a></li>
-          <ul class="inner-menu">
-            <li{% if nav_basic %} class="active"{% endif %}>
-              <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
+            <li>
+                <a href="{% url 'student-profiles:overview' %}">Dashboard</a>
             </li>
-            <li{% if nav_academic %} class="active"{% endif %}>
-              <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
-            </li>
+        </ul>
 
-            {% if is_phd %}
-              <li{% if nav_phd %} class="active"{% endif %}>
-                <a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree</a>
-              </li>
-            {% else %}
-              {% if is_mphil %}
-                <li{% if nav_mphil %} class="active"{% endif %}>
-                  <a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree</a>
-                </li>
-              {% else %}
-                {% if is_ma %}
-                  <li{% if nav_ma %} class="active"{% endif %}>
-                    <a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree</a>
-                  </li>
+        {% if page_id %}
+            <ul class="outer-menu">
+                <li class="drop-down"><a href="{% url 'student-profiles:edit-basic' page_id %}" id="tour-menu1">Profile</a></li>
+                <ul class="inner-menu">
+                    <li{% if nav_basic %} class="active"{% endif %}>
+                        <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>
+                    </li>
+                    <li{% if nav_academic %} class="active"{% endif %}>
+                        <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
+                    </li>
+
+                    {% if is_phd %}
+                        <li{% if nav_phd %} class="active"{% endif %}>
+                            <a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree</a>
+                        </li>
+                    {% else %}
+                        {% if is_mphil %}
+                            <li{% if nav_mphil %} class="active"{% endif %}>
+                                <a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree</a>
+                            </li>
+                        {% else %}
+                            {% if is_ma %}
+                                <li{% if nav_ma %} class="active"{% endif %}>
+                                    <a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree</a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+
+                </ul>
+            </ul>
+
+            {% if SHOW_PAGES_ENABLED %}
+                {% if is_phd %}
+                <ul class="outer-menu">
+                    <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
+                </ul>
+                {% else %}
+                    {% if is_mphil %}
+                        <ul class="outer-menu">
+                            <li><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a></li>
+                        </ul>
+                    {% else %}
+                        {% if is_ma %}
+                            <ul class="outer-menu">
+                                <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
+                            </ul>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
-              {% endif %}
             {% endif %}
 
-          </ul>
-        </ul>
 
-        {% if SHOW_PAGES_ENABLED %}
-        {% if is_phd %}
-        <ul class="outer-menu">
-          <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
-        </ul>
-        {% else %}
-          {% if is_mphil %}
-        <ul class="outer-menu">
-          <li><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a></li>
-        </ul>
-          {% else %}
-            {% if is_ma %}
-        <ul class="outer-menu">
-          <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
-        </ul>
+            {% if SHOW_PAGES_ENABLED %}
+                <ul class="outer-menu">
+                    <li{% if nav_postcard %} class="active"{% endif %} id="menu-postcard">
+                        <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
+                    </li>
+                </ul>
             {% endif %}
-          {% endif %}
-        {% endif %}
+
         {% endif %}
 
-
-        {% if SHOW_PAGES_ENABLED %}
-        <ul class="outer-menu">
-            <li{% if nav_postcard %} class="active"{% endif %} id="menu-postcard">
-                <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>
-            </li>
-        </ul>
-        {% endif %}
-        {% endif %}
         <ul class="outer-menu rca-now-link" id="menu-rcanow">
-            <li{% if nav_now %} class="active"{% endif %}>
-                <a href="{% url 'nowpages:overview' %}">RCA Now</a>
-            </li>
+                <li{% if nav_now %} class="active"{% endif %}>
+                        <a href="{% url 'nowpages:overview' %}">RCA Now</a>
+                </li>
         </ul>
     </nav>
 </div>
 
-  {% if page.locked %}
+{% if page.locked %}
     <div>
-      This page is locked for editing, because it is being reviewed. Please wait with further edits until the page is published or returned for editing.
+        This page is locked for editing, because it is being reviewed. Please wait with further edits until the page is published or returned for editing.
     </div>
-  {% endif %}
+{% endif %}
 
 
 {% block form_content %}{% endblock form_content %}  {# for inserting the editing forms #}
@@ -104,11 +109,13 @@
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
+
     {% compress css %}
         <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
         <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
         <link rel="stylesheet" type="text/css" href="{% static "student_profiles/css/vendor/joyride-2.1.css" %}">
     {% endcompress %}
+
     <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}
 
@@ -133,11 +140,11 @@
         <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
         <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
         <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
-    
+
         <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
         <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
-{#      <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script> #}
-{# this previous line is the reason for including the block here: we want to remove that line, so we have to duplicate everything else #}
+        {# <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script> #}
+        {# this previous line is the reason for including the block here: we want to remove that line, so we have to duplicate everything else #}
         <script src="{% static "rca/js/vendor/history.js/scripts/bundled/html4+html5/jquery.history.js" %}"></script>
         <script src="{% static "rca/js/vendor/jquery.pjax.js" %}"></script>
         <script src="{% static "rca/js/vendor/froogaloop2.min.js" %}"></script>
@@ -162,9 +169,9 @@
     {% endcompress %}
 
     <script type="text/javascript">
-    {# and here is a replacement for that missing customSelect #}
-    (function ($) {'use strict';$.fn.extend({customSelect: function (options) {}});})(jQuery);
-    
+        {# and here is a replacement for that missing customSelect #}
+        (function ($) {'use strict';$.fn.extend({customSelect: function (options) {}});})(jQuery);
+
         {% if not request.is_ajax %}
             // onDocumentReady wraps all the startup code in site.js
             jQuery(onDocumentReady);
@@ -172,48 +179,48 @@
     </script>
 
 
-{##############################################################################}
-{# custom code starts here #}
-{% compress js %}
-    <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/rangy-core.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/hallo.js"></script>
-    <script src="{{ STATIC_URL }}wagtailadmin/js/hallo-plugins/hallo-hr.js"></script>
-{#     <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>  #}
-{#    <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>  #}
-{#    <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>  #}
-
-{% endcompress %}
-
-{% compress js %}
-<script src="{% static "student_profiles/select2/select2.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>  {# cool little JS that helps with formsets #}
-<script src="{% static "student_profiles/js/vendor/load-image.all.min.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.iframe-transport.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.fileupload.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.fileupload-process.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.fileupload-image.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.fileupload-validate.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
-<script src="{% static "student_profiles/js/vendor/jquery.joyride-2.1.js" %}"></script>
-{# we import the JS files here because every form uses them anyway #}
-<script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
-{% endcompress %}
-  {% if errors %}
-<script>
-  window.form_errors = '{{ errors }}';
-</script>
-  {% endif %}
-
-{% block form_js %}{% endblock form_js %}  {# for activating formset js #}
-
-  {% if not page.locked %}
+    {##############################################################################}
+    {# custom code starts here #}
     {% compress js %}
-      <script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+        <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/rangy-core.js"></script>
+        <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/hallo.js"></script>
+        <script src="{{ STATIC_URL }}wagtailadmin/js/hallo-plugins/hallo-hr.js"></script>
+        {# <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/tag-it.js"></script>  #}
+        {# <script src="{{ STATIC_URL }}wagtailadmin/js/expanding_formset.js"></script>  #}
+        {# <script src="{{ STATIC_URL }}wagtailadmin/js/modal-workflow.js"></script>  #}
     {% endcompress %}
-  {% endif %}
+
+    {% compress js %}
+        <script src="{% static "student_profiles/select2/select2.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.formset.js" %}"></script>  {# cool little JS that helps with formsets #}
+        <script src="{% static "student_profiles/js/vendor/load-image.all.min.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.iframe-transport.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.fileupload.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.fileupload-process.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.fileupload-image.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.fileupload-validate.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.joyride-2.1.js" %}"></script>
+        {# we import the JS files here because every form uses them anyway #}
+        <script src="{% static "student_profiles/js/student_profiles.js" %}"></script>
+    {% endcompress %}
+
+    {% if errors %}
+        <script>
+            window.form_errors = '{{ errors }}';
+        </script>
+    {% endif %}
+
+    {% block form_js %}{% endblock form_js %}  {# for activating formset js #}
+
+    {% if not page.locked %}
+        {% compress js %}
+            <script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+        {% endcompress %}
+    {% endif %}
 
 
 {% endblock js %}
