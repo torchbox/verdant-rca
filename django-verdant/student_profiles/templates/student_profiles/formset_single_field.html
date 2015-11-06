@@ -1,21 +1,28 @@
 {{ formset.management_form }}
+
 <div id="{{ formset.prefix }}" class="field-set">
-<label {% if formset.total_error_count > 0 %}class="error"{% endif %}>{{ formset.title }}
-    {% if formset.help_text %}<p class="help-text">{{ formset.help_text }}</p>{% endif %}
-    {{ formset.non_form_errors }}
-</label>
-{% for form in formset %}
-  <div class="inline-form">
-    <label class="field">
-    {% for field in form %}
-      {% include "student_profiles/form_field_unlabelled.html" with field=field page=page %}
-    {% endfor %}
+
+    <label {% if formset.total_error_count > 0 %}class="error"{% endif %}>{{ formset.title }}
+        {% if formset.help_text %}
+            <p class="help-text">{{ formset.help_text }}</p>
+        {% endif %}
+        {{ formset.non_form_errors }}
     </label>
-    <i class="icon action ion-android-arrow-up move-up"></i>
-    <i class="icon action ion-android-arrow-down move-down"></i>
-  </div>
-{% endfor %}
-{% for error in formset.non_form_errors %}
-  <small class="error">{{ error }}</small>
-{% endfor %}
+
+    {% for form in formset %}
+        <div class="inline-form">
+            <label class="field">
+                {% for field in form %}
+                    {% include "student_profiles/form_field_unlabelled.html" with field=field page=page %}
+                {% endfor %}
+            </label>
+            <i class="icon action ion-android-arrow-up move-up"></i>
+            <i class="icon action ion-android-arrow-down move-down"></i>
+        </div>
+    {% endfor %}
+
+    {% for error in formset.non_form_errors %}
+        <small class="error">{{ error }}</small>
+    {% endfor %}
+
 </div>

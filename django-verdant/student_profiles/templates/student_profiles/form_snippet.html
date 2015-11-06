@@ -1,19 +1,24 @@
 {% for field in form.visible_fields %}
-<label class="{% if field.field.half %}form-col form-col-half{% endif %}{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
-  {% if field.help_text %} <p class="help-text">{{ field.help_text }}</p>{% endif %}
+    <label class="{% if field.field.half %}form-col form-col-half{% endif %}{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
 
-  {% if field.field.readonly or page.locked %}
-    {% include 'student_profiles/form_field_readonly_snippet.html' with field=field %}
-  {% else %}
-    {% include 'student_profiles/form_field_snippet.html' with field=field %}
-  {% endif %}
+        {% if field.help_text %}
+            <p class="help-text">{{ field.help_text }}</p>
+        {% endif %}
 
-</label>
-  {% for error in field.errors %}
-    <small class="error">{{ error }}</small>
-  {% endfor %}
+        {% if field.field.readonly or page.locked %}
+            {% include 'student_profiles/form_field_readonly_snippet.html' with field=field %}
+        {% else %}
+            {% include 'student_profiles/form_field_snippet.html' with field=field %}
+        {% endif %}
+
+    </label>
+
+    {% for error in field.errors %}
+        <small class="error">{{ error }}</small>
+    {% endfor %}
+
 {% endfor %}
 
 {% for hidden_field in form.hidden_fields %}
-{{ hidden_field }}
+    {{ hidden_field }}
 {% endfor %}

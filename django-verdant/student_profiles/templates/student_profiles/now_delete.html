@@ -3,27 +3,27 @@
 
 {% block form_content %}
 
-<div class="page-content rca-now">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Delete "{{ page.title }}"?</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="now-page" action="{% url 'nowpages:delete' page_id %}">{% csrf_token %}
+    <div class="page-content rca-now">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        <p>
-            <input type="submit" class="page-save" value="Delete the page">
-            <a href="{% url 'nowpages:overview' %}" class="button">Don't delete, go back to overview</a>
-        </p>
-      </form>
-    </section>
-  </section>
-</div>
+        <h1>Delete "{{ page.title }}"?</h1>
+
+        <section class="row">
+            <section class="body-text">
+                <form method="POST" class="now-page" action="{% url 'nowpages:delete' page_id %}">{% csrf_token %}
+                    <p>
+                        <input type="submit" class="page-save" value="Delete the page">
+                        <a href="{% url 'nowpages:overview' %}" class="button">Don't delete, go back to overview</a>
+                    </p>
+                </form>
+            </section>
+        </section>
+    </div>
 
 {% endblock form_content %}
-

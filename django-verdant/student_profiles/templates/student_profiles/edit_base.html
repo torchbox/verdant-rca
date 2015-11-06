@@ -58,21 +58,17 @@
 
             {% if SHOW_PAGES_ENABLED %}
                 {% if is_phd %}
-                <ul class="outer-menu">
-                    <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
-                </ul>
-                {% else %}
-                    {% if is_mphil %}
-                        <ul class="outer-menu">
-                            <li><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a></li>
-                        </ul>
-                    {% else %}
-                        {% if is_ma %}
-                            <ul class="outer-menu">
-                                <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
-                            </ul>
-                        {% endif %}
-                    {% endif %}
+                    <ul class="outer-menu">
+                        <li><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a></li>
+                    </ul>
+                {% elif is_mphil %}
+                    <ul class="outer-menu">
+                        <li><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a></li>
+                    </ul>
+                {% elif is_ma %}
+                    <ul class="outer-menu">
+                        <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
+                    </ul>
                 {% endif %}
             {% endif %}
 
@@ -88,9 +84,9 @@
         {% endif %}
 
         <ul class="outer-menu rca-now-link" id="menu-rcanow">
-                <li{% if nav_now %} class="active"{% endif %}>
-                        <a href="{% url 'nowpages:overview' %}">RCA Now</a>
-                </li>
+            <li{% if nav_now %} class="active"{% endif %}>
+                    <a href="{% url 'nowpages:overview' %}">RCA Now</a>
+            </li>
         </ul>
     </nav>
 </div>
@@ -218,7 +214,8 @@
 
     {% if not page.locked %}
         {% compress js %}
-            <script src="{% static "student_profiles/js/autosave.js" %}"></script>          {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+            {# activate autosaving AFTER the form has been initialized because initialization triggers `change` events #}
+            <script src="{% static "student_profiles/js/autosave.js" %}"></script>
         {% endcompress %}
     {% endif %}
 
