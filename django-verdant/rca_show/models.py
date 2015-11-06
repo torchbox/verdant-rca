@@ -70,7 +70,7 @@ class SuperPage(Page):
     def serve(self, request, view, args, kwargs):
         return view(request, *args, **kwargs)
 
-    is_abstract = True
+    is_creatable = False
 
     class Meta:
         abstract = True
