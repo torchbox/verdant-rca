@@ -21,10 +21,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'verdant',
-        'USER': 'postgres',
-        'PASSWORD': '',
-        'HOST': '',  # Set to empty string for localhost.
-        'PORT': '',  # Set to empty string for default.
         'CONN_MAX_AGE': 600,  # number of seconds database connections should persist for
     }
 }
@@ -143,7 +139,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'south',
     'compressor',
     'template_timings_panel',
     'taggit',
@@ -165,6 +160,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailembeds',
     'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
+    'wagtail.contrib.wagtailsearchpromotions',
 
     'donations',
     'rca',
@@ -204,10 +200,6 @@ COMPRESS_PRECOMPILERS = (
 )
 COMPRESS_OFFLINE = True
 
-# Auth settings
-LOGIN_URL = 'django.contrib.auth.views.login'
-LOGIN_REDIRECT_URL = 'wagtailadmin_home'
-
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -239,11 +231,11 @@ LOGGING = {
 
 CACHES = {
     'default': {
-        'BACKEND': 'redis_cache.cache.RedisCache',
+        'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': '127.0.0.1:6379:1',
         'KEY_PREFIX': 'rca',
         'OPTIONS': {
-            'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
@@ -278,6 +270,8 @@ CELERY_SEND_TASK_ERROR_EMAILS = True
 CELERYD_LOG_COLOR = False
 
 PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
+
+GOOGLE_ANALYTICS_ACCOUNT = ''
 
 # The scheduler used by this app needs to be defined in the settings.
 # It also contains some additional configuration options, some need to be set in the local settings.

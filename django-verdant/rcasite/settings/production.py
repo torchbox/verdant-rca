@@ -21,6 +21,7 @@ WAGTAILSEARCH_BACKENDS = {
         'BACKEND': 'wagtail.wagtailsearch.backends.elasticsearch.ElasticSearch',
         'INDEX': 'rca',
         'URLS': ['http://rca1.dh.bytemark.co.uk:8938/es1.3'],
+        'ATOMIC_REBUILD': True,
     },
 }
 
@@ -46,6 +47,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
+GOOGLE_ANALYTICS_ACCOUNT = 'UA-3809199-5'
 
 try:
 	from .local import *

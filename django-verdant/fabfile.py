@@ -11,12 +11,12 @@ env.roledefs = {
     'nginx': ['root@rca1.torchbox.com'],
     'db': ['root@rca1.torchbox.com'],
     'db-notroot': ['rca1.torchbox.com'],
-    'rca2': ['rcawagtail@rca2.torchbox.com'],
+    'rca2': ['rcawagtail@rca2.bmyrk.torchbox.net'],
 
     # All hosts will be listed here.
-    'production': ['rcawagtail@rca2.torchbox.com', 'rcawagtail@rca3.torchbox.com'],
+    'production': ['rcawagtail@rca2.bmyrk.torchbox.net', 'rcawagtail@rca3.bmyrk.torchbox.net'],
 }
-MIGRATION_SERVER = 'rca2.torchbox.com'
+MIGRATION_SERVER = 'rca2.bmyrk.torchbox.net'
 
 
 @roles('staging')
@@ -27,7 +27,6 @@ def deploy_staging(branch="staging", gitonly=False):
         run("git pull")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
         if not gitonly:
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.staging --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.staging --noinput")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.staging --noinput")
         run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.staging")
@@ -46,18 +45,13 @@ def deploy(gitonly=False):
 
         if env['host'] == MIGRATION_SERVER:
             if not gitonly:
-                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py syncdb --settings=rcasite.settings.production --noinput")
-
-                # FOR WAGTAIL 0.4 UPDATE
-                # sudo("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py dbshell < django-verdant/migrate_to_wagtail_04.sql --settings=rcasite.settings.production")
-
                 run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
 
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
         run("restart")
-        if env['host'] == MIGRATION_SERVER and not gitonly:
+        if env['host'] != MIGRATION_SERVER and not gitonly:
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
@@ -77,13 +71,34 @@ def fetch_live_data():
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
-    local('dropdb -Upostgres verdant')
-    local('createdb -Upostgres verdant')
+    local('dropdb verdant')
+    local('createdb verdant')
     local('gunzip %s.gz' % local_path)
-    local('psql -Upostgres verdant -f %s' % local_path)
+    local('psql verdant -f %s' % local_path)
     local('rm %s' % local_path)
 
-fetch_live_data_notroot = fetch_live_data
+
+@roles('rca2')
+def staging_fetch_live_data():
+    filename = "verdant_rca_%s.sql" % uuid.uuid4()
+    local_path = "/usr/local/django/rcawagtail/tmp/%s" % filename
+    remote_path = "/tmp/%s" % filename
+
+    run('pg_dump -cf %s verdant_rca' % remote_path)
+    run('gzip %s' % remote_path)
+    get("%s.gz" % remote_path, "%s.gz" % local_path)
+    run('rm %s.gz' % remote_path)
+    local('gunzip %s.gz' % local_path)
+    local('psql rcawagtail -f %s' % local_path)
+    local('rm %s' % local_path)
+
+
+@roles('staging')
+def sync_staging_with_live():
+    env.forward_agent = True
+    run('fab staging_fetch_live_data')
+    run("django-admin.py migrate --settings=rcasite.settings.staging --noinput")
+    run("rsync -avz rcawagtail@rca2.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
 
 
 @roles('production')

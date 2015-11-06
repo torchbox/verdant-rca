@@ -9,7 +9,7 @@ from rca.models import *
 help = """
 
 This will updated the following pages by replacing
-'goldsmithingsilversmithingmetalworkjewellery' with 'jewelleryandmetal':
+'printmaking' with 'print':
 
 The page types below should be changed based on the date in the 'year' field:
 
@@ -18,7 +18,7 @@ AlumniPage + year
 InnovationRCAProject + year
 ReachOutRCAProject + year
 
-The page types below should be changed based on their last published date (after Oct 1st 2014):
+The page types below should be changed based on their last published date (after Oct 1st 2015):
 
 StandardPage.related_programme
 JobPage
@@ -36,9 +36,9 @@ Press y to continue
 
 def update_page(page, programme_field):
     if programme_field == 'programme':
-        page.programme = 'jewelleryandmetal'
+        page.programme = 'print'
     if programme_field == 'related_programme':
-        page.programme = 'jewelleryandmetal'
+        page.programme = 'print'
 
     if page.has_unpublished_changes:
         # modify the live page directly
@@ -48,8 +48,8 @@ def update_page(page, programme_field):
         revision = page.get_latest_revision()
         revision_data = json.loads(revision.content_json)
 
-        if revision_data[programme_field] == 'goldsmithingsilversmithingmetalworkjewellery':
-            revision_data[programme_field] = 'jewelleryandmetal'
+        if revision_data[programme_field] == 'printmaking':
+            revision_data[programme_field] = 'print'
 
         revision.content_json = json.dumps(revision_data, cls=DjangoJSONEncoder)
         revision.save()
@@ -63,17 +63,17 @@ def update_related(page, related_field):
 
         # modify the live page directly
         if related_field == 'roles':
-            page.roles.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
+            page.roles.filter(programme='printmaking').update(programm='print')
         if related_field == 'related_programmes':
-            page.related_programmes.filter(programme='goldsmithingsilversmithingmetalworkjewellery').update(programm='jewelleryandmetal')
+            page.related_programmes.filter(programme='printmaking').update(programm='print')
 
         # update latest draft revision too
         revision = page.get_latest_revision()
         revision_data = json.loads(revision.content_json)
 
         for related in revision_data[related_field]:
-            if related['programme'] == 'goldsmithingsilversmithingmetalworkjewellery':
-                related['programme'] = 'jewelleryandmetal'
+            if related['programme'] == 'printmaking':
+                related['programme'] = 'print'
 
         revision.content_json = json.dumps(revision_data, cls=DjangoJSONEncoder)
         revision.save()
@@ -83,8 +83,8 @@ def update_related(page, related_field):
         revision_data = json.loads(revision.content_json)
 
         for related in revision_data[related_field]:
-            if related['programme'] == 'goldsmithingsilversmithingmetalworkjewellery':
-                related['programme'] = 'jewelleryandmetal'
+            if related['programme'] == 'printmaking':
+                related['programme'] = 'print'
 
         revision.content_json = json.dumps(revision_data, cls=DjangoJSONEncoder)
         revision.save()
@@ -103,19 +103,19 @@ class Command(NoArgsCommand):
         for ptype in [ResearchItem, AlumniPage, InnovationRCAProject, ReachOutRCAProject]:
             for page in ptype.objects.filter(
                 live=True,
-                year__gte=2014,
-                programme='goldsmithingsilversmithingmetalworkjewellery',
+                year__gte=2015,
+                programme='printmaking',
             ):
                 print page.id
                 count += 1
                 if commit:
                     update_page(page, 'programme')
 
-        # The page types below should be changed based on their last published date (after Oct 1st 2014):
+        # The page types below should be changed based on their last published date (after Oct 1st 2015):
         for page in StandardPage.objects.filter(
             live=True,
-            latest_revision_created_at__gte=datetime.date(2014, 10, 1),
-            related_programme='goldsmithingsilversmithingmetalworkjewellery',
+            latest_revision_created_at__gte=datetime.date(2015, 10, 1),
+            related_programme='printmaking',
         ):
             print page.id
             count += 1
@@ -125,8 +125,8 @@ class Command(NoArgsCommand):
         for ptype in [JobPage, RcaNowPage, RcaBlogPage]:
             for page in ptype.objects.filter(
                 live=True,
-                latest_revision_created_at__gte=datetime.date(2014, 10, 1),
-                programme='goldsmithingsilversmithingmetalworkjewellery',
+                latest_revision_created_at__gte=datetime.date(2015, 10, 1),
+                programme='printmaking',
             ):
                 print page.id
                 count += 1
@@ -135,8 +135,8 @@ class Command(NoArgsCommand):
 
         for page in StaffPage.objects.filter(
             live=True,
-            latest_revision_created_at__gte=datetime.date(2014, 10, 1),
-            roles__programme='goldsmithingsilversmithingmetalworkjewellery',
+            latest_revision_created_at__gte=datetime.date(2015, 10, 1),
+            roles__programme='printmaking',
         ):
             print page.id
             count += 1
@@ -149,8 +149,8 @@ class Command(NoArgsCommand):
         for ptype in [NewsItem, PressRelease, EventItem]:
             for page in ptype.objects.filter(
                 live=True,
-                latest_revision_created_at__gte=datetime.date(2014, 10, 1),
-                related_programmes__programme='goldsmithingsilversmithingmetalworkjewellery',
+                latest_revision_created_at__gte=datetime.date(2015, 10, 1),
+                related_programmes__programme='printmaking',
             ):
                 print page.id
                 count += 1

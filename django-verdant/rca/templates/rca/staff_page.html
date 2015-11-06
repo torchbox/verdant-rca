@@ -21,7 +21,7 @@
                     </li>
                     <li class="col">{% comment %} note closed within forloop {% endcomment %}
                         {% if self.staff_type != "technical" %}
-                            <h3 class="a2">Schools &amp; Centres</h3>
+                            <h3 class="a2">Area</h3>
                             <p class="h7">{{ self.get_school_display }}</p>
                         {% endif %}
                         {% if self.staff_type == "technical" %}
@@ -107,7 +107,7 @@
                             </li>
                             <li class="col col-9 last">
                                 {% for collaboration in collaborations %}
-                                    
+
                                     <h3 class="h7{% if forloop.counter != 1 %} space{% endif %}"><a href="{{ collaboration.link }}">{{ collaboration.title }}</a></h3>
 
                                     {% if collaboration.text %}
@@ -201,13 +201,13 @@
                                     {% else %}
                                         <li>
                                     {% endif %}
-                                            
+
                                             {% if publication.image %}
                                                 <div class="image">
                                                     {% image publication.image width-150 %}
                                                 </div>
                                             {% endif %}
-                                            
+
                                             <div class="content{% if not publication.image %} flushleft{% endif %}">
                                                 <p class="bc3 a2">{{ publication.typeof }}</p>
                                                 {% if publication.link %}<a href="{{ publication.link }}">{% endif %}
@@ -220,7 +220,7 @@
                                             </div>
                                         </li>
                                 {% endfor %}
-                                {% if publications|length > 3 %} 
+                                {% if publications|length > 3 %}
                                     <li class="load-more"><a href="#">+</a></li>
                                 {% endif %}
                             {% endif %}

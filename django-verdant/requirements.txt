@@ -1,10 +1,9 @@
-Django==1.6.10
-South==1.0.0
-wagtail==0.8.8
-django-auth-ldap==1.1.7
+Django==1.8.5
+wagtail==1.2rc1
+django-auth-ldap==1.2.6
 Embedly==0.5.0
 elasticsearch==1.4.0
-psycopg2==2.5.2
+psycopg2==2.6.1
 stripe==1.9.8
 tweepy==2.1
 django-redis==3.8.2
@@ -14,6 +13,8 @@ python-dateutil==1.5
 celery==3.1.17
 django-celery==3.1.16
 simplejson==3.6.5
+django-modelcluster==1.0
+django-compressor==1.5
 
 # Developer requirements
 django-debug-toolbar==0.11.0

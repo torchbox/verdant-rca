@@ -12,7 +12,6 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
-import django.db.models.options as options
 
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
@@ -29,13 +28,14 @@ from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailimages.models import AbstractImage, AbstractRendition
+from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
 
-from modelcluster.tags import ClusterTaggableManager
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from modelcluster.models import ClusterableModel
 from taggit.models import TaggedItemBase, Tag
 
 from donations.forms import DonationForm
@@ -53,9 +53,6 @@ from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHO
 from .help_text import help_text
 
 
-# TODO: find a nicer way to do this. It adds "description" as a meta property of a class, used to describe a content type/snippet so users can make a choice over one type or another. If Django's authors decide to add a "description" of their own, the code below will become a problem and would have to be namespaced appropriately.
-options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('description',)
-
 # RCA defines its own custom image class to replace wagtailimages.Image,
 # providing various additional data fields
 class RcaImage(AbstractImage):
@@ -68,6 +65,10 @@ class RcaImage(AbstractImage):
     photographer = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaImage', 'photographer'))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprint_docid = models.CharField(max_length=255, blank=True, editable=False) # for import
+
+    admin_form_fields = Image.admin_form_fields + (
+        'alt', 'creator', 'year', 'medium', 'dimensions', 'permission', 'photographer'
+    )
 
     search_fields = AbstractImage.search_fields + (
         index.SearchField('creator'),
@@ -137,16 +138,28 @@ def rendition_delete(sender, instance, **kwargs):
 
 
 AREA_CHOICES = (
-    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
-    ('innovationrca', 'InnovationRCA'),
-    ('research-knowledgeexchange', "Research & Knowledge Exchange"),
-    ('showrca', 'Show RCA'),
-    ('fuelrca', 'Fuel RCA'),
-    ('sustainrca', 'SustainRCA'),
-    ('reachoutrca', 'ReachOutRCA'),
-    ('support', 'Support'),
-    ('drawingstudio', 'Drawing Studio'),
+    ('administration', 'Administration'),
     ('alumnirca', 'AlumniRCA'),
+    ('communicationsmarketing', 'Communications & Marketing'),
+    ('development', 'Development'),
+    ('drawingstudio', 'Drawing Studio'),
+    ('executiveeducation', 'Executive Education'),
+    ('fuelrca', 'Fuel RCA'),
+    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
+    ('informationlearningtechnicalservices', 'Information, Learning & Technical Services'),
+    ('innovationrca', 'InnovationRCA'),
+    ('reachoutrca', 'ReachOutRCA'),
+    ('rectorate', 'Rectorate'),
+    ('research-knowledgeexchange', "Research, Knowledge Exchange & Innovation"),
+    ('schoolofarchitecture', 'School of Architecture'),
+    ('schoolofcommunication', 'School of Communication'),
+    ('schoolofdesign', 'School of Design'),
+    ('schooloffineart', 'School of Fine Art'),
+    ('schoolofhumanities', 'School of Humanities'),
+    ('schoolofmaterial', 'School of Material'),
+    ('showrca', 'Show RCA'),
+    ('support', 'Support'),
+    ('sustainrca', 'SustainRCA'),
 )
 
 STAFF_AREA_CHOICES = AREA_CHOICES + (
@@ -272,11 +285,6 @@ SCHOOL_CHOICES = (
     ('schooloffineart', 'School of Fine Art'),
     ('schoolofhumanities', 'School of Humanities'),
     ('schoolofmaterial', 'School of Material'),
-    ('schoolofappliedart', 'School of Applied Art'),
-    ('schoolofarchitecturedesign', 'School of Architecture & Design'),
-    ('schoolofcommunications', 'School of Communications'),
-    ('schooloffashiontextiles', 'School of Fashion & Textiles'),
-    ('schoolofdesignforproduction', 'School of Design for Production'),
     ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
     ('rectorate', 'Rectorate'),
     ('innovationrca', 'InnovationRCA'),
@@ -297,6 +305,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('historyofdesign', 'History of Design'),
     ('fashionmenswear', 'Fashion Menswear'),
     ('printmaking', 'Printmaking'),
+    ('print', 'Print'),
     ('globalinnovationdesign', 'Global Innovation Design'),
     ('architecture', 'Architecture'),
     ('interiordesign', 'Interior Design'),
@@ -312,10 +321,22 @@ ALL_PROGRAMMES = tuple(sorted([
     ('conservation', 'Conservation'),
     ('vehicledesign', 'Vehicle Design'),
     ('communicationartdesign', 'Communication Art & Design'),
-], key=lambda programme: programme[0])) # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
+    ('contemporaryartpractice', 'Contemporary Art Practice'),
+], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
+# TODO: we should use academic years as keys, e.g. 2015/16 instead of 2016,
+# Currently 2016 refers to the academic year ending in 2016: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
+# See also: student_profiles.forms.PROGRAMME_CHOICES_2015
 SCHOOL_PROGRAMME_MAP = {
+    '2016': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
+        'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
+        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
     '2015': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
@@ -365,17 +386,17 @@ SCHOOL_PROGRAMME_MAP = {
         'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
     },
     '2009': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2008': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
     '2007': {
-        'schoolofcommunications': ['animation', 'communicationartdesign'],
+        'schoolofcommunication': ['animation', 'communicationartdesign'],
         'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
         'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
     },
@@ -388,14 +409,16 @@ SUSTAINRCA_CATEGORY_CHOICES = (
     ('movingminds', 'Moving Minds')
 )
 
-# generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP
+# Generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP,
+# using academic years as optgroup labels: e.g. 2015/16 instead of 2016.
 PROGRAMME_CHOICES = sorted([
     (
-        year,   tuple([
-                    (programme, dict(ALL_PROGRAMMES)[programme])
-                    for programme
-                    in sorted(set(sum(mapping.values(), [])))
-                ])
+        '%s/%s' % (int(year) - 1, str(year)[2:]),  # 2015 -> 2014/15
+        tuple([
+            (programme, dict(ALL_PROGRAMMES)[programme])
+            for programme
+            in sorted(set(sum(mapping.values(), [])))
+        ])
     )
     for year, mapping
     in SCHOOL_PROGRAMME_MAP.items()
@@ -588,12 +611,6 @@ class Advert(models.Model):
         FieldPanel('show_globally'),
     ]
 
-    class Meta:
-        description = "Boxed text links displayed in the sidebar. Applied globally or on individual pages. Usable on all pages."
-        permissions = (
-            ("change_advert", "Can edit adverts"),
-        )
-
     def __unicode__(self):
         return self.text
 
@@ -619,21 +636,15 @@ class CustomContentModuleBlock(Orderable):
         FieldPanel('text')
     ]
 
-class CustomContentModule(models.Model):
+class CustomContentModule(ClusterableModel):
     title = models.CharField(max_length=255, help_text=help_text('rca.CustomContentModule', 'title'))
-
-    class Meta:
-        description = "Navigational content for index pages. A series of images in rows of three with titles and links, displayed in main body. Usable only on standard index page"
-        permissions = (
-            ("change_customcontentmodule", "Can edit custom content modules"),
-        )
 
     def __unicode__(self):
         return self.title
 
 CustomContentModule.panels = [
     FieldPanel('title'),
-    InlinePanel(CustomContentModule, 'blocks', label=""),
+    InlinePanel('blocks', label=""),
 ]
 
 register_snippet(CustomContentModule)
@@ -650,12 +661,6 @@ class ReusableTextSnippet(models.Model):
         FieldPanel('name'),
         FieldPanel('text', classname="full")
     ]
-
-    class Meta:
-        description = "Rich text field with title. Displayed in main body. Usable only on standard page and job page."
-        permissions = (
-            ("change_reusabletextsnippet", "Can edit reusable text snippets"),
-        )
 
     def __unicode__(self):
         return self.name
@@ -684,18 +689,12 @@ class ContactSnippetEmail(Orderable):
         FieldPanel('email_address')
     ]
 
-class ContactSnippet(models.Model):
+class ContactSnippet(ClusterableModel):
     title = models.CharField(max_length=255, help_text=help_text('rca.ContactSnippet', 'title', default="This is the reference name for the contact. This is not displayed on the frontend."))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactSnippet', 'contact_title', default="This is the optional title, displayed on the frontend"))
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactSnippet', 'contact_link_text'))
-
-    class Meta:
-        description = "Displayed in main body. Usable on standard index page only. "
-        permissions = (
-            ("change_contactsnippet", "Can edit contact snippets"),
-        )
 
     def __unicode__(self):
         return self.title
@@ -706,8 +705,8 @@ ContactSnippet.panels = [
     FieldPanel('contact_address'),
     FieldPanel('contact_link'),
     FieldPanel('contact_link_text'),
-    InlinePanel(ContactSnippet, 'contact_email', label="Contact phone numbers/emails"),
-    InlinePanel(ContactSnippet, 'contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact phone numbers/emails"),
+    InlinePanel('contact_phone', label="Contact phone number"),
 ]
 
 
@@ -812,7 +811,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(SchoolPage, 'carousel_items', label="Carousel content", help_text="test"),
+    InlinePanel('carousel_items', label="Carousel content", help_text="test"),
     PageChooserPanel('head_of_school', 'rca.StaffPage'),
     FieldPanel('head_of_school_statement', classname="full"),
     PageChooserPanel('head_of_school_link'),
@@ -823,14 +822,14 @@ SchoolPage.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ], 'Contact'),
-    InlinePanel(SchoolPage, 'contact_tel_email', label="Contact phone numbers/emails"),
-    InlinePanel(SchoolPage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(SchoolPage, 'contact_email', label="Contact email"),
+    InlinePanel('contact_tel_email', label="Contact phone numbers/emails"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email"),
     PageChooserPanel('head_of_research', 'rca.StaffPage'),
     FieldPanel('head_of_research_statement', classname="full"),
     PageChooserPanel('head_of_research_link'),
-    InlinePanel(SchoolPage, 'related_links', label="Related links"),
-    InlinePanel(SchoolPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 SchoolPage.promote_panels = [
@@ -954,7 +953,7 @@ class ProgrammePageAd(Orderable):
 
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
@@ -1013,7 +1012,8 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        research_items = ResearchItem.objects.filter(live=True, programme__in=self.programmes.values('programme')).order_by('random_order')
+        programmes = [p.programme for p in self.programmes.all()]
+        research_items = ResearchItem.objects.filter(live=True, programme__in=programmes).order_by('random_order')
 
         per_page = 4
         paginator = Paginator(research_items, per_page)
@@ -1044,24 +1044,24 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(ProgrammePage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         PageChooserPanel('head_of_programme', 'rca.StaffPage',),
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of Programme details'),
-    InlinePanel(ProgrammePage, 'manual_staff_feed', label="Manual staff feed"),
-    InlinePanel(ProgrammePage, 'our_sites', label="Our sites"),
+    InlinePanel('manual_staff_feed', label="Manual staff feed"),
+    InlinePanel('our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Programme video'),
-    InlinePanel(ProgrammePage, 'student_stories', label="Student stories"),
-    InlinePanel(ProgrammePage, 'facilities_carousel_items', label="Facilities"),
-    InlinePanel(ProgrammePage, 'documents', label="Documents"),
-    InlinePanel(ProgrammePage, 'related_links', label="Related links"),
-    InlinePanel(ProgrammePage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('student_stories', label="Student stories"),
+    InlinePanel('facilities_carousel_items', label="Facilities"),
+    InlinePanel('documents', label="Documents"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
@@ -1069,8 +1069,8 @@ ProgrammePage.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ], 'Contact'),
-    InlinePanel(ProgrammePage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(ProgrammePage, 'contact_email', label="Contact email"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email"),
 ]
 
 ProgrammePage.promote_panels = [
@@ -1092,8 +1092,7 @@ ProgrammePage.promote_panels = [
 
     FieldPanel('school'),
 
-    # TODO: can't enforce the minumum number of inlines just yet: https://github.com/torchbox/wagtail/issues/669
-    InlinePanel(ProgrammePage, 'programmes', label="Programmes (*at least one is required)"),
+    InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
 ]
 
 ProgrammePage.settings_panels = [
@@ -1169,7 +1168,7 @@ class NewsIndex(Page, SocialFields):
 NewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(NewsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1231,7 +1230,7 @@ class NewsItem(Page, SocialFields):
     date = models.DateField(help_text=help_text('rca.NewsItem', 'date'))
     intro = RichTextField(help_text=help_text('rca.NewsItem', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.NewsItem', 'body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.NewsItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.NewsItem', 'show_on_homepage'))
     show_on_news_index = models.BooleanField(default=True, help_text=help_text('rca.NewsItem', 'show_on_news_index'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
@@ -1317,8 +1316,8 @@ NewsItem.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(NewsItem, 'related_links', label="Links"),
-    InlinePanel(NewsItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Links"),
+    InlinePanel('carousel_items', label="Carousel content"),
 ]
 
 NewsItem.promote_panels = [
@@ -1340,9 +1339,9 @@ NewsItem.promote_panels = [
     ], 'Social networks'),
 
     FieldPanel('show_on_news_index'),
-    InlinePanel(NewsItem, 'areas', label="Areas"),
-    InlinePanel(NewsItem, 'related_schools', label="Related schools"),
-    InlinePanel(NewsItem, 'related_programmes', label="Related programmes"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
 ]
 
 # == Press Release Index ==
@@ -1398,7 +1397,7 @@ PressReleaseIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(PressReleaseIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1461,7 +1460,7 @@ class PressRelease(Page, SocialFields):
     date = models.DateField(help_text=help_text('rca.PressRelease', 'date'))
     intro = RichTextField(help_text=help_text('rca.PressRelease', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.PressRelease', 'body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.PressRelease', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PressRelease', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressRelease', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
@@ -1483,8 +1482,8 @@ PressRelease.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(PressRelease, 'related_links', label="Links"),
-    InlinePanel(PressRelease, 'carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Links"),
+    InlinePanel('carousel_items', label="Carousel content"),
 ]
 
 PressRelease.promote_panels = [
@@ -1505,9 +1504,9 @@ PressRelease.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 
-    InlinePanel(PressRelease, 'areas', label="Areas"),
-    InlinePanel(PressRelease, 'related_schools', label="Related schools"),
-    InlinePanel(PressRelease, 'related_programmes', label="Related programmes"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
 ]
 
 
@@ -1600,15 +1599,15 @@ class EventItemExternalLink(Orderable):
     ]
 
 class FutureEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
 class FutureNotCurrentEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(FutureNotCurrentEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(FutureNotCurrentEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
             params=[date.today()]
         ).extra(
@@ -1618,8 +1617,8 @@ class FutureNotCurrentEventItemManager(models.Manager):
         )
 
 class PastEventItemManager(models.Manager):
-    def get_query_set(self):
-        return super(PastEventItemManager, self).get_query_set().extra(
+    def get_queryset(self):
+        return super(PastEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
@@ -1636,7 +1635,7 @@ class EventItem(Page, SocialFields):
     special_event = models.BooleanField("Highlight as special event on signage", default=False, help_text=help_text('rca.EventItem', 'special_event', default="Toggling this is a quick way to remove/add an event from signage without deleting the screens defined below"))
     cost = RichTextField(help_text=help_text('rca.EventItem', 'cost'), blank=True)
     eventbrite_id = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'eventbrite_id', default="Must be a ten-digit number. You can find for you event ID by logging on to Eventbrite, then going to the Manage page for your event. Once on the Manage page, look in the address bar of your browser for eclass=XXXXXXXXXX. This ten-digit number after eclass= is the event ID."))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.EventItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.EventItem', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.EventItem', 'listing_intro', default="Used only on pages listing event items"))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.EventItem', 'middle_column_body',))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_title'))
@@ -1761,21 +1760,21 @@ EventItem.content_panels = [
         FieldPanel('gallery'),
         FieldPanel('cost'),
         FieldPanel('eventbrite_id'),
-        InlinePanel(EventItem, 'external_links', label="External links"),
+        InlinePanel('external_links', label="External links"),
         FieldPanel('middle_column_body')
     ], 'Event detail'),
     FieldPanel('body', classname="full"),
-    InlinePanel(EventItem, 'dates_times', label="Dates and times"),
-    InlinePanel(EventItem, 'speakers', label="Speaker"),
-    InlinePanel(EventItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('dates_times', label="Dates and times"),
+    InlinePanel('speakers', label="Speaker"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
-    InlinePanel(EventItem, 'contact_phone', label="Contact phone number"),
-    InlinePanel(EventItem, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
 ]
 
 EventItem.promote_panels = [
@@ -1799,11 +1798,11 @@ EventItem.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('special_event'),
-        InlinePanel(EventItem, 'screens', label="Screen on which to highlight"),
+        InlinePanel('screens', label="Screen on which to highlight"),
         ], 'Special event signage'),
-    InlinePanel(EventItem, 'related_schools', label="Related schools"),
-    InlinePanel(EventItem, 'related_programmes', label="Related programmes"),
-    InlinePanel(EventItem, 'related_areas', label="Related areas"),
+    InlinePanel('related_schools', label="Related schools"),
+    InlinePanel('related_programmes', label="Related programmes"),
+    InlinePanel('related_areas', label="Related areas"),
 ]
 
 
@@ -1899,8 +1898,8 @@ EventIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(EventIndex, 'related_links', label="Related links"),
-    InlinePanel(EventIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -1979,7 +1978,7 @@ TalksIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(TalksIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2060,7 +2059,7 @@ ReviewsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(ReviewsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2137,7 +2136,7 @@ class ReviewPage(Page, SocialFields):
     date = models.DateField(null=True, blank=True, help_text=help_text('rca.ReviewPage', 'date'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewPage', 'author'))
     listing_intro = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewPage', 'listing_intro', default="Used only on pages listing jobs"))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ReviewPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReviewPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReviewPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -2155,13 +2154,13 @@ ReviewPage.content_panels = [
     FieldPanel('date'),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(ReviewPage, 'carousel_items', label="Carousel content"),
-    InlinePanel(ReviewPage, 'related_links', label="Related links"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
-    InlinePanel(ReviewPage, 'documents', label="Document"),
-    InlinePanel(ReviewPage, 'quotations', label="Quotation"),
-    InlinePanel(ReviewPage, 'images', label="Middle column image"),
-    InlinePanel(ReviewPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('documents', label="Document"),
+    InlinePanel('quotations', label="Quotation"),
+    InlinePanel('images', label="Middle column image"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 ReviewPage.promote_panels = [
@@ -2237,21 +2236,30 @@ class StandardPageReusableTextSnippet(Orderable):
         SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
     ]
 
+class StandardPageTag(TaggedItemBase):
+    content_object = ParentalKey('rca.StandardPage', related_name='tagged_items')
+
 class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     intro = RichTextField(help_text=help_text('rca.StandardPage', 'intro'), blank=True)
     body = RichTextField(help_text=help_text('rca.StandardPage', 'body'))
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.StandardPage', 'middle_column_body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.StandardPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StandardPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
     related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
         index.SearchField('body'),
     )
+
+    # StandardPages with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the homepage packery separately.
+    # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
+    STUDENT_STORY_TAG = 'student-story'
+    ALUMNI_STORY_TAG = 'alumni-story'
 
     @property
     def search_name(self):
@@ -2268,14 +2276,14 @@ StandardPage.content_panels = [
     FieldPanel('strapline', classname="full"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardPage, 'carousel_items', label="Carousel content"),
-    InlinePanel(StandardPage, 'related_links', label="Related links"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('middle_column_body', classname="full"),
-    InlinePanel(StandardPage, 'reusable_text_snippets', label="Reusable text snippet"),
-    InlinePanel(StandardPage, 'documents', label="Document"),
-    InlinePanel(StandardPage, 'quotations', label="Quotation"),
-    InlinePanel(StandardPage, 'images', label="Middle column image"),
-    InlinePanel(StandardPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('reusable_text_snippets', label="Reusable text snippet"),
+    InlinePanel('documents', label="Document"),
+    InlinePanel('quotations', label="Quotation"),
+    InlinePanel('images', label="Middle column image"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ]
 
@@ -2301,6 +2309,7 @@ StandardPage.promote_panels = [
         FieldPanel('related_school'),
         FieldPanel('related_programme'),
     ], 'Related pages'),
+    FieldPanel('tags'),
 ]
 
 StandardPage.settings_panels = [
@@ -2451,7 +2460,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
             feed_source = StaffPage.objects.none()
 
         # Chain manual_feed + feed_source (any or both may be empty)
-        feed = chain(manual_feed, feed_source)
+        feed = list(chain(manual_feed, feed_source))
 
         if manual_feed or self.staff_feed_source:
             return feed
@@ -2496,14 +2505,14 @@ StandardIndex.content_panels = [
         PageChooserPanel('intro_link'),
     ],'Introduction'),
     FieldPanel('body', classname="full"),
-    InlinePanel(StandardIndex, 'carousel_items', label="Carousel content"),
-    InlinePanel(StandardIndex, 'manual_staff_feed', label="Manual staff feed"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('manual_staff_feed', label="Manual staff feed"),
     FieldPanel('teasers_title'),
-    InlinePanel(StandardIndex, 'teasers', label="Teaser content"),
-    InlinePanel(StandardIndex, 'custom_content_modules', label="Modules"),
-    InlinePanel(StandardIndex, 'our_sites', label="Our sites"),
-    InlinePanel(StandardIndex, 'related_links', label="Related links"),
-    InlinePanel(StandardIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('teasers', label="Teaser content"),
+    InlinePanel('custom_content_modules', label="Modules"),
+    InlinePanel('our_sites', label="Our sites"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
@@ -2511,9 +2520,9 @@ StandardIndex.content_panels = [
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
     ],'Contact'),
-    InlinePanel(StandardIndex, 'contact_snippets', label="Contacts"),
-    InlinePanel(StandardIndex, 'contact_phone', label="Contact phone number"),
-    InlinePanel(StandardIndex, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_snippets', label="Contacts"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
     FieldPanel('staff_feed_source'),
     FieldPanel('news_carousel_area'),
     MultiFieldPanel([
@@ -2572,19 +2581,23 @@ class HomePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.HomePage', related_name='related_links')
 
 class HomePage(Page, SocialFields):
+    PACKERY_CHOICES = zip(range(11), range(11))
+
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'background_image', default="The full bleed image in the background"))
     news_item_1 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'news_item_1'))
     news_item_2 = models.ForeignKey('wagtailcore.Page', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'news_item_2'))
-    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_news'))
-    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_staff'))
-    packery_student_work = models.IntegerField("Number of student work items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_student_work', default="Student pages flagged to Show On Homepage must have at least one carousel item"))
-    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_tweets'))
-    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_rcanow'))
-    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_research'))
-    packery_alumni = models.IntegerField("Number of alumni to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_alumni'))
-    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_review'))
-    packery_events = models.IntegerField("Number of events to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_events'))
-    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=False, choices=((0,0),(1,1),(2,2),(3,3),(4,4),(5,5),), help_text=help_text('rca.HomePage', 'packery_blog'))
+    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_news'))
+    packery_staff = models.IntegerField("Number of staff to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_staff'))
+    packery_tweets = models.IntegerField("Number of tweets to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_tweets'))
+    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_research'))
+    packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_events'))
+    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_events_rcatalks'))
+    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_blog'))
+    packery_student_stories = models.IntegerField("Number of student stories to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_student_stories'))
+    packery_alumni_stories = models.IntegerField("Number of alumni stories to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_alumni_stories'))
+    packery_student_work = models.IntegerField("Number of student work items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_student_work', default="Student pages flagged to Show On Homepage must have at least one carousel item"))
+    packery_rcanow = models.IntegerField("Number of RCA Now items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_rcanow'))
+    packery_review = models.IntegerField("Number of reviews to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.HomePage', 'packery_review'))
 
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
@@ -2614,28 +2627,63 @@ class HomePage(Page, SocialFields):
 
         news = NewsItem.objects.filter(live=True, show_on_homepage=True).order_by('-date')
         staff = StaffPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
+        events = EventItem.past_objects\
+            .filter(live=True, show_on_homepage=True)\
+            .exclude(audience='rcatalks')\
+            .extra(select={
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
+        events_rcatalks = EventItem.past_objects\
+            .filter(live=True, show_on_homepage=True, audience='rcatalks')\
+            .extra(select={
+                'is_rca_talk': True,
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
+        blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
+        student_stories = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .extra(select={'is_student_story': True})\
+            .order_by('?')
+        alumni_stories = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .extra(select={'is_alumni_story': True})\
+            .order_by('?')
         student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        research = ResearchItem.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
-        alumni = AlumniPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        events = EventItem.objects.filter(live=True, show_on_homepage=True).order_by('?')
-        blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
-        tweets = [[],[],[],[],[]]
+        tweets = [[], [], [], [], []]
 
         if exclude:
-            news = news.exclude(id__in=exclude);
-            staff = staff.exclude(id__in=exclude);
-            student = student.exclude(id__in=exclude);
-            news = news.exclude(id__in=exclude);
-            rcanow = rcanow.exclude(id__in=exclude);
-            research = research.exclude(id__in=exclude);
-            alumni = alumni.exclude(id__in=exclude);
-            review = review.exclude(id__in=exclude);
-            events = events.exclude(id__in=exclude);
-            blog = blog.exclude(id__in=exclude);
+            news = news.exclude(id__in=exclude)
+            staff = staff.exclude(id__in=exclude)
+            news = news.exclude(id__in=exclude)
+            research = research.exclude(id__in=exclude)
+            events = events.exclude(id__in=exclude)
+            events_rcatalks = events_rcatalks.exclude(id__in=exclude)
+            blog = blog.exclude(id__in=exclude)
+            student_stories = student_stories.exclude(id__in=exclude)
+            alumni_stories = alumni_stories.exclude(id__in=exclude)
+            student = student.exclude(id__in=exclude)
+            rcanow = rcanow.exclude(id__in=exclude)
+            review = review.exclude(id__in=exclude)
 
-        packery = list(chain(news[:self.packery_news], staff[:self.packery_staff], student[:self.packery_student_work], rcanow[:self.packery_rcanow], research[:self.packery_research], alumni[:self.packery_alumni], review[:self.packery_review], events[:self.packery_events], blog[:self.packery_blog]))
+        packery = list(chain(
+            news[:self.packery_news],
+            staff[:self.packery_staff],
+            research[:self.packery_research],
+            events[:self.packery_events],
+            events_rcatalks[:self.packery_events_rcatalks],
+            blog[:self.packery_blog],
+            student_stories[:self.packery_student_stories],
+            alumni_stories[:self.packery_alumni_stories],
+            student[:self.packery_student_work],
+            rcanow[:self.packery_rcanow],
+            review[:self.packery_review],
+        ))
 
         # only add tweets to the packery content if not using the plus button
         if not exclude:
@@ -2695,24 +2743,26 @@ class HomePage(Page, SocialFields):
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel(HomePage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     PageChooserPanel('news_item_1'),
     PageChooserPanel('news_item_2'),
     MultiFieldPanel([
         FieldPanel('packery_news'),
         FieldPanel('packery_staff'),
-        FieldPanel('packery_student_work'),
         FieldPanel('packery_tweets'),
         FieldPanel('twitter_feed'),
-        FieldPanel('packery_rcanow'),
         FieldPanel('packery_research'),
-        FieldPanel('packery_alumni'),
-        FieldPanel('packery_review'),
         FieldPanel('packery_events'),
+        FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
+        FieldPanel('packery_student_stories'),
+        FieldPanel('packery_alumni_stories'),
+        FieldPanel('packery_student_work'),
+        FieldPanel('packery_rcanow'),
+        FieldPanel('packery_review'),
     ], 'Packery content'),
-    InlinePanel(HomePage, 'related_links', label="Related links"),
-    InlinePanel(HomePage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 HomePage.promote_panels = [
@@ -2759,7 +2809,7 @@ class JobPage(Page, SocialFields):
     description = RichTextField(help_text=help_text('rca.JobPage', 'description'))
     download_info = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'download_info'))
     listing_intro = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobPage', 'listing_intro', default="Used only on pages listing jobs"))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.JobPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.JobPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -2787,7 +2837,7 @@ JobPage.content_panels = [
     FieldPanel('grade'),
     FieldPanel('description', classname="full"),
     DocumentChooserPanel('download_info'),
-    InlinePanel(StandardPage, 'reusable_text_snippets', label="Application and equal opportunities monitoring form text"),
+    InlinePanel('reusable_text_snippets', label="Application and equal opportunities monitoring form text"),
 ]
 
 JobPage.promote_panels = [
@@ -2840,8 +2890,8 @@ JobsIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(JobsIndex, 'related_links', label="Related links"),
-    InlinePanel(JobsIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2935,8 +2985,8 @@ AlumniIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(AlumniIndex, 'related_links', label="Related links"),
-    InlinePanel(AlumniIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -2969,7 +3019,7 @@ class AlumniPage(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.AlumniPage', 'intro'), blank=True)
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.AlumniPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
     biography = RichTextField(help_text=help_text('rca.AlumniPage', 'biography'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.AlumniPage', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -3067,10 +3117,11 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text=help_text('rca.StaffPage', 'school', default="Please complete this field for academic and administrative staff only"))
+    # N.B. the `school` field has been relabeled as 'Area', and it's using AREA_CHOICES, which includes all the schools too.  See #727
+    school = models.CharField(verbose_name='Area', max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
-    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location', default="Please complete this field for technical staff only"))
+    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'twitter_feed'))
     intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'), blank=True)
     biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'), blank=True)
@@ -3079,15 +3130,15 @@ class StaffPage(Page, SocialFields):
     external_collaborations_placeholder = RichTextField(help_text=help_text('rca.StaffPage', 'external_collaborations_placeholder'), blank=True)
     current_recent_research = RichTextField(help_text=help_text('rca.StaffPage', 'current_recent_research'), blank=True)
     awards_and_grants = RichTextField(help_text=help_text('rca.StaffPage', 'awards_and_grants'), blank=True)
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_homepage'))
-    show_on_programme_page = models.BooleanField(help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
-    listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_homepage'))
+    show_on_programme_page = models.BooleanField(default=False, help_text=help_text('rca.StaffPage', 'show_on_programme_page'))
+    listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.StaffPage', 'listing_intro'))
     research_interests = RichTextField(help_text=help_text('rca.StaffPage', 'research_interests'), blank=True)
     title_prefix = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'title_prefix'))
     first_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'first_name'))
     last_name = models.CharField(max_length=255, help_text=help_text('rca.StaffPage', 'last_name'))
-    supervised_student_other = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'supervised_student_other', default="Enter names of research students here who don\'t have a student profile. Supervised students with profile pages are pulled in automatically."))
-    rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+    supervised_student_other = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'supervised_student_other'))
+    rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -3115,7 +3166,7 @@ StaffPage.content_panels = [
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
     FieldPanel('staff_location'),
-    InlinePanel(StaffPage, 'roles', label="Roles"),
+    InlinePanel('roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
     FieldPanel('practice'),
@@ -3127,9 +3178,9 @@ StaffPage.content_panels = [
     FieldPanel('research_interests', classname="full"),
     FieldPanel('supervised_student_other'),
 
-    InlinePanel(StaffPage, 'carousel_items', label="Selected Work Carousel Content"),
-    InlinePanel(StaffPage, 'collaborations', label="Collaborations"),
-    InlinePanel(StaffPage, 'publications_exhibitions', label="Publications and Exhibitions"),
+    InlinePanel('carousel_items', label="Selected Work Carousel Content"),
+    InlinePanel('collaborations', label="Collaborations"),
+    InlinePanel('publications_exhibitions', label="Publications and Exhibitions"),
 ]
 
 StaffPage.promote_panels = [
@@ -3223,7 +3274,7 @@ StaffIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
-    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3375,7 +3426,7 @@ class ResearchStudentIndex(Page, SocialFields):
 ResearchStudentIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(StaffIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -3501,7 +3552,7 @@ class StudentPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    show_on_homepage = models.BooleanField()
+    show_on_homepage = models.BooleanField(default=False)
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
@@ -3548,28 +3599,28 @@ StudentPage.content_panels = [
     FieldPanel('degree_year'),
     FieldPanel('graduation_year'),
     ImageChooserPanel('profile_image'),
-    InlinePanel(StudentPage, 'supervisors', label="Supervisor"),
-    InlinePanel(StudentPage, 'email', label="Email"),
-    InlinePanel(StudentPage, 'phone', label="Phone"),
-    InlinePanel(StudentPage, 'website', label="Website"),
+    InlinePanel('supervisors', label="Supervisor"),
+    InlinePanel('email', label="Email"),
+    InlinePanel('phone', label="Phone"),
+    InlinePanel('website', label="Website"),
     FieldPanel('student_twitter_feed'),
     FieldPanel('twitter_feed'),
-    InlinePanel(StudentPage, 'degrees', label="Previous degrees"),
-    InlinePanel(StudentPage, 'exhibitions', label="Exhibition"),
-    InlinePanel(StudentPage, 'experiences', label="Experience"),
-    InlinePanel(StudentPage, 'publications', label="Publications"),
-    InlinePanel(StudentPage, 'conferences', label="Conferences"),
+    InlinePanel('degrees', label="Previous degrees"),
+    InlinePanel('exhibitions', label="Exhibition"),
+    InlinePanel('experiences', label="Experience"),
+    InlinePanel('publications', label="Publications"),
+    InlinePanel('conferences', label="Conferences"),
     FieldPanel('funding'),
-    InlinePanel(StudentPage, 'awards', label="Awards"),
+    InlinePanel('awards', label="Awards"),
     FieldPanel('statement', classname="full"),
-    InlinePanel(StudentPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         FieldPanel('work_description', classname="full"),
         FieldPanel('work_type'),
         FieldPanel('work_location'),
     ], 'Show RCA work'),
-    InlinePanel(StudentPage, 'collaborators', label="Show RCA work collaborator"),
-    InlinePanel(StudentPage, 'sponsor', label="Show RCA work sponsor"),
+    InlinePanel('collaborators', label="Show RCA work collaborator"),
+    InlinePanel('sponsor', label="Show RCA work sponsor"),
     FieldPanel('work_awards'),
 ]
 
@@ -4047,15 +4098,15 @@ NewStudentPage.content_panels = [
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
     FieldPanel('innovation_rca_fellow'),
-    InlinePanel(NewStudentPage, 'emails', label="Email"),
-    InlinePanel(NewStudentPage, 'phones', label="Phone"),
-    InlinePanel(NewStudentPage, 'websites', label="Website"),
-    InlinePanel(NewStudentPage, 'previous_degrees', label="Previous degrees"),
-    InlinePanel(NewStudentPage, 'exhibitions', label="Exhibitions"),
-    InlinePanel(NewStudentPage, 'experiences', label="Experience"),
-    InlinePanel(NewStudentPage, 'awards', label="Awards"),
-    InlinePanel(NewStudentPage, 'publications', label="Publications"),
-    InlinePanel(NewStudentPage, 'conferences', label="Conferences"),
+    InlinePanel('emails', label="Email"),
+    InlinePanel('phones', label="Phone"),
+    InlinePanel('websites', label="Website"),
+    InlinePanel('previous_degrees', label="Previous degrees"),
+    InlinePanel('exhibitions', label="Exhibitions"),
+    InlinePanel('experiences', label="Experience"),
+    InlinePanel('awards', label="Awards"),
+    InlinePanel('publications', label="Publications"),
+    InlinePanel('conferences', label="Conferences"),
 
     # MA details
     MultiFieldPanel([
@@ -4072,9 +4123,9 @@ NewStudentPage.content_panels = [
         FieldPanel('show_work_title'),
         FieldPanel('show_work_location'),
         FieldPanel('show_work_description'),
-        InlinePanel(NewStudentPage, 'show_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'show_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'show_sponsors', label="Sponsor"),
+        InlinePanel('show_carousel_items', label="Carousel image/video"),
+        InlinePanel('show_collaborators', label="Collaborator"),
+        InlinePanel('show_sponsors', label="Sponsor"),
     ], "MA Show details", classname="collapsible collapsed"),
 
     # MPhil details
@@ -4089,10 +4140,10 @@ NewStudentPage.content_panels = [
         FieldPanel('mphil_work_location'),
         FieldPanel('mphil_status'),
         FieldPanel('mphil_degree_type'),
-        InlinePanel(NewStudentPage, 'mphil_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'mphil_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'mphil_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'mphil_supervisors', label="Supervisor"),
+        InlinePanel('mphil_carousel_items', label="Carousel image/video"),
+        InlinePanel('mphil_collaborators', label="Collaborator"),
+        InlinePanel('mphil_sponsors', label="Sponsor"),
+        InlinePanel('mphil_supervisors', label="Supervisor"),
     ], "MPhil details", classname="collapsible collapsed"),
 
     # PhD details
@@ -4107,10 +4158,10 @@ NewStudentPage.content_panels = [
         FieldPanel('phd_work_location'),
         FieldPanel('phd_status'),
         FieldPanel('phd_degree_type'),
-        InlinePanel(NewStudentPage, 'phd_carousel_items', label="Carousel image/video"),
-        InlinePanel(NewStudentPage, 'phd_collaborators', label="Collaborator"),
-        InlinePanel(NewStudentPage, 'phd_sponsors', label="Sponsor"),
-        InlinePanel(NewStudentPage, 'phd_supervisors', label="Supervisor"),
+        InlinePanel('phd_carousel_items', label="Carousel image/video"),
+        InlinePanel('phd_collaborators', label="Collaborator"),
+        InlinePanel('phd_sponsors', label="Sponsor"),
+        InlinePanel('phd_supervisors', label="Supervisor"),
     ], "PhD details", classname="collapsible collapsed"),
 ]
 
@@ -4170,7 +4221,7 @@ class RcaNowPage(Page, SocialFields):
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4202,15 +4253,15 @@ class RcaNowPage(Page, SocialFields):
 
 
 RcaNowPage.content_panels = [
-    InlinePanel(RcaNowPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(RcaNowPage, 'areas', label="Areas"),
-    InlinePanel(RcaNowPage, 'related_links', label="Related links"),
+    InlinePanel('areas', label="Areas"),
+    InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4231,7 +4282,7 @@ RcaNowPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    # InlinePanel(RcaNowPage, 'tagged_items', label='tag'),
+    # InlinePanel('tagged_items', label='tag'),
     FieldPanel('tags'),
 ]
 
@@ -4344,9 +4395,9 @@ class RcaBlogPage(Page, SocialFields):
     date = models.DateField("Creation date", help_text=help_text('rca.RcaBlogPage', 'date'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'programme'))
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
@@ -4386,14 +4437,14 @@ class RcaBlogPage(Page, SocialFields):
 
 
 RcaBlogPage.content_panels = [
-    InlinePanel(RcaBlogPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     FieldPanel('author'),
     FieldPanel('date'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(RcaBlogPage, 'areas', label="Areas"),
+    InlinePanel('areas', label="Areas"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4414,7 +4465,7 @@ RcaBlogPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    # InlinePanel(RcaBlogPage, 'tagged_items', label='tag'),
+    # InlinePanel('tagged_items', label='tag'),
     FieldPanel('tags'),
 ]
 
@@ -4426,7 +4477,7 @@ class RcaBlogIndex(Page, SocialFields):
     intro = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'intro'), null=True, blank=True)
     body = RichTextField(help_text=help_text('rca.RcaBlogIndex', 'body'), null=True, blank=True)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
@@ -4567,7 +4618,7 @@ class ResearchItem(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     eprintid = models.CharField(max_length=255, blank=True, editable=False) # for import
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -4627,9 +4678,9 @@ class ResearchItem(Page, SocialFields):
 ResearchItem.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(ResearchItem, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('research_type'),
-    InlinePanel(ResearchItem, 'creator', label="Creator"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('ref'),
     FieldPanel('year'),
     FieldPanel('school'),
@@ -4638,7 +4689,7 @@ ResearchItem.content_panels = [
     FieldPanel('work_type_other'),
     FieldPanel('theme'),
     FieldPanel('description'),
-    InlinePanel(ResearchItem, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -4746,12 +4797,12 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('intro', classname="full"),
         PageChooserPanel('intro_link'),
     ],'Introduction'),
-    InlinePanel(ResearchInnovationPage, 'current_research', label="Current research"),
-    InlinePanel(ResearchInnovationPage, 'carousel_items', label="Carousel content"),
+    InlinePanel('current_research', label="Current research"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('teasers_title'),
-    InlinePanel(ResearchInnovationPage, 'teasers', label="Teaser content"),
-    InlinePanel(ResearchInnovationPage, 'related_links', label="Related links"),
-    InlinePanel(ResearchInnovationPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('teasers', label="Teaser content"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
@@ -4761,8 +4812,8 @@ ResearchInnovationPage.content_panels = [
         FieldPanel('contact_link_text'),
 
     ],'Contact'),
-    InlinePanel(ResearchInnovationPage, 'contact_phone', label="Contact phone number"),
-    InlinePanel(ResearchInnovationPage, 'contact_email', label="Contact email address"),
+    InlinePanel('contact_phone', label="Contact phone number"),
+    InlinePanel('contact_email', label="Contact email address"),
     FieldPanel('news_carousel_area'),
 ]
 
@@ -4850,7 +4901,7 @@ class CurrentResearchPage(Page, SocialFields):
 CurrentResearchPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(CurrentResearchPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5026,7 +5077,7 @@ GalleryPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     FieldPanel('twitter_feed'),
-    InlinePanel(GalleryPage, "related_links", label="Related links")
+    InlinePanel("related_links", label="Related links")
 ]
 
 GalleryPage.promote_panels = [
@@ -5081,8 +5132,8 @@ class OEFormPage(Page, SocialFields):
     body = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     middle_column_body = RichTextField(blank=True)
-    show_on_homepage = models.BooleanField()
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
+    show_on_homepage = models.BooleanField(default=False)
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     data_protection = RichTextField(blank=True)
 
     search_fields = Page.search_fields + (
@@ -5133,7 +5184,7 @@ class DonationPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.DonationPage', 'body'), blank=True)
     strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.DonationPage', 'strapline'))
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.DonationPage', 'middle_column_body'))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.DonationPage', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.DonationPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.DonationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -5205,13 +5256,13 @@ DonationPage.content_panels = [
         FieldPanel('payment_description', classname="full"),
         PageChooserPanel('redirect_to_when_done'),
     ], "Donation details")
-    # InlinePanel(DonationPage, 'carousel_items', label="Carousel content"),
-    # InlinePanel(DonationPage, 'related_links', label="Related links"),
-    # InlinePanel(DonationPage, 'reusable_text_snippets', label="Reusable text snippet"),
-    # InlinePanel(DonationPage, 'documents', label="Document"),
-    # InlinePanel(DonationPage, 'quotations', label="Quotation"),
-    # InlinePanel(DonationPage, 'images', label="Middle column image"),
-    # InlinePanel(DonationPage, 'manual_adverts', label="Manual adverts"),
+    # InlinePanel('carousel_items', label="Carousel content"),
+    # InlinePanel('related_links', label="Related links"),
+    # InlinePanel('reusable_text_snippets', label="Reusable text snippet"),
+    # InlinePanel('documents', label="Document"),
+    # InlinePanel('quotations', label="Quotation"),
+    # InlinePanel('images', label="Middle column image"),
+    # InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 DonationPage.promote_panels = [
@@ -5266,7 +5317,7 @@ class InnovationRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.InnovationRCAProject', 'project_type'))
     project_ended = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'project_ended'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
@@ -5280,6 +5331,9 @@ class InnovationRCAProject(Page, SocialFields):
         index.SearchField('get_programme_display'),
         index.SearchField('get_project_type_display'),
     )
+
+    # InnovationRCAProjects are listed according to the sort order in the wagtail admin, and each InnovationRCAIndex lists only its subpages
+    parent_page_types = ['rca.InnovationRCAIndex']
 
     search_name = 'InnovationRCA Project'
 
@@ -5330,15 +5384,15 @@ class InnovationRCAProject(Page, SocialFields):
 InnovationRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(InnovationRCAProject, 'carousel_items', label="Carousel content"),
-    InlinePanel(InnovationRCAProject, 'creator', label="Creator"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('project_type'),
     FieldPanel('project_ended'),
     FieldPanel('description'),
-    InlinePanel(InnovationRCAProject, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5382,11 +5436,14 @@ class InnovationRCAIndex(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of live projects
-        projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
+        projects = InnovationRCAProject.objects.filter(live=True, path__startswith=self.path)
 
         # Apply filters
-        project_type = request.GET.get('project_type', None)
-        current_past = request.GET.get('current_past', None)
+        project_type = request.GET.get('project_type')
+        current_past = request.GET.get('current_past')
+
+        if current_past:
+            current_past = current_past.lower()
 
         if current_past == 'past':
             project_ended = True
@@ -5399,6 +5456,9 @@ class InnovationRCAIndex(Page, SocialFields):
             projects = projects.filter(project_type=project_type)
         if project_ended is not None:
             projects = projects.filter(project_ended=project_ended)
+
+        # order project subpages based on the sort order in the wagtail admin
+        projects = projects.order_by('path')
 
         # Pagination
         page = request.GET.get('page')
@@ -5428,7 +5488,7 @@ class InnovationRCAIndex(Page, SocialFields):
 InnovationRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(InnovationRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5483,7 +5543,7 @@ class SustainRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SustainRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -5545,14 +5605,14 @@ class SustainRCAProject(Page, SocialFields):
 SustainRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(SustainRCAProject, 'carousel_items', label="Carousel content"),
-    InlinePanel(SustainRCAProject, 'creator', label="Creator"),
+    InlinePanel('carousel_items', label="Carousel content"),
+    InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
     FieldPanel('description'),
     FieldPanel('category'),
-    InlinePanel(SustainRCAProject, 'links', label="Links"),
+    InlinePanel('links', label="Links"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5639,7 +5699,7 @@ class SustainRCAIndex(Page, SocialFields):
 SustainRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(SustainRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5740,7 +5800,7 @@ class ReachOutRCAProject(Page, SocialFields):
     school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'school'))
     programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    show_on_homepage = models.BooleanField(help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
     project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES, help_text=help_text('rca.ReachOutRCAProject', 'project'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReachOutRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
@@ -5803,19 +5863,19 @@ class ReachOutRCAProject(Page, SocialFields):
 ReachOutRCAProject.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('subtitle'),
-    InlinePanel(ReachOutRCAProject, 'carousel_items', label="Carousel content"),
+    InlinePanel('carousel_items', label="Carousel content"),
     FieldPanel('project'),
-    InlinePanel(ReachOutRCAProject, 'leader', label="Project leaders"),
-    InlinePanel(ReachOutRCAProject, 'assistant', label="Project assistants"),
-    InlinePanel(ReachOutRCAProject, 'themes', label="Project themes"),
-    InlinePanel(ReachOutRCAProject, 'participants', label="Project participants"),
-    InlinePanel(ReachOutRCAProject, 'partnerships', label="Project partnerships"),
+    InlinePanel('leader', label="Project leaders"),
+    InlinePanel('assistant', label="Project assistants"),
+    InlinePanel('themes', label="Project themes"),
+    InlinePanel('participants', label="Project participants"),
+    InlinePanel('partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
     FieldPanel('school'),
     FieldPanel('programme'),
-    InlinePanel(ReachOutRCAProject, 'links', label="Links"),
-    InlinePanel(ReachOutRCAProject, 'quotations', label="Middle column quotations"),
+    InlinePanel('links', label="Links"),
+    InlinePanel('quotations', label="Middle column quotations"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5904,7 +5964,7 @@ class ReachOutRCAIndex(Page, SocialFields):
 ReachOutRCAIndex.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(ReachOutRCAIndex, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
 ]
 
@@ -5962,8 +6022,8 @@ StreamPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('body', classname="full"),
     ImageChooserPanel('poster_image'),
-    InlinePanel(StreamPage, 'related_links', label="Related links"),
-    InlinePanel(StreamPage, 'manual_adverts', label="Manual adverts"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     ]
 
