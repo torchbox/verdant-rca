@@ -23,7 +23,7 @@
 {% block extra_js %}
 	<script type="text/javascript">
 		//global var for current_page set here so that it can be used by the script being called
-		var current_page = window.location.pathname;
+		var current_page = "{% pageurl self %}";
 	</script>
 	<!--script src="/static/rca/js/filters.js"></script-->
 {% endblock %}

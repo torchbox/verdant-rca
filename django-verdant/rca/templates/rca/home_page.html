@@ -20,7 +20,7 @@
                             <h2 class="h5">{{ self.news_item_1.title }}</h2>
                             {% if self.news_item_1.listing_intro %}
                                 <p class="bc4">{{ self.news_item_1.specific.listing_intro }}</p>
-                            {% endif %} 
+                            {% endif %}
                             <p class="a2">News</p>
                         </div>
                     </a>
@@ -34,7 +34,7 @@
                             <h2 class="h5">{{ self.news_item_2.title }}</h2>
                             {% if self.news_item_2.listing_intro %}
                                 <p class="bc4">{{ self.news_item_2.specific.listing_intro }}</p>
-                            {% endif %} 
+                            {% endif %}
                             <p class="a2">News</p>
                         </div>
                     </a>
@@ -45,10 +45,10 @@
 
     {% if packery %}
         {% include "rca/includes/homepage_packery.html" %}
-        
+
         <script>
-            var current_page = "{{ self.url }}";
-            var excludeIds = [{% for item in packery %}{% if item.id %}{{ item.id }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}]; 
+            var current_page = "{% pageurl self %}";
+            var excludeIds = [{% for item in packery %}{% if item.id %}{{ item.id }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}];
         </script>
     {% endif %}
 

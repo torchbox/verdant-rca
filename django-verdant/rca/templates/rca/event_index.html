@@ -74,7 +74,7 @@
 			</ul>
 		</form>
 	</section>
-    
+
     <div id="listing">
     	{% include "rca/includes/events_listing.html" %}
 	</div>
@@ -90,7 +90,7 @@
 {% block extra_js %}
 	<script type="text/javascript">
 		//global var for current_page set here so that it can be used by the script being called
-		var current_page = "{{ global_events_index }}";
+		var current_page = "{{ global_events_index_url }}";
 
 		var filters = {{ filters|safe }};
 	</script>

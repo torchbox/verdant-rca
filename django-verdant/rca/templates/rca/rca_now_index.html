@@ -8,7 +8,7 @@
 	{% include "rca/includes/modules/h1-major.html" %}
 
 	{% include "rca/includes/modules/intro-large.html" %}
-	
+
     {% if self.body %}
         <section class='row'>
             {% include "rca/includes/modules/body-text.html" with body=self.body %}
@@ -72,10 +72,10 @@
 
 {% block extra_js %}
 	<script type="text/javascript">
-		//global var for rca_now_index set here so that it can be used by the script being called
-		var current_page = window.location.pathname;
+        //global var for rca_now_index set here so that it can be used by the script being called
+        var current_page = "{% pageurl self %}";
 
-    var filters = {{ filters|safe }};
+        var filters = {{ filters|safe }};
 	</script>
 	<script src="/static/rca/js/filters.js"></script>
 {% endblock %}
