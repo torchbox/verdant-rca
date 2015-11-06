@@ -6053,7 +6053,7 @@ class LightboxGalleryPageItem(Orderable):
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.LightboxGalleryPageItem', 'image'))
     embedly_url = models.URLField('Video URL', blank=True, help_text="A video to show instead of an image")
     poster_image = models.ForeignKey('rca.RcaImage', verbose_name="Video still image", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="A still image of the video to display when not playing.")
-    
+
     panels = [
         ImageChooserPanel('image'),
         FieldPanel('embedly_url'),
@@ -6066,7 +6066,6 @@ class LightboxGalleryPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.LightboxGalleryPage', 'listing_intro', default="Used only on pages listing Lightbox Galleries"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
     )
@@ -6074,7 +6073,7 @@ class LightboxGalleryPage(Page, SocialFields):
 LightboxGalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
-    InlinePanel(LightboxGalleryPage, 'gallery_items', label="Gallery items"),
+    InlinePanel('gallery_items', label="Gallery items"),
 ]
 
 LightboxGalleryPage.promote_panels = [
@@ -6095,4 +6094,3 @@ LightboxGalleryPage.promote_panels = [
         FieldPanel('social_text'),
     ], 'Social networks'),
 ]
-
