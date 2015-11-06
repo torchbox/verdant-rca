@@ -4,88 +4,83 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Welcome to My RCA</h1>
-  <section class="row">
-    <section class="body-text">
+    <div class="page-content">
 
-    <p>
-      These pages let you upload and edit information about yourself for display on the website – in RCANow as a student
-      at the College, as a Research student and in the Show catalogue when you graduate.
-      You can add and edit posts to the <a href="/showcase/rcanow/">RCANow blog</a> and,
-      shortly before your Show, upload a profile for <a href="/showcase/show-rca/">ShowRCA</a> and a show postcard image.
-    </p>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-      <h3>Profile</h3>
-      <p>
-        <strong><a href="{% url 'student-profiles:edit-basic' page_id %}">About you:</a></strong> basic information and contact details
-      </p>
-      <p>
-        <strong><a href="{% url 'student-profiles:edit-academic' page_id %}">CV:</a></strong> your experience and academic background
-      </p>
-      {% if is_phd %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree:</a></strong> details about your programme and dissertation
-        </p>
-      {% else %}
-      {% if is_mphil %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree:</a></strong> details about your programme and dissertation
-        </p>
-      {% else %}
-      {% if is_ma %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree:</a></strong> details about your programme and dissertation
-        </p>
-      {% endif %}
-      {% endif %}
-      {% endif %}
+        <h1>Welcome to My RCA</h1>
 
+        <section class="row">
+            <section class="body-text">
 
-    <h3>RCA Now</h3>
-    <p>
-      <a href="{% url 'nowpages:overview' %}">Add and edit blog posts featuring your work-in-progress for RCANow</a>
-    </p>
-
-        {% if SHOW_PAGES_ENABLED %}
-      <h3>Show project Details</h3>
-      {% if is_phd %}
-        <p>
-          <strong><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
-        </p>
-      {% else %}
-        {% if is_mphil %}
-          <p>
-            <strong><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
-          </p>
-        {% else %}
-          {% if is_ma %}
             <p>
-              <strong><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+                These pages let you upload and edit information about yourself for display on the website – in RCANow as a student
+                at the College, as a Research student and in the Show catalogue when you graduate.
+                You can add and edit posts to the <a href="/showcase/rcanow/">RCANow blog</a> and,
+                shortly before your Show, upload a profile for <a href="/showcase/show-rca/">ShowRCA</a> and a show postcard image.
             </p>
-          {% endif %}
-        {% endif %}
-      {% endif %}
 
-    <h3>Postcard upload</h3>
-    <p>
-      <a href="{% url 'student-profiles:edit-postcard' page_id %}">
-        Upload an image to request 200 postcards for your own use during the Show
-      </a>
-    </p>
-        {% endif %}
+                <h3>Profile</h3>
+                <p>
+                    <strong><a href="{% url 'student-profiles:edit-basic' page_id %}">About you:</a></strong> basic information and contact details
+                </p>
+                <p>
+                    <strong><a href="{% url 'student-profiles:edit-academic' page_id %}">CV:</a></strong> your experience and academic background
+                </p>
+
+                {% if is_phd %}
+                    <p>
+                        <strong><a href="{% url 'student-profiles:edit-phd' page_id %}">Your degree:</a></strong> details about your programme and dissertation
+                    </p>
+                {% elif is_mphil %}
+                    <p>
+                        <strong><a href="{% url 'student-profiles:edit-mphil' page_id %}">Your degree:</a></strong> details about your programme and dissertation
+                    </p>
+                {% elif is_ma %}
+                    <p>
+                        <strong><a href="{% url 'student-profiles:edit-ma' page_id %}">Your degree:</a></strong> details about your programme and dissertation
+                    </p>
+                {% endif %}
+
+            <h3>RCA Now</h3>
+            <p>
+                <a href="{% url 'nowpages:overview' %}">Add and edit blog posts featuring your work-in-progress for RCANow</a>
+            </p>
+
+                {% if SHOW_PAGES_ENABLED %}
+                    <h3>Show project Details</h3>
+                    {% if is_phd %}
+                        <p>
+                            <strong><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+                        </p>
+                    {% elif is_mphil %}
+                        <p>
+                            <strong><a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+                        </p>
+                    {% elif is_ma %}
+                        <p>
+                            <strong><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
+                        </p>
+                    {% endif %}
+
+                    <h3>Postcard upload</h3>
+                    <p>
+                        <a href="{% url 'student-profiles:edit-postcard' page_id %}">
+                            Upload an image to request 200 postcards for your own use during the Show
+                        </a>
+                    </p>
+                {% endif %}
 
 
-    </section>
-  </section>
-</div>
+            </section>
+        </section>
+    </div>
 
 {% endblock form_content %}
 

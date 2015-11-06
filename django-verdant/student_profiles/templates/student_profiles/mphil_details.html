@@ -15,7 +15,7 @@
   <section class="row">
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
+
         {% include 'student_profiles/form_snippet.html' with form=mphil_form %}
 
         {{ supervisor.management_form }}
@@ -52,8 +52,7 @@
 
 
   {% if not page.locked %}
-  makeFormset('{{ supervisor.prefix }}',
-  addedFunc=function(row) {
+  makeFormset('{{ supervisor.prefix }}', function(row) {
     updateSupervisorSelects('{{ supervisor.prefix }}');
     row.find('select').each(function(i) {$(this).trigger('change');});
     row.find('.supervisor-select').select2();;

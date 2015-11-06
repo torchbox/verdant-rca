@@ -1,16 +1,18 @@
 <div class="profile-actions">
-  {% if not page.locked %}
-  <input type="submit" class="profile-save" value="Save Draft" id="submit-save-draft">
-  {% endif %}
-  <input type="submit" class="" value="Preview" name="preview" formtarget="_blank" id="submit-preview">
-{% if not page.locked %}
-  <input type="hidden" id="js_submit_for_moderation" name="js_submit_for_moderation" value=""/>
-  <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication" id="submit-save-and-submit">
-{% endif %}
-</div>
-<div>
-  {% if page.locked %}
-    This page is locked for editing, because it is being reviewed. Please wait with further edits until the page is published or returned for editing.
-  {% endif %}
+    {% if not page.locked %}
+        <input type="submit" class="profile-save" value="Save Draft" id="submit-save-draft">
+    {% endif %}
 
+    <input type="submit" class="" value="Preview" name="preview" formtarget="_blank" id="submit-preview">
+
+    {% if not page.locked %}
+        <input type="hidden" id="js_submit_for_moderation" name="js_submit_for_moderation" value=""/>
+        <input type="submit" class="submit-page" value="Save and submit" name="submit_for_publication" id="submit-save-and-submit">
+    {% endif %}
+</div>
+
+<div>
+    {% if page.locked %}
+        This page is locked for editing, because it is being reviewed. Please wait with further edits until the page is published or returned for editing.
+    {% endif %}
 </div>

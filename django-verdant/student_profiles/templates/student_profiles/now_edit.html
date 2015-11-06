@@ -62,8 +62,7 @@ $('#id_date').datetimepicker({
 
 makeFormset('{{ link_formset.prefix }}');
 makeFormset('{{ area_formset.prefix }}');
-makeFormset('{{ carouselitem_formset.prefix }}',
-  addedFunc=function(row) {
+makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
       updateCarouselSelects('{{ carouselitem_formset.prefix }}');
       row.find('select').each(function(){ $(this).trigger('change')});
       row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
@@ -81,7 +80,7 @@ $('.image-uploader-block').each(function(i) {
 // make the selection between single author and group of authors
 $('#id_by').change(function() {
   var value = $(this).val();
-  
+
   if (value == 'single') {
     $('#id_author_single').parent().show();
     $('#id_author').parent().hide();

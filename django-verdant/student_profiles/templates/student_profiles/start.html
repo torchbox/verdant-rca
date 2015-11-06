@@ -4,27 +4,32 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Get started with My RCA</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        {% include 'student_profiles/form_snippet.html' with form=form %}
+    <div class="page-content">
 
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save and start editing">
-        </div>
-      </form>
-    </section>
-  </section>
-</div>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h1>Get started with My RCA</h1>
+        <section class="row">
+            <section class="body-text">
+                <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% include 'student_profiles/form_snippet.html' with form=form %}
+
+                    <div class="profile-actions">
+                        <input type="submit" class="profile-save" value="Save and start editing">
+                    </div>
+                </form>
+            </section>
+        </section>
+
+    </div>
 
 {% endblock form_content %}
 

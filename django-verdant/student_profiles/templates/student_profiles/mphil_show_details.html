@@ -15,7 +15,7 @@
   <section class="row">
     <section class="body-text">
       <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
+
         {% include 'student_profiles/form_snippet.html' with form=mphil_show_form %}
 
         {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
@@ -52,8 +52,7 @@
   {% if not page.locked %}
 makeFormset('{{ collaborator.prefix }}');
 makeFormset('{{ sponsor.prefix }}');
-makeFormset('{{ carouselitem_formset.prefix }}',
-  addedFunc=function(row) {
+makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
     updateCarouselSelects('{{ carouselitem_formset.prefix }}');
     row.find('select').each(function(){ $(this).trigger('change')});
     row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });

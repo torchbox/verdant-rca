@@ -4,137 +4,137 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1 id="h1">About You</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-
-        {% include 'student_profiles/form_snippet.html' with form=basic_form %}
-
-        {% include "student_profiles/formset_single_field.html" with formset=email_formset %}
-
-        {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
-        {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
-
-        {% include "student_profiles/profile-actions.html" with page=page %}
-      </form>
-    </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>
-        Essential information about you and your contact information, which will all appear on your website profile and
-        Show digital catalogue entry.
-      </p>
-      {% if is_phd %}
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
-      {% else %}
-        {% if is_mphil %}
-          <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
-        {% else %}
-          {% if is_ma %}
-            <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
-          {% endif %}
+    <div class="page-content">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
         {% endif %}
-      {% endif %}
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
-    </section>
-  </section>
-</div>
+        <h1 id="h1">About You</h1>
+        <section class="row">
+            <section class="body-text">
+                <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+                    {% include 'student_profiles/form_snippet.html' with form=basic_form %}
+
+                    {% include "student_profiles/formset_single_field.html" with formset=email_formset %}
+
+                    {% include "student_profiles/formset_single_field.html" with formset=phone_formset %}
+                    {% include "student_profiles/formset_single_field.html" with formset=website_formset %}
+
+                    {% include "student_profiles/profile-actions.html" with page=page %}
+                </form>
+            </section>
+            <section class="notes">
+                <h3>Notes</h3>
+                <p>
+                    Essential information about you and your contact information, which will all appear on your website profile and
+                    Show digital catalogue entry.
+                </p>
+                {% if is_phd %}
+                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
+                {% else %}
+                    {% if is_mphil %}
+                        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
+                    {% else %}
+                        {% if is_ma %}
+                            <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+                <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+            </section>
+        </section>
+    </div>
 
 
-<ol id="joyride-tour" style="display: none;">
-  <li data-id="h1"><p><strong>Welcome!</strong><br>You seem to be here for the first time, so we'd like to give you a short tour.<br/>
-    You can stop this tour at any time by clicking on the little 'X' in the corner.<br/>
-    Let's get started!
-  </p></li>
+    <ol id="joyride-tour" style="display: none;">
+        <li data-id="h1"><p><strong>Welcome!</strong><br>You seem to be here for the first time, so we'd like to give you a short tour.<br/>
+            You can stop this tour at any time by clicking on the little 'X' in the corner.<br/>
+            Let's get started!
+        </p></li>
 
-  <li data-id="tour-menu1"><p>
-    In this menu point you find your basic profile details and your CV.
-  </p></li>
+        <li data-id="tour-menu1"><p>
+            In this menu point you find your basic profile details and your CV.
+        </p></li>
 
-  <li data-id="id_title" data-options="tipLocation:left;"><p>
-    Start by filling out the basic information.<br/>
-    Also add the main text that will appear in your profile page. Write a bit about yourself!
-  </p></li>
+        <li data-id="id_title" data-options="tipLocation:left;"><p>
+            Start by filling out the basic information.<br/>
+            Also add the main text that will appear in your profile page. Write a bit about yourself!
+        </p></li>
 
-  <li data-id="id_email-0-email" data-options="tipLocation:left;"><p>
-    If you want, you can add more contact data.
-  </p></li>
+        <li data-id="id_email-0-email" data-options="tipLocation:left;"><p>
+            If you want, you can add more contact data.
+        </p></li>
 
-  <li data-id="submit-preview" data-options="tipLocation:top;"><p>
-    Preview your work any time, in a new tab.
-  </p></li>
+        <li data-id="submit-preview" data-options="tipLocation:top;"><p>
+            Preview your work any time, in a new tab.
+        </p></li>
 
-  <li data-id="submit-save-draft" data-options="tipLocation:top;"><p>
-    Save when you're ready to move to the next page!
-  </p></li>
+        <li data-id="submit-save-draft" data-options="tipLocation:top;"><p>
+            Save when you're ready to move to the next page!
+        </p></li>
 
-  <li data-id="tour-menu1"><p>
-    When you're finished with this page, fill in your CV and your research or thesis details.
-  </p></li>
+        <li data-id="tour-menu1"><p>
+            When you're finished with this page, fill in your CV and your research or thesis details.
+        </p></li>
 
-  <li data-id="menu-postcard"><p>
-    You can upload an image to be used as a postcard for the show with this menu entry.
-  </p></li>
+        <li data-id="menu-postcard"><p>
+            You can upload an image to be used as a postcard for the show with this menu entry.
+        </p></li>
 
-  <li data-id="menu-rcanow"><p>
-    You can add, edit and review your blog posts for RCA Now. The process is the same as here, so you'll find your way around!
-  </p></li>
+        <li data-id="menu-rcanow"><p>
+            You can add, edit and review your blog posts for RCA Now. The process is the same as here, so you'll find your way around!
+        </p></li>
 
-  <li data-id="submit-save-and-submit" data-options="tipLocation:top;"><p>
-    <strong>Don't submit until you've completed the About You, CV and Your Degree sections.</strong>
-  </p></li>
+        <li data-id="submit-save-and-submit" data-options="tipLocation:top;"><p>
+            <strong>Don't submit until you've completed the About You, CV and Your Degree sections.</strong>
+        </p></li>
 
-  <li data-button="Finish">
-    <p><strong>That's all you need to know.</strong><br/>Happy editing!</p>
-  </li>
+        <li data-button="Finish">
+            <p><strong>That's all you need to know.</strong><br/>Happy editing!</p>
+        </li>
 
-</ol>
+    </ol>
 
 {% endblock form_content %}
 
 
 {% block form_js %}
-<script type="text/javascript">
-$(function() {
+    <script type="text/javascript">
+        $(function() {
 
-  makeRichTextEditable('id_statement');
+            makeRichTextEditable('id_statement');
 
-  {% if not page.locked %}
-  makeFormset('{{ email_formset.prefix }}');
-  makeFormset('{{ phone_formset.prefix }}');
-  makeFormset('{{ website_formset.prefix }}');
+            {% if not page.locked %}
+                makeFormset('{{ email_formset.prefix }}');
+                makeFormset('{{ phone_formset.prefix }}');
+                makeFormset('{{ website_formset.prefix }}');
 
-  activateImageUpload('profile_image');
-  {% else %}
-    $('.move-up').remove();
-    $('.move-down').remove();
-    $('.dropzone').remove();
-    $('.clearbutton').remove();
-  {% endif %}
+                activateImageUpload('profile_image');
+            {% else %}
+                $('.move-up').remove();
+                $('.move-down').remove();
+                $('.dropzone').remove();
+                $('.clearbutton').remove();
+            {% endif %}
 
+            $(window).load(function() {
+                $("#joyride-tour").joyride({
+                    'cookieMonster': true,
+                    'cookieName': 'basic-tour',
+                });
+            });
+        });
 
-  $(window).load(function() {
-    $("#joyride-tour").joyride({
-      'cookieMonster': true,
-      'cookieName': 'basic-tour',
-    });
-  });
-});
-  $(window).load(function() {
-    $("#joyride-tour").joyride({
-      'cookieMonster': true,
-      'cookieName': 'basic-tour',
-    });
-  });
-</script>
+        $(window).load(function() {
+            $("#joyride-tour").joyride({
+                'cookieMonster': true,
+                'cookieName': 'basic-tour',
+            });
+        });
+    </script>
 {% endblock form_js %}
 
