@@ -275,6 +275,16 @@ SPECIALISM_CHOICES = (
     ('platform18', 'Platform 18'),
     ('platform21', 'Platform 21'),
     ('footwear-accessories-millinery', "Footwear, Accessories & Millinery"),
+
+    ('knitwear', 'Knitwear'),
+    ('footwear', 'Footwear'),
+    ('accessory-design', 'Accessory Design'),
+    ('millinery', 'Millinery'),
+    ('design-as-catalyst-platform', 'Design as Catalyst Platform'),
+    ('design-through-making-platform', 'Design through Making Platform'),
+    ('design-for-manufacture-platform', 'Design for Manufacture Platform'),
+    ('object-mediated-interactions-platform', 'Object Mediated Interactions Platform'),
+    ('exploring-emergent-futures-platform', 'Exploring Emergent Futures Platform'),
 )
 
 SCHOOL_CHOICES = (

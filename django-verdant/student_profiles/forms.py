@@ -92,7 +92,7 @@ def make_formset(
 
 class PhoneNumberField(forms.RegexField):
     """CharField that loosely validates phone numbers.
-    
+
     Phone numbers start with + or 0 and continue with digits, spaces and dashes.
     That's all.
     """
@@ -107,14 +107,14 @@ class PhoneNumberField(forms.RegexField):
         super(PhoneNumberField, self).__init__(
             r'^[+0][()\d -]+$',
             *args, **kwargs)
-            
+
     def clean(self, value):
             if value:
                 value = value.strip()
-            return super(PhoneNumberField, self).clean(value)  
+            return super(PhoneNumberField, self).clean(value)
 
 class BooleanField(forms.BooleanField):
-    
+
     type = 'boolean'  # to make it easier in the template to distinguish what this is!
 
 
@@ -143,14 +143,14 @@ class ImageInput(forms.FileInput):
                 pass
             except IOError:
                 pass
-        
+
         return """
             <div id="{name}" class="image-uploader-block" data-url="image/">
                 <div class="preview" style="display: {preview_display};">
                     {preview}
                     <div class="progress">
                         <div class="bar" style="width: 0%; height: 3px; background: #0096ff;"></div>
-                    </div> 
+                    </div>
                     <i class="icon clearbutton action ion-android-delete" {hidden_clear} title="Remove"></i>
                 </div>
                 <div class="dropzone">Drop file here<br>to set image</div>
@@ -162,7 +162,7 @@ class ImageInput(forms.FileInput):
                 value_id=value,
                 hidden_clear='' if value else ' style="display: none;"',
             )
-    
+
 
 
 ################################################################################
@@ -170,7 +170,7 @@ class ImageInput(forms.FileInput):
 
 class ImageForm(forms.Form):
     """This is a simple form that validates a single image.
-    
+
     This is used in validating image uploads, obviously. It's needed because we upload images not with the forms
     themselves but asynchronously by themselves.
     """
@@ -261,7 +261,7 @@ class ProfileBasicForm(forms.ModelForm):
     )
 
     profile_image = forms.IntegerField(
-        required=False,
+        required=True,
         help_text=help_text('rca.NewStudentPage', 'profile_image', default="Self-portrait image, 500x500px"),
         widget=ImageInput,
     )
@@ -328,11 +328,11 @@ WebsiteFormset = make_formset(WebsiteForm, 'Website', 'Paste in the URL of the w
 ## Academic details
 
 class ProfileAcademicDetailsForm(forms.ModelForm):
-    
+
     class Meta:
         model = NewStudentPage
         fields = ['funding']
-    
+
 class PreviousDegreeForm(forms.Form):
     #saves to NewStudentPagePreviousDegree
     degree = forms.CharField(
@@ -489,13 +489,13 @@ class MADetailsForm(forms.ModelForm):
     ma_school = forms.ChoiceField(
         label="School", help_text=help_text('rca.NewStudentPage', 'ma_school'),
         choices=SCHOOL_CHOICES,
-        required=False,
+        required=True,
     )
 
     ma_programme = forms.ChoiceField(
         label="Programme",
         choices=PROGRAMME_CHOICES_2015,
-        required=False,
+        required=True,
     )
 
     def clean_ma_graduation_year(self):
@@ -508,7 +508,8 @@ class MADetailsForm(forms.ModelForm):
         model = NewStudentPage
         fields = [
             'ma_in_show',
-            'ma_school', 'ma_programme',
+            'ma_school',
+            'ma_programme',
             'ma_graduation_year',
             'ma_specialism',
         ]
@@ -529,7 +530,7 @@ class MAShowDetailsForm(forms.ModelForm):
 class MAShowCarouselItemForm(forms.Form):
 
     item_type = forms.ChoiceField(
-        choices = (   
+        choices=(
             ('image', 'Image'),    # if you change these values, you must also change the values in the javascript and in the views!
             ('video', 'Video'),
         )
@@ -537,7 +538,7 @@ class MAShowCarouselItemForm(forms.Form):
 
     image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
         label='Image',
-        required=False,
+        required=True,
         help_text=help_text('rca.CarouselItemFields', 'image', default='Landscape images will display better within the carousel than portrait images. Consider sizing all your images to the same dimension - ideally 2000 x 1125 pixels.'),
         widget=ImageInput,
     )
@@ -689,11 +690,11 @@ MPhilSponsorFormset = make_formset(
     help_text('rca.NewStudentPageMPhilSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project.")
 )
 
-    
+
 class MPhilSupervisorForm(forms.ModelForm):
     supervisor_type = forms.ChoiceField(
         label='Type',
-        choices = (   
+        choices = (
             ('internal', 'Internal'),
             ('other', 'Other'),
         )
@@ -794,12 +795,12 @@ PhDSponsorFormset = make_formset(
 class PhDSupervisorForm(forms.ModelForm):
     supervisor_type = forms.ChoiceField(
         label='Type',
-        choices = (   
+        choices = (
             ('internal', 'Internal'),
             ('other', 'Other'),
         )
     )
-    
+
     supervisor = forms.ModelChoiceField(
         queryset=StaffPage.objects.all().order_by('last_name'),
         required=False,

@@ -3,15 +3,15 @@
 
 {% block css %}
     {% compress css %}
-        <link rel="stylesheet" href="{{ STATIC_URL }}wagtailadmin/scss/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
-        <link rel="stylesheet" href="{{ STATIC_URL }}wagtailadmin/scss/core.scss" type="text/x-scss" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}wagtailadmin/css/vendor/jquery-ui/jquery-ui-1.10.3.verdant.css" />
+        <link rel="stylesheet" href="{{ STATIC_URL }}wagtailadmin/css/core.css" type="text/css" />
     {% endcompress %}
 
     {% block extra_css %}{% endblock %}
 {% endblock %}
 
 {% block js %}
-    
+
     {% compress js %}
         <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/jquery-1.10.3.js"></script>
         <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/jquery-ui-1.10.3.js"></script>
@@ -24,6 +24,6 @@
         <script src="{{ STATIC_URL }}wagtailadmin/js/core.js"></script>
         {% main_nav_js %}
     {% endcompress %}
-    
+
     {% block extra_js %}{% endblock %}
 {% endblock %}
