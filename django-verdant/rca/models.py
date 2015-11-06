@@ -953,7 +953,7 @@ class ProgrammePageAd(Orderable):
 
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
@@ -1092,8 +1092,7 @@ ProgrammePage.promote_panels = [
 
     FieldPanel('school'),
 
-    # TODO: can't enforce the minumum number of inlines just yet: https://github.com/torchbox/wagtail/issues/669
-    InlinePanel('programmes', label="Programmes (*at least one is required)"),
+    InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
 ]
 
 ProgrammePage.settings_panels = [
