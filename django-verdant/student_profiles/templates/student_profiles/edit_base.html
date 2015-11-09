@@ -70,10 +70,7 @@
                         <li><a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show Project Details</a></li>
                     </ul>
                 {% endif %}
-            {% endif %}
 
-
-            {% if SHOW_PAGES_ENABLED %}
                 <ul class="outer-menu">
                     <li{% if nav_postcard %} class="active"{% endif %} id="menu-postcard">
                         <a href="{% url 'student-profiles:edit-postcard' page_id %}">Postcard upload</a>

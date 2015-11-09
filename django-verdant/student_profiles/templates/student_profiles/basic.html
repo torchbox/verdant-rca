@@ -33,17 +33,17 @@
                     Essential information about you and your contact information, which will all appear on your website profile and
                     Show digital catalogue entry.
                 </p>
-                {% if is_phd %}
-                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
-                {% else %}
-                    {% if is_mphil %}
+
+                {% if SHOW_PAGES_ENABLED %}
+                    {% if is_phd %}
+                        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
+                    {% elif is_mphil %}
                         <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
-                    {% else %}
-                        {% if is_ma %}
-                            <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
-                        {% endif %}
+                    {% elif is_ma %}
+                        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
                     {% endif %}
                 {% endif %}
+
                 <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
             </section>
         </section>
@@ -81,9 +81,11 @@
             When you're finished with this page, fill in your CV and your research or thesis details.
         </p></li>
 
-        <li data-id="menu-postcard"><p>
-            You can upload an image to be used as a postcard for the show with this menu entry.
-        </p></li>
+        {% if SHOW_PAGES_ENABLED %}
+            <li data-id="menu-postcard"><p>
+                You can upload an image to be used as a postcard for the show with this menu entry.
+            </p></li>
+        {% endif %}
 
         <li data-id="menu-rcanow"><p>
             You can add, edit and review your blog posts for RCA Now. The process is the same as here, so you'll find your way around!
