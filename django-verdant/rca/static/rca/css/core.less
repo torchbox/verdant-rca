@@ -1398,6 +1398,34 @@ footer {
         margin-bottom: 0;
         padding-bottom: 0;
     }
+    .programmes-and-pathways{
+        a{
+            font-size: 1.5em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        a.chevron-after:after{
+            content: '\00a0\00a0\003e\00a0';
+        }
+        a:hover{
+            color: #939598;
+        }
+
+        a.pathway-link{
+            color: #00AEEF;
+        }
+        a.pathway-link:hover{
+            color: #6DCFF6;
+            &:after{
+                color: #00AEEF;
+            }
+        }
+        a.separator-after:after{
+            content: ' | ';
+            top: -2px;
+            position: relative;
+        }
+    }
 }
 
 .type-news {
