@@ -1406,9 +1406,13 @@ footer {
         }
         a.chevron-after:after{
             content: '\00a0\00a0\003e\00a0';
+            color: #000;
         }
         a:hover{
             color: #939598;
+            &:after{
+                color: #000;
+            }
         }
 
         a.pathway-link{
@@ -1424,6 +1428,7 @@ footer {
             content: ' | ';
             top: -2px;
             position: relative;
+            color: #00AEEF;
         }
     }
 }
