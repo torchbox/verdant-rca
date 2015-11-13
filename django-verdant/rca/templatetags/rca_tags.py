@@ -282,7 +282,10 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
 @register.inclusion_tag('rca/tags/sidebar_adverts.html', takes_context=True)
 def sidebar_adverts(context, show_open_days=False):
     return {
-        'global_adverts': Advert.objects.filter(show_globally=True),
+        'promoted_global_adverts': Advert.objects.filter(show_globally=True, promoted=True),
+        'promoted_manual_adverts': context.get('self').manual_adverts.filter(ad__promoted=True),
+        'global_adverts': Advert.objects.filter(show_globally=True, promoted=False),
+        'manual_adverts': context.get('self').manual_adverts.filter(ad__promoted=False),
         'show_open_days': show_open_days,
         'self': context.get('self'),
         'global_events_index_url': context['global_events_index_url'],

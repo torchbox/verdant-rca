@@ -1,6 +1,7 @@
 HELP_TEXT = {
     ('rca.RelatedLinkMixin', 'link_text'): 'Link title (or leave blank to use page title',
     ('rca.Advert', 'text'): 'bold text',
+    ('rca.Advert', 'promoted'): 'Whether to show the advert at the top of the sidebar above all the other items.',
     ('rca.CustomContentModuleBlock', 'image'): 'The image for the module block',
     ('rca.ContactSnippet', 'title'): 'This is the reference name for the contact. This is not displayed on the frontend.',
     ('rca.ContactSnippet', 'contact_title'): 'This is the optional title, displayed on the frontend',

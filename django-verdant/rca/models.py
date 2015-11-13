@@ -601,6 +601,7 @@ class Advert(models.Model):
     text = models.CharField(max_length=255, help_text=help_text('rca.Advert', 'text', default="bold text"))
     plain_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.Advert', 'plain_text'))
     show_globally = models.BooleanField(default=False, help_text=help_text('rca.Advert', 'show_globally'))
+    promoted = models.BooleanField(blank=True, default=False, help_text=help_text('rca.Advert', 'promoted'))
 
     panels = [
         PageChooserPanel('page'),
@@ -608,6 +609,7 @@ class Advert(models.Model):
         FieldPanel('text'),
         FieldPanel('plain_text'),
         FieldPanel('show_globally'),
+        FieldPanel('promoted'),
     ]
 
     def __unicode__(self):
