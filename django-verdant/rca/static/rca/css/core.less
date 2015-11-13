@@ -1398,14 +1398,19 @@ footer {
         margin-bottom: 0;
         padding-bottom: 0;
     }
+    .section-breadcrumb-pathways{
+        color: #6DCFF6;
+    }
     .programmes-and-pathways{
         a{
-            font-size: 1.5em;
-            font-weight: bold;
+            font-size: 2.2em;
+            line-height: 1;
             text-transform: uppercase;
+            font-family: @font-family-knockout;
         }
         a.chevron-after:after{
-            content: '\00a0\00a0\003e\00a0';
+            content: '\003e';
+            margin-left: 6px;
             color: #000;
         }
         a:hover{
@@ -1425,7 +1430,7 @@ footer {
             }
         }
         a.separator-after:after{
-            content: ' | ';
+            content: '|';
             top: -2px;
             position: relative;
             color: #00AEEF;
