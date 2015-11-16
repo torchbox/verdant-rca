@@ -4,33 +4,35 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  <h1>Disambiguation</h1>
-  <section class="row">
-    <section class="body-text">
+    <div class="page-content">
+        <h1>Disambiguation</h1>
+        <section class="row">
+            <section class="body-text">
 
-      <p>
-	We found more than one student profile for you in the system. Please choose which one you want to edit.
-    </p>
+                <p>
+                    We found more than one student profile for you in the system. Please choose which one you want to edit.
+                </p>
 
-      <table>
-      <tr>
-        <th>Page title</th>
-        <th>last edited at</th>
-      </tr>
-        {% for page in pages %}
-          <tr>
-          <td>
-          <a href="{% url 'student-profiles:overview-specific' page.id %}">{{ page.title }}</a>
-          </td>
-          <td>{{ page.get_latest_revision.created_at }}</td>
-          </tr>
-        {% endfor %}
-      </table>
+                <table>
+                    <tr>
+                        <th>Page title</th>
+                        <th>last edited at</th>
+                    </tr>
 
-    </section>
-  </section>
-</div>
+                    {% for page in pages %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'student-profiles:overview-specific' page.id %}">{{ page.title }}</a>
+                            </td>
+                            <td>{{ page.get_latest_revision.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+
+            </section>
+        </section>
+    </div>
 
 {% endblock form_content %}
 

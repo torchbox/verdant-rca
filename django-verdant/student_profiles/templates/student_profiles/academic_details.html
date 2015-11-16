@@ -4,71 +4,71 @@
 {% block form_content %}
 
 <div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>CV</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-      {% include 'student_profiles/form_snippet.html' with form=academic_form page=page %}
+    <h1>CV</h1>
 
-      {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset page=page %}
-      {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset page=page %}
-      {% include "student_profiles/formset_single_field.html" with formset=experiences_formset page=page %}
-      {% include "student_profiles/formset_single_field.html" with formset=awards_formset page=page %}
-      {% include "student_profiles/formset_single_field.html" with formset=publications_formset page=page %}
-      {% include "student_profiles/formset_single_field.html" with formset=conferences_formset page=page %}
+    <section class="row">
+        <section class="body-text">
+            <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-      {% include "student_profiles/profile-actions.html" with page=page %}
-      </form>
+                {% include 'student_profiles/form_snippet.html' with form=academic_form page=page %}
+
+                {% include "student_profiles/formset_single_field.html" with formset=previous_degrees_formset page=page %}
+                {% include "student_profiles/formset_single_field.html" with formset=exhibitions_formset page=page %}
+                {% include "student_profiles/formset_single_field.html" with formset=experiences_formset page=page %}
+                {% include "student_profiles/formset_single_field.html" with formset=awards_formset page=page %}
+                {% include "student_profiles/formset_single_field.html" with formset=publications_formset page=page %}
+                {% include "student_profiles/formset_single_field.html" with formset=conferences_formset page=page %}
+
+                {% include "student_profiles/profile-actions.html" with page=page %}
+            </form>
+        </section>
+        <section class="notes">
+            <h3>Notes</h3>
+            <p>Optional information about your education, exhibitions and experience, which will appear on your website profile and Show digital catalogue entry.</p>
+
+            {% if is_phd %}
+                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
+            {% elif is_mphil %}
+                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
+            {% elif is_ma %}
+                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
+            {% endif %}
+
+            <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+        </section>
     </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>Optional information about your education, exhibitions and experience, which will appear on your website profile and Show digital catalogue entry.</p>
-      {% if is_phd %}
-        <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
-      {% else %}
-        {% if is_mphil %}
-          <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
-        {% else %}
-          {% if is_ma %}
-            <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
-          {% endif %}
-        {% endif %}
-      {% endif %}
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
-    </section>
-  </section>
 </div>
 
 {% endblock form_content %}
 
 
 {% block form_js %}
-<script type="text/javascript">
-$(function() {
-  
-  {% if not page.locked %}
-  makeFormset('{{ previous_degrees_formset.prefix }}');
-  makeFormset('{{ exhibitions_formset.prefix }}');
-  makeFormset('{{ experiences_formset.prefix }}');
-  makeFormset('{{ awards_formset.prefix }}');
-  makeFormset('{{ publications_formset.prefix }}');
-  makeFormset('{{ conferences_formset.prefix }}');
-  {% else %}
-    $('.move-up').remove();
-    $('.move-down').remove();
-    $('.dropzone').remove();
-    $('.clearbutton').remove();
-  {% endif %}
+    <script type="text/javascript">
+        $(function() {
 
-})
-</script>
+            {% if not page.locked %}
+                makeFormset('{{ previous_degrees_formset.prefix }}');
+                makeFormset('{{ exhibitions_formset.prefix }}');
+                makeFormset('{{ experiences_formset.prefix }}');
+                makeFormset('{{ awards_formset.prefix }}');
+                makeFormset('{{ publications_formset.prefix }}');
+                makeFormset('{{ conferences_formset.prefix }}');
+            {% else %}
+                $('.move-up').remove();
+                $('.move-down').remove();
+                $('.dropzone').remove();
+                $('.clearbutton').remove();
+            {% endif %}
+
+        });
+    </script>
 {% endblock form_js %}
 

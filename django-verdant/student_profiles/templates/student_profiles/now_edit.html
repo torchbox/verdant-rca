@@ -3,118 +3,123 @@
 
 {% block form_content %}
 
-<div class="page-content rca-now">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Your post</h1>
-  <section class="row">
-    <section class="body-text">
-
-      <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-
-        {% include 'student_profiles/form_snippet.html' with form=form %}
-
-        {% include "student_profiles/formset_single_field.html" with formset=area_formset %}
-        {% include "student_profiles/formset_single_field.html" with formset=link_formset %}
-
-        {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
-
-        <div class="now-actions">
-        {% if not page.locked %}
-          <input type="submit" class="page-save" value="Save as draft">
-          <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+    <div class="page-content rca-now">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
         {% endif %}
-          {% if page %}
-          <input type="submit" class="preview-post" value="Preview" name="preview" formtarget="_blank">
-          {% endif %}
-        </div>
-      </form>
-    </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your blog post to appear online.</p>
 
-    </section>
-  </section>
-</div>
+        <h1>Your post</h1>
+
+        <section class="row">
+            <section class="body-text">
+
+                <form method="POST" class="now-page" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+                    {% include 'student_profiles/form_snippet.html' with form=form %}
+
+                    {% include "student_profiles/formset_single_field.html" with formset=area_formset %}
+                    {% include "student_profiles/formset_single_field.html" with formset=link_formset %}
+
+                    {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
+
+                    <div class="now-actions">
+
+                        {% if not page.locked %}
+                            <input type="submit" class="page-save" value="Save as draft">
+                            <input type="submit" class="submit-page" value="Submit for moderation" name="submit_for_moderation">
+                        {% endif %}
+
+                        {% if page %}
+                            <input type="submit" class="preview-post" value="Preview" name="preview" formtarget="_blank">
+                        {% endif %}
+
+                    </div>
+                </form>
+            </section>
+            <section class="notes">
+                <h3>Notes</h3>
+                <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your blog post to appear online.</p>
+            </section>
+        </section>
+    </div>
 
 {% endblock form_content %}
 
 
 {% block form_js %}
-<script type="text/javascript">
+    <script type="text/javascript">
 
-makeRichTextEditable('id_body');
+        makeRichTextEditable('id_body');
 
-  {% if not page.locked %}
+        {% if not page.locked %}
 
-$('#id_date').datetimepicker({
-  timepicker: false,
-  format: 'Y-m-d',
-  closeOnDateSelect: true,
-  scrollInput:false,
-});
+            $('#id_date').datetimepicker({
+                timepicker: false,
+                format: 'Y-m-d',
+                closeOnDateSelect: true,
+                scrollInput:false,
+            });
 
-makeFormset('{{ link_formset.prefix }}');
-makeFormset('{{ area_formset.prefix }}');
-makeFormset('{{ carouselitem_formset.prefix }}',
-  addedFunc=function(row) {
-      updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-      row.find('select').each(function(){ $(this).trigger('change')});
-      row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
-      row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
-  }
-);
-updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-$('#carousel select').each(function(i) {
-  $(this).trigger('change');
-});
-$('.image-uploader-block').each(function(i) {
-  activateImageUpload(this.id);
-});
+            makeFormset('{{ link_formset.prefix }}');
+            makeFormset('{{ area_formset.prefix }}');
+            makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
+                        updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                        row.find('select').each(function(){ $(this).trigger('change')});
+                        row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+                        row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
+                }
+            );
+            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+            $('#carousel select').each(function(i) {
+                $(this).trigger('change');
+            });
+            $('.image-uploader-block').each(function(i) {
+                activateImageUpload(this.id);
+            });
 
-// make the selection between single author and group of authors
-$('#id_by').change(function() {
-  var value = $(this).val();
-  
-  if (value == 'single') {
-    $('#id_author_single').parent().show();
-    $('#id_author').parent().hide();
-  }
-  else if (value == 'group') {
-    $('#id_author_single').parent().hide();
-    $('#id_author').parent().show();
-  }
-});
-$('#id_by').change();
+            // make the selection between single author and group of authors
+            $('#id_by').change(function() {
+                var value = $(this).val();
 
-$('#id_author_single').select2({'width': '100%'});
-  {% else %}
-    updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-    $('#id_by').change(function() {
-      var value = $(this).val();
+                if (value == 'single') {
+                    $('#id_author_single').parent().show();
+                    $('#id_author').parent().hide();
+                }
+                else if (value == 'group') {
+                    $('#id_author_single').parent().hide();
+                    $('#id_author').parent().show();
+                }
+            });
+            $('#id_by').change();
 
-      if (value == 'single') {
-        $('#id_author_single').parent().show();
-        $('#id_author').parent().hide();
-      }
-      else if (value == 'group') {
-        $('#id_author_single').parent().hide();
-        $('#id_author').parent().show();
-      }
-    });
-    $('#id_by').change();
-    $('.move-up').remove();
-    $('.move-down').remove();
-    $('.dropzone').remove();
-    $('.clearbutton').remove();
-  {% endif %}
+            $('#id_author_single').select2({'width': '100%'});
 
-</script>
+        {% else %}
 
+            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+            $('#id_by').change(function() {
+                var value = $(this).val();
+
+                if (value == 'single') {
+                    $('#id_author_single').parent().show();
+                    $('#id_author').parent().hide();
+                }
+                else if (value == 'group') {
+                    $('#id_author_single').parent().hide();
+                    $('#id_author').parent().show();
+                }
+            });
+            $('#id_by').change();
+            $('.move-up').remove();
+            $('.move-down').remove();
+            $('.dropzone').remove();
+            $('.clearbutton').remove();
+
+        {% endif %}
+
+    </script>
 {% endblock form_js %}

@@ -3,80 +3,81 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Show Project Details</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
-        {% include 'student_profiles/form_snippet.html' with form=mphil_show_form %}
+    <div class="page-content">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
-        {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
+        <h1>Show Project Details</h1>
 
-        {% include "student_profiles/formset_single_field.html" with formset=collaborator %}
-        {% include "student_profiles/formset_single_field.html" with formset=sponsor %}
+        <section class="row">
+            <section class="body-text">
+                <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
 
-        {% include "student_profiles/profile-actions.html" with page=page %}
-      </form>
-    </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>
-        Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on
-        your Profile page in the Show catalogue.
-      </p>
-      <p>
-        Don't forget to complete <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>,
-        <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
-        and <a href="{% url 'student-profiles:edit-mphil' page_id %}">Your Degree</a>.
-      </p>
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
-    </section>
-  </section>
-</div>
+                    {% include 'student_profiles/form_snippet.html' with form=mphil_show_form %}
+
+                    {% include "student_profiles/carousel_form.html" with formset=carouselitem_formset %}
+
+                    {% include "student_profiles/formset_single_field.html" with formset=collaborator %}
+                    {% include "student_profiles/formset_single_field.html" with formset=sponsor %}
+
+                    {% include "student_profiles/profile-actions.html" with page=page %}
+                </form>
+            </section>
+            <section class="notes">
+                <h3>Notes</h3>
+                <p>
+                    Upload your Profile for Show RCA. You can include multiple images and videos which will appear on a carousel on
+                    your Profile page in the Show catalogue.
+                </p>
+                <p>
+                    Don't forget to complete <a href="{% url 'student-profiles:edit-basic' page_id %}">About You</a>,
+                    <a href="{% url 'student-profiles:edit-academic' page_id %}">CV</a>
+                    and <a href="{% url 'student-profiles:edit-mphil' page_id %}">Your Degree</a>.
+                </p>
+                <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+            </section>
+        </section>
+    </div>
 
 {% endblock form_content %}
 
 
 
 {% block form_js %}
-<script type="text/javascript">
+    <script type="text/javascript">
 
-  {% if not page.locked %}
-makeFormset('{{ collaborator.prefix }}');
-makeFormset('{{ sponsor.prefix }}');
-makeFormset('{{ carouselitem_formset.prefix }}',
-  addedFunc=function(row) {
-    updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-    row.find('select').each(function(){ $(this).trigger('change')});
-    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
-    row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
-  }
-);
+        {% if not page.locked %}
+            makeFormset('{{ collaborator.prefix }}');
+            makeFormset('{{ sponsor.prefix }}');
+            makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
+                    updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                    row.find('select').each(function(){ $(this).trigger('change')});
+                    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+                    row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
+                }
+            );
 
-$('.image-uploader-block').each(function(i) {
-  activateImageUpload(this.id);
-});
-  {% else %}
-    $('.move-up').remove();
-    $('.move-down').remove();
-    $('.dropzone').remove();
-    $('.clearbutton').remove();
-  {% endif %}
+            $('.image-uploader-block').each(function(i) {
+                activateImageUpload(this.id);
+            });
+        {% else %}
+            $('.move-up').remove();
+            $('.move-down').remove();
+            $('.dropzone').remove();
+            $('.clearbutton').remove();
+        {% endif %}
 
-  makeRichTextEditable('id_mphil_statement');
+        makeRichTextEditable('id_mphil_statement');
 
-  updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-  $('#carousel select').each(function(i) {
-    $(this).trigger('change');
-  });
+        updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+        $('#carousel select').each(function(i) {
+            $(this).trigger('change');
+        });
 
-</script>
+    </script>
 {% endblock form_js %}

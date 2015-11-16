@@ -1,9 +1,8 @@
 {% load widget_tweaks %}
 
 {% if field.field.type == 'boolean' %}
-  {% if field.value %}☑{% else %}☒{% endif %}
+  	{% if field.value %}☑{% else %}☒{% endif %}
 {% else %}
-  {% render_field field disabled="disabled" %}            {# maybe put some icon on it, too? #}
+	{# TODO: maybe put some icon on it, too? #}
+  	{% render_field field disabled="disabled" %}
 {% endif %}
-
-

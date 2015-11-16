@@ -3,105 +3,104 @@
 
 {% block form_content %}
 
-<div class="page-content">
-  {% if messages %}
-  <ul class="messages">
+    <div class="page-content">
+        {% if messages %}
+            <ul class="messages">
+                <style>
+                    li.error { background-color: red; padding: 1em; color: white; font-weight: bold; }
+                </style>
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+            </ul>
+        {% endif %}
+
+        <h1>Postcard Image Upload</h1>
+        <section class="row">
+            <section class="body-text">
+                <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+                    {% include 'student_profiles/form_snippet.html' with form=form %}
+
+                    <div class="profile-actions">
+                        <input type="submit" class="profile-save" value="Save postcard image">
+                    </div>
+                </form>
+            </section>
+            <section class="notes">
+                <h3>Notes</h3>
+                <p>Upload your postcard image. The postcard image will be used to print a set of postcards with your contact details, for you to use during the Show.</p>
+            </section>
+        </section>
+    </div>
+
     <style>
-      li.error { background-color: red; padding: 1em; color: white; font-weight: bold; }
-    </style>
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>Postcard Image Upload</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+        div.uploadModal {
+                display: none;
+            background: rgba(0, 0, 0, 0.5);
+            width:      100%;
+            height:     100%;
+            z-index:    1000;
+            top:        0;
+            left:       0;
+            position:   fixed;
+        }
 
-        {% include 'student_profiles/form_snippet.html' with form=form %}
-
-        <div class="profile-actions">
-          <input type="submit" class="profile-save" value="Save postcard image">
-        </div>
-      </form>
-    </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>Upload your postcard image. The postcard image will be used to print a set of postcards with your contact details, for you to use during the Show.</p>
-    </section>
-  </section>
-</div>
-
-    <style>
-    div.uploadModal {
-        display: none;
-      background: rgba(0, 0, 0, 0.5);
-      width:      100%;
-      height:     100%;
-      z-index:    1000;
-      top:        0;
-      left:       0;
-      position:   fixed;
-    }
-
-    div.uploadModal #content {
-        opacity: 1;
-        color: white;
-        font-size: 200%;
-        text-align: center;
-        position: absolute;
-        height: 20%;
-        top: 50%;
-        margin-top: -10%; /* half the height */
-        width: 50%;
-        left: 50%;
-        margin-left: -25%; /* half the width */
-        z-index: 1001;
-    }
-    div.uploadModal #content .progress {
-        background-color: #444;
-    }
+        div.uploadModal #content {
+                opacity: 1;
+                color: white;
+                font-size: 200%;
+                text-align: center;
+                position: absolute;
+                height: 20%;
+                top: 50%;
+                margin-top: -10%; /* half the height */
+                width: 50%;
+                left: 50%;
+                margin-left: -25%; /* half the width */
+                z-index: 1001;
+        }
+        div.uploadModal #content .progress {
+                background-color: #444;
+        }
 
     </style>
 
-<div class="uploadModal">
-    <div id="content">
-        Image is being uploaded.
-        <div class="progress">
-            <div class="bar" style="width: 0%; height: 1em; background: #0096ff;"></div>
+    <div class="uploadModal">
+        <div id="content">
+            Image is being uploaded.
+            <div class="progress">
+                    <div class="bar" style="width: 0%; height: 1em; background: #0096ff;"></div>
+            </div>
         </div>
     </div>
-</div>
 
 
 {% endblock form_content %}
 
 
 {% block extra_css %}
-
-{{ block.super }}
+    {{ block.super }}
 {% endblock extra_css %}
 
 
 {% block form_js %}
-<script type="text/javascript">
-$(function() {
+    <script type="text/javascript">
+        $(function() {
 
-  activateImageUpload('postcard_image', {
-      imageMinWidth: 1287,
-      imageMinHeight: 1795,
-      maxFileSize: 10485760
-  });
-  $('.clearbutton').click(autosave_last_form_now);
+            activateImageUpload('postcard_image', {
+                    imageMinWidth: 1287,
+                    imageMinHeight: 1795,
+                    maxFileSize: 10485760
+            });
+            $('.clearbutton').click(autosave_last_form_now);
 
-})
-</script>
-  {% if page.locked %}
-    {# override the inclusion of autosave because we actually *do* want autosave here even for locked pages #}
-    <script src="{% static "student_profiles/js/autosave.js" %}"></script>
-  {% endif %}
+        });
+    </script>
+
+    {% if page.locked %}
+        {# override the inclusion of autosave because we actually *do* want autosave here even for locked pages #}
+        <script src="{% static "student_profiles/js/autosave.js" %}"></script>
+    {% endif %}
+
 {% endblock form_js %}
-
-
-

@@ -4,71 +4,75 @@
 {% block form_content %}
 
 <div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>MPhil Details</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
-        {% include 'student_profiles/form_snippet.html' with form=mphil_form %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-        {{ supervisor.management_form }}
-        <h4>Supervisors</h4>
-        <div id="{{ supervisor.prefix }}" class="field-set">
-        {% for form in supervisor %}
-          <div class="inline-form">
-            {{ form.id }}
-            {% include 'student_profiles/form_snippet.html' with form=form %}
-            <i class="icon action ion-android-arrow-up move-up"></i>
-            <i class="icon action ion-android-arrow-down move-down"></i>
-          </div>
-        {% endfor %}
-        </div>
+    <h1>MPhil Details</h1>
 
-        {% include "student_profiles/profile-actions.html" with page=page page=page %}
-      </form>
+    <section class="row">
+        <section class="body-text">
+            <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+                {% include 'student_profiles/form_snippet.html' with form=mphil_form %}
+
+                {{ supervisor.management_form }}
+                <h4>Supervisors</h4>
+                <div id="{{ supervisor.prefix }}" class="field-set">
+
+                    {% for form in supervisor %}
+                        <div class="inline-form">
+                            {{ form.id }}
+                            {% include 'student_profiles/form_snippet.html' with form=form %}
+                            <i class="icon action ion-android-arrow-up move-up"></i>
+                            <i class="icon action ion-android-arrow-down move-down"></i>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                {% include "student_profiles/profile-actions.html" with page=page page=page %}
+            </form>
+        </section>
+        <section class="notes">
+            <h3>Notes</h3>
+            <p>Information about your MPhil at the RCA.<p>
+
+            {% if SHOW_PAGES_ENABLED %}
+                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a>.</p>
+            {% endif %}
+
+            <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+        </section>
     </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>Information about your MPhil at the RCA.<p>
-        {% if SHOW_PAGES_ENABLED %}
-      <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show Project Details</a>.</p>
-        {% endif %}
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
-    </section>
-  </section>
 </div>
 
 {% endblock form_content %}
 
 {% block form_js %}
-<script type="text/javascript">
+    <script type="text/javascript">
 
+        {% if not page.locked %}
+            makeFormset('{{ supervisor.prefix }}', function(row) {
+                updateSupervisorSelects('{{ supervisor.prefix }}');
+                row.find('select').each(function(i) {$(this).trigger('change');});
+                row.find('.supervisor-select').select2();;
+            });
+        {% else %}
+            $('.move-up').remove();
+            $('.move-down').remove();
+            $('.dropzone').remove();
+            $('.clearbutton').remove();
+        {% endif %}
 
-  {% if not page.locked %}
-  makeFormset('{{ supervisor.prefix }}',
-  addedFunc=function(row) {
-    updateSupervisorSelects('{{ supervisor.prefix }}');
-    row.find('select').each(function(i) {$(this).trigger('change');});
-    row.find('.supervisor-select').select2();;
-  });
-  {% else %}
-    $('.move-up').remove();
-    $('.move-down').remove();
-    $('.dropzone').remove();
-    $('.clearbutton').remove();
-  {% endif %}
+        updateSupervisorSelects('{{ supervisor.prefix }}');
+        $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
 
-  updateSupervisorSelects('{{ supervisor.prefix }}');
-  $('#{{ supervisor.prefix }} select').each(function(i) {$(this).trigger('change');});
+        $('.supervisor-select').select2();
 
-  $('.supervisor-select').select2();
-
-</script>
+    </script>
 {% endblock form_js %}

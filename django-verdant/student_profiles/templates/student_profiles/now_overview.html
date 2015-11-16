@@ -6,75 +6,98 @@
 
 {% block form_content %}
 
+    <h1>Your RCA Now blog</h1>
 
-  <h1>Your RCA Now blog</h1>
-  <section class="row">
-    <section class="body-text">
-      {% if not pages %}
-      <div>
-        You have no posts yet.
-      </div>
-      <div class="now-actions">
-          <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
-      </div>
-      {% else %}
-      <table>
-        <tr class="first-row">
-          <th>Title</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-        {% for page in pages %}
-          <tr>
-            <td>{{ page.title }}</td>
-            <td>{% if page.live %}LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
-              {% else %}
-              Draft{% endif %}
-              {% if page.waiting_for_moderation %}<br>In moderation{% endif %}
-            {% if not page.live %}
-            <td>
-              <form action="{% url 'nowpages:delete' page.id %}" method="POST">{% csrf_token %}
-                <button class="button-as-link delete-post">Delete</button>
-              </form>
-            </td>
+    <section class="row">
+        <section class="body-text">
+
+            {% if not pages %}
+
+                <div>
+                    You have no posts yet.
+                </div>
+                <div class="now-actions">
+                        <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
+                </div>
+
+            {% else %}
+
+                <table>
+                    <tr class="first-row">
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                    {% for page in pages %}
+                        <tr>
+                            <td>{{ page.title }}</td>
+                            <td>
+                                {% if page.live %}
+                                    LIVE {% if page.has_unpublished_changes %} + Draft{% endif %}
+                                {% else %}
+                                    Draft
+                                {% endif %}
+
+                                {% if page.waiting_for_moderation %}<br>In moderation{% endif %}
+
+                            {% if not page.live %}
+                                <td>
+                                    <form action="{% url 'nowpages:delete' page.id %}" method="POST">{% csrf_token %}
+                                        <button class="button-as-link delete-post">Delete</button>
+                                    </form>
+                                </td>
+                            {% endif %}
+
+                            <td>
+                                {% if page.live %}
+                                    <a href="{{ page.url }}">Live</a>
+                                {% endif %}
+
+                                {% if page.has_unpublished_changes %}
+                                    <a href="{% url 'nowpages:preview' page.id %}" target="_blank">Preview</a>
+                                {% endif %}
+                            </td>
+
+                            {% if page.locked %}
+                                <td colspan="2">
+                                    can not edit, page is locked
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{% url 'nowpages:edit' page.id %}">Edit</a></td>
+                                <td>
+                                    {% if page.has_unpublished_changes %}
+                                        <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
+                                            <input type="submit" class="submit-page button-as-link" value="Submit for moderation">
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <div class="now-actions">
+                    <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
+                </div>
+
             {% endif %}
-            <td>
-              {% if page.live %}<a href="{{ page.url }}">Live</a>{% endif %}
-              {% if page.has_unpublished_changes %}<a href="{% url 'nowpages:preview' page.id %}" target="_blank">Preview</a>{% endif %}
-            </td>
-            {% if page.locked %}
-            <td colspan="2">
-              can not edit, page is locked
-            </td>
-          {% else %}
 
-            <td>
-              <a href="{% url 'nowpages:edit' page.id %}">Edit</a></td>
-            <td>{% if page.has_unpublished_changes %}
-              <form action="{% url 'nowpages:submit' page.id %}" method="POST">{% csrf_token %}
-                <input type="submit" class="submit-page button-as-link" value="Submit for moderation">
-              </form>
-              {% endif %}
-            </td>
-          {% endif %}
-          </tr>
-        {% endfor %}
-      </table>
-      <div class="now-actions">
-          <a class="button" href="{% url 'nowpages:create' %}">Create post</a>
-      </div>
-      {% endif %}
+        </section>
+
+        <section class="notes">
+            <h3>Notes</h3>
+            <p> Create, edit and submit your blog posts for moderation.</p>
+        </section>
+
     </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p> Create, edit and submit your blog posts for moderation.</p>
-    </section>
-  </section>
 
 {% endblock %}
 
 {% block extra_css %}
     {% include "wagtailadmin/pages/_editor_css.html" %}
-    {% compress css %}<link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />{% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/student-profiles.less" %}" />
+    {% endcompress %}
     <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" />
 {% endblock %}

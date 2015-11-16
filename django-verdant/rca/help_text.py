@@ -100,7 +100,7 @@ HELP_TEXT = {
     ('rca.NewStudentPage', 'phd_start_year'): 'The year you began your PhD',
     ('rca.NewStudentPage', 'phd_statement'): 'Description of your PhD dissertation or project',
     ('rca.NewStudentPage', 'phd_in_show'): 'Please tick only if you are a PhD student in the Show this year',
-    ('rca.RcaNowPage', 'body'): "This is the main text of your post. It should be a description the work, project or idea you're posting about",
+    ('rca.RcaNowPage', 'body'): "This is the main text of your post. It should be a description of the work, project or idea you're posting about",
     ('rca.RcaNowPage', 'author'): "Enter your full name as you'd like it to appear, e.g. Tom Smith",
     ('rca.RcaNowPage', 'date'): 'The date of your RCA Now post',
     ('rca.RcaNowPage', 'area'): "Select an area of the College only if it's relevant to your post",

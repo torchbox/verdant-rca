@@ -1,41 +1,47 @@
 {% load widget_tweaks %}{{ formset.management_form }}<h4>Carousel images/videos</h4>
 <div id="{{ formset.prefix }}" class="field-set">
-  {% for form in formset %}
-    <div class="inline-form">
-      {{ form.id }}
+    {% for form in formset %}
+        <div class="inline-form">
+            {{ form.id }}
 
-      {% include "student_profiles/form_field_labelled_snippet.html" with field=form.item_type %}
+            {% include "student_profiles/form_field_labelled_snippet.html" with field=form.item_type %}
 
-      {% include "student_profiles/form_field_labelled_snippet.html" with field=form.image_id %}
+            {% include "student_profiles/form_field_labelled_snippet.html" with field=form.image_id %}
 
-      <div class="form-col-holder">
-        {# inlined because we want to add the required marker here (without the field technically being required) #}
-        <label class="form-col form-col-half{% if form.title.errors %} error{% endif %}">{{ form.title.label }}:<span>*</span>
-          {% if page.locked %}
-            {% render_field form.title disabled="disabled" %}
-          {% else %}
-            {% render_field form.title %}
-          {% endif %}
-          {% if form.title.help_text %}<p class="help-text">{{ form.title.help_text }}</p>{% endif %}
-        </label>
-        {% for error in form.title.errors %}<small class="error">{{ error }}</small>{% endfor %}
+            <div class="form-col-holder">
+                {# inlined because we want to add the required marker here (without the field technically being required) #}
+                <label class="form-col form-col-half{% if form.title.errors %} error{% endif %}">{{ form.title.label }}:<span>*</span>
 
-        {% include "student_profiles/form_field_labelled_snippet.html" with field=form.creator %}
-        {% include "student_profiles/form_field_labelled_snippet.html" with field=form.year %}
-        {% include "student_profiles/form_field_labelled_snippet.html" with field=form.medium %}
-        {% include "student_profiles/form_field_labelled_snippet.html" with field=form.dimensions %}
-        {% include "student_profiles/form_field_labelled_snippet.html" with field=form.photographer %}
-      </div>
+                    {% if page.locked %}
+                        {% render_field form.title disabled="disabled" %}
+                    {% else %}
+                        {% render_field form.title %}
+                    {% endif %}
 
-      {% include "student_profiles/form_field_labelled_snippet.html" with field=form.embedly_url %}
-      {% include "student_profiles/form_field_labelled_snippet.html" with field=form.poster_image_id %}
+                    {% if form.title.help_text %}
+                        <p class="help-text">{{ form.title.help_text }}</p>
+                    {% endif %}
 
-      {% for hidden_field in form.hidden_fields %}
-        {{ hidden_field }}
-      {% endfor %}
+                </label>
 
-      <i class="icon action ion-android-arrow-up move-up"></i>
-      <i class="icon action ion-android-arrow-down move-down"></i>
-    </div>
-  {% endfor %}
+                {% for error in form.title.errors %}<small class="error">{{ error }}</small>{% endfor %}
+
+                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.creator %}
+                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.year %}
+                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.medium %}
+                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.dimensions %}
+                {% include "student_profiles/form_field_labelled_snippet.html" with field=form.photographer %}
+            </div>
+
+            {% include "student_profiles/form_field_labelled_snippet.html" with field=form.embedly_url %}
+            {% include "student_profiles/form_field_labelled_snippet.html" with field=form.poster_image_id %}
+
+            {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
+
+            <i class="icon action ion-android-arrow-up move-up"></i>
+            <i class="icon action ion-android-arrow-down move-down"></i>
+        </div>
+    {% endfor %}
 </div>

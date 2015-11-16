@@ -254,7 +254,7 @@ def overview(request, page_id=None):
 def preview(request, page_id=None):
     """Preview of the profile page."""
     data, profile_page = initial_context(request, page_id)
-    
+
     return profile_page.serve(profile_page.dummy_request())
 
 @login_required
@@ -271,7 +271,7 @@ def disambiguate(request):
     }
 
     return render(request, 'student_profiles/disambiguate.html', data)
-    
+
 
 
 ################################################################################
@@ -308,7 +308,7 @@ def basic_profile(request, page_id):
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif all((basic_form.is_valid(), email_formset.is_valid(), phone_formset.is_valid(), website_formset.is_valid())):
             bcd = basic_form.cleaned_data
-            
+
             request.user.first_name = profile_page.first_name = bcd['first_name']
             request.user.last_name = profile_page.last_name = bcd['last_name']
 
@@ -358,13 +358,13 @@ def academic_details(request, page_id=None):
     Academic details editing page.
     """
     data, profile_page = initial_context(request, page_id)
-    
+
     data['academic_form'] = ProfileAcademicDetailsForm(instance=profile_page)
-    
+
     def make_formset(formset_class, relname, form_attr_name, model_attr_name=None):
-        
+
         model_attr_name = model_attr_name or form_attr_name
-        
+
         data[relname + '_formset'] = formset_class(
             prefix=relname,
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
@@ -399,7 +399,7 @@ def academic_details(request, page_id=None):
         ConferencesFormset, 'conferences',
         'name',
     )
-    
+
     if request.method == 'POST':
         data['academic_form'] = pf = ProfileAcademicDetailsForm(request.POST)
         data['previous_degrees_formset'] = pdfs = PreviousDegreesFormset(request.POST, prefix='previous_degrees')
@@ -408,14 +408,14 @@ def academic_details(request, page_id=None):
         data['publications_formset'] = pfs = PublicationsFormset(request.POST, prefix='publications')
         data['conferences_formset'] = cfs = ConferencesFormset(request.POST, prefix='conferences')
         data['experiences_formset'] = xfs = ExperiencesFormset(request.POST, prefix='experiences')
-        
+
         if profile_page.locked:
             if not request.is_ajax():
                 # we don't want to put messages in ajax requests because the user will do a manual post and get the message then
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif all((pf.is_valid(), pdfs.is_valid(), efs.is_valid(), pfs.is_valid(), cfs.is_valid(), afs.is_valid(), xfs.is_valid())):
             profile_page.funding = pf.cleaned_data['funding']
-            
+
             profile_page.previous_degrees = [
                 NewStudentPagePreviousDegree(degree=f['degree']) for f in pdfs.ordered_data if f.get('degree')
             ]
@@ -434,9 +434,9 @@ def academic_details(request, page_id=None):
             profile_page.experiences = [
                 NewStudentPageExperience(experience=f['experience']) for f in xfs.ordered_data if f.get('experience')
             ]
-            
+
             save_page(profile_page, request)
-        
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
@@ -519,9 +519,9 @@ def ma_details(request, page_id):
                 messages.error(request, 'The page could not be saved, it is currently locked')
         elif form.is_valid():
             page = form.save(commit=False)
-            
+
             save_page(page, request)
-            
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
@@ -549,9 +549,9 @@ def ma_show_details(request, page_id):
         return redirect('student-profiles:edit-ma', page_id=page_id)
 
     def make_formset(formset_class, relname, form_attr_name, model_attr_name=None):
-        
+
         model_attr_name = model_attr_name or form_attr_name
-        
+
         data[relname + '_formset'] = formset_class(
             prefix=relname,
             initial=[{form_attr_name: getattr(x, model_attr_name)} for x in getattr(profile_page, relname).all()],
@@ -561,7 +561,7 @@ def ma_show_details(request, page_id):
 
     carousel_initial = make_carousel_initial(profile_page.show_carousel_items.all())
     data['carouselitem_formset'] = MAShowCarouselItemFormset(prefix='carousel', initial=carousel_initial)
-    
+
     make_formset(MACollaboratorFormset, 'show_collaborators', 'name')
     make_formset(MASponsorFormset, 'show_sponsors', 'name')
 
@@ -587,7 +587,7 @@ def ma_show_details(request, page_id):
             page.show_sponsors = [
                 NewStudentPageShowSponsor(name=f['name'].strip()) for f in ssf.ordered_data if f.get('name')
             ]
-            
+
             save_page(page, request)
 
             if request.is_ajax():
@@ -645,7 +645,7 @@ def mphil_details(request, page_id):
             ]
 
             save_page(page, request)
-            
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
@@ -761,7 +761,7 @@ def phd_details(request, page_id):
             ]
 
             save_page(page, request)
-            
+
             if request.is_ajax():
                 return HttpResponse(json.dumps({'ok': True}), content_type='application/json')
             if 'preview' in request.POST:
@@ -855,9 +855,9 @@ def image_upload(request, page_id, field=None, max_size=None, min_dim=None, forc
     If field is given it'll be attached to the page in the given field.
     If max_size or min_dim (2-tuple) are given, filesize and image dimensions are checked.
     """
-    
+
     data, profile_page = initial_context(request, page_id)
-    
+
     form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
     if profile_page.locked and not force:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
@@ -867,7 +867,7 @@ def image_upload(request, page_id, field=None, max_size=None, min_dim=None, forc
             file=form.cleaned_data['image'],
             uploaded_by_user=request.user,
         )
-        
+
         if field:
             # set the field to the image
             setattr(profile_page, field, r)

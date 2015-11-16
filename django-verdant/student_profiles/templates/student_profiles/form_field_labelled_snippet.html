@@ -1,21 +1,23 @@
 {% load widget_tweaks %}
+
 <label class="{% if field.field.half %}form-col form-col-half{% endif %}{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
-    
+
     {% if not field.field.half and field.help_text %}
         <p class="help-text">{{ field.help_text }}</p>
     {% endif %}
 
-  {% if page.locked %}
-    {% render_field field disabled="disabled" %}
-  {% else %}
-    {% render_field field %}
-  {% endif %}
+    {% if page.locked %}
+        {% render_field field disabled="disabled" %}
+    {% else %}
+        {% render_field field %}
+    {% endif %}
 
     {% if field.field.half and field.help_text %}
         <p class="help-text">{{ field.help_text }}</p>
     {% endif %}
 
 </label>
+
 {% for error in field.errors %}
-<small class="error">{{ error }}</small>
+    <small class="error">{{ error }}</small>
 {% endfor %}

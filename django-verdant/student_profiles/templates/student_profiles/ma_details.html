@@ -5,32 +5,33 @@
 
 
 <div class="page-content">
-  {% if messages %}
-  <ul class="messages">
-      {% for message in messages %}
-      <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-  </ul>
-  {% endif %}
-  <h1>MA Details</h1>
-  <section class="row">
-    <section class="body-text">
-      <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
-        
-        {% include 'student_profiles/form_snippet.html' with form=ma_form %}
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-        {% include "student_profiles/profile-actions.html" with page=page page=page %}
-      </form>
+    <h1>MA Details</h1>
+    <section class="row">
+        <section class="body-text">
+            <form method="POST" class="student-profile" accept-charset="utf-8" enctype="multipart/form-data">{% csrf_token %}
+
+                {% include 'student_profiles/form_snippet.html' with form=ma_form %}
+
+                {% include "student_profiles/profile-actions.html" with page=page page=page %}
+            </form>
+        </section>
+        <section class="notes">
+            <h3>Notes</h3>
+            <p>Information about your MA at the RCA.<p>
+                {% if SHOW_PAGES_ENABLED %}
+                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show profile</a>.</p>
+                {% endif %}
+            <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
+        </section>
     </section>
-    <section class="notes">
-      <h3>Notes</h3>
-      <p>Information about your MA at the RCA.<p>
-        {% if SHOW_PAGES_ENABLED %}
-      <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show profile</a>.</p>
-        {% endif %}
-      <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>
-    </section>
-  </section>
 </div>
 
 {% endblock form_content %}
