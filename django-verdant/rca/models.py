@@ -629,6 +629,7 @@ class Advert(models.Model):
     text = models.CharField(max_length=255, help_text=help_text('rca.Advert', 'text', default="bold text"))
     plain_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.Advert', 'plain_text'))
     show_globally = models.BooleanField(default=False, help_text=help_text('rca.Advert', 'show_globally'))
+    promoted = models.BooleanField(blank=True, default=False, help_text=help_text('rca.Advert', 'promoted'))
 
     panels = [
         PageChooserPanel('page'),
@@ -636,6 +637,7 @@ class Advert(models.Model):
         FieldPanel('text'),
         FieldPanel('plain_text'),
         FieldPanel('show_globally'),
+        FieldPanel('promoted'),
     ]
 
     def __unicode__(self):
@@ -1036,6 +1038,9 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
             feed2.append(staff)
 
         return feed2
+
+    def pathways(self):
+        return self.get_children().live().type(PathwayPage).specific()
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
@@ -6070,4 +6075,139 @@ StreamPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+]
+
+
+# == Pathway page ==
+
+class PathwayPageCarouselItem(Orderable, CarouselItemFields):
+    page = ParentalKey('rca.PathwayPage', related_name='carousel_items')
+
+class PathwayPageRelatedLink(Orderable, RelatedLinkMixin):
+    page = ParentalKey('rca.PathwayPage', related_name='related_links')
+
+class PathwayPageQuotation(Orderable):
+    page = ParentalKey('rca.PathwayPage', related_name='quotations')
+    quotation = models.TextField(help_text=help_text('rca.PathwayPageQuotation', 'quotation'))
+    quotee = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPageQuotation', 'quotee'))
+    quotee_job_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPageQuotation', 'quotee_job_title'))
+
+    panels = [
+        FieldPanel('quotation'),
+        FieldPanel('quotee'),
+        FieldPanel('quotee_job_title')
+    ]
+
+class PathwayPageRelatedDocument(Orderable):
+    page = ParentalKey('rca.PathwayPage', related_name='documents')
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.PathwayPageRelatedDocument', 'document'))
+    document_name = models.CharField(max_length=255, help_text=help_text('rca.PathwayPageRelatedDocument', 'document_name'))
+
+    panels = [
+        DocumentChooserPanel('document'),
+        FieldPanel('document_name')
+    ]
+
+class PathwayPageImage(Orderable):
+    page = ParentalKey('rca.PathwayPage', related_name='images')
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, related_name='+', help_text=help_text('rca.PathwayPageImage', 'image'))
+
+    panels = [
+        ImageChooserPanel('image'),
+    ]
+
+class PathwayPageAd(Orderable):
+    page = ParentalKey('rca.PathwayPage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.PathwayPageAd', 'ad'))
+
+    panels = [
+        SnippetChooserPanel('ad', Advert),
+    ]
+
+class PathwayPageReusableTextSnippet(Orderable):
+    page = ParentalKey('rca.PathwayPage', related_name='reusable_text_snippets')
+    reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+', help_text=help_text('rca.PathwayPageReusableTextSnippet', 'reusable_text_snippet'))
+
+    panels = [
+        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+    ]
+
+class PathwayPageTag(TaggedItemBase):
+    content_object = ParentalKey('rca.PathwayPage', related_name='tagged_items')
+
+class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
+    intro = RichTextField(help_text=help_text('rca.PathwayPage', 'intro'), blank=True)
+    body = RichTextField(help_text=help_text('rca.PathwayPage', 'body'))
+    strapline = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPage', 'strapline'))
+    middle_column_body = RichTextField(blank=True, help_text=help_text('rca.PathwayPage', 'middle_column_body'))
+    show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PathwayPage', 'show_on_homepage'))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_school'))
+    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_programme'))
+    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    tags = ClusterTaggableManager(through=PathwayPageTag, help_text=help_text('rca.PathwayPage', 'tags'), blank=True)
+
+    search_fields = Page.search_fields + (
+        index.SearchField('intro'),
+        index.SearchField('body'),
+    )
+
+    parent_page_types = ['rca.ProgrammePage']
+
+    @property
+    def search_name(self):
+        if self.related_programme:
+            return self.get_related_programme_display()
+
+        if self.related_school:
+            return self.get_related_school_display()
+
+        return None
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('strapline', classname="full"),
+        FieldPanel('intro', classname="full"),
+        FieldPanel('body', classname="full"),
+        InlinePanel('carousel_items', label="Carousel content"),
+        InlinePanel('related_links', label="Related links"),
+        FieldPanel('middle_column_body', classname="full"),
+        InlinePanel('reusable_text_snippets', label="Reusable text snippet"),
+        InlinePanel('documents', label="Document"),
+        InlinePanel('quotations', label="Quotation"),
+        InlinePanel('images', label="Middle column image"),
+        InlinePanel('manual_adverts', label="Manual adverts"),
+        FieldPanel('twitter_feed'),
+    ]
+
+PathwayPage.promote_panels = [
+    MultiFieldPanel([
+        FieldPanel('seo_title'),
+        FieldPanel('slug'),
+    ], 'Common page configuration'),
+
+    MultiFieldPanel([
+        FieldPanel('show_in_menus'),
+        FieldPanel('show_on_homepage'),
+        ImageChooserPanel('feed_image'),
+        FieldPanel('search_description'),
+    ], 'Cross-page behaviour'),
+
+    MultiFieldPanel([
+        ImageChooserPanel('social_image'),
+        FieldPanel('social_text'),
+    ], 'Social networks'),
+
+    MultiFieldPanel([
+        FieldPanel('related_school'),
+        FieldPanel('related_programme'),
+    ], 'Related pages'),
+    FieldPanel('tags'),
+]
+
+PathwayPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]

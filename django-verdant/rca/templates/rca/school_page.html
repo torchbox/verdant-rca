@@ -39,9 +39,9 @@
     {% endif %}
 
     <!-- programmes -->
-    {% programme_by_school school=self.school %}
+    {% programme_by_school school=self.school %}  {# rca/tags/programmes_by_school.html #}
 
-    
+
     <!-- head of research -->
     {% if self.head_of_research or self.head_of_research_statement %}
         <section class="head-of-programme row module">
@@ -89,7 +89,7 @@
 	{% include "rca/includes/modules/contact.html" %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
-    
+
 {% endblock %}
 
 {% block sidebar %}

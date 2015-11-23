@@ -898,6 +898,11 @@ nav.dl-menuwrapper{
  */
 
 /* advert */
+
+.promoted-adverts{
+    font-size: 1.3em;
+}
+
 .advert-grey {
     .mixin-sidebar-advert(@color-dark-grey, 20%);
 }
@@ -1397,6 +1402,43 @@ footer {
     have any bottom spacing */
         margin-bottom: 0;
         padding-bottom: 0;
+    }
+    .section-breadcrumb-pathways{
+        color: #6DCFF6;
+    }
+    .programmes-and-pathways{
+        a{
+            font-size: 2.2em;
+            line-height: 1;
+            text-transform: uppercase;
+            font-family: @font-family-knockout;
+        }
+        a.chevron-after:after{
+            content: '\003e';
+            margin-left: 5px;
+            color: #000;
+        }
+        a:hover{
+            color: #939598;
+            &:after{
+                color: #000;
+            }
+        }
+
+        a.pathway-link{
+            color: #00AEEF;
+        }
+        a.pathway-link:hover{
+            color: #6DCFF6;
+            &:after{
+                color: #00AEEF;
+            }
+        }
+        a.separator-after:after{
+            content: ' | ';
+            position: relative;
+            color: #00AEEF;
+        }
     }
 }
 
