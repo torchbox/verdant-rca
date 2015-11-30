@@ -633,3 +633,5 @@ $('input[type=checkbox]').on('change',function() {
 // hide label for image/video choice field, which is temporarily disabled:
 // https://projects.torchbox.com/projects/rca-django-cms-project/tickets/755#update-28919690
 $('#id_carousel-0-item_type').closest('label').hide();
+// similarly, hide `by group/single student` field
+$('#id_by').closest('label').hide();
