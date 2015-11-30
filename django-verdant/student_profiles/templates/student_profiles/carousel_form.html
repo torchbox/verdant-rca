@@ -1,4 +1,6 @@
-{% load widget_tweaks %}{{ formset.management_form }}<h4>Carousel images/videos</h4>
+{% load widget_tweaks %}{{ formset.management_form }}<h4>Carousel images{# /videos #}</h4>
+{# TODO: https://projects.torchbox.com/projects/rca-django-cms-project/tickets/755#update-28919690 #}
+
 <div id="{{ formset.prefix }}" class="field-set">
     {% for form in formset %}
         <div class="inline-form">

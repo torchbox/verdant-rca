@@ -535,8 +535,9 @@ class MAShowCarouselItemForm(forms.Form):
     item_type = forms.ChoiceField(
         choices=(
             ('image', 'Image'),    # if you change these values, you must also change the values in the javascript and in the views!
-            ('video', 'Video'),
-        )
+            # ('video', 'Video'),  # TODO: https://projects.torchbox.com/projects/rca-django-cms-project/tickets/755#update-28919690
+        ),
+        initial='image',
     )
 
     image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
