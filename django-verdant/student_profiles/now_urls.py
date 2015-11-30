@@ -21,4 +21,5 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/delete/$', delete, name='delete'),
 
     url(r'^(?P<page_id>\d+)/edit/image/$', image_upload),
+    url(r'^new/image/$', image_upload),
 )

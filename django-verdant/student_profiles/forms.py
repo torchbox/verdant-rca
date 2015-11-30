@@ -119,6 +119,8 @@ class BooleanField(forms.BooleanField):
 
 
 class ImageInput(forms.FileInput):
+    # image_upload_url is relative to the current page, see image_upload in urls.py and now_urls.py
+    image_upload_url = 'image/'
 
     def value_from_datadict(self, data, files, name):
         try:
@@ -145,7 +147,7 @@ class ImageInput(forms.FileInput):
                 pass
 
         return """
-            <div id="{name}" class="image-uploader-block" data-url="image/">
+            <div id="{name}" class="image-uploader-block" data-url="{image_upload_url}">
                 <div class="preview" style="display: {preview_display};">
                     {preview}
                     <div class="progress">
@@ -161,6 +163,7 @@ class ImageInput(forms.FileInput):
                 preview=preview, preview_display='block' if preview else 'none',
                 value_id=value,
                 hidden_clear='' if value else ' style="display: none;"',
+                image_upload_url=self.image_upload_url,
             )
 
 

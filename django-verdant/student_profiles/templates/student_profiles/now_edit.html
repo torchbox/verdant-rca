@@ -52,74 +52,74 @@
 
 {% block form_js %}
     <script type="text/javascript">
+        $(function(){
+            makeRichTextEditable('id_body');
 
-        makeRichTextEditable('id_body');
+            {% if not page.locked %}
 
-        {% if not page.locked %}
+                $('#id_date').datetimepicker({
+                    timepicker: false,
+                    format: 'Y-m-d',
+                    closeOnDateSelect: true,
+                    scrollInput:false,
+                });
 
-            $('#id_date').datetimepicker({
-                timepicker: false,
-                format: 'Y-m-d',
-                closeOnDateSelect: true,
-                scrollInput:false,
-            });
+                makeFormset('{{ link_formset.prefix }}');
+                makeFormset('{{ area_formset.prefix }}');
+                makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
+                            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                            row.find('select').each(function(){ $(this).trigger('change')});
+                            row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+                            row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
+                    }
+                );
+                updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                $('#carousel select').each(function(i) {
+                    $(this).trigger('change');
+                });
+                $('.image-uploader-block').each(function(i) {
+                    activateImageUpload(this.id);
+                });
 
-            makeFormset('{{ link_formset.prefix }}');
-            makeFormset('{{ area_formset.prefix }}');
-            makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
-                        updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-                        row.find('select').each(function(){ $(this).trigger('change')});
-                        row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
-                        row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
-                }
-            );
-            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-            $('#carousel select').each(function(i) {
-                $(this).trigger('change');
-            });
-            $('.image-uploader-block').each(function(i) {
-                activateImageUpload(this.id);
-            });
+                // make the selection between single author and group of authors
+                $('#id_by').change(function() {
+                    var value = $(this).val();
 
-            // make the selection between single author and group of authors
-            $('#id_by').change(function() {
-                var value = $(this).val();
+                    if (value == 'single') {
+                        $('#id_author_single').parent().show();
+                        $('#id_author').parent().hide();
+                    }
+                    else if (value == 'group') {
+                        $('#id_author_single').parent().hide();
+                        $('#id_author').parent().show();
+                    }
+                });
+                $('#id_by').change();
 
-                if (value == 'single') {
-                    $('#id_author_single').parent().show();
-                    $('#id_author').parent().hide();
-                }
-                else if (value == 'group') {
-                    $('#id_author_single').parent().hide();
-                    $('#id_author').parent().show();
-                }
-            });
-            $('#id_by').change();
+                $('#id_author_single').select2({'width': '100%'});
 
-            $('#id_author_single').select2({'width': '100%'});
+            {% else %}
 
-        {% else %}
+                updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                $('#id_by').change(function() {
+                    var value = $(this).val();
 
-            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-            $('#id_by').change(function() {
-                var value = $(this).val();
+                    if (value == 'single') {
+                        $('#id_author_single').parent().show();
+                        $('#id_author').parent().hide();
+                    }
+                    else if (value == 'group') {
+                        $('#id_author_single').parent().hide();
+                        $('#id_author').parent().show();
+                    }
+                });
+                $('#id_by').change();
+                $('.move-up').remove();
+                $('.move-down').remove();
+                $('.dropzone').remove();
+                $('.clearbutton').remove();
 
-                if (value == 'single') {
-                    $('#id_author_single').parent().show();
-                    $('#id_author').parent().hide();
-                }
-                else if (value == 'group') {
-                    $('#id_author_single').parent().hide();
-                    $('#id_author').parent().show();
-                }
-            });
-            $('#id_by').change();
-            $('.move-up').remove();
-            $('.move-down').remove();
-            $('.dropzone').remove();
-            $('.clearbutton').remove();
-
-        {% endif %}
-
+            {% endif %}
+        });
     </script>
 {% endblock form_js %}

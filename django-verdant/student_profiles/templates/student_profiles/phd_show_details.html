@@ -50,33 +50,33 @@
 
 {% block form_js %}
     <script type="text/javascript">
+        $(function(){
+            makeRichTextEditable('id_phd_statement');
 
-        makeRichTextEditable('id_phd_statement');
+            {% if not page.locked %}
+                makeFormset('{{ collaborator.prefix }}');
+                makeFormset('{{ sponsor.prefix }}');
+                makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
+                    updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+                    row.find('select').each(function(){ $(this).trigger('change')});
+                    row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
+                    row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
+                });
 
-        {% if not page.locked %}
-            makeFormset('{{ collaborator.prefix }}');
-            makeFormset('{{ sponsor.prefix }}');
-            makeFormset('{{ carouselitem_formset.prefix }}', function(row) {
-                updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-                row.find('select').each(function(){ $(this).trigger('change')});
-                row.find('.image-uploader-block').each(function(i) { activateImageUpload(this.id); });
-                row.find('.image-uploader-block img').replaceWith('<div class="preview_canvas"></div>');
+                $('.image-uploader-block').each(function(i) {
+                    activateImageUpload(this.id);
+                });
+            {% else %}
+                $('.move-up').remove();
+                $('.move-down').remove();
+                $('.dropzone').remove();
+                $('.clearbutton').remove();
+            {% endif %}
+
+            updateCarouselSelects('{{ carouselitem_formset.prefix }}');
+            $('#carousel select').each(function(i) {
+                $(this).trigger('change');
             });
-
-            $('.image-uploader-block').each(function(i) {
-                activateImageUpload(this.id);
-            });
-        {% else %}
-            $('.move-up').remove();
-            $('.move-down').remove();
-            $('.dropzone').remove();
-            $('.clearbutton').remove();
-        {% endif %}
-
-        updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-        $('#carousel select').each(function(i) {
-            $(this).trigger('change');
         });
-
     </script>
 {% endblock form_js %}

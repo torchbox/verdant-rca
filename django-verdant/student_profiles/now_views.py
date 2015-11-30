@@ -144,7 +144,7 @@ def edit(request, page_id=None):
                         slugify(page.title),
                         page.id,
                     )
-            
+
             revision = page.save_revision(
                 user=request.user,
                 submitted_for_moderation=submit_for_moderation
@@ -217,19 +217,21 @@ def delete(request, page_id):
     return render(request, 'student_profiles/now_delete.html', data)
 
 
-
 @require_POST
 @login_required
-def image_upload(request, page_id, max_size=None, min_dim=None):
+def image_upload(request, page_id=None, max_size=None, min_dim=None):
     """Upload an image file and create an RcaImage out of it. Specific for NowPages
 
     If max_size or min_dim (2-tuple) are given, filesize and image dimensions are checked.
     """
 
-    page = get_page_or_404(request, page_id)
+    if page_id is None:
+        is_page_locked = False
+    else:
+        is_page_locked = get_page_or_404(request, page_id).locked
 
     form = ImageForm(request.POST, request.FILES, max_size=max_size, min_dim=min_dim)
-    if page.locked:
+    if is_page_locked:
         res = {'ok': False, 'errors': 'The page is currently locked and cannot be edited.'}
         return HttpResponse(json.dumps(res), content_type='application/json')
     elif form.is_valid():
