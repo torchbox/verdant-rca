@@ -6,16 +6,6 @@
 
 {% block content %}
 
-<script type="text/javascript">
-    // some form field widgets call makeRichTextEditable from the rendered html
-    // but it will be defined only after the scripts are loaded
-    function makeRichTextEditable(id){
-        window.addEventListener('load', function(){
-            makeRichTextEditable(id);
-        });
-    }
-</script>
-
 <div class="page-content">
 
     <div class="app-details">
