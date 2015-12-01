@@ -11,7 +11,7 @@ def show_subpage_url(show_index, name, *args, **kwargs):
     if show_index.is_programme_page and name in ['student', 'programme'] and 'school' in kwargs:
         del kwargs['school']
 
-    if not kwargs['programme']:
+    if 'programme' in kwargs and not kwargs['programme']:
         del kwargs['programme']
 
     return show_index.reverse_subpage(name, *args, **kwargs)
