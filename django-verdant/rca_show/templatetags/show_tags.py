@@ -44,7 +44,7 @@ def get_school_programmes(show_index, school):
 
 
 @register.assignment_tag
-def get_school_students(show_index, school, random = False):
+def get_school_students(show_index, school, random=False):
     if show_index is None:
         return []
 
@@ -55,7 +55,7 @@ def get_school_students(show_index, school, random = False):
 
 
 @register.assignment_tag
-def get_programme_students(show_index, programme, random = False):
+def get_programme_students(show_index, programme, random=False):
     if show_index is None:
         return []
     if random:
@@ -63,18 +63,20 @@ def get_programme_students(show_index, programme, random = False):
     else:
         return show_index.get_students(programme=programme)
 
+
 @register.assignment_tag
 def get_programme_works(show_index, programme):
-    # Instead of getting a list of students (get_programme_students), 
+    # Instead of getting a list of students (get_programme_students),
     # this gets the same list of students but ordered by their dissertation/work title
     if show_index is None:
         return []
     else:
         return show_index.get_students(programme=programme, orderby="show_work_title")
 
+
 @register.assignment_tag
-def randsize(rangeStart, rangeEnd):
-    return random.randrange(rangeStart, rangeEnd)
+def randsize(range_start, range_end):
+    return random.randrange(range_start, range_end)
 
 
 @register.assignment_tag
@@ -89,7 +91,7 @@ def secondary_menu(calling_page=None):
 @register.assignment_tag
 def get_maps_for_campus(campus):
     maps = models.ShowExhibitionMapPage.objects.filter(live=True, campus=campus)
-   
+
     return maps
 
 
