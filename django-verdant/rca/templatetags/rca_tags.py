@@ -675,7 +675,7 @@ def get_lightbox_config():
 
 @register.inclusion_tag('rca/includes/use_lightbox.html', takes_context=True)
 def use_lightbox(context):
-    if not 'self' in context:
+    if 'self' not in context:
         return {}
 
     cache_key = 'lightbox_config'
