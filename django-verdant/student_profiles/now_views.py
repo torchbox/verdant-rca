@@ -16,17 +16,12 @@ from taggit.models import Tag
 from wagtail.wagtailcore.models import Page
 from rca.models import RcaNowPage, NewStudentPage
 from rca.models import RcaImage, RcaNowPagePageCarouselItem, RcaNowPageRelatedLink, RcaNowPageArea
+from student_profiles.models import StudentProfilesSettings
 
 from .now_forms import PageForm, RelatedLinkFormset, AreaFormSet
 from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show, make_carousel_initial, \
     make_carousel_items, SHOW_PAGES_ENABLED
 from .forms import MAShowCarouselItemFormset, ImageForm
-
-
-# this is the ID of the page where new student pages are added as children
-# MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
-RCA_NOW_INDEX_ID = 36
-
 
 ################################################################################
 ## helper functions
@@ -35,7 +30,8 @@ def get_page_or_404(request, page_id):
     """
     Get the page with the given id if it belongs to the user in the request, otherwise throw a 404.
     """
-    index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
+    student_settings = StudentProfilesSettings.for_site(request.site)
+    index_page = Page.objects.get(id=student_settings.rca_now_index.id)
     child_page = get_object_or_404(index_page.get_children(), owner=request.user, id=page_id).get_latest_revision_as_page()
     if not isinstance(child_page, RcaNowPage):
         raise Http404("Page of correct type could not be found")
@@ -77,7 +73,8 @@ def overview(request):
     data = initial_data(request)
     data['nav_now'] = True
 
-    index_page = Page.objects.get(id=RCA_NOW_INDEX_ID)
+    student_settings = StudentProfilesSettings.for_site(request.site)
+    index_page = Page.objects.get(id=student_settings.rca_now_index.id)
     raw_pages = index_page.get_children().filter(owner=request.user).order_by('-latest_revision_created_at')
     data['pages'] = [p.get_latest_revision_as_page() for p in raw_pages if isinstance(p, RcaNowPage)]
     for p in data['pages']:
@@ -137,7 +134,8 @@ def edit(request, page_id=None):
             if page_id is None:
                 page.live = False
                 page.show_on_homepage = False
-                Page.objects.get(id=RCA_NOW_INDEX_ID).add_child(instance=page)
+                student_settings = StudentProfilesSettings.for_site(request.site)
+                Page.objects.get(id=student_settings.rca_now_index.id).add_child(instance=page)
                 page.slug = slugify(page.title)
                 if Page.objects.exclude(id=page.id).filter(slug=page.slug).exists():
                     page.slug = '{}-{}'.format(

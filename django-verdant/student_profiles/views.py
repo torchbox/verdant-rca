@@ -21,6 +21,7 @@ from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollabo
 from rca.models import NewStudentPageMPhilCarouselItem, NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCarouselItem, NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage
+from student_profiles.models import StudentProfilesSettings
 
 from .forms import StartingForm
 from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
@@ -31,10 +32,6 @@ from .forms import MPhilForm, MPhilShowForm, MPhilCollaboratorFormset, MPhilSpon
 from .forms import PhDForm, PhDShowForm, PhDCollaboratorFormset, PhDSponsorFormset, PhDSupervisorFormset
 
 from .forms import ImageForm
-
-# this is the ID of the page where new student pages are added as children
-# MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
-NEW_STUDENT_PAGE_INDEX_ID = 6201
 
 # module-global setting determining whether show pages and postcard upload is enabled or not
 SHOW_PAGES_ENABLED = bool(getattr(settings, 'STUDENT_UPLOADS_SHOW_PAGES_ENABLED', True))
@@ -230,9 +227,8 @@ def overview(request, page_id=None):
             request.user.first_name = page.first_name = form.cleaned_data['first_name']
             request.user.last_name = page.last_name = form.cleaned_data['last_name']
 
-            # the following is the page where the new student pages are added as children
-            # MAKE SURE THIS IS THE CORRECT ID!
-            Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=page)
+            student_settings = StudentProfilesSettings.for_site(request.site)
+            Page.objects.get(id=student_settings.new_student_page_index.id).add_child(instance=page)
             # the page slug should not be changed, lest all links go wrong!
             page.slug = slugify(page.title)
             if Page.objects.exclude(id=page.id).filter(slug=page.slug).exists():
