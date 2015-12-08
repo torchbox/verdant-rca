@@ -33,9 +33,6 @@ from .forms import PhDForm, PhDShowForm, PhDCollaboratorFormset, PhDSponsorForms
 
 from .forms import ImageForm
 
-# module-global setting determining whether show pages and postcard upload is enabled or not
-SHOW_PAGES_ENABLED = bool(getattr(settings, 'STUDENT_UPLOADS_SHOW_PAGES_ENABLED', True))
-
 # we override login_required with our own login_required because we want to control the login URL
 login_required = login_required(login_url='student-profiles:login')
 
@@ -57,7 +54,7 @@ def user_is_phd(request):
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
     return \
-        SHOW_PAGES_ENABLED and \
+        StudentProfilesSettings.for_site(request.site).show_pages_enabled and \
         (user_is_ma(request) and profile_page.ma_in_show \
         or user_is_mphil(request) and profile_page.mphil_in_show \
         or user_is_phd(request) and profile_page.phd_in_show)
@@ -147,7 +144,7 @@ def make_carousel_items(d, carousel_type):
 def initial_context(request, page_id):
     """Context data that (almost) every view here needs."""
     data = {
-        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
+        'SHOW_PAGES_ENABLED': StudentProfilesSettings.for_site(request.site).show_pages_enabled,
         'is_ma': user_is_ma(request),
         'is_mphil': user_is_mphil(request),
         'is_phd': user_is_phd(request),
@@ -257,7 +254,7 @@ def preview(request, page_id=None):
 def disambiguate(request):
     """There are two profiles for this user, let them choose which one they want to edit."""
     data = {
-        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
+        'SHOW_PAGES_ENABLED': StudentProfilesSettings.for_site(request.site).show_pages_enabled,
         'is_ma': user_is_ma(request),
         'is_mphil': user_is_mphil(request),
         'is_phd': user_is_phd(request),
@@ -459,7 +456,7 @@ def postcard_upload(request, page_id):
     """
     Single page for just uploading postcard images.
     """
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
@@ -533,7 +530,7 @@ def ma_details(request, page_id):
 
 @login_required
 def ma_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_ma(request):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
@@ -660,7 +657,7 @@ def mphil_details(request, page_id):
 
 @login_required
 def mphil_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_mphil(request):
         raise Http404("You cannot view MPhil details because you're not in the MPhil programme.")
@@ -776,7 +773,7 @@ def phd_details(request, page_id):
 
 @login_required
 def phd_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_phd(request):
         raise Http404("You cannot view PhD Show details because you're not in the PhD programme.")

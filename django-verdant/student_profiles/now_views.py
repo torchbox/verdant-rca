@@ -20,7 +20,7 @@ from student_profiles.models import StudentProfilesSettings
 
 from .now_forms import PageForm, RelatedLinkFormset, AreaFormSet
 from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show, make_carousel_initial, \
-    make_carousel_items, SHOW_PAGES_ENABLED
+    make_carousel_items
 from .forms import MAShowCarouselItemFormset, ImageForm
 
 ################################################################################
@@ -53,7 +53,7 @@ def initial_data(request, page_id=None):
         data['page_id'] = profile_page.id
         data['is_in_show'] = profile_is_in_show(request, profile_page)
         data['profile_name'] = profile_page.title
-        data['SHOW_PAGES_ENABLED'] = SHOW_PAGES_ENABLED
+        data['SHOW_PAGES_ENABLED'] = StudentProfilesSettings.for_site(request.site).show_pages_enabled
 
     if page_id is not None:
         page = get_page_or_404(request, page_id)

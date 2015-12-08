@@ -1,6 +1,6 @@
 from django.db import models
 from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.wagtailadmin.edit_handlers import PageChooserPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel
 
 
 @register_setting
@@ -13,18 +13,25 @@ class StudentProfilesSettings(BaseSetting):
         'wagtailcore.Page', null=False, blank=False, on_delete=models.PROTECT,
         related_name='+',
         help_text="New student pages will be added as children of this page.",
-        verbose_name="Index for new student pages",
+        verbose_name="Student pages",
         default=6201
     )
     rca_now_index = models.ForeignKey(
         'wagtailcore.Page', null=False, blank=False, on_delete=models.PROTECT,
         related_name='+',
         help_text="New RCA Now pages will be added as children of this page.",
-        verbose_name="Index for new RCA Now pages",
+        verbose_name="RCA Now pages",
         default=36
+    )
+    show_pages_enabled = models.BooleanField(
+        default=True,
+        help_text="Determine whether show pages and postcard upload are enabled.",
     )
 
     panels = [
-        PageChooserPanel('new_student_page_index', 'rca.StandardIndex'),
-        PageChooserPanel('rca_now_index', 'rca.RCANowIndex')
+        MultiFieldPanel([
+            PageChooserPanel('new_student_page_index', 'rca.StandardIndex'),
+            PageChooserPanel('rca_now_index', 'rca.RCANowIndex'),
+        ], "Index page locations"),
+        FieldPanel('show_pages_enabled')
     ]
