@@ -9,10 +9,21 @@ PIP=$VIRTUALENV_DIR/bin/pip
 # Dependencies for LDAP
 apt-get install -y libldap2-dev libsasl2-dev
 
-# NodeJS
-apt-get install -y nodejs npm
-ln -s /usr/bin/nodejs /usr/bin/node
-
+# Node.js, CoffeeScript and LESS
+if ! command -v npm; then
+    wget http://nodejs.org/dist/v4.2.3/node-v4.2.3.tar.gz
+    tar xzf node-v4.2.3.tar.gz
+    cd node-v4.2.3/
+    ./configure && make && make install
+    cd ..
+    rm -rf node-v4.2.3/ node-v4.2.3.tar.gz
+fi
+if ! command -v coffee; then
+    npm install -g coffee-script
+fi
+if ! command -v lessc; then
+    npm install -g less
+fi
 
 # Create database
 su - vagrant -c "createdb verdant"
