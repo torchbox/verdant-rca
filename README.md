@@ -6,5 +6,4 @@
 * ```vagrant up```
 * ```vagrant ssh```
 * ```djrun```
-* Edit your code locally, browse at [localhost:8111](http://localhost:8000/)
-* 
+* Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
