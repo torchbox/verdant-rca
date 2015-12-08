@@ -5,6 +5,6 @@
 * ```cd verdant-rca```
 * ```vagrant up```
 * ```vagrant ssh```
-* ```./manage.py runserver 0.0.0.0:8000```
-* Edit your code locally, browse at [localhost:8111](http://localhost:8111/)
+* ```djrun```
+* Edit your code locally, browse at [localhost:8111](http://localhost:8000/)
 * 
