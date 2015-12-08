@@ -80,15 +80,31 @@ def upcoming_events_related(context, opendays=0, programme="", school="", displa
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+
 @register.inclusion_tag('rca/tags/programmes_by_school.html', takes_context=True)
 def programme_by_school(context, school):
     programmes = ProgrammePage.objects.filter(live=True, school=school).order_by('title')
-    has_pathways = SchoolPage.objects.get(school=school).get_descendants().live().type(PathwayPage).exists()
+    show_draft_pathways = context.get('show_draft_pathways', False)
+    if show_draft_pathways:
+        has_pathways = SchoolPage.objects.get(school=school).get_descendants().type(PathwayPage).exists()
+    else:
+        has_pathways = SchoolPage.objects.get(school=school).get_descendants().live().type(PathwayPage).exists()
     return {
         'programmes': programmes,
         'has_pathways': has_pathways,
+        'show_draft_pathways': show_draft_pathways,
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
+
+@register.assignment_tag(takes_context=True)
+def pathway_by_programme(context, programme):
+    show_draft_pathways = context.get('show_draft_pathways', False)
+    if show_draft_pathways:
+        return programme.get_children().type(PathwayPage).specific()
+    else:
+        return programme.get_children().live().type(PathwayPage).specific()
+
 
 @register.inclusion_tag('rca/tags/staff_by_programme.html', takes_context=True)
 def staff_by_programme(context, programme):

@@ -811,7 +811,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     search_name = 'School'
 
     @vary_on_headers('X-Requested-With')
-    def serve(self, request):
+    def serve(self, request, show_draft_pathways=False):
         research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
 
         paginator = Paginator(research_items, 4)
@@ -829,13 +829,27 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'show_draft_pathways': show_draft_pathways
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items
+                'research_items': research_items,
+                'show_draft_pathways': show_draft_pathways
             })
+
+    @property
+    def preview_modes(self):
+        return super(SchoolPage, self).preview_modes + [
+            ('show_draft_pathways', 'Show draft pathways')
+        ]
+
+    def serve_preview(self, request, mode_name):
+        if mode_name == 'show_draft_pathways':
+            return self.serve(request, show_draft_pathways=True)
+        return super(SchoolPage, self).serve_preview(request, mode_name)
+
 
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
