@@ -1,27 +1,28 @@
 
 from __future__ import unicode_literals
 
+import json
 import re
 import unicodedata
-import json
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponse
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
-
 from taggit.models import Tag
-
 from wagtail.wagtailcore.models import Page
-from rca.models import RcaNowPage, NewStudentPage
-from rca.models import RcaImage, RcaNowPagePageCarouselItem, RcaNowPageRelatedLink, RcaNowPageArea
+
+from rca.models import (NewStudentPage, RcaImage, RcaNowPage, RcaNowPageArea,
+                        RcaNowPagePageCarouselItem, RcaNowPageRelatedLink)
 from student_profiles.models import StudentProfilesSettings
 
-from .now_forms import PageForm, RelatedLinkFormset, AreaFormSet
-from .views import slugify, user_is_ma, user_is_mphil, user_is_phd, profile_is_in_show, make_carousel_initial, \
-    make_carousel_items
-from .forms import MAShowCarouselItemFormset, ImageForm
+from .forms import ImageForm, MAShowCarouselItemFormset
+from .now_forms import AreaFormSet, PageForm, RelatedLinkFormset
+from .views import (make_carousel_initial, make_carousel_items,
+                    profile_is_in_show, slugify, user_is_ma, user_is_mphil,
+                    user_is_phd)
+
 
 ################################################################################
 ## helper functions

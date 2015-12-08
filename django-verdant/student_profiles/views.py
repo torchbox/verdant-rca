@@ -53,11 +53,12 @@ def user_is_phd(request):
 
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    return \
-        StudentProfilesSettings.for_site(request.site).show_pages_enabled and \
-        (user_is_ma(request) and profile_page.ma_in_show \
-        or user_is_mphil(request) and profile_page.mphil_in_show \
-        or user_is_phd(request) and profile_page.phd_in_show)
+    return (
+        StudentProfilesSettings.for_site(request.site).show_pages_enabled and
+        (user_is_ma(request) and profile_page.ma_in_show or
+         user_is_mphil(request) and profile_page.mphil_in_show or
+         user_is_phd(request) and profile_page.phd_in_show)
+    )
 
 ################################################################################
 ## helper functions
