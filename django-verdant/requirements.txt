@@ -15,6 +15,7 @@ django-celery==3.1.16
 simplejson==3.6.5
 django-modelcluster==1.0
 django-compressor==1.5
+django-libsass==0.6
 
 # Developer requirements
 django-debug-toolbar==0.11.0
