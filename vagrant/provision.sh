@@ -25,6 +25,9 @@ if ! command -v lessc; then
     npm install -g less
 fi
 
+# use YAML for test fixtures
+apt-get install -y libyaml-dev
+
 # Create database
 su - vagrant -c "createdb verdant"
 
