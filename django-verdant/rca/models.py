@@ -4091,7 +4091,7 @@ class NewStudentPage(Page, SocialFields):
 
         # Try to find gallery profile
         if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
-            for gallery_page in GalleryPage.objects.all():
+            for gallery_page in GalleryPage.objects.live():
                 if gallery_page.get_students()[0].filter(id=self.id).exists():
                     return gallery_page.url + self.slug + '/'
 
