@@ -21,6 +21,7 @@ from rca.models import NewStudentPageShowCarouselItem, NewStudentPageShowCollabo
 from rca.models import NewStudentPageMPhilCarouselItem, NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCarouselItem, NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage
+from student_profiles.models import StudentProfilesSettings
 
 from .forms import StartingForm
 from .forms import ProfileBasicForm, EmailFormset, PhoneFormset, WebsiteFormset
@@ -31,13 +32,6 @@ from .forms import MPhilForm, MPhilShowForm, MPhilCollaboratorFormset, MPhilSpon
 from .forms import PhDForm, PhDShowForm, PhDCollaboratorFormset, PhDSponsorFormset, PhDSupervisorFormset
 
 from .forms import ImageForm
-
-# this is the ID of the page where new student pages are added as children
-# MAKE SURE IT IS CORRECT FOR YOUR INSTANCE!
-NEW_STUDENT_PAGE_INDEX_ID = 6201
-
-# module-global setting determining whether show pages and postcard upload is enabled or not
-SHOW_PAGES_ENABLED = bool(getattr(settings, 'STUDENT_UPLOADS_SHOW_PAGES_ENABLED', True))
 
 # we override login_required with our own login_required because we want to control the login URL
 login_required = login_required(login_url='student-profiles:login')
@@ -59,11 +53,12 @@ def user_is_phd(request):
 
 def profile_is_in_show(request, profile_page):
     """Determine whether this user is in the show or not."""
-    return \
-        SHOW_PAGES_ENABLED and \
-        (user_is_ma(request) and profile_page.ma_in_show \
-        or user_is_mphil(request) and profile_page.mphil_in_show \
-        or user_is_phd(request) and profile_page.phd_in_show)
+    return (
+        StudentProfilesSettings.for_site(request.site).show_pages_enabled and
+        (user_is_ma(request) and profile_page.ma_in_show or
+         user_is_mphil(request) and profile_page.mphil_in_show or
+         user_is_phd(request) and profile_page.phd_in_show)
+    )
 
 ################################################################################
 ## helper functions
@@ -150,7 +145,7 @@ def make_carousel_items(d, carousel_type):
 def initial_context(request, page_id):
     """Context data that (almost) every view here needs."""
     data = {
-        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
+        'SHOW_PAGES_ENABLED': StudentProfilesSettings.for_site(request.site).show_pages_enabled,
         'is_ma': user_is_ma(request),
         'is_mphil': user_is_mphil(request),
         'is_phd': user_is_phd(request),
@@ -230,9 +225,8 @@ def overview(request, page_id=None):
             request.user.first_name = page.first_name = form.cleaned_data['first_name']
             request.user.last_name = page.last_name = form.cleaned_data['last_name']
 
-            # the following is the page where the new student pages are added as children
-            # MAKE SURE THIS IS THE CORRECT ID!
-            Page.objects.get(id=NEW_STUDENT_PAGE_INDEX_ID).add_child(instance=page)
+            student_settings = StudentProfilesSettings.for_site(request.site)
+            Page.objects.get(id=student_settings.new_student_page_index.id).add_child(instance=page)
             # the page slug should not be changed, lest all links go wrong!
             page.slug = slugify(page.title)
             if Page.objects.exclude(id=page.id).filter(slug=page.slug).exists():
@@ -261,7 +255,7 @@ def preview(request, page_id=None):
 def disambiguate(request):
     """There are two profiles for this user, let them choose which one they want to edit."""
     data = {
-        'SHOW_PAGES_ENABLED': SHOW_PAGES_ENABLED,
+        'SHOW_PAGES_ENABLED': StudentProfilesSettings.for_site(request.site).show_pages_enabled,
         'is_ma': user_is_ma(request),
         'is_mphil': user_is_mphil(request),
         'is_phd': user_is_phd(request),
@@ -463,7 +457,7 @@ def postcard_upload(request, page_id):
     """
     Single page for just uploading postcard images.
     """
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
@@ -537,7 +531,7 @@ def ma_details(request, page_id):
 
 @login_required
 def ma_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_ma(request):
         raise Http404("You cannot view MA show details because you're not in the MA programme.")
@@ -664,7 +658,7 @@ def mphil_details(request, page_id):
 
 @login_required
 def mphil_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_mphil(request):
         raise Http404("You cannot view MPhil details because you're not in the MPhil programme.")
@@ -780,7 +774,7 @@ def phd_details(request, page_id):
 
 @login_required
 def phd_show_details(request, page_id):
-    if not SHOW_PAGES_ENABLED:
+    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     if not user_is_phd(request):
         raise Http404("You cannot view PhD Show details because you're not in the PhD programme.")
