@@ -19,7 +19,7 @@ def _get_api():
 
 
 @task
-def get_tweets_async(screen_name="RCAevents", count=10):
+def get_tweets_async(screen_name="RCA", count=10):
     api = _get_api()
 
     count = count if count < 50 else 50
@@ -33,7 +33,7 @@ def get_tweets_async(screen_name="RCAevents", count=10):
             break
 
 
-def get_tweets(screen_name="RCAevents", count=10):
+def get_tweets(screen_name="RCA", count=10):
     api = _get_api()
 
     count = count if count < 50 else 50

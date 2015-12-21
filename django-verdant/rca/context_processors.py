@@ -39,7 +39,7 @@ def global_vars(request):
         'global_innovationrca_project_types': INNOVATIONRCA_PROJECT_TYPES_CHOICES,
         'global_events_index_url': '/news-and-events/events/',
         'global_news_index_url': '/news-and-events/news/',
-        'global_default_twitter_handle': "RCAevents",
+        'global_default_twitter_handle': "RCA",
         'global_reachout_projects': REACHOUT_PROJECT_CHOICES,
         'global_reachout_participants': REACHOUT_PARTICIPANTS_CHOICES,
         'global_reachout_themes': REACHOUT_THEMES_CHOICES,
