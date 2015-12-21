@@ -33,9 +33,6 @@ def deploy_staging(branch="staging", gitonly=False):
 
         run('restart')
 
-        if not gitonly:
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.staging")
-
 
 @roles('production')
 def deploy(gitonly=False):
@@ -51,8 +48,6 @@ def deploy(gitonly=False):
             run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
         run("restart")
-        if env['host'] != MIGRATION_SERVER and not gitonly:
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py update_index --settings=rcasite.settings.production")
 
 
 @roles('nginx')
