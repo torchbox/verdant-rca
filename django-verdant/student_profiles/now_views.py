@@ -88,8 +88,10 @@ def overview(request):
 def edit(request, page_id=None):
     data = initial_data(request, page_id)
     if page_id is None:
+        data['new_page'] = True
         page = RcaNowPage(owner=request.user)
     else:
+        data['new_page'] = False
         page = data['page']
 
     data['nav_now'] = True
