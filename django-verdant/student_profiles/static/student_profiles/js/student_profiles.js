@@ -64,8 +64,8 @@ function checkImageFile(file, dfd, data, options) {
     var image  = new Image();
     var minWidth = options.imageMinWidth;
     var minHeight = options.imageMinHeight;
-
-    reader.readAsDataURL(file);
+    
+    reader.readAsDataURL(file);  
     reader.onload = function(_file) {
         image.src    = _file.target.result;
         image.onload = function() {
@@ -86,7 +86,7 @@ function checkImageFile(file, dfd, data, options) {
             dfd.rejectWith(this, [data]);
         };
     };
-
+  
 }
 
 /**
@@ -114,7 +114,7 @@ $.blueimp.fileupload.prototype.processActions.validate_img = function (data, opt
 
 /**
 * Nice little hover-effect for file dropping.
-*/
+*/ 
 $(document).bind('dragover', function (e)
 {
     var dropZone = $('.dropzone'),
@@ -160,7 +160,7 @@ $(document).bind('dragover', function (e)
 
 /**
 * The actual data-binding function that enables file uploads
-*/
+*/ 
 function activateImageUpload(for_id, options) {
 
     // prevent the automatic drop handler because we want specific drop zones
@@ -173,7 +173,7 @@ function activateImageUpload(for_id, options) {
     var containerElement = $($('#' + for_id));
     var dropElement = containerElement.find('.dropzone');
     var idElement = containerElement.find('#id_' + for_id + '_val');
-
+    
     var upload_options = {
         dataType: 'json',
         imageMinWidth: 0,
@@ -276,7 +276,7 @@ function activateImageUpload(for_id, options) {
                 containerElement.find('.preview_canvas').replaceWith(new_canvas);
                 containerElement.find('.preview_canvas').show();
                 containerElement.find('.clearbutton').show();
-
+          
                 idElement.val(data.result.id);
                 idElement.change();
             }
@@ -296,7 +296,7 @@ function activateImageUpload(for_id, options) {
     upload_options = $.extend(upload_options, options);
 
     $(containerElement).fileupload(upload_options);
-
+    
     // set the "clear field" button action
     containerElement.find('.clearbutton').click(function(e) {
         $(this).hide();
@@ -304,7 +304,7 @@ function activateImageUpload(for_id, options) {
         idElement.val(''); idElement.change();
         e.preventDefault();
     });
-
+    
 }
 
 /**
@@ -321,7 +321,7 @@ function switchUp(elem) {
     e1f.change();
 
     e1.insertBefore(e2);
-
+  
     e1.css('position', 'relative');
     e1.css('top', (e1p.top - e2p.top) + 'px');
     e1.animate({top: (e1p.top - e2p.top)/2 + 'px', left: '-30px'}, animDuration/2)
@@ -340,7 +340,7 @@ function switchDown(elem) { switchUp($(elem).next()); };
 *  Example updateFormButtons('#myform .form-row');
 */
 function updateFormButtons(search_term) {
-
+  
     function updateIndividualButtonInForm(searchTerm, lastIndex) {
         return function(index, row) {
             if (index == 0) { $(row).find('.move-up').fadeOut(animDuration); }        // if we knew the width of the element, it would be nicer to have a width-animation
@@ -359,7 +359,7 @@ function updateFormButtons(search_term) {
             }
         }
     }
-
+  
     var elems = $(search_term);
     elems.each(updateIndividualButtonInForm(search_term, elems.length-1));
 };
@@ -383,7 +383,7 @@ function makeFormset(prefix, addedFunc) {
             updateFormButtons(search_term);
         },
     });
-
+  
     updateFormButtons(search_term);
 };
 
@@ -470,7 +470,7 @@ function updateSupervisorSelects(prefix) {
 /*
 * Stop user from leaving the page without confirmation.
 */
-var confirmOnPageExit = function (e)
+var confirmOnPageExit = function (e) 
 {
     // If we haven't been passed the event get the window.event
     e = e || window.event;
@@ -478,7 +478,7 @@ var confirmOnPageExit = function (e)
     var message = 'You have unsaved changes. Are you sure you want to leave this page?';
 
     // For IE6-8 and Firefox prior to version 4
-    if (e)
+    if (e) 
     {
         e.returnValue = message;
     }
@@ -628,8 +628,3 @@ $('input[type=checkbox]').on('change',function() {
     }
 });
 
-
-// TODO: remove
-// hide label for image/video choice field, which is temporarily disabled:
-// https://projects.torchbox.com/projects/rca-django-cms-project/tickets/755#update-28919690
-$('#id_carousel-0-item_type').closest('label').hide();
