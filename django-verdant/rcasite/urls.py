@@ -8,6 +8,7 @@ import os.path
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.wagtailimages import urls as wagtailimages_urls
 
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
+    url(r'^images/', include(wagtailimages_urls)),
     url(r'^admin/donations/', include(donations_urls)),
     url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),

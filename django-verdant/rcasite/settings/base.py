@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailredirects',
     'wagtail.contrib.wagtailsearchpromotions',
+    'wagtail.contrib.settings',
 
     'donations',
     'rca',

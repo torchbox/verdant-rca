@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags rca_tags %}
 
 {% if programmes %}
 
@@ -12,10 +12,11 @@
 		<ul class="programmes-and-pathways">
 			{% for programme in programmes %}
 				<li>
-					<a href="{% pageurl programme %}" {% if programme.pathways.exists %} class="chevron-after" {% endif %}>{{ programme.title }}</a>
-					{% for pathway in programme.pathways %}
-						<a href="{% pageurl pathway %}" class="pathway-link {% if not forloop.last %} separator-after {% endif %}">{{ pathway.title }}</a>
-					{% endfor %}
+                    {% pathway_by_programme programme as pathways %}
+                    <a href="{% pageurl programme %}" {% if pathways %} class="chevron-after" {% endif %}>{{ programme.title }}</a>
+                    {% for pathway in pathways %}
+                        <a href="{% pageurl pathway %}" class="pathway-link {% if not forloop.last %} separator-after {% endif %}">{{ pathway.title }}</a>
+                    {% endfor %}
 				</li>
 			{% endfor %}
 		</ul>
