@@ -88,7 +88,7 @@ def overview(request):
 def edit(request, page_id=None):
     data = initial_data(request, page_id)
     if page_id is None:
-        page = RcaNowPage(owner=request.user)
+        page = RcaNowPage(owner=request.user, author=request.user.get_full_name())
     else:
         page = data['page']
 
