@@ -349,6 +349,11 @@ ALL_PROGRAMMES = tuple(sorted([
     ('vehicledesign', 'Vehicle Design'),
     ('communicationartdesign', 'Communication Art & Design'),
     ('contemporaryartpractice', 'Contemporary Art Practice'),
+    ('mres-rca-humanities-pathway', 'MRes RCA: Humanities Pathway'),
+    ('mres-rca-design-pathway', 'MRes RCA: Design Pathway'),
+    ('mres-rca-communication-design-pathway', 'MRes RCA: Communication Design Pathway'),
+    ('mres-rca-fine-art-pathway', 'MRes RCA: Fine Art Pathway'),
+    ('mres-healthcare-and-design', 'MRes: Healthcare & Design'),
 ], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
