@@ -361,6 +361,14 @@ ALL_PROGRAMMES = tuple(sorted([
 # Currently 2016 refers to the academic year ending in 2016: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
 # See also: student_profiles.forms.PROGRAMME_CHOICES_2015
 SCHOOL_PROGRAMME_MAP = {
+    '2017': {
+        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication', 'mres-rca-communication-design-pathway'],
+        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign', 'mres-rca-design-pathway', 'mres-healthcare-and-design'],
+        'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice', 'mres-rca-fine-art-pathway'],
+        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign', 'mres-rca-humanities-pathway'],
+        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
+    },
     '2016': {
         'schoolofarchitecture': ['architecture', 'interiordesign'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
