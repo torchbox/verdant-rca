@@ -9,6 +9,7 @@ PIP=$VIRTUALENV_DIR/bin/pip
 NODE_VERSION=v4.2.3
 
 # Dependencies for LDAP
+apt-get update -y
 apt-get install -y libldap2-dev libsasl2-dev
 
 # Node.js, CoffeeScript and LESS
