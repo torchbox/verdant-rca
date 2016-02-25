@@ -354,6 +354,7 @@ ALL_PROGRAMMES = tuple(sorted([
     ('mres-rca-communication-design-pathway', 'MRes RCA: Communication Design Pathway'),
     ('mres-rca-fine-art-pathway', 'MRes RCA: Fine Art Pathway'),
     ('mres-healthcare-and-design', 'MRes: Healthcare & Design'),
+    ('mres-rca-architecture-pathway', 'MRes RCA: Architecture Pathway'),
 ], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
 
 
@@ -362,7 +363,7 @@ ALL_PROGRAMMES = tuple(sorted([
 # See also: student_profiles.forms.PROGRAMME_CHOICES_2015
 SCHOOL_PROGRAMME_MAP = {
     '2017': {
-        'schoolofarchitecture': ['architecture', 'interiordesign'],
+        'schoolofarchitecture': ['architecture', 'interiordesign', 'mres-rca-architecture-pathway'],
         'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication', 'mres-rca-communication-design-pathway'],
         'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign', 'mres-rca-design-pathway', 'mres-healthcare-and-design'],
         'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice', 'mres-rca-fine-art-pathway'],
