@@ -5,6 +5,7 @@ import random
 
 from itertools import chain
 
+from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.contrib import messages
@@ -15,7 +16,7 @@ from django.db.models.signals import pre_delete
 
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils import timezone
@@ -6288,4 +6289,41 @@ LightboxGalleryPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+]
+
+
+# == Redirects ==
+
+class PageAlias(Page):
+    alias = models.ForeignKey('wagtailcore.Page', null=True, blank=True, on_delete=models.SET_NULL, related_name='aliases')
+    external_url = models.URLField("External link", null=True, blank=True)
+    listing_intro = models.TextField(
+        blank=True
+    )
+    feed_image = models.ForeignKey(
+        'rca.RcaImage',
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    def clean(self):
+        if not self.alias and not self.external_url:
+            raise ValidationError('You must specify an alias pointing to an existing page or external URL.')
+
+    def serve(self, request):
+        to = self.external_url if self.external_url else self.alias.url
+        return redirect(to, permanent=False)
+
+PageAlias.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('external_url'),
+    PageChooserPanel('alias'),
+]
+
+PageAlias.promote_panels = Page.promote_panels + [
+    MultiFieldPanel([
+        FieldPanel('listing_intro'),
+        ImageChooserPanel('feed_image'),
+    ], "Cross-page behaviour",)
 ]
