@@ -82,38 +82,38 @@
                 });
 
                 // make the selection between single author and group of authors
-                $('#id_by').change(function() {
-                    var value = $(this).val();
+                // $('#id_by').change(function() {
+                //     var value = $(this).val();
 
-                    if (value == 'single') {
-                        $('#id_author_single').parent().show();
-                        $('#id_author').parent().hide();
-                    }
-                    else if (value == 'group') {
-                        $('#id_author_single').parent().hide();
-                        $('#id_author').parent().show();
-                    }
-                });
-                $('#id_by').change();
+                //     if (value == 'single') {
+                //         $('#id_author_single').parent().show();
+                //         $('#id_author').parent().hide();
+                //     }
+                //     else if (value == 'group') {
+                //         $('#id_author_single').parent().hide();
+                //         $('#id_author').parent().show();
+                //     }
+                // });
+                // $('#id_by').change();
 
-                $('#id_author_single').select2({'width': '100%'});
+                // $('#id_author_single').select2({'width': '100%'});
 
             {% else %}
 
                 updateCarouselSelects('{{ carouselitem_formset.prefix }}');
-                $('#id_by').change(function() {
-                    var value = $(this).val();
+                // $('#id_by').change(function() {
+                //     var value = $(this).val();
 
-                    if (value == 'single') {
-                        $('#id_author_single').parent().show();
-                        $('#id_author').parent().hide();
-                    }
-                    else if (value == 'group') {
-                        $('#id_author_single').parent().hide();
-                        $('#id_author').parent().show();
-                    }
-                });
-                $('#id_by').change();
+                //     if (value == 'single') {
+                //         $('#id_author_single').parent().show();
+                //         $('#id_author').parent().hide();
+                //     }
+                //     else if (value == 'group') {
+                //         $('#id_author_single').parent().hide();
+                //         $('#id_author').parent().show();
+                //     }
+                // });
+                // $('#id_by').change();
                 $('.move-up').remove();
                 $('.move-down').remove();
                 $('.dropzone').remove();

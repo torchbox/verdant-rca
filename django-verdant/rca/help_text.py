@@ -102,7 +102,7 @@ HELP_TEXT = {
     ('rca.NewStudentPage', 'phd_statement'): 'Description of your PhD dissertation or project',
     ('rca.NewStudentPage', 'phd_in_show'): 'Please tick only if you are a PhD student in the Show this year',
     ('rca.RcaNowPage', 'body'): "This is the main text of your post. It should be a description of the work, project or idea you're posting about",
-    ('rca.RcaNowPage', 'author'): "Enter your full name as you'd like it to appear, e.g. Tom Smith",
+    ('rca.RcaNowPage', 'author'): "Enter your full name as you'd like it to appear, e.g. Tom Smith. If this post was authored by a group of people, add all names as they are supposed to appear.",
     ('rca.RcaNowPage', 'date'): 'The date of your RCA Now post',
     ('rca.RcaNowPage', 'area'): "Select an area of the College only if it's relevant to your post",
     ('rca.RcaNowPage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
