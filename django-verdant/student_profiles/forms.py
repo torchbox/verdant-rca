@@ -535,14 +535,13 @@ class MAShowCarouselItemForm(forms.Form):
     item_type = forms.ChoiceField(
         choices=(
             ('image', 'Image'),    # if you change these values, you must also change the values in the javascript and in the views!
-            # ('video', 'Video'),  # TODO: https://projects.torchbox.com/projects/rca-django-cms-project/tickets/755#update-28919690
-        ),
-        initial='image',
+            ('video', 'Video'),
+        )
     )
 
     image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
         label='Image',
-        required=True,
+        required=False,
         help_text=help_text('rca.CarouselItemFields', 'image', default='Landscape images will display better within the carousel than portrait images. Consider sizing all your images to the same dimension - ideally 2000 x 1125 pixels.'),
         widget=ImageInput,
     )
@@ -585,11 +584,24 @@ class MAShowCarouselItemForm(forms.Form):
         widget=ImageInput,
     )
 
+    def clean_image_id(self):
+        if self.cleaned_data.get('item_type') == 'image' and not self.cleaned_data.get('image_id'):
+            raise forms.ValidationError('This field is required.')
+        else:
+            return self.cleaned_data.get('image_id')
+
     def clean_title(self):
         if self.cleaned_data.get('item_type') == 'image' and self.cleaned_data.get('image_id') and not self.cleaned_data.get('title'):
             raise forms.ValidationError('This field is required.')
         else:
             return self.cleaned_data.get('title', '')
+
+    def clean_embedly_url(self):
+        if self.cleaned_data.get('item_type') == 'video' and not self.cleaned_data.get('embedly_url'):
+            raise forms.ValidationError('This field is required.')
+        else:
+            return self.cleaned_data.get('embedly_url')
+
 MAShowCarouselItemFormset = make_formset(MAShowCarouselItemForm, max_num=12, validate_max=True)
 
 class MACollaboratorForm(forms.Form):
