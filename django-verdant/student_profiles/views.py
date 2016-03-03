@@ -457,7 +457,7 @@ def postcard_upload(request, page_id):
     """
     Single page for just uploading postcard images.
     """
-    if not StudentProfilesSettings.for_site(request.site).show_pages_enabled:
+    if StudentProfilesSettings.for_site(request.site).show_pages_enabled:
         raise Http404()
     data, page = initial_context(request, page_id)
     data['nav_postcard'] = True
