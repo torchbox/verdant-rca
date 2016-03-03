@@ -34,12 +34,14 @@
             <h3>Notes</h3>
             <p>Optional information about your education, exhibitions and experience, which will appear on your website profile and Show digital catalogue entry.</p>
 
-            {% if is_phd %}
-                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
-            {% elif is_mphil %}
-                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
-            {% elif is_ma %}
-                <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
+            {% if not SHOW_PAGES_ENABLED %}
+                {% if is_phd %}
+                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
+                {% elif is_mphil %}
+                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-mphil-show' page_id %}">Show project details</a>.</p>
+                {% elif is_ma %}
+                    <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-ma-show' page_id %}">Show project details</a>.</p>
+                {% endif %}
             {% endif %}
 
             <p>The form will save automatically every so often. Before you log out, click 'Save as Draft' if you want to return and edit another time; or click 'Submit for Moderation' if you’re ready for your profile information to appear online.</p>

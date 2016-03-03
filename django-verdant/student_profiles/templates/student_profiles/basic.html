@@ -34,7 +34,7 @@
                     Show digital catalogue entry.
                 </p>
 
-                {% if SHOW_PAGES_ENABLED %}
+                {% if not SHOW_PAGES_ENABLED %}
                     {% if is_phd %}
                         <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show project details</a>.</p>
                     {% elif is_mphil %}
@@ -81,7 +81,7 @@
             When you're finished with this page, fill in your CV and your research or thesis details.
         </p></li>
 
-        {% if SHOW_PAGES_ENABLED %}
+        {% if not SHOW_PAGES_ENABLED %}
             <li data-id="menu-postcard"><p>
                 You can upload an image to be used as a postcard for the show with this menu entry.
             </p></li>

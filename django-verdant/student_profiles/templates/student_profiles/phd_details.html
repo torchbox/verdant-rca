@@ -43,7 +43,7 @@
             <h3>Notes</h3>
             <p>Information about your MPhil at the RCA.<p>
 
-            {% if SHOW_PAGES_ENABLED %}
+            {% if not SHOW_PAGES_ENABLED %}
                 <p>If you're in this year's show, don't forget to complete your <a href="{% url 'student-profiles:edit-phd-show' page_id %}">Show Project Details</a>.</p>
             {% endif %}
 

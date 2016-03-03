@@ -25,7 +25,11 @@ class StudentProfilesSettings(BaseSetting):
     )
     show_pages_enabled = models.BooleanField(
         default=True,
-        help_text="Determine whether show pages and postcard upload are enabled.",
+        help_text="""
+            Determine whether show pages and postcard upload are enabled.
+            While this field is checked the show catalogue remains closed.
+            Unchecking this will open the show catalogue.
+        """
     )
 
     panels = [
