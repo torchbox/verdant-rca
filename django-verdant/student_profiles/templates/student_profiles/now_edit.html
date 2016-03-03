@@ -121,5 +121,11 @@
 
             {% endif %}
         });
+
+        {% if new_page %}
+        autosave_disabled = true;
+        {% else %}
+        autosave_disabled = false;
+        {% endif %}
     </script>
 {% endblock form_js %}

@@ -1,7 +1,7 @@
 /**
  *  Enable auto-saving for the given form.
  */
-var autosaveTimers = {}
+var autosaveTimers = {};
 var autosave_last_form_now = undefined;
 function enableAutosave(formsel) {
     autosaveTimers[formsel] = 0;
@@ -75,11 +75,13 @@ function enableAutosave(formsel) {
 }
 // stop any autosave timers that might be running at the moment
 function stopAutosave() {
-    for (i in autosaveTimers)
+    for (var i in autosaveTimers)
     {
         clearTimeout(autosaveTimers[i]);
     }
 }
 // and then immediately enable it for the profile-form in the view
-enableAutosave('form.student-profile');
-enableAutosave('form.now-page');
+if (typeof autosave_disabled === 'undefined' || !autosave_disabled) {  // this is so a page can disable autosaving on a single-case basis
+    enableAutosave('form.student-profile');
+    enableAutosave('form.now-page');
+}
