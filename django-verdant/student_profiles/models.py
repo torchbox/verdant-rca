@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.safestring import mark_safe
 from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, PageChooserPanel
 
@@ -25,11 +26,11 @@ class StudentProfilesSettings(BaseSetting):
     )
     show_pages_enabled = models.BooleanField(
         default=True,
-        help_text="""
-            Determine whether show pages and postcard upload are enabled.
-            While this field is checked the show catalogue remains closed.
+        help_text=mark_safe("""
+            Determine whether show pages and postcard upload are enabled.<br>
+            While this field is checked the show catalogue remains closed.<br>
             Unchecking this will open the show catalogue.
-        """
+        """)
     )
 
     panels = [
@@ -37,5 +38,7 @@ class StudentProfilesSettings(BaseSetting):
             PageChooserPanel('new_student_page_index', 'rca.StandardIndex'),
             PageChooserPanel('rca_now_index', 'rca.RCANowIndex'),
         ], "Index page locations"),
-        FieldPanel('show_pages_enabled')
+        MultiFieldPanel([
+            FieldPanel('show_pages_enabled'),
+        ], "Show pages / Show catalogue"),
     ]
