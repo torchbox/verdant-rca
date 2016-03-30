@@ -162,12 +162,14 @@ INSTALLED_APPS = (
     'wagtail.wagtailredirects',
     'wagtail.contrib.wagtailsearchpromotions',
     'wagtail.contrib.settings',
+    'wagtail.wagtailforms',
 
     'donations',
     'rca',
     'rca_signage',
     'rca_ldap',
     'rca_show',
+    'rca_ee',           # executive education
     'student_profiles',
 )
 

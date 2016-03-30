@@ -1,0 +1,27 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags %}
+
+
+{% block content %}
+
+  <div class="page-content">
+
+    <div class="app-details">
+      <h2 class="app-title">{{ page.title }}</h2>
+      <div class="session-meta">
+        {{ page.thank_you_text|richtext }}
+      </div>
+      {% for document in page.documents.all %}
+        {% if document.for_course == form.cleaned_data.courses %}
+          <div>
+            In the meantime, here is some more information on the selected course:
+            <a href="{{ document.document.url }}">{{ document.document.title }}</a>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+{% endblock content %}

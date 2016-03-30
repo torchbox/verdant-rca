@@ -1,0 +1,276 @@
+@import "variables.less";
+@import "grid.less";
+@import "mixins.less";
+
+
+/* $PROFILE FORM OVERRIDES */
+form {
+    input[type=text],
+    input[type=tel],
+    input[type=email],
+    input[type=url],
+    input[type=number],
+    .richtext,
+    textarea,
+    select {
+        font-size: @font-size-16;
+        max-width: 82%;
+        display: block;
+        margin-top: 0.5em;
+        outline: none;
+    }
+    select {
+        // content: "";
+        // display: block;
+        background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+        background-repeat: no-repeat;
+        background-position: right 17px top 19px;
+        //padding-right: 4.5em;
+        //-moz-appearance: none;
+        //.border-box();
+    }
+    textarea,
+    .richtext {
+        background: @color-pale-grey;
+    }
+    label {
+        display: block;
+        margin-top: 0.5em;
+    }
+    // Hide checkboxes
+    .checkbox-label input[type=checkbox] {
+        display: none;
+    }
+    // Styling
+    .checkbox-label .icon {
+        font-size: @font-size-30;
+        color: @color-highlight-blue;
+        vertical-align: middle;
+        margin-left: 0.4em;
+    }
+    // Select2: faux select box '<select>'
+    // The dropdown div layer (<option>) is not inside the form
+    .select2-container {
+        max-width: 82%;
+        display: block;
+        color: @color-charcoal;
+        .select2-choice {
+            border: none;
+            text-transform: none;
+            background: @color-pale-grey;
+            padding: 16px;
+            padding-right: 4.5em;
+            height: auto;
+            text-decoration: none;
+            .box-sizing(border-box);
+            .box-shadow(none);
+            .border-radius(0);
+            .select2-chosen {
+                margin: 0;
+                font-size: @font-size-16;
+                color: @color-black;
+                font-weight: normal;
+                font-family: sans-serif;
+                line-height: normal;
+            }
+            .select2-arrow {
+                width: 40px;
+                background-image: url("/static/student_profiles/images/icons-down-arrow.png");
+                background-repeat: no-repeat;
+                background-position: left center;
+                background-color: transparent;
+                border: none;
+                b {
+                    background: none;
+                }
+            }
+        }
+    }
+
+    .help-text {
+        text-transform: none;
+        max-width: 82%;
+    }
+    // Image drag and drop uploader
+    .image-uploader-block {
+        .clearfix();
+    }
+    .image-uploader-block .dropzone {
+        border: 2px dashed @color-light-grey;
+        border-left: 0;
+        text-align: center;
+        padding-top: 4em;
+        width: 150px;
+        height: 150px;
+        float: left;
+        position: relative;
+        &:first-child {
+            margin-left: 0;
+        }
+        &.hover:after {
+            content: "\f3c6";
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            left: 50%;
+            margin-left: -10px;
+            font-family: @font-family-ion;
+            font-size: @font-size-22;
+            color: @color-medium-grey;
+        }
+    }
+    label > span {
+        color: @color-pink;
+        font-weight: bold;
+        margin-left: 0.3em;
+        font-size: 1.3em;
+        vertical-align: middle;
+    }
+    // If there are errors
+    label.error > span {
+        color: @color-red;
+    }
+    label.error {
+        input,
+        textarea {
+            border: 1px solid @color-red;
+        }
+    }
+    .image-uploader-block .preview {
+        padding: 0.2em;
+        margin-bottom: 0.5em;
+        border: 2px solid @color-light-grey;
+        width: 150px;
+        height: 150px;
+        float: left;
+        background: @color-pale-grey;
+        position: relative;
+        canvas {
+            width: 100%;
+            height: auto;
+            max-width: 142px;
+            max-height: 142px;
+        }
+        img {
+            width: auto;
+            max-height: 142px;
+            text-align: center;
+        }
+        .clearbutton {
+            position: absolute;
+            bottom: 0em;
+            right: 0em;
+            margin: 0.2em;
+            padding: 0.5em;
+            width: 37px;
+            height: 38px;
+            text-align: center;
+            font-size: @font-size-24;
+        }
+    }
+    .inline-form {
+        .clearfix();
+        .move-up,
+        .move-down,
+        .delete-row {
+            font-size: @font-size-15;
+            width: 18px;
+            height: 19px;
+            text-align: center;
+            display: inline-block;
+        }
+        .delete-row {
+            text-indent: -9999%;
+            &:after {
+                color: @color-white;
+                background: @color-highlight-blue;
+                content: "\f2d7";
+                font-family: @font-family-ion;
+                text-indent: 1px;
+                width: 18px;
+                height: 19px;
+                float: left;
+                line-height: 1.35em;
+                text-align: center;
+            }
+        }
+        .delete-row:hover:after {
+            background-color: @color-pink;
+        }
+    }
+    // Hide until needed
+    .inline-form {
+        .action,
+        .delete-row {
+            .opacity(0);
+            .transition(0.5s ease all);
+        }
+    }
+    // Show when form el is hovered
+    .inline-form:hover {
+        .action,
+        .delete-row {
+            .opacity(100);
+            .transition(0.8s ease all);
+        }
+    }
+    .field-set {
+        padding-top: 1em;
+        margin-top: 1em;
+        border-top: 1px solid @color-middle-column-lines;
+        &:last-child {
+            border: 0;
+        }
+        label {
+            margin-bottom: 0.2em;
+        }
+        .add-row.button {
+            margin-top: 0.5em;
+            display: inline-block;
+        }
+    }
+    #carousel .dynamic-formset-carousel {
+        border-top: 1px dashed darken(@color-pale-grey, 5%);
+        margin-top: 0.5em;
+        padding-top: 0.5em;
+        &:first-child {
+            border-top: 0;
+            padding-top: 0;
+            margin-top: 0;
+        }
+        .form-col-holder {
+            padding-bottom: 1em;
+            border-bottom: 1px dashed darken(@color-pale-grey, 5%);
+            margin-bottom: 1em;
+            .clearfix();
+        }
+    }
+}
+
+/* $SELECT2 DROPDOWN */
+// The dropdown div layer is not inside the form
+// The faux select box is (see above code)
+
+
+//Dropdown box styling
+.select2-drop {
+    border: none;
+    background: @color-pale-grey;
+    color: @color-black;
+    .box-shadow(none);
+    .border-radius(0);
+}
+.select2-drop-active {
+    border: none;
+}
+//Search bar
+.select2-search input {
+    background-color: transparent;
+}
+.select2-result-label,
+.select2-results .select2-highlighted {
+    font-family: sans-serif;
+    &:hover {
+        background-color: @color-pink-darker;
+    }
+}
