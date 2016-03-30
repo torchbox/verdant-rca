@@ -7,8 +7,10 @@ from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailforms.models import AbstractForm, AbstractEmailForm, AbstractFormField
 from wagtail.wagtaildocs.models import Document
 
+from .wtforms import ExtendedAbstractFormField, ExtendedAbstractForm, ExtendedAbstractEmailForm
 
-class FormField(AbstractFormField):
+
+class FormField(ExtendedAbstractFormField):
     """A single form field that is attached to a page."""
     page = ParentalKey('FormPage', related_name='form_fields')
 
@@ -40,7 +42,7 @@ CourseDocument.content_panels = [
 ]
 
 
-class FormPage(AbstractEmailForm):
+class FormPage(ExtendedAbstractEmailForm):
     """
     A page for registering interest in a selection of courses.
     """
@@ -79,14 +81,25 @@ FormPage.content_panels = [
     FieldPanel('intro', classname="full"),
     FieldPanel('thank_you_text', classname="full"),
     InlinePanel('documents', label='Documents'),
-    MultiFieldPanel([
-        FieldPanel('to_address', classname="full"),
-        FieldPanel('from_address', classname="full"),
-        FieldPanel('subject', classname="full"),
-    ], "Email"),
     InlinePanel('form_fields', label="Form fields"),
 ]
 
 
+class BookingFormField(ExtendedAbstractFormField):
+    """A single form field that is attached to a booking form."""
+    page = ParentalKey('BookingFormPage', related_name='form_fields')
 
 
+class BookingFormPage(ExtendedAbstractForm):
+    """
+    A form for booking a specific course.
+    """
+    intro = RichTextField(blank=True)
+    thank_you_text = RichTextField(blank=True)
+
+BookingFormPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('intro', classname="full"),
+    FieldPanel('thank_you_text', classname="full"),
+    InlinePanel('form_fields', label="Form fields"),
+]
