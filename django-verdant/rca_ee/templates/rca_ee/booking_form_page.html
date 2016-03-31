@@ -1,11 +1,9 @@
-{% extends "rca/base.html" %}
+{% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
 {% load compress static wagtailimages_tags wagtailuserbar rca_tags wagtailcore_tags %}
 {% load widget_tweaks %}
 
 
 {% block content %}
-
-<div class="page-content">
 
     <div class="app-details">
         <h2 class="app-title">{{ page.title }}</h2>
@@ -49,8 +47,6 @@
     </div>
 
   </form>
-
-</div>
 
 {% endblock content %}
 
