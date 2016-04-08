@@ -20,7 +20,7 @@
 </small>
 </div>
 
-  <form name="wt_form" action="{% pageurl page %}" method="POST" onsubmit="return storeFormValuesOnSubmit()">
+  <form name="wt_form" id="wt_form" action="{% pageurl page %}" method="POST">
     {% csrf_token %}
     {% for field in form.visible_fields %}
       <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
@@ -171,6 +171,27 @@
     $(function() {
       loadFormValues();
     });
+
+    {# save the form and then re-POST it to the payment page #}
+    var payment_url = 'https://payments.rca.ac.uk/innedu/index.php';
+    $(function() {
+      $('#wt_form').submit(function() {
+        storeFormValuesOnSubmit();
+        var that = $(this);
+        $.ajax({
+          url: that.attr('action'),
+          type: "POST",
+          async: false,
+          data: that.serialize(),
+          complete: function() {
+            that.attr('action', payment_url); {# switch to payment url no matter whether it worked or not #}
+          }
+        });
+        return true;
+      })
+    });
+
+
   </script>
 
 {% endblock js %}
