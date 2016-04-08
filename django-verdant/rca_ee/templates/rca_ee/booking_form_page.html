@@ -20,7 +20,7 @@
 </small>
 </div>
 
-  <form action="{% pageurl page %}" method="POST">
+  <form name="wt_form" action="{% pageurl page %}" method="POST" onsubmit="return storeFormValuesOnSubmit()">
     {% csrf_token %}
     {% for field in form.visible_fields %}
       <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
@@ -137,6 +137,7 @@
         <script src="{% static "student_profiles/js/vendor/jquery.iframe-transport.js" %}"></script>
         <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
         <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
+        <script src="{% static "rca_ee/js/formstore.js" %}"></script>
     {% endcompress %}
 
     {% if errors %}
@@ -166,6 +167,10 @@
         $('#id_course').val(selected_course);
       }
     })();
+
+    $(function() {
+      loadFormValues();
+    });
   </script>
 
 {% endblock js %}
