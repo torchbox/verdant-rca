@@ -7,6 +7,8 @@ from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailforms.models import AbstractForm, AbstractEmailForm, AbstractFormField
 from wagtail.wagtaildocs.models import Document
 
+import uuid
+
 from .wtforms import ExtendedAbstractFormField, ExtendedAbstractForm, ExtendedAbstractEmailForm
 
 
@@ -96,6 +98,16 @@ class BookingFormPage(ExtendedAbstractForm):
     """
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
+
+    def get_form_parameters(self):
+        """Generate a new transaction id and put it in the form."""
+
+        return {
+            "initial": {
+                "transaction_id": str(uuid.uuid4()),
+            }
+        }
+
 
 BookingFormPage.content_panels = [
     FieldPanel('title', classname="full title"),
