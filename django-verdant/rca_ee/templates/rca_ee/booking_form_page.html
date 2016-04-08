@@ -12,14 +12,6 @@
         </div>
     </div>
 
-<div style="text-align: right;">
-<small >
-<ul>
-  <li>TODO: create new transaction ID (if necessary)</li>
-</ul>
-</small>
-</div>
-
   <form name="wt_form" id="wt_form" action="{% pageurl page %}" method="POST">
     {% csrf_token %}
     {% for field in form.visible_fields %}
