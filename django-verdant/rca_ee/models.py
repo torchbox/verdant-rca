@@ -89,10 +89,10 @@ class FormPage(ExtendedAbstractEmailForm):
                         d.for_course.lower() for d in self.upload_necessary.all()
                     ])
                     selected_courses = set(
-                        [c.lower() for c in form.cleaned_data.get('course')]
-                        + [c.lower() for c in form.cleaned_data.get('masterclasses')]
-                        + [c.lower() for c in form.cleaned_data.get('residencies')]
-                        + [c.lower() for c in form.cleaned_data.get('workshops')]
+                        [c.lower() for c in form.cleaned_data.get('course', ())]
+                        + [c.lower() for c in form.cleaned_data.get('masterclasses', ())]
+                        + [c.lower() for c in form.cleaned_data.get('residencies', ())]
+                        + [c.lower() for c in form.cleaned_data.get('workshops', ())]
                     )
 
                     if selected_courses & portfolio_necessary_courses:
