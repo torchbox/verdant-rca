@@ -12,15 +12,7 @@
         </div>
     </div>
 
-<div style="text-align: right;">
-<small >
-<ul>
-  <li>TODO: show conditional upload link</li>
-</ul>
-</small>
-</div>
-
-  <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
+  <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()" enctype="multipart/form-data">
     {% csrf_token %}
     {% for field in form.visible_fields %}
       <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
@@ -41,6 +33,16 @@
     {% for hidden_field in form.hidden_fields %}
       {{ hidden_field }}
     {% endfor %}
+
+    {# portfolio upload #}
+    <label class="{% if portfolio_upload_error %} error{% endif %}" id="portfolio_upload" style="display: none;">Portfolio upload:<span>*</span>
+
+      <p class="help-text">You need to upload a portfolio to participate in a course. Please add a file here.</p>
+
+      <input type="file" name="portfolio">
+
+    </label>
+
 
     <div class="profile-actions">
       <input type="submit" class="submit-page" value="Register interest" name="submit" id="submit-save-and-submit">
@@ -169,6 +171,32 @@
     })();
 
     $(function() {
+      {# conditional form display for portfolio upload #}
+      var necessary_vals = {{ upload_vals|safe }};
+
+      function findSelectedNecessaryCheckboxes() {
+        var vals = [];
+        $.each($('input[type="checkbox"]:checked'), function(index, value) {
+          if (necessary_vals.indexOf(value.value.toLowerCase()) != -1) {
+            vals.push(value.value)
+          }
+        });
+
+        {# technically, this next part should be in a different function, but eh... #}
+        if (vals.length > 0) {
+          $('#portfolio_upload').show();
+        } else {
+          $('#portfolio_upload').hide();
+        }
+        return vals;
+      }
+      var selected_vals = findSelectedNecessaryCheckboxes();
+
+      $('input[type="checkbox"]').bind('change', function() {
+        selected_vals = findSelectedNecessaryCheckboxes();
+      });
+
+      {# initialize from cookie storage #}
       loadFormValues();
     });
   </script>
