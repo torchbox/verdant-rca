@@ -1049,10 +1049,9 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         programmes = ProgrammePageProgramme.objects\
             .filter(page=self)\
             .only('programme')\
-            .distinct()\
-            .values_list('programme', flat=True)
-        programme_labels = dict(ALL_PROGRAMMES)
-        return ", ".join([programme_labels[p] for p in programmes])
+            .distinct()
+
+        return ", ".join([p.get_programme_display() for p in programmes])
 
     @property
     def staff_feed(self):
