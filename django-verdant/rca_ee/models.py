@@ -33,6 +33,13 @@ class CourseDocument(models.Model):
         related_name='+'
     )
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(CourseDocument, self).save(*args, **kwargs)
+
+    def clean(self):
+        self.for_course = self.for_course.strip()
+
     content_panels = [
         FieldPanel('for_course'),
         DocumentChooserPanel('document'),
