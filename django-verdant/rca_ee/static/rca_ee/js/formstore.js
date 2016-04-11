@@ -25,6 +25,10 @@ function getCookie(c_name) {
 }
 
 function storeFormValuesOnSubmit() {
+    // and also stop the form from interaction
+    $("input:submit").attr("disabled", true);
+    $("input:submit").attr("value", "Please wait...");
+
     var form = document.wt_form;
     var json = [];
     for (var i = 0; i < form.length; i++) {
