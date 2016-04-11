@@ -36,6 +36,9 @@ class CourseDocument(models.Model):
         related_name='+'
     )
 
+    def for_course_lower(self):
+        return self.for_course.lower().strip()
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(CourseDocument, self).save(*args, **kwargs)
@@ -80,19 +83,20 @@ class FormPage(ExtendedAbstractEmailForm):
         context['upload_vals'] = json.dumps([
             d.for_course.lower() for d in self.upload_necessary.all()
         ])
+
         if request.method == 'POST':
             form = self.get_form(request.POST)
 
             try:
                 if form.is_valid():
                     portfolio_necessary_courses = set([
-                        d.for_course.lower() for d in self.upload_necessary.all()
+                        d.for_course.lower().strip() for d in self.upload_necessary.all()
                     ])
-                    selected_courses = set(
-                        [c.lower() for c in form.cleaned_data.get('course', ())]
-                        + [c.lower() for c in form.cleaned_data.get('masterclasses', ())]
-                        + [c.lower() for c in form.cleaned_data.get('residencies', ())]
-                        + [c.lower() for c in form.cleaned_data.get('workshops', ())]
+                    context['selected_courses'] = selected_courses = set(
+                        [c.lower().strip() for c in form.cleaned_data.get('course', ())]
+                        + [c.lower().strip() for c in form.cleaned_data.get('masterclasses', ())]
+                        + [c.lower().strip() for c in form.cleaned_data.get('residencies', ())]
+                        + [c.lower().strip() for c in form.cleaned_data.get('workshops', ())]
                     )
 
                     if selected_courses & portfolio_necessary_courses:

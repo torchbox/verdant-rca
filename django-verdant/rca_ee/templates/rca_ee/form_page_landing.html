@@ -12,8 +12,8 @@
         {{ page.thank_you_text|richtext }}
       </div>
       {% for document in page.documents.all %}
-        {% for course in form.cleaned_data.course %}
-          {% if document.for_course == course %}
+        {% for course in selected_courses %}
+          {% if document.for_course_lower == course %}
             <div>
               In the meantime, here is some more information on the course "{{ course }}":
               <a href="{{ document.document.url }}">{{ document.document.title }}</a>
