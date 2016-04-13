@@ -1,3 +1,6 @@
+import json
+
+from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.db import models
 from modelcluster.fields import ParentalKey
@@ -102,12 +105,43 @@ class BookingFormField(ExtendedAbstractFormField):
     page = ParentalKey('BookingFormPage', related_name='form_fields')
 
 
+class CourseNeedsUpload(models.Model):
+    """Indicator that a course can only be booked after sending a portfolio."""
+
+    page = ParentalKey('BookingFormPage', related_name='portfolio_necessary')
+
+    for_course = models.TextField(
+        help_text="The name of the course for which a portfolio upload is necessary before registering interest. Please enter the name of the course exactly as it appears in the selection form below.",
+    )
+    content_panels = [
+        FieldPanel('for_course'),
+    ]
+
+
 class BookingFormPage(ExtendedAbstractForm):
     """
     A form for booking a specific course.
     """
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
+
+    def get_form_class(self):
+
+        that = self
+        class FormClass(super(ExtendedAbstractForm, self).get_form_class()):
+
+            def clean(self):
+                cleaned_data = super(FormClass, self).clean()
+                print(cleaned_data)
+                course = cleaned_data.get('course').lower().strip()
+                portfolio_necessary_courses = set([c.for_course.lower().strip() for c in that.portfolio_necessary.all()])
+                if course in portfolio_necessary_courses and not cleaned_data.get('portfolio-requirement'):
+                    print("portfolio requirement not fulfilled")
+                    self.add_error('portfolio-requirement', 'You must confirm the portfolio requirement to book this course.')
+
+                return cleaned_data
+
+        return FormClass
 
     def get_form_parameters(self):
         """Generate a new transaction id and put it in the form."""
@@ -118,10 +152,42 @@ class BookingFormPage(ExtendedAbstractForm):
             }
         }
 
+    def serve(self, request):
+        context = self.get_context(request)
+        context['portfolio_necessary_courses'] = [c.for_course.lower().strip() for c in self.portfolio_necessary.all()]
+        context['portfolio_necessary_courses_json'] = json.dumps(context['portfolio_necessary_courses'])
+
+        errors = False
+        if request.method == 'POST':
+            form = self.get_form(request.POST)
+
+            if form.is_valid():
+                self.process_form_submission(form)
+
+                context['form'] = form
+                # render the landing_page
+                return render(
+                    request,
+                    self.landing_page_template,
+                    context,
+                )
+            else:
+                errors = True
+        else:
+            form = self.get_form()
+
+        context['form'] = form
+        return render(
+            request,
+            self.template,
+            context,
+            status=200 if not errors else 400
+        )
 
 BookingFormPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('thank_you_text', classname="full"),
+    InlinePanel('portfolio_necessary', label="Portfolio necessary"),
     InlinePanel('form_fields', label="Form fields"),
 ]

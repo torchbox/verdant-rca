@@ -164,6 +164,22 @@
       loadFormValues();
     });
 
+    // show the portfolio requirement for courses that require it
+    var coursesThatRequirePortfolio = {{ portfolio_necessary_courses_json|safe }};
+    function showPortfolioRequirementIfNecessary() {
+      var pfr_block = $('#id_portfolio-requirement').parent();
+      var selected_course = $('#id_course').val().trim().toLocaleLowerCase();
+      if (coursesThatRequirePortfolio.indexOf(selected_course) !== -1) {
+        pfr_block.show();
+      } else {
+        pfr_block.hide();
+      }
+    }
+    $(function() {
+      $('#id_course').bind('change', showPortfolioRequirementIfNecessary);
+      showPortfolioRequirementIfNecessary();
+    });
+
     {# save the form and then re-POST it to the payment page #}
     var payment_url = 'https://payments.rca.ac.uk/innedu/index.php';
     $(function() {
@@ -175,8 +191,8 @@
           type: "POST",
           async: false,
           data: that.serialize(),
-          complete: function() {
-            that.attr('action', payment_url); {# switch to payment url no matter whether it worked or not #}
+          success: function() {
+            that.attr('action', payment_url);
           }
         });
         return true;
