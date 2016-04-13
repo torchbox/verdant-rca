@@ -36,7 +36,7 @@
     {% endfor %}
 
     {% if page.terms_and_conditions %}
-      <div>
+      <div id="link_terms_and_conditions">
         Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">Terms and Conditions</a> before proceeding to payment.
         <br>
       </div>
@@ -189,6 +189,8 @@
     $(function() {
       $('#id_course').bind('change', showPortfolioRequirementIfNecessary);
       showPortfolioRequirementIfNecessary();
+      // move the terms and conditions into the proper place
+      $('#link_terms_and_conditions').detach().appendTo($('#id_accept-rca-terms-and-conditions').parent());
     });
 
     {# save the form and then re-POST it to the payment page #}

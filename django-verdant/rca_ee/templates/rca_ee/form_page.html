@@ -47,9 +47,8 @@
     {% endfor %}
 
     {% if page.terms_and_conditions %}
-      <div>
-        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">Terms and Conditions</a> before submitting this form.
-        <br>
+      <div id="link_terms_and_conditions">
+        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and Conditions</a> before submitting this form.
       </div>
       <hr>
     {% endif %}
@@ -184,6 +183,7 @@
 
     $(function() {
       loadFormValues();
+      $('#link_terms_and_conditions').detach().appendTo($('#id_accept-rca-terms-and-conditions').parent());
     });
   </script>
 
