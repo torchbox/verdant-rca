@@ -5,6 +5,7 @@
 
 {% block content %}
 
+  <div class="body-text">
     <div class="app-details">
         <h2 class="app-title">{{ page.title }}</h2>
         <div class="session-meta">
@@ -34,11 +35,21 @@
       {{ hidden_field }}
     {% endfor %}
 
+    {% if page.terms_and_conditions %}
+      <div>
+        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">Terms and Conditions</a> before proceeding to payment.
+        <br>
+      </div>
+      <hr>
+    {% endif %}
+
     <div class="profile-actions">
       <input type="submit" class="submit-page" value="Proceed to payment" name="submit" id="submit-save-and-submit">
     </div>
 
   </form>
+
+  </div>
 
 {% endblock content %}
 

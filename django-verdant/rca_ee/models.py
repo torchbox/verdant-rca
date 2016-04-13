@@ -1,6 +1,7 @@
 import json
 
 from django.core.exceptions import ValidationError
+from django.db.models import ForeignKey
 from django.shortcuts import render
 from django.db import models
 from modelcluster.fields import ParentalKey
@@ -64,6 +65,13 @@ class FormPage(ExtendedAbstractEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
 
+    terms_and_conditions = ForeignKey(
+        Document,
+        verbose_name='Terms and Conditions',
+        help_text='This document will be shown as the Terms and Conditions document.',
+        blank=True, null=True,
+    )
+
     def serve(self, request):
         if request.method == 'POST':
             form = self.get_form(request.POST)
@@ -95,6 +103,7 @@ FormPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('thank_you_text', classname="full"),
+    DocumentChooserPanel('terms_and_conditions'),
     InlinePanel('documents', label='Documents'),
     InlinePanel('form_fields', label="Form fields"),
 ]
@@ -124,6 +133,12 @@ class BookingFormPage(ExtendedAbstractForm):
     """
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
+    terms_and_conditions = ForeignKey(
+        Document,
+        verbose_name='Terms and Conditions',
+        help_text='This document will be shown as the Terms and Conditions document.',
+        blank=True, null=True,
+    )
 
     def get_form_class(self):
 
@@ -188,6 +203,7 @@ BookingFormPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('intro', classname="full"),
     FieldPanel('thank_you_text', classname="full"),
+    DocumentChooserPanel('terms_and_conditions'),
     InlinePanel('portfolio_necessary', label="Portfolio necessary"),
     InlinePanel('form_fields', label="Form fields"),
 ]
