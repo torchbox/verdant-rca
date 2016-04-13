@@ -13,6 +13,13 @@
         </div>
     </div>
 
+    <style>
+      #id_course li label input {
+        margin-right: 2px;
+        vertical-align:middle;
+      }
+    </style>
+
   <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
     {% csrf_token %}
     {% for field in form.visible_fields %}
