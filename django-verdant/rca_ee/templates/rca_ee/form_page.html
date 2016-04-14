@@ -1,0 +1,189 @@
+{% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
+{% load compress static wagtailimages_tags wagtailuserbar rca_tags wagtailcore_tags %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+
+  <div class="body-text">
+    <div class="app-details">
+        <h2 class="app-title">{{ page.title }}</h2>
+        <div class="session-meta">
+          {{ page.intro|richtext }}
+        </div>
+    </div>
+
+    <style>
+      #id_course > input[type=checkbox] {
+        margin-right: 2px;
+        vertical-align:middle;
+      }
+      form li {
+        padding-bottom: 0px;
+      }
+    </style>
+
+  <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
+    {% csrf_token %}
+    {% for field in form.visible_fields %}
+      <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+
+        {% if field.help_text %}
+          <p class="help-text">{{ field.help_text }}</p>
+        {% endif %}
+
+        {% render_field field %}
+      </label>
+
+      {% for error in field.errors %}
+        <small class="error">{{ error }}</small>
+      {% endfor %}
+
+    {% endfor %}
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% if page.terms_and_conditions %}
+      <div id="link_terms_and_conditions">
+        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and Conditions</a> before submitting this form.
+      </div>
+      <hr>
+    {% endif %}
+
+    <div class="profile-actions">
+      <input type="submit" class="submit-page" value="Register interest" name="submit" id="submit-save-and-submit">
+    </div>
+
+  </form>
+
+  </div>
+
+{% endblock content %}
+
+
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/genericform.less" %}" />
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+    {% endcompress %}
+
+{% endblock %}
+
+{% block js %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
+    <script src="https://js.stripe.com/v2/"></script>
+
+    <script type="text/javascript">
+        var domainroot = "{{ request.site.hostname }}";
+    </script>
+
+    {% use_lightbox %}
+
+    {% compress js %}
+        <script src="{% static "rca/js/vendor/imagesloaded.pkgd.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/packery.pkgd.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/harvey.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.dlmenu.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
+        <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
+
+        <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.once.min.js" %}"></script>
+        {# <script src="{% static "rca/js/vendor/jquery.customSelect.js" %}"></script> #}
+        {# this previous line is the reason for including the block here: we want to remove that line, so we have to duplicate everything else #}
+        <script src="{% static "rca/js/vendor/history.js/scripts/bundled/html4+html5/jquery.history.js" %}"></script>
+        <script src="{% static "rca/js/vendor/jquery.pjax.js" %}"></script>
+        <script src="{% static "rca/js/vendor/froogaloop2.min.js" %}"></script>
+        <script src="{% static "rca/js/jquery.toggle.js" %}"></script>
+        <script src="{% static "rca/js/carousel-news.js" %}"></script>
+        <script src="{% static "rca/js/tweets.js" %}"></script>
+        <script src="{% static "rca/js/site.js" %}"></script>
+        <script src="{% static "rca/js/nav.js" %}"></script>
+        <script src="{% static "rca/js/pushstate.js" %}"></script>
+
+        {% get_debug as DEBUG %}
+
+        {% if DEBUG %}
+            <script type="text/javascript">
+                //set global var for media_url so that it can be used by the script being called
+                var media_url = document.location.origin + "{{ MEDIA_URL }}";
+                // convenience feature for js switching during development
+                var debug = true;
+            </script>
+            <script src="{% static "rca/js/local_images.js" %}"></script>
+        {% endif %}
+    {% endcompress %}
+
+    <script type="text/javascript">
+        {# and here is a replacement for that missing customSelect #}
+        (function ($) {'use strict';$.fn.extend({customSelect: function (options) {}});})(jQuery);
+
+        {% if not request.is_ajax %}
+            // onDocumentReady wraps all the startup code in site.js
+            jQuery(onDocumentReady);
+        {% endif %}
+    </script>
+
+
+    {##############################################################################}
+    {# custom code starts here #}
+    {% compress js %}
+        <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/rangy-core.js"></script>
+        <script src="{{ STATIC_URL }}wagtailadmin/js/vendor/hallo.js"></script>
+        <script src="{{ STATIC_URL }}wagtailadmin/js/hallo-plugins/hallo-hr.js"></script>
+    {% endcompress %}
+
+    {% compress js %}
+        <script src="{% static "student_profiles/select2/select2.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/load-image.all.min.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.iframe-transport.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
+        <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
+        <script src="{% static "rca_ee/js/formstore.js" %}"></script>
+    {% endcompress %}
+
+    {% if errors %}
+        <script>
+            window.form_errors = '{{ errors }}';
+        </script>
+    {% endif %}
+
+  {# used to be block extra_js #}
+  <script>
+    (function() {
+      function parseGET(val) {
+        // with thanks to http://stackoverflow.com/a/5448595
+        var result = undefined, tmp = [];
+        location.search
+                .substr(1)
+                .split("&")
+                .forEach(function (item) {
+                  tmp = item.split("=");
+                  if (tmp[0] === val) result = decodeURIComponent(tmp[1]);
+                });
+        return result;
+      }
+
+      var selected_course = parseGET('course');
+      if (selected_course) {
+        $('#id_course').val(selected_course);
+      }
+    })();
+
+    $(function() {
+      loadFormValues();
+      $('#link_terms_and_conditions').detach().appendTo($('#id_accept-rca-terms-and-conditions').parent());
+    });
+  </script>
+
+{% endblock js %}

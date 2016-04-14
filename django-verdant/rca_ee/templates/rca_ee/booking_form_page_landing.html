@@ -1,0 +1,19 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags %}
+
+
+{% block content %}
+
+  <div class="page-content">
+
+    <div class="app-details">
+      <h2 class="app-title">{{ page.title }}</h2>
+      <div class="session-meta">
+        {{ page.thank_you_text|richtext }}
+      </div>
+
+    </div>
+
+  </div>
+
+{% endblock content %}
