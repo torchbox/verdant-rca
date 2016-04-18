@@ -81,6 +81,12 @@ class FormPage(ExtendedAbstractEmailForm):
 
                 context = self.get_context(request)
                 context['form'] = form
+                context['selected_courses'] = []
+                for key, data in form.cleaned_data.items():
+                    if isinstance(data, list):
+                        context['selected_courses'].extend(
+                            [c.lower().strip() for c in data]
+                        )
                 # render the landing_page
                 return render(
                     request,
@@ -147,11 +153,9 @@ class BookingFormPage(ExtendedAbstractForm):
 
             def clean(self):
                 cleaned_data = super(FormClass, self).clean()
-                print(cleaned_data)
                 course = cleaned_data.get('course').lower().strip()
                 portfolio_necessary_courses = set([c.for_course.lower().strip() for c in that.portfolio_necessary.all()])
                 if course in portfolio_necessary_courses and not cleaned_data.get('portfolio-requirement'):
-                    print("portfolio requirement not fulfilled")
                     self.add_error('portfolio-requirement', 'You must confirm the portfolio requirement to book this course.')
 
                 return cleaned_data
