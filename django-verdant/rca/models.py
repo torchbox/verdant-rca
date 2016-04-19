@@ -99,7 +99,7 @@ class RcaImage(AbstractImage):
         if self.photographer:
             bottom_line_items.append("Photographer: %s" % self.photographer)
         if self.year:
-            bottom_line_items.append(year)
+            bottom_line_items.append(self.year)
 
         if bottom_line_items:
             lines.append(' | '.join(bottom_line_items))
