@@ -1,26 +1,25 @@
 {% extends "rca/base.html" %}
 {% load wagtailcore_tags %}
+{% load static %}
 
 
 {% block content %}
 
-  <div class="page-content">
+  <div class="page-content body-text">
 
     <div class="app-details">
       <h2 class="app-title">{{ page.title }}</h2>
       <div class="session-meta">
         {{ page.thank_you_text|richtext }}
       </div>
-      {% for document in page.documents.all %}
-        {% for course in selected_courses %}
-          {% if document.for_course_lower == course %}
-            <div>
-              In the meantime, here is some more information on the course "{{ document.for_course }}":
-              <a href="{{ document.document.url }}">{{ document.document.title }}</a>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endfor %}
+      {% if selected_documents %}
+        <div>
+
+          Click to download a course booklet for
+          {% for selected_document in selected_documents %}{% if forloop.counter0 > 0 %}{% if forloop.last %} and {% else %}, {% endif %}{% endif %}<a href="{{ selected_document.document.url }}">{{ selected_document.for_course }}&nbsp;<img src="{% static 'rca_ee/img/pdficon.png' %}" style="width: 24px;"></a>{% endfor %}.
+
+        </div>
+      {% endif %}
 
     </div>
 
