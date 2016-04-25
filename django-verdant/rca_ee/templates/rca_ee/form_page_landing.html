@@ -16,7 +16,7 @@
         <div>
 
           Click to download a course booklet for
-          {% for selected_document in selected_documents %}{% if forloop.counter0 > 0 %}{% if forloop.last %} and {% else %}, {% endif %}{% endif %}<a href="{{ selected_document.document.url }}">{{ selected_document.for_course }}&nbsp;<img src="{% static 'rca_ee/img/pdficon.png' %}" style="width: 24px;"></a>{% endfor %}.
+          {% for selected_document in selected_documents %}{% if forloop.counter0 > 0 %}{% if forloop.last %} and {% else %}, {% endif %}{% endif %}<a href="{{ selected_document.document.url }}">{{ selected_document.for_course }}</a>{% endfor %}.
 
         </div>
       {% endif %}
