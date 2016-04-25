@@ -70,6 +70,7 @@ class FormPage(ExtendedAbstractEmailForm):
         verbose_name='Terms and Conditions',
         help_text='This document will be shown as the Terms and Conditions document.',
         blank=True, null=True,
+        on_delete=models.SET_NULL,
     )
 
     def serve(self, request):
@@ -150,6 +151,7 @@ class BookingFormPage(ExtendedAbstractForm):
         verbose_name='Terms and Conditions',
         help_text='This document will be shown as the Terms and Conditions document.',
         blank=True, null=True,
+        on_delete=models.SET_NULL,
     )
 
     def get_form_class(self):
