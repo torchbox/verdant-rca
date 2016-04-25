@@ -87,6 +87,12 @@ class FormPage(ExtendedAbstractEmailForm):
                         context['selected_courses'].extend(
                             [c.lower().strip() for c in data]
                         )
+                context['selected_documents'] = []
+                for document in self.documents.all():
+                    for course in context['selected_courses']:
+                        if document.for_course_lower() == course:
+                            context['selected_documents'].append(document)
+
                 # render the landing_page
                 return render(
                     request,
