@@ -15,6 +15,7 @@ django-celery==3.1.16
 simplejson==3.6.5
 django-compressor==1.5
 django-libsass==0.6
+wagtail-django-recaptcha==0.1
 
 # Developer requirements
 django-debug-toolbar==0.11.0
