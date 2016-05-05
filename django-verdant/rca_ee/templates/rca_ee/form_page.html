@@ -26,18 +26,28 @@
   <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
     {% csrf_token %}
     {% for field in form.visible_fields %}
-      <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+      {% if field.label %}
+        <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
 
-        {% if field.help_text %}
-          <p class="help-text">{{ field.help_text }}</p>
-        {% endif %}
+          {% if field.help_text %}
+            <p class="help-text">{{ field.help_text }}</p>
+          {% endif %}
 
-        {% render_field field %}
-      </label>
+          {% render_field field %}
+        </label>
 
-      {% for error in field.errors %}
-        <small class="error">{{ error }}</small>
-      {% endfor %}
+        {% for error in field.errors %}
+          <small class="error">{{ error }}</small>
+        {% endfor %}
+
+      {% else %}{# field has no label #}
+        <label{% if field.errors %} class="error"{% endif %}>
+          {% render_field field %}
+          {% for error in field.errors %}
+            <small class="error">{{ error }}</small>
+          {% endfor %}
+        </label>
+      {% endif %}
 
     {% endfor %}
 

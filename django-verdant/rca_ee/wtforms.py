@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailforms.models import FORM_FIELD_CHOICES, AbstractFormField, AbstractForm, AbstractEmailForm
 from wagtail.wagtailforms.forms import FormBuilder
+from wagtailcaptcha.models import WagtailCaptchaForm, WagtailCaptchaEmailForm, WagtailCaptchaFormBuilder
 
 
 FORM_FIELD_CHOICES = FORM_FIELD_CHOICES + (
@@ -17,7 +18,6 @@ class ExtendedAbstractFormField(AbstractFormField):
     """
     Some more options added to the form fields.
     """
-
 
     # unfortunately we cannot override the field definition
     # so we have to create a new one and ignore the old one.
@@ -43,7 +43,14 @@ class ExtendedAbstractFormField(AbstractFormField):
     ]
 
 
-class ExtendedFormBuilder(FormBuilder):
+class ExtendedFormBuilder(WagtailCaptchaFormBuilder):
+
+    def __init__(self, fields):
+        super(ExtendedFormBuilder, self).__init__(fields)
+        self.FIELD_TYPES.update({
+            'hidden': ExtendedFormBuilder.create_hidden_field,
+            'multigroup': ExtendedFormBuilder.create_grouped_dropdown_field,
+        })
 
     def create_hidden_field(self, field, options):
         options['widget'] = django.forms.widgets.HiddenInput
@@ -61,19 +68,18 @@ class ExtendedFormBuilder(FormBuilder):
         options['choices'] = choices
         return django.forms.ChoiceField(**options)
 
-    FIELD_TYPES = dict(FormBuilder.FIELD_TYPES.items() + {
-        'hidden': create_hidden_field,
-        'multigroup': create_grouped_dropdown_field,
-    }.items())
+
+class ExtendedAbstractForm(WagtailCaptchaForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ExtendedAbstractForm, self).__init__(*args, **kwargs)
+        self.form_builder = ExtendedFormBuilder
 
 
-class ExtendedAbstractForm(AbstractForm):
+class ExtendedAbstractEmailForm(WagtailCaptchaEmailForm):
 
-    form_builder = ExtendedFormBuilder
-
-
-class ExtendedAbstractEmailForm(AbstractEmailForm):
-
-    form_builder = ExtendedFormBuilder
+    def __init__(self, *args, **kwargs):
+        super(ExtendedAbstractEmailForm, self).__init__(*args, **kwargs)
+        self.form_builder = ExtendedFormBuilder
 
 
