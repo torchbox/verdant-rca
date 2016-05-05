@@ -80,9 +80,19 @@ class RcaImage(AbstractImage):
     def default_alt_text(self):
         return self.alt
 
+    @property
+    def creator_and_year(self):
+        return u" ".join([
+            part for part in [
+                self.creator,
+                self.year,
+            ]
+            if part
+        ])
+
     def caption_lines(self):
-        if self.creator:
-            first_line = u"%s, %s" % (self.title, self.creator)
+        if self.creator or self.year:
+            first_line = u"%s, %s" % (self.title, self.creator_and_year)
         else:
             first_line = self.title
 
@@ -108,8 +118,8 @@ class RcaImage(AbstractImage):
         # use caption_lines, but replace top line with a version that italicises the title
         lines = self.caption_lines()
 
-        if self.creator:
-            lines[0] = mark_safe(u"<i>%s</i>, %s" % (conditional_escape(self.title), conditional_escape(self.creator)))
+        if self.creator or self.year:
+            lines[0] = mark_safe(u"<i>%s</i>, %s" % (conditional_escape(self.title), conditional_escape(self.creator_and_year)))
         else:
             lines[0] = mark_safe(u"<i>%s</i>" % conditional_escape(self.title))
 
