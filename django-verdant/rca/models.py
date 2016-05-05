@@ -3938,8 +3938,8 @@ class NewStudentPage(Page, SocialFields):
     phd_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_degree_type'))
 
     search_fields = Page.search_fields + (
-        index.SearchField('first_name', partial_match=True, boost=50),
-        index.SearchField('last_name', partial_match=True, boost=50),
+        index.SearchField('first_name', partial_match=True, boost=2),
+        index.SearchField('last_name', partial_match=True, boost=2),
         index.SearchField('statement'),
 
         index.SearchField('get_ma_school_display'),
