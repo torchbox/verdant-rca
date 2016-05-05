@@ -3204,7 +3204,6 @@ class StaffPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('title', partial_match=True, boost=2),
         index.SearchField('get_school_display'),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
