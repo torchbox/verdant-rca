@@ -24,6 +24,24 @@ def get_school_display(school):
     return dict(rca_models.SCHOOL_CHOICES)[school]
 
 
+SCHOOL_LOGOS_2016 = {
+    'schoolofcommunication': 'rca_show/images/logo-2016-1.svg',
+    'schoolofhumanities': 'rca_show/images/logo-2016-2.svg',
+    'schooloffineart': 'rca_show/images/logo-2016-3.svg',
+    'schoolofmaterial': 'rca_show/images/logo-2016-4.svg',
+    'schoolofdesign': 'rca_show/images/logo-2016-5.svg',
+    'schoolofarchitecture': 'rca_show/images/logo-2016-6.svg',
+}
+@register.assignment_tag
+def get_school_logo_2016(school):
+    """
+    For a given school identifier, find the filename of the top bar logo for that school.
+
+    This is to make the logo selection easier for the dynamic logo that should appear for each school. If no
+    school is selected, the regular show-wide logo is returned.
+    """
+    return SCHOOL_LOGOS_2016.get(school, 'rca_show/images/logo-2016.svg')
+
 @register.assignment_tag
 def get_schools(show_index):
     if show_index is None:

@@ -19,7 +19,8 @@
 {% endblock %}
 
 {% block logo %}
-    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2016.svg' %}" alt="Show RCA 2016" /></a>
+  {% get_school_logo_2016 school as school_logo %}
+  <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static school_logo %}" alt="Show RCA 2016"/></a>
 {% endblock %}
 
 {% block extra_footer %}
