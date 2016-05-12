@@ -1,0 +1,35 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags wagtailcore_tags %}
+{% load cycle from future %}
+
+{% block body_class %}{{ block.super }} type-school-index{% endblock %}
+
+{% block content %}
+    {% get_schools self.show_index as schools %}
+    {% get_programme_students self.show_index programme as students %}
+
+    {% include "rca_show/includes/menus/menu.html" %}
+
+    <h1 class="hidden">Schools &amp; Programmes</h1>
+    
+    <div class="school-list-wrapper">
+        {% for school in schools %}
+            {% cycle '<ul class="school-list">' '' '' %}
+            <li>
+                <h2><a href="{% show_subpage_url self.show_index 'school' school=school %}" class="color-{{ school }}">{% get_school_display school %}</a></h2>
+                <ul>
+                    {% get_school_programmes self.show_index school as programmes %}
+                        {% for programme in programmes %}
+                        <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}" class="hovercolor-{{ school }}">{% get_programme_display programme %}</a></li>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% cycle '' '' '</ul>' %}
+        {% endfor %}
+        {% if not schools|length|divisibleby:3 %}</ul>{% endif %}
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}

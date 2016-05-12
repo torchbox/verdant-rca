@@ -1,0 +1,365 @@
+{% extends 'rca_show/base.html' %}
+{% load show_tags rca_tags wagtailimages_tags wagtailcore_tags %}
+
+{% block body_class %}{{ block.super }} type-student school-{{ school }}{% endblock %}
+
+{% block content %}
+    {% get_schools self.show_index as schools %}
+    {% get_school_programmes self.show_index school as programmes %}
+
+    {% include "rca_show/includes/menus/menu.html" %}
+
+    <h1>{{ student.first_name }} {{ student.last_name }}</h1>
+
+    {% tabdeck %}
+        {% tab "Show RCA work" %}
+            {% if "animation" in self.get_programmes or "visualcommunication" in self.get_programmes %}
+                {% get_student_carousel_items student show_animation_videos=True as carousel_items %}
+            {% else %}
+                {% get_student_carousel_items student as carousel_items %}
+            {% endif %}
+            {% include "rca_show/includes/modules/carousel.html" %}
+
+            <section class="row">
+                <div class="three-nine-cols">
+                    <div class="col col-3 first">
+                        <div class="meta-data">
+                            <dl>
+                                <dt>Programme</dt>
+                                <dd>
+                                    {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                                        {{ student.get_ma_programme_display }}
+                                    {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                        {{ student.get_mphil_programme_display }}
+                                    {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                        {{ student.get_phd_programme_display }}    
+                                    {% endif %}
+                                </dd>
+                                
+                                {% if student.phones %}
+                                    <dt>Phone</dt>
+                                    <dd class="ellipsis">            
+                                        {% for phone in student.phones.all %}
+                                            <div>{{ phone.phone }}</div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.emails %}
+                                    <dt>Emails</dt>
+                                    <dd class="ellipsis">
+                                        {% for email in student.emails.all %}
+                                            <div><a href="mailto:{{ email.email }}">{{ email.email }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.websites %}
+                                    <dt>Websites</dt>
+                                    <dd class="ellipsis">
+                                        {% for website in student.websites.all %}
+                                            <div><a href="{{ website.website }}">{{ website.website }}</a></div>
+                                        {% endfor %}
+                                    </dd>
+                                {% endif %}
+
+                                {% if student.twitter_handle %}
+                                    <dt>Twitter</dt>
+                                    <dd class="ellipsis"><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></dd>
+                                {% endif %}
+
+                            </dl>
+                        </div>
+                        <div class="single">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </div>
+                    <div class="col col-9 last body-text">
+                        <h2 class="module-title">
+                            {% if student.ma_in_show %}
+                                {# Only show type/title if a type is chosen, else nothing #}
+                                {% if student.show_work_type %}
+                                    <span>{{ student.get_show_work_type_display }}:</span>
+                                {% endif %}
+                            {% else %}
+                                Dissertation: 
+                            {% endif %}
+                        </h2>
+
+                    
+                        <h3>
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                            {{ student.show_work_title }}
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_dissertation_title }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {{ student.phd_dissertation_title }}
+                        {% endif %}                         
+                        </h3>
+
+                        {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                            {{ student.show_work_description|richtext }}
+                        {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {{ student.mphil_statement|richtext }}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {{ student.phd_statement|richtext }}
+                        {% endif %}                            
+                    </div>
+                </div>
+            </section>
+        {% endtab %}
+
+        {% tab "Info" %}
+            <div class="profile">
+                <ul class="four-cols">
+                    <li class="col first">
+                        {% if student.profile_image %}
+                            {% image student.profile_image width-300 %}
+                        {% else %}
+                            <img src="/static/rca/images/rca-placeholder-square.jpg" width="300">
+                        {% endif %}
+                    </li>
+                    <li class="col">
+                        <h3 class="a2">School</h3>
+                        <p class="h7">
+                            {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                                {{ student.get_ma_school_display }}
+                            {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                {{ student.get_mphil_school_display }}
+                            {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                {{ student.get_phd_school_display }}
+                            {% endif %}
+                        </p>
+
+                        <h3 class="a2 space">Programme</h3>
+                        <p class="h7">
+                            {% if student.ma_in_show and student.ma_graduation_year == self.year %}
+                                MA {{ student.get_ma_programme_display }}
+                            {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                                MPhil {{ student.get_mphil_programme_display }}
+                            {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                                PhD {{ student.get_phd_programme_display }}
+                            {% endif %}
+                        </p>
+        
+
+                        {% if student.ma_specialism %}
+                            <h3 class="a2 space">Specialism</h3>
+                            <p class="h7">{{ student.ma_specialism }}</p>
+                        {% endif %}
+
+                        {% if student.mphil_in_show and student.mphil_graduation_year == self.year %}
+                            {% with student.mphil_supervisors.all as supervisors %}
+                                {% if supervisors %}
+                                    <h3 class="a2 space">Supervisor</h3>
+                                    {% for supervisor in supervisors %}
+                                        {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}
+                                            <p class="h7">{{ supervisor.name }}</p>
+                                        {% if supervisor.link %}</a>{% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
+                            {% with student.phd_supervisors.all as supervisors %}
+                                {% if supervisors %}
+                                    <h3 class="a2 space">Supervisor</h3>
+                                    {% for supervisor in supervisors %}
+                                        {% if supervisor.link %}<a href="{{ supervisor.link }}">{% endif %}
+                                            <p class="h7">{{ supervisor.name }}</p>
+                                        {% if supervisor.link %}</a>{% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    </li>
+                    <li class="col">
+                        {% if student.emails or student.phones or student.website or student.twitter_handle %}
+                            <h3 class="a2">Contact</h3>
+                            <ul>
+                                {% for phone in student.phones.all %}
+                                    <li>{{ phone.phone }}</li>
+                                {% endfor %}
+
+                                {% for email in student.emails.all %}
+                                    <li><a href="mailto:{{ email.email }}">{{ email.email }}</a></li>
+                                {% endfor %}
+
+                                {% if student.twitter_handle %}
+                                    <li><a href="http://www.twitter.com/{{ student.twitter_handle }}">&#64;{{ student.twitter_handle }}</a></li>
+                                {% endif %}
+
+                                {% for website in student.websites.all %}
+                                    <li><a href="{{ website.website }}">{{ website.website }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                </ul>
+                <div class="divider"></div>
+                <ul class="three-nine-cols">
+                    <li class="col col-3 first">
+                        <div class="row">
+                            {% include "rca/includes/modules/share-button.html" %}
+                        </div>
+                    </li>
+                    <li class="col col-9 last body-text-style">
+                        {{ student.statement|richtext }}
+                    </li>
+                </ul>
+
+                <!--degrees-->
+                {% with student.previous_degrees.all as degrees %}
+                    {% if degrees %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Previous degrees</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for degree in degrees %}
+                                    {{ degree.degree }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!--experience-->
+                {% with student.experiences.all as experiences %}
+                    {% if experiences %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Experiences</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for experience in experiences %}
+                                    {{ experience.experience }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- exhibitions -->
+                {% with student.exhibitions.all as exhibitions %}
+                    {% if exhibitions %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Exhibitions</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for exhibition in exhibitions %}
+                                    {{ exhibition.exhibition }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- conferences -->
+                {% with student.conferences.all as conferences %}
+                    {% if conferences %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Conferences</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for conference in conferences %}
+                                    {{ conference.name }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- publications -->
+                {% with student.publications.all as publications %}
+                    {% if publications %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Publications</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for publication in publications %}
+                                    {{ publication.name }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- awards -->
+                {% with student.awards.all as awards %}
+                    {% if awards %}
+                        <div class="divider"></div>
+                        <ul class="three-nine-cols">
+                            <li class="col col-3 first">
+                                <h2 class="module-title">Awards</h2>
+                            </li>
+                            <li class="col col-9 last body-text-style">
+                                {% for award in awards %}
+                                    {{ award.award }}{% if not forloop.last %}; {% endif %}
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- funding -->
+                {% if student.funding %}
+                    <div class="divider"></div>
+                    <ul class="three-nine-cols">
+                        <li class="col col-3 first">
+                            <h2 class="module-title">Funding</h2>
+                        </li>
+                        <li class="col col-9 last body-text-style">
+                            {{ student.funding }}
+                        </li>
+                    </ul>
+                {% endif %}
+                <!-- sponsors -->
+                {% with student.get_profile.sponsors.all as sponsors %}
+                    {% if sponsors %}
+                    <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Sponsors</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    {% for sponsor in sponsors %}
+                                        {{ sponsor.name }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                    {% endif %}
+                {% endwith %}
+                <!-- collaborators -->
+                {% with student.get_profile.collaborators.all as collaborators %}
+                    {% if collaborators %}
+                    <div class="divider"></div>
+                            <ul class="three-nine-cols">
+                                <li class="col col-3 first">
+                                    <h2 class="module-title">Collaborators</h2>
+                                </li>
+                                <li class="col col-9 last body-text-style">
+                                    {% for collaborator in collaborators %}
+                                        {{ collaborator.name }}{% if not forloop.last %}; {% endif %}
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                    {% endif %}
+                {% endwith %}      
+
+            </div>
+        {% endtab %}        
+    {% endtabdeck %}    
+   
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}
