@@ -145,3 +145,120 @@ body{
 }*/
 
 
+
+.theme-show2016{
+    @mobile-reduction-factor: 0.6;
+    @colorprimary: #000;
+    @colorsecondary: #fff;
+
+    #overlay {
+        color:@colorsecondary;
+        background-color: @colorprimary; /* fallback for ie8 */
+
+        .exhibition-date,
+        .exhibition-name{
+            color:@colorsecondary;
+        }
+    }
+
+    a:hover,a:active,
+    .text-theme-2016,
+    .exhibition-date,
+    .exhibition-name,
+    h1,
+    .programme-list a,
+    .shownav .jumplist a.active{
+        color:@colorprimary;
+    }
+    .shownav .jumplist.open .toggle,
+    .shownav .jumplist:hover .toggle,
+    .footer,
+    .showgallery .content,
+    .bx-wrapper .bx-next:hover,
+    .bx-wrapper .bx-prev:hover,
+    .share:hover,
+    .tab-nav a:hover,
+    .today h2:hover,
+    nav h2 a:hover{
+        background-color:@colorprimary;
+    }
+
+    .showgallery .content h2,
+    .footer a:hover,
+    .programme-list a:hover{
+        color:@colorsecondary;
+    }
+
+    /* specific login forms */
+    body&.type-login{
+        background-color:@colorprimary;
+        color:@colorsecondary;
+
+        h1,.exhibition-date, .exhibition-name{
+            color:@colorsecondary;
+        }
+
+        input[type=submit], input[type=reset], input[type=button], button, .button{
+            background-color:@colorsecondary;
+        }
+    }
+
+    /* font reset for this years show pages */
+    .body-text,
+    .body-text-style,
+    section.body-text, div#maincontent.inner, .page-content .inner, #overlay, h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .exhibition-date,  {
+        font-family: @font-family-benton-light;
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .body-text b, .body-text-style b, .body-text strong, .body-text-style strong
+    .body-text h2, .body-text-style h2,
+    .body-text h3, .body-text-style h3
+    .body-text h5, .body-text-style h5,
+    {
+        font-family: @font-family-benton-bold;
+        font-weight: normal;
+        font-style: normal;
+    }
+    .body-text em, .body-text-style em, .body-text i, .body-text-style i {
+        font-family: @font-family-benton-light;
+        font-weight: 200;
+        font-style: italic;
+    }
+
+    .meta-data dd {
+        font-family: @font-family-benton;
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'CalvertLight';
+        src: url('@{path-static-show}fonts/Calvert-Light.eot');
+        src: url('@{path-static-show}fonts/Calvert-Light.eot?#iefix') format('embedded-opentype'),
+             url('@{path-static-show}fonts/Calvert-Light.woff') format('woff'),
+             url('@{path-static-show}fonts/Calvert-Light.ttf') format('truetype'),
+             url('@{path-static-show}fonts/Calvert-Light.svg#webfont') format('svg');
+        font-style: normal;
+        font-weight: normal;
+    }
+
+    @font-face {
+        font-family: 'CalvertBold';
+        src: url('@{path-static-show}fonts/Calvert-Bold.eot');
+        src: url('@{path-static-show}fonts/Calvert-Bold.eot?#iefix') format('embedded-opentype'),
+             url('@{path-static-show}fonts/Calvert-Bold.woff') format('woff'),
+             url('@{path-static-show}fonts/Calvert-Bold.ttf') format('truetype'),
+             url('@{path-static-show}fonts/Calvert-Bold.svg#webfont') format('svg');
+        font-style: normal;
+        font-weight: normal;
+    }
+
+
+    .exhibition-name, .school-list h2 {
+        font-family: 'CalvertBold', serif;
+        font-style: normal;
+        font-weight: normal;
+   }
+}
