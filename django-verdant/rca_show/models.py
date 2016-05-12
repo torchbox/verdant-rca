@@ -398,21 +398,31 @@ class ShowIndexPage(SuperPage, SocialFields):
         return self.check_programme_has_students(programme)
 
     # Views
-    landing_template = 'rca_show/landing.html'
-    school_index_template = 'rca_show/school_index.html'
-    school_template = 'rca_show/school.html'
-    programme_template = 'rca_show/programme.html'
-    student_template = 'rca_show/student.html'
+    landing_template_t = 'rca_show/landing{}.html'
+    school_index_template_t = 'rca_show/school_index{}.html'
+    school_template_t = 'rca_show/school{}.html'
+    programme_template_t = 'rca_show/programme{}.html'
+    student_template_t = 'rca_show/student{}.html'
+    programme_template_module_t = 'rca_show/includes/modules/gallery{}.html'
+
 
     def serve_landing(self, request):
         # Render response
-        return render(request, self.landing_template, {
+        templates = (
+            self.landing_template_t.format("_" + self.year),
+            self.landing_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
         })
 
     def serve_school_index(self, request):
         # Render response
-        return render(request, self.school_index_template, {
+        templates = (
+            self.school_index_template_t.format("_" + self.year),
+            self.school_index_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
         })
 
@@ -422,7 +432,11 @@ class ShowIndexPage(SuperPage, SocialFields):
             raise Http404("School doesn't exist")
 
         # Render response
-        return render(request, self.school_template, {
+        templates = (
+            self.school_template_t.format("_" + self.year),
+            self.school_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
             'school': school,
         })
@@ -452,12 +466,18 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Get template
         if request.is_ajax() and 'pjax' not in request.GET:
-            template = 'rca_show/includes/modules/gallery.html'
+            templates = (
+                self.programme_template_module_t.format("_" + self.year),
+                self.programme_template_module_t.format(""),
+            )
         else:
-            template = self.programme_template
+            templates = (
+                self.programme_template_t.format("_" + self.year),
+                self.programme_template_t.format(""),
+            )
 
         # Render response
-        return render(request, template, {
+        return render(request, templates, {
             'self': self,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
@@ -484,7 +504,11 @@ class ShowIndexPage(SuperPage, SocialFields):
         This part of the student view is separate to allow us to render any student with this shows styling
         This is used for student page previews
         """
-        return render(request, self.student_template, {
+        templates = (
+            self.student_template_t.format("_" + self.year),
+            self.student_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
             'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
             'programme': student.programme,
