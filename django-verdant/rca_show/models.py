@@ -362,7 +362,15 @@ class ShowIndexPage(SuperPage, SocialFields):
             school for school in rca_utils.get_schools(year=self.year)
             if self.check_school_has_students(school)
         ]
-        schools.sort()
+        school_sort_keys = {
+            'schoolofcommunication': 0,
+            'schoolofhumanities': 1,
+            'schooloffineart': 2,
+            'schoolofmaterial': 3,
+            'schoolofdesign': 4,
+            'schoolofarchitecture': 5,
+        }
+        schools.sort(key=lambda s: school_sort_keys.get(s))
         return schools
 
     def get_school_programmes(self, school):
