@@ -76,12 +76,32 @@ class SuperPage(Page):
         abstract = True
 
 
+class PageWithYearTemplate():
+    """
+    A page mixin that tries to use the "current year" template instead of the base template. Simply appends
+    '_{year}' to the end of the filename, eg. "show_index.html" becomes "show_index_2016.html".
+    If that template does not exist, the base template is used.
+    """
+
+    def get_template(self, request, *args, **kwargs):
+        if request.is_ajax():
+            orig_template = self.ajax_template or self.template
+        else:
+            orig_template = self.template
+
+        show_index = self.show_index
+        if show_index:
+            return [orig_template.replace('.html', '_{}.html'.format(show_index.year)), orig_template]
+        else:
+            return orig_template
+
+
 # Stream page (for Fashion show)
 
 class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
 
-class ShowStreamPage(Page, SocialFields):
+class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     poster_image = models.ForeignKey(
         'rca.RcaImage',
@@ -136,7 +156,7 @@ class ShowStandardPageContent(Orderable):
         FieldPanel('map_coords')
     ]
 
-class ShowStandardPage(Page, SocialFields):
+class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
@@ -185,7 +205,7 @@ class ShowExhibitionMapIndexContent(Orderable):
         FieldPanel('map_coords')
     ]
 
-class ShowExhibitionMapIndex(Page, SocialFields):
+class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
     @property
     def show_index(self):
         if not hasattr(self, '_show_index'):
@@ -215,7 +235,7 @@ ShowExhibitionMapIndex.promote_panels = [
 ]
 
 
-class ShowExhibitionMapPage(Page, SocialFields):
+class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
 
