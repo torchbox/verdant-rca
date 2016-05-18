@@ -46,7 +46,7 @@
     .shownav .jumplist:hover .toggle,
     .footer,
     .showgallery .content,
-    .bx-wrapper .bx-next:hover, 
+    .bx-wrapper .bx-next:hover,
     .bx-wrapper .bx-prev:hover,
     .share:hover,
     .tab-nav a:hover,
@@ -61,7 +61,7 @@
         color:@colorsecondary;
     }
 
-    /* specific login forms */ 
+    /* specific login forms */
     body&.type-login{
         background-color:@colorprimary;
         color:@colorsecondary;
@@ -100,7 +100,7 @@ body{
     .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
 }
 .theme-schoolofmaterial{
-    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px);
 }*/
 
 /* .school-* must come after .theme-* otherwise school cannot trump the random theme assigned */
@@ -120,7 +120,7 @@ body{
     .theme(hum, @color-hum-1, @color-hum-2, 177px, 226px);
 }
 .school-schoolofmaterial{
-    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px); 
+    .theme(mat, @color-mat-1, @color-mat-2, 201px, 226px);
 }*/
 
 /* generic "make this text a themed colour" stuff. */
@@ -148,7 +148,7 @@ body{
 
 .theme-show2016{
     @mobile-reduction-factor: 0.6;
-    @colorprimary: #000;
+    @colorprimary: #2ABB64;
     @colorsecondary: #fff;
 
     #overlay {
@@ -260,5 +260,13 @@ body{
         font-family: 'CalvertBold', serif;
         font-style: normal;
         font-weight: normal;
+   }
+
+   a.site-name {
+       width: 100%;
+
+       @media screen and (min-width: 768px) {
+           margin-left: 0;
+       }
    }
 }
