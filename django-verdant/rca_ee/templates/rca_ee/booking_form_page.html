@@ -196,7 +196,7 @@
     {# save the form and then re-POST it to the payment page #}
     var payment_url = 'https://payments.rca.ac.uk/innedu/index.php';
     $(function() {
-      $('#wt_form').submit(function(e) {
+      $('#wt_form').submit(function() {
         storeFormValuesOnSubmit();
         var that = $(this);
         $.ajax({
@@ -208,8 +208,6 @@
               window.location.replace(payment_url);
           }
         });
-
-        e.preventDefault();
         return false;
       })
     });
