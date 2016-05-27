@@ -197,7 +197,10 @@
     var payment_url = 'https://payments.rca.ac.uk/innedu/index.php';
     $(function() {
       $('#wt_form').submit(function(e) {
+        console.log("Test 1")
         storeFormValuesOnSubmit();
+
+        console.log("Test 2")
         var that = $(this);
         var preventSubmit = true;
         $.ajax({
@@ -216,10 +219,10 @@
           }
         });
 
-        if (preventSubmit) {
-            e.preventDefault();
-            return false;
-        }
+        console.log("Test 3")
+
+        e.preventDefault();
+        return false;
 
         return true;
       })
