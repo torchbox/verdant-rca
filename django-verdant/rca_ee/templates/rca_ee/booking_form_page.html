@@ -196,9 +196,10 @@
     {# save the form and then re-POST it to the payment page #}
     var payment_url = 'https://payments.rca.ac.uk/innedu/index.php';
     $(function() {
-      $('#wt_form').submit(function() {
+      $('#wt_form').submit(function(e) {
         storeFormValuesOnSubmit();
         var that = $(this);
+        var preventSubmit = true;
         $.ajax({
           url: that.attr('action'),
           type: "POST",
@@ -206,8 +207,20 @@
           data: that.serialize(),
           success: function() {
             that.attr('action', payment_url);
+            preventSubmit = false;
+          },
+          error: function(xhr, status) {
+            console.error("Failed to submit. Status: " + status);
+            console.log("Action: " + that.attr('action'));
+            console.log("Data: " + that.serialize());
           }
         });
+
+        if (preventSubmit) {
+            e.preventDefault();
+            return false;
+        }
+
         return true;
       })
     });
