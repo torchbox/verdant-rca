@@ -202,7 +202,6 @@
 
         console.log("Test 2")
         var that = $(this);
-        var preventSubmit = true;
         $.ajax({
           url: that.attr('action'),
           type: "POST",
@@ -210,7 +209,6 @@
           data: that.serialize(),
           success: function() {
             that.attr('action', payment_url);
-            preventSubmit = false;
           },
           error: function(xhr, status) {
             console.error("Failed to submit. Status: " + status);
@@ -218,11 +216,6 @@
             console.log("Data: " + that.serialize());
           }
         });
-
-        console.log("Test 3")
-
-        e.preventDefault();
-        return false;
 
         return true;
       })
