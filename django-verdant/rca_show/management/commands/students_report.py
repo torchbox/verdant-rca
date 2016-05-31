@@ -83,7 +83,8 @@ class StudentsReport(Report):
             status = page.status_string.upper()
 
             # If page in moderation
-            if page.get_latest_revision().submitted_for_moderation:
+            latest_revision = page.get_latest_revision()
+            if latest_revision and latest_revision.submitted_for_moderation:
                 status += " (in moderation)"
 
             return (
