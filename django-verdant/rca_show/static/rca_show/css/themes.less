@@ -150,6 +150,7 @@ body{
     @mobile-reduction-factor: 0.6;
     @colorprimary: #2ABB64;
     @colorsecondary: #fff;
+    @colorTertiary: #96E5B5;
 
     #overlay {
         color:@colorsecondary;
@@ -161,19 +162,30 @@ body{
         }
     }
 
-    a:hover,a:active,
+    nav a:hover {
+        color: @colorprimary !important;
+    }
+    nav h2 a:hover {
+        color: @colorsecondary !important;
+    }
+
+    nav.hovered h2 a,
+    nav.hovered .menu li.open > a,
+    nav.hovered .menu li.open > a:hover:after,
+    a:hover,a:active,a:focus,
     .text-theme-2016,
     .exhibition-date,
     .exhibition-name,
     h1,
     .programme-list a,
-    .shownav .jumplist a.active{
+    .shownav .jumplist a.active,
+    .body-text a,
+    .body-text-style a{
         color:@colorprimary;
     }
     .shownav .jumplist.open .toggle,
     .shownav .jumplist:hover .toggle,
     .footer,
-    .showgallery .content,
     .bx-wrapper .bx-next:hover,
     .bx-wrapper .bx-prev:hover,
     .share:hover,
@@ -182,7 +194,9 @@ body{
     nav h2 a:hover{
         background-color:@colorprimary;
     }
-
+    .showgallery .content {
+        background-color: @colorTertiary;
+    }
     .showgallery .content h2,
     .footer a:hover,
     .programme-list a:hover{
