@@ -14,8 +14,8 @@ import csv
 import json
 
 
-def get_postcard_zip_filename(student_page):
-    return '-'.join([
+def get_postcard_zip_filename(programme, student_page):
+    return programme + '/' + '-'.join([
         str(student_page.id),
         student_page.first_name.replace(' ', '-'),
         student_page.last_name.replace(' ', '-'),
@@ -355,7 +355,7 @@ class StudentsReport(Report):
             )
 
         if page.postcard_image:
-            filename = get_postcard_zip_filename(page)
+            filename = get_postcard_zip_filename(student['programme'], page)
             return (
                 filename,
                 None,
@@ -547,7 +547,7 @@ class StudentsReport(Report):
                 filename = current.postcard_image.file.name
                 self.postcard_images.append((
                     current.postcard_image.file.name,
-                    get_postcard_zip_filename(current),
+                    get_postcard_zip_filename(obj['programme'], current),
                 ))
 
         return fields
