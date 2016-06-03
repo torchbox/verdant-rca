@@ -196,8 +196,11 @@ body{
     }
     .showgallery .content {
         background-color: @colorTertiary;
+        h2 {
+            color: black;
+            .bold();
+        }
     }
-    .showgallery .content h2,
     .footer a:hover,
     .programme-list a:hover{
         color:@colorsecondary;
@@ -226,11 +229,10 @@ body{
         font-style: normal;
     }
 
-    .body-text b, .body-text-style b, .body-text strong, .body-text-style strong
+    .body-text b, .body-text-style b, .body-text strong, .body-text-style strong,
     .body-text h2, .body-text-style h2,
-    .body-text h3, .body-text-style h3
-    .body-text h5, .body-text-style h5
-    {
+    .body-text h3, .body-text-style h3,
+    .body-text h5, .body-text-style h5 {
         font-family: @font-family-benton-bold;
         font-weight: normal;
         font-style: normal;
