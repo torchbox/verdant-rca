@@ -1,6 +1,8 @@
+import types
+import StringIO, unicodecsv
+
 from django.template import Template, Context
 from django.utils import timezone, dateformat
-import StringIO, unicodecsv
 
 
 class Report(object):
@@ -93,7 +95,23 @@ class Report(object):
             if not self.include_in_report(row):
               continue
 
-            fields = self.post_process(row, [field_func(self, row) for field_name, field_func in self.get_fields()])
+            processed_fields = []
+            current_field_func = None
+            current_generator = None
+            for field_name, field_func in self.get_fields():
+                processed_field = field_func(row)
+                if isinstance(processed_field, types.GeneratorType):
+                    if field_func != current_field_func:
+                        current_field_func = field_func
+                        current_generator = processed_field
+                    try:
+                        processed_fields.append(current_generator.next())
+                    except StopIteration:
+                        processed_fields.append(("", None, None))
+                else:
+                    processed_fields.append(processed_field)
+
+            fields = self.post_process(row, processed_fields)
 
             if fields is not None:
                 yield fields

@@ -1,17 +1,20 @@
-from django.core.management.base import BaseCommand
-from django.db import models
-from django.utils import dateformat
-from django.conf import settings
-from rca.models import NewStudentPage
-from rca_show.management.report_generator import Report
+import os
+import csv
+import json
 from optparse import make_option
 import dateutil.parser
 from zipfile import ZipFile
 from PIL import Image
 import humanize
-import os
-import csv
-import json
+
+from django.core.management.base import BaseCommand
+from django.db import models
+from django.utils import dateformat
+from django.conf import settings
+
+from rca.models import NewStudentPage
+from rca_show.management.report_generator import Report
+
 
 
 def get_postcard_zip_filename(programme, student_page):
@@ -294,6 +297,19 @@ class StudentsReport(Report):
 
         return self.get_child_objects(page.emails, 'email')
 
+    def student_email_fields(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+            for child_object in page.emails.all():
+                yield (child_object.email, None, None)
+        else:
+            yield (
+                "",
+                'error',
+                None,
+            )
+
+
     def student_phone_number_field(self, student):
         if student['current_revision_page']:
             page = student['current_revision_page']
@@ -306,6 +322,18 @@ class StudentsReport(Report):
 
         return self.get_child_objects(page.phones, 'phone')
 
+    def student_phone_number_fields(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+            for child_object in page.phones.all():
+                yield (child_object.phone, None, None)
+        else:
+            yield (
+                "",
+                'error',
+                None,
+            )
+
     def student_website_field(self, student):
         if student['current_revision_page']:
             page = student['current_revision_page']
@@ -317,6 +345,18 @@ class StudentsReport(Report):
             )
 
         return self.get_child_objects(page.websites, 'website')
+
+    def student_website_fields(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+            for child_object in page.websites.all():
+                yield (child_object.website, None, None)
+        else:
+            yield (
+                "",
+                'error',
+                None,
+            )
 
     def student_carousel_items_field(self, student):
         if student['current_revision_page']:
@@ -552,30 +592,87 @@ class StudentsReport(Report):
 
         return fields
 
-    fields = (
-        ("First Name", first_name_field),
-        ("Last Name", last_name_field),
-        ("Programme", programme_field),
-        ("Email", email_field),
-        ("Page", page_field),
-        ("Page Status", page_status_field),
-        ("Student programme", student_programme_field),
-        ("Student graduation year", student_graduation_year_field),
-        ("Student specialism", student_specialism_field),
-        ("Student email", student_email_field),
-        ("Student phone number", student_phone_number_field),
-        ("Student website", student_website_field),
-        ("Student carousel items", student_carousel_items_field),
-        ("Change", page_change_field),
-        ("Postcard image", postcard_image_field),
-        ("Postcard change", postcard_image_change_field),
-        ("Postcard file size", postcard_image_file_size_field),
-        ("Postcard width", postcard_image_width_field),
-        ("Postcard height", postcard_image_height_field),
-        ("Postcard colour format", postcard_image_colour_format_field),
-        ("Postcard caption", postcard_image_caption_field),
-        ("Postcard permission", postcard_image_permission_field),
-    )
+    @property
+    def phone_number_columns(self):
+        if not self.kwargs['split_columns']:
+            return [("Student phone number", self.student_phone_number_field)]
+
+        max_phone_count = NewStudentPage.objects.annotate(
+            phone_count=models.Count('phones')
+        ).aggregate(max=models.Max('phone_count'))['max']
+        if max_phone_count == 0:
+            return []
+        elif max_phone_count == 1:
+            return [("Student phone number", self.student_phone_number_field)]
+        elif max_phone_count > 1:
+            columns = []
+            for i in range(0, max_phone_count):
+                text = "Student phone number %s" % str(i + 1)
+                columns.append((text, self.student_phone_number_fields))
+            return columns
+
+    @property
+    def website_columns(self):
+        if not self.kwargs['split_columns']:
+            return [("Student website", self.student_website_field)]
+
+        max_website_count = NewStudentPage.objects.annotate(
+            website_count=models.Count('websites')
+        ).aggregate(max=models.Max('website_count'))['max']
+        if max_website_count == 0:
+            return []
+        elif max_website_count == 1:
+            return [("Student website", self.student_website_field)]
+        elif max_website_count > 1:
+            columns = []
+            for i in range(0, max_website_count):
+                text = "Student website %s" % str(i + 1)
+                columns.append((text, self.student_website_fields))
+            return columns
+
+    @property
+    def email_columns(self):
+        if not self.kwargs['split_columns']:
+            return [("Student email", self.student_email_field)]
+
+        max_email_count = NewStudentPage.objects.annotate(
+            email_count=models.Count('emails')
+        ).aggregate(max=models.Max('email_count'))['max']
+        if max_email_count == 0:
+            return []
+        elif max_email_count == 1:
+            return [("Student email", self.student_email_field)]
+        elif max_email_count > 1:
+            columns = []
+            for i in range(0, max_email_count):
+                text = "Student email %s" % str(i + 1)
+                columns.append((text, self.student_email_fields))
+            return columns
+
+    @property
+    def fields(self):
+        return [
+            ("First Name", self.first_name_field),
+            ("Last Name", self.last_name_field),
+            ("Programme", self.programme_field),
+            ("Email", self.email_field),
+            ("Page", self.page_field),
+            ("Page Status", self.page_status_field),
+            ("Student programme", self.student_programme_field),
+            ("Student graduation year", self.student_graduation_year_field),
+            ("Student specialism", self.student_specialism_field),
+        ] + self.email_columns + self.phone_number_columns + self.website_columns + [
+            ("Student carousel items", self.student_carousel_items_field),
+            ("Change", self.page_change_field),
+            ("Postcard image", self.postcard_image_field),
+            ("Postcard change", self.postcard_image_change_field),
+            ("Postcard file size", self.postcard_image_file_size_field),
+            ("Postcard width", self.postcard_image_width_field),
+            ("Postcard height", self.postcard_image_height_field),
+            ("Postcard colour format", self.postcard_image_colour_format_field),
+            ("Postcard caption", self.postcard_image_caption_field),
+            ("Postcard permission", self.postcard_image_permission_field),
+        ]
 
     def get_footer(self):
         footer = super(StudentsReport, self).get_footer()
@@ -627,7 +724,12 @@ class Command(BaseCommand):
             dest='include_not_in',
             default=None,
             help='If changed-only is set. Any students not in the list in this file will be included in the report'),
-        )
+        make_option('--split-columns',
+            action='store_true',
+            dest='split_columns',
+            default=False,
+            help='if --split-columns is set, phone numbers, email addresses and websites will be printed in separate columns'),
+    )
 
     def process_student(self, student, previous_date=None):
         # Student info
@@ -635,6 +737,7 @@ class Command(BaseCommand):
         first_name = student[2]
         last_name = student[1]
         email = student[3]
+        page = None
 
         print first_name, last_name
 
@@ -701,6 +804,7 @@ class Command(BaseCommand):
                 changed_only=options['changed_only'],
                 changed_postcard_only=options['changed_postcard_only'],
                 include_not_in=include_not_in,
+                split_columns=options['split_columns']
             )
             report.run()
 
