@@ -65,8 +65,16 @@
             <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
             <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
             <div class="content">
+
                 <video autoplay="autoplay" class="full-screen-video">
-                    <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&profile_id=113" type="video/mp4">
+                    {# old video - before June 2016 #}
+                    {# <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&amp;profile_id=113" type="video/mp4"> #}
+
+                    {# 720p #}
+                    {# <source src="https://player.vimeo.com/external/169841486.hd.mp4?s=b4c960820d360f6064ee38cdbfccde1c7f5044c1&amp;profile_id=174" type="video/mp4"> #}
+
+                    {# 1080p #}
+                    <source src="https://player.vimeo.com/external/169841486.hd.mp4?s=b4c960820d360f6064ee38cdbfccde1c7f5044c1&amp;profile_id=119" type="video/mp4">
                 </video>
 
                 <div class="crest"></div>
