@@ -73,6 +73,23 @@ def fetch_live_data():
     local('rm %s' % local_path)
 
 
+@roles('staging')
+def fetch_staging_data():
+    filename = "verdant_rca_%s.sql" % uuid.uuid4()
+    local_path = "/tmp/%s" % filename
+    remote_path = "/tmp/%s" % filename
+
+    run('pg_dump -cf %s rcawagtail' % remote_path)
+    run('gzip %s' % remote_path)
+    get("%s.gz" % remote_path, "%s.gz" % local_path)
+    run('rm %s.gz' % remote_path)
+    local('dropdb verdant')
+    local('createdb verdant')
+    local('gunzip %s.gz' % local_path)
+    local('psql verdant -f %s' % local_path)
+    local('rm %s' % local_path)
+
+
 @roles('rca2')
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
