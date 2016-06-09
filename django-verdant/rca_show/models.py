@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
 from django.db import models
+from django.db.models.functions import Concat
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib.contenttypes.models import ContentType
@@ -362,7 +363,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         if self.year == '2015' and 'visualcommunication' in self.get_programmes():
             q &= models.Q(carousel_items__sort_order=0) & models.Q(carousel_items__embedly_url__startswith='http')
 
-        return rca_utils.get_students(degree_q=q).order_by(orderby).distinct()
+        return rca_utils.get_students(degree_q=q).order_by(Concat('first_name', 'last_name')).distinct()
 
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]
