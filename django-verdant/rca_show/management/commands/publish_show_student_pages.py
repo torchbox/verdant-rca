@@ -13,12 +13,12 @@ class Command(BaseCommand):
         parser.add_argument(
             '--dry-run',
             action='store_true',
-            dest='dry_run',
+            dest='dry-run',
             default=False,
             help="Don't perform any action",
         )
 
-    def handle(self, filename, **options):
+    def handle(self, **options):
         q = models.Q(in_show=True)
         q &= models.Q(graduation_year=2016)
         q &= models.Q(programme__in=['fashionmenswear', 'fashionwomenswear'])
