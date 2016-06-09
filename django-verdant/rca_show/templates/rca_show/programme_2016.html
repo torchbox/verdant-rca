@@ -1,0 +1,22 @@
+{% extends "rca_show/base_2016.html" %}
+{% load show_tags wagtailcore_tags %}
+
+{% block body_class %}{{ block.super }} type-programme school-{{ school }}{% endblock %}
+
+{% block content %}
+    {% include "rca_show/includes/menus/menu.html" %}
+
+    {% include "rca/includes/modules/carousel.html" with overlayvisible=0 %}
+
+    {% if not self.is_programme_page %}
+        <h1>{% get_programme_display programme %}</h1>
+    {% endif %}
+
+    {{ intro|safe }}
+
+    {% include "rca_show/includes/modules/gallery.html" with students=students %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}

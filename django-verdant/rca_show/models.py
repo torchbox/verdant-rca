@@ -76,12 +76,32 @@ class SuperPage(Page):
         abstract = True
 
 
+class PageWithYearTemplate():
+    """
+    A page mixin that tries to use the "current year" template instead of the base template. Simply appends
+    '_{year}' to the end of the filename, eg. "show_index.html" becomes "show_index_2016.html".
+    If that template does not exist, the base template is used.
+    """
+
+    def get_template(self, request, *args, **kwargs):
+        if request.is_ajax():
+            orig_template = self.ajax_template or self.template
+        else:
+            orig_template = self.template
+
+        show_index = self.show_index
+        if show_index:
+            return [orig_template.replace('.html', '_{}.html'.format(show_index.year)), orig_template]
+        else:
+            return orig_template
+
+
 # Stream page (for Fashion show)
 
 class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
 
-class ShowStreamPage(Page, SocialFields):
+class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     poster_image = models.ForeignKey(
         'rca.RcaImage',
@@ -136,7 +156,7 @@ class ShowStandardPageContent(Orderable):
         FieldPanel('map_coords')
     ]
 
-class ShowStandardPage(Page, SocialFields):
+class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
@@ -185,7 +205,7 @@ class ShowExhibitionMapIndexContent(Orderable):
         FieldPanel('map_coords')
     ]
 
-class ShowExhibitionMapIndex(Page, SocialFields):
+class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
     @property
     def show_index(self):
         if not hasattr(self, '_show_index'):
@@ -215,7 +235,7 @@ ShowExhibitionMapIndex.promote_panels = [
 ]
 
 
-class ShowExhibitionMapPage(Page, SocialFields):
+class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
 
@@ -307,7 +327,6 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     @property
     def local_url(self):
-        root_paths = Site.get_site_root_paths()
         for (id, root_path, root_url) in Site.get_site_root_paths():
             if self.url_path.startswith(root_path):
                 return self.url_path[len(root_path) - 1:]
@@ -362,7 +381,15 @@ class ShowIndexPage(SuperPage, SocialFields):
             school for school in rca_utils.get_schools(year=self.year)
             if self.check_school_has_students(school)
         ]
-        schools.sort()
+        school_sort_keys = {
+            'schoolofcommunication': 0,
+            'schoolofhumanities': 1,
+            'schooloffineart': 2,
+            'schoolofmaterial': 3,
+            'schoolofdesign': 4,
+            'schoolofarchitecture': 5,
+        }
+        schools.sort(key=lambda s: school_sort_keys.get(s))
         return schools
 
     def get_school_programmes(self, school):
@@ -398,21 +425,31 @@ class ShowIndexPage(SuperPage, SocialFields):
         return self.check_programme_has_students(programme)
 
     # Views
-    landing_template = 'rca_show/landing.html'
-    school_index_template = 'rca_show/school_index.html'
-    school_template = 'rca_show/school.html'
-    programme_template = 'rca_show/programme.html'
-    student_template = 'rca_show/student.html'
+    landing_template_t = 'rca_show/landing{}.html'
+    school_index_template_t = 'rca_show/school_index{}.html'
+    school_template_t = 'rca_show/school{}.html'
+    programme_template_t = 'rca_show/programme{}.html'
+    student_template_t = 'rca_show/student{}.html'
+    programme_template_module_t = 'rca_show/includes/modules/gallery{}.html'
+
 
     def serve_landing(self, request):
         # Render response
-        return render(request, self.landing_template, {
+        templates = (
+            self.landing_template_t.format("_" + self.year),
+            self.landing_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
         })
 
     def serve_school_index(self, request):
         # Render response
-        return render(request, self.school_index_template, {
+        templates = (
+            self.school_index_template_t.format("_" + self.year),
+            self.school_index_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
         })
 
@@ -422,7 +459,11 @@ class ShowIndexPage(SuperPage, SocialFields):
             raise Http404("School doesn't exist")
 
         # Render response
-        return render(request, self.school_template, {
+        templates = (
+            self.school_template_t.format("_" + self.year),
+            self.school_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
             'school': school,
         })
@@ -452,12 +493,18 @@ class ShowIndexPage(SuperPage, SocialFields):
 
         # Get template
         if request.is_ajax() and 'pjax' not in request.GET:
-            template = 'rca_show/includes/modules/gallery.html'
+            templates = (
+                self.programme_template_module_t.format("_" + self.year),
+                self.programme_template_module_t.format(""),
+            )
         else:
-            template = self.programme_template
+            templates = (
+                self.programme_template_t.format("_" + self.year),
+                self.programme_template_t.format(""),
+            )
 
         # Render response
-        return render(request, template, {
+        return render(request, templates, {
             'self': self,
             'school': rca_utils.get_school_for_programme(programme, year=self.year),
             'programme': programme,
@@ -484,7 +531,11 @@ class ShowIndexPage(SuperPage, SocialFields):
         This part of the student view is separate to allow us to render any student with this shows styling
         This is used for student page previews
         """
-        return render(request, self.student_template, {
+        templates = (
+            self.student_template_t.format("_" + self.year),
+            self.student_template_t.format(""),
+        )
+        return render(request, templates, {
             'self': self,
             'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
             'programme': student.programme,

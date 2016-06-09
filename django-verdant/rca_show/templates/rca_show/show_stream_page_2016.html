@@ -1,0 +1,28 @@
+{% extends 'rca_show/base_2016.html' %}
+{% load show_tags wagtailcore_tags %}
+
+{% block body_class %}{{ block.super }} type-standard{% endblock %}
+
+
+{% block extra_js_head %}
+    <script src="https://jwpsrv.com/library/ZQUkUgkgEeWx+A4AfQhyIQ.js"></script>
+{% endblock %}
+
+{% block content %}
+    {% include "rca_show/includes/menus/menu.html" %}
+
+    <h1>{{ self.title }}</h1>
+
+    {% include "rca_show/includes/modules/stream.html" with poster_image=self.poster_image %}
+
+    <section class="body-text">
+        {% if self.body %}
+            {{ self.body|richtext }}
+        {% endif %}
+    </section>
+
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" %}
+{% endblock %}

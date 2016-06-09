@@ -1,7 +1,7 @@
 {% extends "rca/base.html" %}
 {% load compress static show_tags wagtailcore_tags %}
 
-{% block body_class %}showrca theme-show2015 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+{% block body_class %}showrca theme-show2016 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
@@ -19,13 +19,13 @@
 {% endblock %}
 
 {% block logo %}
-    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2015.svg' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
+  {% get_school_logo_2016 school as school_logo %}
+  <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static school_logo %}" alt="Show RCA 2016"/></a>
 {% endblock %}
 
 {% block extra_footer %}
     <div class="prefooter standard-wrapper">
         <a href="/" class="logo-rca">Royal College of Art</a>
-        <a href="/" class="exhibition-name">Royal College<br/> of Art Graduate<br/> Exhibition</a>
     </div>
 
     <div class="footer full-width-footer">
@@ -63,18 +63,17 @@
     {% if self.show_index.overlay_intro %}
         <div id="overlay" class="fade">
             <div class="exhibition-date">{{ self.show_index.exhibition_date|linebreaks }}</div>
-            <div class="exhibition-name">Royal College<br /> of Art Graduate<br /> Exhibition</div>
             <div class="content">
 
                 <video autoplay="autoplay" class="full-screen-video">
-                    <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&amp;profile_id=113" type="video/mp4">
+                    {# old video - before June 2016 #}
+                    {# <source src="https://player.vimeo.com/external/124918502.hd.mp4?s=98d43f7f71298356ced95dbd9317a925&amp;profile_id=113" type="video/mp4"> #}
 
-                    {# 2016 videos: #}
                     {# 720p #}
                     {# <source src="https://player.vimeo.com/external/169841486.hd.mp4?s=b4c960820d360f6064ee38cdbfccde1c7f5044c1&amp;profile_id=174" type="video/mp4"> #}
 
                     {# 1080p #}
-                    {# <source src="https://player.vimeo.com/external/169841486.hd.mp4?s=b4c960820d360f6064ee38cdbfccde1c7f5044c1&amp;profile_id=119" type="video/mp4"> #}
+                    <source src="https://player.vimeo.com/external/169841486.hd.mp4?s=b4c960820d360f6064ee38cdbfccde1c7f5044c1&amp;profile_id=119" type="video/mp4">
                 </video>
 
                 <div class="crest"></div>
