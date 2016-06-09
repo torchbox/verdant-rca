@@ -327,7 +327,6 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     @property
     def local_url(self):
-        root_paths = Site.get_site_root_paths()
         for (id, root_path, root_url) in Site.get_site_root_paths():
             if self.url_path.startswith(root_path):
                 return self.url_path[len(root_path) - 1:]
