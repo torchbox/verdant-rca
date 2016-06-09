@@ -32,13 +32,13 @@
                                     {% elif student.mphil_in_show and student.mphil_graduation_year == self.year %}
                                         {{ student.get_mphil_programme_display }}
                                     {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
-                                        {{ student.get_phd_programme_display }}    
+                                        {{ student.get_phd_programme_display }}
                                     {% endif %}
                                 </dd>
-                                
+
                                 {% if student.phones %}
                                     <dt>Phone</dt>
-                                    <dd class="ellipsis">            
+                                    <dd class="ellipsis">
                                         {% for phone in student.phones.all %}
                                             <div>{{ phone.phone }}</div>
                                         {% endfor %}
@@ -82,11 +82,11 @@
                                     <span>{{ student.get_show_work_type_display }}:</span>
                                 {% endif %}
                             {% else %}
-                                Dissertation: 
+                                Dissertation:
                             {% endif %}
                         </h2>
 
-                    
+
                         <h3>
                         {% if student.ma_in_show and student.ma_graduation_year == self.year %}
                             {{ student.show_work_title }}
@@ -94,7 +94,7 @@
                             {{ student.mphil_dissertation_title }}
                         {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
                             {{ student.phd_dissertation_title }}
-                        {% endif %}                         
+                        {% endif %}
                         </h3>
 
                         {% if student.ma_in_show and student.ma_graduation_year == self.year %}
@@ -103,7 +103,7 @@
                             {{ student.mphil_statement|richtext }}
                         {% elif student.phd_in_show and student.phd_graduation_year == self.year %}
                             {{ student.phd_statement|richtext }}
-                        {% endif %}                            
+                        {% endif %}
                     </div>
                 </div>
             </section>
@@ -141,11 +141,11 @@
                                 PhD {{ student.get_phd_programme_display }}
                             {% endif %}
                         </p>
-        
+
 
                         {% if student.ma_specialism %}
                             <h3 class="a2 space">Specialism</h3>
-                            <p class="h7">{{ student.ma_specialism }}</p>
+                            <p class="h7">{{ student.get_ma_specialism_display }}</p>
                         {% endif %}
 
                         {% if student.mphil_in_show and student.mphil_graduation_year == self.year %}
@@ -352,12 +352,12 @@
                                 </li>
                             </ul>
                     {% endif %}
-                {% endwith %}      
+                {% endwith %}
 
             </div>
-        {% endtab %}        
-    {% endtabdeck %}    
-   
+        {% endtab %}
+    {% endtabdeck %}
+
 {% endblock %}
 
 {% block sidebar %}
