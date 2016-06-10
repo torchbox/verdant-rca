@@ -165,9 +165,6 @@ body{
     nav a:hover {
         color: @colorprimary !important;
     }
-    nav h2 a:hover {
-        color: @colorsecondary !important;
-    }
 
     nav.hovered h2 a,
     nav.hovered .menu li.open > a,
@@ -183,16 +180,22 @@ body{
     .body-text-style a{
         color:@colorprimary;
     }
-    .shownav .jumplist.open .toggle,
-    .shownav .jumplist:hover .toggle,
-    .footer,
     .bx-wrapper .bx-next:hover,
     .bx-wrapper .bx-prev:hover,
     .share:hover,
     .tab-nav a:hover,
-    .today h2:hover,
-    nav h2 a:hover{
+    .today h2:hover
+    {
         background-color:@colorprimary;
+    }
+    .footer,
+    .footer li,
+    .shownav .jumplist.open .toggle,
+    .shownav .jumplist:hover .toggle,
+    nav h2 a:hover
+    {
+        background-color: @colorTertiary;
+        color: black !important;
     }
     .showgallery .content {
         background-color: @colorTertiary;
