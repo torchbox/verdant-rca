@@ -281,11 +281,6 @@ PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
 
 GOOGLE_ANALYTICS_ACCOUNT = ''
 
-# The scheduler used by this app needs to be defined in the settings.
-# It also contains some additional configuration options, some need to be set in the local settings.
-from twitter.settings import *
-
-
 # ReCaptcha settings
 RECAPTCHA_PUBLIC_KEY = 'put your public key here'
 RECAPTCHA_PRIVATE_KEY = 'put your recaptcha secret key here'
