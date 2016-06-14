@@ -794,7 +794,7 @@ class SchoolPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.SchoolPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 
@@ -1003,7 +1003,7 @@ class ProgrammePageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ProgrammePageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 
@@ -1170,7 +1170,7 @@ class NewsIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.NewsIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class NewsIndex(Page, SocialFields):
@@ -1457,7 +1457,7 @@ class PressReleaseIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.PressReleaseIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class PressReleaseIndex(Page, SocialFields):
@@ -1913,7 +1913,7 @@ class EventIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.EventIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class EventIndex(Page, SocialFields):
@@ -2086,7 +2086,7 @@ class TalksIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.TalksIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class TalksIndex(Page, SocialFields):
@@ -2167,7 +2167,7 @@ class ReviewsIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ReviewsIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class ReviewsIndex(Page, SocialFields):
@@ -2282,7 +2282,7 @@ class ReviewPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ReviewPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class ReviewPage(Page, SocialFields):
@@ -2382,7 +2382,7 @@ class StandardPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.StandardPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class StandardPageReusableTextSnippet(Orderable):
@@ -2390,7 +2390,7 @@ class StandardPageReusableTextSnippet(Orderable):
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+', help_text=help_text('rca.StandardPageReusableTextSnippet', 'reusable_text_snippet'))
 
     panels = [
-        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+        SnippetChooserPanel('reusable_text_snippet'),
     ]
 
 class StandardPageTag(TaggedItemBase):
@@ -2545,7 +2545,7 @@ class StandardIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.StandardIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class StandardIndexCustomContentModules(Orderable):
@@ -2553,7 +2553,7 @@ class StandardIndexCustomContentModules(Orderable):
     custom_content_module = models.ForeignKey('rca.CustomContentModule', related_name='+', help_text=help_text('rca.StandardIndexCustomContentModules', 'custom_content_module'))
 
     panels = [
-        SnippetChooserPanel('custom_content_module', CustomContentModule),
+        SnippetChooserPanel('custom_content_module'),
     ]
 
 class StandardIndexContactSnippet(Orderable):
@@ -2561,7 +2561,7 @@ class StandardIndexContactSnippet(Orderable):
     contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+', help_text=help_text('rca.StandardIndexContactSnippet', 'contact_snippet'))
 
     panels = [
-        SnippetChooserPanel('contact_snippet', ContactSnippet),
+        SnippetChooserPanel('contact_snippet'),
     ]
 
 class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFields):
@@ -2733,7 +2733,7 @@ class HomePageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.HomePageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class HomePageRelatedLink(Orderable, RelatedLinkMixin):
@@ -2912,7 +2912,7 @@ class JobPageReusableTextSnippet(Orderable):
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+', help_text=help_text('rca.JobPageReusableTextSnippet', 'reusable_text_snippet'))
 
     panels = [
-        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+        SnippetChooserPanel('reusable_text_snippet'),
     ]
 
 class JobPage(Page, SocialFields):
@@ -3001,7 +3001,7 @@ class JobsIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.JobsIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class JobsIndex(Page, SocialFields):
@@ -3194,7 +3194,7 @@ class StaffIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.StaffIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class StaffIndex(Page, SocialFields):
@@ -3342,7 +3342,7 @@ class ResearchStudentIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ResearchStudentIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class ResearchStudentIndex(Page, SocialFields):
@@ -4970,7 +4970,7 @@ class ResearchInnovationPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ResearchInnovationPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class ResearchInnovationPage(Page, SocialFields):
@@ -5043,7 +5043,7 @@ class CurrentResearchPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.CurrentResearchPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class CurrentResearchPage(Page, SocialFields):
@@ -5670,7 +5670,7 @@ class InnovationRCAIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.InnovationRCAIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class InnovationRCAIndex(Page, SocialFields):
@@ -5895,7 +5895,7 @@ class SustainRCAIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+')
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class SustainRCAIndex(Page, SocialFields):
@@ -6174,7 +6174,7 @@ class ReachOutRCAIndexAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ReachOutRCAIndexAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class ReachOutRCAIndex(Page, SocialFields):
@@ -6266,7 +6266,7 @@ class StreamPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.StreamPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class StreamPage(Page, SocialFields):
@@ -6358,7 +6358,7 @@ class PathwayPageAd(Orderable):
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.PathwayPageAd', 'ad'))
 
     panels = [
-        SnippetChooserPanel('ad', Advert),
+        SnippetChooserPanel('ad'),
     ]
 
 class PathwayPageReusableTextSnippet(Orderable):
@@ -6366,7 +6366,7 @@ class PathwayPageReusableTextSnippet(Orderable):
     reusable_text_snippet = models.ForeignKey('rca.ReusableTextSnippet', related_name='+', help_text=help_text('rca.PathwayPageReusableTextSnippet', 'reusable_text_snippet'))
 
     panels = [
-        SnippetChooserPanel('reusable_text_snippet', ReusableTextSnippet),
+        SnippetChooserPanel('reusable_text_snippet'),
     ]
 
 class PathwayPageTag(TaggedItemBase):
