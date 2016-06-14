@@ -74,10 +74,10 @@ class RcaImage(AbstractImage):
         'alt', 'creator', 'year', 'medium', 'dimensions', 'permission', 'photographer'
     )
 
-    search_fields = AbstractImage.search_fields + (
+    search_fields = AbstractImage.search_fields + [
         index.SearchField('creator'),
         index.SearchField('photographer'),
-    )
+    ]
 
     @property
     def default_alt_text(self):
@@ -814,12 +814,12 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     head_of_research_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_research_link'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         # Requires Wagtail >= 1.3
         # index.RelatedFields('school', [
         #     index.SearchField('display_name'),
         # ]),
-    )
+    ]
 
     search_name = 'School'
 
@@ -1036,14 +1036,14 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
 
         # Requires Wagtail >= 1.3
         # index.RelatedFields('school', [
         #     index.SearchField('display_name'),
         # ]),
-    )
+    ]
 
     search_name = 'Programme'
 
@@ -1179,9 +1179,9 @@ class NewsIndex(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     subpage_types = ['NewsItem']
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
-    )
+    ]
 
     search_name = None
 
@@ -1345,10 +1345,10 @@ class NewsItem(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = 'News'
 
@@ -1466,10 +1466,10 @@ class PressReleaseIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PressReleaseIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressReleaseIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -1570,10 +1570,10 @@ class PressRelease(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressRelease', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = 'PressRelease'
 
@@ -1751,11 +1751,11 @@ class EventItem(Page, SocialFields):
     past_objects = PastEventItemManager()
     future_not_current_objects = FutureNotCurrentEventItemManager()
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('get_location_display'),
         index.SearchField('location_other'),
-    )
+    ]
 
     search_name = 'Event'
 
@@ -1922,10 +1922,10 @@ class EventIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -2095,10 +2095,10 @@ class TalksIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.TalksIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.TalksIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_page = None
 
@@ -2176,10 +2176,10 @@ class ReviewsIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReviewsIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReviewsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -2296,11 +2296,11 @@ class ReviewPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReviewPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReviewPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.SearchField('strapline'),
         index.SearchField('author'),
-    )
+    ]
 
     search_name = 'Review'
 
@@ -2409,10 +2409,10 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     # StandardPages with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the homepage packery separately.
     # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
@@ -2583,11 +2583,11 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     hide_body = models.BooleanField(default=True, help_text=help_text('rca.StandardIndex', 'hide_body'))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('strapline'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -2934,7 +2934,7 @@ class JobPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.JobPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         # Requires Wagtail >= 1.3
         # index.RelatedFields('school', [
         #     index.SearchField('display_name'),
@@ -2948,7 +2948,7 @@ class JobPage(Page, SocialFields):
         index.SearchField('other_department'),
         index.SearchField('get_campus_display'),
         index.SearchField('description'),
-    )
+    ]
 
     search_name = 'Job'
 
@@ -3010,10 +3010,10 @@ class JobsIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobsIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobsIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -3125,7 +3125,7 @@ class StaffPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         # Requires Wagtail >= 1.3
         # index.RelatedFields('area', [
         #     index.SearchField('display_name'),
@@ -3133,7 +3133,7 @@ class StaffPage(Page, SocialFields):
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
-    )
+    ]
 
     search_name = 'Staff'
 
@@ -3350,9 +3350,9 @@ class ResearchStudentIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchStudentIndex', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchStudentIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
-    )
+    ]
 
     search_name = None
 
@@ -3595,11 +3595,11 @@ class StudentPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('get_school_display'),
         index.SearchField('get_programme_display'),
         index.SearchField('statement'),
-    )
+    ]
 
     @property
     def is_researchstudent(self):
@@ -3980,7 +3980,7 @@ class NewStudentPage(Page, SocialFields):
     phd_status = models.CharField("Status", max_length=255, choices=STATUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_status', default=''))
     phd_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_degree_type'))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('first_name', partial_match=True, boost=2),
         index.SearchField('last_name', partial_match=True, boost=2),
         index.SearchField('statement'),
@@ -4019,7 +4019,7 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('phd_graduation_year'),
         index.FilterField('phd_status'),
         index.FilterField('phd_degree_type'),
-    )
+    ]
 
     @property
     def is_ma_student(self):
@@ -4386,7 +4386,7 @@ class RcaNowPage(Page, SocialFields):
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.SearchField('author'),
         # Requires Wagtail >= 1.3
@@ -4396,7 +4396,7 @@ class RcaNowPage(Page, SocialFields):
         # index.RelatedFields('programme', [
         #     index.SearchField('display_name'),
         # ]),
-    )
+    ]
 
     search_name = 'RCA Now'
 
@@ -4456,10 +4456,10 @@ class RcaNowIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowIndex', 'twitter_feed'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -4608,7 +4608,7 @@ class RcaBlogPage(Page, SocialFields):
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.SearchField('author'),
         # Requires Wagtail >= 1.3
@@ -4623,7 +4623,7 @@ class RcaBlogPage(Page, SocialFields):
         #         index.SearchField('display_name'),
         #     ]),
         # ]),
-    )
+    ]
 
     search_name = 'RCA Blog'
 
@@ -4689,10 +4689,10 @@ class RcaBlogIndex(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogIndex', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -4818,7 +4818,7 @@ class ResearchItem(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
@@ -4832,7 +4832,7 @@ class ResearchItem(Page, SocialFields):
         index.SearchField('get_work_type_display'),
         index.SearchField('work_type_other'),
         index.SearchField('get_theme_display'),
-    )
+    ]
 
     search_name = 'Research'
 
@@ -4986,9 +4986,9 @@ class ResearchInnovationPage(Page, SocialFields):
     news_carousel_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'news_carousel_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
-    )
+    ]
 
     search_name = None
 
@@ -5184,10 +5184,10 @@ class GalleryPage(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.GalleryPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.GalleryPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = 'Gallery'
 
@@ -5395,10 +5395,10 @@ class OEFormPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
     data_protection = RichTextField(blank=True)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -5446,10 +5446,10 @@ class DonationPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.DonationPage', 'show_on_homepage'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.DonationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     search_name = None
 
@@ -5580,12 +5580,12 @@ class InnovationRCAProject(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.InnovationRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
         index.SearchField('get_project_type_display'),
-    )
+    ]
 
     # InnovationRCAProjects are listed according to the sort order in the wagtail admin, and each InnovationRCAIndex lists only its subpages
     parent_page_types = ['rca.InnovationRCAIndex']
@@ -5794,7 +5794,7 @@ class SustainRCAProject(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SustainRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
@@ -5806,7 +5806,7 @@ class SustainRCAProject(Page, SocialFields):
         #     index.SearchField('display_name'),
         # ]),
         index.SearchField('get_category_display'),
-    )
+    ]
 
     search_name = 'SustainRCA Project'
 
@@ -6084,12 +6084,12 @@ class ReachOutRCAProject(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ReachOutRCAProject', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
         index.SearchField('get_project_display'),
-    )
+    ]
 
     search_name = 'ReachOutRCA Project'
 
@@ -6281,10 +6281,10 @@ class StreamPage(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StreamPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
 StreamPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -6384,10 +6384,10 @@ class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=PathwayPageTag, help_text=help_text('rca.PathwayPage', 'tags'), blank=True)
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
-    )
+    ]
 
     parent_page_types = ['rca.ProgrammePage']
 
@@ -6468,9 +6468,9 @@ class LightboxGalleryPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.LightboxGalleryPage', 'listing_intro', default="Used only on pages listing Lightbox Galleries"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    search_fields = Page.search_fields + (
+    search_fields = Page.search_fields + [
         index.SearchField('intro'),
-    )
+    ]
 
 LightboxGalleryPage.content_panels = [
     FieldPanel('title', classname="full title"),
