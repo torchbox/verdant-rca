@@ -20,44 +20,29 @@ class Area(models.Model):
 @register_snippet
 @python_2_unicode_compatible
 class School(models.Model):
-    year = models.PositiveIntegerField(
-        help_text="This is the year that the academic year finishes. For "
-                  "example, this should be set to '2017' for the '2016/17' "
-                  "academic year")
-    slug = models.CharField(
-        max_length=255,
-        help_text="This field is used to link this school with previous years. "
-                  "The display name may be changed year-on-year but the slug "
-                  "must remain the same. It must contain lowercase letters only."
-    )
+    slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
 
     def __str__(self):
-        return "{} ({})".format(self.display_name, self.year)
+        return self.display_name
 
     class Meta:
-        unique_together = (
-            ('year', 'slug'),
-        )
-        ordering = ['-year', 'display_name']
+        ordering = ['display_name']
 
 
 @register_snippet
 @python_2_unicode_compatible
 class Programme(models.Model):
     school = models.ForeignKey('School', related_name='programmes')
-    slug = models.CharField(
-        max_length=255,
-        help_text="Like the slug field above, this field must not change "
-                  "year-on-year and it must only contain lowercase letters."
-    )
+    slug = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
+    graduation_year = models.PositiveIntegerField(null=True)
 
     def __str__(self):
-        return "{} ({})".format(self.display_name, self.school.year)
+        return "{}: {} ({})".format(self.school.display_name, self.display_name, self.graduation_year)
 
     class Meta:
         unique_together = (
-            ('school', 'slug'),
+            ('graduation_year', 'slug'),
         )
-        ordering = ['display_name']
+        ordering = ['-graduation_year', 'display_name']
