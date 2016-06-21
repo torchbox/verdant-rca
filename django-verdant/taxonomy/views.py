@@ -14,6 +14,10 @@ def api(request):
         'schools': {
             school.slug: {
                 'display_name': school.display_name,
+                'historical_display_names': {
+                    hdn.end_year: hdn.display_name
+                    for hdn in school.historical_display_names.all()
+                }
             }
             for school in School.objects.all()
         },
