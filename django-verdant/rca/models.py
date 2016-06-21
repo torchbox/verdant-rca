@@ -3989,15 +3989,15 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def is_ma_student(self):
-        return self.ma_school != ''
+        return self.ma_programme_new is not None
 
     @property
     def is_mphil_student(self):
-        return self.mphil_school != ''
+        return self.mphil_programme_new is not None
 
     @property
     def is_phd_student(self):
-        return self.phd_school != ''
+        return self.phd_programme_new is not None
 
     def get_profiles(self):
         profiles = {}
@@ -4005,10 +4005,10 @@ class NewStudentPage(Page, SocialFields):
         if self.is_phd_student:
             profiles['phd'] = {
                 'name': "PhD",
-                'school': self.phd_school,
-                'school_display': self.get_phd_school_display(),
-                'programme': self.phd_programme,
-                'programme_display': self.get_phd_programme_display(),
+                'school': self.phd_programme_new.school,
+                'school_display': self.phd_programme_new.school.get_display_name_for_year(self.phd_graduation_year),
+                'programme': self.phd_programme_new,
+                'programme_display': self.phd_programme_new.get_display_name_for_year(self.phd_graduation_year),
                 'start_year': self.phd_start_year,
                 'graduation_year': self.phd_graduation_year,
                 'in_show_': self.phd_in_show,
@@ -4020,10 +4020,10 @@ class NewStudentPage(Page, SocialFields):
         if self.is_mphil_student:
             profiles['mphil'] = {
                 'name': "MPhil",
-                'school': self.mphil_school,
-                'school_display': self.get_mphil_school_display(),
-                'programme': self.mphil_programme,
-                'programme_display': self.get_mphil_programme_display(),
+                'school': self.mphil_programme_new.school,
+                'school_display': self.mphil_programme_new.school.get_display_name_for_year(self.mphil_graduation_year),
+                'programme': self.mphil_programme_new,
+                'programme_display': self.mphil_programme_new.get_display_name_for_year(self.mphil_graduation_year),
                 'start_year': self.mphil_start_year,
                 'graduation_year': self.mphil_graduation_year,
                 'in_show_': self.mphil_in_show,
@@ -4035,10 +4035,10 @@ class NewStudentPage(Page, SocialFields):
         if self.is_ma_student:
             profiles['ma'] = {
                 'name': "MA",
-                'school': self.ma_school,
-                'school_display': self.get_ma_school_display(),
-                'programme': self.ma_programme,
-                'programme_display': self.get_ma_programme_display(),
+                'school': self.ma_programme_new.school,
+                'school_display': self.ma_programme_new.school.get_display_name_for_year(self.ma_graduation_year),
+                'programme': self.ma_programme_new,
+                'programme_display': self.ma_programme_new.get_display_name_for_year(self.ma_graduation_year),
                 'start_year': self.ma_graduation_year,
                 'graduation_year': self.ma_graduation_year,
                 'in_show_': self.ma_in_show,
@@ -4187,9 +4187,7 @@ NewStudentPage.content_panels = [
     # MA details
     MultiFieldPanel([
         FieldPanel('ma_in_show'),
-        FieldPanel('ma_school'),
-        FieldPanel('ma_programme'),
-        FieldPanel('ma_graduation_year'),
+        FieldPanel('ma_programme_new'),
         FieldPanel('ma_specialism'),
     ], "MA details", classname="collapsible collapsed"),
 
@@ -4207,8 +4205,7 @@ NewStudentPage.content_panels = [
     # MPhil details
     MultiFieldPanel([
         FieldPanel('mphil_in_show'),
-        FieldPanel('mphil_school'),
-        FieldPanel('mphil_programme'),
+        FieldPanel('mphil_programme_new'),
         FieldPanel('mphil_dissertation_title'),
         FieldPanel('mphil_statement'),
         FieldPanel('mphil_start_year'),
@@ -4225,8 +4222,7 @@ NewStudentPage.content_panels = [
     # PhD details
     MultiFieldPanel([
         FieldPanel('phd_in_show'),
-        FieldPanel('phd_school'),
-        FieldPanel('phd_programme'),
+        FieldPanel('phd_programme_new'),
         FieldPanel('phd_dissertation_title'),
         FieldPanel('phd_statement'),
         FieldPanel('phd_start_year'),
