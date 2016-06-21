@@ -66,7 +66,7 @@ class Programme(models.Model):
     graduation_year = models.PositiveIntegerField()
 
     def __str__(self):
-        return "{}: {} ({})".format(self.school.display_name, self.display_name, self.graduation_year)
+        return "{}: {} ({})".format(self.school.get_display_name_for_year(self.graduation_year), self.display_name, self.graduation_year)
 
     class Meta:
         unique_together = (
