@@ -3905,6 +3905,7 @@ class NewStudentPage(Page, SocialFields):
     # MA details
     ma_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_school'))
     ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_programme'))
+    ma_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'))
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
     ma_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'ma_in_show', default="Please tick only if you're in the Show this academic year"))
@@ -3916,6 +3917,7 @@ class NewStudentPage(Page, SocialFields):
     # MPhil details
     mphil_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_school'))
     mphil_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
+    mphil_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_start_year'))
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_work_location'))
@@ -3928,6 +3930,7 @@ class NewStudentPage(Page, SocialFields):
     # PhD details
     phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_school'))
     phd_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_programme'))
+    phd_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
     phd_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_start_year'))
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_work_location'))
@@ -3954,6 +3957,7 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('ma_in_show'),
         index.FilterField('ma_school'),
         index.FilterField('ma_programme'),
+        index.FilterField('ma_programme_new'),
         index.FilterField('ma_graduation_year'),
 
         index.SearchField('get_mphil_school_display'),
@@ -3964,6 +3968,7 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('mphil_in_show'),
         index.FilterField('mphil_school'),
         index.FilterField('mphil_programme'),
+        index.FilterField('mphil_programme_new'),
         index.FilterField('mphil_graduation_year'),
         index.FilterField('mphil_status'),
         index.FilterField('mphil_degree_type'),
@@ -3976,6 +3981,7 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('phd_in_show'),
         index.FilterField('phd_school'),
         index.FilterField('phd_programme'),
+        index.FilterField('phd_programme_new'),
         index.FilterField('phd_graduation_year'),
         index.FilterField('phd_status'),
         index.FilterField('phd_degree_type'),
