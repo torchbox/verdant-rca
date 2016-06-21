@@ -36,7 +36,7 @@ class Programme(models.Model):
     school = models.ForeignKey('School', related_name='programmes')
     slug = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
-    graduation_year = models.PositiveIntegerField(null=True)
+    graduation_year = models.PositiveIntegerField()
 
     def __str__(self):
         return "{}: {} ({})".format(self.school.display_name, self.display_name, self.graduation_year)
