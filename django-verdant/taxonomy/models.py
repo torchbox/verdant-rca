@@ -11,6 +11,9 @@ from wagtail.wagtailsnippets.models import register_snippet
 @register_snippet
 @python_2_unicode_compatible
 class Area(models.Model):
+    """
+    Used for non-academic areas (Administration, AlumniRCA, etc)
+    """
     slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
 
@@ -24,6 +27,9 @@ class Area(models.Model):
 @register_snippet
 @python_2_unicode_compatible
 class School(ClusterableModel):
+    """
+    Used for schools (School of Comminication, School of Architecture, etc)
+    """
     slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
 
@@ -49,8 +55,19 @@ class School(ClusterableModel):
 
 
 class SchoolHistoricalDisplayName(models.Model):
+    """
+    Used to store names that were used for a particular school in the past.
+
+    Schools can change their name over time. If this happens, the old name must
+    be inserted here noting the last year the name was used. This allows us to
+    look up the correct name to use for a school when displaying old content.
+    """
     school = ParentalKey('School', related_name='historical_display_names')
-    end_year = models.PositiveIntegerField()
+    end_year = models.PositiveIntegerField(
+        help_text="This is the last year that the name was used. For example, if"
+                  "the name was changed at the beginning of the 2016/17 academic"
+                  "year, this field should be set to 2016."
+    )
     display_name = models.CharField(max_length=255)
 
     class Meta:
@@ -60,6 +77,12 @@ class SchoolHistoricalDisplayName(models.Model):
 @register_snippet
 @python_2_unicode_compatible
 class Programme(models.Model):
+    """
+    Used for programmes (Animation, Interior design, etc).
+
+    Unlike areas and schools, programmes are linked to a single year. This is to
+    allow the programmes to be easily changed year on year.
+    """
     school = models.ForeignKey('School', related_name='programmes')
     slug = models.CharField(max_length=255)
     display_name = models.CharField(max_length=255)
