@@ -10,7 +10,7 @@ class Command(BaseCommand):
         parser.add_argument('filename', type=str)
 
     def find_student_page(self, student):
-        email = student[0].strip()
+        email = student[3].strip()
 
         print email
 
