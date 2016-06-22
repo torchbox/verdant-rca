@@ -6,6 +6,9 @@ from rca.models import NewStudentPage
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument('filename', type=str)
+
     def find_student_page(self, student):
         email = student[0].strip()
 
