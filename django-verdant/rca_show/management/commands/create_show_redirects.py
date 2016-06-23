@@ -30,6 +30,9 @@ SUB_EXPRESSIONS = (
 
 
 class Command(BaseCommand):
+    def add_arguments(self, parser):
+        parser.add_argument('show_index_id', type=int)
+
     def handle(self, show_index_id, **options):
         # Find show index page
         show_index = ShowIndexPage.objects.get(id=show_index_id)
@@ -45,7 +48,7 @@ class Command(BaseCommand):
 
             from_url = 'show2015/' + slugify(name) + '/'
 
-            # Find students url inside 
+            # Find students url inside
             if show_index.is_programme_page:
                 to_url = show_index.reverse_subpage('student', programme=student.programme, slug=student.slug)
             else:
