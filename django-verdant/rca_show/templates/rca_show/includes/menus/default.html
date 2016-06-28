@@ -4,16 +4,19 @@
 {% block jumplist %}
     {% if self.show_index %}
         {% get_schools self.show_index as schools %}
-        {% get_school_programmes self.show_index school as programmes %}
+
+        {% if school %}
+            {% get_school_programmes self.show_index school as programmes %}
+        {% endif %}
 
         {% if schools %}
             <li class="jumplist{% if school %} active{% endif %}">
                 <h2 class="toggle">Select a School</h2>
                 <div class="selected toggle">{% if school %}{% get_school_display school %}{% endif %}</div>
                 <ul class="options">
-                    
+
                     {% for school in schools %}
-                        <li><a href="{% show_subpage_url self.show_index 'school' school=school %}">{% get_school_display school %}</a></li>
+                        <li><a href="{% show_subpage_url self.show_index 'school' school_slug=school.slug %}">{% get_school_display school %}</a></li>
                     {% endfor %}
                 </ul>
             </li>
@@ -23,16 +26,15 @@
                 <h2 class="toggle">Select a Programme</h2>
                 <div class="selected toggle">{% if programme %}{% get_programme_display programme %}{% endif %}</div>
                 <ul class="options">
-                    
+
                     {% for programme in programmes %}
-                        {% get_school_for_programme programme as school %}
-                        <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
+                        <li><a href="{% show_subpage_url self.show_index 'programme' school_slug=programme.school.slug programme_slug=programme.slug %}">{% get_programme_display programme %}</a></li>
                     {% endfor %}
                 </ul>
             </li>
         {% endif %}
     {% endif %}
-    
+
     {% if programme %}
         {% get_programme_students self.show_index programme as students %}
         <li class="jumplist{% if student %} active{% endif %}">
@@ -40,11 +42,10 @@
             <div class="selected toggle">{% if student %}{{ student }}{% endif %}</div>
             <ul class="options">
                 {% for student in students %}
-                    <li><a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">{{ student.title }}</a></li>
+                    <li><a href="{% show_subpage_url self.show_index 'student' school_slug=student.school.slug programme_slug=student.programme.slug slug=student.slug %}">{{ student.title }}</a></li>
                 {% endfor %}
             </ul>
         </li>
     {% endif %}
 
 {% endblock %}
-

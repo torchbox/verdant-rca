@@ -10,7 +10,7 @@
             {% get_programme_students self.show_index programme as students %}
             {% for student in students %}
                 <li>
-                    <a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">
+                    <a href="{% show_subpage_url self.show_index 'student' school_slug=student.school.slug programme_slug=student.programme.slug slug=student.slug %}">
                         <span class="student">{{ student.title }}</span>
                         <span class="work">{{ student.show_work_title }}</span>
                     </a>
@@ -25,7 +25,7 @@
             {% get_programme_works self.show_index programme as works %}
             {% for student in works %}
                 <li>
-                    <a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">
+                    <a href="{% show_subpage_url self.show_index 'student' school_slug=student.school programme_slug=student.programme slug=student.slug %}">
                         <span class="work">{{ student.show_work_title }}</span>
                         <span class="student">{{ student.title }}</span>
                     </a>

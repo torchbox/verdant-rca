@@ -8,20 +8,21 @@ register = template.Library()
 
 @register.simple_tag
 def show_subpage_url(show_index, name, *args, **kwargs):
-    if show_index.is_programme_page and name in ['student', 'programme'] and 'school' in kwargs:
-        del kwargs['school']
+    if show_index.is_programme_page and name in ['student', 'programme'] and 'school_slug' in kwargs:
+        del kwargs['school_slug']
 
     return show_index.reverse_subpage(name, *args, **kwargs)
 
 
 @register.simple_tag
 def get_programme_display(programme):
-    return dict(rca_models.ALL_PROGRAMMES)[programme]
+    return programme.display_name
 
 
 @register.simple_tag
 def get_school_display(school):
-    return dict(rca_models.SCHOOL_CHOICES)[school]
+    # TODO: Historical display name
+    return school.display_name
 
 
 SCHOOL_LOGOS_2016 = {
@@ -40,7 +41,7 @@ def get_school_logo_2016(school):
     This is to make the logo selection easier for the dynamic logo that should appear for each school. If no
     school is selected, the regular show-wide logo is returned.
     """
-    return SCHOOL_LOGOS_2016.get(school, 'rca_show/images/logo-2016.svg')
+    return SCHOOL_LOGOS_2016.get(school.slug, 'rca_show/images/logo-2016.svg')
 
 @register.assignment_tag
 def get_schools(show_index):
@@ -80,7 +81,7 @@ def get_programme_students(show_index, programme, random = False):
 
 @register.assignment_tag
 def get_programme_works(show_index, programme):
-    # Instead of getting a list of students (get_programme_students), 
+    # Instead of getting a list of students (get_programme_students),
     # this gets the same list of students but ordered by their dissertation/work title
     if show_index is None:
         return []
@@ -104,7 +105,7 @@ def secondary_menu(calling_page=None):
 @register.assignment_tag
 def get_maps_for_campus(campus):
     maps = models.ShowExhibitionMapPage.objects.filter(live=True, campus=campus)
-   
+
     return maps
 
 
