@@ -34,6 +34,7 @@ from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
+from wagtail.wagtailcore.query import PageQuerySet
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ClusterableModel
@@ -3387,97 +3388,97 @@ class ResearchStudentIndex(Page, SocialFields):
 
     search_name = None
 
-    def current_students_q(self):
-        current_year = timezone.now().year
-        return (~models.Q(phd_school='') & (models.Q(phd_graduation_year='') | models.Q(phd_graduation_year__gte=current_year))) | (~models.Q(mphil_school='') & (models.Q(mphil_graduation_year='') | models.Q(mphil_graduation_year__gte=current_year)))
-
-    def phd_students_q(self, period=None):
-        q = ~models.Q(phd_school='')
-
-        if period == 'current':
-            q &= self.current_students_q()
-        elif period == 'past':
-            q &= ~self.current_students_q()
-
-        return q
-
-    def mphil_students_q(self, period=None):
-        q = ~models.Q(mphil_school='')
-
-        if period == 'current':
-            q &= self.current_students_q()
-        elif period == 'past':
-            q &= ~self.current_students_q()
-
-        return q
-
-    def get_students_q(self, school=None, programme=None, period=None):
-        # Get students
-        phd_students_q = self.phd_students_q(period)
-        mphil_students_q = self.mphil_students_q(period)
-
-        # Run filters
-        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
-            ('school', 'phd_school', school),
-            ('programme', 'phd_programme', programme),
-        ])
-        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
-            ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme', programme),
-        ])
-
-        # Combine filters
-        filters = combine_filters(phd_filters, mphil_filters)
-
-        # Add combined filters to both groups
-        phd_students_q &= get_filters_q(filters, {
-            'school': 'phd_school',
-            'programme': 'phd_programme',
-        })
-        mphil_students_q &= get_filters_q(filters, {
-            'school': 'mphil_school',
-            'programme': 'mphil_programme',
-        })
-
-        return phd_students_q, mphil_students_q, filters
-
     def all_students(self):
-        phd_students_q, mphil_students_q, filters = self.get_students_q()
-        return NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
+        students = NewStudentPageQuerySet(NewStudentPage).live()
+        return students.mphil() | students.phd()
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
+        school_slug = request.GET.get('school')
+        programme_slug = request.GET.get('programme')
         period = request.GET.get('period')
 
         # Get students
-        phd_students_q, mphil_students_q, filters = self.get_students_q(school, programme, period)
-        research_students = NewStudentPage.objects.filter(live=True).filter(phd_students_q | mphil_students_q)
+        students = NewStudentPageQuerySet(NewStudentPage).live()
 
-        research_students = research_students.distinct().order_by('random_order')
+        if period == 'current':
+            mphil_students = students.mphil(current=True)
+            phd_students = students.phd(current=True)
+        elif period == 'past':
+            mphil_students = students.mphil(current=False)
+            phd_students = students.phd(current=False)
+        else:
+            mphil_students = students.mphil()
+            phd_students = students.phd()
 
+        students = mphil_students | phd_students
+
+        # Get available programmes
+        programme_options = Programme.objects.filter(
+            models.Q(id__in=mphil_students.values_list('mphil_programme_new', flat=True)) |
+            models.Q(id__in=phd_students.values_list('phd_programme_new', flat=True))
+        )
+
+        # Get all available schools
+        # NOTE: this bit must be before we filter the programme listing by
+        # school below
+        school_options = School.objects.filter(programmes__in=programme_options).distinct()
+
+        # If a school is selected, filter programme listing
+        selected_school = school_options.filter(slug=school_slug).first()
+        if selected_school:
+            programme_options = programme_options.filter(school=selected_school)
+
+        # Filter students by school/programme
+        selected_programme = programme_options.filter(slug=programme_slug).first()
+        if selected_programme:
+            mphil_students = mphil_students.filter(mphil_programme_new=selected_programme)
+            phd_students = phd_students.filter(phd_programme_new=selected_programme)
+        elif selected_school:
+            mphil_students = mphil_students.filter(mphil_programme_new__school=selected_school)
+            phd_students = phd_students.filter(phd_programme_new__school=selected_school)
+
+        students = (mphil_students | phd_students).distinct().order_by('random_order')
+
+        # Pagination
         page = request.GET.get('page')
-        paginator = Paginator(research_students, 17)  # Show 17 research students per page
+        paginator = Paginator(students, 17)  # Show 17 research students per page
         try:
-            research_students = paginator.page(page)
+            students = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            research_students = paginator.page(1)
+            students = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            research_students = paginator.page(paginator.num_pages)
+            students = paginator.page(paginator.num_pages)
+
+        filters = [
+            {
+                "name": "school",
+                "current_value": selected_school.slug if selected_school else None,
+                "options": [
+                    school.slug for school in school_options
+                ]
+            },
+            {
+                "name": "programme",
+                "current_value": selected_programme.slug if selected_programme else None,
+                "options": [
+                    programme.slug for programme in programme_options
+                ]
+            }
+        ]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_students_pages_listing.html", {
                 'self': self,
-                'research_students': research_students,
+                'research_students': students,
                 'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_students': research_students,
+                'research_students': students,
                 'filters': json.dumps(filters),
             })
 
