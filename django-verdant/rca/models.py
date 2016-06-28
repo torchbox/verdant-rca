@@ -46,6 +46,8 @@ import stripe
 
 import hashlib
 
+from taxonomy.models import School, Programme
+
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
 
@@ -4200,7 +4202,7 @@ class NewStudentPage(Page, SocialFields):
         # Try to find gallery profile
         if self.ma_in_show or self.mphil_in_show or self.phd_in_show:
             for gallery_page in GalleryPage.objects.live():
-                if gallery_page.get_students()[0].filter(id=self.id).exists():
+                if gallery_page.all_students().filter(id=self.id).exists():
                     return gallery_page.url + self.slug + '/'
 
         # Cannot find any profiles, use regular url
@@ -5091,94 +5093,82 @@ class GalleryPage(Page, SocialFields):
 
     search_name = 'Gallery'
 
-    def student_which_profile(self, student, ma_students_q, mphil_students_q, phd_students_q):
-        students = NewStudentPage.objects.filter(live=True)
-
+    def student_which_profile(self, student, ma_students, mphil_students, phd_students):
         # Check if student is in phd students
-        if students.filter(phd_students_q).filter(pk=student.pk).exists():
+        if phd_students.filter(pk=student.pk).exists():
             return 'phd'
 
         # Check if student is in mphil students
-        if students.filter(mphil_students_q).filter(pk=student.pk).exists():
+        if mphil_students.filter(pk=student.pk).exists():
             return 'mphil'
 
         # Check if student is in ma students
-        if students.filter(ma_students_q).filter(pk=student.pk).exists():
+        if ma_students.filter(pk=student.pk).exists():
             return 'ma'
 
-    def get_students_q(self, school=None, programme=None, year=None):
-        ma_students_q = ~models.Q(ma_school='') & models.Q(ma_in_show=True)
-        mphil_students_q = ~models.Q(mphil_school='') & ~models.Q(mphil_graduation_year='') & models.Q(mphil_in_show=True)
-        phd_students_q = ~models.Q(phd_school='') & ~models.Q(phd_graduation_year='') & models.Q(phd_in_show=True)
-
-        # Run filters
-        ma_filters = run_filters_q(NewStudentPage, ma_students_q, [
-            ('school', 'ma_school', school),
-            ('programme', 'ma_programme', programme),
-            ('year', 'ma_graduation_year', year),
-        ])
-        mphil_filters = run_filters_q(NewStudentPage, mphil_students_q, [
-            ('school', 'mphil_school', school),
-            ('programme', 'mphil_programme', programme),
-            ('year', 'mphil_graduation_year', year),
-        ])
-        phd_filters = run_filters_q(NewStudentPage, phd_students_q, [
-            ('school', 'phd_school', school),
-            ('programme', 'phd_programme', programme),
-            ('year', 'phd_graduation_year', year),
-        ])
-
-        # Combine filters
-        filters = combine_filters(ma_filters, mphil_filters, phd_filters)
-
-        # Add combined filters to both groups
-        ma_students_q &= get_filters_q(filters, {
-            'school': 'ma_school',
-            'programme': 'ma_programme',
-            'year': 'ma_graduation_year',
-        })
-        mphil_students_q &= get_filters_q(filters, {
-            'school': 'mphil_school',
-            'programme': 'mphil_programme',
-            'year': 'mphil_graduation_year',
-        })
-        phd_students_q &= get_filters_q(filters, {
-            'school': 'phd_school',
-            'programme': 'phd_programme',
-            'year': 'phd_graduation_year',
-        })
-
-        return ma_students_q, mphil_students_q, phd_students_q, filters
-
-    def get_students(self, school=None, programme=None, year=None):
-        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        return NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q), filters
+    def all_students(self):
+        students = NewStudentPageQuerySet(NewStudentPage).live()
+        return students.ma(in_show=True) | students.mphil(in_show=True) | students.phd(in_show=True)
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get filter parameters
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
-        year = request.GET.get('degree_year') or '2013'
+        school_slug = request.GET.get('school')
+        programme_slug = request.GET.get('programme')
+        year = request.GET.get('degree_year') or None  # "or None" converts '' => None
 
         # Get students
-        ma_students_q, mphil_students_q, phd_students_q, filters = self.get_students_q(school, programme, year)
-        students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q)
+        students = NewStudentPageQuerySet(NewStudentPage).live()
 
-        # Find year options
-        year_options = []
-        for fil in filters:
-            if fil['name'] == 'year':
-                year_options = fil['options']
-                break
+        if year:
+            ma_students = students.ma(in_show=True, current=True, current_year=year)
+            mphil_students = students.none()
+            phd_students = students.none()
+        else:
+            # Students for all time
+            ma_students = students.ma(in_show=True)
+            mphil_students = students.mphil(in_show=True)
+            phd_students = students.phd(in_show=True)
 
-        # Randomly order students
-        students = students.extra(
-            select={
-                '_year': "CASE WHEN phd_graduation_year = '' THEN CASE WHEN mphil_graduation_year = '' THEN ma_graduation_year ELSE mphil_graduation_year END ELSE phd_graduation_year END"
-            },
-            order_by=['-_year', 'random_order'],
-        ).distinct()
+        # Get available years
+        # NOTE: We need to use the un-year-filtered students list here, unlike
+        # for the programme_options
+        year_options = list()
+        year_options.extend(students.ma(in_show=True).exclude(ma_graduation_year='').values_list('ma_graduation_year', flat=True))
+        year_options.extend(students.mphil(in_show=True).exclude(mphil_graduation_year='').values_list('mphil_graduation_year', flat=True))
+        year_options.extend(students.phd(in_show=True).exclude(phd_graduation_year='').values_list('phd_graduation_year', flat=True))
+        year_options = list(set(year_options))
+        year_options.sort(reverse=True)
+
+        # Get available programmes
+        programme_options = Programme.objects.filter(
+            models.Q(id__in=ma_students.values_list('ma_programme_new', flat=True)) |
+            models.Q(id__in=mphil_students.values_list('mphil_programme_new', flat=True)) |
+            models.Q(id__in=phd_students.values_list('phd_programme_new', flat=True))
+        ).order_by('slug').distinct('slug')
+
+        # Get all available schools
+        # NOTE: this bit must be before we filter the programme listing by
+        # school below
+        school_options = School.objects.filter(programmes__in=programme_options).distinct()
+
+        # If a school is selected, filter programme listing
+        selected_school = school_options.filter(slug=school_slug).first()
+        if selected_school:
+            programme_options = programme_options.filter(school=selected_school)
+
+        # Filter students by school/programme
+        selected_programme = programme_options.filter(slug=programme_slug).first()
+        if selected_programme:
+            ma_students = ma_students.filter(ma_programme_new=selected_programme)
+            mphil_students = mphil_students.filter(mphil_programme_new=selected_programme)
+            phd_students = phd_students.filter(phd_programme_new=selected_programme)
+        elif selected_school:
+            ma_students = ma_students.filter(ma_programme_new__school=selected_school)
+            mphil_students = mphil_students.filter(mphil_programme_new__school=selected_school)
+            phd_students = phd_students.filter(phd_programme_new__school=selected_school)
+
+        students = (ma_students | mphil_students | phd_students).distinct().order_by('random_order')
 
         # Pagination
         page = request.GET.get('page')
@@ -5191,14 +5181,35 @@ class GalleryPage(Page, SocialFields):
             students = paginator.page(paginator.num_pages)
 
         # Add profile to students
+        # NOTE: Runs queries for each student, so must be done after pagination!
         for student in students:
-            student.profile = student.get_profile(self.student_which_profile(student, ma_students_q, mphil_students_q, phd_students_q))
+            student.profile = student.get_profile(self.student_which_profile(student, ma_students, mphil_students, phd_students))
 
         # Get template
         if request.is_ajax() and 'pjax' not in request.GET:
             template = 'rca/includes/gallery_listing.html'
         else:
             template = self.template
+
+        filters = [
+            {
+                "name": "school",
+                "current_value": selected_school.slug if selected_school else None,
+                "options": [
+                    school.slug for school in school_options
+                ]
+            }, {
+                "name": "programme",
+                "current_value": selected_programme.slug if selected_programme else None,
+                "options": [
+                    programme.slug for programme in programme_options
+                ]
+            }, {
+                "name": "year",
+                "current_value": year,
+                "options": list(year_options)
+            }
+        ]
 
         # Render response
         return render(request, template, {
@@ -5214,7 +5225,7 @@ class GalleryPage(Page, SocialFields):
         # If so, re route through the student page
         if len(path_components) == 1:
             try:
-                student_page = self.get_students()[0].get(slug=path_components[0])
+                student_page = self.all_students().get(slug=path_components[0])
                 return RouteResult(student_page.specific, kwargs={'view': 'show'})
             except NewStudentPage.DoesNotExist:
                 pass
