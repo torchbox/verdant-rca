@@ -1,7 +1,7 @@
 import random
 from django import template
 from rca_show import models
-from rca import models as rca_models, utils as rca_utils
+from rca import models as rca_models
 
 register = template.Library()
 
@@ -111,4 +111,4 @@ def get_maps_for_campus(campus):
 
 @register.assignment_tag
 def get_school_for_programme(programme):
-    return rca_utils.get_school_for_programme(programme)
+    return programme.school

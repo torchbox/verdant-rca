@@ -11,7 +11,6 @@ import random
 import re
 
 from rca.models import *
-from rca.utils import get_students
 from wagtail.wagtaildocs.models import Document
 
 register = template.Library()
@@ -644,7 +643,7 @@ def get_student_carousel_items(student, degree=None, show_animation_videos=False
     carousel_items = profile['carousel_items'].all()
 
     # If this is an animation student, remove the first two carousel items if they are vimeo videos
-    if show_animation_videos == False and get_students(degree_filters=dict(programme__in=['animation', 'visualcommunication'])).filter(id=student.id).exists():
+    if show_animation_videos == False and profile['programme'].slug in ['animation', 'visualcommunication']:
         for i in range(2):
             try:
                 first_carousel_item = carousel_items[0]
