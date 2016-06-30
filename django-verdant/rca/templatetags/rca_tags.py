@@ -207,26 +207,19 @@ def jobs_listing(context):
     }
 
 def get_related_students(programme=None, year=None, exclude=None, has_work=False):
-    ma_students_q = ~Q(ma_school='')
-    mphil_students_q = ~Q(mphil_school='')
-    phd_students_q = ~Q(phd_school='')
+    students = NewStudentPageQuerySet(NewStudentPage).live()
+    current = True if year else None
+
+    ma_students = students.ma(programme=programme, current=current, current_year=year)
+    mphil_students = students.mphil(programme=programme, current=current, current_year=year)
+    phd_students = students.phd(programme=programme, current=current, current_year=year)
 
     if has_work:
-        ma_students_q &= (Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
-        mphil_students_q &= (Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
-        phd_students_q &= (Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
+        ma_students = ma_students.filter(Q(show_carousel_items__image__isnull=False) | Q(show_carousel_items__embedly_url__isnull=False))
+        mphil_students = mphil_students.filter(Q(mphil_carousel_items__image__isnull=False) | Q(mphil_carousel_items__embedly_url__isnull=False))
+        phd_students = phd_students.filter(Q(phd_carousel_items__image__isnull=False) | Q(phd_carousel_items__embedly_url__isnull=False))
 
-    if programme:
-        ma_students_q &= Q(ma_programme__in=get_programme_synonyms(programme))
-        mphil_students_q &= Q(mphil_programme__in=get_programme_synonyms(programme))
-        phd_students_q &= Q(phd_programme__in=get_programme_synonyms(programme))
-
-    if year:
-        ma_students_q &= Q(ma_graduation_year=year)
-        mphil_students_q &= Q(mphil_start_year=year)
-        phd_students_q &= Q(phd_start_year=year)
-
-    students = NewStudentPage.objects.filter(live=True).filter(ma_students_q | mphil_students_q | phd_students_q).order_by('?')
+    students = (ma_students | mphil_students | phd_students).order_by('?')
 
     if exclude:
         students = students.exclude(id=exclude.id)
