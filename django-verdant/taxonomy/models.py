@@ -79,20 +79,14 @@ class SchoolHistoricalDisplayName(models.Model):
 class Programme(models.Model):
     """
     Used for programmes (Animation, Interior design, etc).
-
-    Unlike areas and schools, programmes are linked to a single year. This is to
-    allow the programmes to be easily changed year on year.
     """
     school = models.ForeignKey('School', related_name='programmes')
-    slug = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
-    graduation_year = models.PositiveIntegerField()
+    disabled = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{}: {} ({})".format(self.school.get_display_name_for_year(self.graduation_year), self.display_name, self.graduation_year)
+        return self.school.display_name + ': ' + self.display_name
 
     class Meta:
-        unique_together = (
-            ('graduation_year', 'slug'),
-        )
-        ordering = ['-graduation_year', 'display_name']
+        ordering = ['display_name']
