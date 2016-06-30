@@ -3417,8 +3417,8 @@ class ResearchStudentIndex(Page, SocialFields):
 
         # Get available programmes
         programme_options = Programme.objects.filter(
-            models.Q(id__in=mphil_students.values_list('mphil_programme_new', flat=True)) |
-            models.Q(id__in=phd_students.values_list('phd_programme_new', flat=True))
+            models.Q(id__in=mphil_students.values_list('mphil_programme', flat=True)) |
+            models.Q(id__in=phd_students.values_list('phd_programme', flat=True))
         )
 
         # Get all available schools
@@ -3434,11 +3434,11 @@ class ResearchStudentIndex(Page, SocialFields):
         # Filter students by school/programme
         selected_programme = programme_options.filter(slug=programme_slug).first()
         if selected_programme:
-            mphil_students = mphil_students.filter(mphil_programme_new=selected_programme)
-            phd_students = phd_students.filter(phd_programme_new=selected_programme)
+            mphil_students = mphil_students.filter(mphil_programme=selected_programme)
+            phd_students = phd_students.filter(phd_programme=selected_programme)
         elif selected_school:
-            mphil_students = mphil_students.filter(mphil_programme_new__school=selected_school)
-            phd_students = phd_students.filter(phd_programme_new__school=selected_school)
+            mphil_students = mphil_students.filter(mphil_programme__school=selected_school)
+            phd_students = phd_students.filter(phd_programme__school=selected_school)
 
         students = (mphil_students | phd_students).distinct().order_by('random_order')
 
@@ -3734,15 +3734,15 @@ class CarouselItemManager(models.Manager):
 
 class NewStudentPageQuerySet(PageQuerySet):
     def phd(self, school=None, programme=None, current=None, current_year=None, in_show=None):
-        self = self.filter(phd_programme_new__isnull=False)
+        self = self.filter(phd_programme__isnull=False)
 
         if programme:
-            self = self.filter(phd_programme_new=programme)
+            self = self.filter(phd_programme=programme)
 
             if school and programme.school != school:
                 return self.none()
         elif school:
-            self = self.filter(phd_programme_new__school=school)
+            self = self.filter(phd_programme__school=school)
 
         if current is not None:
             if current_year is None:
@@ -3759,15 +3759,15 @@ class NewStudentPageQuerySet(PageQuerySet):
         return self
 
     def mphil(self, school=None, programme=None, current=None, current_year=None, in_show=None):
-        self = self.filter(mphil_programme_new__isnull=False)
+        self = self.filter(mphil_programme__isnull=False)
 
         if programme:
-            self = self.filter(mphil_programme_new=programme)
+            self = self.filter(mphil_programme=programme)
 
             if school and programme.school != school:
                 return self.none()
         elif school:
-            self = self.filter(mphil_programme_new__school=school)
+            self = self.filter(mphil_programme__school=school)
 
         if current is not None:
             if current_year is None:
@@ -3784,15 +3784,15 @@ class NewStudentPageQuerySet(PageQuerySet):
         return self
 
     def ma(self, school=None, programme=None, current=None, current_year=None, in_show=None):
-        self = self.filter(ma_programme_new__isnull=False)
+        self = self.filter(ma_programme__isnull=False)
 
         if programme:
-            self = self.filter(ma_programme_new=programme)
+            self = self.filter(ma_programme=programme)
 
             if school and programme.school != school:
                 return self.none()
         elif school:
-            self = self.filter(ma_programme_new__school=school)
+            self = self.filter(ma_programme__school=school)
 
         if current is not None:
             if current_year is None:
@@ -3983,7 +3983,7 @@ class NewStudentPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     # MA details
-    ma_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
+    ma_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'))
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
     ma_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'ma_in_show', default="Please tick only if you're in the Show this academic year"))
@@ -3993,7 +3993,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
-    mphil_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
+    mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_start_year'))
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_work_location'))
@@ -4004,7 +4004,7 @@ class NewStudentPage(Page, SocialFields):
     mphil_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_degree_type'))
 
     # PhD details
-    phd_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
+    phd_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
     phd_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_start_year'))
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_work_location'))
@@ -4029,7 +4029,7 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('get_show_work_location_display'),
         index.SearchField('show_work_description'),
         index.FilterField('ma_in_show'),
-        index.FilterField('ma_programme_new'),
+        index.FilterField('ma_programme'),
         index.FilterField('ma_graduation_year'),
 
         index.SearchField('get_mphil_school_display'),
@@ -4038,7 +4038,7 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('mphil_dissertation_title'),
         index.SearchField('mphil_statement'),
         index.FilterField('mphil_in_show'),
-        index.FilterField('mphil_programme_new'),
+        index.FilterField('mphil_programme'),
         index.FilterField('mphil_graduation_year'),
         index.FilterField('mphil_status'),
         index.FilterField('mphil_degree_type'),
@@ -4049,7 +4049,7 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('phd_dissertation_title'),
         index.SearchField('phd_statement'),
         index.FilterField('phd_in_show'),
-        index.FilterField('phd_programme_new'),
+        index.FilterField('phd_programme'),
         index.FilterField('phd_graduation_year'),
         index.FilterField('phd_status'),
         index.FilterField('phd_degree_type'),
@@ -4057,15 +4057,15 @@ class NewStudentPage(Page, SocialFields):
 
     @property
     def is_ma_student(self):
-        return self.ma_programme_new is not None
+        return self.ma_programme is not None
 
     @property
     def is_mphil_student(self):
-        return self.mphil_programme_new is not None
+        return self.mphil_programme is not None
 
     @property
     def is_phd_student(self):
-        return self.phd_programme_new is not None
+        return self.phd_programme is not None
 
     def get_profiles(self):
         profiles = {}
@@ -4073,9 +4073,9 @@ class NewStudentPage(Page, SocialFields):
         if self.is_phd_student:
             profiles['phd'] = {
                 'name': "PhD",
-                'school': self.phd_programme_new.school,
+                'school': self.phd_programme.school,
                 'school_display': self.get_phd_school_display(),
-                'programme': self.phd_programme_new,
+                'programme': self.phd_programme,
                 'programme_display': self.get_phd_programme_display(),
                 'start_year': self.phd_start_year,
                 'graduation_year': self.phd_graduation_year,
@@ -4088,9 +4088,9 @@ class NewStudentPage(Page, SocialFields):
         if self.is_mphil_student:
             profiles['mphil'] = {
                 'name': "MPhil",
-                'school': self.mphil_programme_new.school,
+                'school': self.mphil_programme.school,
                 'school_display': self.get_mphil_school_display(),
-                'programme': self.mphil_programme_new,
+                'programme': self.mphil_programme,
                 'programme_display': self.get_mphil_programme_display(),
                 'start_year': self.mphil_start_year,
                 'graduation_year': self.mphil_graduation_year,
@@ -4103,9 +4103,9 @@ class NewStudentPage(Page, SocialFields):
         if self.is_ma_student:
             profiles['ma'] = {
                 'name': "MA",
-                'school': self.ma_programme_new.school,
+                'school': self.ma_programme.school,
                 'school_display': self.get_ma_school_display(),
-                'programme': self.ma_programme_new,
+                'programme': self.ma_programme,
                 'programme_display': self.get_ma_programme_display(),
                 'start_year': self.ma_graduation_year,
                 'graduation_year': self.ma_graduation_year,
@@ -4151,22 +4151,22 @@ class NewStudentPage(Page, SocialFields):
             return ''
 
     def get_ma_programme_display(self):
-        return self.ma_programme_new.get_display_name_for_year(self.ma_graduation_year)
+        return self.ma_programme.get_display_name_for_year(self.ma_graduation_year)
 
     def get_ma_school_display(self):
-        return self.ma_programme_new.school.get_display_name_for_year(self.ma_graduation_year)
+        return self.ma_programme.school.get_display_name_for_year(self.ma_graduation_year)
 
     def get_mphil_programme_display(self):
-        return self.mphil_programme_new.get_display_name_for_year(self.mphil_graduation_year)
+        return self.mphil_programme.get_display_name_for_year(self.mphil_graduation_year)
 
     def get_mphil_school_display(self):
-        return self.mphil_programme_new.school.get_display_name_for_year(self.mphil_graduation_year)
+        return self.mphil_programme.school.get_display_name_for_year(self.mphil_graduation_year)
 
     def get_phd_programme_display(self):
-        return self.phd_programme_new.get_display_name_for_year(self.phd_graduation_year)
+        return self.phd_programme.get_display_name_for_year(self.phd_graduation_year)
 
     def get_phd_school_display(self):
-        return self.phd_programme_new.school.get_display_name_for_year(self.phd_graduation_year)
+        return self.phd_programme.school.get_display_name_for_year(self.phd_graduation_year)
 
     def get_programme_display(self):
         profile = self.get_profile()
@@ -4289,7 +4289,7 @@ NewStudentPage.content_panels = [
     # MA details
     MultiFieldPanel([
         FieldPanel('ma_in_show'),
-        FieldPanel('ma_programme_new'),
+        FieldPanel('ma_programme'),
         FieldPanel('ma_specialism'),
     ], "MA details", classname="collapsible collapsed"),
 
@@ -4307,7 +4307,7 @@ NewStudentPage.content_panels = [
     # MPhil details
     MultiFieldPanel([
         FieldPanel('mphil_in_show'),
-        FieldPanel('mphil_programme_new'),
+        FieldPanel('mphil_programme'),
         FieldPanel('mphil_dissertation_title'),
         FieldPanel('mphil_statement'),
         FieldPanel('mphil_start_year'),
@@ -4324,7 +4324,7 @@ NewStudentPage.content_panels = [
     # PhD details
     MultiFieldPanel([
         FieldPanel('phd_in_show'),
-        FieldPanel('phd_programme_new'),
+        FieldPanel('phd_programme'),
         FieldPanel('phd_dissertation_title'),
         FieldPanel('phd_statement'),
         FieldPanel('phd_start_year'),
@@ -5164,9 +5164,9 @@ class GalleryPage(Page, SocialFields):
 
         # Get available programmes
         programme_options = Programme.objects.filter(
-            models.Q(id__in=ma_students.values_list('ma_programme_new', flat=True)) |
-            models.Q(id__in=mphil_students.values_list('mphil_programme_new', flat=True)) |
-            models.Q(id__in=phd_students.values_list('phd_programme_new', flat=True))
+            models.Q(id__in=ma_students.values_list('ma_programme', flat=True)) |
+            models.Q(id__in=mphil_students.values_list('mphil_programme', flat=True)) |
+            models.Q(id__in=phd_students.values_list('phd_programme', flat=True))
         ).order_by('slug').distinct('slug')
 
         # Get all available schools
@@ -5182,13 +5182,13 @@ class GalleryPage(Page, SocialFields):
         # Filter students by school/programme
         selected_programme = programme_options.filter(slug=programme_slug).first()
         if selected_programme:
-            ma_students = ma_students.filter(ma_programme_new=selected_programme)
-            mphil_students = mphil_students.filter(mphil_programme_new=selected_programme)
-            phd_students = phd_students.filter(phd_programme_new=selected_programme)
+            ma_students = ma_students.filter(ma_programme=selected_programme)
+            mphil_students = mphil_students.filter(mphil_programme=selected_programme)
+            phd_students = phd_students.filter(phd_programme=selected_programme)
         elif selected_school:
-            ma_students = ma_students.filter(ma_programme_new__school=selected_school)
-            mphil_students = mphil_students.filter(mphil_programme_new__school=selected_school)
-            phd_students = phd_students.filter(phd_programme_new__school=selected_school)
+            ma_students = ma_students.filter(ma_programme__school=selected_school)
+            mphil_students = mphil_students.filter(mphil_programme__school=selected_school)
+            phd_students = phd_students.filter(phd_programme__school=selected_school)
 
         students = (ma_students | mphil_students | phd_students).distinct().order_by('random_order')
 
