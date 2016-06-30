@@ -64,8 +64,8 @@ class SchoolHistoricalDisplayName(models.Model):
     """
     school = ParentalKey('School', related_name='historical_display_names')
     end_year = models.PositiveIntegerField(
-        help_text="This is the last year that the name was used. For example, if"
-                  "the name was changed at the beginning of the 2016/17 academic"
+        help_text="This is the last year that the name was used. For example, if "
+                  "the name was changed at the beginning of the 2016/17 academic "
                   "year, this field should be set to 2016."
     )
     display_name = models.CharField(max_length=255)
@@ -118,8 +118,8 @@ class ProgrammeHistoricalDisplayName(models.Model):
     """
     school = ParentalKey('Programme', related_name='historical_display_names')
     end_year = models.PositiveIntegerField(
-        help_text="This is the last year that the name was used. For example, if"
-                  "the name was changed at the beginning of the 2016/17 academic"
+        help_text="This is the last year that the name was used. For example, if "
+                  "the name was changed at the beginning of the 2016/17 academic "
                   "year, this field should be set to 2016."
     )
     display_name = models.CharField(max_length=255)
