@@ -3729,6 +3729,83 @@ class CarouselItemManager(models.Manager):
         return self.all().filter(embedly_url='')
 
 
+class NewStudentPageQuerySet(PageQuerySet):
+    def phd(self, school=None, programme=None, current=None, current_year=None, in_show=None):
+        self = self.filter(phd_programme_new__isnull=False)
+
+        if programme:
+            self = self.filter(phd_programme_new=programme)
+
+            if school and programme.school != school:
+                return self.none()
+        elif school:
+            self = self.filter(phd_programme_new__school=school)
+
+        if current is not None:
+            if current_year is None:
+                current_year = timezone.now().year
+
+            if current == True:
+                self = self.filter(phd_graduation_year__gte=current_year)
+            elif current == False:
+                self = self.filter(phd_graduation_year__lt=current_year)
+
+        if in_show != None:
+            self = self.filter(phd_in_show=in_show)
+
+        return self
+
+    def mphil(self, school=None, programme=None, current=None, current_year=None, in_show=None):
+        self = self.filter(mphil_programme_new__isnull=False)
+
+        if programme:
+            self = self.filter(mphil_programme_new=programme)
+
+            if school and programme.school != school:
+                return self.none()
+        elif school:
+            self = self.filter(mphil_programme_new__school=school)
+
+        if current is not None:
+            if current_year is None:
+                current_year = timezone.now().year
+
+            if current == True:
+                self = self.filter(mphil_graduation_year__gte=current_year)
+            elif current == False:
+                self = self.filter(mphil_graduation_year__lt=current_year)
+
+        if in_show != None:
+            self = self.filter(mphil_in_show=in_show)
+
+        return self
+
+    def ma(self, school=None, programme=None, current=None, current_year=None, in_show=None):
+        self = self.filter(ma_programme_new__isnull=False)
+
+        if programme:
+            self = self.filter(ma_programme_new=programme)
+
+            if school and programme.school != school:
+                return self.none()
+        elif school:
+            self = self.filter(ma_programme_new__school=school)
+
+        if current is not None:
+            if current_year is None:
+                current_year = timezone.now().year
+
+            if current == True:
+                self = self.filter(ma_graduation_year=current_year)
+            elif current == False:
+                self = self.filter(ma_graduation_year__ne=current_year)
+
+        if in_show != None:
+            self = self.filter(ma_in_show=in_show)
+
+        return self
+
+
 # General
 class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
