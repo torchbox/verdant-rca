@@ -22,13 +22,15 @@ def api(request):
             for school in School.objects.all()
         },
         'programmes': {
-            graduation_year: {
-                programme.slug: {
-                    'display_name': programme.display_name,
-                    'school': programme.school.slug,
-                }
-                for programme in Programme.objects.filter(graduation_year=graduation_year).select_related('school__slug')
+            programme.slug: {
+                'display_name': programme.display_name,
+                'historical_display_names': {
+                    hdn.end_year: hdn.display_name
+                    for hdn in programme.historical_display_names.all()
+                },
+                'school': programme.school.slug,
+                'disabled': programme.disabled,
             }
-            for graduation_year in Programme.objects.order_by('-graduation_year').values_list('graduation_year', flat=True).distinct('graduation_year')
+            for programme in Programme.objects.select_related('school__slug')
         }
     })
