@@ -3983,8 +3983,6 @@ class NewStudentPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     # MA details
-    ma_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_school'))
-    ma_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'))
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
@@ -3995,8 +3993,6 @@ class NewStudentPage(Page, SocialFields):
     show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
-    mphil_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_school'))
-    mphil_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
     mphil_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_start_year'))
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
@@ -4008,8 +4004,6 @@ class NewStudentPage(Page, SocialFields):
     mphil_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_degree_type'))
 
     # PhD details
-    phd_school = models.CharField("School", max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_school'))
-    phd_programme = models.CharField("Programme", max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_programme'))
     phd_programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
     phd_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_start_year'))
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
@@ -4035,8 +4029,6 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('get_show_work_location_display'),
         index.SearchField('show_work_description'),
         index.FilterField('ma_in_show'),
-        index.FilterField('ma_school'),
-        index.FilterField('ma_programme'),
         index.FilterField('ma_programme_new'),
         index.FilterField('ma_graduation_year'),
 
@@ -4046,8 +4038,6 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('mphil_dissertation_title'),
         index.SearchField('mphil_statement'),
         index.FilterField('mphil_in_show'),
-        index.FilterField('mphil_school'),
-        index.FilterField('mphil_programme'),
         index.FilterField('mphil_programme_new'),
         index.FilterField('mphil_graduation_year'),
         index.FilterField('mphil_status'),
@@ -4059,8 +4049,6 @@ class NewStudentPage(Page, SocialFields):
         index.SearchField('phd_dissertation_title'),
         index.SearchField('phd_statement'),
         index.FilterField('phd_in_show'),
-        index.FilterField('phd_school'),
-        index.FilterField('phd_programme'),
         index.FilterField('phd_programme_new'),
         index.FilterField('phd_graduation_year'),
         index.FilterField('phd_status'),
@@ -4086,9 +4074,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['phd'] = {
                 'name': "PhD",
                 'school': self.phd_programme_new.school,
-                'school_display': self.phd_programme_new.school.get_display_name_for_year(self.phd_graduation_year),
+                'school_display': self.get_phd_school_display(),
                 'programme': self.phd_programme_new,
-                'programme_display': self.phd_programme_new.get_display_name_for_year(self.phd_graduation_year),
+                'programme_display': self.get_phd_programme_display(),
                 'start_year': self.phd_start_year,
                 'graduation_year': self.phd_graduation_year,
                 'in_show_': self.phd_in_show,
@@ -4101,9 +4089,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['mphil'] = {
                 'name': "MPhil",
                 'school': self.mphil_programme_new.school,
-                'school_display': self.mphil_programme_new.school.get_display_name_for_year(self.mphil_graduation_year),
+                'school_display': self.get_mphil_school_display(),
                 'programme': self.mphil_programme_new,
-                'programme_display': self.mphil_programme_new.get_display_name_for_year(self.mphil_graduation_year),
+                'programme_display': self.get_mphil_programme_display(),
                 'start_year': self.mphil_start_year,
                 'graduation_year': self.mphil_graduation_year,
                 'in_show_': self.mphil_in_show,
@@ -4116,9 +4104,9 @@ class NewStudentPage(Page, SocialFields):
             profiles['ma'] = {
                 'name': "MA",
                 'school': self.ma_programme_new.school,
-                'school_display': self.ma_programme_new.school.get_display_name_for_year(self.ma_graduation_year),
+                'school_display': self.get_ma_school_display(),
                 'programme': self.ma_programme_new,
-                'programme_display': self.ma_programme_new.get_display_name_for_year(self.ma_graduation_year),
+                'programme_display': self.get_ma_programme_display(),
                 'start_year': self.ma_graduation_year,
                 'graduation_year': self.ma_graduation_year,
                 'in_show_': self.ma_in_show,
@@ -4159,6 +4147,40 @@ class NewStudentPage(Page, SocialFields):
 
         if profile:
             return self.get_profile()['programme']
+        else:
+            return ''
+
+    def get_ma_programme_display(self):
+        return self.ma_programme_new.get_display_name_for_year(self.ma_graduation_year)
+
+    def get_ma_school_display(self):
+        return self.ma_programme_new.school.get_display_name_for_year(self.ma_graduation_year)
+
+    def get_mphil_programme_display(self):
+        return self.mphil_programme_new.get_display_name_for_year(self.mphil_graduation_year)
+
+    def get_mphil_school_display(self):
+        return self.mphil_programme_new.school.get_display_name_for_year(self.mphil_graduation_year)
+
+    def get_phd_programme_display(self):
+        return self.phd_programme_new.get_display_name_for_year(self.phd_graduation_year)
+
+    def get_phd_school_display(self):
+        return self.phd_programme_new.school.get_display_name_for_year(self.phd_graduation_year)
+
+    def get_programme_display(self):
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['programme_display']
+        else:
+            return ''
+
+    def get_school_display(self):
+        profile = self.get_profile()
+
+        if profile:
+            return self.get_profile()['school_display']
         else:
             return ''
 
