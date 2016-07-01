@@ -3143,16 +3143,16 @@ class StaffPageCarouselItem(Orderable, CarouselItemFields):
 class StaffPageRole(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
-    school_new = models.ForeignKey('taxonomy.School', verbose_name="School", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
-    programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
-    area_new = models.ForeignKey('taxonomy.Area', verbose_name="Area", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.StaffPageRole', 'email'))
 
     panels = [
         FieldPanel('title'),
-        FieldPanel('school_new'),
-        FieldPanel('programme_new'),
-        FieldPanel('area_new'),
+        FieldPanel('school'),
+        FieldPanel('programme'),
+        FieldPanel('area'),
         FieldPanel('email'),
     ]
 
@@ -3304,16 +3304,16 @@ class StaffIndex(Page, SocialFields):
 
         # Programme
         programme_options = Programme.objects.filter(
-            id__in=StaffPageRole.objects.values_list('programme_new', flat=True)
+            id__in=StaffPageRole.objects.values_list('programme', flat=True)
         )
 
         programme = programme_options.filter(slug=programme_slug).first()
 
         # School
         school_options = School.objects.filter(
-            id__in=StaffPageRole.objects.values_list('school_new', flat=True)
+            id__in=StaffPageRole.objects.values_list('school', flat=True)
         ) | School.objects.filter(
-            id__in=StaffPageRole.objects.values_list('programme_new__school', flat=True)
+            id__in=StaffPageRole.objects.values_list('programme__school', flat=True)
         )
 
         school = school_options.filter(slug=school_slug).first()
@@ -3327,7 +3327,7 @@ class StaffIndex(Page, SocialFields):
 
         # Area
         area_options = Area.objects.filter(
-            id__in=StaffPageRole.objects.values_list('area_new', flat=True)
+            id__in=StaffPageRole.objects.values_list('area', flat=True)
         ) | Area.objects.filter(
             id__in=StaffPage.objects.values_list('area', flat=True)
         )
@@ -3338,17 +3338,17 @@ class StaffIndex(Page, SocialFields):
         staff_pages = StaffPage.objects.live()
 
         if programme:
-            staff_pages = staff_pages.filter(roles__programme_new=programme)
+            staff_pages = staff_pages.filter(roles__programme=programme)
         elif school:
             staff_pages = staff_pages.filter(
-                models.Q(roles__school_new=school) |
-                models.Q(roles__programme_new__school=school)
+                models.Q(roles__school=school) |
+                models.Q(roles__programme__school=school)
             )
 
         if area:
             staff_pages = staff_pages.filter(
                 models.Q(area=area) |
-                models.Q(roles__area_new=area)
+                models.Q(roles__area=area)
             )
 
         if staff_type:

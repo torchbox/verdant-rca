@@ -247,10 +247,10 @@ def staff_random(context, exclude=None, programmes=None, count=4):
 @register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
 def staff_related(context, staff_page, count=4):
     staff = StaffPage.objects.live().exclude(id=staff_page.id).order_by('?')
-    programme_ids = list(staff_page.roles.filter(programme_new__isnull=False).values_list('programme_new_id', flat=True))
+    programme_ids = list(staff_page.roles.filter(programme__isnull=False).values_list('programme_id', flat=True))
 
     if programme_ids:
-        staff = staff.filter(roles__programme_new_id__in=programme_ids)
+        staff = staff.filter(roles__programme_id__in=programme_ids)
     elif staff_page.area:
         staff = staff.filter(area=staff_page.area)
 
