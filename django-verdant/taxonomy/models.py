@@ -5,10 +5,8 @@ from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel
-from wagtail.wagtailsnippets.models import register_snippet
 
 
-# @register_snippet
 @python_2_unicode_compatible
 class Area(models.Model):
     """
@@ -26,7 +24,6 @@ class Area(models.Model):
         ordering = ['display_name']
 
 
-#@register_snippet
 @python_2_unicode_compatible
 class School(ClusterableModel):
     """
@@ -81,7 +78,6 @@ class SchoolHistoricalDisplayName(models.Model):
         ordering = ['end_year']
 
 
-# @register_snippet
 @python_2_unicode_compatible
 class Programme(ClusterableModel):
     """
