@@ -3143,9 +3143,6 @@ class StaffPageCarouselItem(Orderable, CarouselItemFields):
 class StaffPageRole(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
-    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text=help_text('rca.StaffPageRole', 'school'))
-    programme = models.CharField(max_length=255, blank=True, choices=PROGRAMME_CHOICES, help_text=help_text('rca.StaffPageRole', 'programme'))
-    area = models.CharField(max_length=255, blank=True, choices=STAFF_AREA_CHOICES, help_text=help_text('rca.StaffPageRole', 'area'))
     school_new = models.ForeignKey('taxonomy.School', verbose_name="School", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
     programme_new = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
     area_new = models.ForeignKey('taxonomy.Area', verbose_name="Area", null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
@@ -3194,7 +3191,6 @@ class StaffPagePublicationExhibition(Orderable):
 
 class StaffPage(Page, SocialFields):
     # N.B. the `school` field has been relabeled as 'Area', and it's using AREA_CHOICES, which includes all the schools too.  See #727
-    school = models.CharField(verbose_name='Area', max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school'))
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
