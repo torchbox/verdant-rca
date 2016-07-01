@@ -46,7 +46,7 @@ import stripe
 
 import hashlib
 
-from taxonomy.models import School, Programme
+from taxonomy.models import Area, School, Programme
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
@@ -3298,27 +3298,65 @@ class StaffIndex(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         staff_type = request.GET.get('staff_type')
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
-        area = request.GET.get('area')
+        school_slug = request.GET.get('school')
+        programme_slug = request.GET.get('programme')
+        area_slug = request.GET.get('area')
 
-        staff_pages = StaffPage.objects.filter(live=True)
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=StaffPageRole.objects.values_list('programme_new', flat=True)
+        )
 
-        # Run filters
-        staff_pages, filters = run_filters(staff_pages, [
-            ('school', 'roles__school', school),
-            ('programme', 'roles__programme', programme),
-            ('staff_type', 'staff_type', staff_type),
-            ('area', 'roles__area', area),
-        ])
+        programme = programme_options.filter(slug=programme_slug).first()
 
-        # Remove duplicates (#615)
-        staff_pages = staff_pages.distinct()
+        # School
+        school_options = School.objects.filter(
+            id__in=StaffPageRole.objects.values_list('school_new', flat=True)
+        ) | School.objects.filter(
+            id__in=StaffPageRole.objects.values_list('programme_new__school', flat=True)
+        )
 
-        staff_pages = staff_pages.order_by('-random_order')
+        school = school_options.filter(slug=school_slug).first()
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
 
-        # research_items.order_by('-year')
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
 
+        # Area
+        area_options = Area.objects.filter(
+            id__in=StaffPageRole.objects.values_list('area_new', flat=True)
+        ) | Area.objects.filter(
+            id__in=StaffPage.objects.values_list('area', flat=True)
+        )
+
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get staff pages
+        staff_pages = StaffPage.objects.live()
+
+        if programme:
+            staff_pages = staff_pages.filter(roles__programme_new=programme)
+        elif school:
+            staff_pages = staff_pages.filter(
+                models.Q(roles__school_new=school) |
+                models.Q(roles__programme_new__school=school)
+            )
+
+        if area:
+            staff_pages = staff_pages.filter(
+                models.Q(area=area) |
+                models.Q(roles__area_new=area)
+            )
+
+        if staff_type:
+            staff_pages = staff_pages.filter(staff_type=staff_type)
+
+        staff_pages = staff_pages.distinct().order_by('-random_order')
+
+        # Paginate
         page = request.GET.get('page')
         paginator = Paginator(staff_pages, 17)
         try:
@@ -3329,6 +3367,24 @@ class StaffIndex(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             staff_pages = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "staff_type",
+            "current_value": staff_type,
+            "options": [""] + list(dict(STAFF_TYPES_CHOICES).keys()),
+        }, {
+            "name": "area",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/staff_pages_listing.html", {
