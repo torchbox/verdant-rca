@@ -3216,7 +3216,10 @@ class StaffPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('area', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
@@ -3224,9 +3227,6 @@ class StaffPage(Page, SocialFields):
 
     search_name = 'Staff'
 
-    @property
-    def programmes(self):
-        return list({role.programme for role in StaffPageRole.objects.filter(page=self) if role.programme})
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
