@@ -1207,42 +1207,90 @@ class NewsIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
-        area = request.GET.get('area')
+        programme_slug = request.GET.get('programme')
+        school_slug = request.GET.get('school')
+        area_slug = request.GET.get('area')
 
-        news = NewsItem.objects.filter(live=True, path__startswith=self.path, show_on_news_index=True)
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=NewsItemRelatedProgramme.objects.values_list('programme', flat=True)
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
 
-        # Run school and programme filters
-        news, filters = run_filters(news, [
-            ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme', programme),
-            ('areas', 'areas__area', area)
-        ])
+         # School
+        school_options = School.objects.filter(
+            id__in=NewsItemRelatedSchool.objects.values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=NewsItemRelatedProgramme.objects.values_list('programme__school', flat=True)
+        )
+        school = school_options.filter(slug=school_slug).first()
 
-        news = news.distinct().order_by('-date')
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
 
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
+
+        # Area
+        area_options = Area.objects.filter(
+            id__in=NewsItemArea.objects.values_list('area', flat=True)
+        )
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get news items
+        news_items = NewsItem.objects.live().descendant_of(self).filter(show_on_news_index=True)
+
+        if programme:
+            news_items = news_items.filter(related_programmes__programme=programme)
+        elif school:
+            news_items = news_items.filter(
+                models.Q(related_schools__school=school) |
+                models.Q(related_programmes__programme__school=school)
+            )
+
+        if area:
+            news_items = news_items.filter(models.Q(areas__area=area))
+
+        news_items = news_items.distinct().order_by('-date')
+
+        # Pagination
         page = request.GET.get('page')
-        paginator = Paginator(news, 10)  # Show 10 news items per page
+        paginator = Paginator(news_items, 10)  # Show 10 news items per page
         try:
-            news = paginator.page(page)
+            news_items = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            news = paginator.page(1)
+            news_items = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver lst page of results.
-            news = paginator.page(paginator.num_pages)
+            news_items = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "areas",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/news_listing.html", {
                 'self': self,
-                'news': news,
+                'news': news_items,
                 'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'news': news,
+                'news': news_items,
                 'filters': json.dumps(filters),
             })
 
@@ -1288,7 +1336,7 @@ class NewsItemLink(Orderable):
 
 class NewsItemRelatedSchool(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='related_schools')
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.NewsItemRelatedSchool', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemRelatedSchool', 'school'))
 
     panels = [
         FieldPanel('school')
@@ -1296,13 +1344,13 @@ class NewsItemRelatedSchool(models.Model):
 
 class NewsItemRelatedProgramme(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='related_programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.NewsItemRelatedProgramme', 'programme'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemRelatedProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
 class NewsItemArea(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.NewsItemArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -1316,10 +1364,6 @@ class NewsItem(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.NewsItem', 'listing_intro', default="Used only on pages listing news items"))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewsItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
-
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.NewsItem', 'area'))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
@@ -1330,9 +1374,9 @@ class NewsItem(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            areas=list(self.areas.values_list('area', flat=True)),
-            programmes=list(self.related_programmes.values_list('programme', flat=True)),
-            schools=list(self.related_schools.values_list('school', flat=True)),
+            areas=Area.objects.filter(id__in=self.areas.values_list('area_id', flat=True)),
+            programmes=Programme.objects.filter(id__in=self.related_programmes.values_list('programme_id', flat=True)),
+            schools=School.objects.filter(id__in=self.related_schools.values_list('school_id', flat=True)),
             exclude=self,
             count=count
         )
@@ -1351,36 +1395,37 @@ class NewsItem(Page, SocialFields):
         # if self.area is blank, we don't want to give priority to other news items
         # that also have a blank area field - so instead, set the target area to
         # something that will never match, so that it never contributes to the score
-        if not areas:
-            areas = ["this_will_never_match"]
+        area_ids = [0]
+        if areas is not None:
+            area_ids = list(areas.values_list('id', flat=True)) or [0]
 
-        if not programmes:
-            # insert a dummy programme name to avoid an empty IN clause
-            programmes = ["this_will_never_match_either"]
+        programme_ids = [0]
+        if programmes is not None:
+            programme_ids = list(programmes.values_list('id', flat=True)) or [0]
 
-        if not schools:
-            # insert a dummy school name to avoid an empty IN clause
-            schools = ["this_will_never_match_either"]
+        school_ids = [0]
+        if schools is not None:
+            school_ids = list(schools.values_list('id', flat=True)) or [0]
 
         results = NewsItem.objects.extra(
             select={'score': """
                 (
                     SELECT COUNT(*) FROM rca_newsitemarea
                     WHERE rca_newsitemarea.page_id=wagtailcore_page.id
-                        AND rca_newsitemarea.area IN %s
+                        AND rca_newsitemarea.area_id IN %s
                 ) * 100
                 + (
                     SELECT COUNT(*) FROM rca_newsitemrelatedprogramme
                     WHERE rca_newsitemrelatedprogramme.page_id=wagtailcore_page.id
-                        AND rca_newsitemrelatedprogramme.programme IN %s
+                        AND rca_newsitemrelatedprogramme.programme_id IN %s
                 ) * 10
                 + (
                     SELECT COUNT(*) FROM rca_newsitemrelatedschool
                     WHERE rca_newsitemrelatedschool.page_id=wagtailcore_page.id
-                        AND rca_newsitemrelatedschool.school IN %s
+                        AND rca_newsitemrelatedschool.school_id IN %s
                 ) * 1
             """},
-            select_params=(tuple(areas), tuple(programmes), tuple(schools))
+            select_params=(tuple(area_ids), tuple(programme_ids), tuple(school_ids))
         )
         if exclude:
             results = results.exclude(id=exclude.id)

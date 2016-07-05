@@ -5,7 +5,7 @@
                 <dd>Writer</dd>
                 <dt>{{ self.author }}</dt>
             {% endif %}
-            
+
             {% if self.date %}
                 <dd>Date</dd>
                 <dt>{{ self.date|date:"j F Y" }}</dt>
@@ -17,7 +17,7 @@
                     <dt>
                         <ul>
                             {% for area in areas %}
-                                <li>{{ area.get_area_display }}</li>
+                                <li>{{ area.area.display_name }}</li>
                             {% endfor %}
                         </ul>
                     </dt>
@@ -30,7 +30,7 @@
                     <dt>
                         <ul>
                              {% for school in related_schools %}
-                                <li>{{ school.get_school_display }}</li>
+                                <li>{{ school.school.display_name }}</li>
                             {% endfor %}
                         </ul>
                     </dt>
@@ -43,13 +43,13 @@
                     <dt>
                         <ul>
                              {% for programme in related_programmes %}
-                                <li>{{ programme.get_programme_display }}</li>
+                                <li>{{ programme.programme.display_name }}</li>
                             {% endfor %}
                         </ul>
                     </dt>
                 {% endif %}
-            {% endwith %} 
-            
+            {% endwith %}
+
             {% with self.related_links.all as related_links %}
                 {% if related_links %}
                     <dd>Links</dd>
