@@ -39,7 +39,7 @@
     {% endif %}
 
     <!-- programmes -->
-    {% programme_by_school school=self.school %}  {# rca/tags/programmes_by_school.html #}
+    {% programme_by_school school=self.school_new.slug %}  {# rca/tags/programmes_by_school.html #}
 
 
     <!-- head of research -->
@@ -78,13 +78,13 @@
     </div>
 
         <!-- events -->
-    {% upcoming_events_related school=self.school display_name=self.get_school_display %}
+    {% upcoming_events_related school=self.school_new.slug display_name=self.get_school_display %}
 
     <!-- news carousel -->
-    {% news_carousel school=self.school %}
+    {% news_carousel school=self.school_new.slug %}
 
     <!-- open days -->
-    {% upcoming_events_related opendays=1 school=self.school %}
+    {% upcoming_events_related opendays=1 school=self.school_new.slug %}
 
 	{% include "rca/includes/modules/contact.html" %}
 

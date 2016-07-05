@@ -814,7 +814,7 @@ class SchoolPageAd(Orderable):
 
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.SchoolPage', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
     head_of_school_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_school_statement'), null=True, blank=True)
@@ -830,7 +830,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'School'
