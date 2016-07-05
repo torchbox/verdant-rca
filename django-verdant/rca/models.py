@@ -4151,21 +4151,39 @@ class NewStudentPage(Page, SocialFields):
             return ''
 
     def get_ma_programme_display(self):
+        if not self.ma_programme:
+            return ''
+
         return self.ma_programme.get_display_name_for_year(self.ma_graduation_year)
 
     def get_ma_school_display(self):
+        if not self.ma_programme:
+            return ''
+
         return self.ma_programme.school.get_display_name_for_year(self.ma_graduation_year)
 
     def get_mphil_programme_display(self):
+        if not self.mphil_programme:
+            return ''
+
         return self.mphil_programme.get_display_name_for_year(self.mphil_graduation_year)
 
     def get_mphil_school_display(self):
+        if not self.mphil_programme:
+            return ''
+
         return self.mphil_programme.school.get_display_name_for_year(self.mphil_graduation_year)
 
     def get_phd_programme_display(self):
+        if not self.phd_programme:
+            return ''
+
         return self.phd_programme.get_display_name_for_year(self.phd_graduation_year)
 
     def get_phd_school_display(self):
+        if not self.phd_programme:
+            return ''
+
         return self.phd_programme.school.get_display_name_for_year(self.phd_graduation_year)
 
     def get_programme_display(self):
