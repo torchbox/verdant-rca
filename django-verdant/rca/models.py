@@ -814,7 +814,7 @@ class SchoolPageAd(Orderable):
 
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.SchoolPage', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
     head_of_school_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_school_statement'), null=True, blank=True)
@@ -830,7 +830,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'School'
@@ -1021,13 +1024,13 @@ class ProgrammePageAd(Orderable):
 
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
 
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ProgrammePage', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme', default="Select the profile page of the head of this programme."))
     head_of_programme_second = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Second head of programme", help_text=help_text('rca.ProgrammePage', 'head_of_programme_secondary', default="Select the profile page of another head of this programme."))
@@ -1050,18 +1053,21 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     search_fields = Page.search_fields + (
         index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
+
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'Programme'
 
     def get_programme_display(self):
-        programmes = ProgrammePageProgramme.objects\
-            .filter(page=self)\
-            .only('programme')\
-            .distinct()
+        programmes = Programme.objects.filter(
+            id__in=self.programmes.all().values_list('programme_id')
+        )
 
-        return ", ".join([p.get_programme_display() for p in programmes])
+        return ", ".join([p.display_name for p in programmes])
 
     @property
     def staff_feed(self):
