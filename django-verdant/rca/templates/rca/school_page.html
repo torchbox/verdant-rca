@@ -78,13 +78,13 @@
     </div>
 
         <!-- events -->
-    {% upcoming_events_related school=self.school display_name=self.get_school_display %}
+    {% upcoming_events_related school=self.school.slug display_name=self.school.display_name %}
 
     <!-- news carousel -->
-    {% news_carousel school=self.school %}
+    {% news_carousel school=self.school.slug %}
 
     <!-- open days -->
-    {% upcoming_events_related opendays=1 school=self.school %}
+    {% upcoming_events_related opendays=1 school=self.school.slug %}
 
 	{% include "rca/includes/modules/contact.html" %}
 
