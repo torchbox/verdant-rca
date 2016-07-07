@@ -1563,7 +1563,7 @@ class PressReleaseLink(Orderable):
 
 class PressReleaseRelatedSchool(models.Model):
     page = ParentalKey('rca.PressRelease', related_name='related_schools')
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.PressReleaseRelatedSchool', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='press_releases', help_text=help_text('rca.PressReleaseRelatedSchool', 'school'))
 
     panels = [
         FieldPanel('school')
@@ -1571,13 +1571,13 @@ class PressReleaseRelatedSchool(models.Model):
 
 class PressReleaseRelatedProgramme(models.Model):
     page = ParentalKey('rca.PressRelease', related_name='related_programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.PressReleaseRelatedProgramme', 'programme'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='press_releases', help_text=help_text('rca.PressReleaseRelatedProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
 class PressReleaseArea(models.Model):
     page = ParentalKey('rca.PressRelease', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.PressReleaseArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='press_releases', help_text=help_text('rca.PressReleaseArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -1589,10 +1589,6 @@ class PressRelease(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PressRelease', 'show_on_homepage'))
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.PressRelease', 'listing_intro', default="Used only on pages listing news items"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PressRelease', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
-
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.PressRelease', 'area'))
 
     search_fields = Page.search_fields + (
         index.SearchField('intro'),
