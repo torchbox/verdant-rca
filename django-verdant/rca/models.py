@@ -2974,8 +2974,9 @@ class JobPageReusableTextSnippet(Orderable):
     ]
 
 class JobPage(Page, SocialFields):
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, null=True, blank=True, help_text=help_text('rca.JobPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True, help_text=help_text('rca.JobPage', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'programme'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'area'))
     other_department = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobPage', 'other_department'))
     closing_date = models.DateField(help_text=help_text('rca.JobPage', 'closing_date'))
     interview_date = models.DateField(null=True, blank=True, help_text=help_text('rca.JobPage', 'interview_date'))
@@ -2992,8 +2993,16 @@ class JobPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('area', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('other_department'),
         index.SearchField('get_campus_display'),
         index.SearchField('description'),
@@ -3005,6 +3014,7 @@ JobPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('programme'),
     FieldPanel('school'),
+    FieldPanel('area'),
     FieldPanel('other_department'),
     FieldPanel('closing_date'),
     FieldPanel('interview_date'),

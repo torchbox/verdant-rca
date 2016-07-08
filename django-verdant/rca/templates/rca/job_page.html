@@ -20,12 +20,17 @@
 
 				{% if self.school %}
 					<h3 class="a2">School</h3>
-					<p>{{ self.get_school_display }}</p>
+					<p>{{ self.school.display_name }}</p>
 				{% endif %}
 
 				{% if self.programme %}
 					<h3 class="a2">Programme</h3>
-					<p>{{ self.get_programme_display }}</p>
+					<p>{{ self.programme.display_name }}</p>
+				{% endif %}
+
+				{% if self.area %}
+					<h3 class="a2">Area</h3>
+					<p>{{ self.area.display_name }}</p>
 				{% endif %}
 
 				{% if self.other_department %}
