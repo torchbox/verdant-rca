@@ -4568,7 +4568,7 @@ class RcaNowPageTag(TaggedItemBase):
 
 class RcaNowPageArea(models.Model):
     page = ParentalKey('rca.RcaNowPage', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaNowPageArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPageArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -4584,23 +4584,24 @@ class RcaNowPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaNowPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaNowPage', 'area'))
-
     search_fields = Page.search_fields + (
         index.SearchField('body'),
         index.SearchField('author'),
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_area_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'RCA Now'
