@@ -4908,8 +4908,8 @@ class ResearchItem(Page, SocialFields):
     ref = models.BooleanField(default=False, blank=True, help_text=help_text('rca.ResearchItem', 'ref'))
     year = models.CharField(max_length=4, help_text=help_text('rca.ResearchItem', 'year'))
     description = RichTextField(help_text=help_text('rca.ResearchItem', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.ResearchItem', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ResearchItem', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='research_items', help_text=help_text('rca.ResearchItem', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='research_items', help_text=help_text('rca.ResearchItem', 'programme'))
     work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'work_type'))
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'work_type_other'))
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES, blank=True, help_text=help_text('rca.ResearchItem', 'theme'))
@@ -4924,8 +4924,13 @@ class ResearchItem(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('get_work_type_display'),
         index.SearchField('work_type_other'),
         index.SearchField('get_theme_display'),
@@ -4938,7 +4943,7 @@ class ResearchItem(Page, SocialFields):
         # Get related research
         research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
         if self.programme:
-            research_items = research_items.filter(programme__in=get_programme_synonyms(self.programme))
+            research_items = research_items.filter(programme=self.programme)
         else:
             research_items = research_items.filter(school=self.school)
 
