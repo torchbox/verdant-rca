@@ -4744,7 +4744,7 @@ class RcaBlogPageTag(TaggedItemBase):
 
 class RcaBlogPageArea(models.Model):
     page = ParentalKey('rca.RcaBlogPage', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaBlogPageArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='blog_pages', help_text=help_text('rca.RcaBlogPageArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -4753,23 +4753,29 @@ class RcaBlogPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaBlogPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaBlogPage', 'date'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_blog_pages', help_text=help_text('rca.RcaBlogPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_blog_pages', help_text=help_text('rca.RcaBlogPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaBlogPage', 'area'))
-
     search_fields = Page.search_fields + (
         index.SearchField('body'),
         index.SearchField('author'),
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_area_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('areas', [
+        #     index.RelatedFields('area', [
+        #         index.SearchField('display_name'),
+        #     ]),
+        # ]),
     )
 
     search_name = 'RCA Blog'
@@ -4790,10 +4796,7 @@ class RcaBlogPage(Page, SocialFields):
         return self.get_ancestors().type(RcaBlogIndex).last()
 
     def get_related_blogs(self, count=4):
-        siblings = self.get_siblings()
-        related_blogs = RcaBlogPage.objects.filter(live=True, id__in=siblings).order_by('-date')
-        related_blogs = related_blogs.exclude(id=self.id)
-        return related_blogs[:count]
+        return RcaBlogPage.objects.live().sibling_of(self, inclusive=False).order_by('-date')[:count]
 
 
 RcaBlogPage.content_panels = [
@@ -4860,22 +4863,10 @@ class RcaBlogIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        # programme = request.GET.get('programme')
-        # school = request.GET.get('school')
-        # area = request.GET.get('area')
         tag = request.GET.get('tag', None)
+        rca_blog_items = self.get_blog_items(tag=tag).order_by('-date')
 
-        rca_blog_items = self.get_blog_items(tag=tag)
-
-        # Run school, area and programme filters
-        # rca_blog_items, filters = run_filters(rca_blog_items, [
-        #     ('school', 'school', school),
-        #     ('programme', 'programme', programme),
-        #     ('area', 'area', area),
-        # ])
-
-        rca_blog_items = rca_blog_items.order_by('-date')
-
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(rca_blog_items, 10)  # Show 10 rca blog items per page
         try:
@@ -4892,14 +4883,12 @@ class RcaBlogIndex(Page, SocialFields):
                 'self': self,
                 'rca_blog_items': rca_blog_items,
                 'tag': tag,
-                #'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'rca_blog_items': rca_blog_items,
                 'tag': tag,
-                #'filters': json.dumps(filters),
             })
 
     def get_popular_tags(self):
