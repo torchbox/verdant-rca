@@ -5158,22 +5158,52 @@ class CurrentResearchPage(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         research_type = request.GET.get('research_type')
-        school = request.GET.get('school')
+        school_slug = request.GET.get('school')
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.filter(live=True).order_by('random_order')
+        research_items = ResearchItem.objects.live()
 
-        # Run filters
-        research_items, filters = run_filters(research_items, [
-            ('research_type', 'research_type', research_type),
-            ('school', 'school', school),
-            ('theme', 'theme', theme),
-            ('work_type', 'work_type', work_type),
-        ])
+        # Research type
+        research_type_options = list(zip(*RESEARCH_TYPES_CHOICES)[0])
+        if research_type in research_type_options:
+            research_items = research_items.filter(research_type=research_type)
+        else:
+            research_type = ''
 
-        research_items.order_by('-year')
+        # School
+        school_options = School.objects.filter(
+            id__in=research_items.values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=research_items.values_list('programme__school', flat=True)
+        )
+        school = school_options.filter(slug=school_slug).first()
 
+        if school:
+            research_items = research_items.filter(
+                models.Q(school=school) |
+                models.Q(programme__school=school)
+            )
+
+        # Theme
+        available_themes = set(research_items.values_list('theme', flat=True))
+        theme_options = [t for t in zip(*WORK_THEME_CHOICES)[0] if t in available_themes]
+        if theme in theme_options:
+            research_items = research_items.filter(theme=theme)
+        else:
+            theme = ''
+
+        # Work type
+        available_work_types = set(research_items.values_list('work_type', flat=True))
+        work_type_options = [wt for wt in zip(*WORK_TYPES_CHOICES)[0] if wt in available_work_types]
+        if work_type in work_type_options:
+            research_items = research_items.filter(work_type=work_type)
+        else:
+            work_type = ''
+
+        research_items = research_items.order_by('random_order')
+
+        # Pagination
         per_page = 8
         page = request.GET.get('page')
         paginator = Paginator(research_items, per_page)  # Show 8 research items per page
@@ -5185,6 +5215,25 @@ class CurrentResearchPage(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             research_items = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "research_type",
+            "current_value": research_type,
+            "options": [""] + research_type_options,
+
+        }, {
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "theme",
+            "current_value": theme,
+            "options": [""] + theme_options,
+        }, {
+            "name": "work_type",
+            "current_value": work_type,
+            "options": [""] + work_type_options,
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/research_listing.html", {
