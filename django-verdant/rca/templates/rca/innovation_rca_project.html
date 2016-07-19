@@ -38,16 +38,8 @@
                     <dd>Year</dd>
                     <dt>{{ self.year }}</dt>
 
-                    <dd>Centre</dd>
-                    <dt>{{ self.get_school_display }}</dt>
-
                     <dd>Type</dd>
                     <dt>{{ self.get_project_type_display }}</dt>
-
-                    {% if self.programme %}
-                        <dd>Programme</dd>
-                        <dt>{{ self.get_programme_display }}</dt>
-                    {% endif %}
 
                     {% with self.links.all as links %}
                         {% if links %}
