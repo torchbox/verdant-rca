@@ -5147,7 +5147,7 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_link_text'))
-    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'news_carousel_area'))
+    news_carousel_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'news_carousel_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
