@@ -4308,6 +4308,7 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('ma_in_show'),
         FieldPanel('ma_programme'),
+        FieldPanel('ma_graduation_year'),
         FieldPanel('ma_specialism'),
     ], "MA details", classname="collapsible collapsed"),
 
