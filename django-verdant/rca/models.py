@@ -6533,8 +6533,8 @@ class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.PathwayPage', 'middle_column_body'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PathwayPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_school'))
-    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_programme'))
+    related_school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'related_school'))
+    related_programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'related_programme'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=PathwayPageTag, help_text=help_text('rca.PathwayPage', 'tags'), blank=True)
 
@@ -6548,12 +6548,10 @@ class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
     @property
     def search_name(self):
         if self.related_programme:
-            return self.get_related_programme_display()
+            return self.related_programme.display_name
 
         if self.related_school:
-            return self.get_related_school_display()
-
-        return None
+            return self.related_school.display_name
 
     content_panels = [
         FieldPanel('title', classname="full title"),
