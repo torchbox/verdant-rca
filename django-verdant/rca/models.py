@@ -5963,8 +5963,8 @@ class SustainRCAProject(Page, SocialFields):
     category = models.CharField(max_length=255, blank=True, choices=SUSTAINRCA_CATEGORY_CHOICES)
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.SustainRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.SustainRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='sustainrca_projects', help_text=help_text('rca.SustainRCAProject', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='sustainrca_projects', help_text=help_text('rca.SustainRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
@@ -5974,8 +5974,13 @@ class SustainRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('get_category_display'),
     )
 
@@ -5984,40 +5989,40 @@ class SustainRCAProject(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get related research
-        projects = SustainRCAProject.objects.filter(live=True).order_by('random_order')
-        projects = projects.filter(category=self.category)
+        related_projects = SustainRCAProject.objects.live().order_by('random_order')
+        related_projects = related_projects.filter(category=self.category)
         if self.programme:
-            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
+            related_projects = related_projects.filter(programme=self.programme)
         elif self.school:
-            projects = projects.filter(school=self.school)
+            related_projects = related_projects.filter(school=self.school)
 
-        paginator = Paginator(projects, 4)
-
+        # Pagination
+        paginator = Paginator(related_projects, 4)
         page = request.GET.get('page')
         try:
-            projects = paginator.page(page)
+            related_projects = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            projects = paginator.page(1)
+            related_projects = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            projects = paginator.page(paginator.num_pages)
+            related_projects = paginator.page(paginator.num_pages)
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/sustain_rca_listing.html", {
                 'self': self,
-                'projects': projects
+                'projects': related_projects
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'projects': projects
+                'projects': related_projects
             })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=get_programme_synonyms(self.programme) if self.programme else None,
+            programmes=([self.programme] if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -6078,19 +6083,34 @@ class SustainRCAIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        selected_year = request.GET.get('year', None)
-        selected_category = request.GET.get('category', None)
-        selected_programme = request.GET.get('programme', None)
+        year = request.GET.get('year')
+        category = request.GET.get('category')
+        programme_slug = request.GET.get('programme')
 
-        projects = SustainRCAProject.objects.filter(live=True)
-        projects, filters = run_filters(projects, [
-            ('year', 'year', selected_year),
-            ('category', 'category', selected_category),
-            ('programme', 'programme', selected_programme)
-        ])
-        projects = projects.order_by('random_order')
+        projects = SustainRCAProject.objects.live()
 
-        years = projects.values_list('year', flat=True).distinct()
+        # Year
+        year_options = list(projects.order_by('-year').values_list('year', flat=True).distinct('year'))
+        if year in year_options:
+            projects = projects.filter(year=year)
+        else:
+            year = ''
+
+        # Category
+        available_categories = set(projects.values_list('category', flat=True))
+        category_options = [c for c in zip(*SUSTAINRCA_CATEGORY_CHOICES)[0] if c in available_categories]
+        if category in category_options:
+            projects = projects.filter(category=category)
+        else:
+            category = ''
+
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=projects.values_list('programme', flat=True),
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
+        if programme:
+            projects = projects.filter(programme=programme)
 
         # Pagination
         page = request.GET.get('page')
@@ -6102,6 +6122,20 @@ class SustainRCAIndex(Page, SocialFields):
         except EmptyPage:
             projects = paginator.page(paginator.num_pages)
 
+        filters = [{
+            "name": "year",
+            "current_value": year,
+            "options": year_options
+        }, {
+            "name": "category",
+            "current_value": category,
+            "options": category_options
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [programme.slug for programme in programme_options]
+        }]
+
         # Find template
         if request.is_ajax() and 'pjax' not in request.GET:
             template = "rca/includes/sustain_rca_listing.html"
@@ -6112,7 +6146,7 @@ class SustainRCAIndex(Page, SocialFields):
         return render(request, template, {
             'self': self,
             'projects': projects,
-            'years': years,
+            'years': year_options,
             'filters': json.dumps(filters),
         })
 

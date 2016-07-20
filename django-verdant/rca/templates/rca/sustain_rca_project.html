@@ -38,15 +38,17 @@
                     <dd>Year</dd>
                     <dt>{{ self.year }}</dt>
 
-                    <dd>Centre</dd>
-                    <dt>{{ self.get_school_display }}</dt>
+                    {% if self.school %}
+                        <dd>Centre</dd>
+                        <dt>{{ self.school.display_name }}</dt>
+                    {% endif %}
 
                     <dd>Category</dd>
                     <dt>{{ self.get_category_display }}</dt>
 
                     {% if self.programme %}
                         <dd>Programme</dd>
-                        <dt>{{ self.get_programme_display }}</dt>
+                        <dt>{{ self.programme.display_name }}</dt>
                     {% endif %}
 
                     {% with self.links.all as links %}
