@@ -10,6 +10,9 @@ from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailimages import urls as wagtailimages_urls
 
+from wagtail.api.v2.router import WagtailAPIRouter
+from wagtail.api.v2.endpoints import PagesAPIEndpoint
+
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
@@ -27,6 +30,11 @@ from rca_ldap.signal_handlers import register_signal_handlers as rca_ldap_regist
 rca_ldap_register_signal_handlers()
 
 
+# Wagtail API
+api_router = WagtailAPIRouter('wagtailapi_v2')
+api_router.register_endpoint('pages', PagesAPIEndpoint)
+
+
 urlpatterns = patterns('',
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
@@ -37,6 +45,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
     url(r'^taxonomy/api/v0/$', taxonomy_views.api, name='taxonomy_api_v0'),
+    url(r'^api/v2beta/', api_router.urls),
 
     url(r'^search/$', 'wagtail.wagtailsearch.views.search', {
         'template': 'rca/search_results.html',

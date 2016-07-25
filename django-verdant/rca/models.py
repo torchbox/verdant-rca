@@ -581,6 +581,13 @@ class CarouselItemFields(models.Model):
     embedly_url = models.URLField('Vimeo URL', blank=True, help_text=help_text('rca.CarouselItemFields', 'embedly_url'))
     poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'poster_image'))
 
+    api_fields = [
+        'image',
+        'overlay_text',
+        'poster_image',
+        'get_link',
+    ]
+
     @property
     def get_link(self):
         if self.link_page:
@@ -605,6 +612,11 @@ class RelatedLinkMixin(models.Model):
     link = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.RelatedLinkMixin', 'link'))
     link_external = models.URLField("External link", blank=True, help_text=help_text('rca.RelatedLinkMixin', 'link_external'))
     link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RelatedLinkMixin', 'link_text', default="Link title (or leave blank to use page title"))
+
+    api_fields = [
+        'get_link',
+        'get_link_text',
+    ]
 
     panels = [
         PageChooserPanel('link'),
@@ -1306,6 +1318,11 @@ class NewsItemLink(Orderable):
     link = models.URLField(help_text=help_text('rca.NewsItemLink', 'link'))
     link_text = models.CharField(max_length=255, help_text=help_text('rca.NewsItemLink', 'link_text'))
 
+    api_fields = [
+        'link',
+        'link_text',
+    ]
+
     panels=[
         FieldPanel('link'),
         FieldPanel('link_text')
@@ -1315,6 +1332,10 @@ class NewsItemRelatedSchool(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='related_schools')
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemRelatedSchool', 'school'))
 
+    api_fields = [
+        'school',
+    ]
+
     panels = [
         FieldPanel('school')
     ]
@@ -1323,11 +1344,19 @@ class NewsItemRelatedProgramme(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='related_programmes')
     programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemRelatedProgramme', 'programme'))
 
+    api_fields = [
+        'programme',
+    ]
+
     panels = [FieldPanel('programme')]
 
 class NewsItemArea(models.Model):
     page = ParentalKey('rca.NewsItem', related_name='areas')
     area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='news_items', help_text=help_text('rca.NewsItemArea', 'area'))
+
+    api_fields = [
+        'area',
+    ]
 
     panels = [FieldPanel('area')]
 
@@ -1345,6 +1374,20 @@ class NewsItem(Page, SocialFields):
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
+    ]
+
+    api_fields = [
+        'author',
+        'date',
+        'intro',
+        'body',
+        'listing_intro',
+        'feed_image',
+        'carousel_items',
+        'related_links',
+        'related_schools',
+        'related_programmes',
+        'areas',
     ]
 
     search_name = 'News'
@@ -1641,11 +1684,19 @@ class EventItemRelatedSchool(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_schools')
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedSchool', 'school'))
 
+    api_fields = [
+        'school',
+    ]
+
     panels = [FieldPanel('school')]
 
 class EventItemRelatedProgramme(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_programmes')
     programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedProgramme', 'programme'))
+
+    api_fields = [
+        'programme',
+    ]
 
     panels = [FieldPanel('programme')]
 
@@ -1653,11 +1704,19 @@ class EventItemRelatedArea(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_areas')
     area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedArea', 'area'))
 
+    api_fields = [
+        'area',
+    ]
+
     panels = [FieldPanel('area')]
 
 class EventItemContactPhone(Orderable):
     page = ParentalKey('rca.EventItem', related_name='contact_phone')
     phone_number = models.CharField(max_length=255, help_text=help_text('rca.EventItemContactPhone', 'phone_number'))
+
+    api_fields = [
+        'phone_number',
+    ]
 
     panels = [
         FieldPanel('phone_number')
@@ -1666,6 +1725,10 @@ class EventItemContactPhone(Orderable):
 class EventItemContactEmail(Orderable):
     page = ParentalKey('rca.EventItem', related_name='contact_email')
     email_address = models.CharField(max_length=255, help_text=help_text('rca.EventItemContactEmail', 'email_address'))
+
+    api_fields = [
+        'email_address',
+    ]
 
     panels = [
         FieldPanel('email_address')
@@ -1679,6 +1742,14 @@ class EventItemDatesTimes(Orderable):
     time_to = models.TimeField("End time", null=True, blank=True, help_text=help_text('rca.EventItemDatesTimes', 'time_to'))
     time_other = models.CharField("Time other", max_length=255, blank=True, help_text=help_text('rca.EventItemDatesTimes', 'time_other', default="Use this field to give additional information about start and end times"))
 
+    api_fields = [
+        'date_from',
+        'date_to',
+        'time_from',
+        'time_to',
+        'time_other',
+    ]
+
     panels = [
         FieldPanel('date_from'),
         FieldPanel('date_to'),
@@ -1691,6 +1762,11 @@ class EventItemExternalLink(Orderable):
     page = ParentalKey('rca.EventItem', related_name='external_links')
     link = models.URLField(help_text=help_text('rca.EventItemExternalLink', 'link'))
     text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItemExternalLink', 'text'))
+
+    api_fields = [
+        'link',
+        'text',
+    ]
 
     panels = [
         FieldPanel('link'),
@@ -1752,6 +1828,34 @@ class EventItem(Page, SocialFields):
         index.SearchField('body'),
         index.SearchField('get_location_display'),
         index.SearchField('location_other'),
+    ]
+
+    api_fields = [
+        'body',
+        'audience',
+        'location',
+        'location_other',
+        'specific_directions',
+        'specific_directions_link',
+        'gallery',
+        'special_event',
+        'cost',
+        'eventbrite_id',
+        'listing_intro',
+        'middle_column_body',
+        'contact_title',
+        'contact_address',
+        'contact_phone',
+        'contact_email',
+        'contact_link',
+        'contact_link_text',
+        'feed_image',
+        'carousel_items',
+        'related_schools',
+        'related_programmes',
+        'related_areas',
+        'dates_times',
+        'external_links',
     ]
 
     search_name = 'Event'
@@ -2411,6 +2515,23 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
         index.SearchField('body'),
     ]
 
+    api_fields = [
+        'intro',
+        'body',
+        'strapline',
+        'twitter_feed',
+        'related_school',
+        'related_programme',
+        'related_area',
+        'feed_image',
+        'tags',
+        'carousel_items',
+        'related_links',
+        'quotations',
+        'documents',
+        'images',
+    ]
+
     # StandardPages with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the homepage packery separately.
     # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
     STUDENT_STORY_TAG = 'student-story'
@@ -3054,6 +3175,14 @@ class StaffPageRole(Orderable):
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.StaffPageRole', 'email'))
 
+    api_fields = [
+        'title',
+        'school',
+        'programme',
+        'area',
+        'email',
+    ]
+
     panels = [
         FieldPanel('title'),
         FieldPanel('school'),
@@ -3068,6 +3197,13 @@ class StaffPageCollaborations(Orderable):
     link = models.URLField(help_text=help_text('rca.StaffPageCollaborations', 'link'))
     text = RichTextField(help_text=help_text('rca.StaffPageCollaborations', 'text'))
     date = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPageCollaborations', 'date'))
+
+    api_fields = [
+        'title',
+        'link',
+        'text',
+        'date',
+    ]
 
     panels = [
         FieldPanel('title'),
@@ -3085,6 +3221,15 @@ class StaffPagePublicationExhibition(Orderable):
     link = models.URLField(blank=True, help_text=help_text('rca.StaffPagePublicationExhibition', 'link'))
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPagePublicationExhibition', 'image'))
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False) # for import
+
+    api_fields = [
+        'title',
+        'typeof',
+        'location_year',
+        'authors_collaborators',
+        'link',
+        'image',
+    ]
 
     panels = [
         FieldPanel('title'),
@@ -3128,6 +3273,32 @@ class StaffPage(Page, SocialFields):
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
+    ]
+
+    api_fields = [
+        'area',
+        'profile_image',
+        'staff_type',
+        'staff_location',
+        'twitter_feed',
+        'intro',
+        'biography',
+        'practice',
+        'publications_exhibtions_and_other_outcomes_placeholder',
+        'external_collaborations_placeholder',
+        'current_recent_research',
+        'awards_and_grants',
+        'listing_intro',
+        'research_interests',
+        'title_prefix',
+        'first_name',
+        'last_name',
+        'supervised_student_other',
+        'feed_image',
+        'carousel_items',
+        'roles',
+        'collaborations',
+        'publications_exhibitions',
     ]
 
     search_name = 'Staff'
@@ -3574,54 +3745,63 @@ class NewStudentPagePreviousDegree(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='previous_degrees')
     degree = models.CharField(max_length=255, help_text=help_text('rca.NewStudentPagePreviousDegree', 'degree', default="Please include the degree level, subject, institution name and year of graduation, separated by commas"))
 
+    api_fields = ['degree']
     panels = [FieldPanel('degree')]
 
 class NewStudentPageExhibition(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='exhibitions')
     exhibition = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageExhibition', 'exhibition', default="Please include exhibition title, gallery, city and year, separated by commas"))
 
+    api_fields = ['exhibition']
     panels = [FieldPanel('exhibition')]
 
 class NewStudentPageExperience(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='experiences')
     experience = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageExperience', 'experience', default="Please include job title, company name, city and year(s), separated by commas"))
 
+    api_fields = ['experience']
     panels = [FieldPanel('experience')]
 
 class NewStudentPageContactsEmail(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='emails')
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageContactsEmail', 'email', default="Students can use personal email as well as firstname.surname@network.rca.ac.uk"))
 
+    api_fields = ['email']
     panels = [FieldPanel('email')]
 
 class NewStudentPageContactsPhone(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phones')
     phone = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageContactsPhone', 'phone', default="UK mobile e.g. 07XXX XXXXXX or overseas landline, e.g. +33 (1) XXXXXXX"))
 
+    api_fields = ['phone']
     panels = [FieldPanel('phone')]
 
 class NewStudentPageContactsWebsite(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='websites')
     website = models.URLField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageContactsWebsite', 'website'))
 
+    api_fields = ['website']
     panels = [FieldPanel('website')]
 
 class NewStudentPagePublication(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='publications')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPagePublication', 'name', default="Please include author (if not you), title of article, title of publication, issue number, year, pages, separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPageConference(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='conferences')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageConference', 'name', default="Please include paper, title of conference, institution, date, separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPageAward(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='awards')
     award = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageAward', 'award', default="Please include prize, award title and year, separated by commas"))
 
+    api_fields = ['award']
     panels = [FieldPanel('award')]
 
 
@@ -3635,12 +3815,14 @@ class NewStudentPageShowCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_collaborators')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageShowCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPageShowSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='show_sponsors')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageShowSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 
@@ -3654,12 +3836,14 @@ class NewStudentPageMPhilCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_collaborators')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageMPhilCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPageMPhilSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='mphil_sponsors')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPageMPhilSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPageMPhilSupervisor(Orderable):
@@ -3679,6 +3863,8 @@ class NewStudentPageMPhilSupervisor(Orderable):
         if self.supervisor:
             return self.supervisor.url
 
+    api_fields = ['name', 'link']
+
     panels = [
         PageChooserPanel('supervisor'),
         FieldPanel('supervisor_other'),
@@ -3695,12 +3881,14 @@ class NewStudentPagePhDCollaborator(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_collaborators')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPagePhDCollaborator', 'name', default="Please include collaborator's name and programme (if RCA), separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPagePhDSponsor(Orderable):
     page = ParentalKey('rca.NewStudentPage', related_name='phd_sponsors')
     name = models.CharField(max_length=255, blank=True, help_text=help_text('rca.NewStudentPagePhDSponsor', 'name', default="Please list companies and individuals that have provided financial or in kind sponsorship for your final project, separated by commas"))
 
+    api_fields = ['name']
     panels = [FieldPanel('name')]
 
 class NewStudentPagePhDSupervisor(Orderable):
@@ -3719,6 +3907,8 @@ class NewStudentPagePhDSupervisor(Orderable):
     def link(self):
         if self.supervisor:
             return self.supervisor.url
+
+    api_fields = ['name', 'link']
 
     panels = [
         PageChooserPanel('supervisor'),
@@ -3813,6 +4003,70 @@ class NewStudentPage(Page, SocialFields):
         index.FilterField('phd_graduation_year'),
         index.FilterField('phd_status'),
         index.FilterField('phd_degree_type'),
+    ]
+
+    api_fields = [
+        'first_name',
+        'last_name',
+        'profile_image',
+        'statement',
+        'twitter_handle',
+        'funding',
+        'feed_image',
+        'innovation_rca_fellow',
+        'postcard_image',
+        'previous_degrees',
+        'exhibitions',
+        'experiences',
+        'emails',
+        'phones',
+        'websites',
+        'publications',
+        'conferences',
+        'awards',
+
+        # MA details
+        'ma_programme',
+        'ma_graduation_year',
+        'ma_specialism',
+        'ma_in_show',
+        'show_work_title',
+        'show_work_type',
+        'show_work_location',
+        'show_work_description',
+        'show_carousel_items',
+        'show_collaborators',
+        'show_sponsors',
+
+        # MPhil details
+        'mphil_programme',
+        'mphil_start_year',
+        'mphil_graduation_year',
+        'mphil_work_location',
+        'mphil_dissertation_title',
+        'mphil_statement',
+        'mphil_in_show',
+        'mphil_status',
+        'mphil_degree_type',
+        'mphil_carousel_items',
+        'mphil_collaborators',
+        'mphil_sponsors',
+        'mphil_supervisors',
+
+        # PhD details
+        'phd_programme',
+        'phd_start_year',
+        'phd_graduation_year',
+        'phd_work_location',
+        'phd_dissertation_title',
+        'phd_statement',
+        'phd_in_show',
+        'phd_status',
+        'phd_degree_type',
+        'phd_carousel_items',
+        'phd_collaborators',
+        'phd_sponsors',
+        'phd_supervisors',
     ]
 
     @property
@@ -4415,6 +4669,19 @@ class RcaBlogPage(Page, SocialFields):
                 index.SearchField('display_name'),
             ]),
         ]),
+    ]
+
+    api_fields = [
+        'body',
+        'author',
+        'date',
+        'programme',
+        'school',
+        'twitter_feed',
+        'feed_image',
+        'tags',
+        'carousel_items',
+        'areas',
     ]
 
     search_name = 'RCA Blog'
