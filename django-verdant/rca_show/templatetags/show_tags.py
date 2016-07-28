@@ -41,7 +41,10 @@ def get_school_logo_2016(school):
     This is to make the logo selection easier for the dynamic logo that should appear for each school. If no
     school is selected, the regular show-wide logo is returned.
     """
-    return SCHOOL_LOGOS_2016.get(school.slug, 'rca_show/images/logo-2016.svg')
+    if not school or school not in SCHOOL_LOGOS_2016:
+        return 'rca_show/images/logo-2016.svg'
+
+    return SCHOOL_LOGOS_2016[school.slug]
 
 @register.assignment_tag
 def get_schools(show_index):
