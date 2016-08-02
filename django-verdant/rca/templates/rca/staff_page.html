@@ -22,7 +22,7 @@
                     <li class="col">{% comment %} note closed within forloop {% endcomment %}
                         {% if self.staff_type != "technical" %}
                             <h3 class="a2">Area</h3>
-                            <p class="h7">{{ self.get_school_display }}</p>
+                            <p class="h7">{{ self.area.display_name }}</p>
                         {% endif %}
                         {% if self.staff_type == "technical" %}
                             <h3 class="a2">Location</h3>
@@ -38,7 +38,7 @@
                                     {% endif %}
                                     <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
                                     <ul>
-                                        <li>{{ role.get_programme_display }}</li>
+                                        <li>{{ role.programme_new.display_name }}</li>
                                         <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
                                     </ul>
                                 </li> {% comment %} close col {% endcomment %}

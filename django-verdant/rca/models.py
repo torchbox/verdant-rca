@@ -46,7 +46,7 @@ import stripe
 
 import hashlib
 
-from taxonomy.models import School, Programme
+from taxonomy.models import Area, School, Programme
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
@@ -3143,9 +3143,9 @@ class StaffPageCarouselItem(Orderable, CarouselItemFields):
 class StaffPageRole(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='roles')
     title = models.CharField(max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
-    school = models.CharField(max_length=255, blank=True, choices=SCHOOL_CHOICES, help_text=help_text('rca.StaffPageRole', 'school'))
-    programme = models.CharField(max_length=255, blank=True, choices=PROGRAMME_CHOICES, help_text=help_text('rca.StaffPageRole', 'programme'))
-    area = models.CharField(max_length=255, blank=True, choices=STAFF_AREA_CHOICES, help_text=help_text('rca.StaffPageRole', 'area'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.StaffPageRole', 'email'))
 
     panels = [
@@ -3191,7 +3191,7 @@ class StaffPagePublicationExhibition(Orderable):
 
 class StaffPage(Page, SocialFields):
     # N.B. the `school` field has been relabeled as 'Area', and it's using AREA_CHOICES, which includes all the schools too.  See #727
-    school = models.CharField(verbose_name='Area', max_length=255, blank=True, choices=AREA_CHOICES, help_text=help_text('rca.StaffPage', 'school'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
     staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location'))
@@ -3216,7 +3216,10 @@ class StaffPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('area', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
@@ -3224,9 +3227,6 @@ class StaffPage(Page, SocialFields):
 
     search_name = 'Staff'
 
-    @property
-    def programmes(self):
-        return list({role.programme for role in StaffPageRole.objects.filter(page=self) if role.programme})
 
 StaffPage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -3235,7 +3235,7 @@ StaffPage.content_panels = [
         FieldPanel('first_name'),
         FieldPanel('last_name'),
     ], 'Full name'),
-    FieldPanel('school'),
+    FieldPanel('area'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
     FieldPanel('staff_location'),
@@ -3298,27 +3298,65 @@ class StaffIndex(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         staff_type = request.GET.get('staff_type')
-        school = request.GET.get('school')
-        programme = request.GET.get('programme')
-        area = request.GET.get('area')
+        school_slug = request.GET.get('school')
+        programme_slug = request.GET.get('programme')
+        area_slug = request.GET.get('area')
 
-        staff_pages = StaffPage.objects.filter(live=True)
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=StaffPageRole.objects.values_list('programme', flat=True)
+        )
 
-        # Run filters
-        staff_pages, filters = run_filters(staff_pages, [
-            ('school', 'roles__school', school),
-            ('programme', 'roles__programme', programme),
-            ('staff_type', 'staff_type', staff_type),
-            ('area', 'roles__area', area),
-        ])
+        programme = programme_options.filter(slug=programme_slug).first()
 
-        # Remove duplicates (#615)
-        staff_pages = staff_pages.distinct()
+        # School
+        school_options = School.objects.filter(
+            id__in=StaffPageRole.objects.values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=StaffPageRole.objects.values_list('programme__school', flat=True)
+        )
 
-        staff_pages = staff_pages.order_by('-random_order')
+        school = school_options.filter(slug=school_slug).first()
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
 
-        # research_items.order_by('-year')
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
 
+        # Area
+        area_options = Area.objects.filter(
+            id__in=StaffPageRole.objects.values_list('area', flat=True)
+        ) | Area.objects.filter(
+            id__in=StaffPage.objects.values_list('area', flat=True)
+        )
+
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get staff pages
+        staff_pages = StaffPage.objects.live()
+
+        if programme:
+            staff_pages = staff_pages.filter(roles__programme=programme)
+        elif school:
+            staff_pages = staff_pages.filter(
+                models.Q(roles__school=school) |
+                models.Q(roles__programme__school=school)
+            )
+
+        if area:
+            staff_pages = staff_pages.filter(
+                models.Q(area=area) |
+                models.Q(roles__area=area)
+            )
+
+        if staff_type:
+            staff_pages = staff_pages.filter(staff_type=staff_type)
+
+        staff_pages = staff_pages.distinct().order_by('-random_order')
+
+        # Paginate
         page = request.GET.get('page')
         paginator = Paginator(staff_pages, 17)
         try:
@@ -3329,6 +3367,24 @@ class StaffIndex(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             staff_pages = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "staff_type",
+            "current_value": staff_type,
+            "options": [""] + list(dict(STAFF_TYPES_CHOICES).keys()),
+        }, {
+            "name": "area",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/staff_pages_listing.html", {

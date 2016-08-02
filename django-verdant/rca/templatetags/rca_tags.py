@@ -113,16 +113,6 @@ def staff_by_programme(context, programme):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/related_staff.html', takes_context=True)
-def related_staff(context, programme="", school=""):
-    if school:
-        staff = StaffPage.objects.filter(live=True, roles__school=school)
-    if programme:
-        staff = StaffPage.objects.filter(live=True, roles__programme__in=get_programme_synonyms(programme))
-    return {
-        'staff': staff,
-        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
-    }
 
 @register.inclusion_tag('rca/tags/alumni_by_programme.html', takes_context=True)
 def alumni_by_programme(context, programme):
@@ -256,13 +246,14 @@ def staff_random(context, exclude=None, programmes=None, count=4):
 
 @register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
 def staff_related(context, staff_page, count=4):
-    staff = StaffPage.objects.filter(live=True).exclude(id=staff_page.id).order_by('?')
-    # import pdb; pdb.set_trace()
-    if staff_page.programmes:
-        programmes = sum([get_programme_synonyms(programme) for programme in staff_page.programmes], [])
-        staff = staff.filter(roles__programme__in=programmes)
-    elif staff_page.school:
-        staff = staff.filter(school=staff_page.school)
+    staff = StaffPage.objects.live().exclude(id=staff_page.id).order_by('?')
+    programme_ids = list(staff_page.roles.filter(programme__isnull=False).values_list('programme_id', flat=True))
+
+    if programme_ids:
+        staff = staff.filter(roles__programme_id__in=programme_ids)
+    elif staff_page.area:
+        staff = staff.filter(area=staff_page.area)
+
     return {
         'staff': staff[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
