@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags show_tags static %}
 
 <li class="item {% if gallery_image.is_landscape %}landscape{% else %}portrait{% endif %}" >
-    <a href="{% show_subpage_url self.show_index 'student' school=student.school programme=student.programme slug=student.slug %}">
+    <a href="{% show_subpage_url self.show_index 'student' school_slug=student.school.slug programme_slug=student.programme.slug slug=student.slug %}">
         <div class="gallery-image">
             {% if gallery_image %}
                 {% if image_format == "fill" %}

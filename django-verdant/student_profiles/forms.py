@@ -10,12 +10,12 @@ from django.template.defaultfilters import filesizeformat
 
 from PIL import Image
 
+from taxonomy.models import Programme
 from rca.help_text import help_text
 from rca.models import NewStudentPage, NewStudentPageShowCarouselItem
 from rca.models import NewStudentPageMPhilCollaborator, NewStudentPageMPhilSponsor, NewStudentPageMPhilSupervisor
 from rca.models import NewStudentPagePhDCollaborator, NewStudentPagePhDSponsor, NewStudentPagePhDSupervisor
 from rca.models import RcaImage, StaffPage
-from rca.models import SCHOOL_PROGRAMME_MAP, ALL_PROGRAMMES
 
 ################################################################################
 ## internal classes and functions
@@ -448,30 +448,6 @@ class PostcardUploadForm(forms.ModelForm):
 
 
 ################################################################################
-## custom school and programme choices for 2015
-
-SCHOOL_CHOICES = (
-    ('', '---------'),
-    ('schoolofarchitecture', 'School of Architecture'),
-    ('schoolofcommunication', 'School of Communication'),
-    ('schoolofdesign', 'School of Design'),
-    ('schooloffineart', 'School of Fine Art'),
-    ('schoolofhumanities', 'School of Humanities'),
-    ('schoolofmaterial', 'School of Material'),
-)
-
-PROGRAMME_CHOICES_2015 = (('', '---------'), ) + tuple(sorted([
-    (
-        2015, tuple([
-                    (programme, dict(ALL_PROGRAMMES)[programme])
-                    for programme
-                    in sorted(set(sum(SCHOOL_PROGRAMME_MAP['2014'].values(), [])))
-                ])
-    )
-], reverse=True))
-
-
-################################################################################
 ## MA details
 
 class MADetailsForm(forms.ModelForm):
@@ -489,15 +465,9 @@ class MADetailsForm(forms.ModelForm):
         help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'),
     )
 
-    ma_school = forms.ChoiceField(
-        label="School", help_text=help_text('rca.NewStudentPage', 'ma_school'),
-        choices=SCHOOL_CHOICES,
-        required=True,
-    )
-
-    ma_programme = forms.ChoiceField(
+    ma_programme = forms.ModelChoiceField(
         label="Programme",
-        choices=PROGRAMME_CHOICES_2015,
+        queryset=Programme.objects.filter(disabled=False),
         required=True,
     )
 
@@ -511,7 +481,6 @@ class MADetailsForm(forms.ModelForm):
         model = NewStudentPage
         fields = [
             'ma_in_show',
-            'ma_school',
             'ma_programme',
             'ma_graduation_year',
             'ma_specialism',
@@ -626,16 +595,10 @@ MASponsorFormset = make_formset(MASponsorForm, 'Sponsors', help_text('rca.NewStu
 # MPhil and PhD forms
 class MPhilForm(forms.ModelForm):
 
-    mphil_school = forms.ChoiceField(
-        label="School", help_text=help_text('rca.NewStudentPage', 'mphil_school'),
-        choices=SCHOOL_CHOICES,
-        required=False,
-    )
-
-    mphil_programme = forms.ChoiceField(
-        label="Programme", help_text=help_text('rca.NewStudentPage', 'mphil_programme'),
-        choices=PROGRAMME_CHOICES_2015,
-        required=False,
+    mphil_programme = forms.ModelChoiceField(
+        label="Programme",
+        queryset=Programme.objects.filter(disabled=False),
+        required=True,
     )
 
     mphil_start_year = forms.IntegerField(
@@ -667,7 +630,7 @@ class MPhilForm(forms.ModelForm):
         model = NewStudentPage
         fields = [
             'mphil_in_show',
-            'mphil_school', 'mphil_programme',
+            'mphil_programme',
             'mphil_start_year',
             'mphil_graduation_year',
             'mphil_status',
@@ -731,16 +694,10 @@ MPhilSupervisorFormset = make_formset(MPhilSupervisorForm, 'Supervisors')
 # and the same once again with PhD instead of MPhil
 class PhDForm(forms.ModelForm):
 
-    phd_school = forms.ChoiceField(
-        label="School", help_text=help_text('rca.NewStudentPage', 'phd_school'),
-        choices=SCHOOL_CHOICES,
-        required=False,
-    )
-
-    phd_programme = forms.ChoiceField(
+    phd_programme = forms.ModelChoiceField(
         label="Programme", help_text=help_text('rca.NewStudentPage', 'phd_programme'),
-        choices=PROGRAMME_CHOICES_2015,
-        required=False,
+        queryset=Programme.objects.filter(disabled=False),
+        required=True,
     )
 
     phd_start_year = forms.IntegerField(
@@ -771,7 +728,7 @@ class PhDForm(forms.ModelForm):
         model = NewStudentPage
         fields = [
             'phd_in_show',
-            'phd_school', 'phd_programme',
+            'phd_programme',
             'phd_start_year', 'phd_graduation_year',
             'phd_status',
             'phd_degree_type',

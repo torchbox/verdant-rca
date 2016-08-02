@@ -1,20 +1,23 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.conf import settings
 from django.db import models
 from django.db.models.functions import Concat
 from django.http import Http404
-from django.shortcuts import render, redirect
-from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import RegexURLResolver, Resolver404
 from django.conf.urls import url
+
 from modelcluster.fields import ParentalKey
+
 from wagtail.wagtailcore.models import Page, Orderable, Site
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
-from rca.models import NewStudentPage, SocialFields, CarouselItemFields, SCHOOL_CHOICES, PROGRAMME_CHOICES, SCHOOL_PROGRAMME_MAP, CAMPUS_CHOICES
-from rca import utils as rca_utils
+from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
+
+from taxonomy.models import School, Programme
+
+from rca.models import NewStudentPage, SocialFields, CarouselItemFields, CAMPUS_CHOICES, NewStudentPageQuerySet
 
 
 class SuperPage(Page):
@@ -77,7 +80,7 @@ class SuperPage(Page):
         abstract = True
 
 
-class PageWithYearTemplate():
+class PageWithYearTemplate(object):
     """
     A page mixin that tries to use the "current year" template instead of the base template. Simply appends
     '_{year}' to the end of the filename, eg. "show_index.html" becomes "show_index_2016.html".
@@ -102,6 +105,7 @@ class PageWithYearTemplate():
 class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
 
+
 class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
     poster_image = models.ForeignKey(
@@ -117,35 +121,35 @@ class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-ShowStreamPage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    InlinePanel('carousel_items', label="Carousel content"),
-    FieldPanel('body'),
-    ImageChooserPanel('poster_image'),
-]
+    content_panels = Page.content_panels + [
+        InlinePanel('carousel_items', label="Carousel content"),
+        FieldPanel('body'),
+        ImageChooserPanel('poster_image'),
+    ]
 
-ShowStreamPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], "Common page configuration"),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], "Common page configuration"),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        FieldPanel('search_description'),
-    ], "Cross-page behaviour"),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+        ], "Cross-page behaviour"),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], "Social networks"),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], "Social networks"),
+    ]
 
 
 # Standard page for contacts etc
 
 class ShowStandardPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStandardPage', related_name='carousel_items')
+
 
 class ShowStandardPageContent(Orderable):
     page = ParentalKey('rca_show.ShowStandardPage', related_name='content_block')
@@ -156,6 +160,7 @@ class ShowStandardPageContent(Orderable):
         FieldPanel('body'),
         FieldPanel('map_coords')
     ]
+
 
 class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
     body = RichTextField(blank=True)
@@ -169,32 +174,33 @@ class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-ShowStandardPage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    InlinePanel('carousel_items', label="Carousel content"),
-    FieldPanel('body'),
-    FieldPanel('map_coords'),
-    InlinePanel('content_block', label="Content block"),
-]
+    content_panels = Page.content_panels + [
+        FieldPanel('title', classname="full title"),
+        InlinePanel('carousel_items', label="Carousel content"),
+        FieldPanel('body'),
+        FieldPanel('map_coords'),
+        InlinePanel('content_block', label="Content block"),
+    ]
 
-ShowStandardPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], "Common page configuration"),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], "Common page configuration"),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        FieldPanel('search_description'),
-        FieldPanel('listing_intro'),
-        ImageChooserPanel('feed_image'),
-    ], "Cross-page behaviour"),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+            FieldPanel('listing_intro'),
+            ImageChooserPanel('feed_image'),
+        ], "Cross-page behaviour"),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], "Social networks"),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], "Social networks"),
+    ]
+
 
 class ShowExhibitionMapIndexContent(Orderable):
     page = ParentalKey('rca_show.ShowExhibitionMapIndex', related_name='content_block')
@@ -206,6 +212,7 @@ class ShowExhibitionMapIndexContent(Orderable):
         FieldPanel('map_coords')
     ]
 
+
 class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
     @property
     def show_index(self):
@@ -213,27 +220,26 @@ class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-ShowExhibitionMapIndex.content_panels = [
-    FieldPanel('title', classname="full title"),
-    InlinePanel('content_block', label="Content block"),
-]
+    content_panels = Page.content_panels + [
+        InlinePanel('content_block', label="Content block"),
+    ]
 
-ShowExhibitionMapIndex.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], "Common page configuration"),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], "Common page configuration"),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        FieldPanel('search_description'),
-    ], "Cross-page behaviour"),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+        ], "Cross-page behaviour"),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], "Social networks"),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], "Social networks"),
+    ]
 
 
 class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
@@ -246,46 +252,55 @@ class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
             self._show_index = self.get_ancestors().type(ShowIndexPage).last().specific
         return self._show_index
 
-ShowExhibitionMapPage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    FieldPanel('body'),
-    FieldPanel('campus'),
-]
+    content_panels = Page.content_panels + [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('body'),
+        FieldPanel('campus'),
+    ]
 
-ShowExhibitionMapPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], "Common page configuration"),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], "Common page configuration"),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        FieldPanel('search_description'),
-    ], "Cross-page behaviour"),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+        ], "Cross-page behaviour"),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], "Social networks"),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], "Social networks"),
+    ]
+
 
 # Main show index page (which performs school, programme and student layouts)
 
 class ShowIndexPageProgramme(Orderable):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", on_delete=models.CASCADE, related_name='+')
 
-    panels = [FieldPanel('programme')]
+    panels = [
+        SnippetChooserPanel('programme'),
+    ]
+
 
 class ShowIndexProgrammeIntro(Orderable):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='programme_intros')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES)
+    programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", on_delete=models.CASCADE, related_name='+')
     intro = RichTextField(blank=True)
 
-    panels = [FieldPanel('programme'), FieldPanel('intro')]
+    panels = [
+        SnippetChooserPanel('programme'),
+        FieldPanel('intro'),
+    ]
+
 
 class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowIndexPage', related_name='carousel_items')
+
 
 class ShowIndexPage(SuperPage, SocialFields):
     body = RichTextField(blank=True, help_text="Optional body text. Useful for holding pages prior to Show launch.")
@@ -323,10 +338,6 @@ class ShowIndexPage(SuperPage, SocialFields):
         return menu_items
 
     @property
-    def school(self):
-        return rca_utils.get_school_for_programme(self.programme)
-
-    @property
     def local_url(self):
         for (id, root_path, root_url) in Site.get_site_root_paths():
             if self.url_path.startswith(root_path):
@@ -335,7 +346,7 @@ class ShowIndexPage(SuperPage, SocialFields):
     def get_programmes(self):
         # This method gets hit quite alot (sometimes over 100 times per request)
         if not hasattr(self, '_programmes_cache'):
-            self._programmes_cache = self.programmes.all().values_list('programme', flat=True)
+            self._programmes_cache = Programme.objects.filter(id__in=self.programmes.all().values_list('programme_id', flat=True))
 
         return self._programmes_cache
 
@@ -343,27 +354,45 @@ class ShowIndexPage(SuperPage, SocialFields):
     def is_programme_page(self):
         return bool(self.get_programmes())
 
-    def get_students(self, school=None, programme=None, orderby="first_name"):
-        q = models.Q(in_show=True)
+    def get_students(self, school=None, programme=None):
+        students = NewStudentPageQuerySet(NewStudentPage).live()
+
+        params = {
+            'in_show': True,
+        }
 
         if self.year:
-            q &= models.Q(graduation_year=self.year)
-
-        if school:
-            q &= models.Q(school=school)
+            params['current'] = True
+            params['current_year'] = self.year
 
         if programme:
-            q &= models.Q(programme=programme)
+            params['programme'] = programme
+
+            ma_students = students.ma(**params)
+            mphil_students = students.mphil(**params)
+            phd_students = students.phd(**params)
         else:
+            if school:
+                params['school'] = school
+
             programmes = self.get_programmes()
             if programmes:
-                q &= models.Q(programme__in=programmes)
+                ma_students = students.none()
+                mphil_students = students.none()
+                phd_students = students.none()
 
-        # If this is the 2015 visual communication show, make that the first carousel item is an embed
-        if self.year == '2015' and 'visualcommunication' in self.get_programmes():
-            q &= models.Q(carousel_items__sort_order=0) & models.Q(carousel_items__embedly_url__startswith='http')
+                for programme in programmes:
+                    params['programme'] = programme
 
-        return rca_utils.get_students(degree_q=q).order_by(Concat('first_name', 'last_name')).distinct()
+                    ma_students |= students.ma(**params)
+                    mphil_students |= students.mphil(**params)
+                    phd_students |= students.phd(**params)
+            else:
+                ma_students = students.ma(**params)
+                mphil_students = students.mphil(**params)
+                phd_students = students.phd(**params)
+
+        return (ma_students | mphil_students | phd_students).order_by(Concat('first_name', 'last_name')).distinct()
 
     def get_rand_students(self, school=None, programme=None):
         return self.get_students(school, programme).order_by('random_order')[:20]
@@ -379,7 +408,7 @@ class ShowIndexPage(SuperPage, SocialFields):
 
     def get_schools(self):
         schools = [
-            school for school in rca_utils.get_schools(year=self.year)
+            school for school in School.objects.all()
             if self.check_school_has_students(school)
         ]
         school_sort_keys = {
@@ -390,15 +419,14 @@ class ShowIndexPage(SuperPage, SocialFields):
             'schoolofdesign': 4,
             'schoolofarchitecture': 5,
         }
-        schools.sort(key=lambda s: school_sort_keys.get(s))
+        schools.sort(key=lambda s: school_sort_keys.get(s.slug))
         return schools
 
     def get_school_programmes(self, school):
         programmes = [
-            programme for programme in rca_utils.get_programmes(school, year=self.year)
+            programme for programme in school.programmes.all()
             if self.check_programme_has_students(programme)
         ]
-        programmes.sort()
         return programmes
 
     def get_student_url(self, student):
@@ -408,23 +436,6 @@ class ShowIndexPage(SuperPage, SocialFields):
             slug=student.slug,
         )
 
-    def contains_school(self, school):
-        if self.is_programme_page:
-            return False
-
-        if len(rca_utils.get_programmes(school, year=self.year)) == 0:
-            return False
-
-        return self.check_school_has_students(school)
-
-    def contains_programme(self, programme):
-        programmes = self.get_programmes() or rca_utils.get_programmes(year=self.year)
-
-        if not programme in programmes:
-            return False
-
-        return self.check_programme_has_students(programme)
-
     # Views
     landing_template_t = 'rca_show/landing{}.html'
     school_index_template_t = 'rca_show/school_index{}.html'
@@ -432,7 +443,6 @@ class ShowIndexPage(SuperPage, SocialFields):
     programme_template_t = 'rca_show/programme{}.html'
     student_template_t = 'rca_show/student{}.html'
     programme_template_module_t = 'rca_show/includes/modules/gallery{}.html'
-
 
     def serve_landing(self, request):
         # Render response
@@ -454,11 +464,8 @@ class ShowIndexPage(SuperPage, SocialFields):
             'self': self,
         })
 
-    def serve_school(self, request, school):
-        # Check that the school exists
-        if not self.contains_school(school):
-            raise Http404("School doesn't exist")
-
+    def serve_school(self, request, school_slug):
+        school = get_object_or_404(School, slug=school_slug)
         # Render response
         templates = (
             self.school_template_t.format("_" + self.year),
@@ -469,10 +476,8 @@ class ShowIndexPage(SuperPage, SocialFields):
             'school': school,
         })
 
-    def serve_programme(self, request, programme, school=None):
-        # Check that the programme exists
-        if not self.contains_programme(programme):
-            raise Http404("Programme doesn't exist")
+    def serve_programme(self, request, programme_slug, school_slug=None):
+        programme = get_object_or_404(Programme, slug=programme_slug)
 
         # Get programme intro
         try:
@@ -507,16 +512,14 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Render response
         return render(request, templates, {
             'self': self,
-            'school': rca_utils.get_school_for_programme(programme, year=self.year),
+            'school': programme.school,
             'programme': programme,
             'intro': intro,
             'students': students
         })
 
-    def serve_student(self, request, programme, slug, school=None):
-        # Check that the programme exists
-        if not self.contains_programme(programme):
-            raise Http404("Programme doesn't exist")
+    def serve_student(self, request, school_slug, programme_slug, slug):
+        programme = get_object_or_404(Programme, slug=programme_slug)
 
         # Get the student
         try:
@@ -538,7 +541,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         )
         return render(request, templates, {
             'self': self,
-            'school': rca_utils.get_school_for_programme(student.programme, year=self.year),
+            'school': student.programme.school,
             'programme': student.programme,
             'student': student,
         })
@@ -553,9 +556,9 @@ class ShowIndexPage(SuperPage, SocialFields):
             return [
                 url(r'^$', self.serve_landing, name='landing'),
                 url(r'^schools/$', self.serve_school_index, name='school_index'),
-                url(r'^(?P<school>[\w\-]+)/$', self.serve_school, name='school'),
-                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/$', self.serve_programme, name='programme'),
-                url(r'^(?P<school>[\w\-]+)/(?P<programme>[\w\-]+)/(?P<slug>[\w\-]+)/$', self.serve_student, name='student'),
+                url(r'^(?P<school_slug>[\w\-]+)/$', self.serve_school, name='school'),
+                url(r'^(?P<school_slug>[\w\-]+)/(?P<programme_slug>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<school_slug>[\w\-]+)/(?P<programme_slug>[\w\-]+)/(?P<slug>[\w\-]+)/$', self.serve_student, name='student'),
             ]
         elif programme_count == 1:
             programme = self.programmes.all()[0].programme
@@ -567,36 +570,35 @@ class ShowIndexPage(SuperPage, SocialFields):
         else:
             return [
                 url(r'^$', self.serve_landing, name='landing'),
-                url(r'^(?P<programme>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
-                url(r'^(?P<programme>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
+                url(r'^(?P<programme_slug>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
+                url(r'^(?P<programme_slug>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
             ]
 
-ShowIndexPage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    FieldPanel('year'),
-    FieldPanel('exhibition_date'),
-    FieldPanel('body'),
-    InlinePanel('carousel_items', label="Carousel content"),
-    FieldPanel('overlay_intro'),
-    InlinePanel('programme_intros', label="Programme intros"),
-    InlinePanel('programmes', label="Programmes"),
-    PageChooserPanel('parent_show_index'),
-    FieldPanel('password_prompt'),
-]
+    content_panels = Page.content_panels + [
+        FieldPanel('year'),
+        FieldPanel('exhibition_date'),
+        FieldPanel('body'),
+        InlinePanel('carousel_items', label="Carousel content"),
+        FieldPanel('overlay_intro'),
+        InlinePanel('programme_intros', label="Programme intros"),
+        InlinePanel('programmes', label="Programmes"),
+        PageChooserPanel('parent_show_index'),
+        FieldPanel('password_prompt'),
+    ]
 
-ShowIndexPage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], "Common page configuration"),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], "Common page configuration"),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        FieldPanel('search_description'),
-    ], "Cross-page behaviour"),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            FieldPanel('search_description'),
+        ], "Cross-page behaviour"),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], "Social networks"),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], "Social networks"),
+    ]

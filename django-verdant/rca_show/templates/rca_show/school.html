@@ -15,13 +15,13 @@
     <div class="shownav programme-list">
         <ul>
             {% for programme in programmes %}
-                <li><a href="{% show_subpage_url self.show_index 'programme' school=school programme=programme %}">{% get_programme_display programme %}</a></li>
+                <li><a href="{% show_subpage_url self.show_index 'programme' school_slug=school.slug programme_slug=programme.slug %}">{% get_programme_display programme %}</a></li>
             {% endfor %}
         </ul>
     </div>
 
     {% include "rca_show/includes/modules/gallery.html" with students=rand_students %}
-   
+
 {% endblock %}
 
 {% block sidebar %}

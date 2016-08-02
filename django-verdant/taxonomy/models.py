@@ -40,6 +40,9 @@ class School(ClusterableModel):
     ]
 
     def get_display_name_for_year(self, year):
+        if not year:
+            return self.display_name
+
         hdn = self.historical_display_names.filter(end_year__gte=year).order_by('end_year').first()
         if hdn:
             return hdn.display_name
@@ -94,6 +97,9 @@ class Programme(ClusterableModel):
     ]
 
     def get_display_name_for_year(self, year):
+        if not year:
+            return self.display_name
+
         hdn = self.historical_display_names.filter(end_year__gte=year).order_by('end_year').first()
         if hdn:
             return hdn.display_name
