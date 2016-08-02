@@ -518,7 +518,7 @@ class ShowIndexPage(SuperPage, SocialFields):
             'students': students
         })
 
-    def serve_student(self, request, school_slug, programme_slug, slug):
+    def serve_student(self, request, programme_slug, slug, school_slug=None):
         programme = get_object_or_404(Programme, slug=programme_slug)
 
         # Get the student
@@ -564,14 +564,14 @@ class ShowIndexPage(SuperPage, SocialFields):
             programme = self.programmes.all()[0].programme
 
             return [
-                url(r'^$', self.serve_programme, dict(programme=programme, school=None), name='programme'),
-                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme=programme, school=None), name='student'),
+                url(r'^$', self.serve_programme, dict(programme_slug=programme.slug), name='programme'),
+                url(r'^(?P<slug>[\w\-]+)/$', self.serve_student, dict(programme_slug=programme.slug), name='student'),
             ]
         else:
             return [
                 url(r'^$', self.serve_landing, name='landing'),
-                url(r'^(?P<programme_slug>[\w\-]+)/$', self.serve_programme, dict(school=None), name='programme'),
-                url(r'^(?P<programme_slug>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, dict(school=None), name='student'),
+                url(r'^(?P<programme_slug>[\w\-]+)/$', self.serve_programme, name='programme'),
+                url(r'^(?P<programme_slug>[\w\-]+)/(?P<slug>.+)/$', self.serve_student, name='student'),
             ]
 
     content_panels = Page.content_panels + [
