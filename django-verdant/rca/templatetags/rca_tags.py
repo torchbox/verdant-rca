@@ -32,9 +32,11 @@ def upcoming_events(context, exclude=None, count=3, collapse_by_default=False):
     }
 
 @register.inclusion_tag('rca/tags/carousel_news.html', takes_context=True)
-def news_carousel(context, area="", programme="", school="", count=5):
+def news_carousel(context, area="", programme="", school="", count=5, area_slug=None):
     if area:
         news_items = NewsItem.objects.filter(live=True, areas__area=area)
+    elif area_slug:
+        news_items = NewsItem.objects.filter(live=True, areas__area__slug=area_slug)
     elif programme:
         news_items = NewsItem.objects.filter(live=True, related_programmes__programme__in=get_programme_synonyms(programme))
     elif school:
