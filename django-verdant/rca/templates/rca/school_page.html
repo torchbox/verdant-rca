@@ -81,7 +81,7 @@
     {% upcoming_events_related school=self.school.slug display_name=self.school.display_name %}
 
     <!-- news carousel -->
-    {% news_carousel school=self.school.slug %}
+    {% news_carousel school=self.school %}
 
     <!-- open days -->
     {% upcoming_events_related opendays=1 school=self.school.slug %}

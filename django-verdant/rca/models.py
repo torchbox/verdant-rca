@@ -4972,9 +4972,9 @@ class ResearchItem(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            areas=['research'],
-            programmes=get_programme_synonyms(self.programme) if self.programme else None,
-            schools=([self.school] if self.school else None),
+            areas=Area.objects.filter(slug='research'),
+            programmes=Programme.objects.filter(id=self.programme_id) if self.programme_id else None,
+            schools=School.objects.filter(id=self.school_id) if self.school_id else None,
             count=count,
         )
 
