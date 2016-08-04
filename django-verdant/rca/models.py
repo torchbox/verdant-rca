@@ -1069,7 +1069,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     def get_programme_display(self):
         programmes = Programme.objects.filter(
-            id__in=self.programmes.all().values_list('programme_id')
+            id__in=self.programmes.all().values_list('programme_id', flat=True)
         )
 
         return ", ".join([p.display_name for p in programmes])
