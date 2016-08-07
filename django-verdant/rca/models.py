@@ -2428,8 +2428,9 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.StandardPage', 'middle_column_body'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StandardPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
-    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
+    related_school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_school'))
+    related_programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_programme'))
+    related_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
@@ -2446,10 +2447,10 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     @property
     def search_name(self):
         if self.related_programme:
-            return self.get_related_programme_display()
+            return self.related_programme.display_name
 
         if self.related_school:
-            return self.get_related_school_display()
+            return self.related_school.display_name
 
         return None
 
@@ -2490,6 +2491,7 @@ StandardPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('related_school'),
         FieldPanel('related_programme'),
+        FieldPanel('related_area'),
     ], 'Related pages'),
     FieldPanel('tags'),
 ]
@@ -2599,10 +2601,10 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
     contact_address = models.TextField(blank=True, help_text=help_text('rca.StandardIndex', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.StandardIndex', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'contact_link_text'))
-    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'news_carousel_area'))
-    staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'staff_feed_source'))
+    news_carousel_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'news_carousel_area'))
+    staff_feed_source = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'staff_feed_source'))
     show_events_feed = models.BooleanField(default=False, help_text=help_text('rca.StandardIndex', 'show_events_feed'))
-    events_feed_area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'events_feed_area'))
+    events_feed_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'events_feed_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     hide_body = models.BooleanField(default=True, help_text=help_text('rca.StandardIndex', 'hide_body'))
 
