@@ -73,6 +73,8 @@ def migrate_standard_page_taxonomy_revisions(apps, schema_editor):
                 if content['related_school'] in ['helenhamlyn', 'innovationrca']:
                     # This is a new field which I created because there were a few standard pages that had areas in their school field
                     content['related_area'] = Area.objects.get(slug=content['related_school']).id
+
+                    content['related_school'] = None
                 else:
                     content['related_school'] = School.objects.get(slug=content['related_school']).id
 
