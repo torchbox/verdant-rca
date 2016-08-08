@@ -110,7 +110,7 @@ class Programme(ClusterableModel):
         return self.school.display_name + ': ' + self.display_name
 
     class Meta:
-        ordering = ['display_name']
+        ordering = ['school__display_name', 'display_name']
 
 
 class ProgrammeHistoricalDisplayName(models.Model):
