@@ -1662,19 +1662,19 @@ class EventItemScreen(models.Model):
 
 class EventItemRelatedSchool(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_schools')
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.EventItemRelatedSchool', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedSchool', 'school'))
 
     panels = [FieldPanel('school')]
 
 class EventItemRelatedProgramme(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_programmes')
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.EventItemRelatedProgramme', 'programme'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
 class EventItemRelatedArea(models.Model):
     page = ParentalKey('rca.EventItem', related_name='related_areas')
-    area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.EventItemRelatedArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='event_items', help_text=help_text('rca.EventItemRelatedArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -1962,27 +1962,64 @@ class EventIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
+        programme_slug = request.GET.get('programme')
+        school_slug = request.GET.get('school')
         location = request.GET.get('location')
         location_other = request.GET.get('location_other')
-        area = request.GET.get('area')
+        area_slug = request.GET.get('area')
         audience = request.GET.get('audience')
         period = request.GET.get('period')
 
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=EventItemRelatedProgramme.objects.values_list('programme', flat=True)
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
+
+        # School
+        school_options = School.objects.filter(
+            id__in=EventItemRelatedSchool.objects.values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=EventItemRelatedProgramme.objects.values_list('programme__school', flat=True)
+        )
+        school = school_options.filter(slug=school_slug).first()
+
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
+
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
+
+         # Area
+        area_options = Area.objects.filter(
+            id__in=EventItemRelatedArea.objects.values_list('area', flat=True)
+        )
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get events
         if period == 'past':
             events = self.past_events()
         else:
             events = self.future_events()
 
-        # Run filters
-        events, filters = run_filters(events, [
-            ('school', 'related_schools__school', school),
-            ('programme', 'related_programmes__programme', programme),
-            ('location', 'location', location),
-            ('area', 'related_areas__area', area),
-            ('audience', 'audience', audience),
-        ])
+        if programme:
+            events = events.filter(related_programmes__programme=programme)
+        elif school:
+            events = events.filter(
+                models.Q(related_schools__school=school) |
+                models.Q(related_programmes__programme__school=school)
+            )
+
+        if area:
+            events = events.filter(models.Q(related_areas__area=area))
+
+        if location:
+            events = events.filter(location=location)
+
+        if audience:
+            events = events.filter(audience=audience)
 
         events = events.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
         if period== 'past':
@@ -1992,6 +2029,7 @@ class EventIndex(Page, SocialFields):
 
         events = events.distinct()
 
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(events, 10)  # Show 10 events per page
         try:
@@ -2002,6 +2040,28 @@ class EventIndex(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             events = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "location",
+            "current_value": location,
+            "options": [""] + list(dict(EVENT_LOCATION_CHOICES).keys()),
+        }, {
+            "name": "area",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }, {
+            "name": "audience",
+            "current_value": audience,
+            "options": [""] + list(dict(EVENT_AUDIENCE_CHOICES).keys()),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/events_listing.html", {
@@ -2368,8 +2428,9 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.StandardPage', 'middle_column_body'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.StandardPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_school'))
-    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.StandardPage', 'related_programme'))
+    related_school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_school'))
+    related_programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_programme'))
+    related_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='standard_pages', help_text=help_text('rca.StandardPage', 'related_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
@@ -2386,10 +2447,10 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     @property
     def search_name(self):
         if self.related_programme:
-            return self.get_related_programme_display()
+            return self.related_programme.display_name
 
         if self.related_school:
-            return self.get_related_school_display()
+            return self.related_school.display_name
 
         return None
 
@@ -2430,6 +2491,7 @@ StandardPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('related_school'),
         FieldPanel('related_programme'),
+        FieldPanel('related_area'),
     ], 'Related pages'),
     FieldPanel('tags'),
 ]
@@ -2539,10 +2601,10 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
     contact_address = models.TextField(blank=True, help_text=help_text('rca.StandardIndex', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.StandardIndex', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StandardIndex', 'contact_link_text'))
-    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'news_carousel_area'))
-    staff_feed_source = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'staff_feed_source'))
+    news_carousel_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'news_carousel_area'))
+    staff_feed_source = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'staff_feed_source'))
     show_events_feed = models.BooleanField(default=False, help_text=help_text('rca.StandardIndex', 'show_events_feed'))
-    events_feed_area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.StandardIndex', 'events_feed_area'))
+    events_feed_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'events_feed_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardIndex', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     hide_body = models.BooleanField(default=True, help_text=help_text('rca.StandardIndex', 'hide_body'))
 
