@@ -1748,7 +1748,7 @@ class PastEventItemManager(models.Manager):
 class EventItem(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.EventItem', 'body'))
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES, help_text=help_text('rca.EventItem', 'audience'))
-    area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.EventItem', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'))
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES, help_text=help_text('rca.EventItem', 'location'))
     location_other = models.CharField("'Other' location", max_length=255, blank=True, help_text=help_text('rca.EventItem', 'location_other'))
     specific_directions = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'specific_directions', default="Brief, more specific location e.g Go to reception on 2nd floor"))
@@ -1765,11 +1765,6 @@ class EventItem(Page, SocialFields):
     contact_link = models.URLField(blank=True, help_text=help_text('rca.EventItem', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
-
-    # DELETED
-    external_link = models.URLField(blank=True, editable=False)
-    external_link_text = models.CharField(max_length=255, blank=True, editable=False)
 
     objects = models.Manager()
     future_objects = FutureEventItemManager()
@@ -2979,8 +2974,9 @@ class JobPageReusableTextSnippet(Orderable):
     ]
 
 class JobPage(Page, SocialFields):
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, null=True, blank=True, help_text=help_text('rca.JobPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, null=True, blank=True, help_text=help_text('rca.JobPage', 'school'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'programme'))
+    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='job_pages', help_text=help_text('rca.JobPage', 'area'))
     other_department = models.CharField(max_length=255, blank=True, help_text=help_text('rca.JobPage', 'other_department'))
     closing_date = models.DateField(help_text=help_text('rca.JobPage', 'closing_date'))
     interview_date = models.DateField(null=True, blank=True, help_text=help_text('rca.JobPage', 'interview_date'))
@@ -2997,8 +2993,16 @@ class JobPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('area', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('other_department'),
         index.SearchField('get_campus_display'),
         index.SearchField('description'),
@@ -3010,6 +3014,7 @@ JobPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('programme'),
     FieldPanel('school'),
+    FieldPanel('area'),
     FieldPanel('other_department'),
     FieldPanel('closing_date'),
     FieldPanel('interview_date'),
@@ -4563,7 +4568,7 @@ class RcaNowPageTag(TaggedItemBase):
 
 class RcaNowPageArea(models.Model):
     page = ParentalKey('rca.RcaNowPage', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaNowPageArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPageArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -4579,23 +4584,24 @@ class RcaNowPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaNowPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaNowPage', 'area'))
-
     search_fields = Page.search_fields + (
         index.SearchField('body'),
         index.SearchField('author'),
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_area_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'RCA Now'
@@ -4665,21 +4671,54 @@ class RcaNowIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
-        area = request.GET.get('area')
+        programme_slug = request.GET.get('programme')
+        school_slug = request.GET.get('school')
+        area_slug = request.GET.get('area')
 
-        rca_now_items = RcaNowPage.objects.filter(live=True)
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('programme', flat=True)
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
 
-        # Run school, area and programme filters
-        rca_now_items, filters = run_filters(rca_now_items, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-            ('area', 'area', area),
-        ])
+        # School
+        school_options = School.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('programme__school', flat=True)
+        )
+        school = school_options.filter(slug=school_slug).first()
+
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
+
+        # Area
+        area_options = Area.objects.filter(
+            id__in=RcaNowPageArea.objects.filter(page__live=True).values_list('area', flat=True)
+        )
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get RCA Now items
+        rca_now_items = RcaNowPage.objects.live()
+
+        if programme:
+            rca_now_items = rca_now_items.filter(programme=programme)
+        elif school:
+            rca_now_items = rca_now_items.filter(
+                models.Q(school=school) |
+                models.Q(programme__school=school)
+            )
+
+        if area:
+            rca_now_items = rca_now_items.filter(models.Q(areas__area=area))
 
         rca_now_items = rca_now_items.order_by('-date')
 
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(rca_now_items, 10)  # Show 10 rca now items per page
         try:
@@ -4690,6 +4729,20 @@ class RcaNowIndex(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             rca_now_items = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "area",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/rca_now_listing.html", {
@@ -4744,7 +4797,7 @@ class RcaBlogPageTag(TaggedItemBase):
 
 class RcaBlogPageArea(models.Model):
     page = ParentalKey('rca.RcaBlogPage', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaBlogPageArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='blog_pages', help_text=help_text('rca.RcaBlogPageArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -4753,23 +4806,29 @@ class RcaBlogPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaBlogPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaBlogPage', 'date'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.RcaBlogPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_blog_pages', help_text=help_text('rca.RcaBlogPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_blog_pages', help_text=help_text('rca.RcaBlogPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaBlogPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaBlogPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, on_delete=models.SET_NULL, blank=True, related_name='+', help_text=help_text('rca.RcaBlogPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaBlogPageTag)
 
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaBlogPage', 'area'))
-
     search_fields = Page.search_fields + (
         index.SearchField('body'),
         index.SearchField('author'),
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_area_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('areas', [
+        #     index.RelatedFields('area', [
+        #         index.SearchField('display_name'),
+        #     ]),
+        # ]),
     )
 
     search_name = 'RCA Blog'
@@ -4790,10 +4849,7 @@ class RcaBlogPage(Page, SocialFields):
         return self.get_ancestors().type(RcaBlogIndex).last()
 
     def get_related_blogs(self, count=4):
-        siblings = self.get_siblings()
-        related_blogs = RcaBlogPage.objects.filter(live=True, id__in=siblings).order_by('-date')
-        related_blogs = related_blogs.exclude(id=self.id)
-        return related_blogs[:count]
+        return RcaBlogPage.objects.live().sibling_of(self, inclusive=False).order_by('-date')[:count]
 
 
 RcaBlogPage.content_panels = [
@@ -4860,22 +4916,10 @@ class RcaBlogIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        # programme = request.GET.get('programme')
-        # school = request.GET.get('school')
-        # area = request.GET.get('area')
         tag = request.GET.get('tag', None)
+        rca_blog_items = self.get_blog_items(tag=tag).order_by('-date')
 
-        rca_blog_items = self.get_blog_items(tag=tag)
-
-        # Run school, area and programme filters
-        # rca_blog_items, filters = run_filters(rca_blog_items, [
-        #     ('school', 'school', school),
-        #     ('programme', 'programme', programme),
-        #     ('area', 'area', area),
-        # ])
-
-        rca_blog_items = rca_blog_items.order_by('-date')
-
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(rca_blog_items, 10)  # Show 10 rca blog items per page
         try:
@@ -4892,14 +4936,12 @@ class RcaBlogIndex(Page, SocialFields):
                 'self': self,
                 'rca_blog_items': rca_blog_items,
                 'tag': tag,
-                #'filters': json.dumps(filters),
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'rca_blog_items': rca_blog_items,
                 'tag': tag,
-                #'filters': json.dumps(filters),
             })
 
     def get_popular_tags(self):
@@ -5147,7 +5189,7 @@ class ResearchInnovationPage(Page, SocialFields):
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'contact_link_text'))
-    news_carousel_area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, help_text=help_text('rca.ResearchInnovationPage', 'news_carousel_area'))
+    news_carousel_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'news_carousel_area'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchInnovationPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
@@ -5737,8 +5779,6 @@ class InnovationRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'subtitle'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.InnovationRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.InnovationRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.InnovationRCAProject', 'project_type'))
@@ -5750,8 +5790,6 @@ class InnovationRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
         index.SearchField('get_project_type_display'),
     )
 
@@ -5810,8 +5848,6 @@ InnovationRCAProject.content_panels = [
     InlinePanel('carousel_items', label="Carousel content"),
     InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
-    FieldPanel('school'),
-    FieldPanel('programme'),
     FieldPanel('project_type'),
     FieldPanel('project_ended'),
     FieldPanel('description'),
@@ -5963,8 +5999,8 @@ class SustainRCAProject(Page, SocialFields):
     category = models.CharField(max_length=255, blank=True, choices=SUSTAINRCA_CATEGORY_CHOICES)
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.SustainRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.SustainRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.SustainRCAProject', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='sustainrca_projects', help_text=help_text('rca.SustainRCAProject', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='sustainrca_projects', help_text=help_text('rca.SustainRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SustainRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.SustainRCAProject', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
@@ -5974,8 +6010,13 @@ class SustainRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('get_category_display'),
     )
 
@@ -5984,40 +6025,40 @@ class SustainRCAProject(Page, SocialFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get related research
-        projects = SustainRCAProject.objects.filter(live=True).order_by('random_order')
-        projects = projects.filter(category=self.category)
+        related_projects = SustainRCAProject.objects.live().order_by('random_order')
+        related_projects = related_projects.filter(category=self.category)
         if self.programme:
-            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
+            related_projects = related_projects.filter(programme=self.programme)
         elif self.school:
-            projects = projects.filter(school=self.school)
+            related_projects = related_projects.filter(school=self.school)
 
-        paginator = Paginator(projects, 4)
-
+        # Pagination
+        paginator = Paginator(related_projects, 4)
         page = request.GET.get('page')
         try:
-            projects = paginator.page(page)
+            related_projects = paginator.page(page)
         except PageNotAnInteger:
             # If page is not an integer, deliver first page.
-            projects = paginator.page(1)
+            related_projects = paginator.page(1)
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
-            projects = paginator.page(paginator.num_pages)
+            related_projects = paginator.page(paginator.num_pages)
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/sustain_rca_listing.html", {
                 'self': self,
-                'projects': projects
+                'projects': related_projects
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'projects': projects
+                'projects': related_projects
             })
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
             areas=['research'],
-            programmes=get_programme_synonyms(self.programme) if self.programme else None,
+            programmes=([self.programme] if self.programme else None),
             schools=([self.school] if self.school else None),
             count=count,
         )
@@ -6078,19 +6119,34 @@ class SustainRCAIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        selected_year = request.GET.get('year', None)
-        selected_category = request.GET.get('category', None)
-        selected_programme = request.GET.get('programme', None)
+        year = request.GET.get('year')
+        category = request.GET.get('category')
+        programme_slug = request.GET.get('programme')
 
-        projects = SustainRCAProject.objects.filter(live=True)
-        projects, filters = run_filters(projects, [
-            ('year', 'year', selected_year),
-            ('category', 'category', selected_category),
-            ('programme', 'programme', selected_programme)
-        ])
-        projects = projects.order_by('random_order')
+        projects = SustainRCAProject.objects.live()
 
-        years = projects.values_list('year', flat=True).distinct()
+        # Year
+        year_options = list(projects.order_by('-year').values_list('year', flat=True).distinct('year'))
+        if year in year_options:
+            projects = projects.filter(year=year)
+        else:
+            year = ''
+
+        # Category
+        available_categories = set(projects.values_list('category', flat=True))
+        category_options = [c for c in zip(*SUSTAINRCA_CATEGORY_CHOICES)[0] if c in available_categories]
+        if category in category_options:
+            projects = projects.filter(category=category)
+        else:
+            category = ''
+
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=projects.values_list('programme', flat=True),
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
+        if programme:
+            projects = projects.filter(programme=programme)
 
         # Pagination
         page = request.GET.get('page')
@@ -6102,6 +6158,20 @@ class SustainRCAIndex(Page, SocialFields):
         except EmptyPage:
             projects = paginator.page(paginator.num_pages)
 
+        filters = [{
+            "name": "year",
+            "current_value": year,
+            "options": year_options
+        }, {
+            "name": "category",
+            "current_value": category,
+            "options": category_options
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [programme.slug for programme in programme_options]
+        }]
+
         # Find template
         if request.is_ajax() and 'pjax' not in request.GET:
             template = "rca/includes/sustain_rca_listing.html"
@@ -6112,7 +6182,7 @@ class SustainRCAIndex(Page, SocialFields):
         return render(request, template, {
             'self': self,
             'projects': projects,
-            'years': years,
+            'years': year_options,
             'filters': json.dumps(filters),
         })
 
@@ -6220,8 +6290,6 @@ class ReachOutRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'subtitle'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.ReachOutRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
     project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES, help_text=help_text('rca.ReachOutRCAProject', 'project'))
@@ -6232,8 +6300,6 @@ class ReachOutRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
         index.SearchField('get_project_display'),
     )
 
@@ -6295,8 +6361,6 @@ ReachOutRCAProject.content_panels = [
     InlinePanel('partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
-    FieldPanel('school'),
-    FieldPanel('programme'),
     InlinePanel('links', label="Links"),
     InlinePanel('quotations', label="Middle column quotations"),
     FieldPanel('twitter_feed'),
@@ -6533,8 +6597,8 @@ class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
     middle_column_body = RichTextField(blank=True, help_text=help_text('rca.PathwayPage', 'middle_column_body'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.PathwayPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.PathwayPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    related_school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_school'))
-    related_programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.PathwayPage', 'related_programme'))
+    related_school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'related_school'))
+    related_programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'related_programme'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.PathwayPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=PathwayPageTag, help_text=help_text('rca.PathwayPage', 'tags'), blank=True)
 
@@ -6548,12 +6612,10 @@ class PathwayPage(Page, SocialFields, SidebarBehaviourFields):
     @property
     def search_name(self):
         if self.related_programme:
-            return self.get_related_programme_display()
+            return self.related_programme.display_name
 
         if self.related_school:
-            return self.get_related_school_display()
-
-        return None
+            return self.related_school.display_name
 
     content_panels = [
         FieldPanel('title', classname="full title"),
