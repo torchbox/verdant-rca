@@ -93,16 +93,6 @@
                         <dt>{{ self.year }}</dt>
                     {% endif %}
 
-                    {% if self.programme %}
-                        <dd>Centre</dd>
-                        <dt>{{ self.get_school_display }}</dt>
-                    {% endif %}
-
-                    {% if self.programme %}
-                        <dd>Programme</dd>
-                        <dt>{{ self.get_programme_display }}</dt>
-                    {% endif %}
-
                     {% with self.links.all as links %}
                         {% if links %}
                             <dd>Links</dd>

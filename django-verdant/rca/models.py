@@ -5779,8 +5779,6 @@ class InnovationRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'subtitle'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.InnovationRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.InnovationRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.InnovationRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.InnovationRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.InnovationRCAProject', 'show_on_homepage'))
     project_type = models.CharField(max_length=255, choices=INNOVATIONRCA_PROJECT_TYPES_CHOICES, help_text=help_text('rca.InnovationRCAProject', 'project_type'))
@@ -5792,8 +5790,6 @@ class InnovationRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
         index.SearchField('get_project_type_display'),
     )
 
@@ -5852,8 +5848,6 @@ InnovationRCAProject.content_panels = [
     InlinePanel('carousel_items', label="Carousel content"),
     InlinePanel('creator', label="Creator"),
     FieldPanel('year'),
-    FieldPanel('school'),
-    FieldPanel('programme'),
     FieldPanel('project_type'),
     FieldPanel('project_ended'),
     FieldPanel('description'),
@@ -6262,8 +6256,6 @@ class ReachOutRCAProject(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'subtitle'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'year'))
     description = RichTextField(help_text=help_text('rca.ReachOutRCAProject', 'description'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'programme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ReachOutRCAProject', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ReachOutRCAProject', 'show_on_homepage'))
     project = models.CharField(max_length=255, choices=REACHOUT_PROJECT_CHOICES, help_text=help_text('rca.ReachOutRCAProject', 'project'))
@@ -6274,8 +6266,6 @@ class ReachOutRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
         index.SearchField('get_project_display'),
     )
 
@@ -6337,8 +6327,6 @@ ReachOutRCAProject.content_panels = [
     InlinePanel('partnerships', label="Project partnerships"),
     FieldPanel('description', classname="full"),
     FieldPanel('year'),
-    FieldPanel('school'),
-    FieldPanel('programme'),
     InlinePanel('links', label="Links"),
     InlinePanel('quotations', label="Middle column quotations"),
     FieldPanel('twitter_feed'),
