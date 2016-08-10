@@ -1662,6 +1662,14 @@ class EventItemSpeaker(Orderable):
     link_page = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItemSpeaker', 'link_page'))
     link = models.URLField(blank=True, help_text=help_text('rca.EventItemSpeaker', 'link'))
 
+    api_fields = [
+        'image',
+        'name',
+        'surname',
+        'link_page',
+        'link',
+    ]
+
     panels=[
         FieldPanel('name'),
         FieldPanel('surname'),
@@ -1854,6 +1862,7 @@ class EventItem(Page, SocialFields):
         'related_schools',
         'related_programmes',
         'related_areas',
+        'speakers',
         'dates_times',
         'external_links',
     ]
