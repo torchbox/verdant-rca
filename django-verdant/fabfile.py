@@ -73,6 +73,13 @@ def fetch_live_data():
     local('rm %s' % local_path)
 
 
+@roles('rca2')
+def fetch_live_media():
+    remote_path = '/verdant-shared/media/'
+
+    local('rsync -avz %s:%s /vagrant/media/' % (env['host_string'], remote_path))
+
+
 @roles('staging')
 def fetch_staging_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
