@@ -4150,7 +4150,7 @@ class NewStudentPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
 
     # MA details
-    ma_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
+    ma_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='ma_students', help_text=help_text('rca.NewStudentPage', 'ma_programme'))
     ma_graduation_year = models.CharField("Graduation year",max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_graduation_year'))
     ma_specialism = models.CharField("Specialism", max_length=255, choices=SPECIALISM_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'ma_specialism'))
     ma_in_show = models.BooleanField("In show", default=False, help_text=help_text('rca.NewStudentPage', 'ma_in_show', default="Please tick only if you're in the Show this academic year"))
@@ -4160,7 +4160,7 @@ class NewStudentPage(Page, SocialFields):
     show_work_description = RichTextField(help_text=help_text('rca.NewStudentPage', 'show_work_description'), blank=True)
 
     # MPhil details
-    mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
+    mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_start_year'))
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_work_location'))
@@ -4171,7 +4171,7 @@ class NewStudentPage(Page, SocialFields):
     mphil_degree_type = models.CharField("Degree type", max_length=255, choices=DEGREE_TYPE_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_degree_type'))
 
     # PhD details
-    phd_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
+    phd_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
     phd_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_start_year'))
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_work_location'))
