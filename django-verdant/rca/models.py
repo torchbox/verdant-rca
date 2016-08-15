@@ -4573,7 +4573,7 @@ class RcaNowPageTag(TaggedItemBase):
 
 class RcaNowPageArea(models.Model):
     page = ParentalKey('rca.RcaNowPage', related_name='areas')
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, help_text=help_text('rca.RcaNowPageArea', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPageArea', 'area'))
 
     panels = [FieldPanel('area')]
 
@@ -4589,23 +4589,24 @@ class RcaNowPage(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.RcaNowPage', 'body'))
     author = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'author'))
     date = models.DateField("Creation date", help_text=help_text('rca.RcaNowPage', 'date'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.RcaNowPage', 'programme'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.RcaNowPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='rca_now_pages', help_text=help_text('rca.RcaNowPage', 'school'))
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.RcaNowPage', 'show_on_homepage'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RcaNowPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.RcaNowPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     tags = ClusterTaggableManager(through=RcaNowPageTag)
 
-    # DELETED FIELDS
-    area = models.CharField(max_length=255, choices=AREA_CHOICES, blank=True, editable=False, help_text=help_text('rca.RcaNowPage', 'area'))
-
     search_fields = Page.search_fields + (
         index.SearchField('body'),
         index.SearchField('author'),
-        index.SearchField('get_programme_display'),
-        index.SearchField('get_school_display'),
-        index.SearchField('get_area_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
     )
 
     search_name = 'RCA Now'
@@ -4675,21 +4676,54 @@ class RcaNowIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        programme = request.GET.get('programme')
-        school = request.GET.get('school')
-        area = request.GET.get('area')
+        programme_slug = request.GET.get('programme')
+        school_slug = request.GET.get('school')
+        area_slug = request.GET.get('area')
 
-        rca_now_items = RcaNowPage.objects.filter(live=True)
+        # Programme
+        programme_options = Programme.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('programme', flat=True)
+        )
+        programme = programme_options.filter(slug=programme_slug).first()
 
-        # Run school, area and programme filters
-        rca_now_items, filters = run_filters(rca_now_items, [
-            ('school', 'school', school),
-            ('programme', 'programme', programme),
-            ('area', 'area', area),
-        ])
+        # School
+        school_options = School.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('school', flat=True)
+        ) | School.objects.filter(
+            id__in=RcaNowPage.objects.live().values_list('programme__school', flat=True)
+        )
+        school = school_options.filter(slug=school_slug).first()
+
+        if school:
+            # Filter programme options to only this school
+            programme_options = programme_options.filter(school=school)
+            # Prevent programme from a different school being selected
+            if programme and programme.school != school:
+                programme = None
+
+        # Area
+        area_options = Area.objects.filter(
+            id__in=RcaNowPageArea.objects.filter(page__live=True).values_list('area', flat=True)
+        )
+        area = area_options.filter(slug=area_slug).first()
+
+        # Get RCA Now items
+        rca_now_items = RcaNowPage.objects.live()
+
+        if programme:
+            rca_now_items = rca_now_items.filter(programme=programme)
+        elif school:
+            rca_now_items = rca_now_items.filter(
+                models.Q(school=school) |
+                models.Q(programme__school=school)
+            )
+
+        if area:
+            rca_now_items = rca_now_items.filter(models.Q(areas__area=area))
 
         rca_now_items = rca_now_items.order_by('-date')
 
+        # Pagination
         page = request.GET.get('page')
         paginator = Paginator(rca_now_items, 10)  # Show 10 rca now items per page
         try:
@@ -4700,6 +4734,20 @@ class RcaNowIndex(Page, SocialFields):
         except EmptyPage:
             # If page is out of range (e.g. 9999), deliver last page of results.
             rca_now_items = paginator.page(paginator.num_pages)
+
+        filters = [{
+            "name": "school",
+            "current_value": school.slug if school else None,
+            "options": [""] + list(school_options.values_list('slug', flat=True)),
+        }, {
+            "name": "programme",
+            "current_value": programme.slug if programme else None,
+            "options": [""] + list(programme_options.values_list('slug', flat=True)),
+        }, {
+            "name": "area",
+            "current_value": area.slug if area else None,
+            "options": [""] + list(area_options.values_list('slug', flat=True)),
+        }]
 
         if request.is_ajax() and 'pjax' not in request.GET:
             return render(request, "rca/includes/rca_now_listing.html", {
