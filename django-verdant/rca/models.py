@@ -1748,7 +1748,7 @@ class PastEventItemManager(models.Manager):
 class EventItem(Page, SocialFields):
     body = RichTextField(help_text=help_text('rca.EventItem', 'body'))
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES, help_text=help_text('rca.EventItem', 'audience'))
-    area = models.CharField(max_length=255, choices=EVENT_AREA_CHOICES, blank=True, help_text=help_text('rca.EventItem', 'area'))
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'))
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES, help_text=help_text('rca.EventItem', 'location'))
     location_other = models.CharField("'Other' location", max_length=255, blank=True, help_text=help_text('rca.EventItem', 'location_other'))
     specific_directions = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'specific_directions', default="Brief, more specific location e.g Go to reception on 2nd floor"))
@@ -1765,11 +1765,6 @@ class EventItem(Page, SocialFields):
     contact_link = models.URLField(blank=True, help_text=help_text('rca.EventItem', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
-    # TODO: Embargo Date, which would perhaps be part of a workflow module, not really a model thing?
-
-    # DELETED
-    external_link = models.URLField(blank=True, editable=False)
-    external_link_text = models.CharField(max_length=255, blank=True, editable=False)
 
     objects = models.Manager()
     future_objects = FutureEventItemManager()
