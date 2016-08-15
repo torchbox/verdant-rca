@@ -12,6 +12,7 @@ from wagtail.wagtailimages import urls as wagtailimages_urls
 
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.api.v2.endpoints import PagesAPIEndpoint
+from rca.api.endpoints import RCAImagesAPIEndpoint
 
 from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
@@ -33,6 +34,7 @@ rca_ldap_register_signal_handlers()
 # Wagtail API
 api_router = WagtailAPIRouter('wagtailapi_v2')
 api_router.register_endpoint('pages', PagesAPIEndpoint)
+api_router.register_endpoint('images', RCAImagesAPIEndpoint)
 
 
 urlpatterns = patterns('',
