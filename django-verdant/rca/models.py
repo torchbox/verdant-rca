@@ -585,6 +585,7 @@ class CarouselItemFields(models.Model):
         'image',
         'overlay_text',
         'poster_image',
+        'embedly_url',
         'get_link',
     ]
 
@@ -4648,6 +4649,10 @@ class RcaBlogPageTag(TaggedItemBase):
 class RcaBlogPageArea(models.Model):
     page = ParentalKey('rca.RcaBlogPage', related_name='areas')
     area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='blog_pages', help_text=help_text('rca.RcaBlogPageArea', 'area'))
+
+    api_fields = [
+        'area',
+    ]
 
     panels = [FieldPanel('area')]
 
