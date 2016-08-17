@@ -79,6 +79,16 @@ class RcaImage(AbstractImage):
         index.SearchField('photographer'),
     ]
 
+    api_fields = [
+        'alt',
+        'creator',
+        'year',
+        'focal_point_x',
+        'focal_point_y',
+        'focal_point_width',
+        'focal_point_height',
+    ]
+
     @property
     def default_alt_text(self):
         return self.alt
