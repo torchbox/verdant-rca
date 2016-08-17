@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load rca_tags wagtailcore_tags %}
+{% load rca_tags wagtailcore_tags taxonomy_tags %}
 
 {% block body_class %}type-sustainrca-project{% endblock %}
 
@@ -40,7 +40,7 @@
 
                     {% if self.school %}
                         <dd>Centre</dd>
-                        <dt>{{ self.school.display_name }}</dt>
+                        <dt>{% school_historical_display_name self.school self.year %}</dt>
                     {% endif %}
 
                     <dd>Category</dd>
@@ -48,7 +48,7 @@
 
                     {% if self.programme %}
                         <dd>Programme</dd>
-                        <dt>{{ self.programme.display_name }}</dt>
+                        <dt>{% programme_historical_display_name self.programme self.year %}</dt>
                     {% endif %}
 
                     {% with self.links.all as links %}
