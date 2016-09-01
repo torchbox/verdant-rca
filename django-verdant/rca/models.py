@@ -5803,10 +5803,6 @@ class InnovationRCAProject(Page, SocialFields):
         # Get related research
         projects = InnovationRCAProject.objects.filter(live=True).order_by('random_order')
         projects = projects.filter(project_type=self.project_type)
-        if self.programme:
-            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
-        elif self.school:
-            projects = projects.filter(school=self.school)
 
         paginator = Paginator(projects, 4)
 
