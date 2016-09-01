@@ -6304,10 +6304,6 @@ class ReachOutRCAProject(Page, SocialFields):
         # Get related research
         projects = ReachOutRCAProject.objects.filter(live=True).order_by('random_order')
         projects = projects.filter(project=self.project)
-        if self.programme:
-            projects = projects.filter(programme__in=get_programme_synonyms(self.programme))
-        elif self.school:
-            projects = projects.filter(school=self.school)
 
         paginator = Paginator(projects, 4)
 
