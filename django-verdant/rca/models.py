@@ -5829,7 +5829,7 @@ class InnovationRCAProject(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            areas=['research'],
+            areas=Area.objects.filter(slug='innovationrca'),
             count=count,
         )
 
@@ -6051,9 +6051,9 @@ class SustainRCAProject(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            areas=['research'],
-            programmes=([self.programme] if self.programme else None),
-            schools=([self.school] if self.school else None),
+            areas=Area.objects.filter(slug='sustainrca'),
+            programmes=Programme.objects.filter(id=self.programme_id) if self.programme else None,
+            schools=School.objects.filter(id=self.school_id) if self.school else None,
             count=count,
         )
 
@@ -6334,9 +6334,7 @@ class ReachOutRCAProject(Page, SocialFields):
 
     def get_related_news(self, count=4):
         return NewsItem.get_related(
-            areas=['research'],
-            programmes=get_programme_synonyms(self.programme) if self.programme else None,
-            schools=([self.school] if self.school else None),
+            areas=Area.objects.filter(slug='reachoutrca'),
             count=count,
         )
 
