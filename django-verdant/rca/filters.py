@@ -3,8 +3,6 @@ import json
 
 
 def run_filters_q(cls, q, filters):
-    from rca.models import get_programme_synonyms
-
     filters_out = []
 
     # Iterate through filters
@@ -20,13 +18,7 @@ def run_filters_q(cls, q, filters):
 
         # Apply filter to queryset
         if current_value:
-
-            if field.endswith('programme'):
-                filter_dict = {'%s__in' % field: get_programme_synonyms(current_value)}
-            else:
-                filter_dict = {field: current_value}
-
-            queryset_filtered = queryset.filter(**filter_dict)
+            queryset_filtered = queryset.filter(**{field: current_value})
 
             # Only apply the filter if there are values
             if queryset_filtered.exists():
