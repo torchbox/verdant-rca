@@ -114,9 +114,9 @@ def alumni_by_programme(context, programme):
     }
 
 @register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
-def rca_now_related(context, programme="", author=""):
+def rca_now_related(context, programme=None, author=""):
     if programme:
-        rcanow = RcaNowPage.objects.filter(live=True).filter(programme__in=get_programme_synonyms(programme))
+        rcanow = RcaNowPage.objects.filter(live=True).filter(programme=programme)
     elif author:
         rcanow = RcaNowPage.objects.filter(live=True, author=author)
     return {
