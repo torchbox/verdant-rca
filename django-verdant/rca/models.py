@@ -2870,44 +2870,6 @@ class HomePage(Page, SocialFields):
 
         random.shuffle(packery)
 
-        # programme = request.GET.get('programme')
-        # school = request.GET.get('school')
-        # location = request.GET.get('location')
-        # location_other = request.GET.get('location_other')
-        # area = request.GET.get('area')
-        # audience = request.GET.get('audience')
-        # period = request.GET.get('period')
-
-        # if period == 'past':
-        #     events = self.past_events()
-        # else:
-        #     events = self.future_events()
-
-        # if programme and programme != '':
-             # events = events.filter(related_programmes__programme__in=get_programme_synonyms(programme))
-        # if school and school != 'all':
-        #     events = events.filter(related_schools__school=school)
-        # if location and location != '':
-        #     events = events.filter(location=location)
-        # if area and area != 'all':
-        #     events = events.filter(related_areas__area=area)
-        # if audience and audience != '':
-        #     events = events.filter(audience=audience)
-        # events = events.annotate(start_date=Min('dates_times__date_from')).order_by('start_date')
-
-        # related_programmes = SCHOOL_PROGRAMME_MAP[str(date.today().year)].get(school, []) if school else []
-
-        # page = request.GET.get('page')
-        # paginator = Paginator(events, 10)  # Show 10 events per page
-        # try:
-        #     events = paginator.page(page)
-        # except PageNotAnInteger:
-        #     # If page is not an integer, deliver first page.
-        #     events = paginator.page(1)
-        # except EmptyPage:
-        #     # If page is out of range (e.g. 9999), deliver last page of results.
-        #     events = paginator.page(paginator.num_pages)
-
         if request.is_ajax():
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
