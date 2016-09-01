@@ -124,34 +124,36 @@ def rca_now_related(context, programme=None, author=""):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+
 @register.inclusion_tag('rca/tags/research_related.html', takes_context=True)
-def research_related(context, programme="", person="", school="", exclude=None):
+def research_related(context, programme=None, person=None, school=None, exclude=None):
     if programme:
-        research_items = ResearchItem.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
+        research_items = ResearchItem.objects.filter(live=True, programme=programme)
     elif person:
         research_items = ResearchItem.objects.filter(live=True, creator__person=person)
     elif school:
         research_items = ResearchItem.objects.filter(live=True, school=school)
     if exclude:
         research_items = research_items.exclude(id=exclude.id)
+
     return {
         'research_items': research_items.order_by('?'),
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
         'person': person,
-        'programme': programme,
-        'school': school
     }
 
+
 @register.inclusion_tag('rca/tags/innovation_rca_related.html', takes_context=True)
-def innovation_rca_related(context, programme="", person="", school="", exclude=None):
+def innovation_rca_related(context, programme=None, person=None, school=None, exclude=None):
     if programme:
-        projects = InnovationRCAProject.objects.filter(live=True, programme__in=get_programme_synonyms(programme))
+        projects = InnovationRCAProject.objects.filter(live=True, programme=programme)
     elif person:
         projects = InnovationRCAProject.objects.filter(live=True, creator__person=person)
     elif school:
         projects = InnovationRCAProject.objects.filter(live=True, school=school)
     if exclude:
         projects = projects.exclude(id=exclude.id)
+
     return {
         'projects': projects.order_by('?'),
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
