@@ -480,26 +480,6 @@ PROGRAMME_CHOICES = sorted([
 ], reverse=True)
 
 
-def get_programme_synonyms(programme):
-    """ Find all programme identifiers that appear on the same programme page.
-        E.g. jewelleryandmetal and goldsmithingsilversmithingmetalworkjewellery
-        are both associated with the same ProgrammePage and if one of them
-        is selected in a filter then we want to return results for both.
-    """
-    programmes = Programme.objects.filter(
-        id__in=ProgrammePageProgramme.objects\
-            .filter(page__programmes__programme__slug=programme)\
-            .only('programme')\
-            .distinct()\
-            .values_list('programme_id', flat=True)
-        )
-
-    if programmes.exists():
-        return list(programmes.values_list('slug', flat=True))
-    else:
-        return [programme]
-
-
 # Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
 # 1. check schools
 assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
