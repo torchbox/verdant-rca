@@ -53,12 +53,12 @@ def news_carousel(context, area=None, programme=None, school=None, count=5):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme="", school="", display_name="", area="", audience=""):
+def upcoming_events_related(context, opendays=0, programme=None, school=None, display_name="", area=None, audience=""):
     events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'))
     if school:
         events = events.filter(related_schools__school=school).order_by('start_date')
     elif programme:
-        events = events.filter(related_programmes__programme__in=get_programme_synonyms(programme)).order_by('start_date')
+        events = events.filter(related_programmes__programme=programme).order_by('start_date')
     elif area:
         events = events.filter(area=area).order_by('start_date')
     elif audience:
