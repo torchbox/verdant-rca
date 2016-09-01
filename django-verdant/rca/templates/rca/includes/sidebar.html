@@ -40,10 +40,6 @@
     {% staff_related self %}
 {% endif %}
 
-{% if showRandomStaff %}
-    {% staff_random programmes=self.programmes exclude=self %}
-{% endif %}
-
 <!-- job adverts -->
 {% if showJobs %}
     {% upcoming_jobs exclude=self %}

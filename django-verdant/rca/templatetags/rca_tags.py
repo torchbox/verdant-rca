@@ -224,18 +224,6 @@ def students_related_work(context, year=None, exclude=None, count=4):
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
-@register.inclusion_tag('rca/tags/staff_random.html', takes_context=True)
-def staff_random(context, exclude=None, programmes=None, count=4):
-    staff = StaffPage.objects.filter(live=True).order_by('?')
-    if exclude:
-        staff = staff.exclude(id=exclude.id)
-    if programmes:
-        programmes = sum([get_programme_synonyms(programme) for programme in programmes], [])
-        staff = staff.filter(roles__programme__in=programmes)
-    return {
-        'staff': staff[:count],
-        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
-    }
 
 @register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
 def staff_related(context, staff_page, count=4):
