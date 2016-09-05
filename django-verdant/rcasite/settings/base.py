@@ -144,7 +144,6 @@ INSTALLED_APPS = (
     'taggit',
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
-    'djcelery',
     'raven.contrib.django.raven_compat',
 
     'django.contrib.admin',
