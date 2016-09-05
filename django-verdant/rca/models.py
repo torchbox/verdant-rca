@@ -815,10 +815,9 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + [
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
     ]
 
     search_name = 'School'
@@ -1038,11 +1037,9 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
-
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
     ]
 
     search_name = 'Programme'
@@ -2935,16 +2932,15 @@ class JobPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.JobPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + [
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('programme', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('area', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('programme', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('area', [
+            index.SearchField('display_name'),
+        ]),
         index.SearchField('other_department'),
         index.SearchField('get_campus_display'),
         index.SearchField('description'),
@@ -3274,10 +3270,9 @@ class StaffPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + [
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('area', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('area', [
+            index.SearchField('display_name'),
+        ]),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
@@ -4537,13 +4532,12 @@ class RcaNowPage(Page, SocialFields):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.SearchField('author'),
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('programme', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('programme', [
+            index.SearchField('display_name'),
+        ]),
     ]
 
     search_name = 'RCA Now'
@@ -4759,18 +4753,17 @@ class RcaBlogPage(Page, SocialFields):
     search_fields = Page.search_fields + [
         index.SearchField('body'),
         index.SearchField('author'),
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('programme', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('areas', [
-        #     index.RelatedFields('area', [
-        #         index.SearchField('display_name'),
-        #     ]),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('programme', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('areas', [
+            index.RelatedFields('area', [
+                index.SearchField('display_name'),
+            ]),
+        ]),
     ]
 
     search_name = 'RCA Blog'
@@ -4970,13 +4963,12 @@ class ResearchItem(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('programme', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('programme', [
+            index.SearchField('display_name'),
+        ]),
         index.SearchField('get_work_type_display'),
         index.SearchField('work_type_other'),
         index.SearchField('get_theme_display'),
@@ -5946,13 +5938,12 @@ class SustainRCAProject(Page, SocialFields):
         index.SearchField('subtitle'),
         index.SearchField('get_research_type_display'),
         index.SearchField('description'),
-        # Requires Wagtail >= 1.3
-        # index.RelatedFields('school', [
-        #     index.SearchField('display_name'),
-        # ]),
-        # index.RelatedFields('programme', [
-        #     index.SearchField('display_name'),
-        # ]),
+        index.RelatedFields('school', [
+            index.SearchField('display_name'),
+        ]),
+        index.RelatedFields('programme', [
+            index.SearchField('display_name'),
+        ]),
         index.SearchField('get_category_display'),
     ]
 
