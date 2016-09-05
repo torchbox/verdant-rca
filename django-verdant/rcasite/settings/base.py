@@ -203,7 +203,7 @@ DEBUG_TOOLBAR_PANELS = (
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
     ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/less', 'lesspress.LessCompiler'),
+    ('text/less', 'lessc {infile} {outfile}'),
 )
 COMPRESS_OFFLINE = True
 
