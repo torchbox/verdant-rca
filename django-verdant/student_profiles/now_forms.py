@@ -7,7 +7,8 @@ from django.forms.formsets import formset_factory
 
 from rca.help_text import help_text
 from rca.models import RcaNowPage, NewStudentPage
-from rca.models import AREA_CHOICES
+from taxonomy.models import Area
+
 from .forms import OrderedFormset
 
 
@@ -122,9 +123,8 @@ RelatedLinkFormset.help_text = 'Paste in the URL of the website in full, includi
 
 
 class AreaForm(forms.Form):
-    area = forms.ChoiceField(
-        choices=(('', '---------'),) + AREA_CHOICES,
-    )
+    area = forms.ModelChoiceField(queryset=Area.objects.all())
+
 AreaFormSet = formset_factory(AreaForm, extra=1, formset=OrderedFormset)
 AreaFormSet.title = 'Areas'
 AreaFormSet.help_text = help_text=help_text('rca.RcaNowPageArea', 'area')
