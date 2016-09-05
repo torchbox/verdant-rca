@@ -3144,8 +3144,8 @@ AlumniIndex.promote_panels = [
 
 class AlumniPage(Page, SocialFields):
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniPage', 'profile_image'))
-    school = models.CharField(max_length=255, choices=SCHOOL_CHOICES, help_text=help_text('rca.AlumniPage', 'school'))
-    programme = models.CharField(max_length=255, choices=PROGRAMME_CHOICES, help_text=help_text('rca.AlumniPage', 'programme'))
+    school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='alumni_pages', help_text=help_text('rca.AlumniPage', 'school'))
+    programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='alumni_pages', help_text=help_text('rca.AlumniPage', 'programme'))
     year = models.CharField(max_length=4, blank=True, help_text=help_text('rca.AlumniPage', 'year'))
     intro = RichTextField(help_text=help_text('rca.AlumniPage', 'intro'), blank=True)
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.AlumniPage', 'listing_intro', default="Used only on pages displaying a list of pages of this type"))
@@ -3155,8 +3155,13 @@ class AlumniPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.AlumniPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + (
-        index.SearchField('get_school_display'),
-        index.SearchField('get_programme_display'),
+        # Requires Wagtail >= 1.3
+        # index.RelatedFields('school', [
+        #     index.SearchField('display_name'),
+        # ]),
+        # index.RelatedFields('programme', [
+        #     index.SearchField('display_name'),
+        # ]),
         index.SearchField('intro'),
         index.SearchField('biography'),
     )
