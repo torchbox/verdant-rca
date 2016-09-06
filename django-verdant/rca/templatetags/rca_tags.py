@@ -1,8 +1,9 @@
 from django import template
+from django.apps import apps
 from django.core.cache import cache
 from django.utils.html import conditional_escape
-from django.db.models import Min, Max, Q, get_app, get_models, get_model
-from django.template.base import parse_bits
+from django.db.models import Min, Max, Q
+from django.template.library import parse_bits
 from wagtail.wagtailcore.utils import camelcase_to_underscore
 
 from datetime import date
@@ -635,7 +636,7 @@ def get_lightbox_config():
 
     for path in DONT_OPEN_IN_LIGHTBOX:
         app, model_name = path.split('.')
-        for m in get_models(get_app(app)):
+        for m in apps.get_app_config(app).get_models():
             if not issubclass(m, Page):
                 continue
             if m.__name__.lower() == model_name.lower():
@@ -646,7 +647,7 @@ def get_lightbox_config():
     excluded1 = '/(%s)/?[\?#]?[^/]*$' % '|'.join(excluded)
 
     # don't open anything that's under a ShowIndexPage
-    slugs = get_model('rca_show', 'ShowIndexPage').objects.all().only('slug').values_list('slug', flat=True).distinct()
+    slugs = apps.get_model('rca_show', 'ShowIndexPage').objects.all().only('slug').values_list('slug', flat=True).distinct()
     excluded2 = '/(%s)/.*' % '|'.join(slugs)
 
     return {
