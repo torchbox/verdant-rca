@@ -14,6 +14,19 @@ build:
     # Check for missing migrations
     - bash -c "! python manage.py makemigrations -e --dry-run --noinput"
 
+    # Run tests
+    - python manage.py test
+
+  environment:
+    - PGHOST=127.0.0.1
+    - PGUSER=postgres
+
 cache:
   mount:
     - /drone/pip-cache
+
+compose:
+  db:
+    image: postgres:9.4
+  cache:
+    image: redis:2.8
