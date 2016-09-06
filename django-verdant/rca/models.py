@@ -22,7 +22,7 @@ from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.views.decorators.vary import vary_on_headers
 
-from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtailcore.models import Page, Orderable, PageManager
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
@@ -1697,14 +1697,14 @@ class EventItemExternalLink(Orderable):
         FieldPanel('text'),
     ]
 
-class FutureEventItemManager(models.Manager):
+class FutureEventItemManager(PageManager):
     def get_queryset(self):
         return super(FutureEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
             params=[date.today(), date.today()]
         )
 
-class FutureNotCurrentEventItemManager(models.Manager):
+class FutureNotCurrentEventItemManager(PageManager):
     def get_queryset(self):
         return super(FutureNotCurrentEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s)"],
@@ -1715,7 +1715,7 @@ class FutureNotCurrentEventItemManager(models.Manager):
             order_by=['next_date_from']
         )
 
-class PastEventItemManager(models.Manager):
+class PastEventItemManager(PageManager):
     def get_queryset(self):
         return super(PastEventItemManager, self).get_queryset().extra(
             where=["wagtailcore_page.id NOT IN (SELECT DISTINCT page_id FROM rca_eventitemdatestimes WHERE date_from >= %s OR date_to >= %s)"],
@@ -1743,7 +1743,7 @@ class EventItem(Page, SocialFields):
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    objects = models.Manager()
+    objects = PageManager()
     future_objects = FutureEventItemManager()
     past_objects = PastEventItemManager()
     future_not_current_objects = FutureNotCurrentEventItemManager()
