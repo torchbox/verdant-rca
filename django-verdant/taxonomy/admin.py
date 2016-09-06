@@ -1,11 +1,12 @@
 from django.conf.urls import url
 from django.contrib.admin.utils import quote
+from django.core.exceptions import PermissionDenied
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _
 
 from wagtail.contrib.modeladmin.helpers import ButtonHelper
 from wagtail.contrib.modeladmin.options import ModelAdmin, ModelAdminGroup
-from wagtail.contrib.modeladmin.views import InstanceSpecificView
+from wagtail.contrib.modeladmin.views import DeleteView, InstanceSpecificView
 from wagtail.wagtailadmin.utils import get_object_usage
 
 from . import models
@@ -36,6 +37,46 @@ class UsageView(InstanceSpecificView):
 
     def get_template_names(self):
         return ['taxonomy/admin/usage.html']
+
+
+class TaxonomyDeleteView(DeleteView):
+    """
+    A specialised delete view which protects taxonomy objects that are
+    in use on the site
+    """
+    @cached_property
+    def usage_url(self):
+        return self.url_helper.get_action_url('usage', self.pk_quoted)
+
+    def get_usage(self):
+        return get_object_usage(self.instance)
+
+    def post(self, request, *args, **kwargs):
+        # Disallow deleting taxonomy objects that are in use
+        if self.get_usage().exists():
+            raise PermissionDenied
+
+        return super(TaxonomyDeleteView, self).post(request, *args, **kwargs)
+
+    # Wagtail doesn't yet call get_context_data on DeleteView so we override get() for now
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(TaxonomyDeleteView, self).get_context_data(**kwargs)
+    #     import pdb; pdb.set_trace()
+    #     context['can_be_deleted'] = not self.get_usage().exists()
+    #     return context
+
+    def get(self, request, *args, **kwargs):
+        context = {
+            'view': self,
+            'instance': self.instance,
+            'can_be_deleted': not self.get_usage().exists(),
+        }
+
+        return self.render_to_response(context)
+
+    def get_template_names(self):
+        return ['taxonomy/admin/delete.html']
 
 
 class TaxonomyButtonHelper(ButtonHelper):
@@ -82,6 +123,7 @@ class TaxonomyButtonHelper(ButtonHelper):
 class TaxonomyModelAdmin(ModelAdmin):
     button_helper_class = TaxonomyButtonHelper
     usage_view_class = UsageView
+    delete_view_class = TaxonomyDeleteView
 
     def usage_view(self, request, instance_pk):
         kwargs = {'model_admin': self, 'instance_pk': instance_pk}
