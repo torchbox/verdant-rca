@@ -1749,7 +1749,7 @@ class EventItem(Page, SocialFields):
     future_not_current_objects = FutureNotCurrentEventItemManager()
 
     search_fields = Page.search_fields + [
-        index.SearchField('intro'),
+        index.SearchField('body'),
         index.SearchField('get_location_display'),
         index.SearchField('location_other'),
     ]
@@ -5722,7 +5722,6 @@ class InnovationRCAProject(Page, SocialFields):
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
-        index.SearchField('get_research_type_display'),
         index.SearchField('description'),
         index.SearchField('get_project_type_display'),
     ]
@@ -5936,7 +5935,6 @@ class SustainRCAProject(Page, SocialFields):
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
-        index.SearchField('get_research_type_display'),
         index.SearchField('description'),
         index.RelatedFields('school', [
             index.SearchField('display_name'),
@@ -6225,7 +6223,6 @@ class ReachOutRCAProject(Page, SocialFields):
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
-        index.SearchField('get_research_type_display'),
         index.SearchField('description'),
         index.SearchField('get_project_display'),
     ]
