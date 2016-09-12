@@ -15,7 +15,7 @@ from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 
 from django.dispatch.dispatcher import receiver
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
