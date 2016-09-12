@@ -56,7 +56,7 @@ class Command(BaseCommand):
 
         ad_usernames = [d[1].get('sAMAccountName')[0] for d in ad_usernames if d[1].get('sAMAccountName')]
 
-        for staff_page in StaffPage.objects.exclude(ad_username='').live():
+        for staff_page in StaffPage.objects.filter(ad_username=''):
             ad_username_guess = ('%s.%s' % (staff_page.first_name, staff_page.last_name)).lower()
             if ad_username_guess in ad_usernames:
                 staff_page.ad_username = ad_username_guess
