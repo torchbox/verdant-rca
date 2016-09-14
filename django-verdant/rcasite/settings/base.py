@@ -168,6 +168,7 @@ INSTALLED_APPS = (
     'wagtailcaptcha',
     'captcha',
 
+    'webhooks',
     'taxonomy',
     'donations',
     'rca',
