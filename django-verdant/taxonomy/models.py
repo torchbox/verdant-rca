@@ -92,7 +92,7 @@ class Programme(ClusterableModel):
     display_name = models.CharField(max_length=255)
     disabled = models.BooleanField(default=False)
 
-    api_fields = ['slug']
+    api_fields = ['slug', 'school']
 
     panels = [
         FieldPanel('school'),
