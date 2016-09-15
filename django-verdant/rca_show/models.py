@@ -309,6 +309,7 @@ class ShowIndexPage(SuperPage, SocialFields):
     exhibition_date = models.TextField(max_length=255, blank=True)
     parent_show_index = models.ForeignKey('rca_show.ShowIndexPage', null=True, blank=True, on_delete=models.SET_NULL)
     password_prompt = models.CharField(max_length=255, blank=True, help_text="A custom message asking the user to log in, on protected pages")
+    hide_animation_videos = models.BooleanField(default=True, help_text="If this box is checked, videos embedded in the carousel will not be displayed on Animation and Visual Communication student profiles")
 
     password_required_template = "rca_show/login.html"
 
@@ -584,6 +585,7 @@ class ShowIndexPage(SuperPage, SocialFields):
         InlinePanel('programmes', label="Programmes"),
         PageChooserPanel('parent_show_index'),
         FieldPanel('password_prompt'),
+        FieldPanel('hide_animation_videos'),
     ]
 
     promote_panels = [
