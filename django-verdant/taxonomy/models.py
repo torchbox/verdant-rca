@@ -17,6 +17,8 @@ class Area(models.Model):
     slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
 
+    api_fields = ['slug']
+
     def __str__(self):
         return self.display_name
 
@@ -32,6 +34,8 @@ class School(ClusterableModel):
     """
     slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
+
+    api_fields = ['slug']
 
     panels = [
         FieldPanel('slug'),
@@ -87,6 +91,8 @@ class Programme(ClusterableModel):
     slug = models.CharField(max_length=255, unique=True)
     display_name = models.CharField(max_length=255)
     disabled = models.BooleanField(default=False)
+
+    api_fields = ['slug', 'school']
 
     panels = [
         FieldPanel('school'),

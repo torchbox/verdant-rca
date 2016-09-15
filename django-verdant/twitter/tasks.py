@@ -1,16 +1,14 @@
-from datetime import timedelta
 import random
 
 import tweepy
-from celery.decorators import task
-from celery.task import PeriodicTask
+from tweepy.error import TweepError
 
 from django.conf import settings
 
 from .models import Tweet
 
 
-def _get_api():
+def get_api():
     # app level rate limit: 300 request every 15 minutes
     auth = tweepy.OAuthHandler(settings.TWITTER_CONSUMER_KEY, settings.TWITTER_CONSUMER_SECRET)
     auth.set_access_token(settings.TWITTER_ACCESS_TOKEN, settings.TWITTER_ACCESS_TOKEN_SECRET)
@@ -18,67 +16,60 @@ def _get_api():
     return api
 
 
-@task
-def get_tweets_async(screen_name="RCA", count=10):
-    api = _get_api()
+def get_tweets(screen_name, count=10):
+    api = get_api()
 
-    count = count if count < 50 else 50
-
-    if api.get_user(screen_name=screen_name)["protected"]:
-        return
-
-    for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
-        Tweet.save_from_dict(status)
-        if int(dict(api.last_response.getheaders())["x-rate-limit-remaining"]) < 1:
-            break
-
-
-def get_tweets(screen_name="RCA", count=10):
-    api = _get_api()
-
-    count = count if count < 50 else 50
+    count = min(count, 50)
 
     try:
         if api.get_user(screen_name=screen_name)["protected"]:
             return
-    except tweepy.TweepError:
+    except TweepError:
         return  # ignore 404 errors
 
-    for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
-        Tweet.save_from_dict(status)
-        if int(dict(api.last_response.getheaders())["x-rate-limit-remaining"]) < 1:
-            break
+    try:
+        data = api.rate_limit_status()  # {'remaining': 178, 'limit': 180, 'reset': 1459422554}
+        remaining = data['resources']['statuses']['/statuses/user_timeline']['remaining']
+        if remaining < 1:
+            # we can't do anything now but users will trigger this again, and the new screen name will be added eventually
+            return
+
+        for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
+            Tweet.save_from_dict(status)
+            data = api.rate_limit_status()  # {'remaining': 178, 'limit': 180, 'reset': 1459422554}
+            remaining = data['resources']['statuses']['/statuses/user_timeline']['remaining']
+            if remaining < 2:
+                break
+    except TweepError:
+        # even the rate_limit_status method sometime returns 404 or over capacity errors
+        pass
 
 
-class get_tweets_for_all(PeriodicTask):
+def get_tweets_for_all():
+    api = get_api()
 
-    run_every = timedelta(days=30)  # dummy value, scheduler.is_due overrides it
+    count = 20
 
-    def run(self):
-        api = _get_api()
+    screen_names = list(Tweet.objects.values_list('user_screen_name', flat=True).distinct())
 
-        count = 20
+    # if we have more than 300 screen_names (or we're above the rate limit for any other reason)
+    # then the screen_names at the end of the list wouldn't be updated, this makes that less likely
+    random.shuffle(screen_names)
 
-        screen_names = list(Tweet.objects.values_list('user_screen_name', flat=True).distinct())
+    for screen_name in screen_names:
+        try:
+            for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
+                Tweet.save_from_dict(status)
+        except TweepError:
+            pass
 
-        # if we have more than 300 screen_names (or we're above the rate limit for any other reason)
-        # then the screen_names at the end of the list wouldn't be updated, this makes that less likely
-        random.shuffle(screen_names)
-
-        for screen_name in screen_names:
-            try:
-                for status in api.user_timeline(screen_name=screen_name, exclude_replies=True, count=count):
-                    Tweet.save_from_dict(status)
-            except tweepy.TweepError:
-                # ignore connection errors which happen a bit too often now that Twitter switched over to ssl only
-                pass
-
-            if hasattr(api, "last_response"):
-                remaining = dict(api.last_response.getheaders()).get("x-rate-limit-remaining")
-                if remaining is not None and int(remaining) < 1:
-                    break
-
-
-@task
-def test_error_email():
-    raise Exception("test")
+        try:
+            data = api.rate_limit_status()  # {'remaining': 178, 'limit': 180, 'reset': 1459422554}
+            remaining = data['resources']['statuses']['/statuses/user_timeline']['remaining']
+            # print data['resources']['statuses']['/statuses/user_timeline']
+            if remaining < 5:
+                # this leaves some quota for adding new screen_names, which otherwise won't keep retrying
+                break
+        except TweepError:
+            # the rate_limit_status method sometime returns 404 or over capacity errors
+            pass

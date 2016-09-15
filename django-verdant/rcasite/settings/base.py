@@ -115,10 +115,10 @@ MIDDLEWARE_CLASSES = (
 )
 
 from django.conf import global_settings
-TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + (
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + [
     'django.core.context_processors.request',
     'rca.context_processors.global_vars',
-)
+]
 
 ROOT_URLCONF = 'rcasite.urls'
 
@@ -144,7 +144,6 @@ INSTALLED_APPS = (
     'taggit',
     'twitter',  # the app used to proxy the Twitter REST API
     'widget_tweaks',
-    'djcelery',
     'raven.contrib.django.raven_compat',
 
     'django.contrib.admin',
@@ -204,7 +203,7 @@ DEBUG_TOOLBAR_PANELS = (
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
     ('text/coffeescript', 'coffee --compile --stdio'),
-    ('text/less', 'lesspress.LessCompiler'),
+    ('text/less', 'lessc {infile} {outfile}'),
 )
 COMPRESS_OFFLINE = True
 
@@ -280,11 +279,6 @@ CELERYD_LOG_COLOR = False
 PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
 
 GOOGLE_ANALYTICS_ACCOUNT = ''
-
-# The scheduler used by this app needs to be defined in the settings.
-# It also contains some additional configuration options, some need to be set in the local settings.
-from twitter.settings import *
-
 
 # ReCaptcha settings
 RECAPTCHA_PUBLIC_KEY = 'put your public key here'
