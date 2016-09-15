@@ -604,14 +604,14 @@ def get_debug():
 
 
 @register.assignment_tag
-def get_student_carousel_items(student, degree=None, show_animation_videos=False):
+def get_student_carousel_items(student, degree=None, hide_animation_videos=True):
     profile = student.get_profile(degree)
     if not profile['carousel_items']:
         return []
     carousel_items = profile['carousel_items'].all()
 
     # If this is an animation student, remove the first two carousel items if they are vimeo videos
-    if show_animation_videos == False and profile['programme'].slug in ['animation', 'visualcommunication']:
+    if hide_animation_videos and profile['programme'].slug in ['animation', 'visualcommunication']:
         for i in range(2):
             try:
                 first_carousel_item = carousel_items[0]
