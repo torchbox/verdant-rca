@@ -5,14 +5,18 @@ from .models import Area, School, Programme
 
 def api(request):
     return JsonResponse({
-        'areas': {
-            area.slug: {
+        'areas': [
+            {
+                'id': area.id,
+                'slug': area.slug,
                 'display_name': area.display_name,
             }
             for area in Area.objects.all()
-        },
-        'schools': {
-            school.slug: {
+        ],
+        'schools': [
+            {
+                'id': school.id,
+                'slug': school.slug,
                 'display_name': school.display_name,
                 'historical_display_names': {
                     hdn.end_year: hdn.display_name
@@ -20,9 +24,11 @@ def api(request):
                 }
             }
             for school in School.objects.all()
-        },
-        'programmes': {
-            programme.slug: {
+        ],
+        'programmes': [
+            {
+                'id': programme.id,
+                'slug': programme.slug,
                 'display_name': programme.display_name,
                 'historical_display_names': {
                     hdn.end_year: hdn.display_name
@@ -32,5 +38,5 @@ def api(request):
                 'disabled': programme.disabled,
             }
             for programme in Programme.objects.select_related('school__slug')
-        }
+        ]
     })
