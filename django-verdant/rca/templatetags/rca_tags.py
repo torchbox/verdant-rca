@@ -106,14 +106,6 @@ def pathway_by_programme(context, programme):
         return programme.get_children().live().type(PathwayPage).specific()
 
 
-@register.inclusion_tag('rca/tags/alumni_by_programme.html', takes_context=True)
-def alumni_by_programme(context, programme):
-    alumni = AlumniPage.objects.filter(live=True, programme=programme)
-    return {
-        'alumni': alumni,
-        'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
-    }
-
 @register.inclusion_tag('rca/tags/rca_now_related.html', takes_context=True)
 def rca_now_related(context, programme=None, author=""):
     if programme:
