@@ -46,8 +46,8 @@ urlpatterns = patterns('',
     url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
-    url(r'^taxonomy/api/v0/$', taxonomy_views.api, name='taxonomy_api_v0'),
-    url(r'^api/v2beta/', api_router.urls),
+    url(r'^taxonomy/api/v1/$', taxonomy_views.api, name='taxonomy_api_v0'),
+    url(r'^api/v2/', api_router.urls),
 
     url(r'^search/$', 'wagtail.wagtailsearch.views.search', {
         'template': 'rca/search_results.html',
