@@ -15,7 +15,7 @@ from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 
 from django.dispatch.dispatcher import receiver
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
@@ -3285,6 +3285,7 @@ class StaffPage(Page, SocialFields):
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StaffPage', 'ad_username'))
 
     search_fields = Page.search_fields + [
         index.RelatedFields('area', [
@@ -3319,6 +3320,7 @@ class StaffPage(Page, SocialFields):
         'roles',
         'collaborations',
         'publications_exhibitions',
+        'ad_username',
     ]
 
     search_name = 'Staff'
@@ -3346,6 +3348,7 @@ StaffPage.content_panels = [
     FieldPanel('twitter_feed'),
     FieldPanel('research_interests', classname="full"),
     FieldPanel('supervised_student_other'),
+    FieldPanel('ad_username'),
 
     InlinePanel('carousel_items', label="Selected Work Carousel Content"),
     InlinePanel('collaborations', label="Collaborations"),
