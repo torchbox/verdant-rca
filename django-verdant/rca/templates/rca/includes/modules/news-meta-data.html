@@ -33,7 +33,7 @@
                         <ul>
                             {% for school in related_schools %}
                                 {% if self.date %}
-                                    <li>{% school_historical_display_name school self.date.year %}</li>
+                                    <li>{% school_historical_display_name school.school self.date.year %}</li>
                                 {% else %}
                                     <li>{{ school.school.display_name }}</li>
                                 {% endif %}
@@ -50,7 +50,7 @@
                         <ul>
                             {% for programme in related_programmes %}
                                 {% if self.date %}
-                                    <li>{% programme_historical_display_name programme self.date.year %}</li>
+                                    <li>{% programme_historical_display_name programme.programme self.date.year %}</li>
                                 {% else %}
                                     <li>{{ programme.programme.display_name }}</li>
                                 {% endif %}
