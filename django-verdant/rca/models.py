@@ -4477,7 +4477,7 @@ class RcaNowPage(Page, SocialFields):
         """Return the profile page for the author of this post, if one exists (and is live)"""
         if self.owner:
             try:
-                return StudentPage.objects.filter(live=True, owner=self.owner)[0]
+                return NewStudentPage.objects.filter(live=True, owner=self.owner)[0]
             except IndexError:
                 return None
 
