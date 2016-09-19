@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags taxonomy_tags %}
 
 {% block body_class %}type-rcablog{% endblock %}
 
@@ -26,8 +26,8 @@
                     <dt>{{ self.date|date:"j F Y" }}</dt>
 
                     {% if self.programme %}
-                    <dd>Programme</dd>
-                    <dt>{{ self.programme.display_name }}</dt>
+                        <dd>Programme</dd>
+                        <dt>{% programme_historical_display_name self.programme self.date.year %}</dt>
                     {% endif %}
 
                     {% if self.tags.all.count > 0 %}

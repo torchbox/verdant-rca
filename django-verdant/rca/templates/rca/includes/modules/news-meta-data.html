@@ -1,3 +1,5 @@
+{% load taxonomy_tags %}
+
 <section class="four">
     <div class="meta-data">
         <dl>
@@ -29,8 +31,12 @@
                     <dd>From</dd>
                     <dt>
                         <ul>
-                             {% for school in related_schools %}
-                                <li>{{ school.school.display_name }}</li>
+                            {% for school in related_schools %}
+                                {% if self.date %}
+                                    <li>{% school_historical_display_name school self.date.year %}</li>
+                                {% else %}
+                                    <li>{{ school.school.display_name }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </dt>
@@ -42,8 +48,12 @@
                     <dd>Programme</dd>
                     <dt>
                         <ul>
-                             {% for programme in related_programmes %}
-                                <li>{{ programme.programme.display_name }}</li>
+                            {% for programme in related_programmes %}
+                                {% if self.date %}
+                                    <li>{% programme_historical_display_name programme self.date.year %}</li>
+                                {% else %}
+                                    <li>{{ programme.programme.display_name }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </dt>
