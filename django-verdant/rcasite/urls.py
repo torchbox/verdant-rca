@@ -14,6 +14,7 @@ from donations import urls as donations_urls
 from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
+from taxonomy import views as taxonomy_views
 
 admin.autodiscover()
 
@@ -35,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
+    url(r'^taxonomy/api/v0/$', taxonomy_views.api, name='taxonomy_api_v0'),
 
     url(r'^search/$', 'wagtail.wagtailsearch.views.search', {
         'template': 'rca/search_results.html',
