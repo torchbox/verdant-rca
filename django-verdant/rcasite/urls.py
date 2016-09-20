@@ -3,12 +3,14 @@ from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
+from django.views.decorators.cache import never_cache
 import os.path
 
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailimages import urls as wagtailimages_urls
+from wagtail.utils.urlpatterns import decorate_urlpatterns
 
 from wagtail.api.v2.router import WagtailAPIRouter
 from wagtail.api.v2.endpoints import PagesAPIEndpoint
@@ -46,8 +48,8 @@ urlpatterns = patterns('',
     url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
-    url(r'^taxonomy/api/v1/$', taxonomy_views.api, name='taxonomy_api_v0'),
-    url(r'^api/v2/', api_router.urls),
+    url(r'^taxonomy/api/v1/$', never_cache(taxonomy_views.api), name='taxonomy_api_v0'),
+    url(r'^api/v2/', include(decorate_urlpatterns(api_router.get_urlpatterns(), never_cache), namespace=api_router.url_namespace)),
 
     url(r'^search/$', 'wagtail.wagtailsearch.views.search', {
         'template': 'rca/search_results.html',
