@@ -4,8 +4,15 @@ from collections import OrderedDict
 
 from rest_framework.fields import Field
 
+from wagtail.wagtailcore.models import Site
 from wagtail.wagtailimages.models import SourceImageIOError
 from wagtail.wagtailimages.api.v2.serializers import ImageSerializer
+
+
+def get_main_site_root_url():
+    for site_id, root_path, root_url in Site.get_site_root_paths():
+        if root_path == '/home/':
+            return root_url
 
 
 class ImageRenditionField(Field):
@@ -37,9 +44,10 @@ class ImageRenditionField(Field):
     def to_representation(self, image):
         try:
             thumbnail = image.get_rendition(self.filter_spec)
+            root_url = get_main_site_root_url()
 
             return OrderedDict([
-                ('url', 'http://rca.ac.uk' + thumbnail.url),
+                ('url', root_url + thumbnail.url),
                 ('width', thumbnail.width),
                 ('height', thumbnail.height),
             ])
