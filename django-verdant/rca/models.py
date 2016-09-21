@@ -1186,6 +1186,8 @@ class NewsItem(Page, SocialFields):
         'areas',
     ]
 
+    pushable_to_inforca = True
+
     search_name = 'News'
 
     def get_related_news(self, count=4):
@@ -1662,6 +1664,8 @@ class EventItem(Page, SocialFields):
         'dates_times',
         'external_links',
     ]
+
+    pushable_to_inforca = True
 
     search_name = 'Event'
 
@@ -3107,6 +3111,8 @@ class StaffPage(Page, SocialFields):
         'ad_username',
     ]
 
+    pushable_to_inforca = True
+
     search_name = 'Staff'
 
 
@@ -4497,6 +4503,8 @@ class RcaBlogPage(Page, SocialFields):
         'carousel_items',
         'areas',
     ]
+
+    pushable_to_inforca = True
 
     search_name = 'RCA Blog'
 

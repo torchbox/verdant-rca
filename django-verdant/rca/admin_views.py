@@ -1,9 +1,14 @@
 # RCA-specific extensions to Verdant admin.
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+import requests
 
-from wagtail.wagtailcore.models import UserPagePermissionsProxy
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404, render, redirect
+
+from wagtail.wagtailadmin import messages
+from wagtail.wagtailcore.models import Page, UserPagePermissionsProxy
 
 from rca.models import RcaNowPage, RcaNowIndex, NewStudentPage, StandardIndex
 
@@ -58,3 +63,44 @@ def student_page_index(request):
             'pages': pages,
             'hide_actions': ('move', 'add_subpage'),
         })
+
+
+def push_to_inforca(request, page_id):
+    # Get page
+    page = get_object_or_404(Page, id=page_id)
+
+    # User must have publish permission
+    user_perms = UserPagePermissionsProxy(request.user)
+    page_perms = user_perms.for_page(page)
+    if not page_perms.can_publish():
+        raise PermissionDenied
+
+    if request.method == "POST":
+        # Perform request
+        url = settings.INFORCA_PUSH_URL.format(
+            type=page._meta.app_label + '.' + page.__class__.__name__,
+            id=page.id,
+        )
+        response = requests.post(url)
+
+        if response.status_code == 200:
+            intranet_url = response.json()['public_url']
+
+            # Success message
+            message = "Successfully pushed '{0}' to the intranet.".format(page.title)
+            messages.success(request, message, buttons=[
+                messages.button(
+                    intranet_url,
+                    'View on intranet'
+                ),
+            ])
+        else:
+            # Error message
+            message = "Error recieved while pushing '{0}' to the intranet. (status code: {1})".format(page.title, request.status_code)
+            messages.error(request, message)
+
+        return redirect('wagtailadmin_explore', page.get_parent().id)
+
+    return render(request, 'rca/admin/push_to_inforca.html', {
+        'page': page,
+    })
