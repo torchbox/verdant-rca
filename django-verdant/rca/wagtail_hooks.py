@@ -1,15 +1,12 @@
 from wagtail.wagtailcore import hooks
 from wagtail.wagtailadmin.menu import MenuItem
-from wagtail.wagtailadmin import widgets as wagtailadmin_widgets
 
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from django.conf import settings
-from django.conf.urls import url
 
-from .models import RcaNowPage
-from . import admin_views
+from rca.models import RcaNowPage
 
 
 def editor_css():
@@ -56,23 +53,3 @@ def construct_homepage_panels(request, panels):
         # assigning panels[:] will modify the list passed in
         panels[:] = [p for p in panels if p.name != 'site_summary']
 hooks.register('construct_homepage_panels', construct_homepage_panels)
-
-
-@hooks.register('register_page_listing_buttons')
-def page_listing_buttons(page, page_perms, is_parent=False):
-    if not getattr(settings, 'INFORCA_PUSH_URL', False):
-        return
-
-    if page.live and page_perms.can_publish() and getattr(page, 'pushable_to_inforca', False):
-        yield wagtailadmin_widgets.PageListingButton(
-            'Push to intranet',
-            reverse('push_to_inforca', args=(page.id, )),
-            priority=40
-        )
-
-
-@hooks.register('register_admin_urls')
-def register_admin_urls():
-    return [
-        url(r'^push_to_inforca/(\d+)/$', admin_views.push_to_inforca, name='push_to_inforca'),
-    ]
