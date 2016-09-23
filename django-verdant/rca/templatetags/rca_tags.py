@@ -221,7 +221,7 @@ def students_related_work(context, year=None, exclude=None, count=4):
 @register.inclusion_tag('rca/tags/staff_related.html', takes_context=True)
 def staff_related(context, staff_page, count=4):
     staff = StaffPage.objects.live().exclude(id=staff_page.id).order_by('?')
-    programme_ids = list(staff_page.roles.filter(programme__isnull=False).values_list('programme_id', flat=True))
+    programme_ids = [role.programme_id for role in staff_page.roles.all() if role.programme_id]
 
     if programme_ids:
         staff = staff.filter(roles__programme_id__in=programme_ids)
@@ -232,6 +232,7 @@ def staff_related(context, staff_page, count=4):
         'staff': staff[:count],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
+
 
 @register.inclusion_tag('rca/tags/homepage_packery.html', takes_context=True)
 def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, student_count=5, tweets_count=5, rcanow_count=5, research_count=5, alumni_count=5, review_count=5, blog_count=5):
