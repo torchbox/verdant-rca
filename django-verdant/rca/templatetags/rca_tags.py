@@ -254,21 +254,29 @@ def homepage_packery(context, calling_page=None, news_count=5, staff_count=5, st
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
 
+
 @register.inclusion_tag('rca/tags/sidebar_adverts.html', takes_context=True)
 def sidebar_adverts(context, show_open_days=False):
     self = context.get('self')
-    manual_adverts = getattr(self, 'manual_adverts', None)
+    try:
+        manual_adverts = self.manual_adverts.all()
+    except AttributeError:
+        manual_adverts = []
+
+    promoted_manual_adverts = [a for a in manual_adverts if a.ad.promoted is True]
+    manual_adverts = [a for a in manual_adverts if a.ad.promoted is False]
 
     return {
         'promoted_global_adverts': Advert.objects.filter(show_globally=True, promoted=True),
-        'promoted_manual_adverts': manual_adverts.filter(ad__promoted=True) if manual_adverts else [],
+        'promoted_manual_adverts': promoted_manual_adverts,
         'global_adverts': Advert.objects.filter(show_globally=True, promoted=False),
-        'manual_adverts': manual_adverts.filter(ad__promoted=False) if manual_adverts else [],
+        'manual_adverts': manual_adverts,
         'show_open_days': show_open_days,
         'self': self,
         'global_events_index_url': context['global_events_index_url'],
         'request': context['request'],
     }
+
 
 @register.inclusion_tag('rca/tags/sidebar_links.html', takes_context=True)
 def sidebar_links(context, calling_page=None):
