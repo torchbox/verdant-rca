@@ -54,6 +54,12 @@ class Command(BaseCommand):
         ),
     )
 
+    def check_ldap_username_exists(self, dn, username):
+        with LDAPConnection() as conn:
+            ldap_user = LDAPSearch(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName=%(user)s)").execute(conn, dict(user=username))
+
+        return bool(ldap_user)
+
     def guess_and_update_ldap_usernames(self, dn, model, commit=False):
         """
         Finds pages whose 'ad_username' field is blank attempts to guess the correct value
@@ -69,17 +75,15 @@ class Command(BaseCommand):
         updated = []
         not_updated = []
 
-        with LDAPConnection() as conn:
-            ad_usernames = LDAPSearch(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName=*)").execute(conn)
-
-        ad_usernames = [d[1].get('sAMAccountName')[0] for d in ad_usernames if d[1].get('sAMAccountName')]
-
         for page in model.objects.filter(ad_username=''):
             ad_username_guess = ('%s.%s' % (slugify(page.first_name), slugify(page.last_name)))
-            if ad_username_guess in ad_usernames:
+
+            if self.check_ldap_username_exists(dn, ad_username_guess):
                 page.ad_username = ad_username_guess
+
                 if commit:
                     page.save()
+
                 updated.append(page.id)
             else:
                 not_updated.append(page.id)
