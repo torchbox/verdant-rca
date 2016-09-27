@@ -5,7 +5,7 @@ from django.conf import settings
 
 from wagtail.wagtailcore.models import Site
 
-from rca.models import RcaImage, StaffPage
+from rca.models import RcaImage, StaffPage, NewStudentPage
 
 
 import ldap
@@ -46,25 +46,50 @@ class Command(BaseCommand):
             dest='commit',
             default=False,
         ),
+        make_option('--students',
+            action='store_true',
+            dest='students',
+            default=False,
+        ),
     )
 
-    def handle(self, commit, **options):
+    def guess_and_update_ldap_usernames(self, dn, model, commit=False):
+        """
+        Finds pages whose 'ad_username' field is blank attempts to guess the correct value
+        based on the 'first_name' and 'last_name' fields.
+
+        The guess is checked against LDAP. If a user with that username exists, the value is
+        saved, otherwise the value is discarded leaving 'ad_username' blank.
+
+        This returns two lists of page ids, the first list contains ids of the pages that a
+        username was successfully guessed for. The second list contains the ids of the pages
+        for which a guess was attempted but the guessed username didn't exist in LDAP.
+        """
         updated = []
         not_updated = []
+
         with LDAPConnection() as conn:
-            ad_usernames = LDAPSearch(STAFF_DN, ldap.SCOPE_SUBTREE, "(sAMAccountName=*)").execute(conn)
+            ad_usernames = LDAPSearch(dn, ldap.SCOPE_SUBTREE, "(sAMAccountName=*)").execute(conn)
 
         ad_usernames = [d[1].get('sAMAccountName')[0] for d in ad_usernames if d[1].get('sAMAccountName')]
 
-        for staff_page in StaffPage.objects.filter(ad_username=''):
-            ad_username_guess = ('%s.%s' % (staff_page.first_name, staff_page.last_name)).lower()
+        for page in model.objects.filter(ad_username=''):
+            ad_username_guess = ('%s.%s' % (page.first_name, page.last_name)).lower()
             if ad_username_guess in ad_usernames:
-                staff_page.ad_username = ad_username_guess
+                page.ad_username = ad_username_guess
                 if commit:
-                    staff_page.save()
-                updated.append(staff_page.id)
+                    page.save()
+                updated.append(page.id)
             else:
-                not_updated.append(staff_page.id)
+                not_updated.append(page.id)
+
+        return updated, not_updated
+
+    def handle(self, commit, students, **options):
+        if students:
+            updated, not_updated = self.guess_and_update_ldap_usernames(STUDENTS_DN, NewStudentPage, commit=commit)
+        else:
+            updated, not_updated = self.guess_and_update_ldap_usernames(STAFF_DN, StaffPage, commit=commit)
 
         root_url = Site.objects.get(is_default_site=True).root_url
         for id in updated:
