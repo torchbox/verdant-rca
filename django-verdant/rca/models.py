@@ -3950,6 +3950,7 @@ class NewStudentPage(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.NewStudentPage', 'show_on_homepage'))
     innovation_rca_fellow = models.BooleanField(default=False, help_text=help_text('rca.NewStudentPage', 'innovation_rca_fellow', default="Please tick this box only if you are currently an InnovationRCA Fellow"))
     postcard_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.NewStudentPage', 'postcard_image', default="Please upload images sized to A6 plus 2mm 'bleed' (152 x 109mm or 1795 x 1287px @ 300 dpi) - this must be uploaded at the correct size for printed postcards"))
+    ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StudentPage', 'ad_username'))
 
     # Hidden fields
     rca_content_id = models.CharField(max_length=255, blank=True, editable=False)  # for import
@@ -4037,6 +4038,7 @@ class NewStudentPage(Page, SocialFields):
         'funding',
         'feed_image',
         'innovation_rca_fellow',
+        'ad_username',
         'postcard_image',
         'previous_degrees',
         'exhibitions',
@@ -4331,6 +4333,7 @@ NewStudentPage.content_panels = [
     FieldPanel('twitter_handle'),
     FieldPanel('funding'),
     FieldPanel('innovation_rca_fellow'),
+    FieldPanel('ad_username'),
     InlinePanel('emails', label="Email"),
     InlinePanel('phones', label="Phone"),
     InlinePanel('websites', label="Website"),

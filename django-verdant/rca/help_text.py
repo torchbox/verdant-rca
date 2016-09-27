@@ -91,6 +91,7 @@ HELP_TEXT = {
     ('rca.NewStudentPage', 'feed_image'): 'This image displays in content feeds, such as the news carousel. Should be 16:9 aspect ratio.',
     ('rca.NewStudentPage', 'innovation_rca_fellow'): 'Tick this box only if you are currently an InnovationRCA Fellow',
     ('rca.NewStudentPage', 'postcard_image'): "Image will be used to print a set of postcards with your contact details, for you to use during the show. The image will not appear in your Show online catalogue. Image must be A6 plus 2mm 'bleed' on each edge (152 x 109mm or 1795 x 1287px @ 300 dpi).  This must be uploaded at the correct size and before the deadline for postcards to be printed.",
+    ('rca.NewStudentPage', 'ad_username'): 'Username in Active Directory',
     ('rca.NewStudentPage', 'ma_specialism'): 'Only complete for Fashion (Knitwear; Accessories, Footwear and Millinery) Textiles (Knit; Mixed-media; Print, Weave) or Fine Art (Performance; Moving Image)',
     ('rca.NewStudentPage', 'ma_in_show'): "Tick for MA students in this year's Show ",
     ('rca.NewStudentPage', 'show_work_title'): 'The title of your MA Show work/project. CWA&D and History of Design students should enter their dissertation titles. CCA Students should enter their exhibition title.',
