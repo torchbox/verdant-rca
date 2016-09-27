@@ -161,40 +161,6 @@ def rendition_delete(sender, instance, **kwargs):
     instance.file.delete(False)
 
 
-AREA_CHOICES = (
-    ('administration', 'Administration'),
-    ('alumnirca', 'AlumniRCA'),
-    ('communicationsmarketing', 'Communications & Marketing'),
-    ('development', 'Development'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('executiveeducation', 'Executive Education'),
-    ('fuelrca', 'Fuel RCA'),
-    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
-    ('informationlearningtechnicalservices', 'Information, Learning & Technical Services'),
-    ('innovationrca', 'InnovationRCA'),
-    ('reachoutrca', 'ReachOutRCA'),
-    ('rectorate', 'Rectorate'),
-    ('research-knowledgeexchange', "Research, Knowledge Exchange & Innovation"),
-    ('schoolofarchitecture', 'School of Architecture'),
-    ('schoolofcommunication', 'School of Communication'),
-    ('schoolofdesign', 'School of Design'),
-    ('schooloffineart', 'School of Fine Art'),
-    ('schoolofhumanities', 'School of Humanities'),
-    ('schoolofmaterial', 'School of Material'),
-    ('showrca', 'Show RCA'),
-    ('support', 'Support'),
-    ('sustainrca', 'SustainRCA'),
-)
-
-STAFF_AREA_CHOICES = AREA_CHOICES + (
-    ('performance', "Performance"),
-    ('moving-image', "Moving image"),
-)
-
-EVENT_AREA_CHOICES = AREA_CHOICES + (
-    ('alumnirca', 'AlumniRCA'),
-)
-
 EVENT_AUDIENCE_CHOICES = (
     ('public', 'Public'),
     ('rcaonly', 'RCA only'),
@@ -329,192 +295,11 @@ SPECIALISM_CHOICES = (
     )),
 )
 
-SCHOOL_CHOICES = (
-    ('schoolofarchitecture', 'School of Architecture'),
-    ('schoolofcommunication', 'School of Communication'),
-    ('schoolofdesign', 'School of Design'),
-    ('schooloffineart', 'School of Fine Art'),
-    ('schoolofhumanities', 'School of Humanities'),
-    ('schoolofmaterial', 'School of Material'),
-    ('helenhamlyn', 'The Helen Hamlyn Centre for Design'),
-    ('rectorate', 'Rectorate'),
-    ('innovationrca', 'InnovationRCA'),
-)
-
-ALL_PROGRAMMES = tuple(sorted([
-    ('fashionwomenswear', 'Fashion Womenswear'),
-    ('textiles', 'Textiles'),
-    ('ceramicsglass', 'Ceramics & Glass'),
-    ('sculpture', 'Sculpture'),
-    ('designproducts', 'Design Products'),
-    ('industrialdesignengineering', 'Industrial Design Engineering'),
-    ('goldsmithingsilversmithingmetalworkjewellery', 'Goldsmithing, Silversmithing, Metalwork & Jewellery'),
-    ('jewelleryandmetal', 'Jewellery & Metal'),
-    ('visualcommunication', 'Visual Communication'),
-    ('designinteractions', 'Design Interactions'),
-    ('innovationdesignengineering', 'Innovation Design Engineering'),
-    ('historyofdesign', 'History of Design'),
-    ('fashionmenswear', 'Fashion Menswear'),
-    ('printmaking', 'Printmaking'),
-    ('print', 'Print'),
-    ('globalinnovationdesign', 'Global Innovation Design'),
-    ('architecture', 'Architecture'),
-    ('interiordesign', 'Interior Design'),
-    ('drawingstudio', 'Drawing Studio'),
-    ('criticalhistoricalstudies', 'Critical & Historical Studies'),
-    ('painting', 'Painting'),
-    ('photography', 'Photography'),
-    ('servicedesign', 'Service Design'),
-    ('animation', 'Animation'),
-    ('informationexperiencedesign', 'Information Experience Design'),
-    ('criticalwritinginartdesign', 'Critical Writing in Art & Design'),
-    ('curatingcontemporaryart', 'Curating Contemporary Art'),
-    ('conservation', 'Conservation'),
-    ('vehicledesign', 'Vehicle Design'),
-    ('communicationartdesign', 'Communication Art & Design'),
-    ('contemporaryartpractice', 'Contemporary Art Practice'),
-    ('mres-rca-humanities-pathway', 'MRes RCA: Humanities Pathway'),
-    ('mres-rca-design-pathway', 'MRes RCA: Design Pathway'),
-    ('mres-rca-communication-design-pathway', 'MRes RCA: Communication Design Pathway'),
-    ('mres-rca-fine-art-pathway', 'MRes RCA: Fine Art Pathway'),
-    ('mres-healthcare-and-design', 'MRes: Healthcare & Design'),
-    ('mres-rca-architecture-pathway', 'MRes RCA: Architecture Pathway'),
-], key=lambda programme: programme[0]))  # ALL_PROGRAMMES needs to be in alphabetical order (#504 Issue 1)
-
-
-# TODO: we should use academic years as keys, e.g. 2015/16 instead of 2016,
-# Currently 2016 refers to the academic year ending in 2016: https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/748#update-27575600
-# See also: student_profiles.forms.PROGRAMME_CHOICES_2015
-SCHOOL_PROGRAMME_MAP = {
-    '2017': {
-        'schoolofarchitecture': ['architecture', 'interiordesign', 'mres-rca-architecture-pathway'],
-        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication', 'mres-rca-communication-design-pathway'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign', 'mres-rca-design-pathway', 'mres-healthcare-and-design'],
-        'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice', 'mres-rca-fine-art-pathway'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign', 'mres-rca-humanities-pathway'],
-        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2016': {
-        'schoolofarchitecture': ['architecture', 'interiordesign'],
-        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'print', 'sculpture', 'contemporaryartpractice'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2015': {
-        'schoolofarchitecture': ['architecture', 'interiordesign'],
-        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2014': {
-        'schoolofarchitecture': ['architecture', 'interiordesign'],
-        'schoolofcommunication': ['animation', 'informationexperiencedesign', 'visualcommunication'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'globalinnovationdesign', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'jewelleryandmetal', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2013': {
-        'schoolofarchitecture': ['architecture'],
-        'schoolofcommunication': ['animation', 'visualcommunication'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'servicedesign', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2012': {
-        'schoolofarchitecture': ['architecture'],
-        'schoolofcommunication': ['animation', 'visualcommunication'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2011': {
-        'schoolofarchitecture': ['architecture'],
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2010': {
-        'schoolofarchitecture': ['architecture'],
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
-        'schoolofdesign': ['designinteractions', 'designproducts', 'innovationdesignengineering', 'vehicledesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['criticalhistoricalstudies', 'criticalwritinginartdesign', 'curatingcontemporaryart', 'historyofdesign'],
-        'schoolofmaterial': ['ceramicsglass', 'goldsmithingsilversmithingmetalworkjewellery', 'fashionmenswear', 'fashionwomenswear', 'textiles'],
-    },
-    '2009': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
-    },
-    '2008': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
-    },
-    '2007': {
-        'schoolofcommunication': ['animation', 'communicationartdesign'],
-        'schooloffineart': ['painting', 'photography', 'printmaking', 'sculpture'],
-        'schoolofhumanities': ['conservation', 'criticalhistoricalstudies', 'curatingcontemporaryart', 'historyofdesign'],
-    },
-}
-
 SUSTAINRCA_CATEGORY_CHOICES = (
     ('solutionsforsociety', 'Solutions for Society'),
     ('inspiredproducts', 'Inspired Products'),
     ('visionaryprocess', 'Visionary Process'),
     ('movingminds', 'Moving Minds')
-)
-
-# Generate choices for programmes groupped by year, based on SCHOOL_PROGRAMME_MAP,
-# using academic years as optgroup labels: e.g. 2015/16 instead of 2016.
-PROGRAMME_CHOICES = sorted([
-    (
-        '%s/%s' % (int(year) - 1, str(year)[2:]),  # 2015 -> 2014/15
-        tuple([
-            (programme, dict(ALL_PROGRAMMES)[programme])
-            for programme
-            in sorted(set(sum(mapping.values(), [])))
-        ])
-    )
-    for year, mapping
-    in SCHOOL_PROGRAMME_MAP.items()
-], reverse=True)
-
-
-# Make sure the values in SCHOOL_PROGRAMME_MAP are valid (`sum(list, [])` flattens a list)
-# 1. check schools
-assert set(sum([mapping.keys() for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
-        .issubset(set(dict(SCHOOL_CHOICES)))
-# 2. check programmes
-assert set(sum([sum(mapping.values(), []) for mapping in SCHOOL_PROGRAMME_MAP.values()], []))\
-        .issubset(set(dict(ALL_PROGRAMMES)))
-
-YEARS = list(sorted(SCHOOL_PROGRAMME_MAP.keys()))
-
-SCHOOL_CHOICES_MAP = dict(SCHOOL_CHOICES)
-
-# A list of all schools that are mentioned in SCHOOL_PROGRAMME_MAP
-SHOW_SCHOOLS = tuple(
-    (school_slug, SCHOOL_CHOICES_MAP[school_slug])
-    for school_slug in {
-        school for school in mapping
-        for year, mapping
-        in SCHOOL_PROGRAMME_MAP.items()
-    }
-)
-
-SUBJECT_CHOICES = ALL_PROGRAMMES + (
-    ('curatingcontemporaryartcollegebased', 'Curating Contemporary Art (College-based)'),
-    ('curatingcontemporaryartworkbased', 'Curating Contemporary Art (Work-based)'),
 )
 
 QUALIFICATION_CHOICES = (
@@ -3261,7 +3046,6 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    # N.B. the `school` field has been relabeled as 'Area', and it's using AREA_CHOICES, which includes all the schools too.  See #727
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
     staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
