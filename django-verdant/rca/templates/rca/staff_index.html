@@ -22,7 +22,7 @@
 	                <label for="school">Schools &amp; Centres</label>
 	                <select id="school" name="school">
 	                    <option value="">All schools</option>
-	                    {% for key, value in global_schools %}
+	                    {% for key, value in global_all_schools %}
 	                    	<option value="{{ key }}" {% if request.GET.school == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
 	                </select>
@@ -31,7 +31,7 @@
 	                <label for="programme">Programme</label>
 	                <select id="programme" name="programme">
 	                    <option value="">All programmes</option>
-	                    {% for key, value in global_programmes %}
+	                    {% for key, value in global_all_programmes %}
 	                    	<option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
 						{% endfor %}
 	                </select>
