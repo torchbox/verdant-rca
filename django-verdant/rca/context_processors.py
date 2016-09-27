@@ -12,7 +12,6 @@ def global_vars(request):
     all_areas = Area.objects.all()
     all_schools = School.objects.all()
     all_programmes = Programme.objects.all()
-    current_year = 2016  # FIXME
 
     return {
         'global_all_schools': all_schools.values_list('slug', 'display_name'),
