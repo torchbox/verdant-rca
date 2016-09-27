@@ -34,7 +34,7 @@
                   <label for="programme">Programmes</label>
                   <select name="programme" id="programme">
                       <option value="">All programmes</option>
-                      {% for key, value in global_programmes %}
+                      {% for key, value in global_all_programmes %}
                         <option value="{{ key }}" {% if request.GET.programme == key %}selected="selected"{% endif %}>{{ value }}</option>
                       {% endfor %}
                   </select>

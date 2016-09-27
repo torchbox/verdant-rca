@@ -18,10 +18,7 @@ def global_vars(request):
 
     return {
         'global_all_schools': all_schools.values_list('slug', 'display_name'),
-        'global_schools': all_schools.values_list('slug', 'display_name'),
-        'global_show_schools': all_schools.values_list('slug', 'display_name'),
         'global_all_programmes': all_programmes.values_list('slug', 'display_name'),
-        'global_programmes': all_programmes.values_list('slug', 'display_name'),
         'global_locations': EVENT_LOCATION_CHOICES,
         'global_areas': all_areas.values_list('slug', 'display_name'),
         'global_years': years_until_current_year,
