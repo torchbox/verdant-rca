@@ -2,6 +2,7 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.utils.text import slugify
 
 from wagtail.wagtailcore.models import Site
 
@@ -74,7 +75,7 @@ class Command(BaseCommand):
         ad_usernames = [d[1].get('sAMAccountName')[0] for d in ad_usernames if d[1].get('sAMAccountName')]
 
         for page in model.objects.filter(ad_username=''):
-            ad_username_guess = ('%s.%s' % (page.first_name, page.last_name)).lower()
+            ad_username_guess = ('%s.%s' % (slugify(page.first_name), slugify(page.last_name)))
             if ad_username_guess in ad_usernames:
                 page.ad_username = ad_username_guess
                 if commit:
