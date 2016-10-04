@@ -103,6 +103,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -167,6 +168,7 @@ INSTALLED_APPS = (
 
     'wagtailcaptcha',
     'captcha',
+    'corsheaders',
 
     'webhooks',
     'taxonomy',
@@ -287,3 +289,14 @@ RECAPTCHA_PUBLIC_KEY = 'put your public key here'
 RECAPTCHA_PRIVATE_KEY = 'put your recaptcha secret key here'
 NOCAPTCHA = True
 RECAPTCHA_USE_SSL = True
+
+# CORS settings
+
+CORS_ORIGIN_WHITELIST = [
+    'localhost:8000',
+    'intranet.rca.ac.uk',
+    'inforca-staging.torchboxapps.com',
+]
+
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_METHODS = ['GET', 'OPTIONS']

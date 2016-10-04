@@ -18,6 +18,7 @@ wagtail-django-recaptcha==0.1
 raven==5.26.0
 dj-database-url==0.3.0
 ConcurrentLogHandler==0.9.1
+django-cors-headers==1.2.1
 
 # Developer requirements
 django-debug-toolbar==0.11.0
