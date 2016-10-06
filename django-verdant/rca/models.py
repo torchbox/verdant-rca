@@ -3884,6 +3884,8 @@ class NewStudentPage(Page, SocialFields):
         'phd_supervisors',
     ]
 
+    pushable_to_inforca = True
+
     @property
     def is_ma_student(self):
         return self.ma_programme is not None
