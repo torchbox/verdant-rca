@@ -65,7 +65,7 @@ def student_page_index(request):
         })
 
 
-def push_to_inforca(request, page_id):
+def push_to_intranet(request, page_id):
     # Get page
     page = get_object_or_404(Page, id=page_id)
 
@@ -77,7 +77,7 @@ def push_to_inforca(request, page_id):
 
     if request.method == "POST":
         # Perform request
-        url = settings.INFORCA_PUSH_URL.format(
+        url = settings.INTRANET_PUSH_URL.format(
             type=page._meta.app_label + '.' + page.__class__.__name__,
             id=page.id,
         )
@@ -101,6 +101,6 @@ def push_to_inforca(request, page_id):
 
         return redirect('wagtailadmin_explore', page.get_parent().id)
 
-    return render(request, 'rca/admin/push_to_inforca.html', {
+    return render(request, 'rca/admin/push_to_intranet.html', {
         'page': page,
     })

@@ -26,7 +26,7 @@
             This action can be undone by logging into the intranet and deleting the page there.
         </p>
 
-        <form action="{% url 'push_to_inforca' page.id %}" method="POST">
+        <form action="{% url 'push_to_intranet' page.id %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="button button-longrunning" data-clicked-text="Pushing..."><span class="icon icon-spinner"></span><em>Push to intranet</em></button>
             <a href="{% url 'wagtailadmin_explore' page.get_parent.id %}" class="button button-secondary">Go back</a>

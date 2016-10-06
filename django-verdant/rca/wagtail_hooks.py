@@ -60,13 +60,13 @@ hooks.register('construct_homepage_panels', construct_homepage_panels)
 
 @hooks.register('register_page_listing_buttons')
 def page_listing_buttons(page, page_perms, is_parent=False):
-    if not getattr(settings, 'INFORCA_PUSH_URL', False):
+    if not getattr(settings, 'INTRANET_PUSH_URL', False):
         return
 
-    if page.live and page_perms.can_publish() and getattr(page, 'pushable_to_inforca', False):
+    if page.live and page_perms.can_publish() and getattr(page, 'pushable_to_intranet', False):
         yield wagtailadmin_widgets.PageListingButton(
             'Push to intranet',
-            reverse('push_to_inforca', args=(page.id, )),
+            reverse('push_to_intranet', args=(page.id, )),
             priority=40
         )
 
@@ -74,5 +74,5 @@ def page_listing_buttons(page, page_perms, is_parent=False):
 @hooks.register('register_admin_urls')
 def register_admin_urls():
     return [
-        url(r'^push_to_inforca/(\d+)/$', admin_views.push_to_inforca, name='push_to_inforca'),
+        url(r'^push_to_intranet/(\d+)/$', admin_views.push_to_intranet, name='push_to_intranet'),
     ]

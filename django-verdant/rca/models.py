@@ -1186,7 +1186,7 @@ class NewsItem(Page, SocialFields):
         'areas',
     ]
 
-    pushable_to_inforca = True
+    pushable_to_intranet = True
 
     search_name = 'News'
 
@@ -1665,7 +1665,7 @@ class EventItem(Page, SocialFields):
         'external_links',
     ]
 
-    pushable_to_inforca = True
+    pushable_to_intranet = True
 
     search_name = 'Event'
 
@@ -3111,7 +3111,7 @@ class StaffPage(Page, SocialFields):
         'ad_username',
     ]
 
-    pushable_to_inforca = True
+    pushable_to_intranet = True
 
     search_name = 'Staff'
 
@@ -3884,7 +3884,7 @@ class NewStudentPage(Page, SocialFields):
         'phd_supervisors',
     ]
 
-    pushable_to_inforca = True
+    pushable_to_intranet = True
 
     @property
     def is_ma_student(self):
@@ -4506,7 +4506,7 @@ class RcaBlogPage(Page, SocialFields):
         'areas',
     ]
 
-    pushable_to_inforca = True
+    pushable_to_intranet = True
 
     search_name = 'RCA Blog'
 
