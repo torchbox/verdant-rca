@@ -96,7 +96,7 @@ def push_to_inforca(request, page_id):
             ])
         else:
             # Error message
-            message = "Error recieved while pushing '{0}' to the intranet. (status code: {1})".format(page.title, request.status_code)
+            message = "Error received while pushing '{0}' to the intranet. (status code: {1})".format(page.title, request.status_code)
             messages.error(request, message)
 
         return redirect('wagtailadmin_explore', page.get_parent().id)
