@@ -31,7 +31,7 @@ class StudentsSubmittedForModerationReport(Report):
         return (
             page.title,
             None,
-            'http://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
+            'https://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
         )
 
 
@@ -53,7 +53,7 @@ class StudentsSubmittedForModerationReport(Report):
 
     def page_submitted_by_field(self, student):
         user = student['current_revision'].user
-        return user.username, None, 'http://www.rca.ac.uk/admin/users/' + str(user.id) + '/'
+        return user.username, None, 'https://www.rca.ac.uk/admin/users/' + str(user.id) + '/'
 
     def page_submitted_at_field(self, student):
         time = student['current_revision'].created_at

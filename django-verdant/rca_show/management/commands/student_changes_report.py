@@ -38,7 +38,7 @@ class StudentChangesReport(Report):
             return (
                 page.title,
                 None,
-                'http://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
+                'https://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
             )
         else:
             return (
@@ -103,7 +103,7 @@ class StudentChangesReport(Report):
             return '', None, None
 
         user = student['current_revision'].user
-        return user.username, None, 'http://www.rca.ac.uk/admin/users/' + str(user.id) + '/'
+        return user.username, None, 'https://www.rca.ac.uk/admin/users/' + str(user.id) + '/'
 
 
     def page_change_at_field(self, student):

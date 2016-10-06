@@ -28,7 +28,7 @@ class PostcardDumpReport(Report):
         return (
             student.title,
             None,
-            'http://www.rca.ac.uk/admin/pages/' + str(student.id) + '/edit/',
+            'https://www.rca.ac.uk/admin/pages/' + str(student.id) + '/edit/',
         )
 
     def page_status_field(self, student):

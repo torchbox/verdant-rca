@@ -33,7 +33,7 @@ class ProfileImageDumpReport(Report):
             return (
                 page.title,
                 None,
-                'http://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
+                'https://www.rca.ac.uk/admin/pages/' + str(page.id) + '/edit/',
             )
         else:
             return (
