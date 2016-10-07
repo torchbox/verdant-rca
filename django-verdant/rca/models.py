@@ -21,6 +21,8 @@ from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils import timezone
 from django.views.decorators.vary import vary_on_headers
+from wagtail.contrib.settings.models import BaseSetting
+from wagtail.contrib.settings.registry import register_setting
 
 from wagtail.wagtailcore.models import Page, Orderable, PageManager
 from wagtail.wagtailcore.fields import RichTextField
@@ -46,6 +48,7 @@ import stripe
 
 import hashlib
 
+from rca_ee.models import FormPage
 from taxonomy.models import Area, School, Programme
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
@@ -6411,3 +6414,13 @@ PageAlias.promote_panels = Page.promote_panels + [
         ImageChooserPanel('feed_image'),
     ], "Cross-page behaviour",)
 ]
+
+
+@register_setting
+class EnquiryFormSettings(BaseSetting):
+    form_page = models.ForeignKey(Page, on_delete=models.SET_NULL, related_name='+', null=True, blank=True,
+                                  help_text=help_text('rca.CarouselItemFields', 'link_page'))
+
+    panels = [
+        PageChooserPanel('form_page', page_type=FormPage),
+    ]
