@@ -732,10 +732,14 @@ function onDocumentReady(jQuery, inLightBox){
     var enquiryForm = function() {
 
         var $trigger            = $( '.js-enquiry-form-trigger' ),
+            $triggerButton      = $( '.enquiry-form-trigger' ),
             $sidebar            = $( '.enquiry-form' ),
             $bodyContent        = $( '.mobile-content-wrapper' ),
+            $wrapper            = $( '.enquiry-trigger-wrapper' ),
+            wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
             showSidebar         = 'enquiry-form--show',
-            shiftContent        = 'mobile-content-wrapper--shift-left'
+            shiftContent        = 'mobile-content-wrapper--shift-left',
+            toggled             = 'enquiry-form-trigger--toggled',
             displayBuffer       = 10,
             state               = {
                 open    : false,
@@ -749,6 +753,9 @@ function onDocumentReady(jQuery, inLightBox){
                 setTimeout(function(){
                     $sidebar.addClass( showSidebar );
                     $bodyContent.addClass( shiftContent );
+                    $wrapper.addClass( wrapperFixed );
+                    $triggerButton.addClass( toggled );
+                    $triggerButton.html( 'Apply to study <span>&mdash; Enquiries</span>' );
                 
                     state.open = true;
                     state.busy = false;
@@ -763,6 +770,9 @@ function onDocumentReady(jQuery, inLightBox){
                 setTimeout(function(){
                     $sidebar.removeClass( showSidebar );
                     $bodyContent.removeClass( shiftContent );
+                    $wrapper.removeClass( wrapperFixed );
+                    $triggerButton.removeClass( toggled );
+                    $triggerButton.html( 'Enquire to study' );
 
                     state.open = false;
                     state.busy = false;
