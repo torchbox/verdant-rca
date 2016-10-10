@@ -69,12 +69,17 @@ html, body {
  */
 
 .mobile-content-wrapper{
-    .transition(all 0.2s ease);
     position: relative;
     float:right;
     width:100%;
     overflow: hidden;
     padding: 0 15px 0 15px; /* padding for mobile */
+    transition:
+        transform 300ms ease;
+
+    &--shift-left {
+        transform: translate3d(-@sidebarWidth, 0, 0);
+    }
 }
 
 .mobile-menu-wrapper{
@@ -2115,3 +2120,4 @@ a.hidden {
 
 @import "modules.less";
 @import "dlmenu.less";
+@import "enquiry-form.less";

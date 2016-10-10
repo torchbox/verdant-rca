@@ -728,4 +728,69 @@ function onDocumentReady(jQuery, inLightBox){
         displayCookieNotice();
       }
     });
+
+    var enquiryForm = function() {
+
+        var $trigger            = $( '.js-enquiry-form-trigger' ),
+            $sidebar            = $( '.enquiry-form' ),
+            $bodyContent        = $( '.mobile-content-wrapper' ),
+            showSidebar         = 'enquiry-form--show',
+            shiftContent        = 'mobile-content-wrapper--shift-left'
+            displayBuffer       = 10,
+            state               = {
+                open    : false,
+                busy    : false
+            };
+
+        function open(){
+            if( !state.busy ){
+                state.busy = true;
+
+                setTimeout(function(){
+                    $sidebar.addClass( showSidebar );
+                    $bodyContent.addClass( shiftContent );
+                
+                    state.open = true;
+                    state.busy = false;
+                }, displayBuffer );
+            }
+        }
+
+        function close() {
+            if( !state.busy ){
+                state.busy = true;
+
+                setTimeout(function(){
+                    $sidebar.removeClass( showSidebar );
+                    $bodyContent.removeClass( shiftContent );
+
+                    state.open = false;
+                    state.busy = false;
+                }, displayBuffer );
+            }
+        }
+
+        function toggle(){
+            if( state.open ) {
+                close();
+            } else {
+                open();
+            }
+        }
+
+        function bindEvents(){
+            $trigger.on( 'click', function(){
+                toggle();
+            });
+
+            $bodyContent.on( 'click', function() {
+                close();
+            });
+        }
+
+        bindEvents();
+    };
+
+    enquiryForm();
+
 }
