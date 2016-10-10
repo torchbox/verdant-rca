@@ -62,6 +62,8 @@ class FormPage(ExtendedAbstractEmailForm):
     """
     A page for registering interest in a selection of courses.
     """
+    ajax_template = 'rca_ee/form_page_ajax.html'
+
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
 
@@ -107,7 +109,7 @@ class FormPage(ExtendedAbstractEmailForm):
         context['form'] = form
         return render(
             request,
-            self.template,
+            self.get_template(request),
             context
         )
 
