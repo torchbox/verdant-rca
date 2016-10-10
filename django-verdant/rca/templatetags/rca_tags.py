@@ -681,8 +681,9 @@ def enquiry_form(context):
     enquiry_page, enquiry_page_form = None, None
     if request:
         enquiry_form_settings = EnquiryFormSettings.for_site(request.site)
-        enquiry_page = enquiry_form_settings.form_page.specific
-        enquiry_page_form = enquiry_page.get_form()
+        if enquiry_form_settings.form_page:
+            enquiry_page = enquiry_form_settings.form_page.specific
+            enquiry_page_form = enquiry_page.get_form()
 
     return {
         'request': request,
