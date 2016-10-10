@@ -1,9 +1,8 @@
 {% load wagtailcore_tags widget_tweaks %}
 <div class="enquiry-form">
   <div class="enquiry-form__inner">
-    {# Replace with real data #}
     <div class="enquiry-form__introduction">
-      Please fill in the information below and we will send you relevant course information.
+      {{ enquiry_page.intro|richtext }}
     </div>
     {% if enquiry_page %}
       <form action="{% pageurl enquiry_page %}" method="POST">
