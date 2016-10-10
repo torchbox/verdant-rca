@@ -1,10 +1,58 @@
+////
+// Fly-in enquiry form
+////
+
+// Style button
 .enquiry-form-trigger {
-    position: fixed;
+    position: absolute;
     top: 50px;
-    right: 72px;
-    z-index: 999999;
+    right: calc(~'40px + 5%');
+    z-index: 4001;
+    border: 0;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+    transition:
+        background-color 300ms ease;
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -36px;
+        width: 35px;
+        height: 100%;
+        background-color: #0096ff;
+        transition:
+            background-color 300ms ease;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    &:focus {
+        outline: 0;
+    }
+
+    span {
+        font-size: 10px;
+        text-transform: none;
+        font-weight: 100;
+    }
+
+    &--toggled {
+        position: fixed;
+
+        &:after {
+            background-color: #7b7a7a;
+        }
+    }
+
 }
 
+// Fly-in form
 .enquiry-form {
     position: fixed;
     right: 0;
@@ -12,12 +60,54 @@
     width: @sidebarWidth;
     height: 100vh;
     z-index: 4000;
-    background: #5b5a5a;
-    transform: translate3d(@sidebarWidth, 0, 0);
+    background-color: #5b5a5a;
+    transform: 
+        translate3d(@sidebarWidth, 0, 0);
     transition:
         transform 300ms ease;
+    
+    // BEM not possible, have to beat specificity
+    input,
+    textarea {
+        padding: 10px;
+    }
+
+    label {
+        color: #fff;
+    }
 
     &--show {
         transform: translate3d(0, 0, 0);
     }
+
+    &__inner {
+        padding: 120px 20px 20px;
+    }
+
+        &__introduction {
+            color: #fff;
+            font-size: 12px;
+            border-top: 1px solid #6d6b6b;
+            border-bottom: 1px solid #6d6b6b;
+            padding: 15px 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        &__form-wrapper {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #6d6b6b;
+        }
+
+        &__submit,
+        input[type=submit] {
+            padding: 10px 15px;
+            font-size: 12px;
+        }
+}
+
+// Hide GC for now - not sure if it will be used
+.rc-anchor-light {
+    display: none !important;
 }

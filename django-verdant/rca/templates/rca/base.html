@@ -79,7 +79,9 @@
 
         <div class="mobile-menu-wrapper">
         </div>
-        <button class="enquiry-form-trigger js-enquiry-form-trigger">Enquire to study</button>
+        <button class="enquiry-form-trigger js-enquiry-form-trigger">
+            Enquire to study<span></span>
+        </button>
 
         <div class="mobile-content-wrapper">
             <div class="mobile-menu-button">Inside</div>
@@ -196,8 +198,7 @@
             {% block extra_js %}{% endblock %}
         {% endblock %}
 
-        <div class="enquiry-form">
-            {% enquiry_form %}
-        </div>
+        {% enquiry_form %}
+
     </body>
 </html>
