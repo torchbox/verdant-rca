@@ -682,11 +682,9 @@ def enquiry_form(context):
     if request:
         enquiry_form_settings = EnquiryFormSettings.for_site(request.site)
         if enquiry_form_settings.form_page:
-            enquiry_page = enquiry_form_settings.form_page.specific
-            enquiry_page_form = enquiry_page.get_form()
+            enquiry_page = enquiry_form_settings.form_page
 
     return {
         'request': request,
         'enquiry_page': enquiry_page,
-        'enquiry_page_form': enquiry_page_form,
     }

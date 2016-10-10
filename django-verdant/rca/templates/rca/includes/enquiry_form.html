@@ -1,56 +1,5 @@
 {% load wagtailcore_tags widget_tweaks %}
-<div class="enquiry-form">
-  <div class="enquiry-form__inner">
-    <div class="enquiry-form__introduction">
-      {{ enquiry_page.intro|richtext }}
+{% if enquiry_page %}
+    <div class="enquiry-form" data-from-url="{% pageurl enquiry_page %}">
     </div>
-    {% if enquiry_page %}
-      <form action="{% pageurl enquiry_page %}" method="POST">
-      {% csrf_token %}
-        <div class="enquiry-form__form-wrapper">
-        {% for field in enquiry_page_form.visible_fields %}
-          {% if field.label %}
-            <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
-
-              {% if field.help_text %}
-                <p class="help-text">{{ field.help_text }}</p>
-              {% endif %}
-
-              {% render_field field %}
-            </label>
-
-            {% for error in field.errors %}
-              <small class="error">{{ error }}</small>
-            {% endfor %}
-
-          {% else %}{# field has no label #}
-            <label{% if field.errors %} class="error"{% endif %}>
-              {% render_field field %}
-              {% for error in field.errors %}
-                <small class="error">{{ error }}</small>
-              {% endfor %}
-            </label>
-          {% endif %}
-
-        {% endfor %}
-      </div>
-
-      {% for hidden_field in enquiry_page_form.hidden_fields %}
-        {{ hidden_field }}
-      {% endfor %}
-
-      {% if enquiry_page.terms_and_conditions %}
-        <div id="link_terms_and_conditions">
-          Please make sure to read the <a href="{{ enquiry_page.terms_and_conditions.url }}">RCA Terms and Conditions</a> before submitting this form.
-        </div>
-        <hr>
-      {% endif %}
-
-      <div class="profile-actions">
-        <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
-      </div>
-
-      </form>
-    {% endif %}
-  </div>
-</div>
+{% endif %}

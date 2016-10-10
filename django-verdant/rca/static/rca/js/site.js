@@ -743,10 +743,13 @@ function onDocumentReady(jQuery, inLightBox){
             displayBuffer       = 10,
             state               = {
                 open    : false,
-                busy    : false
+                busy    : false,
+                hasData : false
             };
 
         function open(){
+            var previousRequest = null;
+
             if( !state.busy ){
                 state.busy = true;
 
@@ -756,10 +759,33 @@ function onDocumentReady(jQuery, inLightBox){
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     $triggerButton.html( 'Apply to study <span>&mdash; Enquiries</span>' );
-                
+
                     state.open = true;
-                    state.busy = false;
+                    if ( state.hasData ) {
+                        state.busy = false;
+                    }
                 }, displayBuffer );
+
+                if ( !state.hasData ) {
+                    previousRequest = jQuery.ajax({
+                        url: $sidebar.data('from-url'),
+                        beforeSend: function()    {
+                            if (previousRequest != null) {
+                                previousRequest.abort();
+                                state.busy = false;
+                            }
+
+                        },
+                        success: function(data) {
+                            if (data.length) {
+                                $sidebar.html(data);
+                            }
+
+                            state.busy = false;
+                            state.hasData = true;
+                        }
+                    });
+                }
             }
         }
 
