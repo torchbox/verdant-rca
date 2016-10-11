@@ -9,29 +9,36 @@
     {% csrf_token %}
     <div class="enquiry-form__form-wrapper">
     {% for field in form.visible_fields %}
-      {% if field.label %}
-        <label class="{% if field.errors %} error{% endif %}">
+      {% with field_widget_type=field|widget_type %}
 
-          {% if field.help_text %}
-            <p class="help-text">{{ field.help_text }}</p>
-          {% endif %}
+        {% if field.label %}
+          <label class="{% if field.errors %} error{% endif %}">
 
-          {% render_field field placeholder=field.label %}
-        </label>
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
 
-        {% for error in field.errors %}
-          <small class="error">{{ error }}</small>
-        {% endfor %}
+            {% if field_widget_type == 'dateinput' %}
+              {% render_field field placeholder=field.label type='date' %}
+            {% else %}
+              {% render_field field placeholder=field.label %}
+            {% endif %}
+          </label>
 
-      {% else %}{# field has no label #}
-        <label{% if field.errors %} class="error"{% endif %}>
-          {% render_field field %}
           {% for error in field.errors %}
             <small class="error">{{ error }}</small>
           {% endfor %}
-        </label>
-      {% endif %}
 
+        {% else %}{# field has no label #}
+          <label{% if field.errors %} class="error"{% endif %}>
+            {% render_field field %}
+            {% for error in field.errors %}
+              <small class="error">{{ error }}</small>
+            {% endfor %}
+          </label>
+        {% endif %}
+
+      {% endwith %}
     {% endfor %}
     </div>
 
