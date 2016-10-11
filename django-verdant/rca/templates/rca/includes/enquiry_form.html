@@ -1,5 +1,9 @@
 {% load wagtailcore_tags widget_tweaks %}
 {% if enquiry_page %}
     <div class="enquiry-form" data-from-url="{% pageurl enquiry_page %}">
+    	<button class="enquiry-form-trigger enquiry-form-trigger--sidebar js-enquiry-form-trigger">
+    	    Enquire to study
+    	</button>
+    	<div class="enquiry-form__inner"></div>
     </div>
 {% endif %}

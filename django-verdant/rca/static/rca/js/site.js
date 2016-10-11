@@ -733,7 +733,10 @@ function onDocumentReady(jQuery, inLightBox){
 
         var $trigger            = $( '.js-enquiry-form-trigger' ),
             $triggerButton      = $( '.enquiry-form-trigger' ),
+            $triggerSidebar     = $( '.enquiry-form-trigger--sidebar' ),
+            $triggerBody        = $( '.enquiry-form-trigger--body' ),
             $sidebar            = $( '.enquiry-form' ),
+            $sidebarInner       = $( '.enquiry-form__inner' ),
             $bodyContent        = $( '.mobile-content-wrapper' ),
             $wrapper            = $( '.enquiry-trigger-wrapper' ),
             wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
@@ -745,6 +748,9 @@ function onDocumentReady(jQuery, inLightBox){
                 open    : false,
                 busy    : false,
                 hasData : false
+            },
+            breakpoint          = {
+                mobile  : 768
             };
 
         function open(){
@@ -758,12 +764,22 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.addClass( shiftContent );
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
-                    $triggerButton.html( 'Apply to study <span>&mdash; Enquiries</span>' );
+                    
+                    // Show/hide triggers
+                    if ( $(window).width() > breakpoint.mobile ) {
+                        $triggerBody.hide();
+
+                        setTimeout(function() {
+                            $triggerSidebar.fadeIn();
+                        }, 100);
+                    }
 
                     state.open = true;
+                    
                     if ( state.hasData ) {
                         state.busy = false;
                     }
+
                 }, displayBuffer );
 
                 if ( !state.hasData ) {
@@ -778,7 +794,7 @@ function onDocumentReady(jQuery, inLightBox){
                         },
                         success: function(data) {
                             if (data.length) {
-                                $sidebar.html(data);
+                                $sidebarInner.html(data);
                             }
 
                             state.busy = false;
@@ -798,7 +814,15 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.removeClass( shiftContent );
                     $wrapper.removeClass( wrapperFixed );
                     $triggerButton.removeClass( toggled );
-                    $triggerButton.html( 'Enquire to study' );
+
+                    // Show/hide triggers
+                    if ( $(window).width() > breakpoint.mobile ) {
+                        $triggerSidebar.hide();
+
+                        setTimeout(function() {
+                            $triggerBody.fadeIn();
+                        }, 300);
+                    }
 
                     state.open = false;
                     state.busy = false;
@@ -819,7 +843,7 @@ function onDocumentReady(jQuery, inLightBox){
                 toggle();
             });
 
-            $bodyContent.on( 'click', function() {
+            $bodyContent.on( 'click', function(){
                 close();
             });
         }
