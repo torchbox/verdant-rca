@@ -753,6 +753,28 @@ function onDocumentReady(jQuery, inLightBox){
                 mobile  : 768
             };
 
+        function selectPlaceholders() {
+
+            $sidebar.find( 'select' ).each(function(){
+
+                var $select          = $(this),
+                    placeholderText  = $select.attr( 'placeholder' );
+
+                // Add blank <option> as placeholder
+                $select.prepend(
+                    $( '<option>' , {
+                        value    : '', 
+                        text     : placeholderText, 
+                        selected : true 
+                    }
+                ));
+
+                // Add icon
+                $select.parent().addClass( 'select-icon' );
+            });
+
+        }
+
         function open(){
             var previousRequest = null;
 
@@ -799,6 +821,9 @@ function onDocumentReady(jQuery, inLightBox){
                         success: function(data) {
                             if (data.length) {
                                 $sidebarInner.html(data);
+
+                                // Modify placeholders
+                                selectPlaceholders();
                             }
 
                             state.busy = false;
@@ -856,5 +881,4 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     enquiryForm();
-
 }

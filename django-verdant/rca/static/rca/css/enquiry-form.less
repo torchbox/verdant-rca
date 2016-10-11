@@ -25,8 +25,8 @@
         right: 14px;
         transform: scale(0.6);
         .sprite-load-23(
-            @positionX: -12px,
-            @positionY: -48px,
+            @positionX: -190px,
+            @positionY: -119px,
             @retinaPositionX: -382px,
             @retinaPositionY: -240px,
             @width: 25px,
@@ -188,6 +188,31 @@
 
         &--show {
             transform: translate3d(0, 0, 0);
+        }
+    }
+
+    select {
+        padding: 10px 10px;
+        cursor: pointer;
+    }
+
+    .select-icon {
+        position: relative;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            transform: scale(0.6);
+            .sprite-load-23(
+                @positionX: -46px,
+                @positionY: -38px,
+                @retinaPositionX: -98px,
+                @retinaPositionY: -76px,
+                @width: 25px,
+                @height: 25px
+            );
         }
     }
 }
