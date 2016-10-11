@@ -769,6 +769,9 @@ function onDocumentReady(jQuery, inLightBox){
                 if ( !state.hasData ) {
                     previousRequest = jQuery.ajax({
                         url: $sidebar.data('from-url'),
+                        data: {
+                            format: 'enquiry_form'
+                        },
                         beforeSend: function()    {
                             if (previousRequest != null) {
                                 previousRequest.abort();
