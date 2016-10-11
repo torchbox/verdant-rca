@@ -10,7 +10,7 @@
     min-height: 36px;
     z-index: 4001;
     border: 0;
-    padding: 10px 60px 10px 20px;
+    padding: 10px 55px 10px 20px;
     background-color: rgba(0, 0, 0, 0.6);
     font-size: 12px;
     font-weight: 600;
@@ -22,13 +22,13 @@
         content: '';
         position: absolute;
         top: 6px;
-        right: 14px;
+        right: 7px;
         transform: scale(0.6);
         .sprite-load-23(
             @positionX: -190px,
-            @positionY: -119px,
+            @positionY: -12px,
             @retinaPositionX: -382px,
-            @retinaPositionY: -240px,
+            @retinaPositionY: -24px,
             @width: 25px,
             @height: 25px
         );
@@ -37,11 +37,12 @@
     &:before {
         content: '';
         position: absolute;
-        top: 7px;
-        right: 46px;
-        width: 1px;
-        height: 22px;
-        background-color: #6b6968;
+        top: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background-color: #0096ff;
+        border-left: 1px solid #bec3bc;
     }
 
     &:hover {
@@ -67,6 +68,10 @@
             transform: 
                 scale(0.6)
                 rotate(45deg);
+        }
+
+        &:before {
+            border-left: 1px solid #5b5a5a;
         }
 
         @media screen and ( max-width : 768px ) {
@@ -194,6 +199,7 @@
     select {
         padding: 10px 10px;
         cursor: pointer;
+        -moz-appearance: none;
     }
 
     .select-icon {
