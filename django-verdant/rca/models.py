@@ -5255,6 +5255,19 @@ class ContactUsPageGeneralEnquiries(Orderable):
     contact_snippet = models.ForeignKey('rca.ContactSnippet', null=True, blank=True, related_name='+', help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'contact_snippet'))
     text = RichTextField(blank=True, help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'text'))
 
+    def clean(self):
+        if not self.contact_snippet and not self.text:
+            raise ValidationError({
+                'contact_snippet': ValidationError("You must fill in the contact snippet field or the text field."),
+                'text': ValidationError("You must fill in the contact snippet field or the text field."),
+            })
+
+        if self.contact_snippet and self.text:
+            raise ValidationError({
+                'contact_snippet': ValidationError("You must fill in the contact snippet field or the text field. You can't use both."),
+                'text': ValidationError("You must fill in the contact snippet field or the text field. You can't use both."),
+            })
+
 
 ContactUsPageGeneralEnquiries.panels = [
     SnippetChooserPanel('contact_snippet'),
