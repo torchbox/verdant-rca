@@ -1,0 +1,80 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}type-standard{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
+    <section class="row">
+        {% with general_enquiries=page.general_enquiries.all %}
+            {% if general_enquiries %}
+                <div>
+
+                    {% for contact in general_enquiries %}
+
+                        {# if a contact snippet linked, display it #}
+                        {% if contact.contact_snippet %}
+                            <div style="border: 1px dotted #783cac;">
+
+                                <p>
+                                    {% if contact.contact_snippet.contact_title %}
+                                        <strong>{{ contact.contact_snippet.contact_title }}</strong><br />
+                                    {% endif %}
+                                    {% if contact.contact_snippet.contact_address %}
+                                        {{ contact.contact_snippet.contact_address|linebreaksbr }}
+                                    {% endif %}
+                                </p>
+                                {% if contact.contact_snippet.contact_link and contact.contact_snippets.contact_link_text %}
+                                    <p><a href="{{ contact.contact_link }}">{{ contact.contact_snippet.contact_link_text }}</a></p>
+                                {% endif %}
+
+                                {% with contact.contact_snippet.contact_phone.all as phone_nos %}
+                                    {% if phone_nos %}
+                                        {% for phone_no in phone_nos %}
+                                            <b>{{ phone_no.phone_number }}</b><br />
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+                                {% with contact.contact_snippet.contact_email.all as emails %}
+                                    {% if emails %}
+                                        {% for email in emails %}
+                                            <a href="mailto:{{ email.email_address }}">{{ email.email_address }}</a><br />
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endwith %}
+
+                            </div>
+                        {# if th contact snippet is not linked, display text field #}
+                        {% else %}
+                            <div style="border: 1px dotted #00AEEF;">
+                                {{ contact.text|richtext }}
+                            </div>
+                        {% endif %}
+
+                    {% endfor %}
+
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <section class="body-text">
+            {{ self.body|richtext }}
+        </section>
+
+        <section class="four">
+            {% if self.middle_column_body %}
+                <div class="body-text middle-column-body-text">
+{#                    {{ self.middle_column_body|richtext }}#}
+                </div>
+            {% endif %}
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showRelatedLinks="true" showAdverts="true" %}
+{% endblock %}
