@@ -1,0 +1,231 @@
+////
+// Fly-in enquiry form
+////
+
+// Style button
+.enquiry-form-trigger {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    min-height: 36px;
+    z-index: 4001;
+    border: 0;
+    padding: 10px 55px 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+    font-weight: 600;
+    transition: 
+        background-color 300ms ease, 
+        right 300ms ease;
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 6px;
+        right: 7px;
+        transform: scale(0.6);
+        .sprite-load-23(
+            @positionX: -190px,
+            @positionY: -12px,
+            @retinaPositionX: -382px,
+            @retinaPositionY: -24px,
+            @width: 25px,
+            @height: 25px
+        );
+    }
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 36px;
+        height: 36px;
+        background-color: #0096ff;
+        border-left: 1px solid #bec3bc;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    &:focus {
+        outline: 0;
+    }
+
+    span {
+        font-size: 10px;
+        text-transform: none;
+        font-weight: 100;
+    }
+
+    &--sidebar {
+        right: auto;
+        left: 20px;
+        display: none;
+
+        &:after {
+            transform: 
+                scale(0.6)
+                rotate(45deg);
+        }
+
+        &:before {
+            border-left: 1px solid #5b5a5a;
+        }
+
+        @media screen and ( max-width : 768px ) {
+            display: block;
+        }
+    }
+
+    @media screen and ( max-width : 768px ) {
+        position: static;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ff00df;
+
+        &:after {
+            position: static;
+            left: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+        }
+
+        &:before {
+            position: static;
+            left: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+        }
+    }
+}
+
+.enquiry-button-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 1300px;
+    margin: 0 22% 0 5%;
+
+    @media screen and ( max-width : 768px ) {
+        height: 36px;
+        width: 100%;
+        margin: 0;
+    }
+}
+
+// Fly-in form
+.enquiry-form {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: scroll;
+    width: @sidebarWidth;
+    min-height: 100vh;
+    z-index: 4000;
+    background-color: #5b5a5a;
+    transform: 
+        translate3d(@sidebarWidth, 0, 0);
+    transition:
+        transform 300ms ease;
+    
+    // BEM not possible, have to beat specificity
+    input,
+    textarea {
+        padding: 10px;
+    }
+
+    label {
+        color: #fff;
+    }
+
+    &--show {
+        transform: translate3d(0, 0, 0);
+    }
+
+    &__inner {
+        padding: 120px 20px 20px;
+
+        @media screen and ( max-width : 768px ) {
+            padding-top: 15px;
+        }
+    }
+
+        &__introduction {
+            color: #fff;
+            font-size: 12px;
+            border-top: 1px solid #6d6b6b;
+            border-bottom: 1px solid #6d6b6b;
+            padding: 15px 0;
+            margin-bottom: 15px;
+            font-weight: 600;
+
+            @media screen and ( max-width : 768px ) {
+                padding: 0;
+            }
+        }
+
+        &__form-wrapper {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #6d6b6b;
+
+            @media screen and ( max-width : 768px ) {
+                padding-bottom: 6px;
+            }
+        }
+
+        &__submit,
+        input[type=submit] {
+            padding: 10px 15px;
+            font-size: 12px;
+        }
+
+    @media screen and ( max-width : 768px ) {
+        width: 100%;
+        transform:
+            translate3d(100%, 0, 0);
+
+        &--show {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    select {
+        padding: 10px 10px;
+        cursor: pointer;
+        -moz-appearance: none;
+    }
+
+    .select-icon {
+        position: relative;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            right: 8px;
+            transform: scale(0.6);
+            .sprite-load-23(
+                @positionX: -46px,
+                @positionY: -38px,
+                @retinaPositionX: -98px,
+                @retinaPositionY: -76px,
+                @width: 25px,
+                @height: 25px
+            );
+        }
+    }
+}
+
+// GC styling
+.g-recaptcha {
+    @media screen and ( max-width : 768px ) {
+        overflow: hidden;
+    }
+}

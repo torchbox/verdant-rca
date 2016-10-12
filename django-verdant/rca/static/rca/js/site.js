@@ -728,4 +728,157 @@ function onDocumentReady(jQuery, inLightBox){
         displayCookieNotice();
       }
     });
+
+    var enquiryForm = function() {
+
+        var $trigger            = $( '.js-enquiry-form-trigger' ),
+            $triggerButton      = $( '.enquiry-form-trigger' ),
+            $triggerSidebar     = $( '.enquiry-form-trigger--sidebar' ),
+            $triggerBody        = $( '.enquiry-form-trigger--body' ),
+            $sidebar            = $( '.enquiry-form' ),
+            $sidebarInner       = $( '.enquiry-form__inner' ),
+            $bodyContent        = $( '.mobile-content-wrapper' ),
+            $wrapper            = $( '.enquiry-trigger-wrapper' ),
+            wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
+            showSidebar         = 'enquiry-form--show',
+            shiftContent        = 'mobile-content-wrapper--shift-left',
+            toggled             = 'enquiry-form-trigger--toggled',
+            displayBuffer       = 10,
+            state               = {
+                open    : false,
+                busy    : false,
+                hasData : false
+            },
+            breakpoint          = {
+                mobile  : 768
+            };
+
+        function selectPlaceholders() {
+
+            $sidebar.find( 'select' ).each(function(){
+
+                var $select          = $(this),
+                    placeholderText  = $select.attr( 'placeholder' );
+
+                // Add blank <option> as placeholder
+                $select.prepend(
+                    $( '<option>' , {
+                        value    : '', 
+                        text     : placeholderText, 
+                        selected : true 
+                    }
+                ));
+
+                // Add icon
+                $select.parent().addClass( 'select-icon' );
+            });
+
+        }
+
+        function open(){
+            var previousRequest = null;
+
+            if( !state.busy ){
+                state.busy = true;
+
+                setTimeout(function(){
+                    $sidebar.addClass( showSidebar );
+                    $bodyContent.addClass( shiftContent );
+                    $wrapper.addClass( wrapperFixed );
+                    $triggerButton.addClass( toggled );
+                    
+                    // Show/hide triggers
+                    if ( $(window).width() > breakpoint.mobile ) {
+                        $triggerBody.hide();
+
+                        setTimeout(function() {
+                            $triggerSidebar.fadeIn();
+                        }, 100);
+                    }
+
+                    state.open = true;
+                    
+                    if ( state.hasData ) {
+                        state.busy = false;
+                    }
+
+                }, displayBuffer );
+
+                if ( !state.hasData ) {
+                    previousRequest = jQuery.ajax({
+                        url: $sidebar.data('from-url'),
+                        cache: false,
+                        data: {
+                            format: 'enquiry_form'
+                        },
+                        beforeSend: function()    {
+                            if (previousRequest != null) {
+                                previousRequest.abort();
+                                state.busy = false;
+                            }
+
+                        },
+                        success: function(data) {
+                            if (data.length) {
+                                $sidebarInner.html(data);
+
+                                // Modify placeholders
+                                selectPlaceholders();
+                            }
+
+                            state.busy = false;
+                            state.hasData = true;
+                        }
+                    });
+                }
+            }
+        }
+
+        function close() {
+            if( !state.busy ){
+                state.busy = true;
+
+                setTimeout(function(){
+                    $sidebar.removeClass( showSidebar );
+                    $bodyContent.removeClass( shiftContent );
+                    $wrapper.removeClass( wrapperFixed );
+                    $triggerButton.removeClass( toggled );
+
+                    // Show/hide triggers
+                    if ( $(window).width() > breakpoint.mobile ) {
+                        $triggerSidebar.hide();
+
+                        setTimeout(function() {
+                            $triggerBody.fadeIn();
+                        }, 300);
+                    }
+
+                    state.open = false;
+                    state.busy = false;
+                }, displayBuffer );
+            }
+        }
+
+        function toggle(){
+            if( state.open ) {
+                close();
+            } else {
+                open();
+            }
+        }
+
+        function bindEvents(){
+            $trigger.on( 'click', function(){
+                toggle();
+            });
+
+            $bodyContent.on( 'click', function(){
+                close();
+            });
+        }
+
+        bindEvents();
+    };
+
+    enquiryForm();
 }

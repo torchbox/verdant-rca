@@ -672,3 +672,19 @@ def use_lightbox(context):
         cache.set(cache_key, lightbox_config, 60 * 60)
 
     return lightbox_config
+
+
+@register.inclusion_tag('rca/includes/enquiry_form.html', takes_context=True)
+def enquiry_form(context):
+    request = context.get('request')
+
+    enquiry_page, enquiry_page_form = None, None
+    if request:
+        enquiry_form_settings = EnquiryFormSettings.for_site(request.site)
+        if enquiry_form_settings.form_page:
+            enquiry_page = enquiry_form_settings.form_page
+
+    return {
+        'request': request,
+        'enquiry_page': enquiry_page,
+    }

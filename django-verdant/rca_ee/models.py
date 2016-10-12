@@ -107,9 +107,15 @@ class FormPage(ExtendedAbstractEmailForm):
         context['form'] = form
         return render(
             request,
-            self.template,
+            self.get_template(request),
             context
         )
+
+    def get_template(self, request, *args, **kwargs):
+        if request.is_ajax() and request.GET.get('format') == 'enquiry_form':
+            return 'rca_ee/form_page_enquiry_form_ajax.html'
+
+        return super(FormPage, self).get_template(request, *args, **kwargs)
 
 
 FormPage.content_panels = [
