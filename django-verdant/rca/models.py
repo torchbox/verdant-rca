@@ -5275,11 +5275,20 @@ ContactUsPageGeneralEnquiries.panels = [
 ]
 
 
+class ContactUsPageMiddleColumnLinks(Orderable):
+    page = ParentalKey('rca.ContactUsPage', related_name='middle_column_links')
+    link_page = models.ForeignKey('wagtailcore.Page', on_delete=models.CASCADE, related_name='+', blank=True, null=True)
+
+
+ContactUsPageMiddleColumnLinks.panels = [
+    PageChooserPanel('link_page'),
+]
+
+
 class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
-    body = RichTextField(blank=True, help_text=help_text('rca.ContactPage', 'body'))
-    # TODO: Add a list of links / maps instead of middle_column_body
-    # middle_column_body = RichTextField(blank=True, help_text=help_text('rca.ContactPage', 'middle_column_body'))
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+    body = RichTextField(blank=True, help_text=help_text('rca.ContactUsPage', 'body'))
+    middle_column_map = models.TextField(blank=True, help_text=help_text('rca.ContactUsPage', 'middle_column_map'))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactUsPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
     search_fields = Page.search_fields + [
         index.SearchField('body'),
@@ -5290,7 +5299,8 @@ ContactUsPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
     InlinePanel('general_enquiries', label='General enquiries'),
-    # FieldPanel('middle_column_body', classname="full"),
+    FieldPanel('middle_column_map', classname="full"),
+    InlinePanel('middle_column_links', label='Middle column links'),
     FieldPanel('twitter_feed'),
 ]
 

@@ -7,6 +7,8 @@
     <h1 class="h1">{{ self.title }}</h1>
     <section class="row">
         {% with general_enquiries=page.general_enquiries.all %}
+
+            {# Needs styling #}
             {% if general_enquiries %}
                 <div>
 
@@ -62,11 +64,25 @@
         </section>
 
         <section class="four">
-            {% if self.middle_column_body %}
-                <div class="body-text middle-column-body-text">
-{#                    {{ self.middle_column_body|richtext }}#}
-                </div>
-            {% endif %}
+            {% with links=self.middle_column_links.all %}
+                {% if links or self.middle_column_map %}
+                    <div class="body-text middle-column-body-text">
+
+                        {# Needs styling: should responsive at least #}
+                        {% if self.middle_column_map %}
+                            <iframe src="{{ self.middle_column_map }}" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        {% endif %}
+
+                        {# Needs styling #}
+                        {% for link in links %}
+                            <p>
+                                <a href="{% pageurl link.link_page %}">{{ link.link_page.title }}</a>
+                            </p>
+                        {% endfor %}
+
+                    </div>
+                {% endif %}
+            {% endwith %}
             <div class="single borders">
                 {% include "rca/includes/modules/share-button.html" %}
             </div>
