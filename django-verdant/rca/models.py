@@ -5244,8 +5244,37 @@ GalleryPage.promote_panels = [
 
 # == Contact Us page ==
 
-class ContactUsPage(Page, SocialFields):
-    feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ContactUsPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+
+class ContactUsPageGeneralEnquiries(Orderable):
+    page = ParentalKey('rca.ContactUsPage', related_name='general_enquiries')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', null=True, blank=True, related_name='+', help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'contact_snippet'))
+    text = RichTextField(blank=True, help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'text'))
+
+
+ContactUsPageGeneralEnquiries.panels = [
+    SnippetChooserPanel('contact_snippet'),
+    FieldPanel('text'),
+]
+
+
+class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
+    body = RichTextField(blank=True, help_text=help_text('rca.ContactPage', 'body'))
+    # TODO: Add a list of links / maps instead of middle_column_body
+    # middle_column_body = RichTextField(blank=True, help_text=help_text('rca.ContactPage', 'middle_column_body'))
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+
+    search_fields = Page.search_fields + [
+        index.SearchField('body'),
+    ]
+
+
+ContactUsPage.content_panels = [
+    FieldPanel('title', classname="full title"),
+    FieldPanel('body', classname="full"),
+    InlinePanel('general_enquiries', label='General enquiries'),
+    # FieldPanel('middle_column_body', classname="full"),
+    FieldPanel('twitter_feed'),
+]
 
 ContactUsPage.promote_panels = [
     MultiFieldPanel([
@@ -5255,7 +5284,6 @@ ContactUsPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
-        ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
 
@@ -5263,6 +5291,13 @@ ContactUsPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+]
+
+ContactUsPage.settings_panels = [
+    PublishingPanel(),
+    MultiFieldPanel([
+        FieldPanel('collapse_upcoming_events'),
+    ], 'Sidebar behaviour'),
 ]
 
 
