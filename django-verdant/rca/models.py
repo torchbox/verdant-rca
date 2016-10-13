@@ -6462,6 +6462,10 @@ class EnquiryFormPage(AbstractEmailForm):
 
         return super(FormPage, self).get_template(request, *args, **kwargs)
 
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request):
+        return super(EnquiryFormPage, self).serve(request)
+
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('intro', classname="full"),
