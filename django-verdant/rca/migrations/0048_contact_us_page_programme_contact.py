@@ -12,7 +12,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('taxonomy', '0019_auto_20160901_1129'),
-        ('rca_ee', '0011_auto_20160919_1427'),
         ('rca', '0047_new_contact_page'),
     ]
 
@@ -33,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contactuspage',
             name='contact_form_page',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='contact_form_page', to='rca_ee.FormPage'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='contact_form_page', to='rca.EnquiryFormPage'),
         ),
         migrations.AddField(
             model_name='contactuspageprogrammecontact',

@@ -5309,7 +5309,7 @@ ContactUsPageMiddleColumnLinks.panels = [
 class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
     body = RichTextField(blank=True, help_text=help_text('rca.ContactUsPage', 'body'))
     middle_column_map = models.TextField(blank=True, help_text=help_text('rca.ContactUsPage', 'middle_column_map'))
-    contact_form_page = models.ForeignKey('rca_ee.FormPage', null=True, blank=True, related_name='contact_form_page', on_delete=models.SET_NULL)
+    contact_form_page = models.ForeignKey('rca.EnquiryFormPage', null=True, blank=True, related_name='contact_form_page', on_delete=models.SET_NULL)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactUsPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
     search_fields = Page.search_fields + [
@@ -5346,7 +5346,7 @@ class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
 ContactUsPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
-    PageChooserPanel('contact_form_page'),
+    PageChooserPanel('contact_form_page', page_type='rca.EnquiryFormPage'),
     InlinePanel('general_enquiries', label='General enquiries'),
     InlinePanel('programme_contacts', label='Programme contacts'),
     FieldPanel('middle_column_map', classname="full"),
