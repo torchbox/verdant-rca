@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('wagtailcore', '0029_unicode_slugfield_dj19'),
-        ('rca', '0045_newstudentpage_ad_username'),
+        ('rca', '0046_enquiryformsettings'),
     ]
 
     operations = [
