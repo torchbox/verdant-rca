@@ -38,7 +38,7 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
 from wagtail.wagtailcore.query import PageQuerySet
-from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField, FormSubmission
+from wagtail.wagtailforms.models import AbstractFormField, FormSubmission
 from wagtail.wagtailadmin.utils import send_mail
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
@@ -56,6 +56,8 @@ from taxonomy.models import Area, School, Programme
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
+
+from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBuilder
 
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
@@ -6423,13 +6425,15 @@ class EnquiryFormField(AbstractFormField):
     page = ParentalKey('EnquiryFormPage', related_name='form_fields')
 
 
-class EnquiryFormPage(AbstractEmailForm):
+class EnquiryFormPage(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
     to_address_row = models.CharField(
         verbose_name='to address (rest of world)', max_length=255, blank=True,
         help_text="Optional - form submissions from the rest of the world will be emailed to these addresses (instead of the standard addresses). Separate multiple addresses by comma."
     )
+
+    form_builder = WagtailCaptchaFormBuilder
 
     def get_to_address(self, submission, form):
         # HACK: Work out whether they are in or out of the EU depending on the value of one of the fields
