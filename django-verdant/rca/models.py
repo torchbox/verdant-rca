@@ -13,6 +13,7 @@ from django.contrib.auth.signals import user_logged_in
 from django.db import models
 from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
+from django.core.serializers.json import DjangoJSONEncoder
 
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -37,6 +38,8 @@ from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 from wagtail.wagtailsnippets.models import register_snippet
 from wagtail.wagtailsearch import index
 from wagtail.wagtailcore.query import PageQuerySet
+from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField, FormSubmission
+from wagtail.wagtailadmin.utils import send_mail
 
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.models import ClusterableModel
@@ -6416,11 +6419,62 @@ PageAlias.promote_panels = Page.promote_panels + [
 ]
 
 
+class EnquiryFormField(AbstractFormField):
+    page = ParentalKey('EnquiryFormPage', related_name='form_fields')
+
+
+class EnquiryFormPage(AbstractEmailForm):
+    intro = RichTextField(blank=True)
+    thank_you_text = RichTextField(blank=True)
+    to_address_row = models.CharField(
+        verbose_name='to address (rest of world)', max_length=255, blank=True,
+        help_text="Optional - form submissions from the rest of the world will be emailed to these addresses (instead of the standard addresses). Separate multiple addresses by comma."
+    )
+
+    def get_to_address(self, submission, form):
+        # TODO
+        return self.to_address
+
+    def send_mail(self, form, to_address):
+        addresses = [x.strip() for x in to_address.split(',')]
+        content = '\n'.join([x[1].label + ': ' + unicode(form.data.get(x[0])) for x in form.fields.items()])
+        send_mail(self.subject, content, addresses, self.from_address)
+
+    def process_form_submission(self, form):
+        submission = FormSubmission.objects.create(
+            form_data=json.dumps(form.cleaned_data, cls=DjangoJSONEncoder),
+            page=self,
+        )
+
+        to_address = self.get_to_address(submission, form)
+        if to_address:
+            self.send_mail(form, to_address)
+
+        return submission
+
+    def get_template(self, request, *args, **kwargs):
+        if request.is_ajax():
+            return 'rca/enqiry_form_page_ajax.html'
+
+        return super(FormPage, self).get_template(request, *args, **kwargs)
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        FieldPanel('thank_you_text', classname="full"),
+        FieldPanel('from_address'),
+        FieldPanel('subject'),
+        FieldPanel('to_address'),
+        FieldPanel('to_address_row'),
+        InlinePanel('form_fields', label="Form fields"),
+    ]
+
+
 @register_setting
 class EnquiryFormSettings(BaseSetting):
     form_page = models.ForeignKey(Page, on_delete=models.SET_NULL, related_name='+', null=True, blank=True,
-                                  help_text=help_text('rca.CarouselItemFields', 'link_page'))
+                                  help_text=help_text('rca.EnquiryFormSettings', 'form_page'))
 
     panels = [
-        PageChooserPanel('form_page', page_type=FormPage),
+        PageChooserPanel('form_page', page_type=EnquiryFormPage),
     ]

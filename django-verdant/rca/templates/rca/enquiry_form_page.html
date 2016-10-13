@@ -1,0 +1,56 @@
+{% extends request.is_ajax|yesno:"rca/base_ajax.html,rca/base.html" %}
+{% load compress static wagtailimages_tags wagtailuserbar rca_tags wagtailcore_tags %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+
+  <div class="body-text">
+    <div class="app-details">
+        <h2 class="app-title">{{ page.title }}</h2>
+        <div class="session-meta">
+          {{ page.intro|richtext }}
+        </div>
+    </div>
+
+    <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST">
+      {% csrf_token %}
+      {% for field in form.visible_fields %}
+        {% if field.label %}
+          <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
+
+            {% render_field field %}
+          </label>
+
+          {% for error in field.errors %}
+            <small class="error">{{ error }}</small>
+          {% endfor %}
+
+        {% else %}{# field has no label #}
+          <label{% if field.errors %} class="error"{% endif %}>
+            {% render_field field %}
+            {% for error in field.errors %}
+              <small class="error">{{ error }}</small>
+            {% endfor %}
+          </label>
+        {% endif %}
+
+      {% endfor %}
+
+      {% for hidden_field in form.hidden_fields %}
+        {{ hidden_field }}
+      {% endfor %}
+
+      <div class="profile-actions">
+        <input type="submit" class="submit-page" value="Enquire to study" name="submit">
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock content %}
