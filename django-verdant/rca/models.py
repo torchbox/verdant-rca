@@ -5327,7 +5327,7 @@ class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
             programme_contact = programme_contact.first()
 
             context.update({
-                'form': self.contact_form_page.get_form(),
+                'form': self.contact_form_page.get_form() if self.contact_form_page else None,
                 'programme_contact': programme_contact,
             })
 
