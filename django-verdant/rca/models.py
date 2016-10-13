@@ -5316,6 +5316,32 @@ class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
         index.SearchField('body'),
     ]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super(ContactUsPage, self).get_context(request, *args, **kwargs)
+
+        if request.is_ajax() and request.GET.get('format') == 'programme_contact_form':
+            programme_contact = self.programme_contacts.filter(
+                programme__disabled=False,
+                pk=request.GET.get('programme_contact')
+            )
+            programme_contact = programme_contact.first()
+
+            context.update({
+                'form': self.contact_form_page.get_form(),
+                'programme_contact': programme_contact,
+            })
+
+        return context
+
+    def get_template(self, request, *args, **kwargs):
+        if request.is_ajax() and request.GET.get('format') == 'programme_contact_form':
+            return 'rca/contact_us_page_programme_contact_form_ajax.html'
+
+        return super(ContactUsPage, self).get_template(request, *args, **kwargs)
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request, *args, **kwargs):
+        return super(ContactUsPage, self).serve(request, *args, **kwargs)
 
 ContactUsPage.content_panels = [
     FieldPanel('title', classname="full title"),

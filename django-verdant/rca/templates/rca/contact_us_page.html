@@ -1,9 +1,10 @@
 {% extends "rca/base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{% block body_class %}type-standard{% endblock %}
-
 {% block content %}
+    {# TODO: Replace this temporary div with pop-up #}
+    <div class="js-contact-us-form-body"></div>
+
     <h1 class="h1">{{ self.title }}</h1>
     <section class="row">
         {% with general_enquiries=page.general_enquiries.all %}
@@ -77,13 +78,13 @@
             {% with programme_contacts=self.programme_contacts.all %}
                 {% if programme_contacts %}
                     <div>
-                        <select>
+                        <select class="js-contact-us-form-trigger">
                             <option value="" disabled selected>Browse programmes</option>
 
                             {% for programme_contact in programme_contacts %}
                                 {% if programme_contact.programme and not programme_contact.programme.disabled%}
 
-                                    <option value="{{ programme_contact.programme.pk }}">
+                                    <option value="{{ programme_contact.pk }}">
                                         {{ programme_contact.programme.display_name }}
                                     </option>
 
