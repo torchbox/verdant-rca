@@ -6458,13 +6458,35 @@ class EnquiryFormPage(AbstractEmailForm):
 
     def get_template(self, request, *args, **kwargs):
         if request.is_ajax():
-            return 'rca/enqiry_form_page_ajax.html'
+            return 'rca/enquiry_form_page_ajax.html'
 
-        return super(FormPage, self).get_template(request, *args, **kwargs)
+        return super(EnquiryFormPage, self).get_template(request, *args, **kwargs)
 
     @vary_on_headers('X-Requested-With')
-    def serve(self, request):
-        return super(EnquiryFormPage, self).serve(request)
+    def serve(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            form = self.get_form(request.POST)
+
+            if form.is_valid():
+                self.process_form_submission(form)
+
+                # render the landing_page
+                # TODO: It is much better to redirect to it
+                return render(
+                    request,
+                    self.landing_page_template,
+                    self.get_context(request)
+                )
+        else:
+            form = self.get_form()
+
+        context = self.get_context(request)
+        context['form'] = form
+        return render(
+            request,
+            self.get_template(request, *args, **kwargs),
+            context
+        )
 
     content_panels = [
         FieldPanel('title', classname="full title"),
