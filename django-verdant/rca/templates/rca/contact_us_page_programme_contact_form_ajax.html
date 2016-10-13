@@ -1,7 +1,93 @@
 {% load wagtailcore_tags %}
+{% load widget_tweaks %}
 
 {% if form %}
+    <form action="{% pageurl page.contact_form_page %}" method="POST">
+        {% csrf_token %}
+        <div class="enquiry-form__form-wrapper">
+        {% for field in form.visible_fields %}
+            {% with field_widget_type=field|widget_type %}
+
+                {% if field.label %}
+                    <label class="{% if field.errors %} error{% endif %}">
+
+                        {% if field.help_text %}
+                            <p class="help-text">{{ field.help_text }}</p>
+                        {% endif %}
+
+                        {% if field_widget_type == 'dateinput' %}
+                            {% render_field field placeholder=field.label type='date' %}
+                        {% else %}
+                            {% render_field field placeholder=field.label %}
+                        {% endif %}
+
+                    </label>
+
+                    {% for error in field.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+
+                {% else %}{# field has no label #}
+                    <label{% if field.errors %} class="error"{% endif %}>
+                        {% render_field field %}
+                        {% for error in field.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
+
+            {% endwith %}
+        {% endfor %}
+        </div>
+
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <div class="profile-actions">
+          <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
+        </div>
+
+    </form>
+
     {% if programme_contact %}
-        {{ programme_contact.programme.display_name }}
+        {# if a contact snippet linked, display it #}
+        {% if programme_contact.contact_snippet %}
+            <div style="border: 1px dotted #783cac;">
+
+                <p>
+                    {% if programme_contact.contact_snippet.contact_title %}
+                        <strong>{{ programme_contact.contact_snippet.contact_title }}</strong><br />
+                    {% endif %}
+                    {% if programme_contact.contact_snippet.contact_address %}
+                        {{ programme_contact.contact_snippet.contact_address|linebreaksbr }}
+                    {% endif %}
+                </p>
+                {% if programme_contact.contact_snippet.contact_link and programme_contact.contact_snippets.contact_link_text %}
+                    <p><a href="{{ programme_contact.contact_link }}">{{ programme_contact.contact_snippet.contact_link_text }}</a></p>
+                {% endif %}
+
+                {% with programme_contact.contact_snippet.contact_phone.all as phone_nos %}
+                    {% if phone_nos %}
+                        {% for phone_no in phone_nos %}
+                            <b>{{ phone_no.phone_number }}</b><br />
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                {% with programme_contact.contact_snippet.contact_email.all as emails %}
+                    {% if emails %}
+                        {% for email in emails %}
+                            <a href="mailto:{{ email.email_address }}">{{ email.email_address }}</a><br />
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+            </div>
+        {# if th contact snippet is not linked, display text field #}
+        {% else %}
+            <div style="border: 1px dotted #00AEEF;">
+                {{ programme_contact.text|richtext }}
+            </div>
+        {% endif %}
     {% endif %}
 {% endif %}
