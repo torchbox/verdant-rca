@@ -881,4 +881,58 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     enquiryForm();
+
+    var contactUsForm = function() {
+
+        var $trigger            = $( '.js-contact-us-form-trigger' ),
+            $contactUsFormBody  = $( '.js-contact-us-form-body' ),
+            state               = {
+                open    : false,
+                busy    : false,
+            };
+
+
+        function open(programme_contact) {
+            var previousRequest = null;
+
+            if ( !state.busy ) {
+                state.busy = true;
+
+                // Requests current page
+                previousRequest = jQuery.ajax({
+                    cache: false,
+                    data: {
+                        programme_contact: programme_contact,
+                        format: 'programme_contact_form'
+                    },
+                    beforeSend: function()    {
+                        if (previousRequest != null) {
+                            previousRequest.abort();
+                            state.busy = false;
+                        }
+
+                    },
+                    success: function(data) {
+                        if (data.length) {
+                            $contactUsFormBody.html(data);
+                        }
+
+                        state.busy = false;
+                    }
+                });
+
+                // TODO: Add pop-up open logic here
+            }
+        }
+
+        function bindEvents() {
+            $trigger.on( 'change', function() {
+                open(this.value);
+            });
+        }
+
+        bindEvents();
+    };
+
+    contactUsForm();
 }
