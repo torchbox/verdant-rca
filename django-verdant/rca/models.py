@@ -5250,8 +5250,7 @@ GalleryPage.promote_panels = [
 # == Contact Us page ==
 
 
-class ContactUsPageGeneralEnquiries(Orderable):
-    page = ParentalKey('rca.ContactUsPage', related_name='general_enquiries')
+class ContactUsPageContactFields(models.Model):
     contact_snippet = models.ForeignKey('rca.ContactSnippet', null=True, blank=True, related_name='+', help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'contact_snippet'))
     text = RichTextField(blank=True, help_text=help_text('rca.ContactUsPageGeneralEnquiries', 'text'))
 
@@ -5268,11 +5267,33 @@ class ContactUsPageGeneralEnquiries(Orderable):
                 'text': ValidationError("You must fill in the contact snippet field or the text field. You can't use both."),
             })
 
+    class Meta:
+        abstract = True
 
-ContactUsPageGeneralEnquiries.panels = [
-    SnippetChooserPanel('contact_snippet'),
-    FieldPanel('text'),
+
+ContactUsPageContactFields.panels = [
+    MultiFieldPanel([
+        SnippetChooserPanel('contact_snippet'),
+        FieldPanel('text'),
+    ], heading="Contact fields")
 ]
+
+
+class ContactUsPageProgrammeContact(Orderable, ContactUsPageContactFields):
+    page = ParentalKey('rca.ContactUsPage', related_name='programme_contacts')
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ContactUsPage', 'programme'))
+
+
+ContactUsPageProgrammeContact.panels = [
+    FieldPanel('programme'),
+] + ContactUsPageContactFields.panels
+
+
+class ContactUsPageGeneralEnquiries(Orderable, ContactUsPageContactFields):
+    page = ParentalKey('rca.ContactUsPage', related_name='general_enquiries')
+
+
+ContactUsPageGeneralEnquiries.panels = ContactUsPageContactFields.panels
 
 
 class ContactUsPageMiddleColumnLinks(Orderable):
@@ -5288,6 +5309,7 @@ ContactUsPageMiddleColumnLinks.panels = [
 class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
     body = RichTextField(blank=True, help_text=help_text('rca.ContactUsPage', 'body'))
     middle_column_map = models.TextField(blank=True, help_text=help_text('rca.ContactUsPage', 'middle_column_map'))
+    contact_form_page = models.ForeignKey('rca_ee.FormPage', null=True, blank=True, related_name='contact_form_page', on_delete=models.SET_NULL)
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ContactUsPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
     search_fields = Page.search_fields + [
@@ -5298,7 +5320,9 @@ class ContactUsPage(Page, SocialFields, SidebarBehaviourFields):
 ContactUsPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('body', classname="full"),
+    PageChooserPanel('contact_form_page'),
     InlinePanel('general_enquiries', label='General enquiries'),
+    InlinePanel('programme_contacts', label='Programme contacts'),
     FieldPanel('middle_column_map', classname="full"),
     InlinePanel('middle_column_links', label='Middle column links'),
     FieldPanel('twitter_feed'),

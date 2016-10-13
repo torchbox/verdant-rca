@@ -63,10 +63,37 @@
             you need to add a from page in the enquiry form settings menu
             {% endcomment %}
             {% if settings.rca.EnquiryFormSettings.form_page %}
-                <button class="js-enquiry-form-trigger">
-                    Make an enquire
-                </button>
+                <div>
+                    <button class="js-enquiry-form-trigger">
+                        Make an enquire
+                    </button>
+                </div>
             {% endif %}
+
+            {% comment %}
+            Needs styling. To display this select box,
+            you need to add at least one programme contact
+            {% endcomment %}
+            {% with programme_contacts=self.programme_contacts.all %}
+                {% if programme_contacts %}
+                    <div>
+                        <select>
+                            <option value="" disabled selected>Browse programmes</option>
+
+                            {% for programme_contact in programme_contacts %}
+                                {% if programme_contact.programme and not programme_contact.programme.disabled%}
+
+                                    <option value="{{ programme_contact.programme.pk }}">
+                                        {{ programme_contact.programme.display_name }}
+                                    </option>
+
+                                {% endif %}
+                            {% endfor %}
+
+                        </select>
+                    </div>
+                {% endif %}
+            {% endwith %}
 
         {% endwith %}
 
