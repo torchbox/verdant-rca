@@ -57,6 +57,17 @@
 
                 </div>
             {% endif %}
+
+            {% comment %}
+            Needs styling. To display this button,
+            you need to add a from page in the enquiry form settings menu
+            {% endcomment %}
+            {% if settings.rca.EnquiryFormSettings.form_page %}
+                <button class="js-enquiry-form-trigger">
+                    Make an enquire
+                </button>
+            {% endif %}
+
         {% endwith %}
 
         <section class="body-text">
