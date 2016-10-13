@@ -6432,7 +6432,11 @@ class EnquiryFormPage(AbstractEmailForm):
     )
 
     def get_to_address(self, submission, form):
-        # TODO
+        # HACK: Work out whether they are in or out of the EU depending on the value of one of the fields
+        # If they change the label of values of the field, you must update this!
+        if form.cleaned_data['country-of-citizenship'] == u'Outside the European Union':
+            return self.to_address_row
+
         return self.to_address
 
     def send_mail(self, form, to_address):
