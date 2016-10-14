@@ -1,8 +1,10 @@
 {% load wagtailcore_tags %}
 {% load widget_tweaks %}
 
+<div class="modal__container">
 {% if form %}
-    <form action="{% pageurl page.contact_form_page %}" method="POST">
+    <form action="{% pageurl page.contact_form_page %}" method="POST" class="modal__form">
+        <h2>Send a message</h2>
         {% csrf_token %}
         <div class="enquiry-form__form-wrapper">
         {% for field in form.visible_fields %}
@@ -49,8 +51,8 @@
     {% if programme_contact %}
         {# if a contact snippet linked, display it #}
         {% if programme_contact.contact_snippet %}
-            <div style="border: 1px dotted #783cac;">
-
+            <div class="modal__contact-details">
+                <h3>Contact details</h3>
                 <p>
                     {% if programme_contact.contact_snippet.contact_title %}
                         <strong>{{ programme_contact.contact_snippet.contact_title }}</strong><br />
@@ -87,3 +89,4 @@
         {% endif %}
     {% endif %}
 {% endif %}
+</div> <!-- /modal__container -->

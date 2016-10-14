@@ -30,7 +30,7 @@
                 float: left;
                 width: 50%;
             }
-            
+
         }
 
     }
@@ -130,4 +130,26 @@
         padding-top: 0;
     }
 
+}
+
+.modal {
+
+    &__container {
+        .clearfix();
+    }
+
+    &__form {
+        @media screen and (min-width: 768px) {
+            float: left;
+            width: 66.66666667%;
+            padding-right: @grid-gutter-width;
+        }
+    }
+
+    &__contact-details {
+        @media screen and (min-width: 768px) {
+            float: left;
+            width: 33.33333333%;
+        }
+    }
 }
