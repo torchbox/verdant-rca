@@ -3500,10 +3500,11 @@ class NewStudentPageQuerySet(PageQuerySet):
             if current_year is None:
                 current_year = timezone.now().year
 
+            empty_year_q = models.Q(phd_graduation_year='')
             if current == True:
-                self = self.filter(phd_graduation_year__gte=current_year)
+                self = self.filter(models.Q(phd_graduation_year__gte=current_year) | empty_year_q)
             elif current == False:
-                self = self.filter(phd_graduation_year__lt=current_year)
+                self = self.exclude(empty_year_q).filter(phd_graduation_year__lt=current_year)
 
         if in_show != None:
             self = self.filter(phd_in_show=in_show)
@@ -3525,10 +3526,11 @@ class NewStudentPageQuerySet(PageQuerySet):
             if current_year is None:
                 current_year = timezone.now().year
 
+            empty_year_q = models.Q(mphil_graduation_year='')
             if current == True:
-                self = self.filter(mphil_graduation_year__gte=current_year)
+                self = self.filter(models.Q(mphil_graduation_year__gte=current_year) | empty_year_q)
             elif current == False:
-                self = self.filter(mphil_graduation_year__lt=current_year)
+                self = self.exclude(empty_year_q).filter(mphil_graduation_year__lt=current_year)
 
         if in_show != None:
             self = self.filter(mphil_in_show=in_show)
