@@ -5,23 +5,29 @@
     {# TODO: Replace this temporary div with pop-up #}
     <div class="js-contact-us-form-body"></div>
 
-    <h1 class="h1">{{ self.title }}</h1>
+    <h1 class="h1 major"><span class="dark-grey">{{ self.title }}</span></h1>
+
     <section class="row">
+
+        <div class="featured-content">
+
         {% with general_enquiries=page.general_enquiries.all %}
 
             {# Needs styling #}
             {% if general_enquiries %}
-                <div>
+                <div class="featured-content__contacts">
+
+                    <h2>General Enquiries</h2>
 
                     {% for contact in general_enquiries %}
 
                         {# if a contact snippet linked, display it #}
                         {% if contact.contact_snippet %}
-                            <div style="border: 1px dotted #783cac;">
+                            <div class="featured-content__contacts__item">
 
                                 <p>
                                     {% if contact.contact_snippet.contact_title %}
-                                        <strong>{{ contact.contact_snippet.contact_title }}</strong><br />
+                                        <h3>{{ contact.contact_snippet.contact_title }}</h3>
                                     {% endif %}
                                     {% if contact.contact_snippet.contact_address %}
                                         {{ contact.contact_snippet.contact_address|linebreaksbr }}
@@ -49,26 +55,29 @@
                             </div>
                         {# if th contact snippet is not linked, display text field #}
                         {% else %}
-                            <div style="border: 1px dotted #00AEEF;">
+                            <div class="featured-content__contacts__item">
                                 {{ contact.text|richtext }}
                             </div>
                         {% endif %}
 
                     {% endfor %}
 
-                </div>
+                </div> <!-- /featured-contacts__contacts -->
             {% endif %}
+
+                <div class="featured-content__action-container">
 
             {% comment %}
             Needs styling. To display this button,
             you need to add a from page in the enquiry form settings menu
             {% endcomment %}
             {% if settings.rca.EnquiryFormSettings.form_page %}
-                <div>
+                <div class="featured-content__enquire">
+                    <h2>Enquire to Study</h2>
                     <button class="js-enquiry-form-trigger">
-                        Make an enquire
+                        Make an enquiry
                     </button>
-                </div>
+                </div> <!-- /featured-content__enquire -->
             {% endif %}
 
             {% comment %}
@@ -78,7 +87,8 @@
             {% endcomment %}
             {% with programme_contacts=self.programme_contacts.all %}
                 {% if self.contact_form_page and programme_contacts %}
-                    <div>
+                    <div class="featured-content__programme-contact">
+                        <h2>Programme contacts</h2>
                         <select class="js-contact-us-form-trigger">
                             <option value="" disabled selected>Browse programmes</option>
 
@@ -93,32 +103,37 @@
                             {% endfor %}
 
                         </select>
-                    </div>
+                    </div> <!-- /featured-content__programme-contact -->
                 {% endif %}
             {% endwith %}
 
+        </div> <!-- /featured-content__action-container -->
+
         {% endwith %}
+
+        </div> <!-- /featured-content -->
 
         <section class="body-text">
             {{ self.body|richtext }}
         </section>
 
-        <section class="four">
+        <section class="four map-column">
             {% with links=self.middle_column_links.all %}
                 {% if links or self.middle_column_map %}
-                    <div class="body-text middle-column-body-text">
+                    <div>
 
                         {# Needs styling: should responsive at least #}
                         {% if self.middle_column_map %}
                             <iframe src="{{ self.middle_column_map }}" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                         {% endif %}
 
-                        {# Needs styling #}
+                        <ul class="map-column__links">
                         {% for link in links %}
-                            <p>
-                                <a href="{% pageurl link.link_page %}">{{ link.link_page.title }}</a>
-                            </p>
+                            <li class="map-column__links__item">
+                                <a class="map-column__links__link" href="{% pageurl link.link_page %}">{{ link.link_page.title }}</a>
+                            </li>
                         {% endfor %}
+                        </ul> <!-- /map-column__links -->
 
                     </div>
                 {% endif %}
