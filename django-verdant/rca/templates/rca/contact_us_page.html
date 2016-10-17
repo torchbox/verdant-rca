@@ -2,9 +2,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-    {# TODO: Replace this temporary div with pop-up #}
-    <div class="js-contact-us-form-body"></div>
-
     <h1 class="h1 major"><span class="dark-grey">{{ self.title }}</span></h1>
 
     <section class="row">
@@ -13,7 +10,6 @@
 
         {% with general_enquiries=page.general_enquiries.all %}
 
-            {# Needs styling #}
             {% if general_enquiries %}
                 <div class="featured-content__contacts">
 
@@ -68,7 +64,7 @@
                 <div class="featured-content__action-container">
 
             {% comment %}
-            Needs styling. To display this button,
+            To display this button,
             you need to add a from page in the enquiry form settings menu
             {% endcomment %}
             {% if settings.rca.EnquiryFormSettings.form_page %}
@@ -81,7 +77,7 @@
             {% endif %}
 
             {% comment %}
-            Needs styling. To display this select box,
+            To display this select box,
             you need to add at least one programme contact
             and contact form page.
             {% endcomment %}
@@ -122,7 +118,6 @@
                 {% if links or self.middle_column_map %}
                     <div>
 
-                        {# Needs styling: should responsive at least #}
                         {% if self.middle_column_map %}
                             <iframe src="{{ self.middle_column_map }}" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                         {% endif %}
