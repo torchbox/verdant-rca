@@ -127,13 +127,15 @@
                             <iframe src="{{ self.middle_column_map }}" width="300" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                         {% endif %}
 
-                        <ul class="map-column__links">
-                        {% for link in links %}
-                            <li class="map-column__links__item">
-                                <a class="map-column__links__link" href="{% pageurl link.link_page %}">{{ link.link_page.title }}</a>
-                            </li>
-                        {% endfor %}
-                        </ul> <!-- /map-column__links -->
+                        {% if links %}
+                            <ul class="map-column__links">
+                            {% for link in links %}
+                                <li class="map-column__links__item">
+                                    <a class="map-column__links__link" href="{% pageurl link.link_page %}">{{ link.link_page.title }}</a>
+                                </li>
+                            {% endfor %}
+                            </ul> <!-- /map-column__links -->
+                        {% endif %}
 
                     </div>
                 {% endif %}
