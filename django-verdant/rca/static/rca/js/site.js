@@ -885,13 +885,14 @@ function onDocumentReady(jQuery, inLightBox){
     var contactUsForm = function() {
 
         var $trigger            = $( '.js-contact-us-form-trigger' ),
-            $contactUsFormBody  = $( '.js-contact-us-form-body' ),
             $modalContent       = $( '.pjax-content' ),
-            $modalClose         = $( '#pjax-close' ),
+            modalClose          = '.form-modal #pjax-close' ,
+            modalOverlay        = '.form-modal .page-overlay' ,
             modalClasses        = 'lightbox-view lightbox-visible form-modal',
+            modalBodyKeydown    = 'body.form-modal.lightbox-view',
             state               = {
                 open    : false,
-                busy    : false,
+                busy    : false
             };
 
         function showModal(data) {
@@ -931,8 +932,6 @@ function onDocumentReady(jQuery, inLightBox){
                         state.busy = false;
                     }
                 });
-
-                // TODO: Add pop-up open logic here
             }
         }
 
@@ -941,17 +940,24 @@ function onDocumentReady(jQuery, inLightBox){
                 open(this.value);
             });
 
-            // Modal close button
-            $modalClose.on( 'click', function() {
+            $(document).on('click', modalClose, function(e) {
+                e.preventDefault();
+
                 closeModal();
             });
 
-            // Catch clicks outside modal
-            $( document ).on( 'click', function( e ){
-                if( !$( e.target ).closest( $(modalContent) ).length && !$( e.target ).is( $modalContent ) ){
+            $(document).on('keydown', modalBodyKeydown, function(e) {
+                if (e.keyCode == 27){
                     e.preventDefault();
+
                     closeModal();
                 }
+            });
+
+            $(document).on('click', modalOverlay, function(e) {
+                e.preventDefault();
+
+                closeModal();
             });
         }
 
@@ -959,10 +965,4 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     contactUsForm();
-
-    $( 'select' ).on( 'change', function() {
-        $( 'body' ).addClass( 'lightbox-view lightbox-visible' );
-    });
-
-
 }

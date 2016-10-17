@@ -215,22 +215,17 @@ $(function(){
         }
     });
 
-    // Prevent non-pushstate usage of modal from breaking
-    if ( !$( 'body' ).hasClass( 'form-modal' ) ) {
+    $(document).on('click', '#pjax-close', function(event) {
+        History.back();
+    });
 
-        $(document).on('keydown', 'body.lightbox-view', function(e){
-            if(e.keyCode == 27){
-                History.back();
-            }
-        });
-
-        $('.page-overlay').on('click', function(){
+    $(document).on('keydown', 'body.lightbox-view', function(e){
+        if(e.keyCode == 27){
             History.back();
-        });
+        }
+    });
 
-        $(document).on('click', '#pjax-close', function(event) {
-            History.back();
-        });
-    }
-    
+    $('.page-overlay').on('click', function(){
+        History.back();
+    });
 });
