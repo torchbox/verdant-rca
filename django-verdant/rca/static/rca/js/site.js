@@ -886,11 +886,22 @@ function onDocumentReady(jQuery, inLightBox){
 
         var $trigger            = $( '.js-contact-us-form-trigger' ),
             $contactUsFormBody  = $( '.js-contact-us-form-body' ),
+            $modalContent       = $( '.pjax-content' ),
+            $modalClose         = $( '#pjax-close' ),
+            modalClasses        = 'lightbox-view lightbox-visible form-modal',
             state               = {
                 open    : false,
                 busy    : false,
             };
 
+        function showModal(data) {
+            $modalContent.html(data);
+            $( 'body' ).addClass( modalClasses );
+        }
+
+        function closeModal() {
+            $( 'body' ).removeClass( modalClasses );
+        }
 
         function open(programme_contact) {
             var previousRequest = null;
@@ -914,7 +925,7 @@ function onDocumentReady(jQuery, inLightBox){
                     },
                     success: function(data) {
                         if (data.length) {
-                            $contactUsFormBody.html(data);
+                            showModal(data);
                         }
 
                         state.busy = false;
@@ -929,10 +940,29 @@ function onDocumentReady(jQuery, inLightBox){
             $trigger.on( 'change', function() {
                 open(this.value);
             });
+
+            // Modal close button
+            $modalClose.on( 'click', function() {
+                closeModal();
+            });
+
+            // Catch clicks outside modal
+            $( document ).on( 'click', function( e ){
+                if( !$( e.target ).closest( $(modalContent) ).length && !$( e.target ).is( $modalContent ) ){
+                    e.preventDefault();
+                    closeModal();
+                }
+            });
         }
 
         bindEvents();
     };
 
     contactUsForm();
+
+    $( 'select' ).on( 'change', function() {
+        $( 'body' ).addClass( 'lightbox-view lightbox-visible' );
+    });
+
+
 }
