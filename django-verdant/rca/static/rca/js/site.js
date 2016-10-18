@@ -879,9 +879,15 @@ function onDocumentReady(jQuery, inLightBox){
 
         var $trigger            = $( '.js-contact-us-form-trigger' ),
             $modalContent       = $( '.pjax-content' ),
-            modalClose          = '.form-modal #pjax-close' ,
-            modalOverlay        = '.form-modal .page-overlay' ,
-            modalClasses        = 'lightbox-view lightbox-visible form-modal',
+            modalClose          = '.form-modal #pjax-close',
+            modalOverlay        = '.form-modal .page-overlay',
+            /*
+            We need to add the no-pushstate class
+            to temporary disable pushstate while our modal is opened.
+
+            See event selectors for event handlers in pushstate.js
+             */
+            modalClasses        = 'lightbox-view lightbox-visible form-modal no-pushstate',
             modalBodyKeydown    = 'body.form-modal.lightbox-view',
             state               = {
                 open: false,
@@ -926,22 +932,17 @@ function onDocumentReady(jQuery, inLightBox){
             });
 
             $(document).on('click', modalClose, function(e) {
-                e.preventDefault();
-
                 closeModal();
             });
 
             $(document).on('keydown', modalBodyKeydown, function(e) {
-                if (e.keyCode == 27){
-                    e.preventDefault();
+                if (e.keyCode == 27) {
 
                     closeModal();
                 }
             });
 
             $(document).on('click', modalOverlay, function(e) {
-                e.preventDefault();
-
                 closeModal();
             });
         }

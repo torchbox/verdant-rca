@@ -215,17 +215,17 @@ $(function(){
         }
     });
 
-    $(document).on('click', '#pjax-close', function(event) {
+    $(document).on('click', 'body:not(.no-pushstate) #pjax-close', function(event) {
         History.back();
     });
 
-    $(document).on('keydown', 'body.lightbox-view', function(e){
+    $(document).on('keydown', 'body.lightbox-view:not(.no-pushstate)', function(e){
         if(e.keyCode == 27){
             History.back();
         }
     });
 
-    $('.page-overlay').on('click', function(){
+    $(document).on('click', 'body:not(.no-pushstate) .page-overlay', function(){
         History.back();
     });
 });
