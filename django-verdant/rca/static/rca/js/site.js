@@ -776,8 +776,6 @@ function onDocumentReady(jQuery, inLightBox){
         }
 
         function open(){
-            var previousRequest = null;
-
             if( !state.busy ){
                 state.busy = true;
 
@@ -805,18 +803,11 @@ function onDocumentReady(jQuery, inLightBox){
                 }, displayBuffer );
 
                 if ( !state.hasData ) {
-                    previousRequest = jQuery.ajax({
+                    jQuery.ajax({
                         url: $sidebar.data('from-url'),
                         cache: false,
                         data: {
                             format: 'enquiry_form'
-                        },
-                        beforeSend: function()    {
-                            if (previousRequest != null) {
-                                previousRequest.abort();
-                                state.busy = false;
-                            }
-
                         },
                         success: function(data) {
                             if (data.length) {
@@ -824,10 +815,12 @@ function onDocumentReady(jQuery, inLightBox){
 
                                 // Modify placeholders
                                 selectPlaceholders();
-                            }
 
+                                state.hasData = true;
+                            }
+                        },
+                        complete: function() {
                             state.busy = false;
-                            state.hasData = true;
                         }
                     });
                 }
@@ -891,8 +884,8 @@ function onDocumentReady(jQuery, inLightBox){
             modalClasses        = 'lightbox-view lightbox-visible form-modal',
             modalBodyKeydown    = 'body.form-modal.lightbox-view',
             state               = {
-                open    : false,
-                busy    : false
+                open: false,
+                busy: false
             };
 
         function showModal(data) {
@@ -905,30 +898,22 @@ function onDocumentReady(jQuery, inLightBox){
         }
 
         function open(programme_contact) {
-            var previousRequest = null;
-
             if ( !state.busy ) {
                 state.busy = true;
 
                 // Requests current page
-                previousRequest = jQuery.ajax({
+                jQuery.ajax({
                     cache: false,
                     data: {
                         programme_contact: programme_contact,
                         format: 'programme_contact_form'
                     },
-                    beforeSend: function()    {
-                        if (previousRequest != null) {
-                            previousRequest.abort();
-                            state.busy = false;
-                        }
-
-                    },
                     success: function(data) {
                         if (data.length) {
                             showModal(data);
                         }
-
+                    },
+                    complete: function() {
                         state.busy = false;
                     }
                 });
