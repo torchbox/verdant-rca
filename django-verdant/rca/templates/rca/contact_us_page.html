@@ -82,9 +82,9 @@
             and contact form page.
             {% endcomment %}
             {% with programme_contacts=self.programme_contacts.all %}
-                {% if self.contact_form_page and programme_contacts %}
+                {% if self.contact_form_page or programme_contacts %}
                     <div class="featured-content__programme-contact">
-                        <h2>Programme contacts</h2>
+                        <h2>Programme Contacts</h2>
                         <select class="js-contact-us-form-trigger">
                             <option value="" disabled selected>Browse programmes</option>
 

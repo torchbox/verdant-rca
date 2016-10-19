@@ -1,52 +1,54 @@
 {% load wagtailcore_tags %}
 {% load widget_tweaks %}
 
-<div class="modal__container">
-{% if form %}
-    <form action="{% pageurl page.contact_form_page %}" method="POST" class="modal__form">
-        <h2>Send a message</h2>
-        {% csrf_token %}
-        <div class="enquiry-form__form-wrapper">
-        {% for field in form.visible_fields %}
-            {% with field_widget_type=field|widget_type %}
+{% if form or programme_contact %}
+    <div class="modal__container">
+    {% if form %}
+        <form action="{% pageurl page.contact_form_page %}" method="POST" class="modal__form">
+            <h2>Send a message</h2>
+            {% csrf_token %}
+            <div class="enquiry-form__form-wrapper">
+            {% for field in form.visible_fields %}
+                {% with field_widget_type=field|widget_type %}
 
-                {% if field.label %}
-                    <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+                    {% if field.label %}
+                        <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
 
-                        {% if field.help_text %}
-                            <p class="help-text">{{ field.help_text }}</p>
-                        {% endif %}
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
 
-                        {% render_field field %}
+                            {% render_field field %}
 
-                    </label>
+                        </label>
 
-                    {% for error in field.errors %}
-                        <small class="error">{{ error }}</small>
-                    {% endfor %}
-
-                {% else %}{# field has no label #}
-                    <label{% if field.errors %} class="error"{% endif %}>
-                        {% render_field field %}
                         {% for error in field.errors %}
                             <small class="error">{{ error }}</small>
                         {% endfor %}
-                    </label>
-                {% endif %}
 
-            {% endwith %}
-        {% endfor %}
-        </div>
+                    {% else %}{# field has no label #}
+                        <label{% if field.errors %} class="error"{% endif %}>
+                            {% render_field field %}
+                            {% for error in field.errors %}
+                                <small class="error">{{ error }}</small>
+                            {% endfor %}
+                        </label>
+                    {% endif %}
 
-        {% for hidden_field in form.hidden_fields %}
-            {{ hidden_field }}
-        {% endfor %}
+                {% endwith %}
+            {% endfor %}
+            </div>
 
-        <div class="profile-actions">
-          <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
-        </div>
+            {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
 
-    </form>
+            <div class="profile-actions">
+              <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
+            </div>
+
+        </form>
+    {% endif %}
 
     {% if programme_contact %}
         {# if a contact snippet linked, display it #}
@@ -88,5 +90,5 @@
             </div>
         {% endif %}
     {% endif %}
+    </div> <!-- /modal__container -->
 {% endif %}
-</div> <!-- /modal__container -->
