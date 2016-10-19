@@ -813,6 +813,8 @@ function onDocumentReady(jQuery, inLightBox){
                             if (data.length) {
                                 $sidebarInner.html(data);
 
+                                $( 'input[type="date"]' ).datepicker();
+
                                 // Modify placeholders
                                 selectPlaceholders();
 
