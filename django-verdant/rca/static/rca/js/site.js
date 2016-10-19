@@ -878,7 +878,9 @@ function onDocumentReady(jQuery, inLightBox){
     var contactUsForm = function() {
 
         var $trigger            = $( '.js-contact-us-form-trigger' ),
+            $headerWrapper      = $( '.header-wrapper' ),
             $modalContent       = $( '.pjax-content' ),
+            $modalWrapper       = $( '.page-wrapper' ),
             modalClose          = '.form-modal #pjax-close',
             modalOverlay        = '.form-modal .page-overlay',
             /*
@@ -889,14 +891,36 @@ function onDocumentReady(jQuery, inLightBox){
              */
             modalClasses        = 'lightbox-view lightbox-visible form-modal no-pushstate',
             modalBodyKeydown    = 'body.form-modal.lightbox-view',
+            prevScrollY         = null,
             state               = {
                 open: false,
                 busy: false
             };
 
+        function scrollPostition() {
+            return +(window.scrollY || window.pageYOffset);
+        }
+
         function showModal(data) {
             $modalContent.html(data);
             $( 'body' ).addClass( modalClasses );
+
+            prevScrollY = scrollPostition();
+
+            // needed so that the browser can scroll back when closing the lightbox
+            $( 'body, html' ).css('min-height', $(document).height());
+
+            // disable bs-affix because it would interfer with positioning
+            $modalWrapper.data('bs.affix').disable();
+            $modalWrapper.removeClass('affix affix-top');
+
+            var affixed = $headerWrapper.hasClass('affix');
+            $modalWrapper.css({
+                top: -scrollPostition() + (affixed ? 186 : 200)
+            });
+
+            // scroll to top, but leave the menu collapsed
+            $(window).scrollTop(affixOffsetTop);
         }
 
         function closeModal() {
@@ -927,6 +951,8 @@ function onDocumentReady(jQuery, inLightBox){
         }
 
         function bindEvents() {
+            prevScrollY = scrollPostition();
+
             $trigger.on( 'change', function() {
                 open(this.value);
             });
