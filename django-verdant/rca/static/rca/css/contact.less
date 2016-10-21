@@ -147,6 +147,16 @@
     }
 
     &__contact-details {
+        a {
+            color: @color-highlight-blue;
+            .bold();
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &__contact-details_with-form {
         @media screen and (min-width: 768px) {
             float: left;
             width: 33.33333333%;

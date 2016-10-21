@@ -51,7 +51,7 @@
     {% endif %}
 
     {% if programme_contact %}
-        <div class="modal__contact-details">
+        <div class="modal__contact-details {% if form %}modal__contact-details_with-form{% endif %}">
             <h3>Contact Details</h3>
             {# if a contact snippet linked, display it #}
             {% if programme_contact.contact_snippet %}
@@ -70,7 +70,7 @@
                 {% with programme_contact.contact_snippet.contact_phone.all as phone_nos %}
                     {% if phone_nos %}
                         {% for phone_no in phone_nos %}
-                            <b>{{ phone_no.phone_number }}</b><br />
+                            <b>Tel: {{ phone_no.phone_number }}</b><br />
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
