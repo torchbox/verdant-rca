@@ -51,10 +51,10 @@
     {% endif %}
 
     {% if programme_contact %}
-        {# if a contact snippet linked, display it #}
-        {% if programme_contact.contact_snippet %}
-            <div class="modal__contact-details">
-                <h3>Contact details</h3>
+        <div class="modal__contact-details {% if form %}modal__contact-details_with-form{% endif %}">
+            <h3>Contact Details</h3>
+            {# if a contact snippet linked, display it #}
+            {% if programme_contact.contact_snippet %}
                 <p>
                     {% if programme_contact.contact_snippet.contact_title %}
                         <strong>{{ programme_contact.contact_snippet.contact_title }}</strong><br />
@@ -70,7 +70,7 @@
                 {% with programme_contact.contact_snippet.contact_phone.all as phone_nos %}
                     {% if phone_nos %}
                         {% for phone_no in phone_nos %}
-                            <b>{{ phone_no.phone_number }}</b><br />
+                            <b>Tel: {{ phone_no.phone_number }}</b><br />
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
@@ -81,14 +81,11 @@
                         {% endfor %}
                     {% endif %}
                 {% endwith %}
-
-            </div>
-        {# if th contact snippet is not linked, display text field #}
-        {% else %}
-            <div>
+            {# if th contact snippet is not linked, display text field #}
+            {% else %}
                 {{ programme_contact.text|richtext }}
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     {% endif %}
     </div> <!-- /modal__container -->
 {% endif %}
