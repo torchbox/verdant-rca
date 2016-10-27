@@ -4,15 +4,10 @@
 
 
 {% block content %}
+  <h1 class="h1">{{ self.title }}</h1>
+  <div class="bc3 intro">{{ self.intro|richtext }}</div>
 
   <div class="body-text">
-    <div class="app-details">
-        <h2 class="app-title">{{ page.title }}</h2>
-        <div class="session-meta">
-          {{ page.intro|richtext }}
-        </div>
-    </div>
-
     <style>
       #id_course > input[type=checkbox] {
         margin-right: 2px;

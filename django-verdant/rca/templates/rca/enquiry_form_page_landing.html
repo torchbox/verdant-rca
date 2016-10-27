@@ -4,25 +4,9 @@
 
 
 {% block content %}
+    <h1 class="h1">{{ self.title }}</h1>
 
-  <div class="page-content body-text">
-
-    <div class="app-details">
-      <h2 class="app-title">{{ page.title }}</h2>
-      <div class="session-meta">
+    <div class="body-text">
         {{ page.thank_you_text|richtext }}
-      </div>
-      {% if selected_documents %}
-        <div>
-
-          Click to download a course booklet for
-          {% for selected_document in selected_documents %}{% if forloop.counter0 > 0 %}{% if forloop.last %} and {% else %}, {% endif %}{% endif %}<a href="{{ selected_document.document.url }}">{{ selected_document.for_course }} (PDF)</a>{% endfor %}.
-
-        </div>
-      {% endif %}
-
     </div>
-
-  </div>
-
 {% endblock content %}
