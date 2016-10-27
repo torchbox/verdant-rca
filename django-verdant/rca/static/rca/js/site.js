@@ -877,30 +877,34 @@ function onDocumentReady(jQuery, inLightBox){
 
     var contactUsForm = function() {
 
-        var $trigger            = $( '.js-contact-us-form-trigger' ),
-            $headerWrapper      = $( '.header-wrapper' ),
-            $modalContent       = $( '.pjax-content' ),
-            $modalWrapper       = $( '.page-wrapper' ),
-            modalClose          = '.contact-us-form-modal #pjax-close',
-            modalOverlay        = '.contact-us-form-modal .page-overlay',
+        var $trigger             = $( '.js-contact-us-form-trigger' ),
+            $headerWrapper       = $( '.header-wrapper' ),
+            $mobileContent       = $( '.body-text__mobile-contacts' ),
+            $modalContent        = $( '.pjax-content' ),
+            $modalWrapper        = $( '.page-wrapper' ),
+            modalClose           = '.contact-us-form-modal #pjax-close',
+            modalOverlay         = '.contact-us-form-modal .page-overlay',
             /*
             We need to add the no-pushstate class
             to temporary disable pushstate while our modal is opened.
 
             See event selectors for event handlers in pushstate.js
              */
-            modalClasses        = 'lightbox-view lightbox-visible contact-us-form-modal no-pushstate',
-            modalBodyKeydown    = 'body.contact-us-form-modal.lightbox-view',
-            prevScrollY         = null,
-            state               = {
-                open: false,
-                busy: false
+            mobileContentClasses = 'body-text__mobile-contacts__dynamic-content',
+            modalClasses         = 'lightbox-view lightbox-visible contact-us-form-modal no-pushstate',
+            modalBodyKeydown     = 'body.contact-us-form-modal.lightbox-view',
+            prevScrollY          = null,
+            state                = {
+                open     : false,
+                busy     : false,
+                useModal : true
             };
 
         function scrollPostition() {
             return +(window.scrollY || window.pageYOffset);
         }
 
+        // We will use this function to display content on large screens
         function showModal(data) {
             $modalContent.html(data);
             $( 'body' ).addClass( modalClasses );
@@ -923,6 +927,20 @@ function onDocumentReady(jQuery, inLightBox){
             $(window).scrollTop(affixOffsetTop);
         }
 
+        // We will use this function to display content on mobile devices
+        function showOnPage(data) {
+            var $innerElement = $('<div></div>');
+
+            $innerElement.addClass(mobileContentClasses);
+            $innerElement.html(data);
+
+            $mobileContent.html($innerElement);
+
+            $("html, body").animate({
+                scrollTop: $mobileContent.show().offset().top
+            }, 500);
+        }
+
         function closeModal() {
             $( 'body' ).removeClass( modalClasses );
         }
@@ -940,7 +958,11 @@ function onDocumentReady(jQuery, inLightBox){
                     },
                     success: function(data) {
                         if (data.length) {
-                            showModal(data);
+                            if (state.useModal) {
+                                showModal(data);
+                            } else {
+                                showOnPage(data);
+                            }
                         }
                     },
                     complete: function() {
@@ -970,6 +992,16 @@ function onDocumentReady(jQuery, inLightBox){
 
             $(document).on('click', modalOverlay, function(e) {
                 closeModal();
+            });
+
+            Harvey.attach(breakpoints.mobile, {
+                on: function() {
+                    state.useModal = false;
+                },
+                off: function() {
+                    state.useModal = true;
+                    $mobileContent.html('');
+                }
             });
         }
 
