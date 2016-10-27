@@ -881,16 +881,16 @@ function onDocumentReady(jQuery, inLightBox){
             $headerWrapper      = $( '.header-wrapper' ),
             $modalContent       = $( '.pjax-content' ),
             $modalWrapper       = $( '.page-wrapper' ),
-            modalClose          = '.form-modal #pjax-close',
-            modalOverlay        = '.form-modal .page-overlay',
+            modalClose          = '.contact-us-form-modal #pjax-close',
+            modalOverlay        = '.contact-us-form-modal .page-overlay',
             /*
             We need to add the no-pushstate class
             to temporary disable pushstate while our modal is opened.
 
             See event selectors for event handlers in pushstate.js
              */
-            modalClasses        = 'lightbox-view lightbox-visible form-modal no-pushstate',
-            modalBodyKeydown    = 'body.form-modal.lightbox-view',
+            modalClasses        = 'lightbox-view lightbox-visible contact-us-form-modal no-pushstate',
+            modalBodyKeydown    = 'body.contact-us-form-modal.lightbox-view',
             prevScrollY         = null,
             state               = {
                 open: false,
