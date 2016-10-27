@@ -943,6 +943,7 @@ function onDocumentReady(jQuery, inLightBox){
 
         function closeModal() {
             $( 'body' ).removeClass( modalClasses );
+            $modalContent.html('');
         }
 
         function open(programme_contact) {
@@ -997,6 +998,7 @@ function onDocumentReady(jQuery, inLightBox){
             Harvey.attach(breakpoints.mobile, {
                 on: function() {
                     state.useModal = false;
+                    closeModal();
                 },
                 off: function() {
                     state.useModal = true;
