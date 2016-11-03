@@ -739,10 +739,12 @@ function onDocumentReady(jQuery, inLightBox){
             $sidebarInner       = $( '.enquiry-form__inner' ),
             $bodyContent        = $( '.mobile-content-wrapper' ),
             $wrapper            = $( '.enquiry-trigger-wrapper' ),
+            $background         = $('html');
             wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
             showSidebar         = 'enquiry-form--show',
             shiftContent        = 'mobile-content-wrapper--shift-left',
             toggled             = 'enquiry-form-trigger--toggled',
+            contentShifted      = 'mobile-content-wrapper--open',
             displayBuffer       = 10,
             state               = {
                 open    : false,
@@ -782,6 +784,7 @@ function onDocumentReady(jQuery, inLightBox){
                 setTimeout(function(){
                     $sidebar.addClass( showSidebar );
                     $bodyContent.addClass( shiftContent );
+                    $background.addClass(contentShifted);
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     
@@ -836,6 +839,8 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.removeClass( shiftContent );
                     $wrapper.removeClass( wrapperFixed );
                     $triggerButton.removeClass( toggled );
+                    //$background.removeClass( contentShifted);
+
 
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {
@@ -877,30 +882,34 @@ function onDocumentReady(jQuery, inLightBox){
 
     var contactUsForm = function() {
 
-        var $trigger            = $( '.js-contact-us-form-trigger' ),
-            $headerWrapper      = $( '.header-wrapper' ),
-            $modalContent       = $( '.pjax-content' ),
-            $modalWrapper       = $( '.page-wrapper' ),
-            modalClose          = '.form-modal #pjax-close',
-            modalOverlay        = '.form-modal .page-overlay',
+        var $trigger             = $( '.js-contact-us-form-trigger' ),
+            $headerWrapper       = $( '.header-wrapper' ),
+            $mobileContent       = $( '.body-text__mobile-contacts' ),
+            $modalContent        = $( '.pjax-content' ),
+            $modalWrapper        = $( '.page-wrapper' ),
+            modalClose           = '.contact-us-form-modal #pjax-close',
+            modalOverlay         = '.contact-us-form-modal .page-overlay',
             /*
             We need to add the no-pushstate class
             to temporary disable pushstate while our modal is opened.
 
             See event selectors for event handlers in pushstate.js
              */
-            modalClasses        = 'lightbox-view lightbox-visible form-modal no-pushstate',
-            modalBodyKeydown    = 'body.form-modal.lightbox-view',
-            prevScrollY         = null,
-            state               = {
-                open: false,
-                busy: false
+            mobileContentClasses = 'body-text__mobile-contacts__dynamic-content',
+            modalClasses         = 'lightbox-view lightbox-visible contact-us-form-modal no-pushstate',
+            modalBodyKeydown     = 'body.contact-us-form-modal.lightbox-view',
+            prevScrollY          = null,
+            state                = {
+                open     : false,
+                busy     : false,
+                useModal : true
             };
 
         function scrollPostition() {
             return +(window.scrollY || window.pageYOffset);
         }
 
+        // We will use this function to display content on large screens
         function showModal(data) {
             $modalContent.html(data);
             $( 'body' ).addClass( modalClasses );
@@ -923,8 +932,23 @@ function onDocumentReady(jQuery, inLightBox){
             $(window).scrollTop(affixOffsetTop);
         }
 
+        // We will use this function to display content on mobile devices
+        function showOnPage(data) {
+            var $innerElement = $('<div></div>');
+
+            $innerElement.addClass(mobileContentClasses);
+            $innerElement.html(data);
+
+            $mobileContent.html($innerElement);
+
+            $("html, body").animate({
+                scrollTop: $mobileContent.show().offset().top
+            }, 500);
+        }
+
         function closeModal() {
             $( 'body' ).removeClass( modalClasses );
+            $modalContent.html('');
         }
 
         function open(programme_contact) {
@@ -940,7 +964,11 @@ function onDocumentReady(jQuery, inLightBox){
                     },
                     success: function(data) {
                         if (data.length) {
-                            showModal(data);
+                            if (state.useModal) {
+                                showModal(data);
+                            } else {
+                                showOnPage(data);
+                            }
                         }
                     },
                     complete: function() {
@@ -970,6 +998,17 @@ function onDocumentReady(jQuery, inLightBox){
 
             $(document).on('click', modalOverlay, function(e) {
                 closeModal();
+            });
+
+            Harvey.attach(breakpoints.mobile, {
+                on: function() {
+                    state.useModal = false;
+                    closeModal();
+                },
+                off: function() {
+                    state.useModal = true;
+                    $mobileContent.html('');
+                }
             });
         }
 

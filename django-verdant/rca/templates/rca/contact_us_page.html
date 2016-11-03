@@ -61,53 +61,57 @@
                 </div> <!-- /featured-contacts__contacts -->
             {% endif %}
 
-                <div class="featured-content__action-container">
+            <div class="featured-content__action-container">
 
-            {% comment %}
-            To display this button,
-            you need to add a from page in the enquiry form settings menu
-            {% endcomment %}
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                <div class="featured-content__enquire">
-                    <h2>Enquire to Study</h2>
-                    <button class="js-enquiry-form-trigger">
-                        Make an enquiry
-                    </button>
-                </div> <!-- /featured-content__enquire -->
-            {% endif %}
-
-            {% comment %}
-            To display this select box,
-            you need to add at least one programme contact
-            and contact form page.
-            {% endcomment %}
-            {% with programme_contacts=self.programme_contacts.all %}
-                {% if self.contact_form_page or programme_contacts %}
-                    <div class="featured-content__programme-contact">
-                        <h2>Programme Contacts</h2>
-                        <select class="js-contact-us-form-trigger">
-                            <option value="" disabled selected>Browse programmes</option>
-
-                            {% for programme_contact in programme_contacts %}
-                                {% if programme_contact.programme and not programme_contact.programme.disabled%}
-
-                                    <option value="{{ programme_contact.pk }}">
-                                        {{ programme_contact.programme.display_name }}
-                                    </option>
-
-                                {% endif %}
-                            {% endfor %}
-
-                        </select>
-                    </div> <!-- /featured-content__programme-contact -->
+                {% comment %}
+                To display this button,
+                you need to add a from page in the enquiry form settings menu
+                {% endcomment %}
+                {% if settings.rca.EnquiryFormSettings.form_page %}
+                    <div class="featured-content__enquire">
+                        <h2>Enquire to Study</h2>
+                        <button class="js-enquiry-form-trigger">
+                            Make an enquiry
+                        </button>
+                    </div> <!-- /featured-content__enquire -->
                 {% endif %}
-            {% endwith %}
 
-        </div> <!-- /featured-content__action-container -->
+                {% comment %}
+                To display this select box,
+                you need to add at least one programme contact
+                and contact form page.
+                {% endcomment %}
+                {% with programme_contacts=self.programme_contacts.all %}
+                    {% if self.contact_form_page or programme_contacts %}
+                        <div class="featured-content__programme-contact">
+                            <h2>Programme Contacts</h2>
+                            <select class="js-contact-us-form-trigger">
+                                <option value="" disabled selected>Browse programmes</option>
+
+                                {% for programme_contact in programme_contacts %}
+                                    {% if programme_contact.programme and not programme_contact.programme.disabled%}
+
+                                        <option value="{{ programme_contact.pk }}">
+                                            {{ programme_contact.programme.display_name }}
+                                        </option>
+
+                                    {% endif %}
+                                {% endfor %}
+
+                            </select>
+                        </div> <!-- /featured-content__programme-contact -->
+                    {% endif %}
+                {% endwith %}
+
+            </div> <!-- /featured-content__action-container -->
 
         {% endwith %}
 
         </div> <!-- /featured-content -->
+
+        <section class="body-text body-text__mobile-contacts">
+            {# We will insert contact details here instead of modal on small screens #}
+        </section>
 
         <section class="body-text">
             {{ self.body|richtext }}
