@@ -1,0 +1,29 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import migrations, models
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('rca', '0024_pagealias'),
+    ]
+
+    operations = [
+        migrations.AlterField(
+            model_name='rcanowpage',
+            name='author',
+            field=models.CharField(help_text=b"Enter your full name as you'd like it to appear, e.g. Tom Smith. If this post was authored by a group of people, add all names as they are supposed to appear.", max_length=255, blank=True),
+        ),
+        migrations.AlterField(
+            model_name='reachoutrcaparticipants',
+            name='participant',
+            field=models.CharField(blank=True, help_text=b'', max_length=255, choices=[(b'alexandraandainsworthestate', b'Alexandra and Ainsworth Estate'), (b'archbishoptenisonsschool', b"Archbishop Tenison's School"), (b'ashcrofttechnologyacademy', b'Ashcroft Technology Academy'), (b'bexhillcollege', b'Bexhill College'), (b'bishopdouglassschool', b'Bishop Douglass School'), (b'blackheathbluecoat', b'Blackheath Bluecoat'), (b'blanchenevileschool', b'Blanche Nevile School'), (b'bournemouthpoolefecollege', b'Bournemouth & Poole FE College'), (b'brentsidehighschool', b'Brentside High School'), (b'bsixcollege', b'BSix College'), (b'burntwoodschool', b'Burntwood School'), (b'centralstmartins', b'Central St Martins'), (b'cityandislington college', b'City and Islington College'), (b'cityoflondonschool', b'City of London School'), (b'claptongirlsacademy', b"Clapton Girls' Academy"), (b'cumberlandschool', b'Cumberland School'), (b'downtonlacemakers', b'Downton lace-makers'), (b'dunravenschool', b'Dunraven School'), (b'elmgreenschool', b'Elmgreen School'), (b'elthamhillschool', b'Eltham Hill School'), (b'erithschool', b'Erith School'), (b'ernestbevincollege', b'Ernest Bevin College'), (b'families', b'Families'), (b'foresthillschool', b'Forest Hill School'), (b'fulhamcrossgirlsschool', b"Fulham Cross Girls' School"), (b'greycoathospitalschool', b'Grey Coat Hospital School'), (b'greycourtschool', b'Grey Court School'), (b'griffinprimaryschool', b'Griffin Primary School'), (b'hasmoneanhighschool', b'Hasmonean High School'), (b'haveringcollege', b'Havering College'), (b'haveringsixthformcollege', b'Havering Sixth Form College'), (b'haverstockschool', b'Haverstock School'), (b'heathfieldschoolforgirls', b'Heathfield School for Girls'), (b'hendonschool', b'Hendon School'), (b'henriettabarnettschool', b'Henrietta Barnett School'), (b'henryfawcettprimaryschool', b'Henry Fawcett Primary School'), (b'highburygroveschool', b'Highbury Grove School'), (b'hollandparkschool', b'Holland Park School'), (b'horizonscentre', b'Horizons Centre'), (b'intouniversity', b'IntoUniversity'), (b'islingtonartsandmediaschool', b'Islington Arts and Media School'), (b'kingsburyhighschool', b'Kingsbury High School'), (b'lewishamsouthwarkcollege', b'Lewisham Southwark College'), (b'newhavenschool', b'Newhaven School'), (b'newmancatholiccollege', b'Newman Catholic College'), (b'northolthighschool', b'Northolt High School'), (b'oaklandsschool', b'Oaklands School'), (b'outsetfamily', b'Outset Family'), (b'parkhighschool', b'Park High School'), (b'parkviewacademy', b'Park View Academy'), (b'pimlicoacademy', b'Pimlico Academy'), (b'queensparkcommunityschool', b'Queens Park Community School'), (b'ravensbourne', b'Ravensbourne'), (b'rcastudents', b'RCA students'), (b'refugeesandasylumseekers', b'Refugees and asylum seekers'), (b'residentsofstmarynewingtonclose', b'Residents of St Mary Newington Close'), (b'ripongrammarschool', b'Ripon Grammar School'), (b'salesiancollege', b'Salesian College'), (b'salisburymuseum', b'Salisbury Museum'), (b'sirgeorgemonouxsixthformcollege', b'Sir George Monoux Sixth Form College'), (b'southendhighschoolforboys', b'Southend High School for Boys'), (b'southwarkpensionerscentre', b"Southwark Pensioners' Centre"), (b'staugustinescofeschool', b"St Augustine's C of E School"), (b'stceciliasschool', b"St Cecilia's School"), (b'stcharlescatholicsixthformcollege', b'St Charles Catholic Sixth Form College'), (b'stjamescatholichighschool', b"St James' Catholic High School"), (b'stmaryleboneschoolcofeschool', b'St Marylebone School C of E School'), (b'stmichaelscatholicgrammarschool', b"St Michael's Catholic Grammar School"), (b'surreysquareprimaryschool', b'Surrey Square Primary School'), (b'teachers', b'Teachers'), (b'thecomptonschool', b'The Compton School'), (b'thelaurels', b'The Laurels'), (b'ucaepsom', b'UCA Epsom'), (b'villiershighschool', b'Villiers High School'), (b'westlondoncollege', b'West London College'), (b'westminsteracademy', b'Westminster Academy'), (b'westthamescollege', b'West Thames College'), (b'whitefieldschool', b'Whitefield School'), (b'williamellisschool', b'William Ellis School'), (b'woolwichpolytechnicschool', b'Woolwich Polytechnic School'), (b'wrenacademy', b'Wren Academy'), (b'youngcarers', b'Young Carers')]),
+        ),
+        migrations.AlterField(
+            model_name='reachoutrcapartnership',
+            name='partnership',
+            field=models.CharField(blank=True, help_text=b'', max_length=255, choices=[(b'artontheunderground', b'Art on the Underground'), (b'creativequarter', b'Creative Quarter'), (b'burberryfoundation', b'Burberry Foundation'), (b'chathamhistoricdockyardtrust', b'Chatham Historic Dockyard Trust'), (b'thecraftscouncil', b'The Crafts Council'), (b'durhamwharffoundation', b'Durham Wharf Foundation'), (b'friezefoundation', b'Frieze Foundation'), (b'johnlyonscharity', b"John Lyon's Charity"), (b'mangroupplc', b'Man Group plc'), (b'outsetfamily', b'Outset Family'), (b'therochesterbridgetrust', b'The Rochester Bridge Trust'), (b'va', b'V&A'), (b'wandsworthartsfestival', b'Wandsworth Arts Festival')]),
+        ),
+    ]
