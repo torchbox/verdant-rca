@@ -739,10 +739,12 @@ function onDocumentReady(jQuery, inLightBox){
             $sidebarInner       = $( '.enquiry-form__inner' ),
             $bodyContent        = $( '.mobile-content-wrapper' ),
             $wrapper            = $( '.enquiry-trigger-wrapper' ),
+            $background         = $('html');
             wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
             showSidebar         = 'enquiry-form--show',
             shiftContent        = 'mobile-content-wrapper--shift-left',
             toggled             = 'enquiry-form-trigger--toggled',
+            contentShifted      = 'mobile-content-wrapper--open',
             displayBuffer       = 10,
             state               = {
                 open    : false,
@@ -782,6 +784,7 @@ function onDocumentReady(jQuery, inLightBox){
                 setTimeout(function(){
                     $sidebar.addClass( showSidebar );
                     $bodyContent.addClass( shiftContent );
+                    $background.addClass(contentShifted);
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     
@@ -836,6 +839,8 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.removeClass( shiftContent );
                     $wrapper.removeClass( wrapperFixed );
                     $triggerButton.removeClass( toggled );
+                    //$background.removeClass( contentShifted);
+
 
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {

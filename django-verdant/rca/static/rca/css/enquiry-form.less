@@ -120,19 +120,18 @@
 
 // Fly-in form
 .enquiry-form {
-    position: fixed;
-    right: 0;
+    display: none;
+    position: absolute;
+    right: -@sidebarWidth;
     top: 0;
-    bottom: 0;
-    overflow: scroll;
     width: @sidebarWidth;
     min-height: 100vh;
     z-index: 4000;
     background-color: #5b5a5a;
-    transform:
-        translate3d(@sidebarWidth, 0, 0);
+    //transform:
+    //    translate3d(@sidebarWidth, 0, 0);
     transition:
-        transform 300ms ease;
+        display 300ms ease;
 
     // BEM not possible, have to beat specificity
     input,
@@ -145,7 +144,9 @@
     }
 
     &--show {
-        transform: translate3d(0, 0, 0);
+        //transform: translate3d(0, 0, 0);
+        display: block;
+        right: 0;
     }
 
     &__inner {
