@@ -31,6 +31,10 @@
         <meta property="og:description" content="{% if self.social_text %}{{ self.social_text }}{% else %}Royal College of Art{% endif %}" />
         <meta property="og:site_name" content="Royal College of Art" />
 
+        {% if SILVERPOP_BRANDEDDOMAINS %}
+            <meta name="com.silverpop.brandeddomains" content="{{ SILVERPOP_BRANDEDDOMAINS }}" />
+        {% endif %}
+
         {% block css %}{# Block defined for timing breakdowns in django debug toolbar - not expected to be overridden #}
             <link rel="stylesheet" href="//cloud.typography.com/7787252/679822/css/fonts.css" />
             <link rel="stylesheet" href="//cloud.webtype.com/css/2dc77ba2-6663-49b6-9e6c-aa009c06648b.css" />
@@ -149,6 +153,10 @@
             <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
+
+            {% if SILVERPOP_ID %}
+                <script src="https://www.sc.pages05.net/lp/static/js/iMAWebCookie.js?{{ SILVERPOP_ID }}&h=www.pages05.net" type="text/javascript"></script>
+            {% endif %}
 
             <script type="text/javascript">
                 var domainroot = "{{ request.site.hostname }}";
