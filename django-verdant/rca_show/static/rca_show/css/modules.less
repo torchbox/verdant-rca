@@ -132,7 +132,7 @@
 
     h2{
         text-transform:uppercase;
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
         font-size:1.2em;
     }
 }
@@ -198,10 +198,10 @@
 
 .body-text,
 .body-text-style{
-    .font-family-newrail-light();
+    //.font-family-newrail-light();
 
     .module-title{
-        font-family:@font-family-benton-light;
+        //font-family:@font-family-benton-light;
         font-size: 0.867em;
     }
 
@@ -242,22 +242,22 @@
     }
 
     b, strong {
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
     }
 
     em, i{
-        .font-family-newrail-light-italic();
+        //.font-family-newrail-light-italic();
     }
 
     /* seriously. */
     b em, em b, b i, i b, strong em, em strong, strong i, i strong{
-        .font-family-newrail-bold-italic();
+        //.font-family-newrail-bold-italic();
     }
 
     /* hack to allow larger text as per intro style. Using the h5 tag for this because there's only limited tags that
     hello.js will allow and we can't add classes. This mimics the intro style on the standard page. */
     h5 {
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
         font-size: @font-size-18;
         line-height: @line-height-5;
         text-transform: none;
@@ -269,7 +269,7 @@
     which wouldn't be the case if we mapped them to .h2, .h3, .h4 (they're all too big).
     */
     h2 {
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
         font-size: @font-size-22;
         line-height: @line-height-4;
         padding-top: @spacing-one;
@@ -279,7 +279,7 @@
     }
 
     h3 {
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
         font-size: @font-size-18;
         line-height: @line-height-5;
         margin-bottom: 0;
@@ -290,7 +290,7 @@
     }
 
     h4 {
-        .font-family-newrail-bold();
+        //.font-family-newrail-bold();
         font-size: @font-size-15;
         line-height: @line-height-3;
         text-transform: none;
@@ -320,7 +320,7 @@
         display:none;
     }
     dd{
-        .font-family-newrail-medium();
+        //.font-family-newrail-medium();
         text-transform:none;
         margin-bottom:@spacing-one;
         color:black;
