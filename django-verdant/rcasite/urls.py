@@ -16,7 +16,7 @@ from wagtail.api.v2.router import WagtailAPIRouter
 from rca.api.endpoints import RCAPagesAPIEndpoint, RCAImagesAPIEndpoint
 
 from donations import urls as donations_urls
-from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
+from rca import admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
 from taxonomy import views as taxonomy_views
@@ -44,7 +44,6 @@ urlpatterns = patterns('',
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^images/', include(wagtailimages_urls)),
     url(r'^admin/donations/', include(donations_urls)),
-    url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
     url(r'^taxonomy/api/v1/$', never_cache(taxonomy_views.api), name='taxonomy_api_v0'),
