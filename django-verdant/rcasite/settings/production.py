@@ -58,10 +58,10 @@ COMPRESS_CSS_FILTERS = [
 ]
 COMPRESS_CSS_HASHING_METHOD = 'content'
 
-# Cache everything for 10 minutes
+# Cache everything for 30 minutes
 # This only applies to pages that do not have a more specific cache-control
 # setting. See urls.py
-CACHE_CONTROL_MAX_AGE = 600
+CACHE_CONTROL_MAX_AGE = 30 * 60
 
 
 # Configuration from environment variables
