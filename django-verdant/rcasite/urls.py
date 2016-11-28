@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control, never_cache
 import os.path
 
 from wagtail.wagtailcore import urls as wagtail_urls
@@ -75,4 +75,14 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL + 'images/', document_root=os.path.join(settings.MEDIA_ROOT, 'images'))
     urlpatterns += patterns('',
         (r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'rca/images/favicon.ico', permanent=True))
+    )
+
+
+# Cache-control
+cache_length = getattr(settings, 'CACHE_CONTROL_MAX_AGE', None)
+
+if cache_length:
+    urlpatterns = decorate_urlpatterns(
+        urlpatterns,
+        cache_control(max_age=cache_length)
     )
