@@ -772,15 +772,6 @@ class ProgrammeDocuments(Orderable):
         FieldPanel('text')
     ]
 
-class ProgrammePageAd(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='manual_adverts')
-    ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ProgrammePageAd', 'ad'))
-
-    panels = [
-        SnippetChooserPanel('ad'),
-    ]
-
-
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
     programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
@@ -890,7 +881,6 @@ ProgrammePage.content_panels = [
     ], 'Programme video'),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
-    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('contact_title'),
