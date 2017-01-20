@@ -762,18 +762,6 @@ class ProgrammePageContactEmail(Orderable):
         FieldPanel('email_address')
     ]
 
-class ProgrammePageOurSites(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
-    url = models.URLField(help_text=help_text('rca.ProgrammePageOurSites', 'url'))
-    site_name = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageOurSites', 'site_name'))
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageOurSites', 'image'))
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('url'),
-        FieldPanel('site_name')
-    ]
-
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
     document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
@@ -910,7 +898,6 @@ ProgrammePage.content_panels = [
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of Programme details'),
     InlinePanel('manual_staff_feed', label="Manual staff feed"),
-    InlinePanel('our_sites', label="Our sites"),
     MultiFieldPanel([
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
