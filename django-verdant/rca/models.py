@@ -772,20 +772,6 @@ class ProgrammeDocuments(Orderable):
         FieldPanel('text')
     ]
 
-class ProgrammePageStudentStory(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='student_stories')
-    name = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageStudentStory', 'name'))
-    text = RichTextField(help_text=help_text('rca.ProgrammePageStudentStory', 'text'))
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageStudentStory', 'image'))
-    link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageStudentStory', 'link'))
-
-    panels = [
-        FieldPanel('name'),
-        FieldPanel('text'),
-        ImageChooserPanel('image'),
-        PageChooserPanel('link'),
-    ]
-
 class ProgrammePageAd(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_adverts')
     ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ProgrammePageAd', 'ad'))
@@ -902,7 +888,6 @@ ProgrammePage.content_panels = [
         FieldPanel('programme_video'),
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Programme video'),
-    InlinePanel('student_stories', label="Student stories"),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
