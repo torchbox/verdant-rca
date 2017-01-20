@@ -733,21 +733,6 @@ SchoolPage.settings_panels = [
 
 # == Programme page ==
 
-class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
-
-class ProgrammePageFacilitiesCarouselItem(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='facilities_carousel_items')
-    facilities_text = RichTextField(help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_text'), null=True, blank=True)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_image'))
-    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_link'))
-
-    panels = [
-        ImageChooserPanel('facilities_image'),
-        FieldPanel('facilities_text'),
-        PageChooserPanel('facilities_link'),
-    ]
-
 class ProgrammePageManualStaffFeed(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
     staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff'))
@@ -918,7 +903,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         PageChooserPanel('head_of_programme', 'rca.StaffPage',),
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
@@ -932,7 +916,6 @@ ProgrammePage.content_panels = [
         ImageChooserPanel('programme_video_poster_image'),
     ], 'Programme video'),
     InlinePanel('student_stories', label="Student stories"),
-    InlinePanel('facilities_carousel_items', label="Facilities"),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
