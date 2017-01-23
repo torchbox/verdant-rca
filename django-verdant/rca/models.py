@@ -733,34 +733,8 @@ SchoolPage.settings_panels = [
 
 # == Programme page ==
 
-class ProgrammePageManualStaffFeed(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
-    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff'))
-    staff_role = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff_role'))
-
-    panels = [
-        PageChooserPanel('staff', 'rca.StaffPage'),
-        FieldPanel('staff_role'),
-    ]
-
 class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
-
-class ProgrammePageContactPhone(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='contact_phone')
-    phone_number = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageContactPhone', 'phone_number'))
-
-    panels = [
-        FieldPanel('phone_number')
-    ]
-
-class ProgrammePageContactEmail(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='contact_email')
-    email_address = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageContactEmail', 'email_address'))
-
-    panels = [
-        FieldPanel('email_address')
-    ]
 
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
@@ -787,10 +761,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     head_of_programme_statement = RichTextField("Head(s) of programme statement", help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'), null=True, blank=True)
     head_of_programme_link = models.ForeignKey(Page, verbose_name="Head(s) of programme link", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme_link', default="The link to the Head(s) of Programme Welcome Page"))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'contact_title'))
-    contact_address = models.TextField(blank=True, help_text=help_text('rca.ProgrammePage', 'contact_address'))
-    contact_link = models.URLField(blank=True, help_text=help_text('rca.ProgrammePage', 'contact_link'))
-    contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'contact_link_text'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -810,20 +780,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         )
 
         return ", ".join([p.display_name for p in programmes])
-
-    @property
-    def staff_feed(self):
-        # Get staff from manual feed
-        feed = self.manual_staff_feed.all()
-
-        # Get each staffpage out of the feed and add their role
-        feed2 = []
-        for staffpage in feed:
-            staff = staffpage.staff
-            staff.staff_role = staffpage.staff_role
-            feed2.append(staff)
-
-        return feed2
 
     def pathways(self):
         return self.get_children().live().type(PathwayPage).specific()
@@ -868,18 +824,9 @@ ProgrammePage.content_panels = [
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of Programme details'),
-    InlinePanel('manual_staff_feed', label="Manual staff feed"),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
-    MultiFieldPanel([
-        FieldPanel('contact_title'),
-        FieldPanel('contact_address'),
-        FieldPanel('contact_link'),
-        FieldPanel('contact_link_text'),
-    ], 'Contact'),
-    InlinePanel('contact_phone', label="Contact phone number"),
-    InlinePanel('contact_email', label="Contact email"),
 ]
 
 ProgrammePage.promote_panels = [
