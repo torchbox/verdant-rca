@@ -8,6 +8,8 @@ HELP_TEXT = {
     ('rca.SchoolPage', 'background_image'): 'The full bleed image in the background',
     ('rca.SchoolPage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.SchoolPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    ('rca.ProgrammePageHowToApply', 'link'): 'How to apply link',
+    ('rca.ProgrammePageHowToApply', 'link_text'): 'The text for the "How to apply" link',
     ('rca.ProgrammePage', 'background_image'): 'The full bleed image in the background',
     ('rca.ProgrammePage', 'head_of_programme'): 'Select the profile page of the Head of this programme.',
     ('rca.ProgrammePage', 'head_of_programme_link'): 'The link to the Head of Programme Welcome Page',

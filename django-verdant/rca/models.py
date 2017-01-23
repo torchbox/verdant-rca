@@ -736,6 +736,16 @@ SchoolPage.settings_panels = [
 class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
 
+class ProgrammePageHowToApply(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='how_to_apply')
+    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageHowToApply', 'link_text'))
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text')
+    ]
+
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
     document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
@@ -823,7 +833,10 @@ ProgrammePage.content_panels = [
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
+    ], 'Head of programme introduction'),
+    MultiFieldPanel([
         DocumentChooserPanel('programme_specification'),
+        InlinePanel('how_to_apply', label="How to apply"),
     ], 'Key programme information'),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
