@@ -762,6 +762,13 @@ class ProgrammePageProgramme(models.Model):
 
     panels = [FieldPanel('programme')]
 
+class ProgrammePageContactSnippet(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='contact_snippets')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+', help_text=help_text('rca.ProgrammePageContactSnippet', 'contact_snippet'))
+
+    panels = [
+        SnippetChooserPanel('contact_snippet'),
+    ]
 
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
@@ -841,6 +848,7 @@ ProgrammePage.content_panels = [
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
+    InlinePanel('contact_snippets', label="Contacts"),
 ]
 
 ProgrammePage.promote_panels = [

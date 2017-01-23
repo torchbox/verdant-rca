@@ -1,5 +1,5 @@
 HELP_TEXT = {
-    ('rca.RelatedLinkMixin', 'link_text'): 'Link title (or leave blank to use page title',
+    ('rca.RelatedLinkMixin', 'link_text'): 'Link title (or leave blank to use page title)',
     ('rca.Advert', 'text'): 'bold text',
     ('rca.Advert', 'promoted'): 'Whether to show the advert at the top of the sidebar above all the other items.',
     ('rca.CustomContentModuleBlock', 'image'): 'The image for the module block',
@@ -10,6 +10,7 @@ HELP_TEXT = {
     ('rca.SchoolPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.ProgrammePageHowToApply', 'link'): 'How to apply link',
     ('rca.ProgrammePageHowToApply', 'link_text'): 'The text for the "How to apply" link',
+    ('rca.ProgrammePageContactSnippet', 'contact_snippet'): 'Choose contact details from the snippet library',
     ('rca.ProgrammePage', 'background_image'): 'The full bleed image in the background',
     ('rca.ProgrammePage', 'head_of_programme'): 'Select the profile page of the Head of this programme.',
     ('rca.ProgrammePage', 'head_of_programme_link'): 'The link to the Head of Programme Welcome Page',
