@@ -794,10 +794,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    # TO BE DELETED
-    facilities_text = RichTextField(editable=False, null=True, blank=True,)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
-    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
 
     search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
