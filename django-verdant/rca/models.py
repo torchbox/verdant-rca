@@ -786,8 +786,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     head_of_programme_second = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Second head of programme", help_text=help_text('rca.ProgrammePage', 'head_of_programme_secondary', default="Select the profile page of another head of this programme."))
     head_of_programme_statement = RichTextField("Head(s) of programme statement", help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'), null=True, blank=True)
     head_of_programme_link = models.ForeignKey(Page, verbose_name="Head(s) of programme link", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme_link', default="The link to the Head(s) of Programme Welcome Page"))
-    programme_video = models.CharField('Programme video Vimeo address', max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'programme_video', default="The web addres for the programme video on Vimeo. For example, 'http://vimeo.com/62715625'."))
-    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'programme_video_poster_image', default="The poster image for the programme video"))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'contact_title'))
     contact_address = models.TextField(blank=True, help_text=help_text('rca.ProgrammePage', 'contact_address'))
@@ -875,10 +873,6 @@ ProgrammePage.content_panels = [
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of Programme details'),
     InlinePanel('manual_staff_feed', label="Manual staff feed"),
-    MultiFieldPanel([
-        FieldPanel('programme_video'),
-        ImageChooserPanel('programme_video_poster_image'),
-    ], 'Programme video'),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
