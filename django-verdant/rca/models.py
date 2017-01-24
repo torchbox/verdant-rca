@@ -806,7 +806,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     facilities_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'facilities_link_text'))
     graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link'))
     graduate_destinations_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link_text'))
-
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
