@@ -798,6 +798,14 @@ class ProgrammePageContactSnippet(Orderable):
         SnippetChooserPanel('contact_snippet'),
     ]
 
+class ProgrammePageAd(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='manual_adverts')
+    ad = models.ForeignKey('rca.Advert', related_name='+', help_text=help_text('rca.ProgrammePageAd', 'ad'))
+
+    panels = [
+        SnippetChooserPanel('ad'),
+    ]
+
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages')
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
@@ -906,6 +914,7 @@ ProgrammePage.content_panels = [
     InlinePanel('find_out_more', label="Find out more"),
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
     FieldPanel('twitter_feed'),
     InlinePanel('contact_snippets', label="Contacts"),
 ]

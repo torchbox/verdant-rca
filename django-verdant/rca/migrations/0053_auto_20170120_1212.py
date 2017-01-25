@@ -10,17 +10,3 @@ class Migration(migrations.Migration):
     dependencies = [
         ('rca', '0052_auto_20170120_1206'),
     ]
-
-    operations = [
-        migrations.RemoveField(
-            model_name='programmepagead',
-            name='ad',
-        ),
-        migrations.RemoveField(
-            model_name='programmepagead',
-            name='page',
-        ),
-        migrations.DeleteModel(
-            name='ProgrammePageAd',
-        ),
-    ]
