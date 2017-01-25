@@ -746,6 +746,14 @@ class ProgrammePageHowToApply(Orderable):
         FieldPanel('link_text')
     ]
 
+class ProgrammePageKeyDetails(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='key_details')
+    text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageKeyDetails', 'text'))
+
+    panels = [
+        FieldPanel('text')
+    ]
+
 class ProgrammePageKeyContent(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='key_content')
     link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
@@ -806,6 +814,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     facilities_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'facilities_link_text'))
     graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link'))
     graduate_destinations_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link_text'))
+    key_content_header = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'key_content_header'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
@@ -868,24 +877,33 @@ ProgrammePage.content_panels = [
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
+        InlinePanel('key_details', label="Key details"),
     ], 'Head of programme introduction'),
     MultiFieldPanel([
         DocumentChooserPanel('programme_specification_document'),
         InlinePanel('how_to_apply', label="How to apply"),
     ], 'Key programme information'),
-    PageChooserPanel('ma_programme_description_link'),
-    FieldPanel('ma_programme_description_link_text'),
-    PageChooserPanel('ma_entry_requirements_link'),
-    FieldPanel('ma_entry_requirements_link_text'),
-    InlinePanel('key_content', label="Other key content links"),
-
-    PageChooserPanel('facilities_link'),
-    FieldPanel('facilities_link_text'),
-    PageChooserPanel('graduate_destinations_link'),
-    FieldPanel('graduate_destinations_link_text'),
-
+    MultiFieldPanel([
+        PageChooserPanel('ma_programme_description_link'),
+        FieldPanel('ma_programme_description_link_text'),
+    ], 'MA programme description'),
+    MultiFieldPanel([
+        PageChooserPanel('facilities_link'),
+        FieldPanel('facilities_link_text'),
+    ], 'Facilities'),
+    MultiFieldPanel([
+        PageChooserPanel('ma_entry_requirements_link'),
+        FieldPanel('ma_entry_requirements_link_text'),
+    ], 'MA Entry requirements'),
+    MultiFieldPanel([
+        PageChooserPanel('graduate_destinations_link'),
+        FieldPanel('graduate_destinations_link_text'),
+    ], 'Graduate destinations'),
+    MultiFieldPanel([
+        FieldPanel('key_content_header'),
+        InlinePanel('key_content', label="Other key content links"),
+    ], 'Other key content'),
     InlinePanel('find_out_more', label="Find out more"),
-
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     FieldPanel('twitter_feed'),
