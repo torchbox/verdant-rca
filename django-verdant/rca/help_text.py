@@ -8,8 +8,14 @@ HELP_TEXT = {
     ('rca.SchoolPage', 'background_image'): 'The full bleed image in the background',
     ('rca.SchoolPage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.SchoolPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    
     ('rca.ProgrammePageHowToApply', 'link'): 'How to apply link',
     ('rca.ProgrammePageHowToApply', 'link_text'): 'The text for the "How to apply" link',
+    ('rca.ProgrammePageKeyDetails', 'text'): 'e.g. number of credits or length of course',
+    ('rca.ProgrammePageKeyContent', 'link'): 'Key content link',
+    ('rca.ProgrammePageKeyContent', 'link_text'): 'Key content link text',
+    ('rca.ProgrammePageFindOutMore', 'link'): 'Find out more link',
+    ('rca.ProgrammePageFindOutMore', 'link_text'): 'Find out more link text',
     ('rca.ProgrammePageContactSnippet', 'contact_snippet'): 'Choose contact details from the snippet library',
     ('rca.ProgrammePage', 'background_image'): 'The full bleed image in the background',
     ('rca.ProgrammePage', 'head_of_programme'): 'Select the profile page of the Head of this programme.',
@@ -17,6 +23,7 @@ HELP_TEXT = {
     ('rca.ProgrammePage', 'programme_specification'): 'The link to download the programme specification',
     ('rca.ProgrammePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term',
     ('rca.ProgrammePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    
     ('rca.NewsIndex', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.NewsIndex', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.NewsItem', 'listing_intro'): 'Used only on pages listing news items',
