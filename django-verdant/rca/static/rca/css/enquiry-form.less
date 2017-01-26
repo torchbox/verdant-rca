@@ -120,26 +120,25 @@
 
 // Fly-in form
 .enquiry-form {
-    display: none;
-    position: absolute;
-    right: -@sidebarWidth;
+    position: fixed;
+    right: 0;
     top: 0;
+    bottom: 0;
+    overflow: scroll;
     width: @sidebarWidth;
     min-height: 100vh;
     z-index: 4000;
     background-color: #5b5a5a;
-    //transform:
-    //    translate3d(@sidebarWidth, 0, 0);
-    transition:
-        display 300ms ease,
-        right 300ms ease;
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(@sidebarWidth, 0, 0);
+    -webkit-transform: translate3d(@sidebarWidth, 0, 0);
+    transition: transform 300ms ease;
 
     // BEM not possible, have to beat specificity
     input,
     textarea {
         padding: 10px;
-        font-size: 16px;
-
     }
 
     label {
@@ -147,9 +146,8 @@
     }
 
     &--show {
-        //transform: translate3d(0, 0, 0);
-        display: block;
-        right: 0;
+        transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0,0,0);
     }
 
     &__inner {
@@ -192,11 +190,12 @@
 
     @media screen and ( max-width : 768px ) {
         width: 100%;
-        transform:
-            translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(100%,0,0);
 
         &--show {
             transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0,0,0);
         }
     }
 
@@ -204,7 +203,6 @@
         padding: 10px 10px;
         cursor: pointer;
         -moz-appearance: none;
-        font-size: 16px;
     }
 
     .select-icon {

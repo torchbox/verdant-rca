@@ -4,6 +4,9 @@ and for allowing more customization
 """
 
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import never_cache
+
+from wagtail.utils.urlpatterns import decorate_urlpatterns
 
 from .now_views import overview, edit, preview, submit, delete
 from .now_views import image_upload
@@ -23,3 +26,5 @@ urlpatterns = patterns(
     url(r'^(?P<page_id>\d+)/edit/image/$', image_upload),
     url(r'^new/image/$', image_upload),
 )
+
+urlpatterns = decorate_urlpatterns(urlpatterns, never_cache)
