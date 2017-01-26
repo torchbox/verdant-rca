@@ -776,8 +776,8 @@ class ProgrammePageFindOutMore(Orderable):
 
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
-    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
-    text = models.CharField(max_length=255, blank=True)
+    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
+    text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammeDocuments', 'text'))
 
     panels = [
         DocumentChooserPanel('document'),
@@ -786,7 +786,7 @@ class ProgrammeDocuments(Orderable):
 
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
-    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages')
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
 
     panels = [FieldPanel('programme')]
 
@@ -807,22 +807,22 @@ class ProgrammePageAd(Orderable):
     ]
 
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
-    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages')
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme', default="Select the profile page of the head of this programme."))
     head_of_programme_second = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Second head of programme", help_text=help_text('rca.ProgrammePage', 'head_of_programme_secondary', default="Select the profile page of another head of this programme."))
-    head_of_programme_statement = RichTextField("Head(s) of programme statement", null=True, blank=True)
+    head_of_programme_statement = RichTextField("Head(s) of programme statement", null=True, blank=True, help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'))
     head_of_programme_link = models.ForeignKey(Page, verbose_name="Head(s) of programme link", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme_link', default="The link to the Head(s) of Programme Welcome Page"))
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
-    ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    ma_programme_description_link_text = models.CharField(max_length=255, blank=True)
-    ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True)
-    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    facilities_link_text = models.CharField(max_length=255, blank=True)
-    graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
-    graduate_destinations_link_text = models.CharField(max_length=255, blank=True)
-    key_content_header = models.CharField(max_length=255, blank=True)
+    ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
+    ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
+    ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
+    ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
+    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
+    facilities_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'facilities_link_text'))
+    graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link'))
+    graduate_destinations_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link_text'))
+    key_content_header = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'key_content_header'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
