@@ -11,7 +11,7 @@ HELP_TEXT = {
     
     ('rca.ProgrammePageHowToApply', 'link'): 'How to apply link',
     ('rca.ProgrammePageHowToApply', 'link_text'): 'The text for the "How to apply" link',
-    ('rca.ProgrammePageKeyDetails', 'text'): 'e.g. number of credits or length of course',
+    ('rca.ProgrammePageKeyDetails', 'text'): 'Key details e.g. number of credits or length of course',
     ('rca.ProgrammePageKeyContent', 'link'): 'Key content link',
     ('rca.ProgrammePageKeyContent', 'link_text'): 'Key content link text',
     ('rca.ProgrammePageFindOutMore', 'link'): 'Find out more link',

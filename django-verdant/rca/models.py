@@ -836,6 +836,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     search_name = 'Programme'
 
+    def get_school_url(self):
+        try:
+            return SchoolPage.objects.get(school=self.school).url
+        except SchoolPage.DoesNotExist:
+            return ""
+
     def get_programme_display(self):
         programmes = Programme.objects.filter(
             id__in=self.programmes.all().values_list('programme_id', flat=True)
@@ -885,28 +891,32 @@ ProgrammePage.content_panels = [
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
-        InlinePanel('key_details', label="Key details"),
     ], 'Head of programme introduction'),
     MultiFieldPanel([
         DocumentChooserPanel('programme_specification_document'),
-        InlinePanel('how_to_apply', label="How to apply"),
+        InlinePanel('key_details', label="Key details"),
+        InlinePanel('contact_snippets', label="Contacts"),
     ], 'Key programme information'),
+    MultiFieldPanel([
+        InlinePanel('how_to_apply', label="How to apply"),
+    ], 'How to apply'),
     MultiFieldPanel([
         PageChooserPanel('ma_programme_description_link'),
         FieldPanel('ma_programme_description_link_text'),
     ], 'MA programme description'),
     MultiFieldPanel([
-        PageChooserPanel('facilities_link'),
-        FieldPanel('facilities_link_text'),
-    ], 'Facilities'),
-    MultiFieldPanel([
         PageChooserPanel('ma_entry_requirements_link'),
         FieldPanel('ma_entry_requirements_link_text'),
     ], 'MA Entry requirements'),
     MultiFieldPanel([
+        PageChooserPanel('facilities_link'),
+        FieldPanel('facilities_link_text'),
+    ], 'Facilities'),
+    MultiFieldPanel([
         PageChooserPanel('graduate_destinations_link'),
         FieldPanel('graduate_destinations_link_text'),
     ], 'Graduate destinations'),
+    FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('key_content_header'),
         InlinePanel('key_content', label="Other key content links"),
@@ -915,8 +925,6 @@ ProgrammePage.content_panels = [
     InlinePanel('documents', label="Documents"),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
-    FieldPanel('twitter_feed'),
-    InlinePanel('contact_snippets', label="Contacts"),
 ]
 
 ProgrammePage.promote_panels = [

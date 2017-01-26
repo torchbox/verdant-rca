@@ -8,150 +8,216 @@
 
     {% include "rca/includes/modules/background-image.html" %}
     {% include "rca/includes/modules/h1-major.html" %}
-    {% include "rca/includes/modules/carousel.html" %}
 
-    <!-- head of programme -->
-    {% if self.head_of_programme or self.head_of_programme_statement %}
-        <section class="head-of-programme {% if self.head_of_programme_second %}head-of-programme-double{% endif %} row module">
-            {% if self.head_of_programme %}
-                <h2 class="module-title"><a href="{% pageurl self.head_of_programme %}">Head{% if self.head_of_programme_second %}s{% endif %} of programme</a></h2>
-                <a href="{% pageurl self.head_of_programme %}">
+    <!-- pathways -->
+    {% with self.pathways.all as pathways %}
+        {% if pathways %}
+            <h2>Pathways</h2>
+            <ul>
+            {% for pathway in pathways %}
+                <li><a href="{% pageurl pathway %}">{{ pathway.title }}</a></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <!-- about the programme -->
+    {% if self.head_of_programme_statement or self.head_of_programme_link or self.programme_specification_document or self.contact_snippet_placements.all or self.head_of_programme or self.key_details.all %}
+        <h2>About the programme</h2>
+    {% endif %}
+
+    {% if self.head_of_programme or self.key_details.all %}
+        <h3>Key details</h3>
+
+        {% if self.head_of_programme %}
+
+            <a href="{% pageurl self.head_of_programme %}">
+                <div class="image">
+                    {% if self.head_of_programme.profile_image %}
+                        {% image self.head_of_programme.profile_image width-200 %}
+                    {% else %}
+                        <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                    {% endif %}
+                </div>
+            </a>
+            {% if self.head_of_programme_second %}
+                <a href="{% pageurl self.head_of_programme_second %}">
                     <div class="image">
-                        {% if self.head_of_programme.profile_image %}
-                            {% image self.head_of_programme.profile_image width-200 %}
+                        {% if self.head_of_programme_second.profile_image %}
+                            {% image self.head_of_programme_second.profile_image width-200 %}
                         {% else %}
                             <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                         {% endif %}
                     </div>
                 </a>
-                {% if self.head_of_programme_second %}
-                    <a href="{% pageurl self.head_of_programme_second %}">
-                        <div class="image">
-                            {% if self.head_of_programme_second.profile_image %}
-                                {% image self.head_of_programme_second.profile_image width-200 %}
-                            {% else %}
-                                <img src="/static/rca/images/light-grey-placeholder.png" width="200">
-                            {% endif %}
-                        </div>
-                    </a>
-                {% endif %}
             {% endif %}
 
-            <div class="content bc2{% if not self.head_of_programme.profile_image %} flushleft{% endif %}">
-                <strong>
-                    {% if self.head_of_programme %}
-                        {{ self.head_of_programme.title }}
-                    {% endif %}
-                    {% if self.head_of_programme_second %}
-                        &amp; {{ self.head_of_programme_second.title }}
-                    {% endif %}
-                </strong>
-                {% if self.head_of_programme_statement %}
-                    {{ self.head_of_programme_statement|richtext }}
-                {% endif %}
-                {% if self.head_of_programme_link %}
-                    ...<a href="{% pageurl self.head_of_programme_link %}"><span class="bc4 caps">Continue</a></span>
-                {% endif %}
-            </div>
-        </section>
+            Head{% if self.head_of_programme_second %}s{% endif %} of Programme
+            <a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a>
+            {% if self.head_of_programme_second %}
+                <a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a>
+            {% endif %}
+
+        {% endif %}
+
+        {% with self.key_details.all as key_details_list %}
+            {% if key_details_list %}
+                <ul>
+                    {% for key_details in key_details_list %}
+                        <li>{{ key_details.text }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
     {% endif %}
 
-    <!-- news carousel -->
 
-    {% news_carousel programme=self.programmes.all.0.programme %}
+    {% if self.head_of_programme_statement %}
+        {{ self.head_of_programme_statement|richtext }}
+    {% endif %}
 
-    <!-- events -->
-    {# use self.title instead of self.get_programme_display, which would return a list of all ralted programme names, but we only need the latest one, i.e. the title #}
-    {% upcoming_events_related programme=self.programmes.all.0.programme display_name=self.title %}
+    {% if self.head_of_programme_link %}
+        ...<a href="{% pageurl self.head_of_programme_link %}"><span class="bc4 caps">Read more</a></span>
+    {% endif %}
 
-    <!-- staff feed -->
-    {% include "rca/includes/modules/staff_feed.html" %}
+    {% if self.programme_specification_document %}
+        <li><a href="{{ self.programme_specification_document.url }}" class="button icon icon-download">Download programme specification</a></li>
+    {% endif %}
+
+    {% include "rca/includes/modules/contact_snippet.html" %}
+
+
+    {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
+        <ul>
+
+            <!-- How to apply -->
+            {% with self.how_to_apply.all as how_to_apply_links %}
+                {% if how_to_apply_links %}
+                    {% for how_to_apply in how_to_apply_links %}
+                        <li>
+                            <a href="{% pageurl how_to_apply.link %}">
+                                {% if how_to_apply.link_text %}
+                                    {{ how_to_apply.link_text }}
+                                {% else %}
+                                    {{ how_to_apply.link.title }}
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- MA programme description -->
+            {% if self.ma_programme_description_link %}
+                <li>
+                    <a href="{% pageurl self.ma_programme_description_link %}">
+                        {% if self.ma_programme_description_link_text %}
+                            {{ self.ma_programme_description_link_text }}
+                        {% else %}
+                            {{ self.ma_programme_description_link.title }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endif %}
+            
+            <!-- MA Entry requirements -->
+            {% if self.ma_entry_requirements_link %}
+                <li>
+                    <a href="{% pageurl self.ma_entry_requirements_link %}">
+                        {% if self.ma_entry_requirements_link_text %}
+                            {{ self.ma_entry_requirements_link_text }}
+                        {% else %}
+                            {{ self.ma_entry_requirements_link.title }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endif %}
+
+            <!-- Facilities -->
+            {% if self.facilities_link %}
+                <li>
+                    <a href="{% pageurl self.facilities_link %}">
+                        {% if self.facilities_link_text %}
+                            {{ self.facilities_link_text }}
+                        {% else %}
+                            {{ self.facilities_link.title }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endif %}
+
+            <!-- Graduate destinations -->
+            {% if self.graduate_destinations_link %}
+                <li>
+                    <a href="{% pageurl self.graduate_destinations_link %}">
+                        {% if self.graduate_destinations_link_text %}
+                            {{ self.graduate_destinations_link_text }}
+                        {% else %}
+                            {{ self.graduate_destinations_link.title }}
+                        {% endif %}
+                    </a>
+                </li>
+            {% endif %}
+
+            <!-- School -->
+            {% if self.get_school_url %}
+                <li>
+                    <a href="{{ self.get_school_url }}">{{ self.school.display_name }}</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    {% endif %}
+
+    <!-- twitter feed -->
+    {% include "rca/includes/modules/twitter-feed.html" %}
 
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme %}
 
-    <!-- tabs -->
+    <!-- other key content -->
+    {% with self.key_content.all as key_content_links %}
+        {% if key_content_links %}
+            <h2>{% if self.key_content_header %}{{ self.key_content_header }}{% else %}Key content{% endif %}</h2>
+            <ul>
+                {% for key_content in key_content_links %}
+                    <li>
+                        <a href="{% pageurl key_content.link %}">
+                            {% if key_content.link_text %}
+                                {{ key_content.link_text }}
+                            {% else %}
+                                {{ key_content.link.title }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-    {% tabdeck moduletitle="Student info" %}
+    <!-- find out more -->
+    {% with self.find_out_more.all as find_out_more_links %}
+        {% if find_out_more_links %}
+            <h2>Find out more</h2>
+            <ul>
+                {% for find_out_more in find_out_more_links %}
+                    <li>
+                        <a href="{% pageurl find_out_more.link %}">
+                            {% if find_out_more.link_text %}
+                                {{ find_out_more.link_text }}
+                            {% else %}
+                                {{ find_out_more.link.title }}
+                            {% endif %}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-        <!-- links and ids added by javascript -->
-        {% tab "Programme video" class="flush" %}
-            {% if self.programme_video %}
-                <div class="single-carousel">
-                    <ul class="carousel paginated">
-                        <li>
-                            <div class="videoembed vimeo">
-                                <div class="playpause play">Play</div>
-                                {% if self.programme_video_poster_image %}
-                                    <div class="poster">{% image self.programme_video_poster_image width-1000 %}</div>
-                                {% endif %}
-                                {{ self.programme_video|embed:"944" }}
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            {% endif %}
-        {% endtab %}
 
-        <!-- links and ids added by javascript -->
-        {% tab "Student stories" %}
-            {% with self.student_stories.all as student_stories %}
-                {% if student_stories %}
-                    <ul class="two-cols">
-                        {% for story in student_stories %}
-                            {% cycle '<li class="newrow">' '<li>' %}
-                                {% if story.image %}
-                                    <div class="image">{% image story.image width-200 %}</div>
-                                {% endif %}
-                                <div class="content">
-                                    <h3 class="h6">{{ story.name }}</h3>
-                                    <div class="bc3">{{ story.text|richtext }}{% if story.link %}....<a href="{% pageurl story.link %}" class="bc5 caps">continue</a>{% endif %}</div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
-        {% endtab %}
-
-        <!-- links and ids added by javascript -->
-        {% tab "Facilities" class="flush" %}
-            <div class="{% if self.facilities_carousel_items|length = 1 %}single-carousel{% endif %}">
-                <ul class="carousel paginated">
-                    {% for facility in self.facilities_carousel_items.all %}
-                        {% if facility.facilities_image %}
-                            <li>
-                                <div class="image {% if facility.facilities_image.is_portrait %}portrait{% else %}landscape{% endif %}">
-                                    {% if facility.facilities_link %}<a href="{{ facility.facilities_link }}">{% endif %}
-                                        {% image facility.facilities_image width-1000 %}
-                                    {% if facility.facilities_link %}</a>{% endif %}
-                                </div>
-
-                                {% if facility.facilities_text %}
-                                    <div class="content footer-content">
-                                        {% if facility.facilities_text %}
-                                            {{ facility.facilities_text|richtext }}
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-
-                                {# Repeat overlay and caption text for mobile #}
-                                {% if facility.facilities_text %}
-                                    <div class="mobilecaption footer-content">
-                                        {% if facility.facilities_text %}
-                                            {{ facility.facilities_text|richtext }}
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endtab %}
-
-    {% endtabdeck %}
-
+    <!-- documents -->
     {% with self.documents.all as documents %}
         {% if documents %}
             <ul class="button-bar two-button">
@@ -163,20 +229,6 @@
             </ul>
         {% endif %}
     {% endwith %}
-
-    <!-- rca now -->
-    {% rca_now_related programme=self.programmes.all.0.programme %}
-
-    <!-- research -->
-    <div id="listing">
-        {% include "rca/includes/research_listing.html" %}
-    </div>
-
-    <!-- our sites -->
-    {% include "rca/includes/modules/our_sites.html" %}
-
-    {% include "rca/includes/modules/contact.html" %}
-    {% include "rca/includes/modules/twitter-feed.html" %}
 
 {% endblock %}
 
