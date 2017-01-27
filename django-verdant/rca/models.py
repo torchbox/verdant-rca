@@ -653,10 +653,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         # packery selection
         news = NewsItem.objects\
             .descendant_of(self)\
-            .filter(live=True, show_on_homepage=True)\
+            .filter(live=True)\
             .order_by('-date')
         events = EventItem.past_objects\
-            .filter(live=True, show_on_homepage=True)\
+            .filter(live=True)\
             .descendant_of(self) \
             .extra(select={
                 'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
@@ -664,8 +664,16 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .order_by('-latest_date')
         blog = RcaBlogPage.objects\
             .descendant_of(self)\
-            .filter(live=True, show_on_homepage=True)\
+            .filter(live=True)\
             .order_by('-date')
+        pages = StandardPage.objects \
+            .descendant_of(self) \
+            .filter(live=True, show_on_school_page=True) \
+            .order_by('-latest_revision_created_at')
+        lightboxes = LightboxGalleryPage.objects \
+            .descendant_of(self) \
+            .filter(live=True, show_on_school_page=True) \
+            .order_by('-latest_revision_created_at')
 
         # which page are we getting?
         try:
@@ -679,11 +687,15 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         NEWS_NUMBER = 5
         EVENTS_NUMBER = 5
         BLOG_NUMBER = 5
+        PAGE_NUMBER = 5
+        LIGHTBOX_NUMBER = 5
 
         packery = list(chain(
             news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
             events[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
             blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
+            pages[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
+            lightboxes[LIGHTBOX_NUMBER * page_nr: LIGHTBOX_NUMBER * next_page_nr],
         ))
 
         random.shuffle(packery)
@@ -717,11 +729,11 @@ SchoolPage.content_panels = [
     ImageChooserPanel('background_image'),
 
     MultiFieldPanel([
-        'featured_content_1',
-        'featured_content_2',
-        'featured_content_3',
-        'featured_content_4',
-        'featured_content_5',
+        FieldPanel('featured_content_1'),
+        FieldPanel('featured_content_2'),
+        FieldPanel('featured_content_3'),
+        FieldPanel('featured_content_4'),
+        FieldPanel('featured_content_5'),
     ], "Featured content"),
 
     MultiFieldPanel([
@@ -2381,6 +2393,8 @@ class StandardPage(Page, SocialFields, SidebarBehaviourFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StandardPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     tags = ClusterTaggableManager(through=StandardPageTag, help_text=help_text('rca.StandardPage', 'tags'), blank=True)
 
+    show_on_school_page = models.BooleanField(default=False, help_text=help_text('rca.StandardPage', 'show_on_school_page'))
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
@@ -2443,6 +2457,7 @@ StandardPage.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('show_on_school_page'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
@@ -6518,6 +6533,8 @@ class LightboxGalleryPage(Page, SocialFields):
     listing_intro = models.CharField(max_length=100, blank=True, help_text=help_text('rca.LightboxGalleryPage', 'listing_intro', default="Used only on pages listing Lightbox Galleries"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StreamPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
+    show_on_school_page = models.BooleanField(default=False, help_text=help_text('rca.LightboxGalleryPage', 'show_on_school_page'))
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
     ]
@@ -6536,6 +6553,7 @@ LightboxGalleryPage.promote_panels = [
 
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
+        FieldPanel('show_on_school_page'),
         FieldPanel('listing_intro'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
