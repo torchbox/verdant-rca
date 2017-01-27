@@ -617,10 +617,19 @@ class SchoolPageAd(Orderable):
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
+
+    featured_content_1 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+    featured_content_2 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+    featured_content_3 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+    featured_content_4 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+    featured_content_5 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+
+    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
+
+    ## old content, do not know whether this will be needed
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
     head_of_school_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_school_statement'), null=True, blank=True)
     head_of_school_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school_link'))
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'contact_title'))
     contact_address = models.TextField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_link'))
@@ -640,32 +649,56 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request, show_draft_pathways=False):
-        research_items = ResearchItem.objects.filter(live=True, school=self.school).order_by('random_order')
 
-        paginator = Paginator(research_items, 4)
+        # packery selection
+        news = NewsItem.objects\
+            .descendant_of(self)\
+            .filter(live=True, show_on_homepage=True)\
+            .order_by('-date')
+        events = EventItem.past_objects\
+            .filter(live=True, show_on_homepage=True)\
+            .descendant_of(self) \
+            .extra(select={
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
+        blog = RcaBlogPage.objects\
+            .descendant_of(self)\
+            .filter(live=True, show_on_homepage=True)\
+            .order_by('-date')
 
-        page = request.GET.get('page')
+        # which page are we getting?
         try:
-            research_items = paginator.page(page)
-        except PageNotAnInteger:
-            # If page is not an integer, deliver first page.
-            research_items = paginator.page(1)
-        except EmptyPage:
-            # If page is out of range (e.g. 9999), deliver last page of results.
-            research_items = paginator.page(paginator.num_pages)
+            page_nr = int(request.GET.get('packery_page', 1))
+            next_page_nr = page_nr + 1
+        except ValueError:
+            page_nr = 1
+            next_page_nr = 2
 
-        if request.is_ajax() and 'pjax' not in request.GET:
-            return render(request, "rca/includes/research_listing.html", {
+        # these are hardcoded for now, since RCA didn't want to set them manually
+        NEWS_NUMBER = 5
+        EVENTS_NUMBER = 5
+        BLOG_NUMBER = 5
+
+        packery = list(chain(
+            news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
+            events[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
+            blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
+        ))
+
+        random.shuffle(packery)
+
+        if request.is_ajax():
+            return render(request, "rca/includes/school_page_packery.html", {
                 'self': self,
-                'research_items': research_items,
-                'show_draft_pathways': show_draft_pathways
+                'packery': packery
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'research_items': research_items,
-                'show_draft_pathways': show_draft_pathways
+                'packery': packery
             })
+
 
     @property
     def preview_modes(self):
@@ -682,25 +715,46 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel('carousel_items', label="Carousel content", help_text="test"),
-    PageChooserPanel('head_of_school', 'rca.StaffPage'),
-    FieldPanel('head_of_school_statement', classname="full"),
-    PageChooserPanel('head_of_school_link'),
-    FieldPanel('twitter_feed'),
+
+    MultiFieldPanel([
+        'featured_content_1',
+        'featured_content_2',
+        'featured_content_3',
+        'featured_content_4',
+        'featured_content_5',
+    ], "Featured content"),
+
+    MultiFieldPanel([
+        # Programmes
+        # Research
+    ], 'Study options (is this not in the document tree?)'),
+
+    MultiFieldPanel([
+        # dean's welcome
+        # school video
+        # link to download school brochure
+    ], 'About the school'),
+
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
         FieldPanel('contact_link'),
         FieldPanel('contact_link_text'),
-    ], 'Contact'),
-    InlinePanel('contact_tel_email', label="Contact phone numbers/emails"),
-    InlinePanel('contact_phone', label="Contact phone number"),
-    InlinePanel('contact_email', label="Contact email"),
-    PageChooserPanel('head_of_research', 'rca.StaffPage'),
-    FieldPanel('head_of_research_statement', classname="full"),
-    PageChooserPanel('head_of_research_link'),
-    InlinePanel('related_links', label="Related links"),
-    InlinePanel('manual_adverts', label="Manual adverts"),
+        InlinePanel('contact_tel_email', label="Contact phone numbers/emails"),
+        InlinePanel('contact_phone', label="Contact phone number"),
+        InlinePanel('contact_email', label="Contact email"),
+    ], 'Contact information'),
+
+    # InlinePanel('carousel_items', label="Carousel content", help_text="test"),
+    # PageChooserPanel('head_of_school', 'rca.StaffPage'),
+    # FieldPanel('head_of_school_statement', classname="full"),
+    # PageChooserPanel('head_of_school_link'),
+    # FieldPanel('twitter_feed'),
+    # PageChooserPanel('head_of_research', 'rca.StaffPage'),
+    # FieldPanel('head_of_research_statement', classname="full"),
+    # PageChooserPanel('head_of_research_link'),
+    # InlinePanel('related_links', label="Related links"),
+    # InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 SchoolPage.promote_panels = [
