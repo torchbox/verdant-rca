@@ -729,22 +729,18 @@ SchoolPage.content_panels = [
     ImageChooserPanel('background_image'),
 
     MultiFieldPanel([
-        FieldPanel('featured_content_1'),
-        FieldPanel('featured_content_2'),
-        FieldPanel('featured_content_3'),
-        FieldPanel('featured_content_4'),
-        FieldPanel('featured_content_5'),
+        PageChooserPanel('featured_content_1'),
+        PageChooserPanel('featured_content_2'),
+        PageChooserPanel('featured_content_3'),
+        PageChooserPanel('featured_content_4'),
+        PageChooserPanel('featured_content_5'),
     ], "Featured content"),
 
     MultiFieldPanel([
-        # Programmes
-        # Research
-    ], 'Study options (is this not in the document tree?)'),
-
-    MultiFieldPanel([
-        # dean's welcome
-        # school video
-        # link to download school brochure
+        PageChooserPanel('head_of_school', 'rca.StaffPage'),
+        FieldPanel('head_of_school_statement', classname="full"),
+        PageChooserPanel('head_of_school_link'),
+        # school video?
     ], 'About the school'),
 
     MultiFieldPanel([
