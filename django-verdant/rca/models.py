@@ -4775,6 +4775,7 @@ class ResearchItem(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    featured = models.BooleanField(default=False, blank=True, help_text=help_text('rca.ResearchItem', 'featured'))
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
@@ -4860,6 +4861,7 @@ ResearchItem.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('featured'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
