@@ -774,6 +774,19 @@ class ProgrammePageFindOutMore(Orderable):
         FieldPanel('link_text')
     ]
 
+class ProgrammePageOurSites(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
+    url = models.URLField(help_text=help_text('rca.ProgrammePageOurSites', 'url'))
+    site_name = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageOurSites', 'site_name'))
+    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageOurSites', 'image'))
+
+    panels = [
+        ImageChooserPanel('image'),
+        FieldPanel('url'),
+        FieldPanel('site_name')
+    ]
+
+
 class ProgrammeDocuments(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='documents')
     document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
@@ -923,6 +936,7 @@ ProgrammePage.content_panels = [
     ], 'Other key content'),
     InlinePanel('find_out_more', label="Find out more"),
     InlinePanel('documents', label="Documents"),
+    InlinePanel('our_sites', label="Our sites"),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
 ]
