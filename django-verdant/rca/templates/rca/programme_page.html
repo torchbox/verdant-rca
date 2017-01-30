@@ -6,172 +6,210 @@
 
 {% block content %}
 
-    {% include "rca/includes/modules/background-image.html" %}
+    {% include "rca/includes/modules/background-image.html" with fade=True %}
     {% include "rca/includes/modules/h1-major.html" %}
 
     <!-- pathways -->
     {% with self.pathways.all as pathways %}
         {% if pathways %}
-            <h2>Pathways</h2>
-            <ul>
-            {% for pathway in pathways %}
-                <li><a href="{% pageurl pathway %}">{{ pathway.title }}</a></li>
-            {% endfor %}
-            </ul>
+            <section class="row module thicker-border offset">
+                <h2 class="module-title offset-title">Pathways</h2>
+
+                <div class="offset-content">
+                    <ul class="pathways block-list">
+                    {% for pathway in pathways %}
+                        <li><a href="{% pageurl pathway %}">{{ pathway.title }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </section>
         {% endif %}
     {% endwith %}
 
-    <!-- about the programme -->
-    {% if self.head_of_programme_statement or self.head_of_programme_link or self.programme_specification_document or self.contact_snippet_placements.all or self.head_of_programme or self.key_details.all %}
-        <h2>About the programme</h2>
-    {% endif %}
+    <!-- About the programme -->
+    {% if self.head_of_programme_statement or self.head_of_programme_link or self.programme_specification_document or self.contact_snippet_placements.all or self.head_of_programme or self.key_details.all or self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
+        <section class="row module offset">
+            <h2 class="module-title offset-title">About the programme</h2>
 
-    {% if self.head_of_programme or self.key_details.all %}
-        <h3>Key details</h3>
+            <div class="offset-content">
+                <div class="programme-details {% if self.head_of_programme_second %}double-photo{% endif %} row row-flush">
+                    <div class="right">
+                        {% if self.head_of_programme or self.key_details.all %}
+                            <h3 class="key-details-header">Key details</h3>
 
-        {% if self.head_of_programme %}
+                            <!-- Head of programme and second head of programme -->
+                            {% if self.head_of_programme %}
 
-            <a href="{% pageurl self.head_of_programme %}">
-                <div class="image">
-                    {% if self.head_of_programme.profile_image %}
-                        {% image self.head_of_programme.profile_image width-200 %}
-                    {% else %}
-                        <img src="/static/rca/images/light-grey-placeholder.png" width="200">
-                    {% endif %}
-                </div>
-            </a>
-            {% if self.head_of_programme_second %}
-                <a href="{% pageurl self.head_of_programme_second %}">
-                    <div class="image">
-                        {% if self.head_of_programme_second.profile_image %}
-                            {% image self.head_of_programme_second.profile_image width-200 %}
-                        {% else %}
-                            <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                <div class="row row-flush">
+                                    <a href="{% pageurl self.head_of_programme %}">
+                                        <div class="image">
+                                            {% if self.head_of_programme.profile_image %}
+                                                {% image self.head_of_programme.profile_image width-200 %}
+                                            {% else %}
+                                                <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                    {% if self.head_of_programme_second %}
+                                        <a href="{% pageurl self.head_of_programme_second %}">
+                                            <div class="image">
+                                                {% if self.head_of_programme_second.profile_image %}
+                                                    {% image self.head_of_programme_second.profile_image width-200 %}
+                                                {% else %}
+                                                    <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                    {% endif %}
+                                </div>
+
+                                <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
+                                <ul>
+                                    <li><a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a></li>
+                                    {% if self.head_of_programme_second %}
+                                        <li><a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a></li>
+                                    {% endif %}
+                                </ul>
+
+                            {% endif %}
+
+                            <!-- Key details -->
+                            {% with self.key_details.all as key_details_list %}
+                                {% if key_details_list %}
+                                    <ul class="key-details">
+                                        {% for key_details in key_details_list %}
+                                            <li>{{ key_details.text }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            {% endwith %}
+
                         {% endif %}
                     </div>
-                </a>
-            {% endif %}
+                
+                    <div class="left">
+                        <!-- Head of programme statement -->
+                        {% if self.head_of_programme_statement %}
+                            <div class="head-of-programme">
+                                {{ self.head_of_programme_statement|richtext }}
+                            </div>
+                        {% endif %}
 
-            Head{% if self.head_of_programme_second %}s{% endif %} of Programme
-            <a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a>
-            {% if self.head_of_programme_second %}
-                <a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a>
-            {% endif %}
+                        <!-- Head of programme link -->
+                        {% if self.head_of_programme_link %}
+                            ...<a href="{% pageurl self.head_of_programme_link %}"><span class="t1 caps">Read more</a></span>
+                        {% endif %}
 
-        {% endif %}
+                        <!-- Programme specification document -->
+                        {% if self.programme_specification_document %}
+                            <ul class="button-bar one-button">
+                                <li><a href="{{ self.programme_specification_document.url }}" class="button icon icon-download">Download programme specification</a></li>
+                            </ul>
+                        {% endif %}
 
-        {% with self.key_details.all as key_details_list %}
-            {% if key_details_list %}
-                <ul>
-                    {% for key_details in key_details_list %}
-                        <li>{{ key_details.text }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
+                        {% if self.contact_snippets %}
+                            <div class="contact-dropdown">
+                                <h3>Contact</h3>
+                            </div>
+                            {% include "rca/includes/modules/contact_snippet.html" %}
+                        {% endif %}
+                    </div>
+                </div>
 
-    {% endif %}
+                {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
+                    <div class="row row-flush">
+                        <ul class="block-list top-border">
 
-
-    {% if self.head_of_programme_statement %}
-        {{ self.head_of_programme_statement|richtext }}
-    {% endif %}
-
-    {% if self.head_of_programme_link %}
-        ...<a href="{% pageurl self.head_of_programme_link %}"><span class="bc4 caps">Read more</a></span>
-    {% endif %}
-
-    {% if self.programme_specification_document %}
-        <li><a href="{{ self.programme_specification_document.url }}" class="button icon icon-download">Download programme specification</a></li>
-    {% endif %}
-
-    {% include "rca/includes/modules/contact_snippet.html" %}
-
-
-    {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
-        <ul>
-
-            <!-- How to apply -->
-            {% with self.how_to_apply.all as how_to_apply_links %}
-                {% if how_to_apply_links %}
-                    {% for how_to_apply in how_to_apply_links %}
-                        <li>
-                            <a href="{% pageurl how_to_apply.link %}">
-                                {% if how_to_apply.link_text %}
-                                    {{ how_to_apply.link_text }}
-                                {% else %}
-                                    {{ how_to_apply.link.title }}
+                            <!-- How to apply -->
+                            {% with self.how_to_apply.all as how_to_apply_links %}
+                                {% if how_to_apply_links %}
+                                    {% for how_to_apply in how_to_apply_links %}
+                                        <li>
+                                            <a href="{% pageurl how_to_apply.link %}">
+                                                {% if how_to_apply.link_text %}
+                                                    {{ how_to_apply.link_text }}
+                                                {% else %}
+                                                    {{ how_to_apply.link.title }}
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                 {% endif %}
-                            </a>
-                        </li>
-                    {% endfor %}
+                            {% endwith %}
+
+                            <!-- MA programme description -->
+                            {% if self.ma_programme_description_link %}
+                                <li>
+                                    <a href="{% pageurl self.ma_programme_description_link %}">
+                                        {% if self.ma_programme_description_link_text %}
+                                            {{ self.ma_programme_description_link_text }}
+                                        {% else %}
+                                            {{ self.ma_programme_description_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            <!-- MA Entry requirements -->
+                            {% if self.ma_entry_requirements_link %}
+                                <li>
+                                    <a href="{% pageurl self.ma_entry_requirements_link %}">
+                                        {% if self.ma_entry_requirements_link_text %}
+                                            {{ self.ma_entry_requirements_link_text }}
+                                        {% else %}
+                                            {{ self.ma_entry_requirements_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Facilities -->
+                            {% if self.facilities_link %}
+                                <li>
+                                    <a href="{% pageurl self.facilities_link %}">
+                                        {% if self.facilities_link_text %}
+                                            {{ self.facilities_link_text }}
+                                        {% else %}
+                                            {{ self.facilities_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Graduate destinations -->
+                            {% if self.graduate_destinations_link %}
+                                <li>
+                                    <a href="{% pageurl self.graduate_destinations_link %}">
+                                        {% if self.graduate_destinations_link_text %}
+                                            {{ self.graduate_destinations_link_text }}
+                                        {% else %}
+                                            {{ self.graduate_destinations_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- School -->
+                            {% if self.get_school_url %}
+                                <li>
+                                    <a href="{{ self.get_school_url }}">{{ self.school.display_name }}</a>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+                    </div>
                 {% endif %}
-            {% endwith %}
-
-            <!-- MA programme description -->
-            {% if self.ma_programme_description_link %}
-                <li>
-                    <a href="{% pageurl self.ma_programme_description_link %}">
-                        {% if self.ma_programme_description_link_text %}
-                            {{ self.ma_programme_description_link_text }}
-                        {% else %}
-                            {{ self.ma_programme_description_link.title }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% endif %}
-            
-            <!-- MA Entry requirements -->
-            {% if self.ma_entry_requirements_link %}
-                <li>
-                    <a href="{% pageurl self.ma_entry_requirements_link %}">
-                        {% if self.ma_entry_requirements_link_text %}
-                            {{ self.ma_entry_requirements_link_text }}
-                        {% else %}
-                            {{ self.ma_entry_requirements_link.title }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% endif %}
-
-            <!-- Facilities -->
-            {% if self.facilities_link %}
-                <li>
-                    <a href="{% pageurl self.facilities_link %}">
-                        {% if self.facilities_link_text %}
-                            {{ self.facilities_link_text }}
-                        {% else %}
-                            {{ self.facilities_link.title }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% endif %}
-
-            <!-- Graduate destinations -->
-            {% if self.graduate_destinations_link %}
-                <li>
-                    <a href="{% pageurl self.graduate_destinations_link %}">
-                        {% if self.graduate_destinations_link_text %}
-                            {{ self.graduate_destinations_link_text }}
-                        {% else %}
-                            {{ self.graduate_destinations_link.title }}
-                        {% endif %}
-                    </a>
-                </li>
-            {% endif %}
-
-            <!-- School -->
-            {% if self.get_school_url %}
-                <li>
-                    <a href="{{ self.get_school_url }}">{{ self.school.display_name }}</a>
-                </li>
-            {% endif %}
-
-        </ul>
+            </div> <!-- end offset content -->
+        </section> <!-- end of about the programme -->
     {% endif %}
 
     <!-- twitter feed -->
-    {% include "rca/includes/modules/twitter-feed.html" %}
+    <section class="row module offset">
+        <h2 class="module-title offset-title">Twitter</h2>
+        <div class="offset-content">
+            {% include "rca/includes/modules/twitter-feed.html" with offset="True" %}
+        </div>
+    </section>
 
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme %}
@@ -179,40 +217,48 @@
     <!-- other key content -->
     {% with self.key_content.all as key_content_links %}
         {% if key_content_links %}
-            <h2>{% if self.key_content_header %}{{ self.key_content_header }}{% else %}Key content{% endif %}</h2>
-            <ul>
-                {% for key_content in key_content_links %}
-                    <li>
-                        <a href="{% pageurl key_content.link %}">
-                            {% if key_content.link_text %}
-                                {{ key_content.link_text }}
-                            {% else %}
-                                {{ key_content.link.title }}
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+            <section class="row module thick-border offset">
+                <h2 class="module-title offset-title">{% if self.key_content_header %}{{ self.key_content_header }}{% else %}Key content{% endif %}</h2>
+                <div class="offset-content">
+                    <ul class="block-list">
+                        {% for key_content in key_content_links %}
+                            <li>
+                                <a href="{% pageurl key_content.link %}">
+                                    {% if key_content.link_text %}
+                                        {{ key_content.link_text }}
+                                    {% else %}
+                                        {{ key_content.link.title }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
         {% endif %}
     {% endwith %}
 
     <!-- find out more -->
     {% with self.find_out_more.all as find_out_more_links %}
         {% if find_out_more_links %}
-            <h2>Find out more</h2>
-            <ul>
-                {% for find_out_more in find_out_more_links %}
-                    <li>
-                        <a href="{% pageurl find_out_more.link %}">
-                            {% if find_out_more.link_text %}
-                                {{ find_out_more.link_text }}
-                            {% else %}
-                                {{ find_out_more.link.title }}
-                            {% endif %}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
+            <section class="row module thick-border offset">
+                <h2 class="module-title offset-title">Find out more</h2>
+                <div class="offset-content">
+                    <ul class="block-list">
+                        {% for find_out_more in find_out_more_links %}
+                            <li>
+                                <a href="{% pageurl find_out_more.link %}">
+                                    {% if find_out_more.link_text %}
+                                        {{ find_out_more.link_text }}
+                                    {% else %}
+                                        {{ find_out_more.link.title }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
         {% endif %}
     {% endwith %}
 

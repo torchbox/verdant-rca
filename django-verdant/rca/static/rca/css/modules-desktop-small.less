@@ -17,7 +17,7 @@
  * Carousel news
  * Twitter
  * Share and dialogue box
- * Head of programme
+ * Programme details
  * Events block
  * Metadata e.g. on news page
  * Body text
@@ -127,12 +127,35 @@
     }
 }
 
+/**
+ *$Programme details
+ */
+.programme-details {
+
+    .left {
+        .column(8);
+    }
+
+    &.double-photo .left {
+        .column(7);
+    }
+
+    .right {
+        .column(4);
+        float: right;
+    }
+
+    &.double-photo .right {
+        .column(5);
+        float: right;
+    }
+}
 
 /**
  *$Head of programme
  */
 
-.head-of-programme{
+/*.head-of-programme{
     .image{
         .column(2);
         padding-left:0;
@@ -150,7 +173,7 @@
             .column(8);
         }
     }
-}
+}*/
 
 
 /* user for all x-plus items, to ensure that new rows are cleared */
