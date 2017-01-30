@@ -262,20 +262,6 @@
         {% endif %}
     {% endwith %}
 
-
-    <!-- documents -->
-    {% with self.documents.all as documents %}
-        {% if documents %}
-            <ul class="button-bar two-button">
-                {% for document in documents %}
-                    {% if document.document and document.text %}
-                        <li><a href="{{ document.document.url }}" class="button icon icon-download">{{ document.text }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-
 {% endblock %}
 
 {% block sidebar %}

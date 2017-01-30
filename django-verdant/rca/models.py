@@ -787,16 +787,6 @@ class ProgrammePageOurSites(Orderable):
     ]
 
 
-class ProgrammeDocuments(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='documents')
-    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
-    text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammeDocuments', 'text'))
-
-    panels = [
-        DocumentChooserPanel('document'),
-        FieldPanel('text')
-    ]
-
 class ProgrammePageProgramme(models.Model):
     page = ParentalKey('rca.ProgrammePage', related_name='programmes')
     programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
@@ -935,7 +925,6 @@ ProgrammePage.content_panels = [
         InlinePanel('key_content', label="Other key content links"),
     ], 'Other key content'),
     InlinePanel('find_out_more', label="Find out more"),
-    InlinePanel('documents', label="Documents"),
     InlinePanel('our_sites', label="Our sites"),
     InlinePanel('related_links', label="Related links"),
     InlinePanel('manual_adverts', label="Manual adverts"),
