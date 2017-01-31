@@ -674,6 +674,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .descendant_of(self) \
             .filter(live=True, show_on_school_page=True) \
             .order_by('-latest_revision_created_at')
+        research = ResearchItem.objects.live() \
+            .descendant_of(self) \
+            .filter(featured=True) \
+            .order_by('-latest_revision_created_at')
 
         # which page are we getting?
         try:
@@ -689,6 +693,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         BLOG_NUMBER = 5
         PAGE_NUMBER = 5
         LIGHTBOX_NUMBER = 5
+        RESEARCH_NUMBER = 5
 
         packery = list(chain(
             news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
@@ -696,6 +701,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
             pages[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
             lightboxes[LIGHTBOX_NUMBER * page_nr: LIGHTBOX_NUMBER * next_page_nr],
+            research[RESEARCH_NUMBER * page_nr: RESEARCH_NUMBER * next_page_nr],
         ))
 
         random.shuffle(packery)
