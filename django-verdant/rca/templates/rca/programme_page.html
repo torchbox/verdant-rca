@@ -13,7 +13,7 @@
     {% with self.pathways.all as pathways %}
         {% if pathways %}
             <section class="row module thicker-border offset">
-                <h2 class="module-title offset-title">{{ self.school.display_name }} pathways</h2>
+                <h2 class="module-title offset-title">{{ self.title }} pathways</h2>
 
                 <div class="offset-content">
                     <ul class="pathways block-list">
@@ -211,6 +211,9 @@
             {% include "rca/includes/modules/twitter-feed.html" with module=False %}
         </div>
     </section>
+
+    <!-- open days -->
+    {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme offset=1 %}
 
     <!-- our sites -->
     {% include "rca/includes/modules/our_sites.html" with offset=True %}

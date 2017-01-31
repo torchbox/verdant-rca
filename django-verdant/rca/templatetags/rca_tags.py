@@ -54,7 +54,7 @@ def news_carousel(context, area=None, programme=None, school=None, count=5):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme=None, school=None, display_name="", area=None, audience=""):
+def upcoming_events_related(context, opendays=0, programme=None, school=None, display_name="", area=None, audience="", offset=0):
     events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'))
     if school:
         events = events.filter(related_schools__school=school).order_by('start_date')
@@ -76,6 +76,7 @@ def upcoming_events_related(context, opendays=0, programme=None, school=None, di
         'programme': programme,
         'area': area,
         'audience': audience,
+        'offset': offset,
         'events_index_url': context['global_events_index_url'],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
