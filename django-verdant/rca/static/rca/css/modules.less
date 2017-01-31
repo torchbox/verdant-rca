@@ -21,7 +21,8 @@
  * Add to calendar
  * Download
  * News carousel
- * Head of programme
+ * Block list
+ * Programme details
  * Event block
  * Half-width double
  * Packery
@@ -46,10 +47,12 @@
  * Gallery
  * Index page intro
  * Contact
+ * Contact drop-down variant
  * Strapline
  * Pagination
  * Forms
  * Cookie notice
+ * Offset content (programme page)
  */
 
 /**
@@ -404,6 +407,7 @@
         }
         .tweet-text{
             display: block;
+            .dont-break-out();
             a { /* repeating body-text-style styles here because I don't want to
             screw with the javascript without being able to test it */
                 color: @color-highlight-blue;
@@ -602,39 +606,137 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 }
 
 /**
- *$Head of programme
+ *$Block list
+ * e.g. pathways on programme page
  */
 
-.head-of-programme{
-    .image{
-        .column(6);
-        padding-left:0;
-        img{
-            max-width:100%;
-        }
-    }
-    .content{
-        .column(6);
-        margin:0;
+.block-list {
+    .ho-b-heading();
+    color: @color-charcoal;
+    margin-bottom: @spacing-one;
 
-        .bc4{
-            font-size:0.8em;
-        }
-
-        p {
-            display:inline;
-        }
-
-        &.flushleft {
-            padding-left: 0;
-        }
+    &.top-border {
+        border-top: 5px solid @color-charcoal;
+        margin-top: @spacing-two;
     }
 
-    &.head-of-programme-double{
-        .content{
-            .row();
-            .column(12);
+    li {
+        border-bottom: 1px solid @color-divider;
+        padding: @spacing-half 0;
+        position: relative;
+
+        a {
+            display: block;
+            width: 100%;
+
+            &::after {
+                content: "";
+                .sprite-load-11(
+                    @positionX: -12px,
+                    @positionY: -84px,
+                    @retinaPositionX: -25px,
+                    @retinaPositionY: -169px,
+                    @width: 7px,
+                    @height: 11px
+                );
+                position: absolute;
+                right: @spacing-half;
+                top: 12px;
+                cursor: pointer;
+            }
+
+            &:hover {
+                color: @color-pink;
+            }
         }
+
+        a:hover::after,
+        a:focus::after {
+            .sprite-load-11(
+                @positionX: -12px,
+                @positionY: -60px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -121px,
+                @width: 7px,
+                @height: 11px
+            );
+        }
+    }
+
+    &:not(.top-border) li:first-child {
+        padding-top: 0;
+        a::after {
+            top: 5px;
+        }
+    }
+
+    li:last-child {
+        border-bottom: none;
+    }
+}
+
+
+/**
+ *$Programme details
+ */
+
+.programme-details {
+
+    .left {
+        .column(12);
+    }
+
+    &.double-photo .left {
+        .column(12);
+    }
+
+    .right {
+        .column(12);
+        float: right;
+    }
+
+    &.double-photo .right {
+        .column(12);
+        float: right;
+    }
+
+    // Head of programme statement etc in left hand column
+    .head-of-programme {
+        margin: @spacing-one 0;
+    }
+
+    .head-of-programme p {
+        display: inline;
+        margin-bottom: @spacing-one;
+    }
+
+    .head-of-programme-readmore {
+        .a0();
+        .highlight-blue();
+
+        &:hover {
+            color: @color-pink;
+        }
+    }
+
+    // Doc download in left column
+    .button-bar {
+        margin-top: @spacing-one;
+    }
+
+    // right hand column
+    .image {
+        .column(6);
+        max-width: 200px;
+    }
+
+    .programme-head {
+        color: @color-dark-grey;
+        margin-bottom: 0;
+    }
+
+    .key-details {
+        margin-top: @spacing-half;
     }
 }
 
@@ -700,10 +802,23 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     background-repeat: no-repeat;
     background-position: top center;
     background-size: cover;
-    height: 100%;
+    height: auto;
     background-attachment: fixed;
     max-height:750px;
     overflow:hidden;
+    display: inline-block;
+    &.fade:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: -webkit-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Safari 5.1-6*/
+        background: -o-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Opera 11.1-12*/
+        background: -moz-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Fx 3.6-15*/
+        background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 1)); /*Standard*/
+    }
 }
 
 
@@ -1198,7 +1313,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         -moz-transform-origin: 0 0;
         position: absolute;
         right: 16px;
-        bottom: 16px;
+        top: 16px;
     }
 }
 
@@ -1733,6 +1848,72 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 }
 
 /**
+ * Contact drop-down variant
+ */
+.contact-dropdown {
+
+    .contact-dropdown-header {
+        margin-top: @spacing-one;
+        position: relative;
+        padding: 10px @spacing-half;
+        color: @color-white;
+        background-color: lighten(@color-black, 60%);
+        .transition(background-color 0.3s ease);
+        cursor: pointer;
+
+        h3 {
+            margin: 0;
+            .t2();
+            font-size: @font-size-12;
+            position: relative;
+            left: calc(23px + @spacing-half);
+        }
+
+        &::before {
+            content:' ';
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -12px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
+            position: absolute;
+            top: 12px;
+            left: @spacing-half;
+        }
+
+        &.expanded::before {
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
+        }
+
+        &:hover {
+            background-color: @color-pink;
+            color: @color-white;
+        }
+    }
+
+    .dropdown {
+        background-color: @color-advert-pale-blue;
+        padding: @spacing-one;
+
+        .module:first-child {
+            //hides top grey border for the first contact
+            border-top: none;
+            margin-top: 0;
+        }
+    }
+}
+
+/**
  * Strapline
  */
 
@@ -2009,6 +2190,19 @@ form .hidden-field{
         padding: @spacing-half;
         float: right;
         margin: 0 0 0 @spacing-one;
+    }
+}
+
+/*
+ * $Offset content (programme page)
+ */
+
+.offset {
+    .offset-title {
+        .column(12);
+    }
+    .offset-content {
+        .column(12);
     }
 }
 

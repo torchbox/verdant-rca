@@ -94,6 +94,7 @@ function onDocumentReady(jQuery, inLightBox){
         if(typeof openByDefault == "undefined"){
             openByDefault = true
         }
+
         if (!openByDefault){
             $(showElement).hide();
         }
@@ -227,6 +228,8 @@ function onDocumentReady(jQuery, inLightBox){
     showHideSlide('.profile .showExternalCollaborations', '.profile .external-collaborations', '.profile .external-collaborations');
     showHideSlide('.profile .showPublications', '.profile .publications', '.profile .publications');
     showHideSlide('.showbody', '.hide-body', '.hide-body');
+    showHideSlide('.contact-dropdown .contact-dropdown-header', '.contact-dropdown .contact-dropdown-header', '.contact-dropdown .dropdown', false);
+
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
