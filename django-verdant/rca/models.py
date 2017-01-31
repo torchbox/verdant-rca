@@ -5019,7 +5019,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.live()
+        research_items = ResearchItem.objects.live().filter(featured=True)
 
         # Research type
         research_type_options = list(zip(*RESEARCH_TYPES_CHOICES)[0])
