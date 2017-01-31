@@ -674,6 +674,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .descendant_of(self) \
             .filter(live=True, show_on_school_page=True) \
             .order_by('-latest_revision_created_at')
+        research = ResearchItem.objects.live() \
+            .descendant_of(self) \
+            .filter(featured=True) \
+            .order_by('-latest_revision_created_at')
 
         # which page are we getting?
         try:
@@ -689,6 +693,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         BLOG_NUMBER = 5
         PAGE_NUMBER = 5
         LIGHTBOX_NUMBER = 5
+        RESEARCH_NUMBER = 5
 
         packery = list(chain(
             news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
@@ -696,6 +701,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
             pages[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
             lightboxes[LIGHTBOX_NUMBER * page_nr: LIGHTBOX_NUMBER * next_page_nr],
+            research[RESEARCH_NUMBER * page_nr: RESEARCH_NUMBER * next_page_nr],
         ))
 
         random.shuffle(packery)
@@ -4758,6 +4764,7 @@ class ResearchItem(Page, SocialFields):
     show_on_homepage = models.BooleanField(default=False, help_text=help_text('rca.ResearchItem', 'show_on_homepage'))
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ResearchItem', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    featured = models.BooleanField(default=False, blank=True, help_text=help_text('rca.ResearchItem', 'featured'))
 
     search_fields = Page.search_fields + [
         index.SearchField('subtitle'),
@@ -4843,6 +4850,7 @@ ResearchItem.promote_panels = [
     MultiFieldPanel([
         FieldPanel('show_in_menus'),
         FieldPanel('show_on_homepage'),
+        FieldPanel('featured'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
     ], 'Cross-page behaviour'),
@@ -5000,7 +5008,7 @@ class CurrentResearchPage(Page, SocialFields):
         theme = request.GET.get('theme')
         work_type = request.GET.get('work_type')
 
-        research_items = ResearchItem.objects.live()
+        research_items = ResearchItem.objects.live().filter(featured=True)
 
         # Research type
         research_type_options = list(zip(*RESEARCH_TYPES_CHOICES)[0])
