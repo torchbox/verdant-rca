@@ -795,48 +795,45 @@ SchoolPage.settings_panels = [
 
 # == Programme page ==
 
-class ProgrammePageCarouselItem(Orderable, CarouselItemFields):
-    page = ParentalKey('rca.ProgrammePage', related_name='carousel_items')
-
-class ProgrammePageFacilitiesCarouselItem(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='facilities_carousel_items')
-    facilities_text = RichTextField(help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_text'), null=True, blank=True)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_image'))
-    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageFacilitiesCarouselItem', 'facilities_link'))
-
-    panels = [
-        ImageChooserPanel('facilities_image'),
-        FieldPanel('facilities_text'),
-        PageChooserPanel('facilities_link'),
-    ]
-
-class ProgrammePageManualStaffFeed(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='manual_staff_feed')
-    staff = models.ForeignKey('rca.StaffPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff'))
-    staff_role = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageManualStaffFeed', 'staff_role'))
-
-    panels = [
-        PageChooserPanel('staff', 'rca.StaffPage'),
-        FieldPanel('staff_role'),
-    ]
-
 class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='related_links')
 
-class ProgrammePageContactPhone(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='contact_phone')
-    phone_number = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageContactPhone', 'phone_number'))
+class ProgrammePageHowToApply(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='how_to_apply')
+    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageHowToApply', 'link_text'))
 
     panels = [
-        FieldPanel('phone_number')
+        PageChooserPanel('link'),
+        FieldPanel('link_text')
     ]
 
-class ProgrammePageContactEmail(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='contact_email')
-    email_address = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageContactEmail', 'email_address'))
+class ProgrammePageKeyDetails(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='key_details')
+    text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageKeyDetails', 'text'))
 
     panels = [
-        FieldPanel('email_address')
+        FieldPanel('text')
+    ]
+
+class ProgrammePageKeyContent(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='key_content')
+    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageKeyContent', 'link_text'))
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text')
+    ]
+
+class ProgrammePageFindOutMore(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='find_out_more')
+    link = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageFindOutMore', 'link'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageFindOutMore', 'link_text'))
+
+    panels = [
+        PageChooserPanel('link'),
+        FieldPanel('link_text')
     ]
 
 class ProgrammePageOurSites(Orderable):
@@ -851,28 +848,19 @@ class ProgrammePageOurSites(Orderable):
         FieldPanel('site_name')
     ]
 
-class ProgrammeDocuments(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='documents')
-    document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammeDocuments', 'document'))
-    text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammeDocuments', 'text'))
+
+class ProgrammePageProgramme(models.Model):
+    page = ParentalKey('rca.ProgrammePage', related_name='programmes')
+    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
+
+    panels = [FieldPanel('programme')]
+
+class ProgrammePageContactSnippet(Orderable):
+    page = ParentalKey('rca.ProgrammePage', related_name='contact_snippets')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+', help_text=help_text('rca.ProgrammePageContactSnippet', 'contact_snippet'))
 
     panels = [
-        DocumentChooserPanel('document'),
-        FieldPanel('text')
-    ]
-
-class ProgrammePageStudentStory(Orderable):
-    page = ParentalKey('rca.ProgrammePage', related_name='student_stories')
-    name = models.CharField(max_length=255, help_text=help_text('rca.ProgrammePageStudentStory', 'name'))
-    text = RichTextField(help_text=help_text('rca.ProgrammePageStudentStory', 'text'))
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageStudentStory', 'image'))
-    link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePageStudentStory', 'link'))
-
-    panels = [
-        FieldPanel('name'),
-        FieldPanel('text'),
-        ImageChooserPanel('image'),
-        PageChooserPanel('link'),
+        SnippetChooserPanel('contact_snippet'),
     ]
 
 class ProgrammePageAd(Orderable):
@@ -883,35 +871,26 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad'),
     ]
 
-
-class ProgrammePageProgramme(models.Model):
-    page = ParentalKey('rca.ProgrammePage', related_name='programmes')
-    programme = models.ForeignKey('taxonomy.Programme', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePageProgramme', 'programme'))
-
-    panels = [FieldPanel('programme')]
-
-
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme', default="Select the profile page of the head of this programme."))
     head_of_programme_second = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Second head of programme", help_text=help_text('rca.ProgrammePage', 'head_of_programme_secondary', default="Select the profile page of another head of this programme."))
-    head_of_programme_statement = RichTextField("Head(s) of programme statement", help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'), null=True, blank=True)
+    head_of_programme_statement = RichTextField("Head(s) of programme statement", null=True, blank=True, help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'))
     head_of_programme_link = models.ForeignKey(Page, verbose_name="Head(s) of programme link", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme_link', default="The link to the Head(s) of Programme Welcome Page"))
-    programme_video = models.CharField('Programme video Vimeo address', max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'programme_video', default="The web addres for the programme video on Vimeo. For example, 'http://vimeo.com/62715625'."))
-    programme_video_poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'programme_video_poster_image', default="The poster image for the programme video"))
-    twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
-    contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'contact_title'))
-    contact_address = models.TextField(blank=True, help_text=help_text('rca.ProgrammePage', 'contact_address'))
-    contact_link = models.URLField(blank=True, help_text=help_text('rca.ProgrammePage', 'contact_link'))
-    contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'contact_link_text'))
+    programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
+    ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
+    ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
+    ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
+    ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
+    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
+    facilities_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'facilities_link_text'))
+    graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link'))
+    graduate_destinations_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link_text'))
+    key_content_header = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'key_content_header'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
-    # TO BE DELETED
-    facilities_text = RichTextField(editable=False, null=True, blank=True,)
-    facilities_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
-    facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', editable=False)
 
     search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
@@ -922,26 +901,18 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     search_name = 'Programme'
 
+    def get_school_url(self):
+        try:
+            return SchoolPage.objects.get(school=self.school).url
+        except SchoolPage.DoesNotExist:
+            return ""
+
     def get_programme_display(self):
         programmes = Programme.objects.filter(
             id__in=self.programmes.all().values_list('programme_id', flat=True)
         )
 
         return ", ".join([p.display_name for p in programmes])
-
-    @property
-    def staff_feed(self):
-        # Get staff from manual feed
-        feed = self.manual_staff_feed.all()
-
-        # Get each staffpage out of the feed and add their role
-        feed2 = []
-        for staffpage in feed:
-            staff = staffpage.staff
-            staff.staff_role = staffpage.staff_role
-            feed2.append(staff)
-
-        return feed2
 
     def pathways(self):
         return self.get_children().live().type(PathwayPage).specific()
@@ -980,33 +951,45 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
-    InlinePanel('carousel_items', label="Carousel content"),
     MultiFieldPanel([
         PageChooserPanel('head_of_programme', 'rca.StaffPage',),
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
-    ], 'Head of Programme details'),
-    InlinePanel('manual_staff_feed', label="Manual staff feed"),
-    InlinePanel('our_sites', label="Our sites"),
+    ], 'Head of programme introduction'),
     MultiFieldPanel([
-        FieldPanel('programme_video'),
-        ImageChooserPanel('programme_video_poster_image'),
-    ], 'Programme video'),
-    InlinePanel('student_stories', label="Student stories"),
-    InlinePanel('facilities_carousel_items', label="Facilities"),
-    InlinePanel('documents', label="Documents"),
-    InlinePanel('related_links', label="Related links"),
-    InlinePanel('manual_adverts', label="Manual adverts"),
+        DocumentChooserPanel('programme_specification_document'),
+        InlinePanel('key_details', label="Key details"),
+        InlinePanel('contact_snippets', label="Contacts"),
+    ], 'Key programme information'),
+    MultiFieldPanel([
+        InlinePanel('how_to_apply', label="How to apply"),
+    ], 'How to apply'),
+    MultiFieldPanel([
+        PageChooserPanel('ma_programme_description_link'),
+        FieldPanel('ma_programme_description_link_text'),
+    ], 'MA programme description'),
+    MultiFieldPanel([
+        PageChooserPanel('ma_entry_requirements_link'),
+        FieldPanel('ma_entry_requirements_link_text'),
+    ], 'MA Entry requirements'),
+    MultiFieldPanel([
+        PageChooserPanel('facilities_link'),
+        FieldPanel('facilities_link_text'),
+    ], 'Facilities'),
+    MultiFieldPanel([
+        PageChooserPanel('graduate_destinations_link'),
+        FieldPanel('graduate_destinations_link_text'),
+    ], 'Graduate destinations'),
     FieldPanel('twitter_feed'),
     MultiFieldPanel([
-        FieldPanel('contact_title'),
-        FieldPanel('contact_address'),
-        FieldPanel('contact_link'),
-        FieldPanel('contact_link_text'),
-    ], 'Contact'),
-    InlinePanel('contact_phone', label="Contact phone number"),
-    InlinePanel('contact_email', label="Contact email"),
+        FieldPanel('key_content_header'),
+        InlinePanel('key_content', label="Other key content links"),
+    ], 'Other key content'),
+    InlinePanel('find_out_more', label="Find out more"),
+    InlinePanel('our_sites', label="Our sites"),
+    InlinePanel('related_links', label="Related links"),
+    InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
 ProgrammePage.promote_panels = [

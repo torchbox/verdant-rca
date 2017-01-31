@@ -100,7 +100,7 @@ $(function(){
                     // use different url for ajax in order to avoid the browser caching the ajax response,
                     // and displaying it instead of the real page
                     url: state.url + "?pjax=1",
-                    timeout: 5 * 1000,  // milliseconds
+                    timeout: 5 * 1000,  // milliseconds (for local build you might need to increase this)
                     success: function(data, status, xhr){
                         var url = this.url.replace("?pjax=1", "");
 
