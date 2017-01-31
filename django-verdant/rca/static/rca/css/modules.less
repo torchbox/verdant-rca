@@ -407,6 +407,7 @@
         }
         .tweet-text{
             display: block;
+            .dont-break-out();
             a { /* repeating body-text-style styles here because I don't want to
             screw with the javascript without being able to test it */
                 color: @color-highlight-blue;
@@ -621,7 +622,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
     li {
         border-bottom: 1px solid @color-divider;
-        padding: calc(1.5 * @spacing-half);
+        padding: @spacing-half 0;
         position: relative;
 
         a {
@@ -630,38 +631,42 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
             &::after {
                 content: "";
-                .sprite-load-23(
-                    @positionX: -89px,
-                    @positionY: -120px,
-                    @retinaPositionX: -179px,
-                    @retinaPositionY: -241px,
-                    @width: 13px,
-                    @height: 23px
+                .sprite-load-11(
+                    @positionX: -12px,
+                    @positionY: -84px,
+                    @retinaPositionX: -25px,
+                    @retinaPositionY: -169px,
+                    @width: 7px,
+                    @height: 11px
                 );
                 position: absolute;
-                right: @grid-gutter-width;
-                top: 11px;
+                right: @spacing-half;
+                top: 12px;
                 cursor: pointer;
+            }
+
+            &:hover {
+                color: @color-pink;
             }
         }
 
         a:hover::after,
         a:focus::after {
-            .sprite-load-23(
-                @positionX: -89px,
-                @positionY: -84px,
-                @retinaPositionX: -179px,
-                @retinaPositionY: -169px,
-                @width: 13px,
-                @height: 23px
+            .sprite-load-11(
+                @positionX: -12px,
+                @positionY: -60px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -121px,
+                @width: 7px,
+                @height: 11px
             );
         }
     }
 
     &:not(.top-border) li:first-child {
-        padding-top: 4px;
+        padding-top: 0;
         a::after {
-            top: 4px;
+            top: 5px;
         }
     }
 
@@ -697,8 +702,20 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
     // Head of programme statement etc in left hand column
     .head-of-programme {
-        p:first-child {
-            margin-top: 0;
+        margin: @spacing-one 0;
+    }
+
+    .head-of-programme p {
+        display: inline;
+        margin-bottom: @spacing-one;
+    }
+
+    .head-of-programme-readmore {
+        .a0();
+        .highlight-blue();
+
+        &:hover {
+            color: @color-pink;
         }
     }
 
@@ -707,16 +724,10 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         margin-top: @spacing-one;
     }
 
-    // Key details in right hand column
+    // right hand column
     .image {
         .column(6);
         max-width: 200px;
-    }
-
-    .key-details-header {
-        .t0();
-        font-weight: normal;
-        margin-top: 0;
     }
 
     .programme-head {
@@ -791,12 +802,22 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     background-repeat: no-repeat;
     background-position: top center;
     background-size: cover;
-    height: 100%;
+    height: auto;
     background-attachment: fixed;
     max-height:750px;
     overflow:hidden;
-    &.fade {
-        .opacity(20);
+    display: inline-block;
+    &.fade:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: -webkit-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Safari 5.1-6*/
+        background: -o-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Opera 11.1-12*/
+        background: -moz-linear-gradient(rgba(255, 255, 255, 0.2),rgba(255, 255, 255, 1)); /*Fx 3.6-15*/
+        background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 1)); /*Standard*/
     }
 }
 
@@ -1292,7 +1313,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         -moz-transform-origin: 0 0;
         position: absolute;
         right: 16px;
-        bottom: 16px;
+        top: 16px;
     }
 }
 
@@ -1830,39 +1851,65 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
  * Contact drop-down variant
  */
 .contact-dropdown {
-    margin-top: @spacing-one;
-    position: relative;
-    padding: 10px @spacing-half;
-    color: @color-white;
-    background-color: lighten(@color-black, 60%);
-    .transition(background-color 0.3s ease);
 
-    h3 {
-        margin: 0;
-        .t2();
-        font-size: @font-size-12;
+    .contact-dropdown-header {
+        margin-top: @spacing-one;
         position: relative;
-        left: calc(23px + @spacing-half);
-    }
-
-    &::before {
-        content:' ';
-        .sprite-load-23(
-            @positionX: -48px,
-            @positionY: -12px,
-            @retinaPositionX: -97px,
-            @retinaPositionY: -25px,
-            @width: 23px,
-            @height: 13px
-        );
-        position: absolute;
-        top: 12px;
-        left: @spacing-half;
-    }
-
-    &:hover {
-        background-color: @color-pink;
+        padding: 10px @spacing-half;
         color: @color-white;
+        background-color: lighten(@color-black, 60%);
+        .transition(background-color 0.3s ease);
+        cursor: pointer;
+
+        h3 {
+            margin: 0;
+            .t2();
+            font-size: @font-size-12;
+            position: relative;
+            left: calc(23px + @spacing-half);
+        }
+
+        &::before {
+            content:' ';
+            .sprite-load-23(
+                @positionX: -48px,
+                @positionY: -12px,
+                @retinaPositionX: -97px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
+            position: absolute;
+            top: 12px;
+            left: @spacing-half;
+        }
+
+        &.expanded::before {
+            .sprite-load-23(
+                @positionX: -12px,
+                @positionY: -12px,
+                @retinaPositionX: -25px,
+                @retinaPositionY: -25px,
+                @width: 23px,
+                @height: 13px
+            );
+        }
+
+        &:hover {
+            background-color: @color-pink;
+            color: @color-white;
+        }
+    }
+
+    .dropdown {
+        background-color: @color-advert-pale-blue;
+        padding: @spacing-one;
+
+        .module:first-child {
+            //hides top grey border for the first contact
+            border-top: none;
+            margin-top: 0;
+        }
     }
 }
 

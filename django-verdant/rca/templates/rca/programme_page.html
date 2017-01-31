@@ -13,7 +13,7 @@
     {% with self.pathways.all as pathways %}
         {% if pathways %}
             <section class="row module thicker-border offset">
-                <h2 class="module-title offset-title">Pathways</h2>
+                <h2 class="module-title offset-title">{{ self.school.display_name }} pathways</h2>
 
                 <div class="offset-content">
                     <ul class="pathways block-list">
@@ -34,57 +34,53 @@
             <div class="offset-content">
                 <div class="programme-details {% if self.head_of_programme_second %}double-photo{% endif %} row row-flush">
                     <div class="right">
-                        {% if self.head_of_programme or self.key_details.all %}
-                            <h3 class="key-details-header">Key details</h3>
 
-                            <!-- Head of programme and second head of programme -->
-                            {% if self.head_of_programme %}
+                        <!-- Head of programme and second head of programme -->
+                        {% if self.head_of_programme %}
 
-                                <div class="row row-flush">
-                                    <a href="{% pageurl self.head_of_programme %}">
+                            <div class="row row-flush">
+                                <a href="{% pageurl self.head_of_programme %}">
+                                    <div class="image">
+                                        {% if self.head_of_programme.profile_image %}
+                                            {% image self.head_of_programme.profile_image width-200 %}
+                                        {% else %}
+                                            <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                        {% endif %}
+                                    </div>
+                                </a>
+                                {% if self.head_of_programme_second %}
+                                    <a href="{% pageurl self.head_of_programme_second %}">
                                         <div class="image">
-                                            {% if self.head_of_programme.profile_image %}
-                                                {% image self.head_of_programme.profile_image width-200 %}
+                                            {% if self.head_of_programme_second.profile_image %}
+                                                {% image self.head_of_programme_second.profile_image width-200 %}
                                             {% else %}
                                                 <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                                             {% endif %}
                                         </div>
                                     </a>
-                                    {% if self.head_of_programme_second %}
-                                        <a href="{% pageurl self.head_of_programme_second %}">
-                                            <div class="image">
-                                                {% if self.head_of_programme_second.profile_image %}
-                                                    {% image self.head_of_programme_second.profile_image width-200 %}
-                                                {% else %}
-                                                    <img src="/static/rca/images/light-grey-placeholder.png" width="200">
-                                                {% endif %}
-                                            </div>
-                                        </a>
-                                    {% endif %}
-                                </div>
-
-                                <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
-                                <ul>
-                                    <li><a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a></li>
-                                    {% if self.head_of_programme_second %}
-                                        <li><a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a></li>
-                                    {% endif %}
-                                </ul>
-
-                            {% endif %}
-
-                            <!-- Key details -->
-                            {% with self.key_details.all as key_details_list %}
-                                {% if key_details_list %}
-                                    <ul class="key-details">
-                                        {% for key_details in key_details_list %}
-                                            <li>{{ key_details.text }}</li>
-                                        {% endfor %}
-                                    </ul>
                                 {% endif %}
-                            {% endwith %}
+                            </div>
+
+                            <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
+                            <ul>
+                                <li><a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a></li>
+                                {% if self.head_of_programme_second %}
+                                    <li><a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a></li>
+                                {% endif %}
+                            </ul>
 
                         {% endif %}
+
+                        <!-- Key details -->
+                        {% with self.key_details.all as key_details_list %}
+                            {% if key_details_list %}
+                                <ul class="key-details">
+                                    {% for key_details in key_details_list %}
+                                        <li>{{ key_details.text }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
                     </div>
                 
                     <div class="left">
@@ -97,7 +93,7 @@
 
                         <!-- Head of programme link -->
                         {% if self.head_of_programme_link %}
-                            ...<a href="{% pageurl self.head_of_programme_link %}"><span class="t1 caps">Read more</a></span>
+                            <a href="{% pageurl self.head_of_programme_link %}"><span class="head-of-programme-readmore">Read more</a></span>
                         {% endif %}
 
                         <!-- Programme specification document -->
@@ -107,11 +103,16 @@
                             </ul>
                         {% endif %}
 
-                        {% if self.contact_snippets %}
+                        {% if self.contact_snippets.all %}
                             <div class="contact-dropdown">
-                                <h3>Contact</h3>
+                                <div class="contact-dropdown-header">
+                                    <h3>Contact</h3>
+                                </div>
+                                <div class="dropdown">
+                                    {% include "rca/includes/modules/contact_snippet.html" with hide_title=True %}
+                                </div>
                             </div>
-                            {% include "rca/includes/modules/contact_snippet.html" %}
+                            
                         {% endif %}
                     </div>
                 </div>
@@ -207,12 +208,12 @@
     <section class="row module offset">
         <h2 class="module-title offset-title">Twitter</h2>
         <div class="offset-content">
-            {% include "rca/includes/modules/twitter-feed.html" with offset="True" %}
+            {% include "rca/includes/modules/twitter-feed.html" with module=False %}
         </div>
     </section>
 
-    <!-- open days -->
-    {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme %}
+    <!-- our sites -->
+    {% include "rca/includes/modules/our_sites.html" with offset=True %}
 
     <!-- other key content -->
     {% with self.key_content.all as key_content_links %}
