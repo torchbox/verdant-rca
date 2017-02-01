@@ -606,9 +606,11 @@ class SchoolPageFeaturedContent(Orderable):
 class SchoolPageResearchLinks(Orderable):
     page = ParentalKey('rca.SchoolPage', related_name='research_link')
     related_page = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'research_link'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPageResearchLinks', 'link_text'))
 
     panels = [
         PageChooserPanel('related_page'),
+        FieldPanel('link_text'),
     ]
 
 
