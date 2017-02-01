@@ -925,7 +925,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         programmes = [p.programme for p in self.programmes.all()]
-        research_items = ResearchItem.objects.filter(live=True, programme__in=programmes).order_by('random_order')
+        research_items = ResearchItem.objects.filter(live=True, programme__in=programmes, featured=True).order_by('random_order')
 
         per_page = 4
         paginator = Paginator(research_items, per_page)
