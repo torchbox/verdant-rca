@@ -603,6 +603,14 @@ class SchoolPageFeaturedContent(Orderable):
         PageChooserPanel('content'),
     ]
 
+class SchoolPageResearchLinks(Orderable):
+    page = ParentalKey('rca.SchoolPage', related_name='research_link')
+    related_page = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'research_link'))
+
+    panels = [
+        PageChooserPanel('related_page'),
+    ]
+
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
@@ -621,9 +629,6 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     contact_address = models.TextField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_address'))
     contact_link = models.URLField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_link'))
     contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'contact_link_text'))
-    head_of_research = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_research'))
-    head_of_research_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_research_statement'), null=True, blank=True)
-    head_of_research_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_research_link'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + [
@@ -722,6 +727,7 @@ SchoolPage.content_panels = [
     ImageChooserPanel('background_image'),
 
     InlinePanel('featured_content', label="Featured content"),
+    InlinePanel('research_link', label="Research"),
 
     MultiFieldPanel([
         PageChooserPanel('head_of_school', 'rca.StaffPage'),
@@ -730,9 +736,8 @@ SchoolPage.content_panels = [
         DocumentChooserPanel('school_brochure'),
     ], 'About the school'),
 
-    InlinePanel('related_links', label="Related links"),
-
     InlinePanel('contact_snippets', label="Contacts"),
+    InlinePanel('related_links', label="Related links"),
 
     # InlinePanel('carousel_items', label="Carousel content", help_text="test"),
     # PageChooserPanel('head_of_school', 'rca.StaffPage'),
