@@ -595,16 +595,18 @@ class SchoolPageAd(Orderable):
         SnippetChooserPanel('ad'),
     ]
 
+class SchoolPageFeaturedContent(Orderable):
+    page = ParentalKey('rca.SchoolPage', related_name='featured_content')
+    content = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
+
+    panels = [
+        PageChooserPanel('content'),
+    ]
+
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
-
-    featured_content_1 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
-    featured_content_2 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
-    featured_content_3 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
-    featured_content_4 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
-    featured_content_5 = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'featured_content'))
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
@@ -719,13 +721,7 @@ SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
 
-    MultiFieldPanel([
-        PageChooserPanel('featured_content_1'),
-        PageChooserPanel('featured_content_2'),
-        PageChooserPanel('featured_content_3'),
-        PageChooserPanel('featured_content_4'),
-        PageChooserPanel('featured_content_5'),
-    ], "Featured content"),
+    InlinePanel('featured_content', label="Featured content"),
 
     MultiFieldPanel([
         PageChooserPanel('head_of_school', 'rca.StaffPage'),
