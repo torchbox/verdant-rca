@@ -576,30 +576,12 @@ class ContactSnippetPlacement(models.Model):
 class SchoolPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.SchoolPage', related_name='carousel_items')
 
-class SchoolPageContactTelEmail(Orderable):
-    page = ParentalKey('rca.SchoolPage', related_name='contact_tel_email')
-    phone_number = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPageContactTelEmail', 'phone_number'))
-    email = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPageContactTelEmail', 'email'))
+class SchoolPageContactSnippet(Orderable):
+    page = ParentalKey('rca.SchoolPage', related_name='contact_snippets')
+    contact_snippet = models.ForeignKey('rca.ContactSnippet', related_name='+', help_text=help_text('rca.SchoolPageContactSnippet', 'contact_snippet'))
 
     panels = [
-        FieldPanel('phone_number'),
-        FieldPanel('email'),
-    ]
-
-class SchoolPageContactPhone(Orderable):
-    page = ParentalKey('rca.SchoolPage', related_name='contact_phone')
-    phone_number = models.CharField(max_length=255, help_text=help_text('rca.SchoolPageContactPhone', 'phone_number'))
-
-    panels = [
-        FieldPanel('phone_number')
-    ]
-
-class SchoolPageContactEmail(Orderable):
-    page = ParentalKey('rca.SchoolPage', related_name='contact_email')
-    email_address = models.CharField(max_length=255, help_text=help_text('rca.SchoolPageContactEmail', 'email_address'))
-
-    panels = [
-        FieldPanel('email_address')
+        SnippetChooserPanel('contact_snippet'),
     ]
 
 class SchoolPageRelatedLink(Orderable, RelatedLinkMixin):
@@ -752,15 +734,7 @@ SchoolPage.content_panels = [
 
     InlinePanel('related_links', label="Related links"),
 
-    MultiFieldPanel([
-        FieldPanel('contact_title'),
-        FieldPanel('contact_address'),
-        FieldPanel('contact_link'),
-        FieldPanel('contact_link_text'),
-        InlinePanel('contact_tel_email', label="Contact phone numbers/emails"),
-        InlinePanel('contact_phone', label="Contact phone number"),
-        InlinePanel('contact_email', label="Contact email"),
-    ], 'Contact information'),
+    InlinePanel('contact_snippets', label="Contacts"),
 
     # InlinePanel('carousel_items', label="Carousel content", help_text="test"),
     # PageChooserPanel('head_of_school', 'rca.StaffPage'),
