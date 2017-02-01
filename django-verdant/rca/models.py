@@ -748,6 +748,8 @@ SchoolPage.content_panels = [
         # school video?
     ], 'About the school'),
 
+    InlinePanel('related_links', label="Related links"),
+
     MultiFieldPanel([
         FieldPanel('contact_title'),
         FieldPanel('contact_address'),
@@ -766,7 +768,6 @@ SchoolPage.content_panels = [
     # PageChooserPanel('head_of_research', 'rca.StaffPage'),
     # FieldPanel('head_of_research_statement', classname="full"),
     # PageChooserPanel('head_of_research_link'),
-    # InlinePanel('related_links', label="Related links"),
     # InlinePanel('manual_adverts', label="Manual adverts"),
 ]
 
