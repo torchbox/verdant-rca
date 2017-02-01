@@ -705,6 +705,8 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
                 'packery': packery
             })
 
+    def programmes(self):
+        return self.get_children().live().type(ProgrammePage).specific()
 
     @property
     def preview_modes(self):
