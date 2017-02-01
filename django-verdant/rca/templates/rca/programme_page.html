@@ -109,7 +109,7 @@
                                     <h3>Contact</h3>
                                 </div>
                                 <div class="dropdown">
-                                    {% include "rca/includes/modules/contact_snippet.html" with hide_title=True %}
+                                    {% include "rca/includes/modules/contact_snippet.html" with in_dropdown=True %}
                                 </div>
                             </div>
                             
@@ -204,6 +204,10 @@
         </section> <!-- end of about the programme -->
     {% endif %}
 
+    
+    <!-- open days -->
+    {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme offset=1 %}
+
     <!-- twitter feed -->
     <section class="row module offset">
         <h2 class="module-title offset-title">Twitter</h2>
@@ -212,8 +216,6 @@
         </div>
     </section>
 
-    <!-- open days -->
-    {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme offset=1 %}
 
     <!-- our sites -->
     {% include "rca/includes/modules/our_sites.html" with offset=True %}
