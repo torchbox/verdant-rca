@@ -626,6 +626,8 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
+    video_url = models.URLField(null=True, blank=True, help_text=help_text('rca.SchoolPage', 'video_url'))
+
     ## old content, do not know whether this will be needed
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
     head_of_school_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_school_statement'), null=True, blank=True)
@@ -745,7 +747,7 @@ SchoolPage.content_panels = [
     MultiFieldPanel([
         PageChooserPanel('head_of_school', 'rca.StaffPage'),
         PageChooserPanel('head_of_school_link'),
-        # school video?
+        FieldPanel('video_url'),
     ], 'About the school'),
 
     InlinePanel('related_links', label="Related links"),
