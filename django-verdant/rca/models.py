@@ -625,10 +625,6 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
     head_of_school_statement = RichTextField(help_text=help_text('rca.SchoolPage', 'head_of_school_statement'), null=True, blank=True)
     head_of_school_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school_link'))
-    contact_title = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'contact_title'))
-    contact_address = models.TextField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_address'))
-    contact_link = models.URLField(blank=True, help_text=help_text('rca.SchoolPage', 'contact_link'))
-    contact_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'contact_link_text'))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     search_fields = Page.search_fields + [
