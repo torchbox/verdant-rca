@@ -609,6 +609,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
 
     video_url = models.URLField(null=True, blank=True, help_text=help_text('rca.SchoolPage', 'video_url'))
+    school_brochure = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.SchoolPage', 'school_brochure', default="Link to the school brochure document"))
 
     ## old content, do not know whether this will be needed
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
@@ -730,6 +731,7 @@ SchoolPage.content_panels = [
         PageChooserPanel('head_of_school', 'rca.StaffPage'),
         PageChooserPanel('head_of_school_link'),
         FieldPanel('video_url'),
+        DocumentChooserPanel('school_brochure'),
     ], 'About the school'),
 
     InlinePanel('related_links', label="Related links"),
