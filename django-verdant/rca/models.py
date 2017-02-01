@@ -744,7 +744,6 @@ SchoolPage.content_panels = [
 
     MultiFieldPanel([
         PageChooserPanel('head_of_school', 'rca.StaffPage'),
-        FieldPanel('head_of_school_statement', classname="full"),
         PageChooserPanel('head_of_school_link'),
         # school video?
     ], 'About the school'),
