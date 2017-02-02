@@ -51,7 +51,7 @@
     <!-- About the school -->
     {% if self.head_of_school or self.school_brochure or self.video_url %}
         <section class="row module offset">
-            <h2 class="module-title offset-title"><a href="{% pageurl self.head_of_school %}">About the school</a></h2>
+            <h2 class="module-title offset-title">About the school</h2>
             <div class="offset-content school-details">
 
                 <div class="row row-flush">
@@ -127,8 +127,9 @@
     {% with self.featured_content.all as featured_content %}
         {% if featured_content %}
             <section class="two-plus x-plus module">
+                <h2 class="module-title">Featured content</h2>
                 <div class="item-container">
-                    <ul class="row">
+                    <ul class="row schools-featured-content">
                         {% for feature in featured_content %}
                             {% if forloop.counter0 == 6 %}
                                 <li class="newrow load-more-target">
@@ -144,16 +145,18 @@
                                         <!-- show dates for news and events -->
                                         {% if feature.content.specific|content_type == 'newsitem' %}
                                             {% if feature.content.specific.date %}
-                                                {{ feature.content.specific.date|date:"j F Y" }}
+                                                <p class="a0">{{ feature.content.specific.date|date:"j F Y" }}</p>
                                             {% endif %}
                                         {% endif %}
 
                                         {% if feature.content.specific|content_type == 'eventitem' %}
                                             {% with feature.content.specific.dates_times.all as dates %}
                                                 {% if dates %}
-                                                    {% for date in dates %}
-                                                        {{ date.date_from|date:"j F Y" }}{% if date.date_to %} - {{ date.date_to|date:"j F Y" }}<br />{% endif %}
-                                                    {% endfor %}
+                                                    <p class="a0">
+                                                        {% for date in dates %}
+                                                            {{ date.date_from|date:"j F Y" }}{% if date.date_to %} - {{ date.date_to|date:"j F Y" }}<br />{% endif %}
+                                                        {% endfor %}
+                                                    </p>
                                                 {% endif %}
                                             {% endwith %}
                                         {% endif %}
