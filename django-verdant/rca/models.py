@@ -642,31 +642,25 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
         # packery selection
         news = NewsItem.objects\
-            .descendant_of(self)\
-            .filter(live=True)\
+            .filter(live=True, related_schools__school=self.school)\
             .order_by('-date')
         events = EventItem.past_objects\
-            .filter(live=True)\
-            .descendant_of(self) \
+            .filter(live=True, related_schools__school=self.school)\
             .extra(select={
                 'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
             })\
             .order_by('-latest_date')
         blog = RcaBlogPage.objects\
-            .descendant_of(self)\
-            .filter(live=True)\
+            .filter(live=True, school=self.school)\
             .order_by('-date')
         pages = StandardPage.objects \
-            .descendant_of(self) \
-            .filter(live=True, show_on_school_page=True) \
+            .filter(live=True, show_on_school_page=True, related_school=self.school) \
             .order_by('-latest_revision_created_at')
         lightboxes = LightboxGalleryPage.objects \
-            .descendant_of(self) \
-            .filter(live=True, show_on_school_page=True) \
+            .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
             .order_by('-latest_revision_created_at')
         research = ResearchItem.objects.live() \
-            .descendant_of(self) \
-            .filter(featured=True) \
+            .filter(featured=True, school=self.school) \
             .order_by('-latest_revision_created_at')
 
         # which page are we getting?
@@ -6478,6 +6472,17 @@ PathwayPage.settings_panels = [
 
 # == Lightbox Gallery page ==
 
+class LightBoxGalleryPageRelatedSchool(models.Model):
+    page = ParentalKey('rca.LightBoxGalleryPage', related_name='related_schools')
+    school = models.ForeignKey('taxonomy.School', on_delete=models.CASCADE, related_name='lightbox_pages', help_text=help_text('rca.LightboxGalleryPage', 'school'))
+
+    api_fields = [
+        'school',
+    ]
+
+    panels = [FieldPanel('school')]
+
+
 class LightboxGalleryPageItem(Orderable):
     page = ParentalKey('rca.LightboxGalleryPage', related_name='gallery_items')
     image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.LightboxGalleryPageItem', 'image'))
@@ -6526,6 +6531,8 @@ LightboxGalleryPage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
+
+    InlinePanel('related_schools', label='Related schools'),
 ]
 
 
