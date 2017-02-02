@@ -325,6 +325,15 @@ def content_type(value):
     return value.__class__.__name__.lower()
 
 @register.filter
+def content_type_display(value):
+    content_type_display = re.sub("([A-Z])"," \g<0>",value.__class__.__name__)
+    if content_type_display.endswith(' Item'):
+        content_type_display = content_type_display[:-5]
+    if content_type_display.endswith(' Page'):
+        content_type_display = content_type_display[:-5]
+    return content_type_display
+
+@register.filter
 def paragraph_split(value, sep = "</p>"):
     value = re.sub('\n', ' ', value)
     value = re.sub('<p>\s*</p>', ' ', value)
