@@ -640,27 +640,35 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     @vary_on_headers('X-Requested-With')
     def serve(self, request, show_draft_pathways=False):
 
+        featured_ids = self.featured_content.all().values_list('content_id', flat=True)
+
         # packery selection
         news = NewsItem.objects\
             .filter(live=True, related_schools__school=self.school)\
+            .exclude(id__in=featured_ids) \
             .order_by('-date')
         events = EventItem.past_objects\
             .filter(live=True, related_schools__school=self.school)\
+            .exclude(id__in=featured_ids) \
             .extra(select={
                 'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
             })\
             .order_by('-latest_date')
         blog = RcaBlogPage.objects\
             .filter(live=True, school=self.school)\
+            .exclude(id__in=featured_ids) \
             .order_by('-date')
         pages = StandardPage.objects \
             .filter(live=True, show_on_school_page=True, related_school=self.school) \
+            .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
         lightboxes = LightboxGalleryPage.objects \
             .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
+            .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
         research = ResearchItem.objects.live() \
             .filter(featured=True, school=self.school) \
+            .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
 
         # which page are we getting?
