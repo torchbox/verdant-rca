@@ -16,7 +16,7 @@ def remove_empty_links(apps, schema_editor):
     for link in SchoolPageResearchLinks.objects.filter(related_page__isnull=True):
         link.delete()
 
-    for content in SchoolPageFeaturedContent.objects.filter(related_page__isnull=True):
+    for content in SchoolPageFeaturedContent.objects.filter(content__isnull=True):
         content.delete()
 
 def do_nothing(apps, schema_editor):
