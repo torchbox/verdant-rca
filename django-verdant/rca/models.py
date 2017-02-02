@@ -687,6 +687,8 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         LIGHTBOX_NUMBER = 5
         RESEARCH_NUMBER = 5
 
+        page_nr, next_page_nr = page_nr - 1, next_page_nr - 1
+
         packery = list(chain(
             news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
             events[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
