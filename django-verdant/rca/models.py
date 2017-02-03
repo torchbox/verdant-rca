@@ -613,6 +613,16 @@ class SchoolPageResearchLinks(Orderable):
         FieldPanel('link_text'),
     ]
 
+class SchoolPageAlsoOfInterest(Orderable):
+    page = ParentalKey('rca.SchoolPage', related_name='also_of_interest')
+    related_page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.SchoolPageAlsoOfInterest', 'related_page'))
+    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPageAlsoOfInterest', 'link_text'))
+
+    panels = [
+        PageChooserPanel('related_page'),
+        FieldPanel('link_text'),
+    ]
+
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
@@ -727,7 +737,6 @@ SchoolPage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
 
-    InlinePanel('featured_content', label="Featured content"),
     InlinePanel('research_link', label="Research"),
 
     MultiFieldPanel([
@@ -736,8 +745,9 @@ SchoolPage.content_panels = [
         FieldPanel('video_url'),
         DocumentChooserPanel('school_brochure'),
     ], 'About the school'),
-
     InlinePanel('contact_snippets', label="Contacts"),
+    InlinePanel('featured_content', label="Featured content"),
+    InlinePanel('also_of_interest', label="Also of interest"),
     InlinePanel('related_links', label="Related links"),
 
     # InlinePanel('carousel_items', label="Carousel content", help_text="test"),

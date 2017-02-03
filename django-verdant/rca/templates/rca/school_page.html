@@ -187,7 +187,28 @@
     {% endif %}
 
     <!-- Also of interest-->
-    
+    {% with self.also_of_interest.all as also_of_interest_links %}
+        {% if also_of_interest_links %}
+            <section class="row module thick-border offset">
+                <h2 class="module-title offset-title">Also of interest</h2>
+                <div class="offset-content">
+                    <ul class="block-list">
+                        {% for also_of_interest in also_of_interest_links %}
+                            <li>
+                                <a href="{% pageurl also_of_interest.related_page %}">
+                                    {% if also_of_interest.link_text %}
+                                        {{ also_of_interest.link_text }}
+                                    {% else %}
+                                        {{ also_of_interest.related_page.title }}
+                                    {% endif %}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 
