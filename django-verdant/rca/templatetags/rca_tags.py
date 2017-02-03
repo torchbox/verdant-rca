@@ -337,14 +337,14 @@ def content_type_display(value):
     elif content_type == 'rcanowpage':
         content_type_display = 'RCA Now'
     elif content_type == 'standardpage':
-        # if StandardPage.STUDENT_STORY_TAG in value.tagged_items:
-        #     content_type_display = 'Student Story'
-        # elif StandardPage.ALUMNI_STORY_TAG in value.tagged_items:
-        #     content_type_display = 'Alumni Story'
-        # else :
-        content_type_display = 'Page'
+        if hasattr(value, 'is_student_story'):
+            content_type_display = 'Student Story'
+        elif hasattr(value, 'is_alumni_story'):
+            content_type_display = 'Alumni Story'
+        else:
+            content_type_display = 'Page'
     else:
-        content_type_display = re.sub("([A-Z])"," \g<0>",value.__class__.__name__)
+        content_type_display = re.sub("([A-Z])", " \g<0>",value.__class__.__name__)
         if content_type_display.endswith(' Item'):
             content_type_display = content_type_display[:-5]
         if content_type_display.endswith(' Page'):
