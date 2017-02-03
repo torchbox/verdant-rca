@@ -626,7 +626,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         padding: @spacing-half 0;
         position: relative;
 
-        a {
+        > a {
             display: block;
             width: 100%;
 
@@ -651,8 +651,8 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
             }
         }
 
-        a:hover::after,
-        a:focus::after {
+        > a:hover::after,
+        > a:focus::after {
             .sprite-load-11(
                 @positionX: -12px,
                 @positionY: -60px,
