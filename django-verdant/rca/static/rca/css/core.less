@@ -1417,38 +1417,100 @@ footer {
     .section-breadcrumb-pathways{
         color: #6DCFF6;
     }
-    .programmes-and-pathways{
-        a{
-            font-size: 2.2em;
-            line-height: 1;
-            text-transform: uppercase;
-            font-family: @font-family-knockout;
-        }
-        a.chevron-after:after{
-            content: '\003e';
-            margin-left: 5px;
-            color: #000;
-        }
-        a:hover{
-            color: #939598;
-            &:after{
-                color: #000;
-            }
+    
+    /*View more link on research listing */
+
+    .research-show-more a::after {
+        content: ' more';
+    }
+
+    .school-research-list.expanded .research-show-more a::after {
+        content: ' less';
+    }
+
+
+    .programme-details {
+
+        .left {
+            .column(12);
         }
 
-        a.pathway-link{
-            color: #00AEEF;
+        &.double-photo .left {
+            .column(12);
         }
-        a.pathway-link:hover{
-            color: #6DCFF6;
-            &:after{
-                color: #00AEEF;
-            }
+
+        .right {
+            .column(12);
+            float: right;
         }
-        a.separator-after:after{
-            content: ' | ';
-            position: relative;
-            color: #00AEEF;
+
+        &.double-photo .right {
+            .column(12);
+            float: right;
+        }
+
+        // Head of programme statement etc in left hand column
+        .head-of-programme {
+            margin: @spacing-one 0;
+        }
+
+        .head-of-programme p {
+            display: inline;
+            margin-bottom: @spacing-one;
+        }
+
+        // Doc download in left column
+        .button-bar {
+            margin-top: @spacing-one;
+        }
+
+        // right hand column
+        .image {
+            .column(6);
+            max-width: 200px;
+        }
+
+        .programme-head {
+            color: @color-dark-grey;
+            margin-bottom: 0;
+        }
+
+        .key-details {
+            margin-top: @spacing-half;
+        }
+    }
+
+
+    .school-details {
+        .left {
+            .column(12);
+        }
+
+        .right {
+            .column(12);
+        }
+
+        .image {
+            max-width: 200px;
+        }
+
+        .school-head-wrapper {
+            margin: @spacing-half 0;
+        }
+
+        .school-head {
+            color: @color-dark-grey;
+            margin: 0;
+        }
+
+        .school-head-name {
+            font-weight: bold;
+        }
+    }
+
+    .schools-featured-content {
+        .h7, .a0, .a2 {
+            margin: 0;
         }
     }
 }

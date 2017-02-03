@@ -723,6 +723,68 @@ footer {
     .cols-nine-three{
         .row-flush();
     }
+
+    .programme-details {
+
+        .left {
+            .column(8);
+        }
+
+        &.double-photo .left {
+            .column(7);
+        }
+
+        .right {
+            .column(4);
+            float: right;
+        }
+
+        &.double-photo .right {
+            .column(5);
+            float: right;
+        }
+    }
+
+    .school-details {
+
+        .left {
+            .column(5);
+        }
+
+        .right {
+            .column(7);
+        }
+
+        .school-head-wrapper {
+            margin: 0;
+        }
+
+        /*Bottom align the brochure and video links*/
+        .row {
+            display: flex;
+
+            .right {
+                position: relative;
+                flex: 1; /* makes it 100% of the row height */
+
+                .align-bottom {
+                    position: absolute;
+                    bottom: 0;
+                    width: 90%;
+                }
+
+                .align-second-bottom {
+                    width: 90%;
+                    position: absolute;
+                    bottom: 53px;
+                }
+            }
+        }
+
+        .image {
+            max-width: none;
+        }
+    }
 }
 
 .type-news {

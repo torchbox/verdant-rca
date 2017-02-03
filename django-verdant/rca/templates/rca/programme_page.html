@@ -61,7 +61,7 @@
                                 {% endif %}
                             </div>
 
-                            <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
+                            <h4 class="school-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
                             <ul>
                                 <li><a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a></li>
                                 {% if self.head_of_programme_second %}
@@ -93,7 +93,7 @@
 
                         <!-- Head of programme link -->
                         {% if self.head_of_programme_link %}
-                            <a href="{% pageurl self.head_of_programme_link %}"><span class="head-of-programme-readmore">Read more</a></span>
+                            <a href="{% pageurl self.head_of_programme_link %}"><span class="read-more">Read more</a></span>
                         {% endif %}
 
                         <!-- Programme specification document -->

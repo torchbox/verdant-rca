@@ -325,6 +325,33 @@ def content_type(value):
     return value.__class__.__name__.lower()
 
 @register.filter
+def content_type_display(value):
+    content_type = value.__class__.__name__.lower()
+    if content_type == 'eventitem':
+        if value.audience == 'rcatalks':
+            content_type_display = 'RCA Talk'
+        else:
+            content_type_display = 'Event'
+    elif content_type == 'studentpage':
+        content_type_display = 'Work'
+    elif content_type == 'rcanowpage':
+        content_type_display = 'RCA Now'
+    elif content_type == 'standardpage':
+        # if StandardPage.STUDENT_STORY_TAG in value.tagged_items:
+        #     content_type_display = 'Student Story'
+        # elif StandardPage.ALUMNI_STORY_TAG in value.tagged_items:
+        #     content_type_display = 'Alumni Story'
+        # else :
+        content_type_display = 'Page'
+    else:
+        content_type_display = re.sub("([A-Z])"," \g<0>",value.__class__.__name__)
+        if content_type_display.endswith(' Item'):
+            content_type_display = content_type_display[:-5]
+        if content_type_display.endswith(' Page'):
+            content_type_display = content_type_display[:-5]
+    return content_type_display
+
+@register.filter
 def paragraph_split(value, sep = "</p>"):
     value = re.sub('\n', ' ', value)
     value = re.sub('<p>\s*</p>', ' ', value)
