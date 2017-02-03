@@ -760,23 +760,26 @@ footer {
         }
 
         /*Bottom align the brochure and video links*/
-        .flexbox & .row {
-            display: flex;
+        @supports (flex: 1) {
+            .row {
 
-            .right {
-                position: relative;
-                flex: 1; /* makes it 100% of the row height */
+                display: flex;
 
-                .align-bottom {
-                    position: absolute;
-                    bottom: 0;
-                    width: 90%;
-                }
+                .right {
+                    position: relative;
+                    flex: 1; /* makes it 100% of the row height */
 
-                .align-second-bottom {
-                    width: 90%;
-                    position: absolute;
-                    bottom: 53px;
+                    .align-bottom {
+                        position: absolute;
+                        bottom: 0;
+                        width: 90%;
+                    }
+
+                    .align-second-bottom {
+                        width: 90%;
+                        position: absolute;
+                        bottom: 53px;
+                    }
                 }
             }
         }
