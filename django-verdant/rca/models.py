@@ -652,6 +652,8 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
         featured_ids = self.featured_content.all().values_list('content_id', flat=True)
 
+
+
         # packery selection
         news = NewsItem.objects\
             .filter(live=True, related_schools__school=self.school)\
@@ -660,7 +662,16 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         events = EventItem.past_objects\
             .filter(live=True, related_schools__school=self.school)\
             .exclude(id__in=featured_ids) \
+            .exclude(audience='rcatalks') \
             .extra(select={
+                'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
+            })\
+            .order_by('-latest_date')
+        events_rcatalks = EventItem.past_objects\
+            .filter(live=True, related_schools__school=self.school, audience='rcatalks')\
+            .exclude(id__in=featured_ids) \
+            .extra(select={
+                'is_rca_talk': True,
                 'latest_date': "SELECT GREATEST(date_from, date_to) AS latest_date FROM rca_eventitemdatestimes where rca_eventitemdatestimes.page_id = wagtailcore_page.id ORDER BY latest_date DESC LIMIT 1",
             })\
             .order_by('-latest_date')
@@ -670,8 +681,21 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .order_by('-date')
         pages = StandardPage.objects \
             .filter(live=True, show_on_school_page=True, related_school=self.school) \
+            .exclude(tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
+        student_stories = StandardPage.objects\
+            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .exclude(id__in=featured_ids) \
+            .extra(select={'is_student_story': True})\
+            .order_by('?')
+        alumni_stories = StandardPage.objects\
+            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .exclude(id__in=featured_ids) \
+            .extra(select={'is_alumni_story': True})\
+            .order_by('?')
         lightboxes = LightboxGalleryPage.objects \
             .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
             .exclude(id__in=featured_ids) \
@@ -702,8 +726,11 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         packery = list(chain(
             news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
             events[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
+            events_rcatalks[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
             blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
             pages[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
+            student_stories[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
+            alumni_stories[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
             lightboxes[LIGHTBOX_NUMBER * page_nr: LIGHTBOX_NUMBER * next_page_nr],
             research[RESEARCH_NUMBER * page_nr: RESEARCH_NUMBER * next_page_nr],
         ))
