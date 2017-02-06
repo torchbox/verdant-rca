@@ -625,6 +625,8 @@ class SchoolPageAlsoOfInterest(Orderable):
 
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
+    PACKERY_CHOICES = zip(range(11), range(11))
+
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
 
@@ -632,6 +634,15 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
     video_url = models.URLField(null=True, blank=True, help_text=help_text('rca.SchoolPage', 'video_url'))
     school_brochure = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.SchoolPage', 'school_brochure', default="Link to the school brochure document"))
+
+
+    packery_news = models.IntegerField("Number of news items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_news'))
+    packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_events'))
+    packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_events_rcatalks'))
+    packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_blog'))
+    packery_standard_pages = models.IntegerField("Number of standard pages to 2show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_standard_pages'))
+    packery_lightbox_galleries = models.IntegerField("Number of lightbox galleries to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_research'))
+    packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_research'))
 
     ## old content, do not know whether this will be needed
     head_of_school = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'head_of_school'))
@@ -685,23 +696,10 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .filter(live=True, school=self.school)\
             .exclude(id__in=featured_ids) \
             .order_by('-date')
-        pages = StandardPage.objects \
+        standard_pages = StandardPage.objects \
             .filter(live=True, show_on_school_page=True, related_school=self.school) \
-            .exclude(tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
-            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
-        student_stories = StandardPage.objects\
-            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
-            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .exclude(id__in=featured_ids) \
-            .extra(select={'is_student_story': True})\
-            .order_by('?')
-        alumni_stories = StandardPage.objects\
-            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .exclude(id__in=featured_ids) \
-            .extra(select={'is_alumni_story': True})\
-            .order_by('?')
         lightboxes = LightboxGalleryPage.objects \
             .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
             .exclude(id__in=featured_ids) \
@@ -711,35 +709,24 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
 
-        # these are hardcoded for now, since RCA didn't want to set them manually
-        NEWS_NUMBER = 5
-        EVENTS_NUMBER = 5
-        BLOG_NUMBER = 5
-        PAGE_NUMBER = 5
-        LIGHTBOX_NUMBER = 5
-        RESEARCH_NUMBER = 5
 
         if exclude:
             news = news.exclude(id__in=exclude)
             events = events.exclude(id__in=exclude)
             events_rcatalks = events_rcatalks.exclude(id__in=exclude)
             blog = blog.exclude(id__in=exclude)
-            pages = pages.exclude(id__in=exclude)
-            student_stories = student_stories.exclude(id__in=exclude)
-            alumni_stories = alumni_stories.exclude(id__in=exclude)
+            standard_pages = standard_pages.exclude(id__in=exclude)
             lightboxes = lightboxes.exclude(id__in=exclude)
             research = research.exclude(id__in=exclude)
 
         packery = list(chain(
-            news[:NEWS_NUMBER],
-            events[:EVENTS_NUMBER],
-            events_rcatalks[:EVENTS_NUMBER],
-            blog[:BLOG_NUMBER],
-            pages[:PAGE_NUMBER],
-            student_stories[:PAGE_NUMBER],
-            alumni_stories[:PAGE_NUMBER],
-            lightboxes[:LIGHTBOX_NUMBER],
-            research[:RESEARCH_NUMBER],
+            news[:self.packery_news],
+            events[:self.packery_events],
+            events_rcatalks[:self.packery_events_rcatalks],
+            blog[:self.packery_blog],
+            standard_pages[:self.packery_standard_pages],
+            lightboxes[:self.packery_lightbox_galleries],
+            research[:self.packery_research],
         ))
 
         random.shuffle(packery)
