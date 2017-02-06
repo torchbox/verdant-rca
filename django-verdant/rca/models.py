@@ -766,13 +766,7 @@ class ProgrammePageKeyContent(Orderable):
 
 class ProgrammePageFindOutMore(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='find_out_more')
-    link = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageFindOutMore', 'link'))
-    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageFindOutMore', 'link_text'))
 
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_text')
-    ]
 
 class ProgrammePageOurSites(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
