@@ -649,9 +649,15 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request, show_draft_pathways=False):
+        exclude = []
+        if request.GET.get('exclude'):
+            for extra_exclude in request.GET.get('exclude', '').split(','):
+                try:
+                    exclude.append(int(extra_exclude))
+                except (TypeError, ValueError):
+                    pass
 
         featured_ids = self.featured_content.all().values_list('content_id', flat=True)
-
 
 
         # packery selection
@@ -705,14 +711,6 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
 
-        # which page are we getting?
-        try:
-            page_nr = int(request.GET.get('packery_page', 1))
-            next_page_nr = page_nr + 1
-        except ValueError:
-            page_nr = 1
-            next_page_nr = 2
-
         # these are hardcoded for now, since RCA didn't want to set them manually
         NEWS_NUMBER = 5
         EVENTS_NUMBER = 5
@@ -721,18 +719,27 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         LIGHTBOX_NUMBER = 5
         RESEARCH_NUMBER = 5
 
-        page_nr, next_page_nr = page_nr - 1, next_page_nr - 1
+        if exclude:
+            news = news.exclude(id__in=exclude)
+            events = events.exclude(id__in=exclude)
+            events_rcatalks = events_rcatalks.exclude(id__in=exclude)
+            blog = blog.exclude(id__in=exclude)
+            pages = pages.exclude(id__in=exclude)
+            student_stories = student_stories.exclude(id__in=exclude)
+            alumni_stories = alumni_stories.exclude(id__in=exclude)
+            lightboxes = lightboxes.exclude(id__in=exclude)
+            research = research.exclude(id__in=exclude)
 
         packery = list(chain(
-            news[NEWS_NUMBER * page_nr:NEWS_NUMBER * next_page_nr],
-            events[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
-            events_rcatalks[EVENTS_NUMBER * page_nr:EVENTS_NUMBER * next_page_nr],
-            blog[BLOG_NUMBER * page_nr:BLOG_NUMBER * next_page_nr],
-            pages[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
-            student_stories[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
-            alumni_stories[PAGE_NUMBER * page_nr:PAGE_NUMBER * next_page_nr],
-            lightboxes[LIGHTBOX_NUMBER * page_nr: LIGHTBOX_NUMBER * next_page_nr],
-            research[RESEARCH_NUMBER * page_nr: RESEARCH_NUMBER * next_page_nr],
+            news[:NEWS_NUMBER],
+            events[:EVENTS_NUMBER],
+            events_rcatalks[:EVENTS_NUMBER],
+            blog[:BLOG_NUMBER],
+            pages[:PAGE_NUMBER],
+            student_stories[:PAGE_NUMBER],
+            alumni_stories[:PAGE_NUMBER],
+            lightboxes[:LIGHTBOX_NUMBER],
+            research[:RESEARCH_NUMBER],
         ))
 
         random.shuffle(packery)
