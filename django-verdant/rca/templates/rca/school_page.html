@@ -1,7 +1,9 @@
 {% extends "rca/base.html" %}
 {% load compress wagtailcore_tags wagtailimages_tags rca_tags wagtailembeds_tags static %}
 
-{% block body_class %}type-programme{% endblock %}
+{# I'm not sure why type-programme has been used here on the school page. Leaving it in in case
+it is important and adding type-school #}
+{% block body_class %}type-programme type-schoolpage{% endblock %}
 
 {% block extra_css %}
     {% compress css %}
