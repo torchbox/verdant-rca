@@ -332,13 +332,15 @@ def content_type_display(value):
             content_type_display = 'RCA Talk'
         else:
             content_type_display = 'Event'
-    elif content_type == 'studentpage':
+    elif content_type == 'newstudentpage':
         content_type_display = 'Work'
     elif content_type == 'rcanowpage':
         content_type_display = 'RCA Now'
     elif content_type == 'standardpage':
+        #TODO this test does not currently work
         if hasattr(value, 'is_student_story'):
             content_type_display = 'Student Story'
+        #TODO this test does not currently work
         elif hasattr(value, 'is_alumni_story'):
             content_type_display = 'Alumni Story'
         else:
