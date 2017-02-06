@@ -63,7 +63,7 @@
 
                             <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
                             <ul>
-                                <li><a href="{% pageurl self.head_of_programme %}">{{ self.head_of_programme.title }}</a></li>
+                                <li><a href="{% pageurl self.head_of_programme %}" class="a3">{{ self.head_of_programme.title }}</a></li>
                                 {% if self.head_of_programme_second %}
                                     <li><a href="{% pageurl self.head_of_programme_second %}">{{ self.head_of_programme_second.title }}</a></li>
                                 {% endif %}
@@ -121,23 +121,6 @@
                     <div class="row row-flush">
                         <ul class="block-list top-border">
 
-                            <!-- How to apply -->
-                            {% with self.how_to_apply.all as how_to_apply_links %}
-                                {% if how_to_apply_links %}
-                                    {% for how_to_apply in how_to_apply_links %}
-                                        <li>
-                                            <a href="{% pageurl how_to_apply.link %}">
-                                                {% if how_to_apply.link_text %}
-                                                    {{ how_to_apply.link_text }}
-                                                {% else %}
-                                                    {{ how_to_apply.link.title }}
-                                                {% endif %}
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-                                {% endif %}
-                            {% endwith %}
-
                             <!-- MA programme description -->
                             {% if self.ma_programme_description_link %}
                                 <li>
@@ -146,6 +129,19 @@
                                             {{ self.ma_programme_description_link_text }}
                                         {% else %}
                                             {{ self.ma_programme_description_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- MA programme overview -->
+                            {% if self.ma_programme_overview_link %}
+                                <li>
+                                    <a href="{% pageurl self.ma_programme_overview_link %}">
+                                        {% if self.ma_programme_overview_link_text %}
+                                            {{ self.ma_programme_overview_link_text }}
+                                        {% else %}
+                                            {{ self.ma_programme_overview_link.title }}
                                         {% endif %}
                                     </a>
                                 </li>
@@ -159,6 +155,19 @@
                                             {{ self.ma_entry_requirements_link_text }}
                                         {% else %}
                                             {{ self.ma_entry_requirements_link.title }}
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            <!-- Programme staff -->
+                            {% if self.ma_programme_staff_link %}
+                                <li>
+                                    <a href="{{ self.ma_programme_staff_link }}">
+                                        {% if self.ma_programme_staff_link_text %}
+                                            {{ self.ma_programme_staff_link_text }}
+                                        {% else %}
+                                            {{ self.ma_programme_staff_link.title }}
                                         {% endif %}
                                     </a>
                                 </li>
@@ -197,6 +206,23 @@
                                 </li>
                             {% endif %}
 
+                            <!-- How to apply -->
+                            {% with self.how_to_apply.all as how_to_apply_links %}
+                                {% if how_to_apply_links %}
+                                    {% for how_to_apply in how_to_apply_links %}
+                                        <li>
+                                            <a href="{% pageurl how_to_apply.link %}">
+                                                {% if how_to_apply.link_text %}
+                                                    {{ how_to_apply.link_text }}
+                                                {% else %}
+                                                    {{ how_to_apply.link.title }}
+                                                {% endif %}
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+
                         </ul>
                     </div>
                 {% endif %}
@@ -207,18 +233,6 @@
     
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme offset=1 %}
-
-    <!-- twitter feed -->
-    <section class="row module offset">
-        <h2 class="module-title offset-title">Twitter</h2>
-        <div class="offset-content">
-            {% include "rca/includes/modules/twitter-feed.html" with module=False %}
-        </div>
-    </section>
-
-
-    <!-- our sites -->
-    {% include "rca/includes/modules/our_sites.html" with offset=True %}
 
     <!-- other key content -->
     {% with self.key_content.all as key_content_links %}
@@ -244,6 +258,18 @@
         {% endif %}
     {% endwith %}
 
+    <!-- twitter feed -->
+    <section class="row module offset">
+        <h2 class="module-title offset-title">Twitter</h2>
+        <div class="offset-content">
+            {% include "rca/includes/modules/twitter-feed.html" with module=False %}
+        </div>
+    </section>
+
+
+    <!-- our sites -->
+    {% include "rca/includes/modules/our_sites.html" with offset=True %}
+
     <!-- find out more -->
     {% with self.find_out_more.all as find_out_more_links %}
         {% if find_out_more_links %}
@@ -252,15 +278,9 @@
                 <div class="offset-content">
                     <ul class="block-list">
                         {% for find_out_more in find_out_more_links %}
-                            <li>
-                                <a href="{% pageurl find_out_more.link %}">
-                                    {% if find_out_more.link_text %}
-                                        {{ find_out_more.link_text }}
-                                    {% else %}
-                                        {{ find_out_more.link.title }}
-                                    {% endif %}
-                                </a>
-                            </li>
+                            {% if find_out_more.get_link and find_out_more.get_link_text %}
+                                <li><a href="{{ find_out_more.get_link }}">{{ find_out_more.get_link_text }}</a></li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
