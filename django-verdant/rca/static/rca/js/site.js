@@ -532,7 +532,7 @@ function onDocumentReady(jQuery, inLightBox){
         });
     });
 
-    $('.packery .load-more').each(function(){
+    $('.type-homepage .packery .js-load-more').each(function(){
         $this = $(this);
         $this.click(function(e){
             e.preventDefault();
@@ -551,6 +551,29 @@ function onDocumentReady(jQuery, inLightBox){
                     })
                 } else {
                     $this.fadeOut();
+                }
+            });
+        });
+    });
+
+    /* Had to rewrite the js for the school page packery load-more, because the model was implemented differently */
+    $('.type-schoolpage .packery .js-load-more').each(function(){
+        var $loadmore = $(this);
+        $loadmore.click(function(e){
+            e.preventDefault();
+            var pageToLoad = $loadmore.data('page-id');
+            
+            var tmp = $('<div></div>').load(current_page + "?packery_page=" + pageToLoad + ".item", function(data){
+                var items = $('.item', tmp);
+
+                if (items.length){
+                    $('.packery ul').append(items);
+                    $('.packery').imagesLoaded( function() {
+                        $('.packery').packery('appended', items);
+                    });
+                    $loadmore.data('page-id', parseInt(pageToLoad) + 1);
+                } else {
+                    $loadmore.fadeOut();
                 }
             });
         });
