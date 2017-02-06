@@ -823,7 +823,7 @@ class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
 
 class ProgrammePageHowToApply(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='how_to_apply')
-    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
+    link = models.ForeignKey('rca.StandardPage', on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
     link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageHowToApply', 'link_text'))
 
     panels = [
@@ -841,7 +841,7 @@ class ProgrammePageKeyDetails(Orderable):
 
 class ProgrammePageKeyContent(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='key_content')
-    link = models.ForeignKey('rca.StandardPage', null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
+    link = models.ForeignKey('rca.StandardPage', on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
     link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageKeyContent', 'link_text'))
 
     panels = [
@@ -849,15 +849,9 @@ class ProgrammePageKeyContent(Orderable):
         FieldPanel('link_text')
     ]
 
-class ProgrammePageFindOutMore(Orderable):
+class ProgrammePageFindOutMore(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.ProgrammePage', related_name='find_out_more')
-    link = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.ProgrammePageFindOutMore', 'link'))
-    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageFindOutMore', 'link_text'))
 
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_text')
-    ]
 
 class ProgrammePageOurSites(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='our_sites')
@@ -904,8 +898,14 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
     ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
     ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
+    
+    ma_programme_staff_link = models.URLField("Programme staff link", blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link'))
+    ma_programme_staff_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link_text'))
+    ma_programme_overview_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link'))
+    ma_programme_overview_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
+    
     ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
-    ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
+    ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link_text'))
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
     facilities_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'facilities_link_text'))
     graduate_destinations_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'graduate_destinations_link'))
@@ -986,29 +986,37 @@ ProgrammePage.content_panels = [
         InlinePanel('contact_snippets', label="Contacts"),
     ], 'Key programme information'),
     MultiFieldPanel([
-        InlinePanel('how_to_apply', label="How to apply"),
-    ], 'How to apply'),
-    MultiFieldPanel([
         PageChooserPanel('ma_programme_description_link'),
         FieldPanel('ma_programme_description_link_text'),
     ], 'MA programme description'),
+    MultiFieldPanel([
+        PageChooserPanel('ma_programme_overview_link'),
+        FieldPanel('ma_programme_overview_link_text'),
+    ], 'MA programme overview'),
     MultiFieldPanel([
         PageChooserPanel('ma_entry_requirements_link'),
         FieldPanel('ma_entry_requirements_link_text'),
     ], 'MA Entry requirements'),
     MultiFieldPanel([
+        FieldPanel('ma_programme_staff_link'),
+        FieldPanel('ma_programme_staff_link_text'),
+    ], 'MA programme staff'),
+    MultiFieldPanel([
         PageChooserPanel('facilities_link'),
         FieldPanel('facilities_link_text'),
     ], 'Facilities'),
     MultiFieldPanel([
+        InlinePanel('how_to_apply', label="How to apply"),
+    ], 'How to apply'),
+    MultiFieldPanel([
         PageChooserPanel('graduate_destinations_link'),
         FieldPanel('graduate_destinations_link_text'),
     ], 'Graduate destinations'),
-    FieldPanel('twitter_feed'),
     MultiFieldPanel([
         FieldPanel('key_content_header'),
         InlinePanel('key_content', label="Other key content links"),
     ], 'Other key content'),
+    FieldPanel('twitter_feed'),
     InlinePanel('find_out_more', label="Find out more"),
     InlinePanel('our_sites', label="Our sites"),
     InlinePanel('related_links', label="Related links"),
