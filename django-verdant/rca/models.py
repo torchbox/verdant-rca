@@ -640,7 +640,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     packery_events = models.IntegerField("Number of events to show (excluding RCA Talks)", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_events'))
     packery_events_rcatalks = models.IntegerField("Number of RCA Talk events to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_events_rcatalks'))
     packery_blog = models.IntegerField("Number of blog items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_blog'))
-    packery_standard_pages = models.IntegerField("Number of standard pages to 2show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_standard_pages'))
+    packery_standard_pages = models.IntegerField("Number of standard pages to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_standard_pages'))
     packery_lightbox_galleries = models.IntegerField("Number of lightbox galleries to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_research'))
     packery_research = models.IntegerField("Number of research items to show", null=True, blank=True, choices=PACKERY_CHOICES, help_text=help_text('rca.SchoolPage', 'packery_research'))
 
@@ -771,7 +771,6 @@ SchoolPage.content_panels = [
         FieldPanel('packery_events'),
         FieldPanel('packery_events_rcatalks'),
         FieldPanel('packery_blog'),
-        FieldPanel('packery_standard_pages'),
         FieldPanel('packery_standard_pages'),
         FieldPanel('packery_lightbox_galleries'),
         FieldPanel('packery_research'),

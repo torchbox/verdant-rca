@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='schoolpage',
             name='packery_standard_pages',
-            field=models.IntegerField(blank=True, choices=[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)], help_text=b'', null=True, verbose_name=b'Number of standard pages to 2show'),
+            field=models.IntegerField(blank=True, choices=[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10)], help_text=b'', null=True, verbose_name=b'Number of standard pages to show'),
         ),
         migrations.AlterField(
             model_name='programmepagefindoutmore',
