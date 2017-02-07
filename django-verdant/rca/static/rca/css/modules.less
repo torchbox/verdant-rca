@@ -612,7 +612,6 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
 .block-list {
     margin-bottom: @spacing-one;
-    font-size: 3em;
 
     &.top-border {
         border-top: 5px solid @color-charcoal;
@@ -622,6 +621,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     > li,
     > div li { /* needed for when some of the list is initially hidden by js */
         .ho-b-heading();
+        font-size: 3em;
         color: @color-charcoal;
         border-bottom: 1px solid @color-divider;
         padding: @spacing-half 0;
@@ -684,11 +684,11 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
     ul li {
         font-family: @font-family-arial;
-        font-size: @font-size-10;
+        font-size: 0.4em;
         text-transform: none;
         font-weight: bold;
         color: @color-twitter-blue;
-        padding: @spacing-half 0 0 @spacing-one;
+        padding: 0 0 0 @spacing-one;
         position: relative;
 
         a {
@@ -704,7 +704,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
                 );
                 position: absolute;
                 left: 0;
-                top: @spacing-one;
+                top: 12px;
                 cursor: pointer;
             }
         }
@@ -722,7 +722,6 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
         }
     }
 }
-
 
 /**
  *$Load more buttons (reused several times below, so this is just common properties)
