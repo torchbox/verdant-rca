@@ -614,6 +614,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     .ho-b-heading();
     color: @color-charcoal;
     margin-bottom: @spacing-one;
+    font-size: 3em;
 
     &.top-border {
         border-top: 5px solid @color-charcoal;
@@ -641,7 +642,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
                 );
                 position: absolute;
                 right: @spacing-half;
-                top: 12px;
+                top: 20px;
                 cursor: pointer;
             }
 
@@ -666,7 +667,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
     &:not(.top-border) li:first-child {
         padding-top: 0;
         a::after {
-            top: 5px;
+            top: 12px;
         }
     }
 
@@ -732,7 +733,12 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 
     .programme-head {
         .a3();
-        margin-bottom: 0;
+        margin: 8px 0 0 0;
+        line-height: 1;
+    }
+
+    .programme-head-name {
+        line-height: 1;
     }
 
     .key-details {
@@ -1853,7 +1859,7 @@ used anywhere. Leaving commented out for now just in case it gets reinstated */
 .contact-dropdown {
 
     .contact-dropdown-header {
-        margin-top: @spacing-one;
+        margin-top: @spacing-half;
         position: relative;
         padding: 10px @spacing-half;
         color: @color-white;
