@@ -420,6 +420,10 @@ ul {
     line-height: @line-height-1;
     color: @color-dark-grey;
     text-transform: uppercase;
+
+    &.module-title-black {
+        color: @color-black;
+    }
 }
 
 /* 'Interative' styles */
@@ -1511,6 +1515,75 @@ footer {
     .schools-featured-content {
         .h7, .a0, .a2 {
             margin: 0;
+        }
+    }
+
+    /**
+     *$Programme details
+     */
+
+    .programme-details {
+
+        .left {
+            .column(12);
+        }
+
+        &.double-photo .left {
+            .column(12);
+        }
+
+        .right {
+            .column(12);
+            float: right;
+        }
+
+        &.double-photo .right {
+            .column(12);
+            float: right;
+        }
+
+        // Head of programme statement etc in left hand column
+        .head-of-programme {
+            margin: @spacing-one 0;
+        }
+
+        .head-of-programme p {
+            display: inline;
+            margin-bottom: @spacing-one;
+        }
+
+        .head-of-programme-readmore {
+            .a0();
+            .highlight-blue();
+
+            &:hover {
+                color: @color-pink;
+            }
+        }
+
+        // Doc download in left column
+        .button-bar {
+            margin-top: @spacing-one;
+        }
+
+        // right hand column
+        .image {
+            .column(6);
+            max-width: 200px;
+        }
+
+        .programme-head {
+            .a3();
+            margin: 8px 0 0 0;
+            line-height: 1;
+        }
+
+        .programme-head-name {
+            line-height: 1;
+        }
+
+        .key-details {
+            margin-top: @spacing-half;
         }
     }
 }
