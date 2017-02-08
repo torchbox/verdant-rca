@@ -8,7 +8,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rca', '0074_programmepagekeycontent_allow_to_choose_any_page'),
+        ('rca', '0075_programmepagehowtoapply_allow_to_choose_any_page'),
         ('rca', '0083_schoolpage_packery_settings'),
     ]
 
