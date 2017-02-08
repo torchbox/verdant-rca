@@ -613,15 +613,8 @@ class SchoolPageResearchLinks(Orderable):
         FieldPanel('link_text'),
     ]
 
-class SchoolPageAlsoOfInterest(Orderable):
+class SchoolPageAlsoOfInterest(Orderable, RelatedLinkMixin):
     page = ParentalKey('rca.SchoolPage', related_name='also_of_interest')
-    related_page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.SchoolPageAlsoOfInterest', 'related_page'))
-    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPageAlsoOfInterest', 'link_text'))
-
-    panels = [
-        PageChooserPanel('related_page'),
-        FieldPanel('link_text'),
-    ]
 
 
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
