@@ -738,7 +738,7 @@ class ProgrammePageRelatedLink(Orderable, RelatedLinkMixin):
 
 class ProgrammePageHowToApply(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='how_to_apply')
-    link = models.ForeignKey('rca.StandardPage', on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
+    link = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageHowToApply', 'link'))
     link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageHowToApply', 'link_text'))
 
     panels = [
