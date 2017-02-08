@@ -859,7 +859,7 @@ class ProgrammePageKeyDetails(Orderable):
 
 class ProgrammePageKeyContent(Orderable):
     page = ParentalKey('rca.ProgrammePage', related_name='key_content')
-    link = models.ForeignKey('rca.StandardPage', on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
+    link = models.ForeignKey(Page, on_delete=models.CASCADE, related_name='+', help_text=help_text('rca.ProgrammePageKeyContent', 'link'))
     link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePageKeyContent', 'link_text'))
 
     panels = [
