@@ -698,8 +698,21 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .order_by('-date')
         standard_pages = StandardPage.objects \
             .filter(live=True, show_on_school_page=True, related_school=self.school) \
+            .exclude(tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
+        student_stories = StandardPage.objects\
+            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .exclude(id__in=featured_ids) \
+            .extra(select={'is_student_story': True})\
+            .order_by('?')
+        alumni_stories = StandardPage.objects\
+            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .exclude(id__in=featured_ids) \
+            .extra(select={'is_alumni_story': True})\
+            .order_by('?')
         lightboxes = LightboxGalleryPage.objects \
             .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
             .exclude(id__in=featured_ids) \
@@ -725,6 +738,8 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             events_rcatalks[:self.packery_events_rcatalks],
             blog[:self.packery_blog],
             standard_pages[:self.packery_standard_pages],
+            student_stories[:self.packery_standard_pages],
+            alumni_stories[:self.packery_standard_pages],
             lightboxes[:self.packery_lightbox_galleries],
             research[:self.packery_research],
         ))
