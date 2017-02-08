@@ -43,7 +43,9 @@ it is important and adding type-school #}
                                 </div>
                             {% endif %}
                         {% endfor %}
-                        <div class="research-show-more read-more"><a href="#">View</a></div>
+                        {% if research_links|length > 3 %}
+                            <div class="research-show-more read-more"><a href="#">View</a></div>
+                        {% endif %}
                     </ul>
                 </div>
             </section>
