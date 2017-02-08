@@ -199,13 +199,7 @@ it is important and adding type-school #}
                     <ul class="block-list">
                         {% for also_of_interest in also_of_interest_links %}
                             <li>
-                                <a href="{% pageurl also_of_interest.related_page %}">
-                                    {% if also_of_interest.link_text %}
-                                        {{ also_of_interest.link_text }}
-                                    {% else %}
-                                        {{ also_of_interest.related_page.title }}
-                                    {% endif %}
-                                </a>
+                                <a href="{{ also_of_interest.get_link }}">{{ also_of_interest.get_link_text }}</a>
                             </li>
                         {% endfor %}
                     </ul>
