@@ -723,6 +723,30 @@ footer {
     .cols-nine-three{
         .row-flush();
     }
+
+    /**
+     *$Programme details
+     */
+    .programme-details {
+
+        .left {
+            .column(8);
+        }
+
+        &.double-photo .left {
+            .column(7);
+        }
+
+        .right {
+            .column(4);
+            float: right;
+        }
+
+        &.double-photo .right {
+            .column(5);
+            float: right;
+        }
+    }
 }
 
 .type-news {

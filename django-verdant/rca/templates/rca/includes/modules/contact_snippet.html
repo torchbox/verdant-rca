@@ -3,11 +3,11 @@
 
 	{% with self.contact_snippets.all as contacts %}
 		{% for contact in contacts %}
-			{% if forloop.first %}
-			<section class="module contact">
-				<h2 class="module-title">Contact</h2>
+			{% if forloop.first and not in_dropdown %}
+				<section class="module contact {% if in_dropdown %}in-dropdown{% endif %}">
+					<h2 class="module-title">Contact</h2>
 			{% else %}
-			<section class="module contact">
+				<section class="module contact {% if in_dropdown %}in-dropdown{% endif %}">
 			{% endif %}
 				<ul class="row">
 					<li class="col col-1">

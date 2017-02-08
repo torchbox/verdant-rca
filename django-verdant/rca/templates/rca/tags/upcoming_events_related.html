@@ -1,8 +1,8 @@
 {% load wagtailcore_tags %}
 {% if events %}
-    <section class="events x-plus row module">
-        <h2 class="module-title">{% if opendays %}<a href="{{ events_index_url }}?audience=openday">Open days</a>{% elif school %}<a href="{{ events_index_url }}?school={{ school.slug }}">{{ display_name }} events</a>{% elif programme %}<a href="{{ events_index_url }}?programme={{ programme.slug }}">{{ display_name }} events</a>{% else %}<a href="{{ events_index_url }}?area={{ area.slug }}">{{ display_name }} events</a>{% endif %}</h2>
-        <div class="item-container">
+    <section class="events x-plus row module {% if offset %}offset{% endif %}">
+        <h2 class="module-title {% if offset %}offset-title{% endif %}">{% if opendays %}<a href="{{ events_index_url }}?audience=openday">Open days</a>{% elif school %}<a href="{{ events_index_url }}?school={{ school.slug }}">{{ display_name }} events</a>{% elif programme %}<a href="{{ events_index_url }}?programme={{ programme.slug }}">{{ display_name }} events</a>{% else %}<a href="{{ events_index_url }}?area={{ area.slug }}">{{ display_name }} events</a>{% endif %}</h2>
+        <div class="item-container {% if offset %}offset-content{% endif %}">
             <ul class="row">
                 {% for event in events %}
                     {% if forloop.counter == 3 %}
