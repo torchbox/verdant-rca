@@ -31,13 +31,7 @@ it is important and adding type-school #}
                                 <div class="research-more">
                             {% endif %}
                             <li>
-                                <a href="{% pageurl research.related_page %}">
-                                    {% if research.link_text %}
-                                        {{ research.link_text }}
-                                    {% else %}
-                                        {{ research.related_page.title }}
-                                    {% endif %}
-                                </a>
+                                <a href="{{ research.get_link }}">{{ research.get_link_text }}</a>
                             </li>
                             {% if forloop.last and forloop.counter0 >= 3 %}
                                 </div>
