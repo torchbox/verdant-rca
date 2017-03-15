@@ -6,6 +6,7 @@
 * ```vagrant up```
 * ```vagrant ssh```
 * ```djrun```
+* ```dj migrate```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
 * 
 
