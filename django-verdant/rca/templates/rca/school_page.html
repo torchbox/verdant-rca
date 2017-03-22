@@ -31,19 +31,15 @@ it is important and adding type-school #}
                                 <div class="research-more">
                             {% endif %}
                             <li>
-                                <a href="{% pageurl research.related_page %}">
-                                    {% if research.link_text %}
-                                        {{ research.link_text }}
-                                    {% else %}
-                                        {{ research.related_page.title }}
-                                    {% endif %}
-                                </a>
+                                <a href="{{ research.get_link }}">{{ research.get_link_text }}</a>
                             </li>
                             {% if forloop.last and forloop.counter0 >= 3 %}
                                 </div>
                             {% endif %}
                         {% endfor %}
-                        <div class="research-show-more read-more"><a href="#">View</a></div>
+                        {% if research_links|length > 3 %}
+                            <div class="research-show-more read-more"><a href="#">View</a></div>
+                        {% endif %}
                     </ul>
                 </div>
             </section>
@@ -197,13 +193,7 @@ it is important and adding type-school #}
                     <ul class="block-list">
                         {% for also_of_interest in also_of_interest_links %}
                             <li>
-                                <a href="{% pageurl also_of_interest.related_page %}">
-                                    {% if also_of_interest.link_text %}
-                                        {{ also_of_interest.link_text }}
-                                    {% else %}
-                                        {{ also_of_interest.related_page.title }}
-                                    {% endif %}
-                                </a>
+                                <a href="{{ also_of_interest.get_link }}">{{ also_of_interest.get_link_text }}</a>
                             </li>
                         {% endfor %}
                     </ul>

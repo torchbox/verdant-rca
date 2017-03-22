@@ -763,33 +763,35 @@ footer {
             margin: 0;
         }
 
-        /*Bottom align the brochure and video links*/
-        @supports (flex: 1) {
-            .row {
-
-                display: flex;
-
-                .right {
-                    position: relative;
-                    flex: 1; /* makes it 100% of the row height */
-
-                    .align-bottom {
-                        position: absolute;
-                        bottom: 0;
-                        width: 90%;
-                    }
-
-                    .align-second-bottom {
-                        width: 90%;
-                        position: absolute;
-                        bottom: 53px;
-                    }
-                }
-            }
-        }
-
         .image {
             max-width: none;
+        }
+    }
+}
+
+/*Bottom align the brochure and video links*/
+/* Don't nest this because using the @supports tag within nested
+css caused an issue when the css was compressed on the live site */
+@supports (flex: 1) {
+    .type-programme .school-details .row {
+
+        display: flex;
+
+        .right {
+            position: relative;
+            flex: 1; /* makes it 100% of the row height */
+
+            .align-bottom {
+                position: absolute;
+                bottom: 0;
+                width: 90%;
+            }
+
+            .align-second-bottom {
+                width: 90%;
+                position: absolute;
+                bottom: 53px;
+            }
         }
     }
 }
