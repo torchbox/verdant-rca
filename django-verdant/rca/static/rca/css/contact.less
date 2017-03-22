@@ -1,0 +1,178 @@
+.featured-content {
+    background-color: @color-charcoal;
+    padding: @grid-gutter-width;
+    color: @color-white;
+    .clearfix();
+
+    a {
+        color: @color-highlight-blue;
+
+        &:hover {
+            color: @color-white;
+        }
+    }
+
+    h2 {
+        margin-top: 0;
+    }
+
+    &__contacts {
+
+        @media screen and (min-width: 768px) {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            float: left;
+            width: 66.66666667%;
+        }
+
+        &__item {
+
+            @media screen and (min-width: 768px) {
+                float: left;
+                width: 50%;
+            }
+
+        }
+
+    }
+
+    &__action-container {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        margin-top: @grid-gutter-width;
+
+        @media screen and (min-width: 768px) {
+            border-top: 0;
+            margin-top: 0;
+            padding-left: @grid-gutter-width;
+            float: left;
+            width: 33.33333333%;
+        }
+
+    }
+
+    &__enquire {
+        margin-bottom: @grid-gutter-width;
+        padding-bottom: @grid-gutter-width;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+        h2 {
+            padding-top: @grid-gutter-width;
+
+            @media screen and (min-width: 768px) {
+                padding-top: 0;
+            }
+
+        }
+
+        button {
+            border: none;
+            line-height: 1;
+        }
+    }
+
+    &__programme-contact {
+
+        .select {
+            position: relative;
+            color: @color-black;
+            border-radius: 4px;
+            padding-top: 0;
+            line-height: 1;
+
+            &:after {
+                position: absolute;
+                right: 12px;
+                top: 12px;
+                background-color: transparent;
+                border: 0;
+            }
+
+            .selectInner {
+                padding-top: 10px;
+            }
+
+        }
+
+        .js-contact-us-form-trigger {
+            height: 34px !important;
+        }
+
+    }
+
+}
+
+.map-column {
+    margin-top: (@grid-gutter-width * 2);
+
+    iframe {
+        width: 100%;
+        height: auto;
+        min-height: 300px;
+    }
+
+    &__links {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+
+        &__item {
+            border-bottom: 1px solid @color-middle-column-lines;
+        }
+
+        &__link {
+            display: block;
+            padding: 10px 0;
+        }
+
+    }
+
+    .single.borders .share-wrapper {
+        border: 0;
+        padding-top: 0;
+    }
+
+}
+
+.modal {
+
+    &__container {
+        .clearfix();
+    }
+
+    &__form {
+        @media screen and (min-width: 768px) {
+            float: left;
+            width: 66.66666667%;
+            padding-right: @grid-gutter-width;
+        }
+    }
+
+    &__contact-details {
+        a {
+            color: @color-highlight-blue;
+            .bold();
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    &__contact-details_with-form {
+        @media screen and (min-width: 768px) {
+            float: left;
+            width: 33.33333333%;
+        }
+    }
+}
+
+// Add extra styles to mobile view of contacts
+.body-text{
+    &__mobile-contacts {
+
+        &__dynamic-content {
+            border-bottom: 1px solid @color-dark-grey;
+            padding-bottom: @grid-gutter-width;
+            margin-bottom: @grid-gutter-width;
+        }
+
+    }
+}

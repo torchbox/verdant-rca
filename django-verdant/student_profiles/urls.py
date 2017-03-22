@@ -4,6 +4,10 @@ and for allowing more customization
 """
 
 from django.conf.urls import patterns, url
+from django.views.decorators.cache import never_cache
+
+from wagtail.utils.urlpatterns import decorate_urlpatterns
+
 from .views import overview, preview, postcard_upload, mphil_show_details, phd_show_details
 from .views import disambiguate
 from .views import basic_profile, academic_details, ma_details, ma_show_details
@@ -41,3 +45,5 @@ urlpatterns = patterns(
     url(r'^logout/$', logout, name='logout'),
 
 )
+
+urlpatterns = decorate_urlpatterns(urlpatterns, never_cache)

@@ -1,92 +1,206 @@
 {% extends "rca/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags rca_tags %}
+{% load compress wagtailcore_tags wagtailimages_tags rca_tags wagtailembeds_tags static %}
 
-{% block body_class %}type-programme{% endblock %}
+{# I'm not sure why type-programme has been used here on the school page. Leaving it in in case
+it is important and adding type-school #}
+{% block body_class %}type-programme type-schoolpage{% endblock %}
+
+{% block extra_css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/vendor/colorbox.less" %}" />
+    {% endcompress %}
+{% endblock %}
 
 {% block content %}
-	{% include "rca/includes/modules/background-image.html" %}
+	{% include "rca/includes/modules/background-image.html" with fade=True  %}
     {% include "rca/includes/modules/h1-major.html" %}
-    {% include "rca/includes/modules/carousel.html" %}
 
-   <!-- head of school -->
-    {% if self.head_of_school or self.head_of_school_statement %}
-        <section class="head-of-programme row module">
-            {% if self.head_of_school %}
-                <h2 class="module-title"><a href="{% pageurl self.head_of_school %}">Dean of School</a></h2>
-                <a href="{% pageurl self.head_of_school %}">
-                    <div class="image">
-                        {% if self.head_of_school.profile_image %}
-                            {% image self.head_of_school.profile_image width-200 %}
-                        {% else %}
-                            <img src="/static/rca/images/staff-default-image.png" width="200">
-                        {% endif %}
-                    </div>
-                </a>
-            {% endif %}
-
-            <div class="content bc2{% if not self.head_of_school.profile_image %} flushleft{% endif %}">
-                {% if self.head_of_school %}
-                    <strong>{{ self.head_of_school.title }}</strong>
-                {% endif %}
-                {% if self.head_of_school_statement %}
-                    {{ self.head_of_school_statement|richtext }}
-                {% endif %}
-                {% if self.head_of_school_link %}
-                    ...<a href="{% pageurl self.head_of_school_link %}"><span class="bc4 caps">Continue</a></span>
-                {% endif %}
-            </div>
-        </section>
-    {% endif %}
-
-    <!-- programmes -->
+    <!-- programmes and pathways -->
     {% programme_by_school school=self.school %}  {# rca/tags/programmes_by_school.html #}
 
 
-    <!-- head of research -->
-    {% if self.head_of_research or self.head_of_research_statement %}
-        <section class="head-of-programme row module">
-            {% if self.head_of_research %}
-                <h2 class="module-title"><a href="{% pageurl self.head_of_research %}">Research Leader</a></h2>
-                <a href="{% pageurl self.head_of_research %}">
-                    <div class="image">
-                        {% if self.head_of_research.profile_image %}
-                            {% image self.head_of_research.profile_image width-200 %}
-                        {% else %}
-                            <img src="/static/rca/images/staff-default-image.png" width="200">
+    <!-- research -->
+    {% with self.research_link.all as research_links %}
+        {% if research_links %}
+            <section class="row module thick-border offset">
+                <h2 class="module-title offset-title">Research</h2>
+                <div class="offset-content">
+                    <ul class="school-research-list block-list">
+                        {% for research in research_links %}
+                            {% if forloop.counter0 == 3 %}
+                                <div class="research-more">
+                            {% endif %}
+                            <li>
+                                <a href="{{ research.get_link }}">{{ research.get_link_text }}</a>
+                            </li>
+                            {% if forloop.last and forloop.counter0 >= 3 %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                        {% if research_links|length > 3 %}
+                            <div class="research-show-more read-more"><a href="#">View</a></div>
+                        {% endif %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
+
+    <!-- About the school -->
+    {% if self.head_of_school or self.school_brochure or self.video_url %}
+        <section class="row module offset">
+            <h2 class="module-title offset-title">About the school</h2>
+            <div class="offset-content school-details">
+
+                <div class="row row-flush">
+                    <div class="left">
+                        {% if self.head_of_school %}
+                            <!-- Head of school photo -->
+                            <a href="{% pageurl self.head_of_school %}">
+                                <div class="image">
+                                    {% if self.head_of_school.profile_image %}
+                                        {% image self.head_of_school.profile_image width-200 %}
+                                    {% else %}
+                                        <img src="/static/rca/images/staff-default-image.png" width="200">
+                                    {% endif %}
+                                </div>
+                            </a>
                         {% endif %}
                     </div>
-                </a>
-            {% endif %}
+                    <div class="right">
+                        {%if self.head_of_school or self.head_of_school_link %}
+                            <div class="school-head-wrapper">
+                                <!-- Head of school -->
+                                {% if self.head_of_school %}
+                                    <h4 class="school-head">Dean of {{ self.title|cut:"School of " }}</h4>
+                                    <div class="school-head-name">{{ self.head_of_school.title }}</div>
+                                {% endif %}
 
-            <div class="content bc2{% if not self.head_of_research.profile_image %} flushleft{% endif %}">
-                {% if self.head_of_research %}
-                    <strong>{{ self.head_of_research.title }}</strong>
+                                <!-- Head of school link -->
+                                {% if self.head_of_school_link %}
+                                    <a href="{% pageurl self.head_of_school_link %}"><span class="read-more">Read more</a></span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        <!-- Video -->
+                        {% if self.video_url %}
+                            <ul class="button-bar one-button {% if self.school_brochure %}align-second-bottom{% else %}align-bottom{% endif %}">
+                                <li><a href="#school_video" class="lightbox inline button icon icon-chevron">{{ self.title }} video</a></li>
+                            </ul>
+                            <!-- this is the hidden content that gets loaded by colorbox -->
+                            <div style="display:none">
+                                <div id="school_video" class="videoembed vimeo">
+                                    {{ self.video_url|embed:"680" }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <!-- School brochure -->
+                        {% if self.school_brochure %}
+                            <ul class="button-bar one-button align-bottom">
+                                <li><a href="{{ self.school_brochure.url }}" class="button icon icon-download">School brochure</a></li>
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if self.contact_snippets.all %}
+                    <div class="contact-dropdown">
+                        <div class="contact-dropdown-header">
+                            <h3>Contact</h3>
+                        </div>
+                        <div class="dropdown">
+                            {% include "rca/includes/modules/contact_snippet.html" with hide_title=True %}
+                        </div>
+                    </div>
+                    
                 {% endif %}
-                {% if self.head_of_research_statement %}
-                    {{ self.head_of_research_statement|richtext }}
-                {% endif %}
-                {% if self.head_of_research_link %}
-                    ...<a href="{% pageurl self.head_of_research_link %}"><span class="bc4 caps">Continue</a></span>
-                {% endif %}
+                
             </div>
         </section>
     {% endif %}
 
-    <!-- research -->
-    <div id="listing">
-        {% include "rca/includes/research_listing.html" %}
-    </div>
+    <!--featured content-->
+    {% with self.featured_content.all as featured_content %}
+        {% if featured_content %}
+            <section class="two-plus x-plus module">
+                <h2 class="module-title">Featured content</h2>
+                <div class="item-container">
+                    <ul class="row schools-featured-content">
+                        {% for feature in featured_content %}
+                            {% if forloop.counter0 == 6 %}
+                                <li class="newrow load-more-target">
+                            {% elif forloop.counter0|divisibleby:"3" %}
+                                <li class="newrow">
+                            {% else %}
+                                <li>
+                            {% endif %}
+                                <a href="{% pageurl feature.content %}">
+                                    <div class="image">{% image feature.content.specific.feed_image width-400 %}</div>
+                                    <div class="content">
+                                        <h3 class="h7">{{ feature.content.title }}</h3>
+                                        <!-- show dates for news and events -->
+                                        {% if feature.content.specific|content_type == 'newsitem' %}
+                                            {% if feature.content.specific.date %}
+                                                <p class="a0">{{ feature.content.specific.date|date:"j F Y" }}</p>
+                                            {% endif %}
+                                        {% endif %}
 
-        <!-- events -->
-    {% upcoming_events_related school=self.school display_name=self.school.display_name %}
+                                        {% if feature.content.specific|content_type == 'eventitem' %}
+                                            {% with feature.content.specific.dates_times.all as dates %}
+                                                {% if dates %}
+                                                    <p class="a0">
+                                                        {% for date in dates %}
+                                                            {{ date.date_from|date:"j F Y" }}{% if date.date_to %} - {{ date.date_to|date:"j F Y" }}<br />{% endif %}
+                                                        {% endfor %}
+                                                    </p>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
 
-    <!-- news carousel -->
-    {% news_carousel school=self.school %}
+                                        <p class="a2">{{ feature.content.specific|content_type_display }}</p>
+                                    </div>
+                                </a>
+                                {% comment %}
+                               {#  News item has date
+                                Event has date_from and date_to #}
+                                {% endcomment %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
 
-    <!-- open days -->
-    {% upcoming_events_related opendays=1 school=self.school %}
+    <!-- Packery -->
+    {% if packery %}
+        {% include "rca/includes/school_page_packery.html" %}
 
-	{% include "rca/includes/modules/contact.html" %}
+        <script>
+            var current_page = "{% pageurl self %}";
+            var excludeIds = [{% for item in packery %}{% if item.id %}{{ item.id }}{% if not forloop.last %},{% endif %}{% endif %}{% endfor %}];
+        </script>
+    {% endif %}
+
+    <!-- Also of interest-->
+    {% with self.also_of_interest.all as also_of_interest_links %}
+        {% if also_of_interest_links %}
+            <section class="row module thick-border offset">
+                <h2 class="module-title offset-title">Also of interest</h2>
+                <div class="offset-content">
+                    <ul class="block-list">
+                        {% for also_of_interest in also_of_interest_links %}
+                            <li>
+                                <a href="{{ also_of_interest.get_link }}">{{ also_of_interest.get_link_text }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
+        {% endif %}
+    {% endwith %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 
@@ -94,4 +208,12 @@
 
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" collapseToday=self.collapse_upcoming_events showAdverts="true" showRelatedLinks="true" %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static "rca/js/vendor/jquery.colorbox-min.js" %}"></script>
+    <script src="{% static "rca/js/lightbox.js" %}"></script>
+    <!--<script type="text/javascript">
+        $(".inline").colorbox({inline:true, width:"50%"});
+    </script>-->
 {% endblock %}

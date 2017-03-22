@@ -94,6 +94,7 @@ function onDocumentReady(jQuery, inLightBox){
         if(typeof openByDefault == "undefined"){
             openByDefault = true
         }
+
         if (!openByDefault){
             $(showElement).hide();
         }
@@ -227,6 +228,9 @@ function onDocumentReady(jQuery, inLightBox){
     showHideSlide('.profile .showExternalCollaborations', '.profile .external-collaborations', '.profile .external-collaborations');
     showHideSlide('.profile .showPublications', '.profile .publications', '.profile .publications');
     showHideSlide('.showbody', '.hide-body', '.hide-body');
+    showHideSlide('.contact-dropdown .contact-dropdown-header', '.contact-dropdown .contact-dropdown-header', '.contact-dropdown .dropdown', false);
+    showHideSlide('.research-show-more', '.school-research-list', '.research-more', false);
+    
     /* change text on show more button to 'hide' once it has been clicked */
     $('.profile .showmore').click(function(eventObject){
         if($(this).html() == 'hide'){
@@ -739,10 +743,12 @@ function onDocumentReady(jQuery, inLightBox){
             $sidebarInner       = $( '.enquiry-form__inner' ),
             $bodyContent        = $( '.mobile-content-wrapper' ),
             $wrapper            = $( '.enquiry-trigger-wrapper' ),
+            $background         = $('html');
             wrapperFixed        = 'enquiry-trigger-wrapper--fixed',
             showSidebar         = 'enquiry-form--show',
             shiftContent        = 'mobile-content-wrapper--shift-left',
             toggled             = 'enquiry-form-trigger--toggled',
+            contentShifted      = 'mobile-content-wrapper--open',
             displayBuffer       = 10,
             state               = {
                 open    : false,
@@ -776,14 +782,13 @@ function onDocumentReady(jQuery, inLightBox){
         }
 
         function open(){
-            var previousRequest = null;
-
             if( !state.busy ){
                 state.busy = true;
 
                 setTimeout(function(){
                     $sidebar.addClass( showSidebar );
                     $bodyContent.addClass( shiftContent );
+                    $background.addClass(contentShifted);
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
                     
@@ -805,18 +810,11 @@ function onDocumentReady(jQuery, inLightBox){
                 }, displayBuffer );
 
                 if ( !state.hasData ) {
-                    previousRequest = jQuery.ajax({
+                    jQuery.ajax({
                         url: $sidebar.data('from-url'),
                         cache: false,
                         data: {
                             format: 'enquiry_form'
-                        },
-                        beforeSend: function()    {
-                            if (previousRequest != null) {
-                                previousRequest.abort();
-                                state.busy = false;
-                            }
-
                         },
                         success: function(data) {
                             if (data.length) {
@@ -824,10 +822,12 @@ function onDocumentReady(jQuery, inLightBox){
 
                                 // Modify placeholders
                                 selectPlaceholders();
-                            }
 
+                                state.hasData = true;
+                            }
+                        },
+                        complete: function() {
                             state.busy = false;
-                            state.hasData = true;
                         }
                     });
                 }
@@ -843,6 +843,8 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.removeClass( shiftContent );
                     $wrapper.removeClass( wrapperFixed );
                     $triggerButton.removeClass( toggled );
+                    //$background.removeClass( contentShifted);
+
 
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {
@@ -881,4 +883,141 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     enquiryForm();
+
+    var contactUsForm = function() {
+
+        var $trigger             = $( '.js-contact-us-form-trigger' ),
+            $headerWrapper       = $( '.header-wrapper' ),
+            $mobileContent       = $( '.body-text__mobile-contacts' ),
+            $modalContent        = $( '.pjax-content' ),
+            $modalWrapper        = $( '.page-wrapper' ),
+            modalClose           = '.contact-us-form-modal #pjax-close',
+            modalOverlay         = '.contact-us-form-modal .page-overlay',
+            /*
+            We need to add the no-pushstate class
+            to temporary disable pushstate while our modal is opened.
+
+            See event selectors for event handlers in pushstate.js
+             */
+            mobileContentClasses = 'body-text__mobile-contacts__dynamic-content',
+            modalClasses         = 'lightbox-view lightbox-visible contact-us-form-modal no-pushstate',
+            modalBodyKeydown     = 'body.contact-us-form-modal.lightbox-view',
+            prevScrollY          = null,
+            state                = {
+                open     : false,
+                busy     : false,
+                useModal : true
+            };
+
+        function scrollPostition() {
+            return +(window.scrollY || window.pageYOffset);
+        }
+
+        // We will use this function to display content on large screens
+        function showModal(data) {
+            $modalContent.html(data);
+            $( 'body' ).addClass( modalClasses );
+
+            prevScrollY = scrollPostition();
+
+            // needed so that the browser can scroll back when closing the lightbox
+            $( 'body, html' ).css('min-height', $(document).height());
+
+            // disable bs-affix because it would interfer with positioning
+            $modalWrapper.data('bs.affix').disable();
+            $modalWrapper.removeClass('affix affix-top');
+
+            var affixed = $headerWrapper.hasClass('affix');
+            $modalWrapper.css({
+                top: -scrollPostition() + (affixed ? 186 : 200)
+            });
+
+            // scroll to top, but leave the menu collapsed
+            $(window).scrollTop(affixOffsetTop);
+        }
+
+        // We will use this function to display content on mobile devices
+        function showOnPage(data) {
+            var $innerElement = $('<div></div>');
+
+            $innerElement.addClass(mobileContentClasses);
+            $innerElement.html(data);
+
+            $mobileContent.html($innerElement);
+
+            $("html, body").animate({
+                scrollTop: $mobileContent.show().offset().top
+            }, 500);
+        }
+
+        function closeModal() {
+            $( 'body' ).removeClass( modalClasses );
+            $modalContent.html('');
+        }
+
+        function open(programme_contact) {
+            if ( !state.busy ) {
+                state.busy = true;
+
+                // Requests current page
+                jQuery.ajax({
+                    cache: false,
+                    data: {
+                        programme_contact: programme_contact,
+                        format: 'programme_contact_form'
+                    },
+                    success: function(data) {
+                        if (data.length) {
+                            if (state.useModal) {
+                                showModal(data);
+                            } else {
+                                showOnPage(data);
+                            }
+                        }
+                    },
+                    complete: function() {
+                        state.busy = false;
+                    }
+                });
+            }
+        }
+
+        function bindEvents() {
+            prevScrollY = scrollPostition();
+
+            $trigger.on( 'change', function() {
+                open(this.value);
+            });
+
+            $(document).on('click', modalClose, function(e) {
+                closeModal();
+            });
+
+            $(document).on('keydown', modalBodyKeydown, function(e) {
+                if (e.keyCode == 27) {
+
+                    closeModal();
+                }
+            });
+
+            $(document).on('click', modalOverlay, function(e) {
+                closeModal();
+            });
+
+            Harvey.attach(breakpoints.mobile, {
+                on: function() {
+                    state.useModal = false;
+                    closeModal();
+                },
+                off: function() {
+                    state.useModal = true;
+                    $mobileContent.html('');
+                }
+            });
+        }
+
+        bindEvents();
+    };
+
+    contactUsForm();
 }

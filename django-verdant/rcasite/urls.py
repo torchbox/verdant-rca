@@ -3,12 +3,13 @@ from django.conf.urls.static import static
 from django.views.generic.base import RedirectView
 from django.contrib import admin
 from django.conf import settings
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control, never_cache
 import os.path
 
 from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
+from wagtail.wagtaildocs.api.v2.endpoints import DocumentsAPIEndpoint
 from wagtail.wagtailimages import urls as wagtailimages_urls
 from wagtail.utils.urlpatterns import decorate_urlpatterns
 
@@ -16,7 +17,7 @@ from wagtail.api.v2.router import WagtailAPIRouter
 from rca.api.endpoints import RCAPagesAPIEndpoint, RCAImagesAPIEndpoint
 
 from donations import urls as donations_urls
-from rca import app_urls as rca_app_urls, admin_urls as rca_admin_urls
+from rca import admin_urls as rca_admin_urls
 from twitter import urls as twitter_urls
 import student_profiles.urls, student_profiles.now_urls
 from taxonomy import views as taxonomy_views
@@ -36,6 +37,7 @@ rca_ldap_register_signal_handlers()
 api_router = WagtailAPIRouter('wagtailapi_v2')
 api_router.register_endpoint('pages', RCAPagesAPIEndpoint)
 api_router.register_endpoint('images', RCAImagesAPIEndpoint)
+api_router.register_endpoint('documents', DocumentsAPIEndpoint)
 
 
 urlpatterns = patterns('',
@@ -44,7 +46,6 @@ urlpatterns = patterns('',
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^images/', include(wagtailimages_urls)),
     url(r'^admin/donations/', include(donations_urls)),
-    url(r'^app/', include(rca_app_urls)),
     url(r'^admin/', include(rca_admin_urls)),
     url(r'^twitter/', include(twitter_urls)),
     url(r'^taxonomy/api/v1/$', never_cache(taxonomy_views.api), name='taxonomy_api_v0'),
@@ -75,4 +76,14 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL + 'images/', document_root=os.path.join(settings.MEDIA_ROOT, 'images'))
     urlpatterns += patterns('',
         (r'^favicon\.ico$', RedirectView.as_view(url=settings.STATIC_URL + 'rca/images/favicon.ico', permanent=True))
+    )
+
+
+# Cache-control
+cache_length = getattr(settings, 'CACHE_CONTROL_MAX_AGE', None)
+
+if cache_length:
+    urlpatterns = decorate_urlpatterns(
+        urlpatterns,
+        cache_control(max_age=cache_length)
     )

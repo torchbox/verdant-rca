@@ -54,7 +54,7 @@ def news_carousel(context, area=None, programme=None, school=None, count=5):
     }
 
 @register.inclusion_tag('rca/tags/upcoming_events_related.html', takes_context=True)
-def upcoming_events_related(context, opendays=0, programme=None, school=None, display_name="", area=None, audience=""):
+def upcoming_events_related(context, opendays=0, programme=None, school=None, display_name="", area=None, audience="", offset=0):
     events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from'))
     if school:
         events = events.filter(related_schools__school=school).order_by('start_date')
@@ -76,6 +76,7 @@ def upcoming_events_related(context, opendays=0, programme=None, school=None, di
         'programme': programme,
         'area': area,
         'audience': audience,
+        'offset': offset,
         'events_index_url': context['global_events_index_url'],
         'request': context['request'],  # required by the {% pageurl %} tag that we want to use within this template
     }
@@ -322,6 +323,35 @@ def job_documents(context):
 @register.filter
 def content_type(value):
     return value.__class__.__name__.lower()
+
+@register.filter
+def content_type_display(value):
+    content_type = value.__class__.__name__.lower()
+    if content_type == 'eventitem':
+        if value.audience == 'rcatalks':
+            content_type_display = 'RCA Talk'
+        else:
+            content_type_display = 'Event'
+    elif content_type == 'newstudentpage':
+        content_type_display = 'Work'
+    elif content_type == 'rcanowpage':
+        content_type_display = 'RCA Now'
+    elif content_type == 'standardpage':
+        #TODO this test does not currently work
+        if hasattr(value, 'is_student_story'):
+            content_type_display = 'Student Story'
+        #TODO this test does not currently work
+        elif hasattr(value, 'is_alumni_story'):
+            content_type_display = 'Alumni Story'
+        else:
+            content_type_display = 'Page'
+    else:
+        content_type_display = re.sub("([A-Z])", " \g<0>",value.__class__.__name__)
+        if content_type_display.endswith(' Item'):
+            content_type_display = content_type_display[:-5]
+        if content_type_display.endswith(' Page'):
+            content_type_display = content_type_display[:-5]
+    return content_type_display
 
 @register.filter
 def paragraph_split(value, sep = "</p>"):

@@ -45,6 +45,9 @@ AUTHENTICATION_BACKENDS = (
 # Google Analytics
 GOOGLE_ANALYTICS_ACCOUNT = 'UA-3809199-5'
 
+SILVERPOP_ID = 'd871c05-15671ce6a9e-c6f842ded9e6d11c5ffebd715e129037'
+SILVERPOP_BRANDEDDOMAINS = 'www.pages05.net,rcawebsite,studentenquiry97.mkt4116.com'
+
 
 # Compress static files offline and minify CSS
 # http://django-compressor.readthedocs.org/en/latest/settings/#django.conf.settings.COMPRESS_OFFLINE
@@ -55,10 +58,10 @@ COMPRESS_CSS_FILTERS = [
 ]
 COMPRESS_CSS_HASHING_METHOD = 'content'
 
-# Cache everything for 10 minutes
+# Cache everything for 30 minutes
 # This only applies to pages that do not have a more specific cache-control
 # setting. See urls.py
-CACHE_CONTROL_MAX_AGE = 600
+CACHE_CONTROL_MAX_AGE = 30 * 60
 
 
 # Configuration from environment variables

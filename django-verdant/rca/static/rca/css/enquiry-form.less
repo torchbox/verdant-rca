@@ -129,10 +129,11 @@
     min-height: 100vh;
     z-index: 4000;
     background-color: #5b5a5a;
-    transform:
-        translate3d(@sidebarWidth, 0, 0);
-    transition:
-        transform 300ms ease;
+    transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(@sidebarWidth, 0, 0);
+    -webkit-transform: translate3d(@sidebarWidth, 0, 0);
+    transition: transform 300ms ease;
 
     // BEM not possible, have to beat specificity
     input,
@@ -140,10 +141,6 @@
     select,
     select:focus {
         padding: 10px;
-
-        @media screen and ( max-width : 768px ) {
-            font-size: 16px;
-        }
     }
 
     label {
@@ -152,6 +149,7 @@
 
     &--show {
         transform: translate3d(0, 0, 0);
+        -webkit-transform: translate3d(0,0,0);
     }
 
     &__inner {
@@ -194,11 +192,12 @@
 
     @media screen and ( max-width : 768px ) {
         width: 100%;
-        transform:
-            translate3d(100%, 0, 0);
+        transform: translate3d(100%, 0, 0);
+        -webkit-transform: translate3d(100%,0,0);
 
         &--show {
             transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0,0,0);
         }
     }
 

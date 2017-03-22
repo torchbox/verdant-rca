@@ -284,6 +284,9 @@ PASSWORD_REQUIRED_TEMPLATE = "rca/login.html"
 
 GOOGLE_ANALYTICS_ACCOUNT = ''
 
+SILVERPOP_ID = ''
+SILVERPOP_BRANDEDDOMAINS = ''
+
 # ReCaptcha settings
 RECAPTCHA_PUBLIC_KEY = 'put your public key here'
 RECAPTCHA_PRIVATE_KEY = 'put your recaptcha secret key here'

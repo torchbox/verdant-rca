@@ -38,11 +38,11 @@ body {
 
 .mobile-content-wrapper{
     padding: 0;
+    z-index: 1;
 }
 .mobile-menu-wrapper, .mobile-menu-button{
     display: none;
 }
-
 
 /*
  * Lightbox styles
@@ -165,7 +165,7 @@ body.lightbox-view{
             background: url('@{path-static}images/spinner.png') 0 0 no-repeat;
             -webkit-animation: spin 1s steps(12) infinite;
             -moz-animation: spin 1s steps(12) infinite;
-            animation: spin 1s steps(12) inifinite;
+            animation: spin 1s steps(12) infinite;
         }
 
         @keyframes spin{
@@ -722,6 +722,76 @@ footer {
 .type-programme{
     .cols-nine-three{
         .row-flush();
+    }
+
+    /**
+     *$Programme details
+     */
+    .programme-details {
+
+        .left {
+            .column(8);
+        }
+
+        &.double-photo .left {
+            .column(7);
+        }
+
+        .right {
+            .column(4);
+            float: right;
+        }
+
+        &.double-photo .right {
+            .column(5);
+            float: right;
+        }
+    }
+
+    .school-details {
+
+        .left {
+            .column(5);
+        }
+
+        .right {
+            .column(7);
+        }
+
+        .school-head-wrapper {
+            margin: 0;
+        }
+
+        .image {
+            max-width: none;
+        }
+    }
+}
+
+/*Bottom align the brochure and video links*/
+/* Don't nest this because using the @supports tag within nested
+css caused an issue when the css was compressed on the live site */
+@supports (flex: 1) {
+    .type-programme .school-details .row {
+
+        display: flex;
+
+        .right {
+            position: relative;
+            flex: 1; /* makes it 100% of the row height */
+
+            .align-bottom {
+                position: absolute;
+                bottom: 0;
+                width: 90%;
+            }
+
+            .align-second-bottom {
+                width: 90%;
+                position: absolute;
+                bottom: 53px;
+            }
+        }
     }
 }
 

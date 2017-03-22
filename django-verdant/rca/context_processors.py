@@ -31,4 +31,6 @@ def global_vars(request):
         'global_reachout_partnerships': REACHOUT_PARTNERSHIPS_CHOICES,
         'global_categories': SUSTAINRCA_CATEGORY_CHOICES,
         'GOOGLE_ANALYTICS_ACCOUNT': settings.GOOGLE_ANALYTICS_ACCOUNT,
+        'SILVERPOP_ID': settings.SILVERPOP_ID,
+        'SILVERPOP_BRANDEDDOMAINS': settings.SILVERPOP_BRANDEDDOMAINS,
     }
