@@ -130,11 +130,15 @@
     min-height: 100vh;
     z-index: 4000;
     background-color: #5b5a5a;
-    transform: translate3d(0,0,0);
-    -webkit-transform: translate3d(0,0,0);
-    transform: translate3d(@sidebarWidth, 0, 0);
-    -webkit-transform: translate3d(@sidebarWidth, 0, 0);
-    transition: transform 300ms ease;
+    
+    @media screen and ( min-width : 768px ) {
+        top: 36px;
+        transform: translate3d(0,0,0);
+        -webkit-transform: translate3d(0,0,0);
+        transform: translate3d(@sidebarWidth, 0, 0);
+        -webkit-transform: translate3d(@sidebarWidth, 0, 0);
+        transition: transform 300ms ease;
+    }
 
     // BEM not possible, have to beat specificity
     input,
@@ -146,7 +150,7 @@
     textarea,
     select,
     select:focus {
-        @media screen and ( max-width : 768px ) {
+        @media screen and ( min-width : 768px ) {
             font-size: 16px;
         }
     }
@@ -155,9 +159,20 @@
         color: #fff;
     }
 
+    input,
+    textarea,
+    select,
+    select:focus {
+        @media screen and ( min-width : 768px ) {
+            font-size: 16px;
+        }
+    }
+
     &--show {
-        transform: translate3d(0, 0, 0);
-        -webkit-transform: translate3d(0,0,0);
+        @media screen and ( min-width : 768px ) {
+            transform: translate3d(0, 0, 0);
+            -webkit-transform: translate3d(0,0,0);
+        }
     }
 
     &__inner {

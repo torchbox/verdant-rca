@@ -84,7 +84,9 @@ html, body {
         transform 300ms ease;
 
     &--shift-left {
-        transform: translate3d(-@sidebarWidth, 0, 0);
+        @media screen and ( min-width : 768px ) {
+            transform: translate3d(-@sidebarWidth, 0, 0);
+        }
     }
 }
 
