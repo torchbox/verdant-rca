@@ -12,7 +12,7 @@
         <section class="body-text">
             <div class="bc3 intro">{{ page.intro|richtext }}</div>
 
-            {{ page.body }}
+            {% include_block page.body %}
 
         </section>
 
