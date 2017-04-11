@@ -25,6 +25,7 @@ class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
     intro = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
     # TODO: a single download field or part of a streamfield? https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/860#update-41868871
+    # download = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
 
     body = StreamField(StandardStreamBlock())
 
