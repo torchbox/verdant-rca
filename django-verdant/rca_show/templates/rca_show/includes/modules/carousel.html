@@ -1,7 +1,7 @@
 {% load wagtailimages_tags wagtailembeds_tags %}
 
 {% if carousel_items %}
-    <section class="row{% if carousel_items|length = 1 %} single-carousel{% endif %}">
+    <section class="row{% if carousel_items|length == 1 %} single-carousel{% endif %}">
         <ul class="carousel paginated">
             {% for carousel_item in carousel_items %}
                 {% if carousel_item.image %}
