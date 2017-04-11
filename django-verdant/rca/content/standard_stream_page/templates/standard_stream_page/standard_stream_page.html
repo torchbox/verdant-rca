@@ -1,0 +1,31 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{# TODO: Check if we need a separate body class for this type of page #}
+{% block body_class %}type-standard{% endblock %}
+
+{% block content %}
+    <h1 class="h1">{{ page.title }}</h1>
+    {% include "rca/includes/modules/strapline.html" %}
+    <section class="row">
+
+        <section class="body-text">
+            <div class="bc3 intro">{{ page.intro|richtext }}</div>
+
+            {{ page.body }}
+
+        </section>
+
+        <section class="four">
+            <div class="single borders">
+                {% include "rca/includes/modules/share-button.html" %}
+            </div>
+        </section>
+
+    </section>
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" collapseToday=page.collapse_upcoming_events %}
+{% endblock %}
