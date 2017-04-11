@@ -32,7 +32,7 @@ class QuoteBlock(blocks.StructBlock):
 class CalloutBlock(blocks.StructBlock):
     title = blocks.CharBlock(max_length=255)
     text = blocks.TextBlock()
-    link = PageChooserBlock()
+    link_page = PageChooserBlock()
     image = ImageChooserBlock(required=False)
 
     class Meta:
