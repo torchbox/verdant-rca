@@ -9,8 +9,8 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
-from rca.content.standard_stream_page.blocks import StandardStreamBlock
 from rca.models import SocialFields, SidebarBehaviourFields, RelatedLinkMixin
+from .blocks import StandardStreamBlock
 
 
 class StandardStreamPageRelatedLink(Orderable, RelatedLinkMixin):
