@@ -1,0 +1,61 @@
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags %}
+
+{% if value.image.image %}
+    <li>
+        <div class="image {% if value.image.image.is_portrait %}portrait{% else %}landscape{% endif %}">
+            {% if item_link %}<a href="{{ item_link }}">{% endif %}
+                {% image value.image.image width-1000 %}
+            {% if item_link %}</a>{% endif %}
+        </div>
+
+        {% if value.image.overlay_text or value.image.image.title or value.image.image.medium or value.image.image.dimensions or value.image.image.permission or value.image.image.photographer %}
+
+            {% if item_link %}
+                <a href="{{ item_link }}" class="{% if not overlayvisible %}hover-{% endif %}content">
+            {% else %}
+                <div class="{% if not overlayvisible %}hover-{% endif %}content">
+            {% endif %}
+
+                {% if value.image.overlay_text %}
+                    <h3 class="bc1">
+                        {{ value.image.overlay_text }}
+                        {% if item_link %}
+                            ...<span class="bc4 caps">Continue</span>
+                        {% endif %}
+                    </h3>
+                {% endif %}
+                <p class="caption a4">{{ value.image.image.caption_html }}</p>
+
+            {% if item_link %}
+                </a>
+            {% else %}
+                </div>
+            {% endif %}
+        {% endif %}
+
+
+        {% comment %} Repeat overlay and caption text for mobile {% endcomment %}
+        {% if value.image.overlay_text or value.image.image.title or value.image.image.medium or value.image.image.dimensions or value.image.image.permission or value.image.image.photographer %}
+            <div class="mobilecaption">
+            {% if value.image.overlay_text %}
+                <h3 class="bc1">
+                    {% if item_link %}
+                            <a href="{{ item_link }}">
+                        {% endif %}
+                    {{ value.image.overlay_text }}
+                    {% if item_link %}
+                        ...<span class="bc4 caps">Continue</span></a>
+                    {% endif %}
+                </h3>
+            {% endif %}
+            {% comment %} only show caption on mobile if there is no overlay text {% endcomment %}
+            {% if not value.image.overlay_text %}
+                {% if value.image.image.title or value.image.image.medium or value.image.image.dimensions or value.image.image.permission or value.image.image.photographer %}
+                    <p class="caption a4">{{ value.image.image.caption_html }}</p>
+                {% endif %}
+            {% endif %}
+            </div>
+        {% endif %}
+    </li>
+
+{% endif %}
