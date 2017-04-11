@@ -42,11 +42,11 @@ class CalloutBlock(blocks.StructBlock):
 
 class CarouselItemBlock(blocks.StructBlock):
     image = ImageBlock()
-    link = PageChooserBlock(required=False, label="External link")
-    link_page = blocks.URLBlock(required=False)
+    link = blocks.URLBlock(required=False, label="External link")
+    link_page = PageChooserBlock(required=False)
 
     def get_context(self, value):
-        item_link = value.link_page.url if value.link_page else value.link
+        item_link = value['link_page'].url if value.get('link_page') else value['link']
 
         context = super(CarouselItemBlock, self).get_context(value)
         context.update({
