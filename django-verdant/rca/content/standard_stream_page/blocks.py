@@ -58,20 +58,16 @@ class CarouselItemBlock(blocks.StructBlock):
         template = "standard_stream_page/blocks/carousel_item_block.html"
 
 
-class CarouselBlock(blocks.StructBlock):
-    carousel_items = blocks.ListBlock(CarouselItemBlock())
-
-    class Meta:
-        template = "standard_stream_page/blocks/carousel_block.html"
-
-
 class StandardStreamBlock(blocks.StreamBlock):
     paragraph = blocks.RichTextBlock()
     image = ImageBlock()
     quote = QuoteBlock()
     embed = EmbedBlock()
     callout = CalloutBlock()
-    carousel = CarouselBlock()
+    carousel = blocks.ListBlock(
+        CarouselItemBlock(),
+        template="standard_stream_page/blocks/carousel_block.html"
+    )
 
     class Meta:
         template = "standard_stream_page/blocks/stream_block.html"

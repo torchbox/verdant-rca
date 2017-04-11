@@ -2,7 +2,8 @@ from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
 from taggit.models import TaggedItemBase
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, PublishingPanel
+from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, MultiFieldPanel, PublishingPanel, \
+    StreamFieldPanel
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
@@ -63,7 +64,7 @@ class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
         FieldPanel('title', classname="full title"),
         FieldPanel('strapline', classname="full"),
         FieldPanel('intro', classname="full"),
-        # FieldPanel('body', classname="full"),
+        StreamFieldPanel('body'),
         InlinePanel('related_links', label="Related links"),
         FieldPanel('twitter_feed'),
     ]
