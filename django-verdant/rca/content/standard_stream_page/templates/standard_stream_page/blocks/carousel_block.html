@@ -1,0 +1,9 @@
+{% load wagtailcore_tags wagtailimages_tags wagtailembeds_tags %}
+
+<section class="row{% if value.carousel_items|length == 1 %} single-carousel{% endif %}">
+    <ul class="carousel paginated">
+        {% for carousel_item in value.carousel_items %}
+            {% include_block carousel_item %}
+        {% endfor %}
+    </ul>
+</section>

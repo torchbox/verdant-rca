@@ -40,13 +40,38 @@ class CalloutBlock(blocks.StructBlock):
         template = "standard_stream_page/blocks/callout_block.html"
 
 
+class CarouselItemBlock(blocks.StructBlock):
+    image = ImageBlock()
+    link = PageChooserBlock(required=False, label="External link")
+    link_page = blocks.URLBlock(required=False)
+
+    def get_context(self, value):
+        item_link = value.link_page.url if value.link_page else value.link
+
+        context = super(CarouselItemBlock, self).get_context(value)
+        context.update({
+            'item_link': item_link,
+        })
+        return context
+
+    class Meta:
+        template = "standard_stream_page/blocks/carousel_item_block.html"
+
+
+class CarouselBlock(blocks.StructBlock):
+    carousel_items = blocks.ListBlock(CarouselItemBlock())
+
+    class Meta:
+        template = "standard_stream_page/blocks/carousel_block.html"
+
+
 class StandardStreamBlock(blocks.StreamBlock):
     paragraph = blocks.RichTextBlock()
     image = ImageBlock()
     quote = QuoteBlock()
     embed = EmbedBlock()
     callout = CalloutBlock()
-    # TODO: carousel
+    carousel = CarouselBlock()
 
     class Meta:
         template = "standard_stream_page/blocks/stream_block.html"

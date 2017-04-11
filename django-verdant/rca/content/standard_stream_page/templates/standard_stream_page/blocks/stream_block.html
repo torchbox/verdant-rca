@@ -1,3 +1,5 @@
+{% load wagtailcore_tags %}
+
 {% for block in value %}
-    {{ block }}
+    {% include_block block %}
 {% endfor %}
