@@ -174,7 +174,7 @@ INSTALLED_APPS = (
     'taxonomy',
     'donations',
     'rca',
-    'rca.content.standard_stream_page',
+    'rca.standard_stream_page',
     'rca_signage',
     'rca_ldap',
     'rca_show',
