@@ -1,0 +1,21 @@
+{% load wagtailimages_tags %}
+
+
+{# TODO: add layout based on value.position (can be 'full' or 'right') #}
+<div>{{ value.position }}</div>
+
+<blockquote>
+    {{ value.quotation }}
+
+    {% if value.quotee %} &mdash; {{ value.quotee }}
+
+        {% if value.quotee_job_title %}
+            ({{ value.quotee_job_title }})
+        {% endif %}
+
+    {% endif %}
+
+    {% if value.image %}
+        {% image value.image fill-200x400-c100 %}
+    {% endif %}
+</blockquote>
