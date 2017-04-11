@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+{# TODO: add layout. Block should e right-aligned #}
+<div>
+    <a href="{% pageurl value.link %}">
+
+        <p>{{ value.title }}</p>
+
+        <p>
+            {{ value.text }}
+
+            <span>read more</span>
+        </p>
+
+        {% if value.image %}
+            {% image value.image fill-400x300-c100 %}
+        {% endif %}
+
+    </a>
+</div>

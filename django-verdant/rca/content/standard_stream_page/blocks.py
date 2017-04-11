@@ -1,4 +1,5 @@
 from wagtail.wagtailadmin import blocks
+from wagtail.wagtailcore.blocks import PageChooserBlock
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
@@ -28,13 +29,24 @@ class QuoteBlock(blocks.StructBlock):
         template = "standard_stream_page/blocks/quote_block.html"
 
 
+class CalloutBlock(blocks.StructBlock):
+    title = blocks.CharBlock(max_length=255)
+    text = blocks.TextBlock()
+    link = PageChooserBlock()
+    image = ImageChooserBlock(required=False)
+
+    class Meta:
+        icon = "view"
+        template = "standard_stream_page/blocks/callout_block.html"
+
+
 class StandardStreamBlock(blocks.StreamBlock):
     paragraph = blocks.RichTextBlock()
     image = ImageBlock()
     quote = QuoteBlock()
     embed = EmbedBlock()
+    callout = CalloutBlock()
     # TODO: carousel
-    # TODO: Right-hand callout block
 
     class Meta:
         template = "standard_stream_page/blocks/stream_block.html"
