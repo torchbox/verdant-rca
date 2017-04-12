@@ -1,21 +1,51 @@
 {% load wagtailimages_tags %}
 
+{# Full-width quote #}
+{% if value.position == 'full' %}
 
-{# TODO: add layout based on value.position (can be 'full' or 'right') #}
-<div>{{ value.position }}</div>
+    {% spaceless %}
+    <div class="blockquote-{{ value.position }}">
+        <blockquote class="blockquote-{{ value.position }}__quote">
+            <p class="blockquote-{{ value.position }}__quote-text">
+                {{ value.quotation }}
 
-<blockquote>
-    {{ value.quotation }}
+                <span>
+                    {% if value.quotee %} 
 
-    {% if value.quotee %} &mdash; {{ value.quotee }}
+                        {{ value.quotee }}
 
-        {% if value.quotee_job_title %}
-            ({{ value.quotee_job_title }})
+                        {% if value.quotee_job_title %}
+                            ({{ value.quotee_job_title }})
+                        {% endif %}
+
+                    {% endif %}
+                </span>
+            </p>
+        </blockquote>
+        <div class="blockquote-{{ value.position }}__image">
+            {% if value.image %}
+                {% image value.image fill-330x400-c100 %}
+            {% endif %}
+        </div>
+    </div>
+    {% endspaceless %}
+
+{# Right-aligned quote #}
+{% else %}
+
+    {% spaceless %}
+    <div class="blockquote-{{ value.position }}">
+        {{ value.quotation }}
+        {% if value.quotee %} 
+
+            {{ value.quotee }}
+
+            {% if value.quotee_job_title %}
+                ({{ value.quotee_job_title }})
+            {% endif %}
+
         {% endif %}
+    </div>
+    {% endspaceless %}
 
-    {% endif %}
-
-    {% if value.image %}
-        {% image value.image fill-200x400-c100 %}
-    {% endif %}
-</blockquote>
+{% endif %}
