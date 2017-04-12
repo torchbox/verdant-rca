@@ -2750,19 +2750,37 @@ class HomePage(Page, SocialFields):
             })\
             .order_by('-latest_date')
         blog = RcaBlogPage.objects.filter(live=True, show_on_homepage=True).order_by('-date')
-        student_stories = StandardPage.objects\
-            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
-            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .extra(select={'is_student_story': True})\
-            .order_by('?')
-        alumni_stories = StandardPage.objects\
-            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .extra(select={'is_alumni_story': True})\
-            .order_by('?')
         student = NewStudentPage.objects.filter(live=True, show_on_homepage=True).order_by('random_order')
         rcanow = RcaNowPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
         review = ReviewPage.objects.filter(live=True, show_on_homepage=True).order_by('?')
         tweets = [[], [], [], [], []]
+
+        # Get all kinds of student stories
+        student_stories_standard = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
+        student_stories_standard_stream = StandardStreamPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardStreamPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
+
+        student_stories = Page.objects.live()\
+            .filter(models.Q(pk__in=student_stories_standard_stream) | models.Q(pk__in=student_stories_standard))\
+            .annotate(is_student_story=models.Value(True, output_field=models.BooleanField())) \
+            .order_by('?')
+
+        # Get all kinds of alumni stories
+        alumni_stories_standard = StandardPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+
+        alumni_stories_standard_stream = StandardStreamPage.objects\
+            .filter(show_on_homepage=True, tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+
+        alumni_stories = Page.objects.live()\
+            .filter(models.Q(pk__in=alumni_stories_standard) | models.Q(pk__in=alumni_stories_standard_stream))\
+            .annotate(is_alumni_story=models.Value(True, output_field=models.BooleanField()))\
+            .order_by('?')
 
         if exclude:
             news = news.exclude(id__in=exclude)
