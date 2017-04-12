@@ -4,20 +4,21 @@
 {% block body_class %}type-standard-stream{% endblock %}
 
 {% block content %}
-    <h1 class="h1">{{ page.title }}</h1>
-    {% include "rca/includes/modules/strapline.html" %}
-    {% include "rca/includes/modules/share-button.html" %}
-    <section class="row">
+    <div class="stream-page">
+        <h1 class="h1">{{ page.title }}</h1>
+        {% include "rca/includes/modules/strapline.html" %}
+        <section class="row">
 
-        <section class="body-text-style">
-            <div class="bc3 intro">{{ page.intro|richtext }}</div>
+            <section class="body-text-style">
+                <div class="bc3 intro">{{ page.intro|richtext }}</div>
 
-            {% include_block page.body %}
+                {% include_block page.body %}
+
+            </section>
 
         </section>
-
-    </section>
-    {% include "rca/includes/modules/twitter-feed.html" %}
+        {% include "rca/includes/modules/twitter-feed.html" %}
+    </div>
 {% endblock %}
 
 {% block sidebar %}
