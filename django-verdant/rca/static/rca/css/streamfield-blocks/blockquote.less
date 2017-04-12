@@ -1,0 +1,75 @@
+/**
+ * Blockquote block
+ */
+
+
+.blockquote-full {
+    margin: 50px 0;
+
+    @media @media-desktop-small {
+        display: flex;    
+    }
+
+    &__quote {
+        display: inline-block;
+        vertical-align: top;
+        margin: 0;
+        padding: 40px;
+        width: 100%;
+        background-color: #F2F2F2;
+
+        @media @media-desktop-small {
+            width: 50%;
+        }
+
+        @media @media-desktop-regular {
+            width: 75%;
+        }
+    }
+
+    &__quote-text {
+        line-height: 1.5;
+        font-size: @font-size-22;
+
+        @media @media-desktop-small {
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        span {
+            margin-top: 10px;
+            display: block;
+            font-family: @font-family-benton;
+            font-size: @font-size-16;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    }
+
+    &__image {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+
+        @media @media-desktop-small {
+            width: 50%;
+        }
+
+        @media @media-desktop-regular {
+            width: 25%;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+
+            @media @media-desktop-small {
+                width: auto;
+                height: 100%;
+            }
+
+        }
+    }
+}
