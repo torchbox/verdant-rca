@@ -621,7 +621,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .values_list('pk', flat=True)
 
         student_stories = Page.objects.live()\
-            .filter(models.Q(pk__in=student_stories_standard_stream))\
+            .filter(models.Q(pk__in=student_stories_standard_stream) | models.Q(pk__in=student_stories_standard))\
             .exclude(pk__in=featured_ids) \
             .annotate(is_student_story=models.Value(True, output_field=models.BooleanField())) \
             .order_by('?')
@@ -636,7 +636,7 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
         alumni_stories = Page.objects.live()\
             .filter(models.Q(pk__in=alumni_stories_standard) | models.Q(pk__in=alumni_stories_standard_stream))\
             .exclude(pk__in=featured_ids) \
-            .annotate(is_student_story=models.Value(True, output_field=models.BooleanField()))\
+            .annotate(is_alumni_story=models.Value(True, output_field=models.BooleanField()))\
             .order_by('?')
 
         if exclude:
