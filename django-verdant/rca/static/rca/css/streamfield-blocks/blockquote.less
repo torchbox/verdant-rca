@@ -2,7 +2,7 @@
  * Blockquote block
  */
 
-
+// Full-width blockquote with image
 .blockquote-full {
     margin: 50px 0;
 
@@ -11,14 +11,14 @@
     }
 
     &__quote {
-        display: inline-block;
-        vertical-align: top;
         margin: 0;
         padding: 40px;
         width: 100%;
         background-color: #F2F2F2;
 
         @media @media-desktop-small {
+            display: inline-block;
+            vertical-align: top;
             width: 50%;
         }
 
@@ -41,7 +41,6 @@
             margin-top: 10px;
             display: block;
             font-family: @font-family-benton;
-            font-size: @font-size-16;
             font-size: 16px;
             font-weight: bold;
             text-transform: uppercase;
@@ -49,11 +48,10 @@
     }
 
     &__image {
-        display: inline-block;
-        vertical-align: top;
-        width: 100%;
-
         @media @media-desktop-small {
+            display: inline-block;
+            vertical-align: top;
+            width: 100%;
             width: 50%;
         }
 
@@ -73,3 +71,58 @@
         }
     }
 }
+
+// Right-aligned blockquote
+.blockquote-right {
+    margin: 50px 0;
+    
+    &__body {
+        @media @media-desktop-regular {
+            display: inline-block;
+            vertical-align: top;
+            width: 70%;
+            padding: 0 8% 0 0;
+        }
+    }
+
+    &__quote {
+        margin-top: 20px;
+        border-top: 1px solid #DFDFDF;
+
+        @media @media-desktop-regular {
+            display: inline-block;
+            vertical-align: top;
+            width: 30%;
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.5;
+            font-size: @font-size-22;
+        }
+
+        span {
+            margin-top: 10px;
+            display: block;
+            font-family: @font-family-benton;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

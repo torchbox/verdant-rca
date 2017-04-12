@@ -35,16 +35,28 @@
 
     {% spaceless %}
     <div class="blockquote-{{ value.position }}">
-        {{ value.quotation }}
-        {% if value.quotee %} 
+        <div class="blockquote-{{ value.position }}__body">
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel turpis tristique nunc dapibus viverra eu a libero. Quisque consequat arcu id sollicitudin luctus. Aliquam sit amet pretium risus, at placerat felis. Mauris auctor, risus at dignissim fermentum, diam augue accumsan libero, ut tincidunt enim orci at arcu. Nullam egestas congue nisl. Mauris tempus eros purus, eu imperdiet sem tincidunt ac. Sed sit amet blandit felis, ut suscipit diam. Nulla facilisi. Maecenas dapibus, felis at finibus aliquam, neque justo mollis magna, at scelerisque turpis leo vitae nulla.
+            </p>
+        </div>
+        <div class="blockquote-{{ value.position }}__quote">
+            <p>
+                {{ value.quotation }}
 
-            {{ value.quotee }}
+                <span>
+                    {% if value.quotee %} 
 
-            {% if value.quotee_job_title %}
-                ({{ value.quotee_job_title }})
-            {% endif %}
+                        {{ value.quotee }}
 
-        {% endif %}
+                        {% if value.quotee_job_title %}
+                            ({{ value.quotee_job_title }})
+                        {% endif %}
+
+                    {% endif %}
+                </span>
+            </p>
+        </div>
     </div>
     {% endspaceless %}
 
