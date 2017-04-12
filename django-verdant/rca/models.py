@@ -11,7 +11,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.signals import user_logged_in
 from django.db import models
-from django.db.models import Min, Max
 from django.db.models.signals import pre_delete
 from django.core.serializers.json import DjangoJSONEncoder
 
@@ -602,17 +601,6 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
-        student_stories = StandardPage.objects\
-            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
-            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .exclude(id__in=featured_ids) \
-            .extra(select={'is_student_story': True})\
-            .order_by('?')
-        alumni_stories = StandardPage.objects\
-            .filter(live=True, show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
-            .exclude(id__in=featured_ids) \
-            .extra(select={'is_alumni_story': True})\
-            .order_by('?')
         lightboxes = LightboxGalleryPage.objects \
             .filter(live=True, show_on_school_page=True, related_schools__school=self.school) \
             .exclude(id__in=featured_ids) \
@@ -622,6 +610,34 @@ class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
             .exclude(id__in=featured_ids) \
             .order_by('-latest_revision_created_at')
 
+        # Get all kinds of student stories
+        student_stories_standard = StandardPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
+        student_stories_standard_stream = StandardStreamPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.STUDENT_STORY_TAG)\
+            .exclude(tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+            .values_list('pk', flat=True)
+
+        student_stories = Page.objects.live()\
+            .filter(models.Q(pk__in=student_stories_standard_stream))\
+            .exclude(pk__in=featured_ids) \
+            .annotate(is_student_story=models.Value(True, output_field=models.BooleanField())) \
+            .order_by('?')
+
+        # Get all kinds of alumni stories
+        alumni_stories_standard = StandardPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardPage.ALUMNI_STORY_TAG)\
+
+        alumni_stories_standard_stream = StandardStreamPage.objects\
+            .filter(show_on_school_page=True, tags__name__iexact=StandardStreamPage.ALUMNI_STORY_TAG)\
+
+        alumni_stories = Page.objects.live()\
+            .filter(models.Q(pk__in=alumni_stories_standard) | models.Q(pk__in=alumni_stories_standard_stream))\
+            .exclude(pk__in=featured_ids) \
+            .annotate(is_student_story=models.Value(True, output_field=models.BooleanField()))\
+            .order_by('?')
 
         if exclude:
             news = news.exclude(id__in=exclude)
@@ -1908,7 +1924,7 @@ class EventIndex(Page, SocialFields):
         if audience:
             events = events.filter(audience=audience)
 
-        events = events.annotate(start_date=Min('dates_times__date_from'), end_date=Max('dates_times__date_to'))
+        events = events.annotate(start_date=models.Min('dates_times__date_from'), end_date=models.Max('dates_times__date_to'))
         if period== 'past':
             events = events.order_by('start_date').reverse()
         else:
@@ -2016,7 +2032,7 @@ class TalksIndex(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
-        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=Min('dates_times__date_from')).order_by('-start_date')
+        talks = EventItem.past_objects.filter(live=True, audience='rcatalks').annotate(start_date=models.Min('dates_times__date_from')).order_by('-start_date')
 
         talks = talks.distinct()
 
@@ -2559,7 +2575,7 @@ class StandardIndex(Page, SocialFields, OptionalBlockFields, SidebarBehaviourFie
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
         # Get list of events
-        events = EventItem.future_objects.filter(live=True).annotate(start_date=Min('dates_times__date_from')).filter(area=self.events_feed_area).order_by('start_date')
+        events = EventItem.future_objects.filter(live=True).annotate(start_date=models.Min('dates_times__date_from')).filter(area=self.events_feed_area).order_by('start_date')
 
         # Event pagination
         page = request.GET.get('page')
