@@ -173,8 +173,11 @@ INSTALLED_APPS = (
     'webhooks',
     'taxonomy',
     'donations',
+
     'rca',
     'rca.standard_stream_page',
+    'rca.utils',
+
     'rca_signage',
     'rca_ldap',
     'rca_show',

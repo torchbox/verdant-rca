@@ -1,5 +1,5 @@
 HELP_TEXT = {
-    ('rca.RelatedLinkMixin', 'link_text'): 'Link title (or leave blank to use page title)',
+    ('utils.RelatedLinkMixin', 'link_text'): 'Link title (or leave blank to use page title)',
     ('rca.Advert', 'text'): 'bold text',
     ('rca.Advert', 'promoted'): 'Whether to show the advert at the top of the sidebar above all the other items.',
     ('rca.CustomContentModuleBlock', 'image'): 'The image for the module block',

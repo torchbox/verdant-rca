@@ -51,6 +51,11 @@ import stripe
 
 import hashlib
 
+from rca.standard_stream_page.models import StandardStreamPage
+from rca.utils.models import (
+    RelatedLinkMixin, SocialFields, SidebarBehaviourFields,
+    OptionalBlockFields, CarouselItemFields,
+)
 from rca_ee.models import FormPage
 from taxonomy.models import Area, School, Programme
 
@@ -154,6 +159,7 @@ def image_delete(sender, instance, **kwargs):
     # Pass false so FileField doesn't save the model.
     instance.file.delete(False)
 
+
 class RcaRendition(AbstractRendition):
     image = models.ForeignKey('RcaImage', related_name='renditions')
 
@@ -161,6 +167,7 @@ class RcaRendition(AbstractRendition):
         unique_together = (
             ('image', 'filter', 'focal_point_key'),
         )
+
 
 # Receive the pre_delete signal and delete the file associated with the model instance.
 @receiver(pre_delete, sender=RcaRendition)
@@ -350,101 +357,6 @@ DEGREE_TYPE_CHOICES = (
 )
 
 TWITTER_FEED_HELP_TEXT = "Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)"
-# Generic fields to opt out of events and twitter blocks
-class OptionalBlockFields(models.Model):
-    exclude_twitter_block = models.BooleanField(default=False, help_text=help_text('rca.OptionalBlockFields', 'exclude_twitter_block'))
-    exclude_events_sidebar = models.BooleanField(default=False, help_text=help_text('rca.OptionalBlockFields', 'exclude_events_sidebar'))
-    exclude_global_adverts = models.BooleanField(default=False, help_text=help_text('rca.OptionalBlockFields', 'exclude_global_adverts'))
-
-    class Meta:
-        abstract = True
-
-# Generic social fields abstract class to add social image/text to any new content type easily.
-class SocialFields(models.Model):
-    social_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SocialFields', 'social_image'))
-    social_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SocialFields', 'social_text'))
-
-    class Meta:
-        abstract = True
-
-# Fields that configure how the sidebar of a given page should be treated
-class SidebarBehaviourFields(models.Model):
-    collapse_upcoming_events = models.BooleanField(default=False, help_text=help_text('rca.SidebarBehaviourFields', 'collapse_upcoming_events'))
-
-    class Meta:
-        abstract = True
-
-
-# Carousel item abstract class - all carousels basically require the same fields
-class CarouselItemFields(models.Model):
-    image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'image'))
-    overlay_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.CarouselItemFields', 'overlay_text'))
-    link = models.URLField("External link", blank=True, help_text=help_text('rca.CarouselItemFields', 'link'))
-    link_page = models.ForeignKey(Page, on_delete=models.SET_NULL, related_name='+', null=True, blank=True, help_text=help_text('rca.CarouselItemFields', 'link_page'))
-    embedly_url = models.URLField('Vimeo URL', blank=True, help_text=help_text('rca.CarouselItemFields', 'embedly_url'))
-    poster_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.CarouselItemFields', 'poster_image'))
-
-    api_fields = [
-        'image',
-        'overlay_text',
-        'poster_image',
-        'embedly_url',
-        'get_link',
-    ]
-
-    @property
-    def get_link(self):
-        if self.link_page:
-            return self.link_page.url
-        else:
-            return self.link
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('overlay_text'),
-        FieldPanel('link'),
-        PageChooserPanel('link_page'),
-        FieldPanel('embedly_url'),
-        ImageChooserPanel('poster_image'),
-    ]
-
-    class Meta:
-        abstract = True
-
-# Related link item abstract class - all related links basically require the same fields
-class RelatedLinkMixin(models.Model):
-    link = models.ForeignKey(Page, null=True, blank=True, related_name='+', help_text=help_text('rca.RelatedLinkMixin', 'link'))
-    link_external = models.URLField("External link", blank=True, help_text=help_text('rca.RelatedLinkMixin', 'link_external'))
-    link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.RelatedLinkMixin', 'link_text', default="Link title (or leave blank to use page title"))
-
-    api_fields = [
-        'get_link',
-        'get_link_text',
-    ]
-
-    panels = [
-        PageChooserPanel('link'),
-        FieldPanel('link_external'),
-        FieldPanel('link_text'),
-    ]
-
-    def get_link(self):
-        if self.link:
-            return self.link.url
-        else:
-            return self.link_external
-
-    def get_link_text(self):
-        if self.link_text:
-            return self.link_text
-        else:
-            try:
-                return self.link.title
-            except:
-                return None
-
-    class Meta:
-        abstract = True
 
 
 # == Snippet: Advert ==

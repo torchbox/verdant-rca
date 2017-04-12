@@ -9,7 +9,7 @@ from wagtail.wagtailcore.models import Page, Orderable
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
-from rca.models import SocialFields, SidebarBehaviourFields, RelatedLinkMixin
+from rca.utils.models import RelatedLinkMixin, SidebarBehaviourFields, SocialFields
 from .blocks import StandardStreamBlock
 
 

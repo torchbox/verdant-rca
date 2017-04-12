@@ -511,7 +511,7 @@ class MAShowCarouselItemForm(forms.Form):
     image_id = forms.IntegerField(   # name is _id because that's what's going to be saved
         label='Image',
         required=False,
-        help_text=help_text('rca.CarouselItemFields', 'image', default='Landscape images will display better within the carousel than portrait images. Consider sizing all your images to the same dimension - ideally 2000 x 1125 pixels.'),
+        help_text='Landscape images will display better within the carousel than portrait images. Consider sizing all your images to the same dimension - ideally 2000 x 1125 pixels.',
         widget=ImageInput,
     )
 
