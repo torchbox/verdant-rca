@@ -48,8 +48,8 @@ class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
 
     # StandardStreamPage with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the packery separately.
     # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
-    # STUDENT_STORY_TAG = 'student-story'
-    # ALUMNI_STORY_TAG = 'alumni-story'
+    STUDENT_STORY_TAG = 'student-story'
+    ALUMNI_STORY_TAG = 'alumni-story'
 
     @property
     def search_name(self):
