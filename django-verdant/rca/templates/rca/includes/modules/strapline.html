@@ -1,3 +1,9 @@
 {% if self.strapline %}
+    {% spaceless %}
     <div class="bc0 strapline">{{ self.strapline }}</div>
+    <div class="icons">
+        {% include "rca/includes/modules/share-button.html" %}
+        <a href="" class="stream-page__download"></a>
+    </div>
+    {% endspaceless %}
 {% endif %}

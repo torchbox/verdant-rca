@@ -1,0 +1,35 @@
+/**
+ * Base
+ * Override existing styles
+ */
+
+.stream-page {
+    .strapline {
+        display: inline-block;
+        vertical-align: top;
+        width: 85%;
+    }
+
+    .icons {
+        display: inline-block;
+        vertical-align: top;
+        width: 15%;
+
+        .share {
+            float: right;
+        }
+    }
+
+    &__download {
+        margin-right: 20px;
+        width: 48px;
+        height: 48px;
+        float: right;
+        background-color: #0C99FF;
+        transition: background-color 300ms ease;
+
+        &:hover {
+            background-color: darken(#0C99FF, 10%); 
+        }
+    }
+}
