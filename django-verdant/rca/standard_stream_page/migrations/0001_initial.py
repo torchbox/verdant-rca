@@ -76,6 +76,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='standardstreampage',
             name='tags',
-            field=modelcluster.contrib.taggit.ClusterTaggableManager(blank=True, help_text='A comma-separated list of tags.', through='standard_stream_page.StandardStreamPageTag', to='taggit.Tag', verbose_name='Tags'),
+            field=modelcluster.contrib.taggit.ClusterTaggableManager(blank=True, help_text=b'To make this page appear in packery lists, you can use the following tags: student-story, alumni-story.', through='standard_stream_page.StandardStreamPageTag', to='taggit.Tag', verbose_name='Tags'),
         ),
     ]
