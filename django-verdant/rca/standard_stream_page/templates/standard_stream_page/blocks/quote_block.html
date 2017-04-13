@@ -24,12 +24,14 @@
                 </span>
             </p>
         </blockquote>
-        <div class="blockquote-{{ value.position }}__image">
-            {% if value.image %}
-                {% image value.image fill-330x400-c100 %}
+
+        
+        {% if value.image %}
+
+            {% image value.image fill-330x400-c100 as background %}
+                <div class="blockquote-{{ value.position }}__image" style="background-image: url('{{ background.url }}');"></div>
             {% endif %}
-        </div>
-    </div>
+
 
 {# Right-aligned quote #}
 {% else %}
