@@ -10,7 +10,7 @@
         {% spaceless %}
             {% include "rca/includes/modules/strapline.html" %}
 
-            <div class="icons">
+            <div class="{% if self.strapline %}icons{% endif %}">
                 {% include "rca/includes/modules/share-button.html" %}
 
                 {% if page.download %}
