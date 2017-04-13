@@ -6,7 +6,19 @@
 {% block content %}
     <div class="stream-page">
         <h1 class="h1">{{ page.title }}</h1>
-        {% include "rca/includes/modules/strapline.html" with showShareButton=True %}
+
+        {% spaceless %}
+            {% include "rca/includes/modules/strapline.html" %}
+
+            <div class="icons">
+                {% include "rca/includes/modules/share-button.html" %}
+
+                {% if page.download %}
+                    <a href="{{ page.download.url }}" class="stream-page__download"></a>
+                {% endif %}
+            </div>
+        {% endspaceless %}
+
         <section class="row">
 
             <section class="body-text-style">
