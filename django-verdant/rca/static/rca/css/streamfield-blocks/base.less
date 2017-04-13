@@ -7,25 +7,57 @@
     .strapline {
         display: inline-block;
         vertical-align: top;
-        width: 85%;
+        width: 75%;
     }
 
     .icons {
         display: inline-block;
         vertical-align: top;
-        width: 15%;
+        width: 100%;
+
+        .share-wrapper {
+            display: inline-block;
+        }
 
         .share {
             float: right;
         }
     }
 
+    .icons--right {
+        width: 100%;
+
+        .share-wrapper {
+            float: left;
+        }
+
+        .stream-page__download {
+            float: left;
+            margin-left: 20px;
+        }
+
+        @media @media-desktop-small {
+            width: 25%;
+
+            .share-wrapper {
+                float: right;
+            }
+
+            .stream-page__download {
+                float: right;
+                margin-left: 0;
+            }
+        }
+    }
+
     &__download {
         position: relative;
+        display: inline-block;
+        vertical-align: top;
         margin-right: 20px;
+        float: left;
         width: 48px;
         height: 48px;
-        float: right;
         background-color: #0C99FF;
         transition: background-color 300ms ease;
 
@@ -48,8 +80,10 @@
             -moz-transform:scale(0.6);
             -moz-transform-origin: 0 0;
             position: absolute;
-            right: 17px;
+            right: 0;
+            left: 0;
             top: 16px;
+            margin: auto;
         }
     }
 }
