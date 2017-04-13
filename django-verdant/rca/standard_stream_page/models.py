@@ -6,6 +6,7 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, InlinePanel, MultiFie
     StreamFieldPanel
 from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailcore.models import Page, Orderable
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailsearch import index
 
@@ -22,10 +23,14 @@ class StandardStreamPageTag(TaggedItemBase):
 
 
 class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
+    # StandardStreamPage with the following tags can be listed on the packery separately.
+    # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
+    STUDENT_STORY_TAG = 'student-story'
+    ALUMNI_STORY_TAG = 'alumni-story'
+
     intro = RichTextField(blank=True)
     strapline = models.CharField(max_length=255, blank=True)
-    # TODO: a single download field or part of a streamfield? https://torchbox.codebasehq.com/projects/rca-django-cms-project/tickets/860#update-41868871
-    # download = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+')
+    download = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
     body = StreamField(StandardStreamBlock())
 
@@ -36,20 +41,21 @@ class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
     related_programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
     related_area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='+')
 
-    tags = ClusterTaggableManager(through=StandardStreamPageTag, blank=True)
+    tags = ClusterTaggableManager(
+        through=StandardStreamPageTag, blank=True,
+        help_text="To make this page appear in packery lists, you can use the following tags: %s." % ', '.join([
+            STUDENT_STORY_TAG,
+            ALUMNI_STORY_TAG,
+        ])
+    )
 
     show_on_homepage = models.BooleanField(default=False)
     show_on_school_page = models.BooleanField(default=False)
 
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
-        # index.SearchField('body'),
+        index.SearchField('body'),
     ]
-
-    # StandardStreamPage with a STUDENT_STORY_TAG or ALUMNI_STORY_TAG can be listed on the packery separately.
-    # TODO: This can be done more elegantly with proxy models. See related PR here: https://github.com/torchbox/wagtail/pull/1736/files
-    STUDENT_STORY_TAG = 'student-story'
-    ALUMNI_STORY_TAG = 'alumni-story'
 
     @property
     def search_name(self):
@@ -66,6 +72,7 @@ class StandardStreamPage(Page, SocialFields, SidebarBehaviourFields):
         FieldPanel('strapline', classname="full"),
         FieldPanel('intro', classname="full"),
         StreamFieldPanel('body'),
+        DocumentChooserPanel('download'),
         InlinePanel('related_links', label="Related links"),
         FieldPanel('twitter_feed'),
     ]
