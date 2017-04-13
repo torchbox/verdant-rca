@@ -48,6 +48,9 @@
     }
 
     &__image {
+        background-size: cover;
+        min-height: 350px;
+
         @media @media-desktop-small {
             display: inline-block;
             vertical-align: top;
@@ -57,17 +60,6 @@
 
         @media @media-desktop-regular {
             width: 25%;
-        }
-
-        img {
-            width: 100%;
-            height: auto;
-
-            @media @media-desktop-small {
-                width: auto;
-                height: 100%;
-            }
-
         }
     }
 }
