@@ -57,6 +57,7 @@ class CalloutBlock(blocks.StructBlock):
     text = blocks.TextBlock()
     link_page = PageChooserBlock()
     image = ImageChooserBlock(required=False)
+    left_hand_text = blocks.RichTextBlock()
 
     class Meta:
         icon = "view"

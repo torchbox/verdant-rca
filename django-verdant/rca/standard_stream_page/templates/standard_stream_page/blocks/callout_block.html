@@ -1,15 +1,9 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{# TODO: add layout. Block should e right-aligned #}
 {% spaceless %}
 <div class="callout-block">
     <div class="callout-block__left">
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel turpis tristique nunc dapibus viverra eu a libero. Quisque consequat arcu id sollicitudin luctus. Aliquam sit amet pretium risus, at placerat felis. Mauris auctor, risus at dignissim fermentum, diam augue accumsan libero, ut tincidunt enim orci at arcu. Nullam egestas congue nisl. Mauris tempus eros purus, eu imperdiet sem tincidunt ac. Sed sit amet blandit felis, ut suscipit diam. Nulla facilisi. Maecenas dapibus, felis at finibus aliquam, neque justo mollis magna, at scelerisque turpis leo vitae nulla.
-        </p>
-        <p>
-            Integer eget magna urna. Maecenas commodo tortor id libero eleifend, non sodales lorem viverra. Ut varius nulla diam, a ultricies urna mollis in. Nunc at velit iaculis, placerat nisi lacinia, euismod ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus a volutpat nibh, et fringilla urna. Vestibulum elementum condimentum scelerisque. Nam eleifend nunc vitae fermentum fringilla. Fusce tempus, nulla vitae fermentum mattis, ipsum purus auctor ipsum, sit amet volutpat neque magna id sem. Suspendisse potenti. Nunc felis augue, rhoncus auctor erat a, dapibus pellentesque dui.
-        </p>
+        {% include_block value.left_hand_text %}
     </div>
     <a class="callout-block__right" href="{% pageurl value.link_page %}">
         <div class="callout-block__content">
