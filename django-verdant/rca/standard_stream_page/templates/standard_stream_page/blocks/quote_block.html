@@ -1,9 +1,11 @@
-{% load wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+{% spaceless %}
 
 {# Full-width quote #}
 {% if value.position == 'full' %}
 
-    {% spaceless %}
     <div class="blockquote-{{ value.position }}">
         <blockquote class="blockquote-{{ value.position }}__quote">
             <p class="blockquote-{{ value.position }}__quote-text">
@@ -28,16 +30,14 @@
             {% endif %}
         </div>
     </div>
-    {% endspaceless %}
 
 {# Right-aligned quote #}
 {% else %}
 
-    {% spaceless %}
     <div class="blockquote-{{ value.position }}">
         <div class="blockquote-{{ value.position }}__body">
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel turpis tristique nunc dapibus viverra eu a libero. Quisque consequat arcu id sollicitudin luctus. Aliquam sit amet pretium risus, at placerat felis. Mauris auctor, risus at dignissim fermentum, diam augue accumsan libero, ut tincidunt enim orci at arcu. Nullam egestas congue nisl. Mauris tempus eros purus, eu imperdiet sem tincidunt ac. Sed sit amet blandit felis, ut suscipit diam. Nulla facilisi. Maecenas dapibus, felis at finibus aliquam, neque justo mollis magna, at scelerisque turpis leo vitae nulla.
+                {% include_block value.left_hand_text %}
             </p>
         </div>
         <div class="blockquote-{{ value.position }}__quote">
@@ -58,6 +58,6 @@
             </p>
         </div>
     </div>
-    {% endspaceless %}
 
 {% endif %}
+{% endspaceless %}
