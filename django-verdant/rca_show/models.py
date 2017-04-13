@@ -15,9 +15,10 @@ from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 
+from rca.utils.models import CarouselItemFields, SocialFields
 from taxonomy.models import School, Programme
 
-from rca.models import NewStudentPage, SocialFields, CarouselItemFields, CAMPUS_CHOICES, NewStudentPageQuerySet
+from rca.models import NewStudentPage, CAMPUS_CHOICES, NewStudentPageQuerySet
 
 
 class SuperPage(Page):

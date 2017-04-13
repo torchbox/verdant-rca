@@ -3,7 +3,7 @@
 <section class="packery module row">
     <ul>
         {% for item in packery %}
-            {% if item|content_type = 'newsitem' %}
+            {% if item.specific|content_type == 'newsitem' %}
                 <li class="item half" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -16,7 +16,7 @@
                         </a>
                     </div>
                 </li>
-            {% elif item|content_type = 'staffpage' %}
+            {% elif item.specific|content_type == 'staffpage' %}
                 <li class="item single" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -29,7 +29,7 @@
                         </a>
                     </div>
                 </li>
-            {% elif item|content_type = 'studentpage' %}
+            {% elif item.specific|content_type == 'studentpage' %}
                 {# NB: this is not really displaying a student page, but rather their work #}
 
                 {% with item.carousel_items.all|first as carouselitem %}
@@ -52,7 +52,7 @@
                         </div>
                     </li>
                 {% endwith %}
-            {% elif item|content_type = 'rcanowpage' %}
+            {% elif item.specific|content_type == 'rcanowpage' %}
                 <li class="item half" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -67,7 +67,7 @@
                         </a>
                     </div>
                 </li>
-            {% elif item|content_type = 'researchitem' %}
+            {% elif item.specific|content_type == 'researchitem' %}
                 <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -89,7 +89,7 @@
                         </a>
                     </div>
                 </li>
-            {% elif item|content_type = 'alumnipage' %}
+            {% elif item.specific|content_type == 'alumnipage' %}
                 <li class="item single" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -103,7 +103,7 @@
                         </a>
                     </div>
                 </li>
-             {% elif item|content_type = 'reviewpage' %}
+             {% elif item.specific|content_type == 'reviewpage' %}
                 <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -117,7 +117,7 @@
                         </a>
                     </div>
                 </li>
-             {% elif item|content_type = 'eventitem' %}
+             {% elif item.specific|content_type == 'eventitem' %}
                 <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -144,7 +144,7 @@
                         </a>
                     </div>
                 </li>
-             {% elif item|content_type = 'rcablogpage' %}
+             {% elif item.specific|content_type == 'rcablogpage' %}
                 <li class="item double" data-id="{{ item.id }}">
                     <div class="inner">
                         <a href="{% pageurl item %}">
@@ -161,7 +161,7 @@
                         </a>
                     </div>
                 </li>
-             {% elif item|content_type = 'standardpage' %}
+             {% elif item.specific|content_type == 'standardpage' or item.specific|content_type == 'standardstreampage' %}
                 {# standard pages tagged with either student-story or alumni-story #}
                 {# TODO: should be done with proxy models once PR #1736 is merged #}
                 <li class="item double" data-id="{{ item.id }}">

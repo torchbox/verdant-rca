@@ -1,0 +1,21 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% spaceless %}
+<div class="callout-block">
+    <div class="callout-block__left">
+        {% include_block value.left_hand_text %}
+    </div>
+    <a class="callout-block__right" href="{% pageurl value.link_page %}">
+        <div class="callout-block__content">
+            <h4>{{ value.title }}</h4>
+            <p>
+                {{ value.text }}
+                <span class="callout-block__read-more">read more</span>
+            </p>
+        </div>
+        {% if value.image %}
+            {% image value.image fill-400x250-c100 %}
+        {% endif %}
+    </a>
+</div>
+{% endspaceless %}

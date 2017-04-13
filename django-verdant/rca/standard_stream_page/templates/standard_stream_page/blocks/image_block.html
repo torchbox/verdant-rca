@@ -1,0 +1,9 @@
+{% load wagtailimages_tags %}
+
+<div>
+    {% image value.image width-1000 %}
+
+    {% if value.overlay_text %}
+        <p>{{ value.overlay_text }}</p>
+    {% endif %}
+</div>
