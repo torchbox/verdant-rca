@@ -20,13 +20,11 @@
             <section class="body-text">
 
             <p>
-                These pages let you upload and edit information about yourself for display on the website – in RCANow as a student
-                at the College, as a Research student and in the Show catalogue when you graduate.
-                You can add and edit posts to the <a href="/showcase/rcanow/">RCANow blog</a> and,
-                shortly before your Show, upload a profile for <a href="/showcase/show-rca/">ShowRCA</a> and a show postcard image.
+                These pages let you upload and edit information about yourself for display on the website – as a Research student and as an MA or Research studentin the Show catalogue when you graduate.
+                This is also where you upload an image for your a show postcard image.
             </p>
 
-                <h3>Profile</h3>
+                <h3>{% if SHOW_PAGES_ENABLED %}Step 1: {% endif %}Profile</h3>
                 <p>
                     <strong><a href="{% url 'student-profiles:edit-basic' page_id %}">About you:</a></strong> basic information and contact details
                 </p>
@@ -48,13 +46,8 @@
                     </p>
                 {% endif %}
 
-            <h3>RCA Now</h3>
-            <p>
-                <a href="{% url 'nowpages:overview' %}">Add and edit blog posts featuring your work-in-progress for RCANow</a>
-            </p>
-
                 {% if SHOW_PAGES_ENABLED %}
-                    <h3>Show project Details</h3>
+                    <h3>Step 2: Show project Details</h3>
                     {% if is_phd %}
                         <p>
                             <strong><a href="{% url 'student-profiles:edit-phd-show' page_id %}">Add images, video and a description of your project for ShowRCA</a></strong>
@@ -69,11 +62,19 @@
                         </p>
                     {% endif %}
 
-                    <h3>Postcard upload</h3>
+                    <p>
+                        <strong>Please note</strong>, you need to complete Step&nbsp;1 and tick ‘in&nbsp;this&nbsp;year’s&nbsp;Show’, before you can complete&nbsp;Step&nbsp;2.
+                    </p>
+
+                    <h3>Step 3: Postcard upload</h3>
                     <p>
                         <a href="{% url 'student-profiles:edit-postcard' page_id %}">
                             Upload an image to request 200 postcards for your own use during the Show
                         </a>
+                    </p>
+
+                    <p>
+                        Don't forget to click ‘Save’ between each section. Only click ‘Save and submit’ when you have completed ALL three sections.
                     </p>
                 {% endif %}
 
