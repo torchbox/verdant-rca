@@ -260,6 +260,20 @@ INNOVATIONRCA_PROJECT_TYPES_CHOICES = (
 )
 
 SPECIALISM_CHOICES = (
+    ('2016/17', (
+        ('accessories', 'Accessories'),
+        ('footwear', 'Footwear'),
+        ('knitwear', 'Knitwear'),
+        ('millinery', 'Millinery'),
+        ('knit', 'Knit'),
+        ('mixed-media', 'Mixed-media'),
+        ('print', 'Print'),
+        ('weave', 'Weave'),
+        ('critical-Practice', 'Critical Practice'),
+        ('performance', 'Performance'),
+        ('public-sphere', 'Public Sphere'),
+        ('moving-image', 'Moving Image'),
+    )),
     ('2015/16', (
         ('ads1', 'ADS1'),
         ('ads2', 'ADS2'),
