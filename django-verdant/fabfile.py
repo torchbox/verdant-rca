@@ -11,12 +11,12 @@ env.roledefs = {
     'nginx': ['root@rca1.torchbox.com'],
     'db': ['root@rca1.torchbox.com'],
     'db-notroot': ['rca1.torchbox.com'],
-    'rca2': ['rcawagtail@rca2.bmyrk.torchbox.net'],
+    'rca2': ['rca@web-1-b.rca.bmyrk.torchbox.net'],
 
     # All hosts will be listed here.
-    'production': ['rcawagtail@rca2.bmyrk.torchbox.net', 'rcawagtail@rca3.bmyrk.torchbox.net'],
+    'production': ['rca@web-1-b.rca.bmyrk.torchbox.net'],
 }
-MIGRATION_SERVER = 'rca2.bmyrk.torchbox.net'
+MIGRATION_SERVER = 'web-1-b.rca.bmyrk.torchbox.net'
 
 
 @roles('staging')
@@ -35,18 +35,17 @@ def deploy_staging(branch="staging", gitonly=False):
 
 @roles('production')
 def deploy(gitonly=False):
-    with cd('/usr/local/django/rcawagtail/'):
-        run("git pull")
-        run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
+    run("git pull")
+    run("pip install -r django-verdant/requirements.txt")
 
-        if env['host'] == MIGRATION_SERVER:
-            if not gitonly:
-                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+    if env['host'] == MIGRATION_SERVER:
+        if not gitonly:
+            run("python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
 
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
+        run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+        run("python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-        run("restart")
+    run("restart")
 
 
 @roles('nginx')
@@ -116,7 +115,7 @@ def sync_staging_with_live():
     env.forward_agent = True
     run('fab staging_fetch_live_data')
     run("django-admin.py migrate --settings=rcasite.settings.staging --noinput")
-    run("rsync -avz rcawagtail@rca2.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
+    run("rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
 
 
 @roles('production')
