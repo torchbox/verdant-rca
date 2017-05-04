@@ -9,9 +9,6 @@ env.roledefs = {
     'staging': ['rca@by-staging-1.torchbox.com'],
 
     'nginx': ['root@rca1.torchbox.com'],
-    'db': ['root@rca1.torchbox.com'],
-    'db-notroot': ['rca1.torchbox.com'],
-    'rca2': ['rca@web-1-b.rca.bmyrk.torchbox.net'],
 
     # All hosts will be listed here.
     'production': ['rca@web-1-b.rca.bmyrk.torchbox.net'],
@@ -54,7 +51,8 @@ def clear_cache():
     run('find /var/cache/nginx -type f -delete')
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/tmp/%s" % filename
@@ -71,7 +69,8 @@ def fetch_live_data():
     local('rm %s' % local_path)
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def fetch_live_media():
     remote_path = '/verdant-shared/media/'
 
@@ -95,7 +94,8 @@ def fetch_staging_data():
     local('rm %s' % local_path)
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/usr/local/django/rcawagtail/tmp/%s" % filename
