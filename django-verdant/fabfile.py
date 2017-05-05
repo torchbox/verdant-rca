@@ -11,9 +11,9 @@ env.roledefs = {
     'nginx': ['root@rca1.torchbox.com'],
 
     # All hosts will be listed here.
-    'production': ['rca@web-1-b.rca.bmyrk.torchbox.net'],
+    'production': ['rca@web-1-a.rca.bmyrk.torchbox.net', 'rca@web-1-b.rca.bmyrk.torchbox.net'],
 }
-MIGRATION_SERVER = 'web-1-b.rca.bmyrk.torchbox.net'
+MIGRATION_SERVER = 'web-1-a.rca.bmyrk.torchbox.net'
 
 
 @roles('staging')
