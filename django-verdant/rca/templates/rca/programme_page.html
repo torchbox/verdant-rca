@@ -39,26 +39,28 @@
                         {% if self.head_of_programme %}
 
                             <div class="row row-flush">
-                                <a href="{% pageurl self.head_of_programme %}">
-                                    <div class="image">
-                                        {% if self.head_of_programme.profile_image %}
-                                            {% image self.head_of_programme.profile_image width-200 %}
-                                        {% else %}
-                                            <img src="/static/rca/images/light-grey-placeholder.png" width="200">
-                                        {% endif %}
-                                    </div>
-                                </a>
-                                {% if self.head_of_programme_second %}
-                                    <a href="{% pageurl self.head_of_programme_second %}">
+                                <div>
+                                    <a href="{% pageurl self.head_of_programme %}">
                                         <div class="image">
-                                            {% if self.head_of_programme_second.profile_image %}
-                                                {% image self.head_of_programme_second.profile_image width-200 %}
+                                            {% if self.head_of_programme.profile_image %}
+                                                {% image self.head_of_programme.profile_image width-200 %}
                                             {% else %}
                                                 <img src="/static/rca/images/light-grey-placeholder.png" width="200">
                                             {% endif %}
                                         </div>
                                     </a>
-                                {% endif %}
+                                    {% if self.head_of_programme_second %}
+                                        <a href="{% pageurl self.head_of_programme_second %}">
+                                            <div class="image">
+                                                {% if self.head_of_programme_second.profile_image %}
+                                                    {% image self.head_of_programme_second.profile_image width-200 %}
+                                                {% else %}
+                                                    <img src="/static/rca/images/light-grey-placeholder.png" width="200">
+                                                {% endif %}
+                                            </div>
+                                        </a>
+                                    {% endif %}
+                                </div>
                             </div>
 
                             <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
@@ -70,17 +72,6 @@
                             </ul>
 
                         {% endif %}
-
-                        <!-- Key details -->
-                        {% with self.key_details.all as key_details_list %}
-                            {% if key_details_list %}
-                                <ul class="key-details">
-                                    {% for key_details in key_details_list %}
-                                        <li>{{ key_details.text }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        {% endwith %}
                     </div>
                 
                     <div class="left">
@@ -96,25 +87,38 @@
                             <a href="{% pageurl self.head_of_programme_link %}"><span class="read-more">Read more</a></span>
                         {% endif %}
 
-                        <!-- Programme specification document -->
-                        {% if self.programme_specification_document %}
-                            <ul class="button-bar one-button">
-                                <li><a href="{{ self.programme_specification_document.url }}" class="button icon icon-download">Download programme specification</a></li>
-                            </ul>
-                        {% endif %}
-
-                        {% if self.contact_snippets.all %}
-                            <div class="contact-dropdown">
-                                <div class="contact-dropdown-header">
-                                    <h3>Contact</h3>
-                                </div>
-                                <div class="dropdown">
-                                    {% include "rca/includes/modules/contact_snippet.html" with in_dropdown=True %}
-                                </div>
-                            </div>
-                            
-                        {% endif %}
+                        <!-- Key details -->
+                        {% with self.key_details.all as key_details_list %}
+                            {% if key_details_list %}
+                                <ul class="key-details h7">
+                                    {% for key_details in key_details_list %}
+                                        <li>{{ key_details.text }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
                     </div>
+                </div>
+                <div class="programme-details row row-flush">
+                    <!-- Programme specification document -->
+                    {% if self.programme_specification_document %}
+                        <ul class="button-bar one-button">
+                            <li><a href="{{ self.programme_specification_document.url }}" class="button icon icon-download">Download programme specification</a></li>
+                        </ul>
+                    {% endif %}
+
+                    <!-- contact -->
+                    {% if self.contact_snippets.all %}
+                        <div class="contact-dropdown">
+                            <div class="contact-dropdown-header">
+                                <h3>Contact</h3>
+                            </div>
+                            <div class="dropdown">
+                                {% include "rca/includes/modules/contact_snippet.html" with in_dropdown=True %}
+                            </div>
+                        </div>
+                        
+                    {% endif %}
                 </div>
 
                 {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}

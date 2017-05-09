@@ -9,14 +9,11 @@ env.roledefs = {
     'staging': ['rca@by-staging-1.torchbox.com'],
 
     'nginx': ['root@rca1.torchbox.com'],
-    'db': ['root@rca1.torchbox.com'],
-    'db-notroot': ['rca1.torchbox.com'],
-    'rca2': ['rcawagtail@rca2.bmyrk.torchbox.net'],
 
     # All hosts will be listed here.
-    'production': ['rcawagtail@rca2.bmyrk.torchbox.net', 'rcawagtail@rca3.bmyrk.torchbox.net'],
+    'production': ['rca@web-1-a.rca.bmyrk.torchbox.net', 'rca@web-1-b.rca.bmyrk.torchbox.net'],
 }
-MIGRATION_SERVER = 'rca2.bmyrk.torchbox.net'
+MIGRATION_SERVER = 'web-1-a.rca.bmyrk.torchbox.net'
 
 
 @roles('staging')
@@ -35,18 +32,17 @@ def deploy_staging(branch="staging", gitonly=False):
 
 @roles('production')
 def deploy(gitonly=False):
-    with cd('/usr/local/django/rcawagtail/'):
-        run("git pull")
-        run("/usr/local/django/virtualenvs/rcawagtail/bin/pip install -r django-verdant/requirements.txt")
+    run("git pull")
+    run("pip install -r django-verdant/requirements.txt")
 
-        if env['host'] == MIGRATION_SERVER:
-            if not gitonly:
-                run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
+    if env['host'] == MIGRATION_SERVER:
+        if not gitonly:
+            run("python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
 
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-            run("/usr/local/django/virtualenvs/rcawagtail/bin/python django-verdant/manage.py compress --settings=rcasite.settings.production")
+        run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+        run("python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
-        run("restart")
+    run("restart")
 
 
 @roles('nginx')
@@ -55,7 +51,8 @@ def clear_cache():
     run('find /var/cache/nginx -type f -delete')
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/tmp/%s" % filename
@@ -72,7 +69,8 @@ def fetch_live_data():
     local('rm %s' % local_path)
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def fetch_live_media():
     remote_path = '/verdant-shared/media/'
 
@@ -96,7 +94,8 @@ def fetch_staging_data():
     local('rm %s' % local_path)
 
 
-@roles('rca2')
+@runs_once
+@roles('production')
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/usr/local/django/rcawagtail/tmp/%s" % filename
@@ -116,7 +115,7 @@ def sync_staging_with_live():
     env.forward_agent = True
     run('fab staging_fetch_live_data')
     run("django-admin.py migrate --settings=rcasite.settings.staging --noinput")
-    run("rsync -avz rcawagtail@rca2.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
+    run("rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
 
 
 @roles('production')

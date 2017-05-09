@@ -791,6 +791,7 @@ function onDocumentReady(jQuery, inLightBox){
                     $background.addClass(contentShifted);
                     $wrapper.addClass( wrapperFixed );
                     $triggerButton.addClass( toggled );
+                    $('.enquiry-form-trigger').addClass('enquiry-form-trigger--fixed');
                     
                     // Show/hide triggers
                     if ( $(window).width() > breakpoint.mobile ) {
@@ -843,6 +844,7 @@ function onDocumentReady(jQuery, inLightBox){
                     $bodyContent.removeClass( shiftContent );
                     $wrapper.removeClass( wrapperFixed );
                     $triggerButton.removeClass( toggled );
+                    $('.enquiry-form-trigger').removeClass('enquiry-form-trigger--fixed');
                     //$background.removeClass( contentShifted);
 
 
