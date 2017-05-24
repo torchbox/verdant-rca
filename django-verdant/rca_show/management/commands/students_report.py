@@ -512,6 +512,29 @@ class StudentsReport(Report):
                 None,
             )
 
+    def postcard_image_photographer_field(self, student):
+        if student['current_revision_page']:
+            page = student['current_revision_page']
+        else:
+            return (
+                "",
+                'error',
+                None,
+            )
+
+        if page.postcard_image:
+            return (
+                page.postcard_image.photographer,
+                None,
+                None,
+            )
+        else:
+            return (
+                "Not set" if page.postcard_image else "",
+                'error',
+                None,
+            )
+
     def postcard_image_caption_field(self, student):
         if student['current_revision_page']:
             page = student['current_revision_page']
@@ -671,6 +694,7 @@ class StudentsReport(Report):
             ("Postcard height", self.postcard_image_height_field),
             ("Postcard colour format", self.postcard_image_colour_format_field),
             ("Postcard caption", self.postcard_image_caption_field),
+            ("Postcard photographer", self.postcard_image_photographer_field),
             ("Postcard permission", self.postcard_image_permission_field),
         ]
 
