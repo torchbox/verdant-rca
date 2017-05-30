@@ -674,7 +674,7 @@ class StudentsReport(Report):
 
     @property
     def fields(self):
-        return [
+        fields = [
             ("First Name", self.first_name_field),
             ("Last Name", self.last_name_field),
             ("Programme", self.programme_field),
@@ -684,10 +684,21 @@ class StudentsReport(Report):
             ("Student programme", self.student_programme_field),
             ("Student graduation year", self.student_graduation_year_field),
             ("Student specialism", self.student_specialism_field),
-        ] + self.email_columns + self.phone_number_columns + self.website_columns + [
+        ]
+
+        fields += self.email_columns
+        fields += self.phone_number_columns
+        fields += self.website_columns
+
+        fields += [
             ("Student carousel items", self.student_carousel_items_field),
             ("Change", self.page_change_field),
-            ("Postcard image", self.postcard_image_field),
+        ]
+
+        if not self.kwargs['without_images']:
+            fields += [("Postcard image", self.postcard_image_field)]
+
+        fields += [
             ("Postcard change", self.postcard_image_change_field),
             ("Postcard file size", self.postcard_image_file_size_field),
             ("Postcard width", self.postcard_image_width_field),
@@ -697,6 +708,8 @@ class StudentsReport(Report):
             ("Postcard photographer", self.postcard_image_photographer_field),
             ("Postcard permission", self.postcard_image_permission_field),
         ]
+
+        return fields
 
     def get_footer(self):
         footer = super(StudentsReport, self).get_footer()
@@ -753,6 +766,11 @@ class Command(BaseCommand):
             dest='split_columns',
             default=False,
             help='if --split-columns is set, phone numbers, email addresses and websites will be printed in separate columns'),
+        make_option('--without-images',
+            action='store_true',
+            dest='without_images',
+            default=False,
+            help='if --without-images is set, this will exclude postcard images from a report archive.'),
     )
 
     def process_student(self, student, previous_date=None):
@@ -828,7 +846,8 @@ class Command(BaseCommand):
                 changed_only=options['changed_only'],
                 changed_postcard_only=options['changed_postcard_only'],
                 include_not_in=include_not_in,
-                split_columns=options['split_columns']
+                split_columns=options['split_columns'],
+                without_images=options['without_images']
             )
             report.run()
 
@@ -836,11 +855,12 @@ class Command(BaseCommand):
         # Create zipfile
         with ZipFile('students_report.zip', 'w') as zf:
             # Add postcard images into zip
-            for postcard_image in report.postcard_images:
-                try:
-                    zf.write(os.path.join(settings.MEDIA_ROOT, postcard_image[0]), 'images/' + postcard_image[1])
-                except (IOError, OSError) as e:
-                    print e
+            if not options['without_images']:
+                for postcard_image in report.postcard_images:
+                    try:
+                        zf.write(os.path.join(settings.MEDIA_ROOT, postcard_image[0]), 'images/' + postcard_image[1])
+                    except (IOError, OSError) as e:
+                        print e
 
             # Write report
             zf.writestr('report.html', report.get_html())
