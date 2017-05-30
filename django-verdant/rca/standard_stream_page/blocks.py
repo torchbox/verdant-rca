@@ -1,6 +1,5 @@
 from django.core.exceptions import ValidationError
-from wagtail.wagtailadmin import blocks
-from wagtail.wagtailcore.blocks import PageChooserBlock
+from wagtail.wagtailcore import blocks
 from wagtail.wagtailembeds.blocks import EmbedBlock
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 
@@ -55,7 +54,7 @@ class QuoteBlock(blocks.StructBlock):
 class CalloutBlock(blocks.StructBlock):
     title = blocks.CharBlock(max_length=255)
     text = blocks.TextBlock()
-    link_page = PageChooserBlock()
+    link_page = blocks.PageChooserBlock()
     image = ImageChooserBlock(required=False)
     left_hand_text = blocks.RichTextBlock()
 
@@ -67,7 +66,7 @@ class CalloutBlock(blocks.StructBlock):
 class CarouselItemBlock(blocks.StructBlock):
     image = ImageBlock()
     link = blocks.URLBlock(required=False, label="External link")
-    link_page = PageChooserBlock(required=False)
+    link_page = blocks.PageChooserBlock(required=False)
 
     def get_context(self, value):
         item_link = value['link_page'].url if value.get('link_page') else value['link']
