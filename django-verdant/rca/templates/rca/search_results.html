@@ -1,6 +1,5 @@
 {% extends "rca/base.html" %}
-
-{% load rca_tags wagtailimages_tags %}
+{% load rca_tags wagtailcore_tags wagtailimages_tags static %}
 
 {% block body_class %}type-standard{% endblock %}
 
@@ -10,7 +9,7 @@
     <h1 class="h1 major">Search</h1>
     
     <section class="module search-results">
-        {% with query.editors_picks.all as editors_picks %}
+        {% with editors_picks=query.editors_picks.all %}
             {% if search_results or editors_picks %}
                 <h2>Found {{ search_results.paginator.count|add:editors_picks.count }} result{{ search_results.paginator.count|add:editors_picks.count|pluralize }} for &quot;{{ query_string }}&quot;</h2>
             {% endif %}
@@ -20,20 +19,18 @@
                 <ul class="picks">
                     {% for editors_pick in editors_picks %}
                         <li class="row">
-                            <a href="{{ editors_pick.page.url }}">
+                            <a href="{% pageurl editors_pick.page %}">
                                 <div class="image">
-                                    {% with editors_pick.page.specific as pick_specific %}
+                                    {% with pick_specific=editors_pick.page.specific %}
                                         {% if pick_specific.feed_image %}
                                             {% image pick_specific.feed_image fill-180x160 %}
                                         {% else %}
-                                            {% with pick_specific.carousel_items.all as carousel_items %}
-                                                {% with carousel_items|first as carousel_item %}
-                                                    {% if carousel_item.image %}
-                                                        {% image carousel_item.image fill-180x160 %}
-                                                    {% else %}
-                                                        <img src="/static/rca/images/rca-placeholder-square.jpg" width="200">
-                                                    {% endif %}
-                                                {% endwith %}
+                                            {% with carousel_item=pick_specific.carousel_items.all|first %}
+                                                {% if carousel_item.image %}
+                                                    {% image carousel_item.image fill-180x160 %}
+                                                {% else %}
+                                                    <img src="{% static 'rca/images/rca-placeholder-square.jpg' %}" width="200">
+                                                {% endif %}
                                             {% endwith %}
                                         {% endif %}
                                     {% endwith %}
