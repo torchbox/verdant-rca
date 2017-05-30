@@ -1,0 +1,32 @@
+{% extends "rca/base.html" %}
+
+{% block body_class %}type-experts-index{% endblock %}
+
+{% block content %}
+    <h1 class="h1 major">Search</h1>
+
+    <section class="module search-results">
+        {% if search_results %}
+            <h2>Found {{ search_results.paginator.count}}
+                result{{ search_results.paginator.count|pluralize }} for
+                &quot;{{ query_string }}&quot;</h2>
+        {% endif %}
+
+        {% if not search_results %}
+            <h2>Sorry, nothing was found for &quot;{{ query_string }}&quot;</h2>
+        {% endif %}
+
+        {% if search_results %}
+            <h4 class="module-title">Results {{ search_results.start_index }}
+                &ndash; {{ search_results.end_index }}</h4>
+
+            {% include "rca/includes/search_listing.html" with search_results=search_results %}
+        {% endif %}
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" collapseToday=page.collapse_upcoming_events %}
+{% endblock %}
