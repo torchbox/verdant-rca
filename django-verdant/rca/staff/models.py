@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import models
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.wagtailcore.fields import RichTextField
@@ -43,13 +44,32 @@ class ExpertsIndexPage(Page, SocialFields):
     ]
 
     def get_context(self, request, *args, **kwargs):
-        staff_pages = StaffPage.objects.live().public()
+        query_string = request.GET.get('q')
 
-        # TODO: Implement search and filtering
+        staff_pages = StaffPage.objects.live().public()
+        # TODO: Uncomment once is_expert field is added to the StaffPage model
+        # staff_pages = staff_pages.filter('is_expert')
+
+        # TODO: Implement filtering
+
+        if query_string:
+            staff_pages = staff_pages.search(query_string, operator='and')
+
+        # Paginate
+        paginator = Paginator(staff_pages, 20)
+        try:
+            staff_pages = paginator.page(request.GET.get('p'))
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            staff_pages = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            staff_pages = paginator.page(paginator.num_pages)
 
         context = super(ExpertsIndexPage, self).get_context(request, *args, **kwargs)
         context.update({
             'search_results': staff_pages,
+            'query_string': query_string,
         })
 
         return context
