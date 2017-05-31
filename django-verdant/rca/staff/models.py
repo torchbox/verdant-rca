@@ -15,6 +15,10 @@ from rca.utils.models import SocialFields
 
 @register_snippet
 class AreaOfExpertise(models.Model):
+    class Meta:
+        verbose_name = 'area of expertise'
+        verbose_name_plural = 'areas of expertise'
+
     name = models.CharField(max_length=128)
 
     panels = [
