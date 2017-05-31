@@ -4,12 +4,24 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
+from wagtail.wagtailsnippets.models import register_snippet
 
 from rca.models import StaffPage
 from rca.utils.models import SocialFields
 
 
 # TODO: Move StaffPage, StaffIndexPage and all related models here
+
+@register_snippet
+class AreaOfExpertise(models.Model):
+    name = models.CharField(max_length=128)
+
+    panels = [
+        FieldPanel('name'),
+    ]
+
+    def __unicode__(self):
+        return self.name
 
 
 class ExpertsIndexPage(Page, SocialFields):
@@ -47,8 +59,7 @@ class ExpertsIndexPage(Page, SocialFields):
         query_string = request.GET.get('q')
 
         staff_pages = StaffPage.objects.live().public()
-        # TODO: Uncomment once is_expert field is added to the StaffPage model
-        # staff_pages = staff_pages.filter('is_expert')
+        staff_pages = staff_pages.filter(is_expert=True)
 
         # TODO: Implement filtering
 
