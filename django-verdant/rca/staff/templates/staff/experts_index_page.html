@@ -6,6 +6,31 @@
 {% block content %}
     <h1 class="h1 major">{{ page.title }}</h1>
 
+    <section class="filters four-filters row">
+        <form id="filters" action="{% pageurl page %}" method="GET">
+            <ul>
+                <li class="filter">
+                    <input type="text" name="q" placeholder="Search" autocomplete="off"
+                           {% if query_string %}value="{{ query_string }}"{% endif %}
+                    >
+                </li>
+                <li class="filter">
+                    <label for="area_of_expertise">Area of expertise</label>
+                    <select id="area_of_expertise" name="area_of_expertise">
+                        <option value="">All Areas</option>
+                        {% for key, value in all_areas_of_expertise %}
+                            <option {% if request.GET.area_of_expertise == key %}selected="selected"{% endif %}
+                                    value="{{ key }}">
+                                {{ value }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <input type="submit"/>
+            </ul>
+        </form>
+    </section>
+
     <section class="module search-results">
         {% if query_string %}
             {% if search_results %}
@@ -74,6 +99,7 @@
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
+
 
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" collapseToday=page.collapse_upcoming_events %}
