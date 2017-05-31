@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db import models
+from django.views.decorators.vary import vary_on_headers
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.models import Page
@@ -55,6 +56,12 @@ class ExpertsIndexPage(Page, SocialFields):
         ], 'Social networks'),
     ]
 
+    ajax_template = 'staff/experts_index_page_listing.html'
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request, *args, **kwargs):
+        return super(ExpertsIndexPage, self).serve(request, *args, **kwargs)
+
     def get_context(self, request, *args, **kwargs):
         # Get all live and public expert pages
         staff_pages = StaffPage.objects.live().public().filter(is_expert=True)
@@ -80,7 +87,8 @@ class ExpertsIndexPage(Page, SocialFields):
             staff_pages = staff_pages.search(query_string, operator='and')
 
         # Paginate
-        paginator = Paginator(staff_pages, 20)
+        paginator_page_size = 20
+        paginator = Paginator(staff_pages, paginator_page_size)
         try:
             staff_pages = paginator.page(request.GET.get('p'))
         except PageNotAnInteger:
@@ -96,6 +104,7 @@ class ExpertsIndexPage(Page, SocialFields):
         context = super(ExpertsIndexPage, self).get_context(request, *args, **kwargs)
         context.update({
             'search_results': staff_pages,
+            'paginator_page_size': paginator_page_size,
             'query_string': query_string,
             'selected_area_of_expertise_pk': selected_area_of_expertise_pk,
             'all_areas_of_expertise': all_areas_of_expertise,

@@ -1,5 +1,5 @@
 {% extends "rca/base.html" %}
-{% load wagtailcore_tags wagtailimages_tags static %}
+{% load wagtailcore_tags static %}
 
 {% block body_class %}type-experts-index{% endblock %}
 
@@ -58,54 +58,7 @@
                 &ndash; {{ search_results.end_index }}
             </h4>
 
-            <ul>
-                {% for result in search_results %}
-                    {% with result_specific=result.specific %}
-                        <li class="row">
-                            <a href="{% pageurl result_specific %}">
-                                <div class="image">
-                                    {% if result_specific.feed_image %}
-                                        {% image result_specific.feed_image fill-180x160 %}
-                                    {% else %}
-                                        <img src="{% static 'rca/images/rca-placeholder-square.jpg' %}"
-                                             width="180">
-                                    {% endif %}
-                                </div>
-                                <div class="content">
-                                    <h4 class="h6">{{ result_specific }}</h4>
-
-                                    {% comment %}
-                                    Note that we need to call the richtext filter here anyway,
-                                    because we want to display ampersands correctly
-                                    and make sure that all internal link representations
-                                    were converted into valid html
-                                    {% endcomment %}
-                                    {{ result_specific.intro|richtext|striptags|truncatewords_html:50 }}
-                                </div>
-                            </a>
-                        </li>
-                    {% endwith %}
-                {% endfor %}
-            </ul>
-
-            {% if search_results.has_previous or search_results.has_next %}
-                <ul class="row pagination">
-                    {% if search_results.has_previous %}
-                        <li class="prev">
-                            <a href="?{% if query_string %}q={{ query_string }}&amp;{% endif %}p={{ search_results.previous_page_number }}">
-                                Previous
-                            </a>
-                        </li>
-                    {% endif %}
-                    {% if search_results.has_next %}
-                        <li class="next">
-                            <a href="?{% if query_string %}q={{ query_string }}&amp;{% endif %}p={{ search_results.next_page_number }}">
-                                Next
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            {% endif %}
+            {% include 'staff/experts_index_page_listing.html' with search_results=search_results %}
 
         {% endif %}
     </section>
@@ -116,4 +69,12 @@
 
 {% block sidebar %}
     {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" collapseToday=page.collapse_upcoming_events %}
+{% endblock %}
+
+{% block extra_js %}
+	<script type="text/javascript">
+		//global var for rca_now_index set here so that it can be used by the script being called
+		var current_page = "{% pageurl page %}";
+	</script>
+	<script src="{% static "rca/js/filters.js" %}"></script>
 {% endblock %}
