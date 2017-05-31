@@ -1,0 +1,82 @@
+{% extends "rca/base.html" %}
+{% load wagtailcore_tags static %}
+
+{% block body_class %}type-experts-index{% endblock %}
+
+{% block content %}
+    <h1 class="h1 major">{{ page.title }}</h1>
+
+    <section class="row pushstate-exclude">
+        <section class="body-text-style">
+            <div class="bc3 intro">
+                {{ page.intro|richtext }}
+            </div>
+        </section>
+    </section>
+
+    <section class="filters two-filters row">
+        <form id="filters" action="{% pageurl page %}" method="GET">
+            <ul>
+                <li class="filter">
+                    <input type="text" name="q" placeholder="Search" autocomplete="off"
+                           {% if query_string %}value="{{ query_string }}"{% endif %}
+                    >
+                </li>
+                <li class="filter">
+                    <label for="area_of_expertise">Area of expertise</label>
+                    <select id="area_of_expertise" name="area_of_expertise">
+                        <option value="">All Areas</option>
+                        {% for pk, name in all_areas_of_expertise %}
+                            <option {% if selected_area_of_expertise_pk == pk %}selected="selected"{% endif %}
+                                    value="{{ pk }}">
+                                {{ name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <input type="submit"/>
+            </ul>
+        </form>
+    </section>
+
+    <section class="module search-results pushstate-exclude">
+        {% if query_string %}
+            <h2>
+                {% if search_results %}
+                    Found {{ search_results.paginator.count }}
+                    result{{ search_results.paginator.count|pluralize }} for
+                    &quot;{{ query_string }}&quot;
+                {% else %}
+                    Sorry, nothing was found for &quot;{{ query_string }}&quot;
+                {% endif %}
+            </h2>
+        {% endif %}
+
+        {% if search_results %}
+            <h4 class="module-title">
+                Results {{ search_results.start_index }}
+                &ndash; {{ search_results.end_index }}
+            </h4>
+
+            <div id="listing">
+                {% include 'staff/experts_index_page_listing.html' with search_results=search_results %}
+            </div>
+
+        {% endif %}
+    </section>
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
+{% endblock %}
+
+
+{% block sidebar %}
+    {% include "rca/includes/sidebar.html" with showToday="true" showRelatedLinks="true" collapseToday=page.collapse_upcoming_events %}
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        //global var for rca_now_index set here so that it can be used by the script being called
+        var current_page = "{% pageurl page %}";
+    </script>
+    <script src="{% static "rca/js/filters.js" %}"></script>
+{% endblock %}

@@ -3102,6 +3102,16 @@ class StaffPagePublicationExhibition(Orderable):
         ImageChooserPanel('image'),
     ]
 
+
+class StaffPageAreaOfExpertise(Orderable):
+    page = ParentalKey('rca.StaffPage', related_name='areas_of_expertise')
+    area_of_expertise = models.ForeignKey('staff.AreaOfExpertise', on_delete=models.CASCADE, related_name='+')
+
+    panels = [
+        SnippetChooserPanel('area_of_expertise'),
+    ]
+
+
 class StaffPage(Page, SocialFields):
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
@@ -3127,6 +3137,7 @@ class StaffPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StaffPage', 'ad_username'))
+    is_expert = models.BooleanField("expert", default=False)
 
     search_fields = Page.search_fields + [
         index.RelatedFields('area', [
@@ -3135,6 +3146,7 @@ class StaffPage(Page, SocialFields):
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
         index.SearchField('biography'),
+        index.FilterField('is_expert'),
     ]
 
     api_fields = [
@@ -3192,6 +3204,11 @@ StaffPage.content_panels = [
     FieldPanel('research_interests', classname="full"),
     FieldPanel('supervised_student_other'),
     FieldPanel('ad_username'),
+
+    MultiFieldPanel([
+        FieldPanel('is_expert'),
+        InlinePanel('areas_of_expertise', label='Areas of expertise'),
+    ], heading='Expert fields'),
 
     InlinePanel('carousel_items', label="Selected Work Carousel Content"),
     InlinePanel('collaborations', label="Collaborations"),

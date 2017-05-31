@@ -13,7 +13,7 @@ TWITTER_CACHE_TIMEOUT_MEDIUM = 60 * 10
 
 
 def statuses_user_timeline(request):
-    if not settings.TWITTER_CONSUMER_KEY:
+    if not hasattr(settings, 'TWITTER_CONSUMER_KEY'):
         return HttpResponse('[]', content_type='application/json')
 
     callback = request.GET.get('callback')

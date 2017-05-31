@@ -176,6 +176,7 @@ INSTALLED_APPS = (
 
     'rca',
     'rca.standard_stream_page',
+    'rca.staff',
     'rca.utils',
 
     'rca_signage',
