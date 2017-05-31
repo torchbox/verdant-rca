@@ -27,7 +27,7 @@
                     <select id="area_of_expertise" name="area_of_expertise">
                         <option value="">All Areas</option>
                         {% for pk, name in all_areas_of_expertise %}
-                            <option {% if selected_area_of_expertise.pk == pk %}selected="selected"{% endif %}
+                            <option {% if selected_area_of_expertise_pk == pk %}selected="selected"{% endif %}
                                     value="{{ pk }}">
                                 {{ name }}
                             </option>
