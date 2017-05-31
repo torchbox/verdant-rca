@@ -56,13 +56,24 @@ class ExpertsIndexPage(Page, SocialFields):
     ]
 
     def get_context(self, request, *args, **kwargs):
+        # Get all live and public expert pages
+        staff_pages = StaffPage.objects.live().public().filter(is_expert=True)
+
+        # Allow to filter by Area of expertise
+        selected_area_of_expertise = AreaOfExpertise.objects.filter(
+            pk=request.GET.get('area_of_expertise')
+        ).first()
+        if selected_area_of_expertise:
+            staff_pages = staff_pages.filter(
+                areas_of_expertise__area_of_expertise=selected_area_of_expertise
+            )
+
+            # We have to do that because Wagtail doesn't support filtering
+            # on related fields, at the moment.
+            staff_pages = StaffPage.objects.filter(pk__in=[page.pk for page in staff_pages])
+
+        # Search
         query_string = request.GET.get('q')
-
-        staff_pages = StaffPage.objects.live().public()
-        staff_pages = staff_pages.filter(is_expert=True)
-
-        # TODO: Implement filtering
-
         if query_string:
             staff_pages = staff_pages.search(query_string, operator='and')
 
@@ -77,16 +88,14 @@ class ExpertsIndexPage(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             staff_pages = paginator.page(paginator.num_pages)
 
-        # TODO: replace with real data
-        all_areas_of_expertise = [
-            ('key1', 'Value 1'),
-            ('key2', 'Value 2'),
-        ]
+        # Get all Areas of expertise for filtering UI
+        all_areas_of_expertise = AreaOfExpertise.objects.all().values_list('pk', 'name')
 
         context = super(ExpertsIndexPage, self).get_context(request, *args, **kwargs)
         context.update({
             'search_results': staff_pages,
             'query_string': query_string,
+            'selected_area_of_expertise': selected_area_of_expertise,
             'all_areas_of_expertise': all_areas_of_expertise,
         })
 

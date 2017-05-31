@@ -18,10 +18,10 @@
                     <label for="area_of_expertise">Area of expertise</label>
                     <select id="area_of_expertise" name="area_of_expertise">
                         <option value="">All Areas</option>
-                        {% for key, value in all_areas_of_expertise %}
-                            <option {% if request.GET.area_of_expertise == key %}selected="selected"{% endif %}
-                                    value="{{ key }}">
-                                {{ value }}
+                        {% for pk, name in all_areas_of_expertise %}
+                            <option {% if selected_area_of_expertise.pk == pk %}selected="selected"{% endif %}
+                                    value="{{ pk }}">
+                                {{ name }}
                             </option>
                         {% endfor %}
                     </select>
