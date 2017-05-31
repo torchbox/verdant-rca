@@ -6,6 +6,14 @@
 {% block content %}
     <h1 class="h1 major">{{ page.title }}</h1>
 
+    <section class="row">
+        <section class="body-text-style">
+            <div class="bc3 intro">
+                {{ page.intro|richtext }}
+            </div>
+        </section>
+    </section>
+
     <section class="filters four-filters row">
         <form id="filters" action="{% pageurl page %}" method="GET">
             <ul>
