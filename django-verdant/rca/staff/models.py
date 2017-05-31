@@ -101,12 +101,21 @@ class ExpertsIndexPage(Page, SocialFields):
         # Get all Areas of expertise for filtering UI
         all_areas_of_expertise = AreaOfExpertise.objects.all().values_list('pk', 'name')
 
+        filters = [
+            {
+                'name': 'area_of_expertise',
+                'current_value': selected_area_of_expertise_pk,
+                'options': [''] + list(all_areas_of_expertise.values_list('pk', flat=True)),
+            },
+        ]
+
         context = super(ExpertsIndexPage, self).get_context(request, *args, **kwargs)
         context.update({
             'search_results': staff_pages,
             'paginator_page_size': paginator_page_size,
             'query_string': query_string,
             'selected_area_of_expertise_pk': selected_area_of_expertise_pk,
+            'filters': filters,
             'all_areas_of_expertise': all_areas_of_expertise,
         })
 
