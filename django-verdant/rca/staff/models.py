@@ -60,17 +60,19 @@ class ExpertsIndexPage(Page, SocialFields):
         staff_pages = StaffPage.objects.live().public().filter(is_expert=True)
 
         # Allow to filter by Area of expertise
-        selected_area_of_expertise = AreaOfExpertise.objects.filter(
-            pk=request.GET.get('area_of_expertise')
-        ).first()
-        if selected_area_of_expertise:
+        try:
+            selected_area_of_expertise_pk = int(request.GET.get('area_of_expertise'))
+
             staff_pages = staff_pages.filter(
-                areas_of_expertise__area_of_expertise=selected_area_of_expertise
+                areas_of_expertise__area_of_expertise__pk=selected_area_of_expertise_pk
             )
 
             # We have to do that because Wagtail doesn't support filtering
             # on related fields, at the moment.
             staff_pages = StaffPage.objects.filter(pk__in=[page.pk for page in staff_pages])
+        except (ValueError, TypeError):
+            # area_of_expertise is invalid or not present in a request
+            selected_area_of_expertise_pk = None
 
         # Search
         query_string = request.GET.get('q')
@@ -95,7 +97,7 @@ class ExpertsIndexPage(Page, SocialFields):
         context.update({
             'search_results': staff_pages,
             'query_string': query_string,
-            'selected_area_of_expertise': selected_area_of_expertise,
+            'selected_area_of_expertise_pk': selected_area_of_expertise_pk,
             'all_areas_of_expertise': all_areas_of_expertise,
         })
 
