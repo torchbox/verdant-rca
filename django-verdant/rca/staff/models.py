@@ -66,10 +66,17 @@ class ExpertsIndexPage(Page, SocialFields):
             # If page is out of range (e.g. 9999), deliver last page of results.
             staff_pages = paginator.page(paginator.num_pages)
 
+        # TODO: replace with real data
+        all_areas_of_expertise = [
+            ('key1', 'Value 1'),
+            ('key2', 'Value 2'),
+        ]
+
         context = super(ExpertsIndexPage, self).get_context(request, *args, **kwargs)
         context.update({
             'search_results': staff_pages,
             'query_string': query_string,
+            'all_areas_of_expertise': all_areas_of_expertise,
         })
 
         return context
