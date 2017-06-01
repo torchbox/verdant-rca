@@ -39,8 +39,8 @@ def deploy(gitonly=False):
         if not gitonly:
             run("python django-verdant/manage.py migrate --settings=rcasite.settings.production --noinput")
 
-        run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
-        run("python django-verdant/manage.py compress --settings=rcasite.settings.production")
+    run("python django-verdant/manage.py collectstatic --settings=rcasite.settings.production --noinput")
+    run("python django-verdant/manage.py compress --settings=rcasite.settings.production")
 
     run("restart")
 
