@@ -205,6 +205,12 @@ LOGGING = {
             'propagate': False,
             'formatter': 'verbose',
         },
+        'compressor': {
+            'handlers': [],
+            'level': 'INFO',
+            'propagate': False,
+            'formatter': 'verbose',
+        },
         'django': {
             'handlers': [],
             'level': 'INFO',
@@ -256,6 +262,7 @@ if 'LOG_DIR' in env:
         'maxBytes': 5242880,  # 5MB
         'backupCount': 5
     }
+    LOGGING['loggers']['compressor']['handlers'].append('errors_file')
     LOGGING['loggers']['django']['handlers'].append('errors_file')
     LOGGING['loggers']['django.request']['handlers'].append('errors_file')
     LOGGING['loggers']['django.security']['handlers'].append('errors_file')
