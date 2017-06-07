@@ -40,29 +40,10 @@
     </section>
 
     <section class="module search-results pushstate-exclude">
-        {% if query_string %}
-            <h2>
-                {% if search_results %}
-                    Found {{ search_results.paginator.count }}
-                    result{{ search_results.paginator.count|pluralize }} for
-                    &quot;{{ query_string }}&quot;
-                {% else %}
-                    Sorry, nothing was found for &quot;{{ query_string }}&quot;
-                {% endif %}
-            </h2>
-        {% endif %}
+        <div id="listing">
+            {% include 'staff/experts_index_page_listing.html' with search_results=search_results %}
+        </div>
 
-        {% if search_results %}
-            <h4 class="module-title">
-                Results {{ search_results.start_index }}
-                &ndash; {{ search_results.end_index }}
-            </h4>
-
-            <div id="listing">
-                {% include 'staff/experts_index_page_listing.html' with search_results=search_results %}
-            </div>
-
-        {% endif %}
     </section>
 
     {% include "rca/includes/modules/twitter-feed.html" %}

@@ -1,6 +1,19 @@
 {% load wagtailcore_tags wagtailimages_tags static %}
 
+{% if query_string %}
+    <h2>
+        {% if search_results %}
+            Found {{ search_results.paginator.count }}
+            result{{ search_results.paginator.count|pluralize }} for
+            &quot;{{ query_string }}&quot;
+        {% else %}
+            Sorry, nothing was found for &quot;{{ query_string }}&quot;
+        {% endif %}
+    </h2>
+{% endif %}
+
 {% if search_results %}
+
     <section class="x-plus row module" data-pagination=".pagination">
         <div class="item-container">
             <ul>
@@ -9,12 +22,14 @@
                         <li class="row">
                             <a href="{% pageurl result_specific %}">
                                 <div class="image">
-                                    {% if result_specific.feed_image %}
-                                        {% image result_specific.feed_image fill-180x160 %}
-                                    {% else %}
-                                        <img src="{% static 'rca/images/rca-placeholder-square.jpg' %}"
-                                             width="180">
-                                    {% endif %}
+                                    {% with listing_image=result_specific.feed_image|default:result_specific.profile_image %}
+                                        {% if listing_image %}
+                                            {% image listing_image fill-180x160 %}
+                                        {% else %}
+                                            <img src="{% static 'rca/images/rca-placeholder-square.jpg' %}"
+                                                 width="180">
+                                        {% endif %}
+                                    {% endwith %}
                                 </div>
                                 <div class="content">
                                     <h4 class="h6">{{ result_specific }}</h4>
