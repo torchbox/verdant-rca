@@ -1,12 +1,13 @@
+from django.apps import apps
 from django.core.management.base import NoArgsCommand
-from django.db import connection, models, transaction
+from django.db import connection
 
 
 class Command(NoArgsCommand):
     def handle_noargs(self, **options):
         # Get models which have a random_order field
         randomised_models = [
-            model for model in models.get_models() 
+            model for model in apps.get_models()
             if [
                 field for field in model._meta.fields 
                 if field.name == 'random_order'

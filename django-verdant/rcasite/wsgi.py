@@ -23,6 +23,23 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "rcasite.settings")
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()
 
-# Apply WSGI middleware here.
-# from helloworld.wsgi import HelloWorldApplication
-# application = HelloWorldApplication(application)
+
+try:
+    import uwsgi
+    from django.core.management import call_command
+    print("We have a uWSGI")
+
+    def make_task_runner(task):
+        def task_runner(unused):
+            if uwsgi.i_am_the_lord(os.getenv("CFG_APP_NAME")):
+                print("I am the lord.")
+                print("Running %s" % task)
+                call_command(task, interactive=False)
+            else:
+                print("I am not the lord.")
+        return task_runner
+
+    uwsgi.register_signal(100, "", make_task_runner('set_page_random_order'))
+    uwsgi.add_timer(100, 60 * 60)  # Run every hour
+except ImportError:
+    print("We have no uWSGI")
