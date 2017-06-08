@@ -84,13 +84,15 @@
 
         <div class="mobile-menu-wrapper">
         </div>
-        <div class="enquiry-button-wrapper">
-        {% if settings.rca.EnquiryFormSettings.form_page %}
-            <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
-                Enquire to study
-            </button>
-        {% endif %}
-        </div>
+        {% block enquiry_form_button %}
+            <div class="enquiry-button-wrapper">
+            {% if settings.rca.EnquiryFormSettings.form_page %}
+                <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
+                    Enquire to study
+                </button>
+            {% endif %}
+            </div>
+        {% endblock %}
 
         <div class="mobile-content-wrapper">
             <div class="mobile-menu-button">Inside</div>
@@ -235,8 +237,10 @@
             {% block extra_js %}{% endblock %}
         {% endblock %}
 
-        {% if settings.rca.EnquiryFormSettings.form_page %}
-            {% enquiry_form %}
-        {% endif %}
+        {% block enquiry_form_sidebar %}
+            {% if settings.rca.EnquiryFormSettings.form_page %}
+                {% enquiry_form %}
+            {% endif %}
+        {% endblock %}
     </body>
 </html>
