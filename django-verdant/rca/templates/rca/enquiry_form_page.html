@@ -21,27 +21,26 @@
   <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
     {% csrf_token %}
     {% for field in form.visible_fields %}
+      {% with field_widget_type=field|widget_type %}
 
         {% if field.label %}
-          {% with field_widget_type=field|widget_type %}  
-            <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+          <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
 
-              {% if field.help_text %}
-                <p class="help-text">{{ field.help_text }}</p>
-              {% endif %}
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
 
-              {% if field_widget_type == 'dateinput' %}
-                {% render_field field type='date' %}
-              {% else %}
-                {% render_field field %}
-              {% endif %}
+            {% if field_widget_type == 'dateinput' %}
+              {% render_field field type='date' %}
+            {% else %}
+              {% render_field field %}
+            {% endif %}
 
-            </label>
+          </label>
 
-            {% for error in field.errors %}
-              <small class="error">{{ error }}</small>
-            {% endfor %}
-          {% endwith %}
+          {% for error in field.errors %}
+            <small class="error">{{ error }}</small>
+          {% endfor %}
         {% else %}{# field has no label #}
           <label{% if field.errors %} class="error"{% endif %}>
             {% render_field field %}
@@ -51,7 +50,8 @@
           </label>
         {% endif %}
 
-      
+
+      {% endwith %}
     {% endfor %}
 
     {% for hidden_field in form.hidden_fields %}
