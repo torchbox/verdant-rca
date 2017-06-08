@@ -2,72 +2,74 @@
 {% load widget_tweaks %}
 
 
-  <div class="enquiry-form__introduction">
+<div class="enquiry-form__introduction">
     {{ page.intro|richtext }}
-  </div>
-  <form action="{% pageurl page %}" method="POST">
+</div>
+<form action="{% pageurl page %}" method="POST">
     {% csrf_token %}
     <div class="enquiry-form__form-wrapper">
-    {% for field in form.visible_fields %}
-      {% with field_widget_type=field|widget_type %}
+        {% for field in form.visible_fields %}
+            {% with field_widget_type=field|widget_type %}
 
-        {% if field.label %}
-          <label class="{% if field.errors %} error{% endif %}">
+                {% if field.label %}
+                    <label class="{% if field.errors %} error{% endif %}">
 
-            {% if field_widget_type == 'dateinput' %}
-              {{ field.label }}
+                        {% if field_widget_type == 'dateinput' %}
+                            {{ field.label }}
 
-              {% if field.help_text %}
-                <p class="help-text">{{ field.help_text }}</p>
-              {% endif %}
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
 
-              {% render_field field type='date' %}
-            {% else %}
-              {% if field.help_text %}
-                <p class="help-text">{{ field.help_text }}</p>
-              {% endif %}
+                            {% render_field field type='date' %}
+                        {% else %}
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
 
-              {% render_field field placeholder=field.label %}
-            {% endif %}
-          </label>
+                            {% render_field field placeholder=field.label %}
+                        {% endif %}
+                    </label>
 
-          {% for error in field.errors %}
-            <small class="error">{{ error }}</small>
-          {% endfor %}
+                    {% for error in field.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
 
-        {% else %}{# field has no label #}
-          <label{% if field.errors %} class="error"{% endif %}>
-            {% render_field field %}
-            {% for error in field.errors %}
-              <small class="error">{{ error }}</small>
-            {% endfor %}
-          </label>
-        {% endif %}
+                    {% else %}{# field has no label #}
+                    <label{% if field.errors %} class="error"{% endif %}>
+                        {% render_field field %}
+                        {% for error in field.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </label>
+                {% endif %}
 
-      {% endwith %}
-    {% endfor %}
+            {% endwith %}
+        {% endfor %}
     </div>
 
     {% for hidden_field in form.hidden_fields %}
-      {{ hidden_field }}
+        {{ hidden_field }}
     {% endfor %}
 
     {% if page.terms_and_conditions %}
-      <div id="link_terms_and_conditions">
-        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and Conditions</a> before submitting this form.
-      </div>
-      <hr>
+        <div id="link_terms_and_conditions">
+            Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and Conditions</a>
+            before submitting this form.
+        </div>
+        <hr>
     {% endif %}
 
     <div class="profile-actions">
-      <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
+        <input type="submit" class="enquiry-form__submit submit-page" value="Send enquiry" name="submit"
+               id="submit-save-and-submit">
     </div>
 
     <div class="enquiry-form__privacy-message">
-      By submitting your information you are consenting to receive information in accordance with the RCA’s
-      <a href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/">
-        privacy policy.
-      </a>
+        By submitting your information you are consenting to receive information in accordance with the RCA’s
+        <a href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/">
+            privacy policy.
+        </a>
     </div>
-  </form>
+</form>
 </div>

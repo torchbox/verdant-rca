@@ -4,81 +4,85 @@
 
 
 {% block content %}
-  <h1 class="h1">{{ self.title }}</h1>
-  <div class="bc3 intro">{{ self.intro|richtext }}</div>
+    <h1 class="h1">{{ self.title }}</h1>
+    <div class="bc3 intro">{{ self.intro|richtext }}</div>
 
-  <div class="body-text">
-    <style>
-      #id_course > input[type=checkbox] {
-        margin-right: 2px;
-        vertical-align:middle;
-      }
-      form li {
-        padding-bottom: 0px;
-      }
-    </style>
+    <div class="body-text">
+        <style>
+            #id_course > input[type=checkbox] {
+                margin-right: 2px;
+                vertical-align: middle;
+            }
 
-  <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST" onsubmit="return storeFormValuesOnSubmit()">
-    {% csrf_token %}
-    {% for field in form.visible_fields %}
-      {% with field_widget_type=field|widget_type %}
+            form li {
+                padding-bottom: 0px;
+            }
+        </style>
 
-        {% if field.label %}
-          <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:{% if field.field.required %}<span>*</span>{% endif %}
+        <form action="{% pageurl page %}" id="wt_form" name="wt_form" method="POST"
+              onsubmit="return storeFormValuesOnSubmit()">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+                {% with field_widget_type=field|widget_type %}
 
-            {% if field.help_text %}
-              <p class="help-text">{{ field.help_text }}</p>
-            {% endif %}
+                    {% if field.label %}
+                        <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:
+                            {% if field.field.required %}<span>*</span>{% endif %}
 
-            {% if field_widget_type == 'dateinput' %}
-              {% render_field field type='date' %}
-            {% else %}
-              {% render_field field %}
-            {% endif %}
+                            {% if field.help_text %}
+                                <p class="help-text">{{ field.help_text }}</p>
+                            {% endif %}
 
-          </label>
+                            {% if field_widget_type == 'dateinput' %}
+                                {% render_field field type='date' %}
+                            {% else %}
+                                {% render_field field %}
+                            {% endif %}
 
-          {% for error in field.errors %}
-            <small class="error">{{ error }}</small>
-          {% endfor %}
-        {% else %}{# field has no label #}
-          <label{% if field.errors %} class="error"{% endif %}>
-            {% render_field field %}
-            {% for error in field.errors %}
-              <small class="error">{{ error }}</small>
+                        </label>
+
+                        {% for error in field.errors %}
+                            <small class="error">{{ error }}</small>
+                        {% endfor %}
+                        {% else %}{# field has no label #}
+                        <label{% if field.errors %} class="error"{% endif %}>
+                            {% render_field field %}
+                            {% for error in field.errors %}
+                                <small class="error">{{ error }}</small>
+                            {% endfor %}
+                        </label>
+                    {% endif %}
+
+
+                {% endwith %}
             {% endfor %}
-          </label>
-        {% endif %}
 
+            {% for hidden_field in form.hidden_fields %}
+                {{ hidden_field }}
+            {% endfor %}
 
-      {% endwith %}
-    {% endfor %}
+            {% if page.terms_and_conditions %}
+                <div id="link_terms_and_conditions">
+                    Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and
+                    Conditions</a> before submitting this form.
+                </div>
+                <hr>
+            {% endif %}
 
-    {% for hidden_field in form.hidden_fields %}
-      {{ hidden_field }}
-    {% endfor %}
+            <div class="profile-actions">
+                <input type="submit" class="submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
+            </div>
 
-    {% if page.terms_and_conditions %}
-      <div id="link_terms_and_conditions">
-        Please make sure to read the <a href="{{ page.terms_and_conditions.url }}">RCA Terms and Conditions</a> before submitting this form.
-      </div>
-      <hr>
-    {% endif %}
+            <p>
+                By submitting your information you are consenting to receive information in accordance with the RCA’s
+                <a href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/">
+                    privacy policy.
+                </a>
+            </p>
 
-    <div class="profile-actions">
-      <input type="submit" class="submit-page" value="Send enquiry" name="submit" id="submit-save-and-submit">
+        </form>
+
     </div>
-
-    <p>
-      By submitting your information you are consenting to receive information in accordance with the RCA’s
-      <a href="https://www.rca.ac.uk/contact-us/about-this-website/privacy-cookies/">
-        privacy policy.
-      </a>
-    </p>
-
-  </form>
-
-  </div>
 
 {% endblock content %}
 
@@ -86,8 +90,8 @@
 
 {% block extra_css %}
     {% compress css %}
-        <link rel="stylesheet" type="text/less" href="{% static "rca/css/genericform.less" %}" />
-        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}" />
+        <link rel="stylesheet" type="text/less" href="{% static "rca/css/genericform.less" %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/select2/select2.css" %}"/>
     {% endcompress %}
 
 {% endblock %}
@@ -143,7 +147,13 @@
 
     <script type="text/javascript">
         {# and here is a replacement for that missing customSelect #}
-        (function ($) {'use strict';$.fn.extend({customSelect: function (options) {}});})(jQuery);
+        (function ($) {
+            'use strict';
+            $.fn.extend({
+                customSelect: function (options) {
+                }
+            });
+        })(jQuery);
 
         {% if not request.is_ajax %}
             // onDocumentReady wraps all the startup code in site.js
@@ -178,33 +188,33 @@
         </script>
     {% endif %}
 
-  {# used to be block extra_js #}
-  <script>
-    (function() {
-      function parseGET(val) {
-        // with thanks to http://stackoverflow.com/a/5448595
-        var result = undefined, tmp = [];
-        location.search
-                .substr(1)
-                .split("&")
-                .forEach(function (item) {
-                  tmp = item.split("=");
-                  if (tmp[0] === val) result = decodeURIComponent(tmp[1]);
-                });
-        return result;
-      }
+    {# used to be block extra_js #}
+    <script>
+        (function () {
+            function parseGET(val) {
+                // with thanks to http://stackoverflow.com/a/5448595
+                var result = undefined, tmp = [];
+                location.search
+                    .substr(1)
+                    .split("&")
+                    .forEach(function (item) {
+                        tmp = item.split("=");
+                        if (tmp[0] === val) result = decodeURIComponent(tmp[1]);
+                    });
+                return result;
+            }
 
-      var selected_course = parseGET('course');
-      if (selected_course) {
-        $('#id_course').val(selected_course);
-      }
-    })();
+            var selected_course = parseGET('course');
+            if (selected_course) {
+                $('#id_course').val(selected_course);
+            }
+        })();
 
-    $(function() {
-      loadFormValues();
-      $('#link_terms_and_conditions').detach().appendTo($('#id_accept-rca-terms-and-conditions').parent());
-    });
-  </script>
+        $(function () {
+            loadFormValues();
+            $('#link_terms_and_conditions').detach().appendTo($('#id_accept-rca-terms-and-conditions').parent());
+        });
+    </script>
 
 {% endblock js %}
 
