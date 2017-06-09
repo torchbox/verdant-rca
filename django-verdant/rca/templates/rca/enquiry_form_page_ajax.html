@@ -13,21 +13,25 @@
 
                 <label class="{% if field.errors %} error{% endif %}">
 
-                    {% if field_widget_type == 'dateinput' %}
-                        {{ field.label }}
-
-                        {% if field.help_text %}
-                            <p class="help-text">{{ field.help_text }}</p>
-                        {% endif %}
-
-                        {% render_field field type='date' %}
-                    {% else %}
-                        {% if field.help_text %}
-                            <p class="help-text">{{ field.help_text }}</p>
-                        {% endif %}
-
-                        {% render_field field placeholder=field.label %}
+                    {% if field.help_text %}
+                        <p class="help-text">{{ field.help_text }}</p>
                     {% endif %}
+
+                    {% render_field field placeholder=field.label %}
+
+                    {% with field_widget_type=field|widget_type %}
+                        {% if field_widget_type == 'dateinput' %}
+                            <script>
+                                $('#{{ field.auto_id }}').datetimepicker({
+                                    timepicker: false,
+                                    format: 'd/m/Y',
+                                    closeOnDateSelect: true,
+                                    scrollInput: false
+                                });
+                            </script>
+                        {% endif %}
+                    {% endwith %}
+
                 </label>
 
                 {% for error in field.errors %}
