@@ -75,6 +75,14 @@
 {% endblock content %}
 
 
+{% block css %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/css" href="{% static "student_profiles/css/vendor/jquery.datetimepicker.css" %}" />
+    {% endcompress %}
+
+    {{ block.super }}
+{% endblock css %}
+
 
 {% block extra_css %}
     {% compress css %}
@@ -178,6 +186,19 @@
 
     {# used to be block extra_js #}
     <script>
+        {% for field in form.visible_fields %}
+            {% with field_widget_type=field|widget_type %}
+                {% if field_widget_type == 'dateinput' %}
+                    $('#{{ field.auto_id }}').datetimepicker({
+                        timepicker: false,
+                        format: 'd/m/Y',
+                        closeOnDateSelect: true,
+                        scrollInput: false
+                    });
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+
         (function () {
             function parseGET(val) {
                 // with thanks to http://stackoverflow.com/a/5448595
