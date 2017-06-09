@@ -23,38 +23,26 @@
               onsubmit="return storeFormValuesOnSubmit()">
             {% csrf_token %}
             {% for field in form.visible_fields %}
-                {% with field_widget_type=field|widget_type %}
+
+                <label class="{% if field.errors %} error{% endif %}">
 
                     {% if field.label %}
-                        <label class="{% if field.errors %} error{% endif %}">{{ field.label }}:
-                            {% if field.field.required %}<span>*</span>{% endif %}
-
-                            {% if field.help_text %}
-                                <p class="help-text">{{ field.help_text }}</p>
-                            {% endif %}
-
-                            {% if field_widget_type == 'dateinput' %}
-                                {% render_field field type='date' %}
-                            {% else %}
-                                {% render_field field %}
-                            {% endif %}
-
-                        </label>
-
-                        {% for error in field.errors %}
-                            <small class="error">{{ error }}</small>
-                        {% endfor %}
-                        {% else %}{# field has no label #}
-                        <label{% if field.errors %} class="error"{% endif %}>
-                            {% render_field field %}
-                            {% for error in field.errors %}
-                                <small class="error">{{ error }}</small>
-                            {% endfor %}
-                        </label>
+                        {{ field.label }}:
+                        {% if field.field.required %}<span>*</span>{% endif %}
                     {% endif %}
 
+                    {% if field.help_text %}
+                        <p class="help-text">{{ field.help_text }}</p>
+                    {% endif %}
 
-                {% endwith %}
+                    {% render_field field %}
+
+                    {% for error in field.errors %}
+                        <small class="error">{{ error }}</small>
+                    {% endfor %}
+
+                </label>
+
             {% endfor %}
 
             {% for hidden_field in form.hidden_fields %}
@@ -95,6 +83,7 @@
     {% endcompress %}
 
 {% endblock %}
+
 
 {% block js %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -177,7 +166,6 @@
         <script src="{% static "student_profiles/js/vendor/jquery.ui.widget.js" %}"></script>
         <script src="{% static "student_profiles/js/vendor/jquery.iframe-transport.js" %}"></script>
         <script src="{% static "student_profiles/js/vendor/jquery.sticky.js" %}"></script>
-        <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
         <script src="{% static "student_profiles/js/vendor/jquery.cookie.js" %}"></script>
         <script src="{% static "rca_ee/js/formstore.js" %}"></script>
     {% endcompress %}
