@@ -42,6 +42,7 @@
             {% compress css %}
                 <link rel="stylesheet" href="{% static "rca/css/vendor/normalize.css" %}" />
                 <link rel="stylesheet" href="{% static "rca/css/vendor/jquery.bxslider.css" %}" />
+                <link rel="stylesheet" type="text/css" href="{% static "student_profiles/css/vendor/jquery.datetimepicker.css" %}" />
                 <link rel="stylesheet" type="text/less" href="{% static "rca/css/core.less" %}" />
                 <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
                 <link rel="stylesheet" type="text/less" href="{% static "rca/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
@@ -84,13 +85,15 @@
 
         <div class="mobile-menu-wrapper">
         </div>
-        <div class="enquiry-button-wrapper">
-        {% if settings.rca.EnquiryFormSettings.form_page %}
-            <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
-                Enquire to study
-            </button>
-        {% endif %}
-        </div>
+        {% block enquiry_form_button %}
+            <div class="enquiry-button-wrapper">
+            {% if settings.rca.EnquiryFormSettings.form_page %}
+                <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
+                    Enquire to study
+                </button>
+            {% endif %}
+            </div>
+        {% endblock %}
 
         <div class="mobile-content-wrapper">
             <div class="mobile-menu-button">Inside</div>
@@ -172,6 +175,7 @@
                 <script src="{% static "rca/js/vendor/jquery.hoverintent.min.js" %}"></script>
                 <script src="{% static "rca/js/vendor/fluidvids.js" %}"></script>
                 <script src="{% static "rca/js/vendor/jquery.bxslider.min.js" %}"></script>
+                <script src="{% static "student_profiles/js/vendor/jquery.datetimepicker.js" %}"></script>
                 <script src="{% static "rca/js/vendor/bootstrap-affix.js" %}"></script>
                 <script src="{% static "rca/js/vendor/bootstrap-tab.js" %}"></script>
                 <script src="{% static "rca/js/vendor/jquery-ui-1.10.3.autocomplete-only.min.js" %}"></script>
@@ -235,8 +239,10 @@
             {% block extra_js %}{% endblock %}
         {% endblock %}
 
-        {% if settings.rca.EnquiryFormSettings.form_page %}
-            {% enquiry_form %}
-        {% endif %}
+        {% block enquiry_form_sidebar %}
+            {% if settings.rca.EnquiryFormSettings.form_page %}
+                {% enquiry_form %}
+            {% endif %}
+        {% endblock %}
     </body>
 </html>
