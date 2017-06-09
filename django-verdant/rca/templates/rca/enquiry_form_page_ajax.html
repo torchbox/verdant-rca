@@ -11,38 +11,28 @@
         {% for field in form.visible_fields %}
             {% with field_widget_type=field|widget_type %}
 
-                {% if field.label %}
-                    <label class="{% if field.errors %} error{% endif %}">
+                <label class="{% if field.errors %} error{% endif %}">
 
-                        {% if field_widget_type == 'dateinput' %}
-                            {{ field.label }}
+                    {% if field_widget_type == 'dateinput' %}
+                        {{ field.label }}
 
-                            {% if field.help_text %}
-                                <p class="help-text">{{ field.help_text }}</p>
-                            {% endif %}
-
-                            {% render_field field type='date' %}
-                        {% else %}
-                            {% if field.help_text %}
-                                <p class="help-text">{{ field.help_text }}</p>
-                            {% endif %}
-
-                            {% render_field field placeholder=field.label %}
+                        {% if field.help_text %}
+                            <p class="help-text">{{ field.help_text }}</p>
                         {% endif %}
-                    </label>
 
-                    {% for error in field.errors %}
-                        <small class="error">{{ error }}</small>
-                    {% endfor %}
+                        {% render_field field type='date' %}
+                    {% else %}
+                        {% if field.help_text %}
+                            <p class="help-text">{{ field.help_text }}</p>
+                        {% endif %}
 
-                    {% else %}{# field has no label #}
-                    <label{% if field.errors %} class="error"{% endif %}>
-                        {% render_field field %}
-                        {% for error in field.errors %}
-                            <small class="error">{{ error }}</small>
-                        {% endfor %}
-                    </label>
-                {% endif %}
+                        {% render_field field placeholder=field.label %}
+                    {% endif %}
+                </label>
+
+                {% for error in field.errors %}
+                    <small class="error">{{ error }}</small>
+                {% endfor %}
 
             {% endwith %}
         {% endfor %}

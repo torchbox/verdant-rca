@@ -26,10 +26,8 @@
 
                 <label class="{% if field.errors %} error{% endif %}">
 
-                    {% if field.label %}
-                        {{ field.label }}:
-                        {% if field.field.required %}<span>*</span>{% endif %}
-                    {% endif %}
+                    {{ field.label }}:
+                    {% if field.field.required %}<span>*</span>{% endif %}
 
                     {% if field.help_text %}
                         <p class="help-text">{{ field.help_text }}</p>
