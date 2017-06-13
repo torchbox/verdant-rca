@@ -1,22 +1,8 @@
-{% extends "rca/base.html" %}
+{% extends "rca_show/base.html" %}
 {% load compress static show_tags wagtailcore_tags %}
 
 {% block body_class %}showrca theme-show2016 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
 
-{% block extra_css %}
-    {% compress css %}
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/core.less" %}" />
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" media="screen and (min-width:768px)" />
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" media="screen and (min-width:1024px)" />
-        <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-large.less" %}"  media="screen and (min-width:1280px)" />
-    {% endcompress %}
-    <!--[if lt IE 9]>
-        {% compress css %}
-            <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-small.less" %}" />
-            <link rel="stylesheet" type="text/less" href="{% static "rca_show/css/desktop-regular.less" %}" />
-        {% endcompress %}
-    <![endif]-->
-{% endblock %}
 
 {% block logo %}
   {% get_school_logo_2016 school as school_logo %}
@@ -77,28 +63,4 @@
             </div>
         </div>
     {% endif %}
-{% endblock %}
-
-{% block show_js %}
-    <script>
-        WebFontConfig = { fontdeck: { id: '42490' } };
-
-        window.showIndexPath = '{{ self.show_index.local_url }}';
-
-        (function() {
-            var wf = document.createElement('script');
-            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
-            '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
-            wf.type = 'text/javascript';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(wf, s);
-        })();
-    </script>
-
-    {% compress js %}
-        <script src="{% static "rca_show/js/vendor/jquery.cookie.js" %}"></script>
-        <script src="{% static "rca_show/js/site.js" %}"></script>
-    {% endcompress %}
-
-    <script>var coverVid=function(a,b,c){function d(a,b){var c=null;return function(){var d=this,e=arguments;window.clearTimeout(c),c=window.setTimeout(function(){a.apply(d,e)},b)}}function e(){var d=a.parentNode.offsetHeight,e=a.parentNode.offsetWidth,f=b,g=c,h=d/g,i=e/f;i>h?(a.style.height="auto",a.style.width=e+"px"):(a.style.height=d+"px",a.style.width="auto")}document.addEventListener("DOMContentLoaded",e),window.onresize=function(){d(e(),50)},a.style.position="absolute",a.style.top="50%",a.style.left="50%",a.style["-webkit-transform"]="translate(-50%, -50%)",a.style["-ms-transform"]="translate(-50%, -50%)",a.style.transform="translate(-50%, -50%)",a.parentNode.style.overflow="hidden"};window.jQuery&&jQuery.fn.extend({coverVid:function(){return coverVid(this[0],arguments[0],arguments[1]),this}});</script>
 {% endblock %}

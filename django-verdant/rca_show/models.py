@@ -16,6 +16,7 @@ from wagtail.wagtailcore.url_routing import RouteResult
 from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 
 from rca.utils.models import CarouselItemFields, SocialFields
+from rca_show.utils import get_base_show_template
 from taxonomy.models import School, Programme
 
 from rca.models import NewStudentPage, CAMPUS_CHOICES, NewStudentPageQuerySet
@@ -81,12 +82,28 @@ class SuperPage(Page):
         abstract = True
 
 
-class PageWithYearTemplate(object):
+class ShowPageWithYearTemplateMixin(object):
     """
-    A page mixin that tries to use the "current year" template instead of the base template. Simply appends
-    '_{year}' to the end of the filename, eg. "show_index.html" becomes "show_index_2016.html".
-    If that template does not exist, the base template is used.
+    A page mixin that allows to customise show templates based on the current year.
+
+    It allows two levels of customisation:
+
+        * It's possible to override a base template to change a logo or an intro video.
+          If there is no base template for a specific year, the generic base template is used.
+
+        * You can override a template for a specific page type by appending a year into a template name,
+          so `show_exhibition_map_index.html` becomes `show_exhibition_map_index_2016.html`.
+          If there is no template for a specific year, generic template for a page type is used
+          (e.g. if there is no `show_exhibition_map_index_2016.html`, it uses `show_exhibition_map_index.html`)
     """
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(ShowPageWithYearTemplateMixin, self).get_context(request, *args, **kwargs)
+        context.update({
+            'base_template': get_base_show_template(self.show_index.year),
+        })
+
+        return context
 
     def get_template(self, request, *args, **kwargs):
         if request.is_ajax():
@@ -96,9 +113,12 @@ class PageWithYearTemplate(object):
 
         show_index = self.show_index
         if show_index:
-            return [orig_template.replace('.html', '_{}.html'.format(show_index.year)), orig_template]
-        else:
-            return orig_template
+            return [
+                orig_template.replace('.html', '_{}.html'.format(show_index.year)),
+                orig_template
+            ]
+
+        return orig_template
 
 
 # Stream page (for Fashion show)
@@ -107,7 +127,7 @@ class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
 
 
-class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
+class ShowStreamPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     poster_image = models.ForeignKey(
         'rca.RcaImage',
@@ -163,7 +183,7 @@ class ShowStandardPageContent(Orderable):
     ]
 
 
-class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
+class ShowStandardPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
@@ -214,7 +234,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     ]
 
 
-class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
+class ShowExhibitionMapIndex(ShowPageWithYearTemplateMixin, Page, SocialFields):
     @property
     def show_index(self):
         if not hasattr(self, '_show_index'):
@@ -243,7 +263,7 @@ class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
     ]
 
 
-class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
+class ShowExhibitionMapPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
 
@@ -304,6 +324,13 @@ class ShowIndexPageCarouselItem(Orderable, CarouselItemFields):
 
 
 class ShowIndexPage(SuperPage, SocialFields):
+    """
+    To find out how templates work for this page type,
+    see the the docstring for the ShowPageWithYearTemplateMixin class.
+
+    This page uses the same approach but for multiple sub-views.
+    """
+
     body = RichTextField(blank=True, help_text="Optional body text. Useful for holding pages prior to Show launch.")
     year = models.CharField(max_length=4, blank=True)
     overlay_intro = RichTextField(blank=True)
@@ -439,46 +466,47 @@ class ShowIndexPage(SuperPage, SocialFields):
         )
 
     # Views
-    landing_template_t = 'rca_show/landing{}.html'
-    school_index_template_t = 'rca_show/school_index{}.html'
-    school_template_t = 'rca_show/school{}.html'
-    programme_template_t = 'rca_show/programme{}.html'
-    student_template_t = 'rca_show/student{}.html'
-    programme_template_module_t = 'rca_show/includes/modules/gallery{}.html'
 
-    def serve_landing(self, request):
-        # Render response
-        templates = (
-            self.landing_template_t.format("_" + self.year),
-            self.landing_template_t.format(""),
-        )
-        return render(request, templates, {
-            'self': self,
+    def get_context(self, request, *args, **kwargs):
+        context = super(ShowIndexPage, self).get_context(request, *args, **kwargs)
+        context.update({
+            'base_template': get_base_show_template(self.year),
         })
 
-    def serve_school_index(self, request):
+        return context
+
+    def serve_landing(self, request, *args, **kwargs):
         # Render response
         templates = (
-            self.school_index_template_t.format("_" + self.year),
-            self.school_index_template_t.format(""),
+            'rca_show/landing_{}.html'.format(self.year),
+            'rca_show/landing.html',
         )
-        return render(request, templates, {
-            'self': self,
-        })
+        return render(request, templates, self.get_context(request, *args, **kwargs))
 
-    def serve_school(self, request, school_slug):
+    def serve_school_index(self, request, *args, **kwargs):
+        # Render response
+        templates = (
+            'rca_show/school_index_{}.html'.format(self.year),
+            'rca_show/school_index.html',
+        )
+        return render(request, templates, self.get_context(request, *args, **kwargs))
+
+    def serve_school(self, request, school_slug, *args, **kwargs):
         school = get_object_or_404(School, slug=school_slug)
         # Render response
         templates = (
-            self.school_template_t.format("_" + self.year),
-            self.school_template_t.format(""),
+            'rca_show/school+{}.html'.format(self.year),
+            'rca_show/school.html',
         )
-        return render(request, templates, {
-            'self': self,
+
+        context = self.get_context(request, *args, **kwargs)
+        context.update({
             'school': school,
         })
 
-    def serve_programme(self, request, programme_slug, school_slug=None):
+        return render(request, templates, context)
+
+    def serve_programme(self, request, programme_slug, school_slug=None, *args, **kwargs):
         programme = get_object_or_404(Programme, slug=programme_slug)
 
         # Get programme intro
@@ -502,25 +530,27 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Get template
         if request.is_ajax() and 'pjax' not in request.GET:
             templates = (
-                self.programme_template_module_t.format("_" + self.year),
-                self.programme_template_module_t.format(""),
+                'rca_show/includes/modules/gallery_{}.html'.format(self.year),
+                'rca_show/includes/modules/gallery.html',
             )
         else:
             templates = (
-                self.programme_template_t.format("_" + self.year),
-                self.programme_template_t.format(""),
+                'rca_show/programme_{}.html'.format(self.year),
+                'rca_show/programme.html',
             )
 
-        # Render response
-        return render(request, templates, {
-            'self': self,
+        context = self.get_context(request, *args, **kwargs)
+        context.update({
             'school': programme.school,
             'programme': programme,
             'intro': intro,
             'students': students
         })
 
-    def serve_student(self, request, programme_slug, slug, school_slug=None):
+        # Render response
+        return render(request, templates, context)
+
+    def serve_student(self, request, programme_slug, slug, school_slug=None, *args, **kwargs):
         programme = get_object_or_404(Programme, slug=programme_slug)
 
         # Get the student
@@ -530,23 +560,25 @@ class ShowIndexPage(SuperPage, SocialFields):
             raise Http404("Cannot find student")
 
         # Render response
-        return self._serve_student(request, student)
+        return self._serve_student(request, student, *args, **kwargs)
 
-    def _serve_student(self, request, student):
+    def _serve_student(self, request, student, *args, **kwargs):
         """
         This part of the student view is separate to allow us to render any student with this shows styling
         This is used for student page previews
         """
         templates = (
-            self.student_template_t.format("_" + self.year),
-            self.student_template_t.format(""),
+            'rca_show/student_{}.html'.format(self.year),
+            'rca_show/student.html',
         )
-        return render(request, templates, {
-            'self': self,
+
+        context = self.get_context(request, *args, **kwargs)
+        context.update({
             'school': student.programme.school,
             'programme': student.programme,
             'student': student,
         })
+        return render(request, templates, context)
 
     def serve_preview(self, request, mode_name):
         return self.serve(request, self.serve_landing, [], {})
