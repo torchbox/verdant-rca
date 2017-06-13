@@ -92,9 +92,17 @@ class SuperPage(Page):
 
 class PageWithYearTemplate(object):
     """
-    A page mixin that tries to use the "current year" template instead of the base template. Simply appends
-    '_{year}' to the end of the filename, eg. "show_index.html" becomes "show_index_2016.html".
-    If that template does not exist, the base template is used.
+    A page mixin that allows to customise show templates based on the current year.
+
+    It allows two levels of customisation:
+
+        * it's possible to override a base template to change a logo or an intro video.
+        If there is no base template for a specific year, the generic base template is used.
+
+        * You can override a template for a specific page type by appending a year into a template name,
+        so `show_exhibition_map_index.html` becomes `show_exhibition_map_index_2016.html`.
+        If there is no template for a specific year, generic template for a page type is used
+        (e.g. if there is no `show_exhibition_map_index_2016.html`, it uses `show_exhibition_map_index.html`)
     """
 
     def get_context(self, request, *args, **kwargs):
