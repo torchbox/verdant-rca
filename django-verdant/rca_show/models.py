@@ -90,7 +90,7 @@ class SuperPage(Page):
         abstract = True
 
 
-class PageWithYearTemplate(object):
+class ShowPageWithYearTemplateMixin(object):
     """
     A page mixin that allows to customise show templates based on the current year.
 
@@ -106,7 +106,7 @@ class PageWithYearTemplate(object):
     """
 
     def get_context(self, request, *args, **kwargs):
-        context = super(PageWithYearTemplate, self).get_context(request, *args, **kwargs)
+        context = super(ShowPageWithYearTemplateMixin, self).get_context(request, *args, **kwargs)
         context.update({
             'base_template': get_base_show_template(self.show_index.year),
         })
@@ -135,7 +135,7 @@ class ShowStreamPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca_show.ShowStreamPage', related_name='carousel_items')
 
 
-class ShowStreamPage(PageWithYearTemplate, Page, SocialFields):
+class ShowStreamPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     poster_image = models.ForeignKey(
         'rca.RcaImage',
@@ -191,7 +191,7 @@ class ShowStandardPageContent(Orderable):
     ]
 
 
-class ShowStandardPage(PageWithYearTemplate, Page, SocialFields):
+class ShowStandardPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     map_coords = models.CharField(max_length=255, blank=True, help_text="Lat lon coordinates for centre of map e.g 51.501533, -0.179284")
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.")
@@ -242,7 +242,7 @@ class ShowExhibitionMapIndexContent(Orderable):
     ]
 
 
-class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
+class ShowExhibitionMapIndex(ShowPageWithYearTemplateMixin, Page, SocialFields):
     @property
     def show_index(self):
         if not hasattr(self, '_show_index'):
@@ -271,7 +271,7 @@ class ShowExhibitionMapIndex(PageWithYearTemplate, Page, SocialFields):
     ]
 
 
-class ShowExhibitionMapPage(PageWithYearTemplate, Page, SocialFields):
+class ShowExhibitionMapPage(ShowPageWithYearTemplateMixin, Page, SocialFields):
     body = RichTextField(blank=True)
     campus = models.CharField(max_length=255, choices=CAMPUS_CHOICES, null=True, blank=True)
 
