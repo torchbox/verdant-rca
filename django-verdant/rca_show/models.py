@@ -459,26 +459,20 @@ class ShowIndexPage(SuperPage, SocialFields):
         )
 
     # Views
-    landing_template_t = 'rca_show/landing{}.html'
-    school_index_template_t = 'rca_show/school_index{}.html'
-    school_template_t = 'rca_show/school{}.html'
-    programme_template_t = 'rca_show/programme{}.html'
-    student_template_t = 'rca_show/student{}.html'
-    programme_template_module_t = 'rca_show/includes/modules/gallery{}.html'
 
     def serve_landing(self, request, *args, **kwargs):
         # Render response
         templates = (
-            self.landing_template_t.format("_" + self.year),
-            self.landing_template_t.format(""),
+            'rca_show/landing_{}.html'.format(self.year),
+            'rca_show/landing.html',
         )
         return render(request, templates, self.get_context(request, *args, **kwargs))
 
     def serve_school_index(self, request, *args, **kwargs):
         # Render response
         templates = (
-            self.school_index_template_t.format("_" + self.year),
-            self.school_index_template_t.format(""),
+            'rca_show/school_index_{}.html'.format(self.year),
+            'rca_show/school_index.html',
         )
         return render(request, templates, self.get_context(request, *args, **kwargs))
 
@@ -486,8 +480,8 @@ class ShowIndexPage(SuperPage, SocialFields):
         school = get_object_or_404(School, slug=school_slug)
         # Render response
         templates = (
-            self.school_template_t.format("_" + self.year),
-            self.school_template_t.format(""),
+            'rca_show/school+{}.html'.format(self.year),
+            'rca_show/school.html',
         )
 
         context = self.get_context(request, *args, **kwargs)
@@ -521,13 +515,13 @@ class ShowIndexPage(SuperPage, SocialFields):
         # Get template
         if request.is_ajax() and 'pjax' not in request.GET:
             templates = (
-                self.programme_template_module_t.format("_" + self.year),
-                self.programme_template_module_t.format(""),
+                'rca_show/includes/modules/gallery_{}.html'.format(self.year),
+                'rca_show/includes/modules/gallery.html',
             )
         else:
             templates = (
-                self.programme_template_t.format("_" + self.year),
-                self.programme_template_t.format(""),
+                'rca_show/programme_{}.html'.format(self.year),
+                'rca_show/programme.html',
             )
 
         context = self.get_context(request, *args, **kwargs)
@@ -559,8 +553,8 @@ class ShowIndexPage(SuperPage, SocialFields):
         This is used for student page previews
         """
         templates = (
-            self.student_template_t.format("_" + self.year),
-            self.student_template_t.format(""),
+            'rca_show/student_{}.html'.format(self.year),
+            'rca_show/student.html',
         )
 
         context = self.get_context(request, *args, **kwargs)
