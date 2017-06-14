@@ -214,6 +214,7 @@ COMPRESS_PRECOMPILERS = (
     ('text/less', 'lessc {infile} {outfile}'),
 )
 COMPRESS_OFFLINE = True
+COMPRESS_OFFLINE_CONTEXT = 'rcasite.utils.offline_context'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
