@@ -1,0 +1,42 @@
+language: python
+python: "2.7"
+cache:
+  pip: true
+
+# Use container-based infrastructure
+dist: trusty
+sudo: false
+
+# Services
+services:
+  - postgresql
+
+addons:
+  postgresql: "9.6"
+
+env:
+  global:
+    - DJANGO_SETTINGS_MODULE=rcasite.settings.production
+    - DATABASE_URL=postgres://postgres@localhost/test_db
+    - CFG_SECRET_KEY=iamnotsosecret
+    - CFG_ALLOWED_HOSTS=localhost
+
+install:
+  - pip install wheel
+  - pip install -r django-verdant/requirements.txt
+
+before_script:
+  # Create a database
+  - psql -c 'create database test_db;' -U postgres
+
+script:
+  - cd django-verdant
+
+  # Run system checks
+  - python manage.py check
+
+  # Check for missing migrations
+  - bash -c "! python manage.py makemigrations -e --dry-run --noinput"
+
+  # Run tests
+  - python manage.py test
