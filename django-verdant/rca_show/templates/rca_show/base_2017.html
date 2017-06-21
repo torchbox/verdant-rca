@@ -1,0 +1,58 @@
+{% extends "rca_show/base.html" %}
+{% load compress static show_tags wagtailcore_tags %}
+
+{% block body_class %}showrca theme-show2017 {% with self.show_index.get_programmes as programmes %}{% if programmes %}{% for programme in programmes %} programme-{{ programme }}{% endfor %}{% else %} programme-{{ programme }}{% endif %}{% endwith %}{% endblock %}
+
+
+{% block logo %}
+    <a href="{% if self.show_index %}{% pageurl self.show_index %}{% endif %}" class="site-name" tabindex="2"><img src="{% static 'rca_show/images/logo-2017.svg' %}" alt="Show RCA {{ self.show_index.year }}" /></a>
+{% endblock %}
+
+{% block extra_footer %}
+    <div class="prefooter standard-wrapper">
+        <a href="/" class="logo-rca">Royal College of Art</a>
+    </div>
+
+    <div class="footer full-width-footer">
+        <div class="footer-wrapper">
+            <footer>
+                <ul>
+                    <li>
+                        <address>
+                            <h2>Kensington Campus</h2>
+                            Royal College of Art<br />
+                            Kensington Gore<br />
+                            London SW7 2EU
+                        </address>
+                    </li>
+                    {% if not self.is_programme_page %}
+                        <li>
+                            <address>
+                                <h2>Battersea Campus</h2>
+                                15-25 Howie St<br />
+                                London<br />
+                                SW11 4AS
+                            </address>
+                        </li>
+                    {% endif %}
+                    {% for item in self.show_index.menu_items %}
+                        <li>
+                            <a href="{{ item.0 }}">{{ item.1 }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </footer>
+        </div>
+    </div>
+
+    {% if self.show_index.overlay_intro %}
+        <div id="overlay" class="fade">
+            <div class="content">
+
+                <video autoplay="autoplay" class="full-screen-video">
+                    <source src="hhttps://player.vimeo.com/external/221599652.hd.mp4s=e6413fa7076e0d45de7ed05d3fc72188d1ff6c4c&profile_id=119" type="video/mp4">
+                </video>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
