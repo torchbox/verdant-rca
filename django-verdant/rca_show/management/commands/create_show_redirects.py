@@ -50,9 +50,9 @@ class Command(BaseCommand):
 
             # Find students url inside
             if show_index.is_programme_page:
-                to_url = show_index.reverse_subpage('student', programme=student.programme, slug=student.slug)
+                to_url = show_index.reverse_subpage('student', programme_slug=student.programme.slug, slug=student.slug)
             else:
-                to_url = show_index.reverse_subpage('student', school=student.school, programme=student.programme, slug=student.slug)
+                to_url = show_index.reverse_subpage('student', school_slug=student.school.slug, programme_slug=student.programme.slug, slug=student.slug)
 
             # Normalise the URL
             from_url_normalised = Redirect.normalise_path(from_url)
