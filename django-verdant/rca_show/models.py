@@ -13,7 +13,6 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, Inli
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
-from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
 
 from rca.utils.models import CarouselItemFields, SocialFields
 from rca_show.utils import get_base_show_template
@@ -304,7 +303,7 @@ class ShowIndexPageProgramme(Orderable):
     programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", on_delete=models.CASCADE, related_name='+')
 
     panels = [
-        SnippetChooserPanel('programme'),
+        FieldPanel('programme'),
     ]
 
 
@@ -314,7 +313,7 @@ class ShowIndexProgrammeIntro(Orderable):
     intro = RichTextField(blank=True)
 
     panels = [
-        SnippetChooserPanel('programme'),
+        FieldPanel('programme'),
         FieldPanel('intro'),
     ]
 
