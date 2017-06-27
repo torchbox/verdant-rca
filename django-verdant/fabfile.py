@@ -106,16 +106,16 @@ def staging_fetch_live_data():
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
     local('gunzip %s.gz' % local_path)
-    local('psql rcawagtail -f %s' % local_path)
+    local('psql rca -f %s' % local_path)
     local('rm %s' % local_path)
 
 
 @roles('staging')
 def sync_staging_with_live():
     env.forward_agent = True
-    run('fab staging_fetch_live_data')
-    run("django-admin.py migrate --settings=rcasite.settings.staging --noinput")
-    run("rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/media/ /usr/local/django/rcawagtail/django-verdant/media/")
+    run('cd django-verdant && fab staging_fetch_live_data')
+    run('django-admin.py migrate --settings=rcasite.settings.staging --noinput')
+    run('rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/media/ /var/www/rca/media/')
 
 
 @roles('production')
