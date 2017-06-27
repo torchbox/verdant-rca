@@ -98,15 +98,16 @@ def fetch_staging_data():
 @roles('production')
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
-    local_path = "/usr/local/django/rcawagtail/tmp/%s" % filename
+    local_path = "/var/www/rca/tmp/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s verdant_rca' % remote_path)
+    run('pg_dump -Fc -x -cf %s verdant_rca --exclude-table-data=wagtailcore_pagerevision' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
     local('gunzip %s.gz' % local_path)
-    local('psql rca -f %s' % local_path)
+    local('psql -d rca -c"DROP SCHEMA public CASCADE;"')
+    local('pg_restore --role=rca -d rca %s' % local_path)
     local('rm %s' % local_path)
 
 
@@ -115,7 +116,7 @@ def sync_staging_with_live():
     env.forward_agent = True
     run('cd django-verdant && fab staging_fetch_live_data')
     run('django-admin.py migrate --settings=rcasite.settings.staging --noinput')
-    run('rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/media/ /var/www/rca/media/')
+    run('rsync -avz rca@web-1-b.rca.bmyrk.torchbox.net:/verdant-shared/sroot/rca/media/ /var/www/rca/media/')
 
 
 @roles('production')
