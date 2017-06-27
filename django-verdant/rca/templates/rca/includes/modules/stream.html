@@ -1,18 +1,8 @@
 {% load wagtailimages_tags wagtailembeds_tags static %}
 
 
-
-
 <section class="row">
-    <div itemscope itemtype="https://schema.org/VideoObject">
-    <meta itemprop="uploadDate" content="2017-06-27T11:51:19+0100" />
-    <meta itemprop="name" content="RCA Convocation" />
-    {% if poster_image %}
-        {% image poster_image original as poster_image_rendition %}
-        <meta itemprop="thumbnailUrl" content="{{ poster_image_rendition.url }}" />
-    {% endif %}
-    <meta itemprop="contentUrl" content="https://ee3a48.entrypoint.cloud.wowza.com/app-46c4/ngrp:40197c94_all/playlist.m3u8" />
-    <script src="https://content.jwplatform.com/players/4HPt6KD8-CWFyJq91.js"></script></div>
+    <div itemscope itemtype="https://schema.org/VideoObject"><meta itemprop="uploadDate" content="2017-06-27T11:51:19+0100" /><meta itemprop="name" content="RCA Convocation" /><meta itemprop="contentUrl" content="https://ee3a48.entrypoint.cloud.wowza.com/app-46c4/ngrp:40197c94_all/playlist.m3u8" /><div style="position:relative; padding-bottom:56.25%; overflow:hidden;"><iframe src="//content.jwplatform.com/players/4HPt6KD8-CWFyJq91.html" width="100%" height="100%" frameborder="0" scrolling="auto" allowfullscreen style="position:absolute;"></iframe></div></div>
 </section>
 
 <!-- 2016 embed code
