@@ -101,7 +101,7 @@ def staging_fetch_live_data():
     local_path = "/var/www/rca/tmp/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -Fc -x -cf %s verdant_rca --exclude-table-data=wagtailcore_pagerevision' % remote_path)
+    run('pg_dump -Fc -x -cf %s verdant_rca' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
