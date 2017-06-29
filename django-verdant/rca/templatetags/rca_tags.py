@@ -660,6 +660,7 @@ def get_lightbox_config():
     excluded = []
 
     DONT_OPEN_IN_LIGHTBOX = [
+        'rca.LightboxGalleryPage',
         'rca.ProgrammePage',
         'rca.SchoolPage',
         'rca.GalleryPage',
