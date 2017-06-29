@@ -171,6 +171,7 @@ $(function(){
             $this.closest('aside').length,
             $this.closest('.pjax-content').length,
             $this.closest('aside').length,
+            $this.closest('lightbox'),
             !$this.closest('.page-wrapper').length
         ];
 
