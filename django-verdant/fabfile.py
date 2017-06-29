@@ -107,6 +107,7 @@ def staging_fetch_live_data():
     run('rm %s.gz' % remote_path)
     local('gunzip %s.gz' % local_path)
     local('psql -d rca -c"DROP SCHEMA public CASCADE;"')
+    local('psql -d rca -c"CREATE SCHEMA public;"')
     local('pg_restore --role=rca -d rca %s' % local_path)
     local('rm %s' % local_path)
 
