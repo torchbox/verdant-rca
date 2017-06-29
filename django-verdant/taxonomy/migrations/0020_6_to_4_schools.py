@@ -212,7 +212,7 @@ def change_schools_and_programmes(apps, schema_editor):
 
     # delete schools, making sure no related objects get cascade deleted
     assert School.objects.filter(slug='schoolofhumanities').delete()[0] == 1
-    assert School.objects.filter(slug='schoolofmaterial').delete()[0] == 1
+    # assert School.objects.filter(slug='schoolofmaterial').delete()[0] == 1
 
     print("\nSchoolPages to be updated manually")
     print("\nRun update_unpublished_revsions() with the following IDs:")
