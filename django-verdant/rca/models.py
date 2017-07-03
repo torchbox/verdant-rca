@@ -526,7 +526,7 @@ class SchoolPageAlsoOfInterest(Orderable, RelatedLinkMixin):
 class SchoolPage(Page, SocialFields, SidebarBehaviourFields):
     PACKERY_CHOICES = zip(range(11), range(11))
 
-    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'), blank=True)
+    school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='school_pages', help_text=help_text('rca.SchoolPage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.SchoolPage', 'background_image', default="The full bleed image in the background"))
 
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.SchoolPage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
