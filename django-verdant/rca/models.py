@@ -832,12 +832,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
     ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
     ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
-
+    
     ma_programme_staff_link = models.URLField("Programme staff link", blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link'))
     ma_programme_staff_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link_text'))
     ma_programme_overview_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link'))
     ma_programme_overview_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
-
+    
     ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
     ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link_text'))
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
@@ -1623,9 +1623,9 @@ class PastEventItemManager(PageManager):
         )
 
 class EventItem(Page, SocialFields):
-    body = RichTextField(help_text=help_text('rca.EventItem', 'body'), blank=True)
+    body = RichTextField(help_text=help_text('rca.EventItem', 'body'))
     audience = models.CharField(max_length=255, choices=EVENT_AUDIENCE_CHOICES, help_text=help_text('rca.EventItem', 'audience'))
-    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'), blank=True)
+    area = models.ForeignKey('taxonomy.Area', null=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.EventItem', 'area'))
     location = models.CharField(max_length=255, choices=EVENT_LOCATION_CHOICES, help_text=help_text('rca.EventItem', 'location'))
     location_other = models.CharField("'Other' location", max_length=255, blank=True, help_text=help_text('rca.EventItem', 'location_other'))
     specific_directions = models.CharField(max_length=255, blank=True, help_text=help_text('rca.EventItem', 'specific_directions', default="Brief, more specific location e.g Go to reception on 2nd floor"))
@@ -4728,11 +4728,11 @@ class ResearchItem(Page, SocialFields):
     subtitle = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'subtitle'))
     research_type = models.CharField(max_length=255, choices=RESEARCH_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'research_type'))
     ref = models.BooleanField(default=False, blank=True, help_text=help_text('rca.ResearchItem', 'ref'))
-    year = models.CharField(max_length=4, help_text=help_text('rca.ResearchItem', 'year'), blank=True)
+    year = models.CharField(max_length=4, help_text=help_text('rca.ResearchItem', 'year'))
     description = RichTextField(help_text=help_text('rca.ResearchItem', 'description'))
     school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='research_items', help_text=help_text('rca.ResearchItem', 'school'))
     programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='research_items', help_text=help_text('rca.ResearchItem', 'programme'))
-    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'work_type'), blank=True)
+    work_type = models.CharField(max_length=255, choices=WORK_TYPES_CHOICES, help_text=help_text('rca.ResearchItem', 'work_type'))
     work_type_other = models.CharField("'Other' work type", max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'work_type_other'))
     theme = models.CharField(max_length=255, choices=WORK_THEME_CHOICES, blank=True, help_text=help_text('rca.ResearchItem', 'theme'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ResearchItem', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
