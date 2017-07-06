@@ -832,12 +832,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
     ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
     ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
-    
+
     ma_programme_staff_link = models.URLField("Programme staff link", blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link'))
     ma_programme_staff_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link_text'))
     ma_programme_overview_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link'))
     ma_programme_overview_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
-    
+
     ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
     ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link_text'))
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
@@ -3015,12 +3015,14 @@ JobsIndex.promote_panels = [
 class StaffPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.StaffPage', related_name='carousel_items')
 
+
 class StaffPageRole(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='roles')
-    title = models.CharField(max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
+    title = models.CharField('Job title', max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
     school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
     programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
+    location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPageRole', 'location'))
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.StaffPageRole', 'email'))
 
     api_fields = [
@@ -3028,6 +3030,7 @@ class StaffPageRole(Orderable):
         'school',
         'programme',
         'area',
+        'location'
         'email',
     ]
 
@@ -3036,8 +3039,35 @@ class StaffPageRole(Orderable):
         FieldPanel('school'),
         FieldPanel('programme'),
         FieldPanel('area'),
+        FieldPanel('location'),
         FieldPanel('email'),
     ]
+
+    def clean(self):
+        if hasattr(self, 'page'):
+            # Will display all errors at the same time, so need to create a dict
+            errors = {x: [] for x in ('area', 'locatgion', 'programme', 'school')}
+
+            # Staff location must be only for technical staff
+            if self.page.staff_type != 'technical' and self.location:
+                errors['location'].append('Location can be assigned only to technical staff')
+
+            # School and programme must be only for academic staff
+            if self.page.staff_type != 'academic':
+                if self.school:
+                    errors['school'].append('School can be assigned only to academic staff.')
+
+                if self.programme:
+                    errors['programme'].append('Programme can be only assigned to academic staff.')
+
+            # Area cannot be filled in when staff is non-academic/administrative
+            if self.page.staff_type not in ('academic', 'administrative') and self.area:
+                errors['area'].append('Area can be only assigned to academic or administrative staff.')
+
+            # If there are any errors in our dict, raise them.
+            if any(errors.itervalues()):
+                raise ValidationError(errors)
+
 
 class StaffPageCollaborations(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='collaborations')
@@ -3089,10 +3119,8 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
-    staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
-    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location'))
+    staff_type = models.CharField(max_length=255, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'twitter_feed'))
     intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'), blank=True)
     biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'), blank=True)
@@ -3115,8 +3143,10 @@ class StaffPage(Page, SocialFields):
     ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StaffPage', 'ad_username'))
 
     search_fields = Page.search_fields + [
-        index.RelatedFields('area', [
-            index.SearchField('display_name'),
+        index.RelatedFields('roles', [
+            index.RelatedFields('area', [
+                index.SearchField('display_name'),
+            ]),
         ]),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
@@ -3124,10 +3154,8 @@ class StaffPage(Page, SocialFields):
     ]
 
     api_fields = [
-        'area',
         'profile_image',
         'staff_type',
-        'staff_location',
         'twitter_feed',
         'intro',
         'biography',
@@ -3162,10 +3190,8 @@ StaffPage.content_panels = [
         FieldPanel('first_name'),
         FieldPanel('last_name'),
     ], 'Full name'),
-    FieldPanel('area'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
-    FieldPanel('staff_location'),
     InlinePanel('roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
@@ -3256,8 +3282,6 @@ class StaffIndex(Page, SocialFields):
         # Area
         area_options = Area.objects.filter(
             id__in=StaffPageRole.objects.values_list('area', flat=True)
-        ) | Area.objects.filter(
-            id__in=StaffPage.objects.values_list('area', flat=True)
         )
 
         area = area_options.filter(slug=area_slug).first()
@@ -3274,10 +3298,7 @@ class StaffIndex(Page, SocialFields):
             )
 
         if area:
-            staff_pages = staff_pages.filter(
-                models.Q(area=area) |
-                models.Q(roles__area=area)
-            )
+            staff_pages = staff_pages.filter(roles__area=area)
 
         if staff_type:
             staff_pages = staff_pages.filter(staff_type=staff_type)

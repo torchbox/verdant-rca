@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls import url
+from django.utils.html import format_html
 
 from .models import RcaNowPage
 from . import admin_views
@@ -76,3 +77,11 @@ def register_admin_urls():
     return [
         url(r'^push_to_intranet/(\d+)/$', admin_views.push_to_intranet, name='push_to_intranet'),
     ]
+
+@hooks.register('insert_global_admin_js')
+def add_staff_page_admin_editor_javascript():
+    return format_html(
+        """
+            <script src="{}rca/js/staff-page-editor.js"></script>
+        """.format(settings.STATIC_URL)
+    )

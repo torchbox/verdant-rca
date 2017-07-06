@@ -226,8 +226,6 @@ def staff_related(context, staff_page, count=4):
 
     if programme_ids:
         staff = staff.filter(roles__programme_id__in=programme_ids)
-    elif staff_page.area:
-        staff = staff.filter(area=staff_page.area)
 
     return {
         'staff': staff[:count],

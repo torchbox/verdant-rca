@@ -23,7 +23,7 @@ HELP_TEXT = {
     ('rca.ProgrammePage', 'programme_specification'): 'The link to download the programme specification',
     ('rca.ProgrammePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term',
     ('rca.ProgrammePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
-    
+
     ('rca.NewsIndex', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.NewsIndex', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.NewsItem', 'listing_intro'): 'Used only on pages listing news items',
@@ -65,7 +65,6 @@ HELP_TEXT = {
     ('rca.AlumniPage', 'listing_intro'): 'Used only on pages displaying a list of pages of this type',
     ('rca.AlumniPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.StaffPage', 'school'): 'Please complete this field for academic and administrative staff only',
-    ('rca.StaffPage', 'staff_location'): 'Please complete this field for technical staff only',
     ('rca.StaffPage', 'listing_intro'): 'Used only on pages displaying a list of pages of this type',
     ('rca.StaffPage', 'supervised_student_other'): "Enter names of research students here who don't have a student profile. Supervised students with profile pages are pulled in automatically.",
     ('rca.StaffPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
