@@ -73,17 +73,6 @@ def change_schools_and_programmes(apps, schema_editor):
     # change school attribute of pages
     # --------------------------------
 
-    # def save(page, *args, **kwargs):
-    #     print('/admin/pages/%d/edit/' % page.id)
-    #     if page.has_unpublished_changes:
-    #         print('page has unpublished changes, skipping')
-    #     else:
-    #         try:
-    #             page.save(*args, **kwargs)
-    #         except ValidationError as e:
-    #             print(str(e))
-    #     print('\n')
-
     # run update_unpublished_revsions with these IDs after the migration
     unpublished_pages = []
 
