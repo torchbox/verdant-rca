@@ -171,7 +171,7 @@ $(function(){
             $this.closest('.pjax-content').length,
             $this.closest('.pushstate-exclude').length,
             $this.closest('aside').length,
-            $this.closest('lightbox'),
+            $this.hasClass('lightbox'),
             !$this.closest('.page-wrapper').length
         ];
 
@@ -193,7 +193,6 @@ $(function(){
         var openInLightbox = !(new RegExp(window.neverOpenInLightbox[0]).test(href));
         if(openInLightbox)
             openInLightbox = !(new RegExp(window.neverOpenInLightbox[1]).test(href));
-
 
         return openInLightbox;
     }
