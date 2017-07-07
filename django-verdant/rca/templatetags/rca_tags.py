@@ -666,7 +666,8 @@ def get_lightbox_config():
         'rca.DonationPage',
         'rca.StreamPage',
         'rca_show.ShowStreamPage',
-        'staff.ExpertsIndexPage'
+        'staff.ExpertsIndexPage',
+        'rca.LightboxGalleryPage',
     ]  # 'rca.OEFormPage'
 
     for path in DONT_OPEN_IN_LIGHTBOX:
