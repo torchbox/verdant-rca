@@ -718,3 +718,24 @@ def enquiry_form(context):
         'request': request,
         'enquiry_page': enquiry_page,
     }
+
+
+@register.inclusion_tag('rca/includes/double_click_ads.html', takes_context=True)
+def double_click_ads(context):
+    page = context.get('self')
+    cat = None
+
+    cache_key = 'double_click_ads'
+    double_click_ads = cache.get(cache_key)
+    if not double_click_ads:
+        double_click_ads = DoubleclickCampaignManagerActivities.objects.all()
+        cache.set(cache_key, double_click_ads, 60 * 60)
+
+    for ads in double_click_ads:
+        if ads.page.pk == page.pk:
+            cat = ads.cat
+
+    return {
+        'cat': cat,
+        'page': page
+    }

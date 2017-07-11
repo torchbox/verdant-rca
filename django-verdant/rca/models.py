@@ -6671,3 +6671,25 @@ class EnquiryFormSettings(BaseSetting):
     panels = [
         PageChooserPanel('form_page', page_type=EnquiryFormPage),
     ]
+
+
+# == Snippet: DoubleclickCampaignManagerActivities ==
+# Ticket: https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898
+
+
+class DoubleclickCampaignManagerActivities(models.Model):
+    page = models.ForeignKey(Page, related_name='double_click', null=True, blank=True,
+        help_text=help_text('rca.DoubleclickCampaignManagerActivities', 'page'))
+    cat = models.CharField(max_length=255,
+        help_text=help_text('rca.DoubleclickCampaignManagerActivities', 'text', default="bold text"))
+
+    panels = [
+        PageChooserPanel('page'),
+        FieldPanel('cat'),
+    ]
+
+    def __unicode__(self):
+        return "{} -> {}".format(self.page.slug, self.cat)
+
+
+register_snippet(DoubleclickCampaignManagerActivities)
