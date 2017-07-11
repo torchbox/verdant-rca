@@ -6681,7 +6681,7 @@ class DoubleclickCampaignManagerActivities(models.Model):
     page = models.ForeignKey(Page, related_name='double_click', null=True, blank=True,
         help_text=help_text('rca.DoubleclickCampaignManagerActivities', 'page'))
     cat = models.CharField(max_length=255,
-        help_text=help_text('rca.DoubleclickCampaignManagerActivities', 'text', default="bold text"))
+        help_text=help_text('rca.DoubleclickCampaignManagerActivities', 'cat'))
 
     panels = [
         PageChooserPanel('page'),
