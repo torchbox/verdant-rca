@@ -723,10 +723,14 @@ def enquiry_form(context):
 @register.inclusion_tag('rca/includes/double_click_ads.html', takes_context=True)
 def double_click_ads(context):
     page = context.get('self')
-    double_click_ads = DoubleclickCampaignManagerActivities.objects.only('cat')\
-        .filter(page_id=page.id)\
-        .first()
-    cat = double_click_ads.cat if double_click_ads else None
+
+    if page is not None:
+        double_click_ads = DoubleclickCampaignManagerActivities.objects.only('cat')\
+            .filter(page_id=page.id)\
+            .first()
+        cat = double_click_ads.cat if double_click_ads else None
+    else:
+        cat = None
 
     return {
         'cat': cat,
