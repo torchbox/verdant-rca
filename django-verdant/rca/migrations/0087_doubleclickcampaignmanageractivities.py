@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='DoubleclickCampaignManagerActivities',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cat', models.CharField(help_text=b'bold text', max_length=255)),
+                ('cat', models.CharField(help_text=b'', max_length=255)),
                 ('page', models.ForeignKey(blank=True, help_text=b'', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='double_click', to='wagtailcore.Page')),
             ],
         ),
