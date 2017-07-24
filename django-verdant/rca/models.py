@@ -6584,6 +6584,19 @@ class EnquiryFormField(AbstractFormField):
     page = ParentalKey('EnquiryFormPage', related_name='form_fields')
 
 
+class EnquiryFormBuilder(WagtailCaptchaFormBuilder):
+
+    def get_field_options(self, field):
+        options = super(EnquiryFormBuilder, self).get_field_options(field)
+
+        if field.field_type == 'date':
+            # Hobsons are expecting to receive emails with dates in a specific format.
+            # On front-end we also have a date picker that uses this format.
+            options['input_formats'] = ['%d/%m/%Y']
+
+        return options
+
+
 class EnquiryFormPage(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     thank_you_text = RichTextField(blank=True)
@@ -6592,7 +6605,13 @@ class EnquiryFormPage(WagtailCaptchaEmailForm):
         help_text="Optional - form submissions from the rest of the world will be emailed to these addresses (instead of the standard addresses). Separate multiple addresses by comma."
     )
 
-    form_builder = WagtailCaptchaFormBuilder
+    def __init__(self, *args, **kwargs):
+        super(EnquiryFormPage, self).__init__(*args, **kwargs)
+
+        # We need to set form builder here since wagtailcaptcha
+        # sets it in __init__ too. We subclass it to override date
+        # of birth format.
+        self.form_builder = EnquiryFormBuilder
 
     def get_to_address(self, submission, form):
         # HACK: Work out whether they are in or out of the EU depending on the value of one of the fields
