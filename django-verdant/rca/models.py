@@ -5,6 +5,7 @@ import random
 
 from itertools import chain
 
+from captcha.fields import ReCaptchaField
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
@@ -6623,7 +6624,12 @@ class EnquiryFormPage(WagtailCaptchaEmailForm):
 
     def send_mail(self, form, to_address):
         addresses = [x.strip() for x in to_address.split(',')]
-        content = '\n'.join([x[1].label + ': ' + unicode(form.data.get(x[0])) for x in form.fields.items()])
+
+        content = ''
+        for x in form.fields.items():
+            if not isinstance(x[1], ReCaptchaField):  # exclude ReCaptchaField from notification
+                content += '\n' + x[1].label + ': ' + unicode(form.data.get(x[0]))
+
         send_mail(self.subject, content, addresses, self.from_address)
 
     def process_form_submission(self, form):
