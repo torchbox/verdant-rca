@@ -83,7 +83,7 @@ def fetch_staging_data():
     local_path = "/tmp/%s" % filename
     remote_path = "/tmp/%s" % filename
 
-    run('pg_dump -cf %s rcawagtail' % remote_path)
+    run('pg_dump -cf %s rca' % remote_path)
     run('gzip %s' % remote_path)
     get("%s.gz" % remote_path, "%s.gz" % local_path)
     run('rm %s.gz' % remote_path)
