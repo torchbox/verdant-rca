@@ -4059,7 +4059,7 @@ class NewStudentPage(Page, SocialFields):
         if self.mphil_programme:
             return self.mphil_programme.school
 
-        return self.mphil_school or None
+        return self.mphil_school
 
     def get_mphil_school_display(self):
         mphil_school = self.get_mphil_school()
@@ -4077,7 +4077,7 @@ class NewStudentPage(Page, SocialFields):
         if self.phd_programme:
             return self.phd_programme.school
 
-        return self.phd_school or None
+        return self.phd_school
 
     def get_phd_school_display(self):
         phd_school = self.get_phd_school()
