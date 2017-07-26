@@ -27,5 +27,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(remove_school_of_material, do_nothing),
+        # Do not need this migration anymore.
+        # migrations.RunPython(remove_school_of_material, do_nothing),
     ]
