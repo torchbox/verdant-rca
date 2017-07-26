@@ -241,5 +241,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(change_schools_and_programmes, do_nothing),
+        # Do not need this migration anymore.
+        # migrations.RunPython(change_schools_and_programmes, do_nothing),
     ]
