@@ -4015,15 +4015,19 @@ class NewStudentPage(Page, SocialFields):
     pushable_to_intranet = True
 
     def clean(self):
+        SCHOOL_PROGRAMME_ERROR = 'Please only select a School if your degree ' \
+                                 'is not associated with a specific programme.'
+
+        errors = {k: [] for k in ('phd_school', 'mphil_school')}
+
         if self.phd_programme and self.phd_school:
-            raise ValidationError({'phd_school': [
-                'School setting won\'t apply if programme is set'
-            ]})
+            errors['phd_school'].append(SCHOOL_PROGRAMME_ERROR)
 
         if self.mphil_programme and self.mphil_school:
-            raise ValidationError({'mphil_school': [
-                'School setting won\'t apply if programme is set'
-            ]})
+            errors['mphil_school'].append(SCHOOL_PROGRAMME_ERROR)
+
+        if any(errors.values()):
+            raise ValidationError(errors)
 
     @property
     def is_ma_student(self):
