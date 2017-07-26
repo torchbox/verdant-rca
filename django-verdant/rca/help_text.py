@@ -23,7 +23,7 @@ HELP_TEXT = {
     ('rca.ProgrammePage', 'programme_specification'): 'The link to download the programme specification',
     ('rca.ProgrammePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term',
     ('rca.ProgrammePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
-    
+
     ('rca.NewsIndex', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.NewsIndex', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.NewsItem', 'listing_intro'): 'Used only on pages listing news items',
@@ -108,9 +108,11 @@ HELP_TEXT = {
     ('rca.NewStudentPage', 'mphil_start_year'): 'The year you began your MPhil',
     ('rca.NewStudentPage', 'mphil_statement'): 'Description of your MPhil dissertation or project',
     ('rca.NewStudentPage', 'mphil_in_show'): "Please tick only if you're an MPhil in the Show this year",
+    ('rca.NewStudentPage', 'mphil_programme'): 'If set, school setting will be ignored',
     ('rca.NewStudentPage', 'phd_start_year'): 'The year you began your PhD',
     ('rca.NewStudentPage', 'phd_statement'): 'Description of your PhD dissertation or project',
     ('rca.NewStudentPage', 'phd_in_show'): 'Please tick only if you are a PhD student in the Show this year',
+    ('rca.NewStudentPage', 'phd_programme'): 'If set, school setting will be ignored',
     ('rca.RcaNowPage', 'body'): "This is the main text of your post. It should be a description of the work, project or idea you're posting about",
     ('rca.RcaNowPage', 'author'): "Enter your full name as you'd like it to appear, e.g. Tom Smith. If this post was authored by a group of people, add all names as they are supposed to appear.",
     ('rca.RcaNowPage', 'date'): 'The date of your RCA Now post',
