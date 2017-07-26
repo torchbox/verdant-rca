@@ -643,7 +643,8 @@ def get_student_carousel_items(student, degree=None, hide_animation_videos=True)
     carousel_items = profile['carousel_items'].all()
 
     # If this is an animation student, remove the first two carousel items if they are vimeo videos
-    if hide_animation_videos and profile['programme'].slug in ['animation', 'visualcommunication']:
+    if hide_animation_videos and profile.get('programme') and \
+            profile['programme'].slug in ['animation', 'visualcommunication']:
         for i in range(2):
             try:
                 first_carousel_item = carousel_items[0]
