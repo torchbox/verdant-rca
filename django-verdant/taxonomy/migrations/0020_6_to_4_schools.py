@@ -237,10 +237,10 @@ def do_nothing(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('rca', '0086_schoolpageresearchlinks_allow_to_add_external_links'),
         ('taxonomy', '0019_auto_20160901_1129'),
     ]
 
     operations = [
-        # Do not need this migration anymore.
-        # migrations.RunPython(change_schools_and_programmes, do_nothing),
+        migrations.RunPython(change_schools_and_programmes, do_nothing),
     ]
