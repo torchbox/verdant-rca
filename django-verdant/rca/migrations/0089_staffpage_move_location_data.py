@@ -6,24 +6,23 @@ import json
 from django.db import migrations
 
 
-def move_area_data(apps, schema_editor):
+def move_location_data(apps, schema_editor):
     """
-    Move StaffPage.area to StaffPageRole.area if the user is
-    academic/administrative and if StaffPageRole.area is empty.
+    Move StaffPage.location to StaffPageRole.location if the user is
+    technical.
     """
     StaffPage = apps.get_model('rca', 'StaffPage')
 
-    # Move area data to roles
+    # Move location data to roles
     records = StaffPage.objects \
                         .prefetch_related('roles') \
-                        .filter(staff_type__in=('administrative', 'academic')) \
-                        .filter(area__isnull=False)
+                        .exclude(staff_location='') \
+                        .filter(staff_type='technical') \
 
-    print('Found {} records to update.'.format(records.count()))
+    print('Found {} records of technical staff with location data '
+            'to migrate.'.format(records.count()))
 
     for staff in records:
-        first_role = staff.roles.filter(area__isnull=True).first()
-        
         # Update revisions
         if staff.has_unpublished_changes:
             # Can't use get_latest_revision() as I am unable to call
@@ -36,23 +35,25 @@ def move_area_data(apps, schema_editor):
                 if revision_json['roles']:
                     print('Updating draft of {} (#{}).'.format(staff, staff.pk))
 
-                    revision_json['roles'][0]['area'] = staff.area_id
+                    revision_json['roles'][0]['location'] = staff.staff_location
 
                     revision.content_json = json.dumps(revision_json)
                     revision.save()
-        
+
+        first_role = staff.roles.first()
+
         if first_role is not None:
             print('Updating live version of {} (#{}).'.format(staff, staff.pk))
 
-            first_role.area = staff.area
+            first_role.location = staff.staff_location
             first_role.save()
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rca', '0086_schoolpageresearchlinks_allow_to_add_external_links'),
+        ('rca', '0088_staffpage_move_area_and_location_field_to_roles'),
     ]
 
     operations = [
-        migrations.RunPython(move_area_data)
+        migrations.RunPython(move_location_data)
     ]

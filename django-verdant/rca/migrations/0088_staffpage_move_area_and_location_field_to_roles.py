@@ -16,10 +16,6 @@ class Migration(migrations.Migration):
             model_name='staffpage',
             name='area',
         ),
-        migrations.RemoveField(
-            model_name='staffpage',
-            name='staff_location',
-        ),
         migrations.AddField(
             model_name='staffpagerole',
             name='location',

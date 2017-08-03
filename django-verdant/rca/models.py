@@ -66,6 +66,7 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBui
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
+from .forms import StaffPageForm
 from .help_text import help_text
 
 
@@ -3043,31 +3044,6 @@ class StaffPageRole(Orderable):
         FieldPanel('email'),
     ]
 
-    def clean(self):
-        if hasattr(self, 'page'):
-            # Will display all errors at the same time, so need to create a dict
-            errors = {x: [] for x in ('area', 'locatgion', 'programme', 'school')}
-
-            # Staff location must be only for technical staff
-            if self.page.staff_type != 'technical' and self.location:
-                errors['location'].append('Location can be assigned only to technical staff')
-
-            # School and programme must be only for academic staff
-            if self.page.staff_type != 'academic':
-                if self.school:
-                    errors['school'].append('School can be assigned only to academic staff.')
-
-                if self.programme:
-                    errors['programme'].append('Programme can be only assigned to academic staff.')
-
-            # Area cannot be filled in when staff is non-academic/administrative
-            if self.page.staff_type not in ('academic', 'administrative') and self.area:
-                errors['area'].append('Area can be only assigned to academic or administrative staff.')
-
-            # If there are any errors in our dict, raise them.
-            if any(errors.itervalues()):
-                raise ValidationError(errors)
-
 
 class StaffPageCollaborations(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='collaborations')
@@ -3141,6 +3117,8 @@ class StaffPage(Page, SocialFields):
     random_order = models.IntegerField(null=True, blank=True, editable=False)
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StaffPage', 'ad_username'))
+
+    base_form_class = StaffPageForm
 
     search_fields = Page.search_fields + [
         index.RelatedFields('roles', [

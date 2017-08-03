@@ -81,7 +81,7 @@ def register_admin_urls():
 @hooks.register('insert_global_admin_js')
 def add_staff_page_admin_editor_javascript():
     return format_html(
-        """
-            <script src="{}rca/js/staff-page-editor.js"></script>
-        """.format(settings.STATIC_URL)
+        """<script src="{}rca/js/staff-page-editor.js"></script>""".format(
+            settings.STATIC_URL
+        )
     )
