@@ -4017,16 +4017,54 @@ class NewStudentPage(Page, SocialFields):
     def clean(self):
         SCHOOL_PROGRAMME_ERROR = 'Please only select a School if your degree ' \
                                  'is not associated with a specific programme.'
-
-        errors = {k: [] for k in ('phd_school', 'mphil_school')}
-
+        # Make sure both options - MPhil and PhD - are not selected
+        errors = {}
+        
         if self.phd_programme and self.phd_school:
-            errors['phd_school'].append(SCHOOL_PROGRAMME_ERROR)
+            errors['phd_school'] = [SCHOOL_PROGRAMME_ERROR]
 
         if self.mphil_programme and self.mphil_school:
-            errors['mphil_school'].append(SCHOOL_PROGRAMME_ERROR)
+            errors['mphil_school'] = [SCHOOL_PROGRAMME_ERROR]
 
         if any(errors.values()):
+            raise ValidationError(errors)
+        
+        # If MPhil details are filled in, please require programme or school
+        # field
+        PHD_MPHIL_EMPTY_MSG = 'Please choose programme or school option.'
+        
+        mphil_fields = [f for f in self._meta.get_fields() if f.concrete \
+                            and f.name.startswith('mphil') \
+                            and getattr(self, f.name) \
+                            and f.name not in ('mphil_programme', 'mphil_school')]
+
+        if mphil_fields and not self.mphil_programme and not self.mphil_school:
+    
+            errors = {
+                'mphil_school': PHD_MPHIL_EMPTY_MSG,
+                'mphil_programme': PHD_MPHIL_EMPTY_MSG
+            }
+
+            errors.update({f.name: PHD_MPHIL_EMPTY_MSG for f in mphil_fields})
+
+            raise ValidationError(errors)
+
+        # If PhD details are filled in, please require programme or school
+        # field
+        phd_fields = [f for f in self._meta.get_fields() if f.concrete \
+                            and f.name.startswith('phd') \
+                            and getattr(self, f.name) \
+                            and f.name not in ('phd_programme', 'phd_school')]
+
+        if phd_fields and not self.phd_programme and not self.phd_school:
+
+            errors = {
+                'phd_school': PHD_MPHIL_EMPTY_MSG,
+                'phd_programme': PHD_MPHIL_EMPTY_MSG
+            }
+
+            errors.update({f.name: PHD_MPHIL_EMPTY_MSG for f in phd_fields})
+
             raise ValidationError(errors)
 
     @property
