@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rca', '0089_staffpage_move_location_data'),
+        ('rca', '0090_staffpage_move_location_data'),
     ]
 
     operations = [

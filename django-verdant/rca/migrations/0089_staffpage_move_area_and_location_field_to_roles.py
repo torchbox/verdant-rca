@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('rca', '0087_staffpage_migrate_area_data_to_roles'),
+        ('rca', '0088_staffpage_migrate_area_data_to_roles'),
     ]
 
     operations = [

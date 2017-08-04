@@ -50,7 +50,7 @@ def move_area_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rca', '0086_schoolpageresearchlinks_allow_to_add_external_links'),
+        ('rca', '0087_doubleclickcampaignmanageractivities'),
     ]
 
     operations = [

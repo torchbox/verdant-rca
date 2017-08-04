@@ -51,7 +51,7 @@ def move_location_data(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('rca', '0088_staffpage_move_area_and_location_field_to_roles'),
+        ('rca', '0089_staffpage_move_area_and_location_field_to_roles'),
     ]
 
     operations = [
