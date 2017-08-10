@@ -23,7 +23,7 @@ def move_area_data(apps, schema_editor):
 
     for staff in records:
         first_role = staff.roles.filter(area__isnull=True).first()
-        
+
         # Update revisions
         if staff.has_unpublished_changes:
             # Can't use get_latest_revision() as I am unable to call
@@ -40,7 +40,7 @@ def move_area_data(apps, schema_editor):
 
                     revision.content_json = json.dumps(revision_json)
                     revision.save()
-        
+
         if first_role is not None:
             print('Updating live version of {} (#{}).'.format(staff, staff.pk))
 
@@ -51,6 +51,7 @@ def move_area_data(apps, schema_editor):
 class Migration(migrations.Migration):
     dependencies = [
         ('rca', '0087_doubleclickcampaignmanageractivities'),
+        ('taxonomy', '0022_move_area_content_types'),
     ]
 
     operations = [
