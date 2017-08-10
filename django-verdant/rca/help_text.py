@@ -65,7 +65,6 @@ HELP_TEXT = {
     ('rca.AlumniPage', 'listing_intro'): 'Used only on pages displaying a list of pages of this type',
     ('rca.AlumniPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
     ('rca.StaffPage', 'school'): 'Please complete this field for academic and administrative staff only',
-    ('rca.StaffPage', 'staff_location'): 'Please complete this field for technical staff only',
     ('rca.StaffPage', 'listing_intro'): 'Used only on pages displaying a list of pages of this type',
     ('rca.StaffPage', 'supervised_student_other'): "Enter names of research students here who don't have a student profile. Supervised students with profile pages are pulled in automatically.",
     ('rca.StaffPage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
