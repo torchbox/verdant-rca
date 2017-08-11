@@ -24,9 +24,10 @@ class ExtendedAbstractFormField(AbstractFormField):
     # yes, that is wasted space but not much anyway
     new_field_type = models.CharField(verbose_name=_('Field type'), max_length=16, choices=FORM_FIELD_CHOICES)
 
-    def save(self, *args, **kwargs):
-        self.field_type = self.new_field_type
-        return super(AbstractFormField, self).save(*args, **kwargs)
+    def __setattr__(self, name, value):
+        if name == 'new_field_type':
+            self.field_type = value
+        return super(ExtendedAbstractFormField, self).__setattr__(name, value)
 
     class Meta:
         abstract = True
