@@ -5,9 +5,9 @@
 * ```cd verdant-rca```
 * ```vagrant up```
 * ```vagrant ssh```
+* ```fab fetch_live_data``` (in your VM)
 * ```djrun```
 * Edit your code locally, browse at [localhost:8000](http://localhost:8000/)
-* 
 
 # Implementation notes
 
