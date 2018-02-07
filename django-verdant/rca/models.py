@@ -61,11 +61,12 @@ from taxonomy.models import Area, School, Programme
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
 
-from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBuilder
+from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
+from .forms import EnquiryFormBuilder
 from .help_text import help_text
 
 
@@ -832,12 +833,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
     ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
     ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
-    
+
     ma_programme_staff_link = models.URLField("Programme staff link", blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link'))
     ma_programme_staff_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link_text'))
     ma_programme_overview_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link'))
     ma_programme_overview_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
-    
+
     ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
     ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link_text'))
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
@@ -6592,7 +6593,13 @@ class EnquiryFormPage(WagtailCaptchaEmailForm):
         help_text="Optional - form submissions from the rest of the world will be emailed to these addresses (instead of the standard addresses). Separate multiple addresses by comma."
     )
 
-    form_builder = WagtailCaptchaFormBuilder
+    def __init__(self, *args, **kwargs):
+        super(EnquiryFormPage, self).__init__(*args, **kwargs)
+
+        # HACK: We need to set form builder here since wagtailcaptcha
+        # sets it in __init__ too. We subclass it to override date
+        # of birth format.
+        self.form_builder = EnquiryFormBuilder
 
     def get_to_address(self, submission, form):
         # HACK: Work out whether they are in or out of the EU depending on the value of one of the fields
