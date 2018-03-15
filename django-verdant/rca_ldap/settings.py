@@ -34,10 +34,10 @@ def get_filter_string(base, **kwargs):
     return filter_string
 
 FILTER_BASE = '(sAMAccountName=%(user)s)'
-FILTER_ADMINS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Administrators,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
-FILTER_MODS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Moderators,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
-FILTER_EDITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Editors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
-FILTER_VISITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Visitors,OU=Media Relations & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_ADMINS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Administrators,OU=Communications & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_MODS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Moderators,OU=Communications & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_EDITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Editors,OU=Communications & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
+FILTER_VISITORS = get_filter_string(FILTER_BASE, memberOf='CN=CMS Visitors,OU=Communications & Marketing,OU=Administration,OU=Staff,DC=rca,DC=ac,DC=uk')
 
 # Roles
 ROLE_ADMIN  = dict(superuser=True, groups=[])
