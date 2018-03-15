@@ -400,12 +400,11 @@ class PostcardUploadForm(forms.ModelForm):
     )
 
     photographer = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'photographer'),
+        max_length=255, required=False, help_text='Only complete in if this is not you',
     )
     permission = forms.CharField(
-        max_length=255, required=False, help_text=help_text('rca.RcaImage', 'permission'),
+        max_length=255, required=False, help_text='Only complete in if a third party or organisation holds copyright of the image',
     )
-
 
     def clean_postcard_image(self):
         try:
