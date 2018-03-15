@@ -832,12 +832,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
     ma_programme_description_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link'))
     ma_programme_description_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_description_link_text'))
-    
+
     ma_programme_staff_link = models.URLField("Programme staff link", blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link'))
     ma_programme_staff_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_staff_link_text'))
     ma_programme_overview_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link'))
     ma_programme_overview_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link_text'))
-    
+
     ma_entry_requirements_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'ma_entry_requirements_link'))
     ma_entry_requirements_link_text = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'ma_programme_overview_link_text'))
     facilities_link = models.ForeignKey(Page, null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'facilities_link'))
@@ -3799,6 +3799,7 @@ class NewStudentPage(Page, SocialFields):
 
     # MPhil details
     mphil_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_programme'))
+    mphil_school = models.ForeignKey('taxonomy.School', verbose_name="School", null=True, blank=True, on_delete=models.SET_NULL, related_name='mphil_students', help_text=help_text('rca.NewStudentPage', 'mphil_school'))
     mphil_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_start_year'))
     mphil_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_graduation_year'))
     mphil_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'mphil_work_location'))
@@ -3810,6 +3811,7 @@ class NewStudentPage(Page, SocialFields):
 
     # PhD details
     phd_programme = models.ForeignKey('taxonomy.Programme', verbose_name="Programme", null=True, blank=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_programme'))
+    phd_school = models.ForeignKey('taxonomy.School', verbose_name="School", null=True, blank=True, on_delete=models.SET_NULL, related_name='phd_students', help_text=help_text('rca.NewStudentPage', 'phd_school'))
     phd_start_year = models.CharField("Start year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_start_year'))
     phd_graduation_year = models.CharField("Graduation year", max_length=4, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_graduation_year'))
     phd_work_location = models.CharField("Work location", max_length=255, choices=CAMPUS_CHOICES, blank=True, help_text=help_text('rca.NewStudentPage', 'phd_work_location'))
@@ -3896,6 +3898,7 @@ class NewStudentPage(Page, SocialFields):
 
         # MPhil details
         'mphil_programme',
+        'mphil_school',
         'mphil_start_year',
         'mphil_graduation_year',
         'mphil_work_location',
@@ -3911,6 +3914,7 @@ class NewStudentPage(Page, SocialFields):
 
         # PhD details
         'phd_programme',
+        'phd_school',
         'phd_start_year',
         'phd_graduation_year',
         'phd_work_location',
@@ -3927,17 +3931,70 @@ class NewStudentPage(Page, SocialFields):
 
     pushable_to_intranet = True
 
+    def clean(self):
+        SCHOOL_PROGRAMME_ERROR = 'Please only select a School if your degree ' \
+                                 'is not associated with a specific programme.'
+        # Make sure both options - MPhil and PhD - are not selected
+        errors = {}
+        
+        if self.phd_programme and self.phd_school:
+            errors['phd_school'] = [SCHOOL_PROGRAMME_ERROR]
+
+        if self.mphil_programme and self.mphil_school:
+            errors['mphil_school'] = [SCHOOL_PROGRAMME_ERROR]
+
+        if any(errors.values()):
+            raise ValidationError(errors)
+        
+        # If MPhil details are filled in, please require programme or school
+        # field
+        PHD_MPHIL_EMPTY_MSG = 'Please choose programme or school option.'
+        
+        mphil_fields = [f for f in self._meta.get_fields() if f.concrete \
+                            and f.name.startswith('mphil') \
+                            and getattr(self, f.name) \
+                            and f.name not in ('mphil_programme', 'mphil_school')]
+
+        if mphil_fields and not self.mphil_programme and not self.mphil_school:
+    
+            errors = {
+                'mphil_school': PHD_MPHIL_EMPTY_MSG,
+                'mphil_programme': PHD_MPHIL_EMPTY_MSG
+            }
+
+            errors.update({f.name: PHD_MPHIL_EMPTY_MSG for f in mphil_fields})
+
+            raise ValidationError(errors)
+
+        # If PhD details are filled in, please require programme or school
+        # field
+        phd_fields = [f for f in self._meta.get_fields() if f.concrete \
+                            and f.name.startswith('phd') \
+                            and getattr(self, f.name) \
+                            and f.name not in ('phd_programme', 'phd_school')]
+
+        if phd_fields and not self.phd_programme and not self.phd_school:
+
+            errors = {
+                'phd_school': PHD_MPHIL_EMPTY_MSG,
+                'phd_programme': PHD_MPHIL_EMPTY_MSG
+            }
+
+            errors.update({f.name: PHD_MPHIL_EMPTY_MSG for f in phd_fields})
+
+            raise ValidationError(errors)
+
     @property
     def is_ma_student(self):
         return self.ma_programme is not None
 
     @property
     def is_mphil_student(self):
-        return self.mphil_programme is not None
+        return self.get_mphil_school() is not None
 
     @property
     def is_phd_student(self):
-        return self.phd_programme is not None
+        return self.get_phd_school() is not None
 
     def get_profiles(self):
         profiles = {}
@@ -3945,7 +4002,7 @@ class NewStudentPage(Page, SocialFields):
         if self.is_phd_student:
             profiles['phd'] = {
                 'name': "PhD",
-                'school': self.phd_programme.school,
+                'school': self.get_phd_school(),
                 'school_display': self.get_phd_school_display(),
                 'programme': self.phd_programme,
                 'programme_display': self.get_phd_programme_display(),
@@ -3960,7 +4017,7 @@ class NewStudentPage(Page, SocialFields):
         if self.is_mphil_student:
             profiles['mphil'] = {
                 'name': "MPhil",
-                'school': self.mphil_programme.school,
+                'school': self.get_mphil_school(),
                 'school_display': self.get_mphil_school_display(),
                 'programme': self.mphil_programme,
                 'programme_display': self.get_mphil_programme_display(),
@@ -4040,11 +4097,17 @@ class NewStudentPage(Page, SocialFields):
 
         return self.mphil_programme.get_display_name_for_year(self.mphil_graduation_year)
 
-    def get_mphil_school_display(self):
-        if not self.mphil_programme:
-            return ''
+    def get_mphil_school(self):
+        if self.mphil_programme:
+            return self.mphil_programme.school
 
-        return self.mphil_programme.school.get_display_name_for_year(self.mphil_graduation_year)
+        return self.mphil_school
+
+    def get_mphil_school_display(self):
+        mphil_school = self.get_mphil_school()
+
+        if mphil_school:
+            return mphil_school.get_display_name_for_year(self.mphil_graduation_year)
 
     def get_phd_programme_display(self):
         if not self.phd_programme:
@@ -4052,11 +4115,19 @@ class NewStudentPage(Page, SocialFields):
 
         return self.phd_programme.get_display_name_for_year(self.phd_graduation_year)
 
+    def get_phd_school(self):
+        if self.phd_programme:
+            return self.phd_programme.school
+
+        return self.phd_school
+
     def get_phd_school_display(self):
-        if not self.phd_programme:
+        phd_school = self.get_phd_school()
+
+        if not phd_school:
             return ''
 
-        return self.phd_programme.school.get_display_name_for_year(self.phd_graduation_year)
+        return phd_school.get_display_name_for_year(self.phd_graduation_year)
 
     def get_programme_display(self):
         profile = self.get_profile()
@@ -4200,6 +4271,7 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('mphil_in_show'),
         FieldPanel('mphil_programme'),
+        FieldPanel('mphil_school'),
         FieldPanel('mphil_dissertation_title'),
         FieldPanel('mphil_statement'),
         FieldPanel('mphil_start_year'),
@@ -4217,6 +4289,7 @@ NewStudentPage.content_panels = [
     MultiFieldPanel([
         FieldPanel('phd_in_show'),
         FieldPanel('phd_programme'),
+        FieldPanel('phd_school'),
         FieldPanel('phd_dissertation_title'),
         FieldPanel('phd_statement'),
         FieldPanel('phd_start_year'),

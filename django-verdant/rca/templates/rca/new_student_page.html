@@ -24,10 +24,14 @@
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>Programme</dd>
-                                    <dt>
-                                        {{ self.get_phd_programme_display }}
-                                    </dt>
+                                    <dd>School</dd>
+                                    <dt>{{ self.get_phd_school_display }}</dt>
+                                    {% if self.phd_programme %}
+                                        <dd>Programme</dd>
+                                        <dt>
+                                            {{ self.get_phd_programme_display }}
+                                        </dt>
+                                    {% endif %}
                                     {% if self.phd_collaborators.all %}
                                         <dd>Collaborators</dd>
                                         <dt>
@@ -78,10 +82,16 @@
                         <div class="col col-3 first">
                             <div class="meta-data">
                                 <dl>
-                                    <dd>Programme</dd>
+                                    <dd>School</dd>
                                     <dt>
-                                        {{ self.get_mphil_programme_display }}
+                                        {{ self.get_mphil_school_display }}
                                     </dt>
+                                    {% if self.mphil_programme %}
+                                        <dd>Programme</dd>
+                                        <dt>
+                                            {{ self.get_mphil_programme_display }}
+                                        </dt>
+                                    {% endif %}
                                     {% if self.mphil_collaborators.all %}
                                         <dd>Collaborators</dd>
                                         <dt>
@@ -175,8 +185,10 @@
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_phd_school_display }}</p>
 
-                            <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}&ndash;{% if self.phd_graduation_year %}{{ self.phd_graduation_year }}{% endif %}</p>
+                            {% if self.phd_programme %}
+                                <h3 class="a2 space">Programme</h3>
+                                <p class="h7">{% if self.phd_programme %}{{ self.get_phd_programme_display }}{% endif %}{% if self.phd_start_year %}, {{ self.phd_start_year }}{% endif %}&ndash;{% if self.phd_graduation_year %}{{ self.phd_graduation_year }}{% endif %}</p>
+                            {% endif %}
                         </li>
                     {% endif %}
                     {% if self.is_mphil_student %}
@@ -186,8 +198,10 @@
                             <h3 class="a2">School</h3>
                             <p class="h7">{{ self.get_mphil_school_display }}</p>
 
-                            <h3 class="a2 space">Programme</h3>
-                            <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}&ndash;{% if self.mphil_graduation_year %}{{ self.mphil_graduation_year }}{% endif %}</p>
+                            {% if self.mphil_programme %}
+                                <h3 class="a2 space">Programme</h3>
+                                <p class="h7">{% if self.mphil_programme %}{{ self.get_mphil_programme_display }}{% endif %}{% if self.mphil_start_year %}, {{ self.mphil_start_year }}{% endif %}&ndash;{% if self.mphil_graduation_year %}{{ self.mphil_graduation_year }}{% endif %}</p>
+                            {% endif %}
                         </li>
                     {% endif %}
                     {% if self.is_ma_student %}
@@ -209,7 +223,7 @@
                 </ul>
 
                 {% if self.emails.all|length > 0  or self.phones.all|length > 0 or self.websites.all|length > 0 or self.student_twitter_feed %}
-                  
+
                     <div class="divider"></div>
                     <ul class="three-nine-cols">
                         <li class="col col-3 first">
@@ -242,7 +256,7 @@
                             {% endif %}
                         </li>
                     </ul>
-                   
+
                 {% endif %}
                 <div class="divider"></div>
                 <ul class="three-nine-cols">
@@ -256,7 +270,7 @@
                     </li>
                 </ul>
 
-     <!--                    
+     <!--
                             <h2 class="h6">Contact</h2>
                             <ul>
                                 {% with self.emails.all as emails %}
@@ -285,7 +299,7 @@
                                 {% endif %}
                             </ul>
                          -->
-                  
+
 
 
                 <!--degrees-->
@@ -391,7 +405,7 @@
                 {% endwith %}
 
                 <div class="inner">
-        
+
                     <!-- research -->
                     {% research_related person=self %}
 

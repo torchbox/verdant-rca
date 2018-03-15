@@ -237,6 +237,7 @@ def do_nothing(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('rca', '0086_schoolpageresearchlinks_allow_to_add_external_links'),
         ('taxonomy', '0019_auto_20160901_1129'),
     ]
 
