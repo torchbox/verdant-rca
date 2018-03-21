@@ -841,7 +841,9 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
     head_of_programme = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme', default="Select the profile page of the head of this programme."))
+    head_of_programme_title = models.CharField(max_length=255, blank=True, verbose_name='Head of programme\'s title',  help_text=help_text('rca.ProgrammePage', 'head_of_programme_title'))
     head_of_programme_second = models.ForeignKey('rca.StaffPage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', verbose_name="Second head of programme", help_text=help_text('rca.ProgrammePage', 'head_of_programme_secondary', default="Select the profile page of another head of this programme."))
+    head_of_programme_second_title = models.CharField(max_length=255, blank=True, verbose_name="Second head of programme's title", help_text=help_text('rca.ProgrammePage', 'head_of_programme_title'))
     head_of_programme_statement = RichTextField("Head(s) of programme statement", null=True, blank=True, help_text=help_text('rca.ProgrammePage', 'head_of_programme_statement'))
     head_of_programme_link = models.ForeignKey(Page, verbose_name="Head(s) of programme link", null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'head_of_programme_link', default="The link to the Head(s) of Programme Welcome Page"))
     programme_specification_document = models.ForeignKey('wagtaildocs.Document', null=True, blank=True, related_name='+', on_delete=models.SET_NULL, help_text=help_text('rca.ProgrammePage', 'programme_specification', default="Download the programme specification"))
@@ -886,6 +888,33 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
         return ", ".join([p.display_name for p in programmes])
 
+    def get_head_of_programme_title_display(self):
+        """
+        Get the title of the first head of programme. If both, the second and
+        first head, have no title specified return "Heads of Programme".
+        """
+        # If both heads have no title and second one is selected,
+        # return "Heads of Programme"
+        if not self.head_of_programme_title and \
+                self.head_of_programme_second and \
+                not self.head_of_programme_second_title:
+            return "Heads of Programme"
+        # Return the first head's title or default to "Head of Programme".
+        return self.head_of_programme_title or "Head of Programme"
+
+    def get_head_of_programme_second_title_display(self):
+        """
+        Get title of the second head of programme. Return None if both of
+        the heads have no titles specified.
+        """
+        # Return None if both heads have no title specified.
+        if not self.head_of_programme_title and \
+                not self.head_of_programme_second_title:
+            return
+        # Return the custom title for the second head or fallback to
+        # the default value.
+        return self.head_of_programme_second_title or "Head of Programme"
+
     def pathways(self):
         return self.get_children().live().type(PathwayPage).specific()
 
@@ -925,7 +954,9 @@ ProgrammePage.content_panels = [
     ImageChooserPanel('background_image'),
     MultiFieldPanel([
         PageChooserPanel('head_of_programme', 'rca.StaffPage',),
+        FieldPanel('head_of_programme_title'),
         PageChooserPanel('head_of_programme_second', 'rca.StaffPage',),
+        FieldPanel('head_of_programme_second_title'),
         FieldPanel('head_of_programme_statement', classname="full"),
         PageChooserPanel('head_of_programme_link'),
     ], 'Head of programme introduction'),
@@ -3951,7 +3982,7 @@ class NewStudentPage(Page, SocialFields):
                                  'is not associated with a specific programme.'
         # Make sure both options - MPhil and PhD - are not selected
         errors = {}
-        
+
         if self.phd_programme and self.phd_school:
             errors['phd_school'] = [SCHOOL_PROGRAMME_ERROR]
 
@@ -3960,18 +3991,18 @@ class NewStudentPage(Page, SocialFields):
 
         if any(errors.values()):
             raise ValidationError(errors)
-        
+
         # If MPhil details are filled in, please require programme or school
         # field
         PHD_MPHIL_EMPTY_MSG = 'Please choose programme or school option.'
-        
+
         mphil_fields = [f for f in self._meta.get_fields() if f.concrete \
                             and f.name.startswith('mphil') \
                             and getattr(self, f.name) \
                             and f.name not in ('mphil_programme', 'mphil_school')]
 
         if mphil_fields and not self.mphil_programme and not self.mphil_school:
-    
+
             errors = {
                 'mphil_school': PHD_MPHIL_EMPTY_MSG,
                 'mphil_programme': PHD_MPHIL_EMPTY_MSG
