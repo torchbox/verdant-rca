@@ -63,17 +63,23 @@
                                 </div>
                             </div>
 
-                            <h4 class="programme-head">Head{% if self.head_of_programme_second %}s{% endif %} of Programme</h4>
+                            <h4 class="programme-head">{{ self.get_head_of_programme_title_display }}</h4>
                             <ul>
                                 <li class="programme-head-name"><a href="{% pageurl self.head_of_programme %}" class="a3">{{ self.head_of_programme.title }}</a></li>
-                                {% if self.head_of_programme_second %}
-                                    <li class="programme-head-name"><a href="{% pageurl self.head_of_programme_second %}" class="a3">{{ self.head_of_programme_second.title }}</a></li>
-                                {% endif %}
                             </ul>
+
+                            {% if self.head_of_programme_second %}
+                                {% if self.get_head_of_programme_second_title_display %}
+                                    <h4 class="programme-head">{{ self.get_head_of_programme_second_title_display }}</h4>
+                                {% endif %}
+                                <ul>
+                                    <li class="programme-head-name"><a href="{% pageurl self.head_of_programme_second %}" class="a3">{{ self.head_of_programme_second.title }}</a></li>
+                                </ul>
+                            {% endif %}
 
                         {% endif %}
                     </div>
-                
+
                     <div class="left">
                         <!-- Head of programme statement -->
                         {% if self.head_of_programme_statement %}
@@ -117,7 +123,7 @@
                                 {% include "rca/includes/modules/contact_snippet.html" with in_dropdown=True %}
                             </div>
                         </div>
-                        
+
                     {% endif %}
                 </div>
 
@@ -150,7 +156,7 @@
                                     </a>
                                 </li>
                             {% endif %}
-                            
+
                             <!-- MA Entry requirements -->
                             {% if self.ma_entry_requirements_link %}
                                 <li>
@@ -234,7 +240,7 @@
         </section> <!-- end of about the programme -->
     {% endif %}
 
-    
+
     <!-- open days -->
     {% upcoming_events_related opendays=1 programme=self.programmes.all.0.programme offset=1 %}
 

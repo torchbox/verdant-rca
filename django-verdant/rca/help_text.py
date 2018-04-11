@@ -19,6 +19,7 @@ HELP_TEXT = {
     ('rca.ProgrammePageContactSnippet', 'contact_snippet'): 'Choose contact details from the snippet library',
     ('rca.ProgrammePage', 'background_image'): 'The full bleed image in the background',
     ('rca.ProgrammePage', 'head_of_programme'): 'Select the profile page of the Head of this programme.',
+    ('rca.ProgrammePage', 'head_of_programme_title'): 'If you do not specify the title, "Head of Programme" will be used',
     ('rca.ProgrammePage', 'head_of_programme_link'): 'The link to the Head of Programme Welcome Page',
     ('rca.ProgrammePage', 'programme_specification'): 'The link to download the programme specification',
     ('rca.ProgrammePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term',
