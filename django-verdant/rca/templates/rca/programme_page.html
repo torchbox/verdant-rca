@@ -127,6 +127,10 @@
                     {% endif %}
                 </div>
 
+                <div class="programme-details row row-flush">
+                    {{ self.video_embed|embed }}
+                </div>
+
                 {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
                     <div class="row">
                         <ul class="block-list top-border">

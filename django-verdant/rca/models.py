@@ -864,6 +864,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     key_content_header = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'key_content_header'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    video_embed = models.URLField(blank=True, help_text=help_text('rca.ProgrammePage', 'video_embed'))
 
 
     search_fields = Page.search_fields + [
@@ -964,6 +965,7 @@ ProgrammePage.content_panels = [
         DocumentChooserPanel('programme_specification_document'),
         InlinePanel('key_details', label="Key details"),
         InlinePanel('contact_snippets', label="Contacts"),
+        FieldPanel('video_embed'),
     ], 'Key programme information'),
     MultiFieldPanel([
         PageChooserPanel('ma_programme_description_link'),

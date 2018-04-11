@@ -24,6 +24,7 @@ HELP_TEXT = {
     ('rca.ProgrammePage', 'programme_specification'): 'The link to download the programme specification',
     ('rca.ProgrammePage', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term',
     ('rca.ProgrammePage', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
+    ('rca.ProgrammePage', 'video_embed'): 'The video embed displayed underneath the contact bar.',
 
     ('rca.NewsIndex', 'twitter_feed'): 'Replace the default Twitter feed by providing an alternative Twitter handle (without the @ symbol)',
     ('rca.NewsIndex', 'feed_image'): 'The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio.',
