@@ -31,6 +31,9 @@ from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
+from wagtail.wagtailembeds import embeds
+from wagtail.wagtailembeds.exceptions import EmbedNotFoundException
+from wagtail.wagtailembeds.finders.embedly import AccessDeniedEmbedlyException, EmbedlyException
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
@@ -875,6 +878,24 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     ]
 
     search_name = 'Programme'
+
+    def clean(self):
+        super(ProgrammePage, self).clean()
+        if self.video_embed:
+            error = None
+            try:
+                embeds.get_embed(self.video_embed)
+            except AccessDeniedEmbedlyException:
+                error = "There seems to be a problem with your embedly API key. Please check your settings."
+            except EmbedNotFoundException:
+                error = "Cannot find an embed for this URL."
+            except EmbedlyException:
+                error = (
+                    "There seems to be an error with Embedly while trying to embed this URL."
+                    " Please try again later."
+                )
+            if error:
+                raise ValidationError({'video_embed': [error]})
 
     def get_school_url(self):
         try:
