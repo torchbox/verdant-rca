@@ -126,6 +126,13 @@
 
                     {% endif %}
                 </div>
+                {% with video_embed=self.video_embed|embed %}
+                {% if video_embed %}
+                    <div class="programme-details row row-flush">
+                        {{ video_embed }}
+                    </div>
+                {% endif %}
+                {% endwith %}
 
                 {% if self.how_to_apply.all or self.ma_programme_description_link or self.ma_entry_requirements_link or self.facilities_link or self.graduate_destinations_link or self.get_school_url %}
                     <div class="row">

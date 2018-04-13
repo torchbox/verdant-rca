@@ -31,6 +31,9 @@ from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
+from wagtail.wagtailembeds import embeds
+from wagtail.wagtailembeds.exceptions import EmbedNotFoundException
+from wagtail.wagtailembeds.finders.embedly import AccessDeniedEmbedlyException, EmbedlyException
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import Image, AbstractImage, AbstractRendition
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
@@ -916,6 +919,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     key_content_header = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'key_content_header'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.ProgrammePage', 'twitter_feed', default="Replace the default Twitter feed by providing an alternative Twitter handle, hashtag or search term"))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
+    video_embed = models.URLField(blank=True, help_text=help_text('rca.ProgrammePage', 'video_embed'))
 
 
     search_fields = Page.search_fields + [
@@ -926,6 +930,24 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     ]
 
     search_name = 'Programme'
+
+    def clean(self):
+        super(ProgrammePage, self).clean()
+        if self.video_embed:
+            error = None
+            try:
+                embeds.get_embed(self.video_embed)
+            except AccessDeniedEmbedlyException:
+                error = "There seems to be a problem with your embedly API key. Please check your settings."
+            except EmbedNotFoundException:
+                error = "Cannot find an embed for this URL."
+            except EmbedlyException:
+                error = (
+                    "There seems to be an error with Embedly while trying to embed this URL."
+                    " Please try again later."
+                )
+            if error:
+                raise ValidationError({'video_embed': [error]})
 
     def get_school_url(self):
         try:
@@ -1016,6 +1038,7 @@ ProgrammePage.content_panels = [
         DocumentChooserPanel('programme_specification_document'),
         InlinePanel('key_details', label="Key details"),
         InlinePanel('contact_snippets', label="Contacts"),
+        FieldPanel('video_embed'),
     ], 'Key programme information'),
     MultiFieldPanel([
         PageChooserPanel('ma_programme_description_link'),
