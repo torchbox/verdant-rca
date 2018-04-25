@@ -129,7 +129,13 @@
                 {% with video_embed=self.video_embed|embed %}
                 {% if video_embed %}
                     <div class="programme-details row row-flush">
-                        {{ video_embed }}
+                        <div class="videoembed vimeo">
+                            {% if self.poster_image %}
+                                <div class="playpause play">Play</div>
+                                <div class="poster">{% image self.poster_image height-500 %}</div>
+                            {% endif %}
+                            {{ video_embed }}
+                        </div>
                     </div>
                 {% endif %}
                 {% endwith %}
