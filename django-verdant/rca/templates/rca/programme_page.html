@@ -130,8 +130,8 @@
                 {% if video_embed %}
                     <div class="programme-details row row-flush">
                         <div class="videoembed vimeo">
-                            <div class="playpause play">Play</div>
                             {% if self.poster_image %}
+                                <div class="playpause play">Play</div>
                                 <div class="poster">{% image self.poster_image height-500 %}</div>
                             {% endif %}
                             {{ video_embed }}
