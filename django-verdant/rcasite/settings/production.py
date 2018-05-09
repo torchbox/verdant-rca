@@ -63,7 +63,6 @@ COMPRESS_CSS_HASHING_METHOD = 'content'
 # setting. See urls.py
 CACHE_CONTROL_MAX_AGE = 30 * 60
 
-
 # Configuration from environment variables
 # Alternatively, you can set these in a local.py file on the server
 
@@ -268,3 +267,7 @@ if 'RAVEN_DSN' in os.environ:
         'dsn': os.environ['RAVEN_DSN'],
         'release': raven.fetch_git_sha(os.path.dirname(os.path.abspath(PROJECT_ROOT))),
     }
+
+# SecurityMiddleware settings
+SECURE_HSTS_SECONDS = 300
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
