@@ -4,7 +4,26 @@ from django.core.management.base import BaseCommand
 from django.db import models
 
 from rca.models import NewStudentPage
-from rca.utils import convert_degree_filters
+
+
+def convert_degree_filters(q, degree):
+    if isinstance(q, tuple):
+        fil, arg = q
+
+        if degree == 'ma' and fil.startswith('carousel_items'):
+            fil = 'show_' + fil
+        else:
+            fil = degree + '_' + fil
+
+        return fil, arg
+    else:
+        new_q = q.__class__._new_instance(
+            children=[], connector=q.connector, negated=q.negated)
+
+        for child_q in q.children:
+            new_q.children.append(convert_degree_filters(child_q, degree))
+
+        return new_q
 
 
 class Command(BaseCommand):
