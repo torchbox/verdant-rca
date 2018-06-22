@@ -21,7 +21,6 @@ class Command(BaseCommand):
     def handle(self, **options):
         q = models.Q(in_show=True)
         q &= models.Q(graduation_year=2018)
-        q &= models.Q(programme__in=['fashionmenswear', 'fashionwomenswear'])
 
         final_q = models.Q()
         final_q |= convert_degree_filters(q, 'ma')
