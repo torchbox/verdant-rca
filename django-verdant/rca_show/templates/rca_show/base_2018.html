@@ -19,22 +19,42 @@
                 <ul>
                     <li>
                         <address>
-                            <h2>Kensington Campus</h2>
+                            <h2>Show Architecture</h2>
+                            The Workshop<br />
+                            26 Lambeth High Street<br />
+                            London SE1 7JS
+                        </address>
+                    </li>
+                    <li>
+                        <address>
+                            <h2>Show Battersea</h2>
+                            15-25 Howie St<br />
+                            London SW11 4AS
+                        </address>
+                    </li>
+
+                    <li>
+                        <address>
+                            <h2>Show Communication</h2>
+                            The Westworks<br />
+                            195 Wood Lane<br />
+                            London W12 7FQ
+                        </address>
+                    </li>
+
+                    <li>
+                        <address>
+                            <h2>Show Kensington</h2>
                             Royal College of Art<br />
                             Kensington Gore<br />
                             London SW7 2EU
                         </address>
                     </li>
-                    {% if not self.is_programme_page %}
-                        <li>
-                            <address>
-                                <h2>Battersea Campus</h2>
-                                15-25 Howie St<br />
-                                London<br />
-                                SW11 4AS
-                            </address>
-                        </li>
-                    {% endif %}
+
+                </ul>
+                <br/>
+                <ul>
+
                     {% for item in self.show_index.menu_items %}
                         <li>
                             <a href="{{ item.0 }}">{{ item.1 }}</a>
