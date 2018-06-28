@@ -2,7 +2,28 @@
 
 
 <section class="row">
-    <div itemscope itemtype="https://schema.org/VideoObject"><meta itemprop="uploadDate" content="2017-06-27T11:51:19+0100" /><meta itemprop="name" content="RCA Convocation" /><meta itemprop="contentUrl" content="https://wowzaprodhd77-lh.akamaihd.net/i/d8283c5f_1@172046/master.m3u8" /><div style="position:relative; padding-bottom:56.25%; overflow:hidden;"><iframe src="//content.jwplatform.com/players/4HPt6KD8-CWFyJq91.html" width="100%" height="100%" frameborder="0" scrolling="auto" allowfullscreen style="position:absolute;"></iframe></div></div>
+    <div id='playerofeAeYdLaGHz'></div>
+    <script type='text/javascript'>
+        jwplayer('playerofeAeYdLaGHz').setup({
+            file: 'https://wowzaprodhd77-lh.akamaihd.net/i/d8283c5f_1@172046/master.m3u8',
+            {% if poster_image %}
+                {% image poster_image original as poster_image_rendition %}
+                image: '{{ poster_image_rendition.url }}',
+            {% endif %}
+            width: '100%',
+            aspectratio: '16:9',
+            autostart: 'true',
+            ga: {},
+            sharing: {},
+            androidhls: 'true'
+        });
+
+        jwplayer().onError(function(){
+            {% if poster_image %}
+                document.getElementById('playerofeAeYdLaGHz').innerHTML = '{% image poster_image original %}';
+            {% endif %}
+        });
+    </script>
 </section>
 
 <!-- 2016 embed code
