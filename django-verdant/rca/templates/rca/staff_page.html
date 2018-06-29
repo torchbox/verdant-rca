@@ -20,14 +20,6 @@
                         {% endif %}
                     </li>
                     <li class="col">{% comment %} note closed within forloop {% endcomment %}
-                        {% if self.staff_type != "technical" %}
-                            <h3 class="a2">Area</h3>
-                            <p class="h7">{{ self.area.display_name }}</p>
-                        {% endif %}
-                        {% if self.staff_type == "technical" %}
-                            <h3 class="a2">Location</h3>
-                            <p class="h7">{{ self.get_staff_location_display }}</p>
-                        {% endif %}
                         {% with self.roles.all as roles %}
                             {% if roles %}
                                 {% for role in roles|slice:":3" %} {% comment %}just in case they add more than 3 {% endcomment %}
@@ -39,6 +31,12 @@
                                     <p class="h7{% if forloop.counter != 1 %} space space-large{% endif %}">{{ role.title }}</p>
                                     <ul>
                                         <li>{{ role.programme.display_name }}</li>
+                                        {% if self.staff_type == "academic" or self.staff_type == "administrative" and role.area %}
+                                            <li>{{ role.area }}</li>
+                                        {% endif %}
+                                        {% if self.staff_type == "technical" and role.location %}
+                                            <li>{{ role.get_location_display }}</li>
+                                        {% endif %}
                                         <li><a href="mailto:{{ role.email }}">{{ role.email }}</a></li>
                                     </ul>
                                 </li> {% comment %} close col {% endcomment %}

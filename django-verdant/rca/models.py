@@ -67,6 +67,7 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBui
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
+from .forms import StaffPageForm
 from .help_text import help_text
 
 
@@ -3061,12 +3062,14 @@ JobsIndex.promote_panels = [
 class StaffPageCarouselItem(Orderable, CarouselItemFields):
     page = ParentalKey('rca.StaffPage', related_name='carousel_items')
 
+
 class StaffPageRole(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='roles')
-    title = models.CharField(max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
+    title = models.CharField('Job title', max_length=255, help_text=help_text('rca.StaffPageRole', 'title'))
     school = models.ForeignKey('taxonomy.School', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'school'))
     programme = models.ForeignKey('taxonomy.Programme', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'programme'))
     area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff_roles', help_text=help_text('rca.StaffPageRole', 'area'))
+    location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPageRole', 'location'))
     email = models.EmailField(max_length=255, blank=True, help_text=help_text('rca.StaffPageRole', 'email'))
 
     api_fields = [
@@ -3074,6 +3077,7 @@ class StaffPageRole(Orderable):
         'school',
         'programme',
         'area',
+        'location'
         'email',
     ]
 
@@ -3082,8 +3086,10 @@ class StaffPageRole(Orderable):
         FieldPanel('school'),
         FieldPanel('programme'),
         FieldPanel('area'),
+        FieldPanel('location'),
         FieldPanel('email'),
     ]
+
 
 class StaffPageCollaborations(Orderable):
     page = ParentalKey('rca.StaffPage', related_name='collaborations')
@@ -3135,10 +3141,8 @@ class StaffPagePublicationExhibition(Orderable):
     ]
 
 class StaffPage(Page, SocialFields):
-    area = models.ForeignKey('taxonomy.Area', null=True, blank=True, on_delete=models.SET_NULL, related_name='staff', help_text=help_text('rca.StaffPage', 'area'))
     profile_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'profile_image'))
-    staff_type = models.CharField(max_length=255, blank=True, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
-    staff_location = models.CharField(max_length=255, blank=True, choices=STAFF_LOCATION_CHOICES, help_text=help_text('rca.StaffPage', 'staff_location'))
+    staff_type = models.CharField(max_length=255, choices=STAFF_TYPES_CHOICES, help_text=help_text('rca.StaffPage', 'staff_type'))
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.StaffPage', 'twitter_feed'))
     intro = RichTextField(help_text=help_text('rca.StaffPage', 'intro'), blank=True)
     biography = RichTextField(help_text=help_text('rca.StaffPage', 'biography'), blank=True)
@@ -3160,9 +3164,13 @@ class StaffPage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.StaffPage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
     ad_username = models.CharField(max_length=255, blank=True, verbose_name='AD username', help_text=help_text('rca.StaffPage', 'ad_username'))
 
+    base_form_class = StaffPageForm
+
     search_fields = Page.search_fields + [
-        index.RelatedFields('area', [
-            index.SearchField('display_name'),
+        index.RelatedFields('roles', [
+            index.RelatedFields('area', [
+                index.SearchField('display_name'),
+            ]),
         ]),
         index.SearchField('get_staff_type_display'),
         index.SearchField('intro'),
@@ -3170,10 +3178,8 @@ class StaffPage(Page, SocialFields):
     ]
 
     api_fields = [
-        'area',
         'profile_image',
         'staff_type',
-        'staff_location',
         'twitter_feed',
         'intro',
         'biography',
@@ -3208,10 +3214,8 @@ StaffPage.content_panels = [
         FieldPanel('first_name'),
         FieldPanel('last_name'),
     ], 'Full name'),
-    FieldPanel('area'),
     ImageChooserPanel('profile_image'),
     FieldPanel('staff_type'),
-    FieldPanel('staff_location'),
     InlinePanel('roles', label="Roles"),
     FieldPanel('intro', classname="full"),
     FieldPanel('biography', classname="full"),
@@ -3302,8 +3306,6 @@ class StaffIndex(Page, SocialFields):
         # Area
         area_options = Area.objects.filter(
             id__in=StaffPageRole.objects.values_list('area', flat=True)
-        ) | Area.objects.filter(
-            id__in=StaffPage.objects.values_list('area', flat=True)
         )
 
         area = area_options.filter(slug=area_slug).first()
@@ -3320,10 +3322,7 @@ class StaffIndex(Page, SocialFields):
             )
 
         if area:
-            staff_pages = staff_pages.filter(
-                models.Q(area=area) |
-                models.Q(roles__area=area)
-            )
+            staff_pages = staff_pages.filter(roles__area=area)
 
         if staff_type:
             staff_pages = staff_pages.filter(staff_type=staff_type)
