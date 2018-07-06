@@ -1,11 +1,10 @@
 {% extends base_template %}
-{% load show_tags wagtailcore_tags %}
+{% load show_tags wagtailcore_tags wagtailimages_tags wagtailembeds_tags static %}
 
 {% block body_class %}{{ block.super }} type-standard{% endblock %}
 
-
 {% block extra_js_head %}
-    <script src="https://jwpsrv.com/library/ZQUkUgkgEeWx+A4AfQhyIQ.js"></script>
+    <script src="https://content.jwplatform.com/libraries/CWFyJq91.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +12,30 @@
 
     <h1>{{ self.title }}</h1>
 
-    {% include "rca_show/includes/modules/stream.html" with poster_image=self.poster_image %}
+    <section class="row">
+        <div id='playerofeAeYdLaGHz'></div>
+        <script type='text/javascript'>
+            jwplayer('playerofeAeYdLaGHz').setup({
+                file: 'https://wowzaprodhd77-lh.akamaihd.net/i/d8283c5f_1@172046/master.m3u8',
+                {% if self.poster_image %}
+                    {% image self.poster_image original as poster_image_rendition %}
+                    image: '{{ poster_image_rendition.url }}',
+                {% endif %}
+                width: '100%',
+                aspectratio: '16:9',
+                autostart: 'true',
+                ga: {},
+                sharing: {},
+                androidhls: 'true'
+            });
+
+            jwplayer().onError(function(){
+                {% if self.poster_image %}
+                    document.getElementById('playerofeAeYdLaGHz').innerHTML = '{% image self.poster_image original %}';
+                {% endif %}
+            });
+        </script>
+    </section>
 
     <section class="body-text">
         {% if self.body %}
