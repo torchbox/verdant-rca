@@ -840,6 +840,11 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad'),
     ]
 
+
+class ProgrammePageKeyword(TaggedItemBase):
+    content_object = ParentalKey('rca.ProgrammePage', on_delete=models.CASCADE)
+
+
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
@@ -874,7 +879,16 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         on_delete=models.SET_NULL,
         related_name='+'
     )
-    exclude_from_programme_finder = models.BooleanField(default=False)
+    programme_finder_exclude = models.BooleanField(
+        default=False,
+        verbose_name='Exclude from programme finder'
+    )
+    programme_finder_keywords = ClusterTaggableManager(
+        through=ProgrammePageKeyword,
+        blank=True,
+        verbose_name='Keywords',
+        help_text='A comma-separated list of keywords.'
+    )
 
 
     search_fields = Page.search_fields + [
@@ -1044,7 +1058,8 @@ ProgrammePage.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
-        FieldPanel('exclude_from_programme_finder'),
+        FieldPanel('programme_finder_exclude'),
+        FieldPanel('programme_finder_keywords'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
