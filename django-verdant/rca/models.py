@@ -874,6 +874,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         on_delete=models.SET_NULL,
         related_name='+'
     )
+    exclude_from_programme_finder = models.BooleanField(default=False)
 
 
     search_fields = Page.search_fields + [
@@ -1043,6 +1044,7 @@ ProgrammePage.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
+        FieldPanel('exclude_from_programme_finder'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
