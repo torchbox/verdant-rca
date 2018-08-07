@@ -2915,6 +2915,7 @@ class HomePage(Page, SocialFields):
 
         random.shuffle(packery)
 
+        # get the last viewed programme
         try:
             last_viewed_programme = ProgrammePage.objects.get(
                 id=request.session.get('last_viewed_programme')
