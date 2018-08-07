@@ -2927,13 +2927,13 @@ class HomePage(Page, SocialFields):
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
                 'packery': packery,
-                'last_viewed_programme': last_viewed_programme,
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'packery': packery,
                 'last_viewed_programme': last_viewed_programme,
+                'programme_count': ProgrammePage.objects.live().public().count()
             })
 
 

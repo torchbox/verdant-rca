@@ -12,9 +12,15 @@
 
     {# WIP Programme Finder #}
     <section>
+        <h2>Study at RCA</h2>
         {% if last_viewed_programme %}
-            <h2>Recently viewed: <a href="{% pageurl last_viewed_programme %}">{{ last_viewed_programme }}</a></h2>
+            <h3>Recently viewed: <a href="{% pageurl last_viewed_programme %}">{{ last_viewed_programme }}</a></h3>
         {% endif %}
+        <p>Search {{ programme_count }} distinctive postgraduate programmes</p>
+        <form>
+            <input type="text" name="course_search" id="course_search" placeholder="Enter a programme title">
+        </form>
+        <p><a href="#">Browse all programmes</a></p>
     </section>
 
     <section class="half-double module row ">
