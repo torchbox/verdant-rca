@@ -881,7 +881,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     )
     programme_finder_exclude = models.BooleanField(
         default=False,
-        verbose_name='Exclude',
+        verbose_name='Exclude from programme finder',
         help_text='Tick to exclude this page from the programme finder.'
     )
     programme_finder_keywords = ClusterTaggableManager(
@@ -889,6 +889,12 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         blank=True,
         verbose_name='Keywords',
         help_text='A comma-separated list of keywords.'
+    )
+    degree_level = models.ForeignKey(
+        'taxonomy.DegreeLevel',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='degree_programme_pages'
     )
 
     search_fields = Page.search_fields + [
@@ -1067,15 +1073,11 @@ ProgrammePage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-
     FieldPanel('school'),
-
     InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
-
-    MultiFieldPanel([
-            FieldPanel('programme_finder_exclude'),
-            FieldPanel('programme_finder_keywords'),
-        ], heading='Programme Finder Fields')
+    FieldPanel('degree_level'),
+    FieldPanel('programme_finder_keywords'),
+    FieldPanel('programme_finder_exclude'),
 ]
 
 ProgrammePage.settings_panels = [
