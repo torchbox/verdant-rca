@@ -963,6 +963,8 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
+        request.session['last_viewed_programme'] = self.id
+
         programmes = [p.programme for p in self.programmes.all()]
         research_items = ResearchItem.objects.filter(live=True, programme__in=programmes, featured=True).order_by('random_order')
 
@@ -2913,16 +2915,26 @@ class HomePage(Page, SocialFields):
 
         random.shuffle(packery)
 
+        try:
+            last_viewed_programme = ProgrammePage.objects.get(
+                id=request.session.get('last_viewed_programme')
+            )
+        except ProgrammePage.DoesNotExist:
+            last_viewed_programme = None
+
         if request.is_ajax():
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
-                'packery': packery
+                'packery': packery,
+                'last_viewed_programme': last_viewed_programme,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'packery': packery
+                'packery': packery,
+                'last_viewed_programme': last_viewed_programme,
             })
+
 
 HomePage.content_panels = [
     FieldPanel('title', classname="full title"),

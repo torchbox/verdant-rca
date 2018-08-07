@@ -10,6 +10,13 @@
 
     {% include "rca/includes/modules/carousel.html" with overlayvisible=1 %}
 
+    {# WIP Programme Finder #}
+    <section>
+        {% if last_viewed_programme %}
+            <h2>Recently viewed: <a href="{% pageurl last_viewed_programme %}">{{ last_viewed_programme }}</a></h2>
+        {% endif %}
+    </section>
+
     <section class="half-double module row ">
         <ul>
             {% if self.news_item_1 %}
