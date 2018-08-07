@@ -881,7 +881,8 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     )
     programme_finder_exclude = models.BooleanField(
         default=False,
-        verbose_name='Exclude from programme finder'
+        verbose_name='Exclude',
+        help_text='Tick to exclude this page from the programme finder.'
     )
     programme_finder_keywords = ClusterTaggableManager(
         through=ProgrammePageKeyword,
@@ -889,7 +890,6 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         verbose_name='Keywords',
         help_text='A comma-separated list of keywords.'
     )
-
 
     search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
@@ -992,6 +992,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
                 'per_page': per_page,
             })
 
+
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
     ImageChooserPanel('background_image'),
@@ -1058,8 +1059,6 @@ ProgrammePage.promote_panels = [
         FieldPanel('show_in_menus'),
         ImageChooserPanel('feed_image'),
         FieldPanel('search_description'),
-        FieldPanel('programme_finder_exclude'),
-        FieldPanel('programme_finder_keywords'),
     ], 'Cross-page behaviour'),
 
     MultiFieldPanel([
@@ -1070,6 +1069,11 @@ ProgrammePage.promote_panels = [
     FieldPanel('school'),
 
     InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
+
+    MultiFieldPanel([
+            FieldPanel('programme_finder_exclude'),
+            FieldPanel('programme_finder_keywords'),
+        ], heading='Programme Finder Fields')
 ]
 
 ProgrammePage.settings_panels = [
