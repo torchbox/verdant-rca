@@ -27,6 +27,8 @@ def get_image_detail(image, filter_spec, root_url):
         return OrderedDict([
             ('error', 'SourceImageIOError'),
         ])
+    except AttributeError:
+        return ''
 
 
 def programme_search(request):
