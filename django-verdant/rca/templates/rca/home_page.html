@@ -11,16 +11,14 @@
     {% include "rca/includes/modules/carousel.html" with overlayvisible=1 %}
 
     {# WIP Programme Finder #}
-    <section>
+    <section style="border: 1px solid black; padding:20px;">
         <h2>Study at RCA</h2>
         {% if last_viewed_programme %}
             <h3>Recently viewed: <a href="{% pageurl last_viewed_programme %}">{{ last_viewed_programme }}</a></h3>
         {% endif %}
         <p>Search {{ programme_count }} distinctive postgraduate programmes</p>
-        <form>
-            <input type="text" name="course_search" id="course_search" placeholder="Enter a programme title">
-        </form>
-        <p><a href="#">Browse all programmes</a></p>
+        <input type="text" name="course_search" id="course_search" placeholder="Enter a programme title">
+        <p><a href="#">Browse all programmes >></a></p>
     </section>
 
     <section class="half-double module row ">
