@@ -1,0 +1,33 @@
+{% load wagtailcore_tags %}
+
+<h1>{{ page.title }}</h1>
+
+<form method="GET">
+    <div>
+        <label>Level of study</label>
+        <select name="level">
+            <option value="">-- Choose a level of study --</option>
+            {% for level in degree_levels %}
+                <option value="{{ level.slug }}" {% if filter_degree_level == level.slug %}selected{% endif %}>{{ level }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label>School </label>
+        <select name="school">
+            <option value="">-- Choose a school --</option>
+            {% for school in schools %}
+                <option value="{{ school.slug }}" {% if filter_school == school.slug %}selected{% endif %}>{{ school }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div><input type="submit" name="search" value="search"></div>
+</form>
+
+
+{% for programme in programmes %}
+    {% if forloop.first %}<h2>Programmes</h2>{% endif %}
+    <p><a href="{% pageurl programme %}">{{ programme }}</a></p>
+{% empty %}
+    <h2>There are no programmes to show</h2>
+{% endfor %}

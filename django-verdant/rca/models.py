@@ -60,7 +60,7 @@ from rca.utils.models import (
     OptionalBlockFields, CarouselItemFields,
 )
 from rca_ee.models import FormPage
-from taxonomy.models import Area, School, Programme
+from taxonomy.models import Area, School, Programme, DegreeLevel
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
@@ -1095,7 +1095,31 @@ class ProgrammeFinderPage(Page, SocialFields, SidebarBehaviourFields):
 
     @classmethod
     def can_create_at(cls, parent):
-        return super(ProgrammeFinderPage, cls).can_create_at(parent) and not cls.objects.count()
+        return super(ProgrammeFinderPage, cls).can_create_at(parent) and not \
+            cls.objects.count()
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(ProgrammeFinderPage, self).get_context(request, *args, **kwargs)
+
+        programmes = ProgrammePage.objects.all()
+
+        degree_level = request.GET.get('level')
+        if degree_level:
+            programmes = programmes.filter(degree_level__slug=degree_level)
+
+        school = request.GET.get('school')
+        if school:
+            programmes = programmes.filter(school__slug=school)
+
+        context.update(
+            degree_levels=DegreeLevel.objects.order_by('name'),
+            schools=School.objects.order_by('display_name'),
+            programmes=programmes.order_by('title'),
+            filter_degree_level=degree_level,
+            filter_school=school,
+        )
+
+        return context
 
     content_panels = Page.content_panels + [
         FieldPanel('introduction'),

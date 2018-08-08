@@ -83,7 +83,7 @@
     <script type="text/javascript">
         $(function() {
             $("input#course_search").autocomplete({
-                minLength: 2,
+                minLength: 3,
                 source: function(request, response) {
                     $.getJSON("/programme_search/?q=" + request.term, function(data) {
                         response(data);
