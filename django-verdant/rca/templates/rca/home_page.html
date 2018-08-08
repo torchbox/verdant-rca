@@ -77,3 +77,24 @@
     <!-- Related links -->
     {% sidebar_links calling_page=self %}
 {% endblock %}
+
+{# WIP Programme Finder #}
+{% block extra_js %}
+    <script type="text/javascript">
+        $(function() {
+            $("input#course_search").autocomplete({
+                minLength: 2,
+                source: function(request, response) {
+                    $.getJSON("/programme_search/?q=" + request.term, function(data) {
+                        response(data);
+                    });
+                },
+                select: function( event, ui ) {
+                    window.location.href = ui.item.search_url || ui.item.url;
+                }
+            }).data("ui-autocomplete")._renderItem = function( ul, item ) {
+                return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "</a>" ).appendTo( ul );
+            };
+        });
+    </script>
+{% endblock %}

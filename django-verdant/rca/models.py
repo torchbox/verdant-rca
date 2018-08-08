@@ -1087,6 +1087,21 @@ ProgrammePage.settings_panels = [
     ], 'Sidebar behaviour'),
 ]
 
+
+class ProgrammeFinderPage(Page, SocialFields, SidebarBehaviourFields):
+    introduction = models.TextField()
+
+    subpage_types = []
+
+    @classmethod
+    def can_create_at(cls, parent):
+        return super(ProgrammeFinderPage, cls).can_create_at(parent) and not cls.objects.count()
+
+    content_panels = Page.content_panels + [
+        FieldPanel('introduction'),
+    ]
+
+
 # == News Index ==
 
 class NewsIndexAd(Orderable):
