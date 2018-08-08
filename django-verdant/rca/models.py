@@ -2974,7 +2974,8 @@ class HomePage(Page, SocialFields):
                 'self': self,
                 'packery': packery,
                 'last_viewed_programme': last_viewed_programme,
-                'programme_count': ProgrammePage.objects.live().public().count()
+                'programme_count': ProgrammePage.objects.live().public().count(),
+                'programme_finder_page': ProgrammeFinderPage.objects.first(),
             })
 
 
