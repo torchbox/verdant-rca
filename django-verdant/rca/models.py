@@ -1101,7 +1101,7 @@ class ProgrammeFinderPage(Page, SocialFields, SidebarBehaviourFields):
     def get_context(self, request, *args, **kwargs):
         context = super(ProgrammeFinderPage, self).get_context(request, *args, **kwargs)
 
-        programmes = ProgrammePage.objects.all()
+        programmes = ProgrammePage.objects.exclude(programme_finder_exclude=True)
 
         degree_level = request.GET.get('level')
         if degree_level:
