@@ -27,9 +27,9 @@
 </form>
 
 
-{% for programme in programmes %}
+{% for course in courses %}
     {% if forloop.first %}<h2>Programmes</h2>{% endif %}
-    <p><a href="{% pageurl programme %}">{{ programme }}</a></p>
+    <p><a href="{% pageurl course %}">{{ course }}</a></p>
 {% empty %}
     <h2>There are no programmes to show</h2>
 {% endfor %}

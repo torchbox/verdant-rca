@@ -18,7 +18,7 @@
         {% endif %}
         <p>Search {{ programme_count }} distinctive postgraduate programmes</p>
         <input type="text" name="course_search" id="course_search" placeholder="Enter a programme title">
-        <p><a href="{% pageurl programme_finder_page %}">Browse all programmes >></a></p>
+        {% if programme_finder_page_url %}<p><a href="{{ programme_finder_page_url }}">Browse all programmes >></a></p>{% endif %}
     </section>
 
     <section class="half-double module row ">

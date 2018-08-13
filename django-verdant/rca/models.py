@@ -1073,8 +1073,8 @@ ProgrammePage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-    FieldPanel('school'),
     InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
+    FieldPanel('school'),
     FieldPanel('degree_level'),
     FieldPanel('programme_finder_keywords'),
     FieldPanel('programme_finder_exclude'),
@@ -1095,26 +1095,40 @@ class ProgrammeFinderPage(Page, SocialFields, SidebarBehaviourFields):
 
     @classmethod
     def can_create_at(cls, parent):
+        # we only need one programme finder page
         return super(ProgrammeFinderPage, cls).can_create_at(parent) and not \
             cls.objects.count()
 
     def get_context(self, request, *args, **kwargs):
-        context = super(ProgrammeFinderPage, self).get_context(request, *args, **kwargs)
+        from shortcourses.models import ShortCoursePage
 
-        programmes = ProgrammePage.objects.exclude(programme_finder_exclude=True)
+        context = super(ProgrammeFinderPage, self).get_context(
+            request, *args, **kwargs)
+
+        programmes = ProgrammePage.objects.exclude(
+            programme_finder_exclude=True)
+        short_courses = ShortCoursePage.objects.exclude(
+            programme_finder_exclude=True)
 
         degree_level = request.GET.get('level')
         if degree_level:
             programmes = programmes.filter(degree_level__slug=degree_level)
+            short_courses = short_courses.filter(
+                degree_level__slug=degree_level)
 
         school = request.GET.get('school')
         if school:
             programmes = programmes.filter(school__slug=school)
+            short_courses = short_courses.filter(related_school__slug=school)
+
+        courses = list(programmes)
+        courses.extend(list(short_courses))
+        courses.sort(key=lambda c: c.title)
 
         context.update(
             degree_levels=DegreeLevel.objects.order_by('name'),
             schools=School.objects.order_by('display_name'),
-            programmes=programmes.order_by('title'),
+            courses=courses,
             filter_degree_level=degree_level,
             filter_school=school,
         )
@@ -2964,6 +2978,12 @@ class HomePage(Page, SocialFields):
         except ProgrammePage.DoesNotExist:
             last_viewed_programme = None
 
+        try:
+            programme_finder_page_url = \
+                ProgrammeFinderPage.objects.live().first().url
+        except AttributeError:
+            programme_finder_page_url = ''
+
         if request.is_ajax():
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
@@ -2975,7 +2995,7 @@ class HomePage(Page, SocialFields):
                 'packery': packery,
                 'last_viewed_programme': last_viewed_programme,
                 'programme_count': ProgrammePage.objects.live().public().count(),
-                'programme_finder_page': ProgrammeFinderPage.objects.first(),
+                'programme_finder_page_url': programme_finder_page_url,
             })
 
 
