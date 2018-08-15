@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.text import slugify
 
 from modelcluster.models import ClusterableModel
 from modelcluster.fields import ParentalKey
@@ -134,3 +135,29 @@ class ProgrammeHistoricalDisplayName(models.Model):
 
     class Meta:
         ordering = ['end_year']
+
+
+@python_2_unicode_compatible
+class DegreeLevel(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    slug = models.CharField(max_length=255, unique=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def clean(self):
+        super(DegreeLevel, self).clean()
+        self.slug = self.find_available_slug(self.name)
+
+    def find_available_slug(self, title):
+        requested_slug = slugify(title)
+        slug = requested_slug
+        number = 1
+        while self.__class__.objects.filter(slug=slug).exists():
+            slug = requested_slug + '-' + str(number)
+            number += 1
+        return slug
+
+    panels = [
+        FieldPanel('name'),
+    ]
