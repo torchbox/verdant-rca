@@ -297,6 +297,34 @@ class ShortCoursePage(Page, SocialFields, SidebarBehaviourFields):
 
         return None
 
+    @property
+    def carousel_items(self):
+        return self.shortcourse_carousel_items
+
+    @property
+    def related_links(self):
+        return self.shortcourse_related_links
+
+    @property
+    def reusable_text_snippets(self):
+        return self.shortcourse_reusable_text_snippets
+
+    @property
+    def documents(self):
+        return self.shortcourse_documents
+
+    @property
+    def quotations(self):
+        return self.shortcourse_quotations
+
+    @property
+    def images(self):
+        return self.shortcourse_images
+
+    @property
+    def manual_adverts(self):
+        return self.shortcourse_manual_adverts
+
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('strapline', classname="full"),
