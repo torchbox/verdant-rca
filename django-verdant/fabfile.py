@@ -56,7 +56,7 @@ def clear_cache():
 def fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
+    remote_path = "/var/www/rca/tmp/%s" % filename
 
     run('pg_dump -cf %s verdant_rca' % remote_path)
     run('gzip %s' % remote_path)
@@ -81,7 +81,7 @@ def fetch_live_media():
 def fetch_staging_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
+    remote_path = "/var/www/rca/tmp/%s" % filename
 
     run('pg_dump -cf %s rca' % remote_path)
     run('gzip %s' % remote_path)
@@ -99,7 +99,7 @@ def fetch_staging_data():
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
     local_path = "/var/www/rca/tmp/%s" % filename
-    remote_path = "/tmp/%s" % filename
+    remote_path = "/var/www/rca/tmp/%s" % filename
 
     run('pg_dump -Fc -x -cf %s verdant_rca' % remote_path)
     run('gzip %s' % remote_path)
