@@ -26,13 +26,13 @@ from wagtail.contrib.settings.models import BaseSetting
 from wagtail.contrib.settings.registry import register_setting
 
 from wagtail.wagtailcore.models import Page, Orderable, PageManager
-from wagtail.wagtailcore.fields import RichTextField
+from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
 from wagtail.wagtailadmin.edit_handlers import (
     FieldPanel, MultiFieldPanel, InlinePanel, ObjectList, PageChooserPanel,
-    PublishingPanel, TabbedInterface
+    PublishingPanel, TabbedInterface, StreamFieldPanel
 )
 from wagtail.wagtailembeds import embeds
 from wagtail.wagtailembeds.exceptions import EmbedNotFoundException
@@ -73,6 +73,7 @@ from wagtailcaptcha.models import WagtailCaptchaEmailForm, WagtailCaptchaFormBui
 from rca_signage.constants import SCREEN_CHOICES
 from reachout_choices import REACHOUT_PROJECT_CHOICES, REACHOUT_PARTICIPANTS_CHOICES, REACHOUT_THEMES_CHOICES, REACHOUT_PARTNERSHIPS_CHOICES
 
+from blocks import HomepageBody
 from .help_text import help_text
 
 
@@ -2879,6 +2880,7 @@ class HomePage(Page, SocialFields):
         on_delete=models.SET_NULL,
         related_name='+',
     )
+    body = StreamField(HomepageBody())
 
     def get_template(self, request):
         if self.use_2018_redesign_template:
@@ -3049,7 +3051,8 @@ class HomePage(Page, SocialFields):
         MultiFieldPanel([
             FieldPanel('hero_text'),
             ImageChooserPanel('hero_image'),
-        ], heading="Hero")
+        ], heading="Hero"),
+        StreamFieldPanel('body'),
     ]
 
     promote_panels = [

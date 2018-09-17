@@ -1,0 +1,9 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<p>{{ value.title }}</p>
+{% for showcase_page in showcase_pages %}
+    <a href="{% pageurl showcase_page %}">
+        {% image showcase_page.feed_image original %}    
+        <b>{{ showcase_page.title }}:</b> {{ showcase_page.strapline }}
+    </a>
+{% endfor %}
