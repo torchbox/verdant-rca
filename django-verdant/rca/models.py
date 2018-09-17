@@ -60,7 +60,7 @@ from rca.utils.models import (
     OptionalBlockFields, CarouselItemFields,
 )
 from rca_ee.models import FormPage
-from taxonomy.models import Area, School, Programme
+from taxonomy.models import Area, School, Programme, DegreeLevel
 
 from rca.filters import run_filters, run_filters_q, combine_filters, get_filters_q
 import json
@@ -840,6 +840,11 @@ class ProgrammePageAd(Orderable):
         SnippetChooserPanel('ad'),
     ]
 
+
+class ProgrammePageKeyword(TaggedItemBase):
+    content_object = ParentalKey('rca.ProgrammePage', on_delete=models.CASCADE)
+
+
 class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
     school = models.ForeignKey('taxonomy.School', null=True, on_delete=models.SET_NULL, related_name='programme_pages', help_text=help_text('rca.ProgrammePage', 'school'))
     background_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.ProgrammePage', 'background_image', default="The full bleed image in the background"))
@@ -874,7 +879,23 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
         on_delete=models.SET_NULL,
         related_name='+'
     )
-
+    programme_finder_exclude = models.BooleanField(
+        default=False,
+        verbose_name='Exclude from programme finder',
+        help_text='Tick to exclude this page from the programme finder.'
+    )
+    programme_finder_keywords = ClusterTaggableManager(
+        through=ProgrammePageKeyword,
+        blank=True,
+        verbose_name='Keywords',
+        help_text='A comma-separated list of keywords.'
+    )
+    degree_level = models.ForeignKey(
+        'taxonomy.DegreeLevel',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='degree_programme_pages'
+    )
 
     search_fields = Page.search_fields + [
         index.SearchField('get_programme_display'),
@@ -948,6 +969,8 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
+        request.session['last_viewed_programme'] = self.id
+
         programmes = [p.programme for p in self.programmes.all()]
         research_items = ResearchItem.objects.filter(live=True, programme__in=programmes, featured=True).order_by('random_order')
 
@@ -976,6 +999,7 @@ class ProgrammePage(Page, SocialFields, SidebarBehaviourFields):
                 'research_items': research_items,
                 'per_page': per_page,
             })
+
 
 ProgrammePage.content_panels = [
     FieldPanel('title', classname="full title"),
@@ -1049,10 +1073,11 @@ ProgrammePage.promote_panels = [
         ImageChooserPanel('social_image'),
         FieldPanel('social_text'),
     ], 'Social networks'),
-
-    FieldPanel('school'),
-
     InlinePanel('programmes', min_num=1, label="Programmes (*at least one is required)"),
+    FieldPanel('school'),
+    FieldPanel('degree_level'),
+    FieldPanel('programme_finder_keywords'),
+    FieldPanel('programme_finder_exclude'),
 ]
 
 ProgrammePage.settings_panels = [
@@ -1061,6 +1086,59 @@ ProgrammePage.settings_panels = [
         FieldPanel('collapse_upcoming_events'),
     ], 'Sidebar behaviour'),
 ]
+
+
+class ProgrammeFinderPage(Page, SocialFields, SidebarBehaviourFields):
+    introduction = models.TextField()
+
+    subpage_types = []
+
+    @classmethod
+    def can_create_at(cls, parent):
+        # we only need one programme finder page
+        return super(ProgrammeFinderPage, cls).can_create_at(parent) and not \
+            cls.objects.count()
+
+    def get_context(self, request, *args, **kwargs):
+        from shortcourses.models import ShortCoursePage
+
+        context = super(ProgrammeFinderPage, self).get_context(
+            request, *args, **kwargs)
+
+        programmes = ProgrammePage.objects.exclude(
+            programme_finder_exclude=True)
+        short_courses = ShortCoursePage.objects.exclude(
+            programme_finder_exclude=True)
+
+        degree_level = request.GET.get('level')
+        if degree_level:
+            programmes = programmes.filter(degree_level__slug=degree_level)
+            short_courses = short_courses.filter(
+                degree_level__slug=degree_level)
+
+        school = request.GET.get('school')
+        if school:
+            programmes = programmes.filter(school__slug=school)
+            short_courses = short_courses.filter(related_school__slug=school)
+
+        courses = list(programmes)
+        courses.extend(list(short_courses))
+        courses.sort(key=lambda c: c.title)
+
+        context.update(
+            degree_levels=DegreeLevel.objects.order_by('name'),
+            schools=School.objects.order_by('display_name'),
+            courses=courses,
+            filter_degree_level=degree_level,
+            filter_school=school,
+        )
+
+        return context
+
+    content_panels = Page.content_panels + [
+        FieldPanel('introduction'),
+    ]
+
 
 # == News Index ==
 
@@ -2901,15 +2979,32 @@ class HomePage(Page, SocialFields):
 
         random.shuffle(packery)
 
+        # get the last viewed programme
+        try:
+            last_viewed_programme = ProgrammePage.objects.get(
+                id=request.session.get('last_viewed_programme')
+            )
+        except ProgrammePage.DoesNotExist:
+            last_viewed_programme = None
+
+        try:
+            programme_finder_page_url = \
+                ProgrammeFinderPage.objects.live().first().url
+        except AttributeError:
+            programme_finder_page_url = ''
+
         if request.is_ajax():
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
-                'packery': packery
+                'packery': packery,
             })
         else:
             return render(request, self.get_template(request), {
                 'self': self,
-                'packery': packery
+                'packery': packery,
+                'last_viewed_programme': last_viewed_programme,
+                'programme_count': ProgrammePage.objects.live().public().count(),
+                'programme_finder_page_url': programme_finder_page_url,
             })
 
     content_panels = [
