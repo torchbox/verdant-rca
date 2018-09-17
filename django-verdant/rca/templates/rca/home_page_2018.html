@@ -6,6 +6,10 @@
     <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
     <a href="{{ header_navigation_links.navigation_link_2_url }}">{{ header_navigation_links.navigation_link_2_text }}</a>
 
+    {# Hero fields #}
+    <p>{{ self.hero_text }}</p>
+    {% image self.hero_image original %}
+
     {# WIP Programme Finder #}
     <section style="border: 1px solid black; padding:20px;">
         <h2>Study at RCA</h2>
@@ -14,8 +18,12 @@
         {% endif %}
         <p>Search {{ programme_count }} distinctive postgraduate programmes</p>
         <input type="text" name="course_search" id="course_search" placeholder="Enter a programme title">
-        {% if programme_finder_page_url %}<p><a href="{{ programme_finder_page_url }}">Browse all programmes >></a></p>{% endif %}
+
+        {# Browse all programmes link needs a ProgrammeFinderPage to exist #}
+        {% if programme_finder_page_url %}<p><a href="{{ programme_finder_page_url }}">Browse our programmes -></a></p>{% endif %}
     </section>
+
+    
 
     Use 2018 template: {{ use_2018_redesign_template }}<br>
     content for homepage goes here

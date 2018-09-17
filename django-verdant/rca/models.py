@@ -30,7 +30,10 @@ from wagtail.wagtailcore.fields import RichTextField
 from wagtail.wagtailcore.url_routing import RouteResult
 from modelcluster.fields import ParentalKey
 
-from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel, PublishingPanel
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel, MultiFieldPanel, InlinePanel, ObjectList, PageChooserPanel,
+    PublishingPanel, TabbedInterface
+)
 from wagtail.wagtailembeds import embeds
 from wagtail.wagtailembeds.exceptions import EmbedNotFoundException
 from wagtail.wagtailembeds.finders.embedly import AccessDeniedEmbedlyException, EmbedlyException
@@ -2865,8 +2868,17 @@ class HomePage(Page, SocialFields):
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
     # 2018 update fields
-    ## temporary field to switch template
-    use_2018_redesign_template = models.BooleanField(default=False)
+    use_2018_redesign_template = models.BooleanField(default=False)  # temporary field to switch template
+    hero_text = models.TextField(
+        help_text="Add asterisks around text to make it appear bold, e.g. "
+                  "'Make *this* bold.'"
+    )
+    hero_image = models.ForeignKey(
+        'rca.RcaImage',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+    )
 
     def get_template(self, request):
         if self.use_2018_redesign_template:
@@ -3032,6 +3044,14 @@ class HomePage(Page, SocialFields):
         InlinePanel('manual_adverts', label="Manual adverts"),
     ]
 
+    content_panels_2018 = [
+        FieldPanel('use_2018_redesign_template'),
+        MultiFieldPanel([
+            FieldPanel('hero_text'),
+            ImageChooserPanel('hero_image'),
+        ], heading="Hero")
+    ]
+
     promote_panels = [
         MultiFieldPanel([
             FieldPanel('seo_title'),
@@ -3050,9 +3070,12 @@ class HomePage(Page, SocialFields):
         ], 'Social networks'),
     ]
 
-    settings_panels = Page.settings_panels + [
-        FieldPanel('use_2018_redesign_template'),
-    ]
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList(content_panels_2018, heading='New Content'),
+        ObjectList(promote_panels, heading='Promote'),
+        ObjectList(Page.settings_panels, heading='Settings', classname='settings')
+    ])
 
 
 # == Job page ==
