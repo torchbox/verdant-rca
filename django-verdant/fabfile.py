@@ -72,7 +72,7 @@ def fetch_live_data():
 @runs_once
 @roles('production')
 def fetch_live_media():
-    remote_path = '/verdant-shared/media/'
+    remote_path = '/verdant-shared/sroot/rca/media/'
 
     local('rsync -avz %s:%s /vagrant/media/' % (env['host_string'], remote_path))
 
