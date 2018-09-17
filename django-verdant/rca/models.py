@@ -6879,3 +6879,40 @@ class DoubleclickCampaignManagerActivities(models.Model):
 
 
 register_snippet(DoubleclickCampaignManagerActivities)
+
+
+@register_setting
+class HeaderSettings(BaseSetting):
+    navigation_link_1_text = models.CharField(
+        max_length=15,
+        verbose_name='Text'
+    )
+    navigation_link_1_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Page'
+    )
+    navigation_link_2_text = models.CharField(
+        max_length=15,
+        verbose_name='Text'
+    )
+    navigation_link_2_page = models.ForeignKey(
+        'wagtailcore.Page',
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name='Page'
+    )
+
+    panels = [
+        MultiFieldPanel([
+            FieldPanel('navigation_link_1_text'),
+            PageChooserPanel('navigation_link_1_page'),
+        ], heading='Navigation Link 1'),
+        MultiFieldPanel([
+            FieldPanel('navigation_link_2_text'),
+            PageChooserPanel('navigation_link_2_page'),
+        ], heading='Navigation Link 2')
+    ]
