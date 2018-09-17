@@ -2786,6 +2786,15 @@ class HomePage(Page, SocialFields):
     twitter_feed = models.CharField(max_length=255, blank=True, help_text=help_text('rca.HomePage', 'twitter_feed', default=TWITTER_FEED_HELP_TEXT))
     feed_image = models.ForeignKey('rca.RcaImage', null=True, blank=True, on_delete=models.SET_NULL, related_name='+', help_text=help_text('rca.HomePage', 'feed_image', default="The image displayed in content feeds, such as the news carousel. Should be 16:9 ratio."))
 
+    # 2018 update fields
+    ## temporary field to switch template
+    use_2018_redesign_template = models.BooleanField(default=False)
+
+    def get_template(self, request):
+        if self.use_2018_redesign_template:
+            return 'rca/home_page_2018.html'
+        return self.template
+
     def future_events(self):
         return EventItem.future_objects.filter(live=True, path__startswith=self.path)
 
@@ -2898,53 +2907,57 @@ class HomePage(Page, SocialFields):
                 'packery': packery
             })
         else:
-            return render(request, self.template, {
+            return render(request, self.get_template(request), {
                 'self': self,
                 'packery': packery
             })
 
-HomePage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    ImageChooserPanel('background_image'),
-    InlinePanel('carousel_items', label="Carousel content"),
-    PageChooserPanel('news_item_1'),
-    PageChooserPanel('news_item_2'),
-    MultiFieldPanel([
-        FieldPanel('packery_news'),
-        FieldPanel('packery_staff'),
-        FieldPanel('packery_tweets'),
-        FieldPanel('twitter_feed'),
-        FieldPanel('packery_research'),
-        FieldPanel('packery_events'),
-        FieldPanel('packery_events_rcatalks'),
-        FieldPanel('packery_blog'),
-        FieldPanel('packery_student_stories'),
-        FieldPanel('packery_alumni_stories'),
-        FieldPanel('packery_student_work'),
-        FieldPanel('packery_rcanow'),
-        FieldPanel('packery_review'),
-    ], 'Packery content'),
-    InlinePanel('related_links', label="Related links"),
-    InlinePanel('manual_adverts', label="Manual adverts"),
-]
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        ImageChooserPanel('background_image'),
+        InlinePanel('carousel_items', label="Carousel content"),
+        PageChooserPanel('news_item_1'),
+        PageChooserPanel('news_item_2'),
+        MultiFieldPanel([
+            FieldPanel('packery_news'),
+            FieldPanel('packery_staff'),
+            FieldPanel('packery_tweets'),
+            FieldPanel('twitter_feed'),
+            FieldPanel('packery_research'),
+            FieldPanel('packery_events'),
+            FieldPanel('packery_events_rcatalks'),
+            FieldPanel('packery_blog'),
+            FieldPanel('packery_student_stories'),
+            FieldPanel('packery_alumni_stories'),
+            FieldPanel('packery_student_work'),
+            FieldPanel('packery_rcanow'),
+            FieldPanel('packery_review'),
+        ], 'Packery content'),
+        InlinePanel('related_links', label="Related links"),
+        InlinePanel('manual_adverts', label="Manual adverts"),
+    ]
 
-HomePage.promote_panels = [
-    MultiFieldPanel([
-        FieldPanel('seo_title'),
-        FieldPanel('slug'),
-    ], 'Common page configuration'),
+    promote_panels = [
+        MultiFieldPanel([
+            FieldPanel('seo_title'),
+            FieldPanel('slug'),
+        ], 'Common page configuration'),
 
-    MultiFieldPanel([
-        FieldPanel('show_in_menus'),
-        ImageChooserPanel('feed_image'),
-        FieldPanel('search_description'),
-    ], 'Cross-page behaviour'),
+        MultiFieldPanel([
+            FieldPanel('show_in_menus'),
+            ImageChooserPanel('feed_image'),
+            FieldPanel('search_description'),
+        ], 'Cross-page behaviour'),
 
-    MultiFieldPanel([
-        ImageChooserPanel('social_image'),
-        FieldPanel('social_text'),
-    ], 'Social networks'),
-]
+        MultiFieldPanel([
+            ImageChooserPanel('social_image'),
+            FieldPanel('social_text'),
+        ], 'Social networks'),
+    ]
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel('use_2018_redesign_template'),
+    ]
 
 
 # == Job page ==
