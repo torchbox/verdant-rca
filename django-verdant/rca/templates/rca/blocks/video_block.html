@@ -1,3 +1,7 @@
-{% load wagtailembeds_tags %}
+{% load wagtailembeds_tags wagtailimages_tags %}
+
+{{ value.title }}
 
 {{ value.video.url|embed }}
+
+{% image value.poster_image original %}

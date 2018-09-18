@@ -1,5 +1,6 @@
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailembeds import blocks as embed_blocks
+from wagtail.wagtailimages.blocks import ImageChooserBlock
 
 
 class ShowcaseBlock(blocks.StructBlock):
@@ -21,7 +22,9 @@ class ShowcaseBlock(blocks.StructBlock):
 
 
 class VideoBlock(blocks.StructBlock):
+    title = blocks.CharBlock()
     video = embed_blocks.EmbedBlock()
+    poster_image = ImageChooserBlock(required=False)
 
     class Meta:
         icon = 'media'
