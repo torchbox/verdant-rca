@@ -1,0 +1,18 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{# More events link #}
+<p><a href="{% pageurl value.more_events_link %}">More events</a></p>
+
+{% for event in events %}
+    <p>
+        <a href="{% pageurl event %}">
+            {% with event.next_date_time as event_dates %}
+                {# {% image event.feed_image original %} #}
+                Dates: {{ event_dates.date_from|date:"j F" }}{% if event_dates.date_to %} - {{ event_dates.date_to|date:"j F" }}{% endif %}<br>
+                Title: {{ event.title }}<br>
+                Strapline: {{ event.strapline }}<br>
+                Audience: {{ event.get_audience_display }}
+            {% endwith %}
+        </a>
+    </p>
+{% endfor %}

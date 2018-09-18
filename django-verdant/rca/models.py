@@ -18,6 +18,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.dispatch.dispatcher import receiver
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect
+from django.utils.functional import cached_property
 from django.utils.html import conditional_escape
 from django.utils.safestring import mark_safe
 from django.utils import timezone
@@ -1845,9 +1846,9 @@ class EventItem(Page, SocialFields):
 
     search_name = 'Event'
 
-    @property
+    @cached_property
     def next_date_time(self):
-        return self.dates_times.order_by('date_from').filter(date_from__gte=timezone.now().date).first()
+        return self.dates_times.order_by('date_from').filter(date_from__gte=timezone.now().date()).first()
 
     def serve(self, request):
         if "format" in request.GET:

@@ -1,3 +1,5 @@
+from django.db.models import Min
+
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailembeds import blocks as embed_blocks
@@ -73,8 +75,25 @@ class NewsBlock(blocks.StructBlock):
         template = 'rca/blocks/news_block.html'
 
 
+class EventsBlock(blocks.StructBlock):
+    more_events_link = blocks.PageChooserBlock()
+
+    def get_context(self, value):
+        from rca.models import EventItem
+        context = super(EventsBlock, self).get_context(value)
+        context['events'] = EventItem.future_objects.live() \
+            .annotate(start_date=Min('dates_times__date_from')) \
+            .order_by('start_date')
+        return context
+
+    class Meta:
+        icon = 'date'
+        template = 'rca/blocks/events_block.html'
+
+
 class HomepageBody(blocks.StreamBlock):
     showcase = ShowcaseBlock()
     video = VideoBlock()
     testimonials = TestimonialsBlock()
     news = NewsBlock()
+    events = EventsBlock()
