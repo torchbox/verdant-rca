@@ -3,6 +3,12 @@
 {# More news link #}
 <p><a href="{% pageurl value.more_news_link %}">More news</a></p>
 
+{% comment %}
+    Let me know if the featured page would be better as part of the loop 
+    and identified with 'forloop.counter == 3' for styling, instead of being
+    separate, Rich.
+{% endcomment %}
+
 {# Featured #}
 <p>
     <a href="{% pageurl value.featured_page %}">
