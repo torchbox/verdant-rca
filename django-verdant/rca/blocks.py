@@ -1,4 +1,5 @@
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailembeds import blocks as embed_blocks
 
 
 class ShowcaseBlock(blocks.StructBlock):
@@ -19,5 +20,14 @@ class ShowcaseBlock(blocks.StructBlock):
         return context
 
 
+class VideoBlock(blocks.StructBlock):
+    video = embed_blocks.EmbedBlock()
+
+    class Meta:
+        icon = 'media'
+        template = 'rca/blocks/video_block.html'
+
+
 class HomepageBody(blocks.StreamBlock):
     showcase = ShowcaseBlock()
+    video = VideoBlock()
