@@ -23,8 +23,7 @@
     <p>
         <a href="{% pageurl news_page %}">
             {% image news_page.feed_image original %}
-            {{ news_page.title }}
-            {{ news_page.strapline }}
+            <b>{{ news_page.title }}:</b> {{ news_page.strapline }}
         </a>
     </p>
 {% endfor %}
