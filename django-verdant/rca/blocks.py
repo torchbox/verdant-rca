@@ -1,4 +1,5 @@
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailcore.models import Page
 from wagtail.wagtailembeds import blocks as embed_blocks
 from wagtail.wagtailimages import blocks as image_blocks
 
@@ -52,7 +53,28 @@ class TestimonialsBlock(blocks.StructBlock):
         template = 'rca/blocks/testimonials_block.html'
 
 
+class NewsBlock(blocks.StructBlock):
+    featured_page = blocks.PageChooserBlock()
+    more_news_link = blocks.PageChooserBlock()
+
+    def get_context(self, value):
+        from rca.models import NewsItem, PressRelease, RcaBlogPage
+        context = super(NewsBlock, self).get_context(value)
+        pages = Page.objects.type(NewsItem) | Page.objects.type(PressRelease) \
+            | Page.objects.type(RcaBlogPage)
+        pages = pages.not_page(value['featured_page']).specific()
+        context['pages'] = sorted(
+            pages, key=lambda p: p.date, reverse=True
+        )[:4]
+        return context
+
+    class Meta:
+        icon = 'list-ul'
+        template = 'rca/blocks/news_block.html'
+
+
 class HomepageBody(blocks.StreamBlock):
     showcase = ShowcaseBlock()
     video = VideoBlock()
     testimonials = TestimonialsBlock()
+    news = NewsBlock()

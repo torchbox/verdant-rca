@@ -1,0 +1,24 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{# More news link #}
+<p><a href="{% pageurl value.more_news_link %}">More news</a></p>
+
+{# Featured #}
+<p>
+    <a href="{% pageurl value.featured_page %}">
+        {% image value.featured_page.feed_image original %}
+        {{ value.featured_page.title }}
+        {{ value.featured_page.strapline }}
+    </a>
+</p>
+
+{# News #}
+{% for news_page in pages %}
+    <p>
+        <a href="{% pageurl news_page %}">
+            {% image news_page.feed_image original %}
+            {{ news_page.title }}
+            {{ news_page.strapline }}
+        </a>
+    </p>
+{% endfor %}
