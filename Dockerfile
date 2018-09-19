@@ -1,12 +1,12 @@
 FROM python:2.7.15-stretch
 
-WORKDIR /app/django-verdant/
+WORKDIR /app/
 
 #  * PORT - default port used. Please match with EXPOSE so it works on Dokku.
 #    Heroku will ignore EXPOSE and only set PORT variable. PORT variable is
 #    read/used by Gunicorn.
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app \
+    PYTHONPATH=/app/django-verdant/ \
     DJANGO_SETTINGS_MODULE=rcasite.settings.production \
     PORT=8000 \
     WEB_CONCURRENCY=3 \
