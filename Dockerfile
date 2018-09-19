@@ -1,4 +1,4 @@
-FROM python:3.6.6-stretch
+FROM python:2.7.15-stretch
 
 WORKDIR /app
 
@@ -7,7 +7,7 @@ WORKDIR /app
 #    read/used by Gunicorn.
 ENV PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app \
-    DJANGO_SETTINGS_MODULE=rcasite.settings.staging \
+    DJANGO_SETTINGS_MODULE=rcasite.settings.production \
     PORT=8000 \
     WEB_CONCURRENCY=3 \
     GUNICORN_CMD_ARGS="--max-requests 1200 --access-logfile -"
@@ -50,4 +50,4 @@ USER verdant-rca
 
 # Run the WSGI server. It reads GUNICORN_CMD_ARGS, PORT and WEB_CONCURRENCY
 # environment variable hence we don't specify a lot options below.
-CMD gunicorn verdant-rca.wsgi:application
+CMD gunicorn django-verdant.rcasite.wsgi:application
