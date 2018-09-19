@@ -1,0 +1,15 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<p>{{ value.title }}</p>
+
+{# column one #}
+<p>
+    {% image value.column_one_image original %}
+    <a href="{% pageurl value.column_one_link_page %}">{{ value.column_one_link_text }}</a>
+</p>
+
+{# column two #}
+<p>
+    {% image value.column_two_image original %}
+    <a href="{% pageurl value.column_two_link_page %}">{{ value.column_two_link_text }}</a>
+</p>

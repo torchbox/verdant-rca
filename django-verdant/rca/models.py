@@ -2883,11 +2883,6 @@ class HomePage(Page, SocialFields):
     )
     body = StreamField(HomepageBody())
 
-    def get_template(self, request):
-        if self.use_2018_redesign_template:
-            return 'rca/home_page_2018.html'
-        return self.template
-
     def future_events(self):
         return EventItem.future_objects.filter(live=True, path__startswith=self.path)
 
@@ -2896,6 +2891,28 @@ class HomePage(Page, SocialFields):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request):
+
+        if self.use_2018_redesign_template:
+            try:
+                last_viewed_programme = ProgrammePage.objects.get(
+                    id=request.session.get('last_viewed_programme')
+                )
+            except ProgrammePage.DoesNotExist:
+                last_viewed_programme = None
+
+            try:
+                programme_finder_page_url = \
+                    ProgrammeFinderPage.objects.live().first().url
+            except AttributeError:
+                programme_finder_page_url = ''
+
+            return render(request, 'rca/home_page_2018.html', {
+                'self': self,
+                'last_viewed_programme': last_viewed_programme,
+                'programme_count': ProgrammePage.objects.live().public().count(),
+                'programme_finder_page_url': programme_finder_page_url,
+            })
+
         exclude = []
 
         if self.news_item_1:
@@ -2994,32 +3011,15 @@ class HomePage(Page, SocialFields):
 
         random.shuffle(packery)
 
-        # get the last viewed programme
-        try:
-            last_viewed_programme = ProgrammePage.objects.get(
-                id=request.session.get('last_viewed_programme')
-            )
-        except ProgrammePage.DoesNotExist:
-            last_viewed_programme = None
-
-        try:
-            programme_finder_page_url = \
-                ProgrammeFinderPage.objects.live().first().url
-        except AttributeError:
-            programme_finder_page_url = ''
-
         if request.is_ajax():
             return render(request, "rca/includes/homepage_packery.html", {
                 'self': self,
                 'packery': packery,
             })
         else:
-            return render(request, self.get_template(request), {
+            return render(request, self.template, {
                 'self': self,
                 'packery': packery,
-                'last_viewed_programme': last_viewed_programme,
-                'programme_count': ProgrammePage.objects.live().public().count(),
-                'programme_finder_page_url': programme_finder_page_url,
             })
 
     content_panels = [

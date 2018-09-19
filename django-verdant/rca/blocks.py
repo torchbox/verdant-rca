@@ -91,9 +91,24 @@ class EventsBlock(blocks.StructBlock):
         template = 'rca/blocks/events_block.html'
 
 
+class TwoColumnBlock(blocks.StructBlock):
+    title = blocks.CharBlock()
+    column_one_image = image_blocks.ImageChooserBlock()
+    column_one_link_text = blocks.CharBlock()
+    column_one_link_page = blocks.PageChooserBlock()
+    column_two_image = image_blocks.ImageChooserBlock()
+    column_two_link_text = blocks.CharBlock()
+    column_two_link_page = blocks.PageChooserBlock()
+
+    class Meta:
+        icon = 'grip'
+        template = 'rca/blocks/two_column_block.html'
+
+
 class HomepageBody(blocks.StreamBlock):
     showcase = ShowcaseBlock()
     video = VideoBlock()
     testimonials = TestimonialsBlock()
     news = NewsBlock()
     events = EventsBlock()
+    two_column_block = TwoColumnBlock()
