@@ -1,6 +1,5 @@
 from django.conf import settings
 
-from rca_show.models import ShowIndexPage
 from rca_show.utils import get_base_show_template
 
 
@@ -11,9 +10,7 @@ def offline_context():
     during offline compression.
     """
 
-    years = ShowIndexPage.objects.order_by().values_list('year', flat=True).distinct()
-
-    for year in years:
+    for year in [2014, 2015, 2016, 2017, 2018]:
         yield {
             'STATIC_URL': settings.STATIC_URL,
             'base_template': get_base_show_template(year),
