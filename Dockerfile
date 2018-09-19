@@ -40,6 +40,7 @@ COPY . .
 # directories and "static_compiled" folder to the main static directory that
 # will be served by the WSGI server.
 RUN SECRET_KEY=none django-admin collectstatic --noinput --clear
+RUN SECRET_KEY=none django-admin compress
 
 # Don't use the root user as it's an anti-pattern and Heroku does not run
 # containers as root either.
