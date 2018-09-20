@@ -43,21 +43,26 @@
     {# showcase carousel using slick #}
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="text/javascript">
-        $('.js-showcase').slick({
-          centerMode: true,
-          infinte:true,
-          slidesToShow: 3,
-          responsive: [
-            {
-              breakpoint: 768,
-              settings: {
-                arrows: false,
-                centerMode: true,
-                centerPadding: '40px',
-                slidesToShow: 1
-              }
-            }
-          ]
+
+        // Home page carousel
+        var $slider = $('.js-showcase');
+
+        $slider.slick({
+            // medium and large desktop
+            centerMode: true,
+            infinte:true,
+            slidesToShow: 3,
+            responsive: [
+                {
+                    // small desktop / mobile
+                    breakpoint: 1024,
+                    settings: {
+                        centerMode: true,
+                        centerPadding: '40px',
+                        slidesToShow: 1
+                    }
+                }
+            ]
         });
 
         //WIP Programme Finder

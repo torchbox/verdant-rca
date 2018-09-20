@@ -5,15 +5,20 @@
     <div class="showcase__slider js-showcase">
         {% for showcase_page in showcase_pages %}
             <div class="showcase__slide">
+                {# {% image showcase_page.specific.feed_image fill-320x212 %}  #}
+                <div class="showcase__wrapper">
+                    <div class="showcase__image-wrapper">
+                        {% image showcase_page.specific.feed_image fill-540x358 %}
+                    </div>
                 
-                {% image showcase_page.specific.feed_image fill-320x212 %}    
-                <h3 class="showcase__details">
-                    <span class="showcase__page-title">{{ showcase_page.title }}</span>{% if showcase_page.strapline %}:{% endif %}
-                    {{ showcase_page.strapline }}
-                </h3>
-                <a class="showcase__link" href="{% pageurl showcase_page %}">
-                    Find out more +
-                </a>
+                    <h3 class="showcase__details">
+                        <span class="showcase__page-title">{{ showcase_page.title }}</span>{% if showcase_page.strapline %}:{% endif %}
+                        {{ showcase_page.strapline }}
+                    </h3>
+                    <a class="showcase__link" href="{% pageurl showcase_page %}">
+                        Find out more +
+                    </a>
+                </div>
             </div>
         {% endfor %}
     </div>
