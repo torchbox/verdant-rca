@@ -1,8 +1,14 @@
 {% extends "rca/full_width.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+{% endblock %}
+
 
 {% block content %}
+    {% include "rca/includes/sprites.html" %}
+
     <p>Use 2018 template: {{ use_2018_redesign_template }}</p>
 
     <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
@@ -25,15 +31,37 @@
         {% if programme_finder_page_url %}<p><a href="{{ programme_finder_page_url }}">Browse our programmes -></a></p>{% endif %}
     </section>
 
-
     {% include_block self.body %}
+
+    {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 
 
 
-{# WIP Programme Finder #}
+
 {% block extra_js %}
+    
+    {# showcase carousel using slick #}
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="text/javascript">
+        $('.js-showcase').slick({
+          centerMode: true,
+          infinte:true,
+          slidesToShow: 3,
+          responsive: [
+            {
+              breakpoint: 768,
+              settings: {
+                arrows: false,
+                centerMode: true,
+                centerPadding: '40px',
+                slidesToShow: 1
+              }
+            }
+          ]
+        });
+
+        //WIP Programme Finder
         $(function() {
             $("input#course_search").autocomplete({
                 minLength: 3,
