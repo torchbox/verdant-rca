@@ -7,6 +7,8 @@
 
 
 {% block content %}
+    {% include "rca/includes/sprites.html" %}
+
     <p>Use 2018 template: {{ use_2018_redesign_template }}</p>
 
     <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
@@ -28,7 +30,6 @@
         {# Browse all programmes link needs a ProgrammeFinderPage to exist #}
         {% if programme_finder_page_url %}<p><a href="{{ programme_finder_page_url }}">Browse our programmes -></a></p>{% endif %}
     </section>
-
 
     {% include_block self.body %}
 
