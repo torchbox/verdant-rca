@@ -1,7 +1,11 @@
 {% load wagtailembeds_tags wagtailimages_tags %}
 
-{{ value.title }}
+<h2 class="block-video__title">{{ value.title }}</h2>
 
-{{ value.video.url|embed }}
+<div class="block-video__video">
+    <!-- {{ value.video.url|embed }} -->
+    <video src="{{ value.video.url }}">
+    </video>
+</div>
 
-{% image value.poster_image original %}
+<!-- {% image value.poster_image original class="block-video__poster" %} -->
