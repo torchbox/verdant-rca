@@ -95,6 +95,14 @@ def fetch_staging_data():
 
 
 @runs_once
+@roles('staging')
+def fetch_staging_media():
+    remote_path = '/var/www/rca/media/'
+
+    local('rsync -avz %s:%s /vagrant/django-verdant/media/' % (env['host_string'], remote_path))
+
+
+@runs_once
 @roles('production')
 def staging_fetch_live_data():
     filename = "verdant_rca_%s.sql" % uuid.uuid4()
