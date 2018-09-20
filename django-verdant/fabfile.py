@@ -72,7 +72,7 @@ def fetch_live_data():
 @runs_once
 @roles('production')
 def fetch_live_media():
-    remote_path = '/verdant-shared/media/'
+    remote_path = '/verdant-shared/sroot/rca/media/'
 
     local('rsync -avz %s:%s /vagrant/media/' % (env['host_string'], remote_path))
 
@@ -92,6 +92,14 @@ def fetch_staging_data():
     local('gunzip %s.gz' % local_path)
     local('psql verdant -f %s' % local_path)
     local('rm %s' % local_path)
+
+
+@runs_once
+@roles('staging')
+def fetch_staging_media():
+    remote_path = '/var/www/rca/media/'
+
+    local('rsync -avz %s:%s /vagrant/django-verdant/media/' % (env['host_string'], remote_path))
 
 
 @runs_once
