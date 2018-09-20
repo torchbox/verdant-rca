@@ -1,0 +1,41 @@
+.two-column-block {
+    @media @media-desktop-small {
+        display: flex;
+    }
+
+    &__item {
+        flex-basis: 50%;
+
+        &:first-child {
+            @media @media-desktop-small {
+                margin-right: @spacing-one;
+            }
+        }
+    }
+
+    &__link {
+        display: block;
+    }
+
+    &__arrow {
+        width: 22px;
+        height: 22px;
+        fill: @color-icon-grey;
+        display: inline-block;
+        vertical-align: text-bottom;
+        margin-left: 5px;
+    }
+
+    &__title {
+        color: @color-highlight-blue;
+        font-size: @font-size-22;
+        font-family: @font-family-benton;
+        display: inline-block;
+        margin-top: @spacing-one;
+        margin-bottom: @spacing-onepointfive;
+
+        @media @media-desktop-small {
+            margin: @spacing-one 0;
+        }
+    }
+}
