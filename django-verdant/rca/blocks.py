@@ -1,6 +1,10 @@
+from django.core.exceptions import ValidationError
 from django.db.models import Min
+from django.forms.utils import ErrorList
 
 from wagtail.wagtailcore import blocks
+from wagtail.wagtailcore.blocks.stream_block import StreamBlockValidationError
+from wagtail.wagtailcore.blocks.struct_block import StructValue
 from wagtail.wagtailcore.models import Page
 from wagtail.wagtailembeds import blocks as embed_blocks
 from wagtail.wagtailimages import blocks as image_blocks
@@ -15,6 +19,28 @@ class ShowcaseBlock(blocks.StructBlock):
     class Meta:
         icon = 'list-ul'
         template = 'rca/blocks/showcase_block.html'
+
+    def clean(self, value):
+        result = []
+        errors = {}
+        for name, val in value.items():
+            try:
+                result.append((name, self.child_blocks[name].clean(val)))
+
+                # can be removed when updated to Wagtail 1.12 or above
+                # https://docs.wagtail.io/en/v1.12.6/topics/streamfield.html#streamblock
+                if name == 'pages' and len(val) < 5:
+                    raise StreamBlockValidationError(
+                        non_block_errors=['Please choose a minumum of 5 pages']
+                    )
+            except ValidationError as e:
+                errors[name] = ErrorList([e])
+
+        if errors:
+            raise ValidationError(
+                'Validation error in StructBlock', params=errors)
+
+        return StructValue(self, result)
 
     def get_context(self, value):
         context = super(ShowcaseBlock, self).get_context(value)
@@ -64,7 +90,7 @@ class NewsBlock(blocks.StructBlock):
         context = super(NewsBlock, self).get_context(value)
         pages = Page.objects.type(NewsItem) | Page.objects.type(PressRelease) \
             | Page.objects.type(RcaBlogPage)
-        pages = pages.not_page(value['featured_page']).specific()
+        pages = pages.not_page(value['featured_page']).live().specific()
         context['pages'] = sorted(
             pages, key=lambda p: p.date, reverse=True
         )[:4]
@@ -106,7 +132,7 @@ class TwoColumnBlock(blocks.StructBlock):
 
 
 class HomepageBody(blocks.StreamBlock):
-    showcase = ShowcaseBlock()
+    showcase = ShowcaseBlock(help_text='Please choose 5 pages')
     video = VideoBlock()
     testimonials = TestimonialsBlock()
     news = NewsBlock()
