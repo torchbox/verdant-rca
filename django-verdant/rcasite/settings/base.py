@@ -308,3 +308,6 @@ CORS_ORIGIN_WHITELIST = [
 
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = ['GET', 'OPTIONS']
+
+# whether to show tracking scripts
+USE_TRACKING = False
