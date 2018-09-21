@@ -15,12 +15,20 @@
 
     &__link {
         display: block;
+
+        &:hover,
+        &:active,
+        &:focus {
+            .two-column-block__title {
+                color: @color-pink;
+            }
+        }
     }
 
     &__arrow {
         width: 22px;
         height: 22px;
-        fill: @color-icon-grey;
+        fill: @color-light-grey;
         display: inline-block;
         vertical-align: text-bottom;
         margin-left: 5px;
@@ -33,6 +41,7 @@
         display: inline-block;
         margin-top: @spacing-one;
         margin-bottom: @spacing-onepointfive;
+        transition: color 0.25s ease-out;
 
         @media @media-desktop-small {
             margin: @spacing-one 0;
