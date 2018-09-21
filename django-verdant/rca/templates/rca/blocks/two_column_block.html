@@ -1,15 +1,27 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<p>{{ value.title }}</p>
+<h2 class="homepage-h2">{{ value.title }}</h2>
 
-{# column one #}
-<p>
-    {% image value.column_one_image original %}
-    <a href="{% pageurl value.column_one_link_page %}">{{ value.column_one_link_text }}</a>
-</p>
+<div class="two-column-block">
+    <div class="two-column-block__item">
+        <a class="two-column-block__link" href="{% pageurl value.column_one_link_page %}">
+            {% image value.column_one_image fill-600x312 %}
 
-{# column two #}
-<p>
-    {% image value.column_two_image original %}
-    <a href="{% pageurl value.column_two_link_page %}">{{ value.column_two_link_text }}</a>
-</p>
+            <h3 class="two-column-block__title">{{ value.column_one_link_text }}</h3>
+            <svg class="two-column-block__arrow">
+                <use xlink:href="#arrow"></use>
+            </svg>
+        </a>
+    </div>
+
+    <div class="two-column-block__item">
+        <a class="two-column-block__link" href="{% pageurl value.column_two_link_page %}">
+            {% image value.column_two_image fill-600x312 %}
+
+            <h3 class="two-column-block__title">{{ value.column_two_link_text }}</h3>
+            <svg class="two-column-block__arrow">
+                <use xlink:href="#arrow"></use>
+            </svg>
+        </a>
+    </div>
+</div>
