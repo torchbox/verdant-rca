@@ -2227,6 +2227,14 @@ a.hidden {
     top:80px;
 }
 
+.hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
 @import "modules.less";
 @import "dlmenu.less";
 @import "enquiry-form.less";
@@ -2237,3 +2245,5 @@ a.hidden {
 @import "streamfield-blocks/showcase.less";
 @import "streamfield-blocks/video-block.less";
 @import "streamfield-blocks/two-column-block";
+
+@import "components/hero";
