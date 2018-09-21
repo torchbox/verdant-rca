@@ -196,7 +196,7 @@
             <script src="//a.vimeocdn.com/js/froogaloop2.min.js"></script>
             <script src="https://js.stripe.com/v2/"></script>
 
-            {% if SILVERPOP_ID %}
+            {% if USE_TRACKING and SILVERPOP_ID %}
                 <script src="https://www.sc.pages05.net/lp/static/js/iMAWebCookie.js?{{ SILVERPOP_ID }}&h=www.pages05.net" type="text/javascript"></script>
             {% endif %}
 
@@ -230,7 +230,7 @@
                 <script src="{% static "rca/js/nav.js" %}"></script>
                 <script src="{% static "rca/js/pushstate.js" %}"></script>
 
-
+                {% if USE_TRACKING %}
                 {# ADROLL https://projects.torchbox.com/projects/rca-django-cms-project/tickets/846 #}
                 <script type="text/javascript">
                     adroll_adv_id = "JW4C3E32PVGTNHWCCSW7MQ";
@@ -253,6 +253,7 @@
                     else {window.attachEvent('onload', _onload)}
                     }());
                 </script>
+                {% endif %}
 
                 {% get_debug as DEBUG %}
 
