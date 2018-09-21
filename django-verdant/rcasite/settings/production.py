@@ -268,3 +268,6 @@ if 'RAVEN_DSN' in os.environ:
         'dsn': os.environ['RAVEN_DSN'],
         'release': raven.fetch_git_sha(os.path.dirname(os.path.abspath(PROJECT_ROOT))),
     }
+
+# use tracking scripts
+USE_TRACKING = True
