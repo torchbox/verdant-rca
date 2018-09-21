@@ -15,13 +15,15 @@
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <meta http-equiv="cleartype" content="on" />
 
-        <!-- Google Tag Manager -->
-        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-MJ4J2Q8');</script>
-        <!-- End Google Tag Manager -->
+        {% if USE_TRACKING %}
+            <!-- Google Tag Manager -->
+            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-MJ4J2Q8');</script>
+            <!-- End Google Tag Manager -->
+        {% endif %}
 
         <!-- twitter cards -->
         <meta name="twitter:card" content="summary">
@@ -69,29 +71,31 @@
 
         <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
 
-        {% if GOOGLE_ANALYTICS_ACCOUNT %}
-            <script type="text/javascript">
-                  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-                  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        {% if USE_TRACKING  %}
+            {% if GOOGLE_ANALYTICS_ACCOUNT %}
+                <script type="text/javascript">
+                      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+                      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-                  ga('create', '{{ GOOGLE_ANALYTICS_ACCOUNT }}', 'auto');
-                  ga('send', 'pageview');
+                      ga('create', '{{ GOOGLE_ANALYTICS_ACCOUNT }}', 'auto');
+                      ga('send', 'pageview');
+                </script>
+            {% endif %}
+
+            <!-- Hotjar Tracking Code for www.rca.ac.uk -->
+            <script>
+                (function (h, o, t, j, a, r) {
+                    h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+                    h._hjSettings = { hjid: 986942, hjsv: 6 };
+                    a = o.getElementsByTagName('head')[0];
+                    r = o.createElement('script'); r.async = 1;
+                    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                    a.appendChild(r);
+                })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
             </script>
         {% endif %}
-
-        <!-- Hotjar Tracking Code for www.rca.ac.uk -->
-        <script>
-            (function (h, o, t, j, a, r) {
-                h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
-                h._hjSettings = { hjid: 986942, hjsv: 6 };
-                a = o.getElementsByTagName('head')[0];
-                r = o.createElement('script'); r.async = 1;
-                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
-                a.appendChild(r);
-            })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
-        </script>
 
         {% block extra_js_head %}{% endblock %}
 
@@ -99,16 +103,20 @@
 
     <body class="{% block body_class %}{% endblock %}">
 
+        {% if USE_TRACKING %}
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MJ4J2Q8" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
+        {% endif %}
 
         <a href="#maincontent" class="hidden" tabindex="1">Skip to main content</a>
 
         {% wagtailuserbar %}
 
-        {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
-        {% include "rca/includes/campaigns_trackers.html" %}
+        {% if USE_TRACKING %}
+            {# ADD CAMPAIGNS TRACKERS https://projects.torchbox.com/projects/rca-django-cms-project/tickets/898 #}
+            {% include "rca/includes/campaigns_trackers.html" %}
+        {% endif %}
 
         <!--[if lt IE 9]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser which this site does not fully support. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
@@ -223,28 +231,30 @@
                 <script src="{% static "rca/js/pushstate.js" %}"></script>
 
 
-                {# ADROLL https://projects.torchbox.com/projects/rca-django-cms-project/tickets/846 #}
-                <script type="text/javascript">
-                    adroll_adv_id = "JW4C3E32PVGTNHWCCSW7MQ";
-                    adroll_pix_id = "5WH5HK36CFBYVKZZQVGY4H";
-                    /* OPTIONAL: provide email to improve user identification */
-                    /* adroll_email = "username@example.com"; */
-                    (function () {
-                    var _onload = function(){
-                    if (document.readyState && !/loaded|complete/.test(document.readyState)){setTimeout(_onload, 10);return}
-                    if (!window.__adroll_loaded){__adroll_loaded=true;setTimeout(_onload, 50);return}
-                    var scr = document.createElement("script");
-                    var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
-                    scr.setAttribute('async', 'true');
-                    scr.type = "text/javascript";
-                    scr.src = host + "/j/roundtrip.js";
-                    ((document.getElementsByTagName('head') || [null])[0] ||
-                    document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
-                    };
-                    if (window.addEventListener) {window.addEventListener('load', _onload, false);}
-                    else {window.attachEvent('onload', _onload)}
-                    }());
-                </script>
+                {% if USE_TRACKING %}
+                    {# ADROLL https://projects.torchbox.com/projects/rca-django-cms-project/tickets/846 #}
+                    <script type="text/javascript">
+                        adroll_adv_id = "JW4C3E32PVGTNHWCCSW7MQ";
+                        adroll_pix_id = "5WH5HK36CFBYVKZZQVGY4H";
+                        /* OPTIONAL: provide email to improve user identification */
+                        /* adroll_email = "username@example.com"; */
+                        (function () {
+                        var _onload = function(){
+                        if (document.readyState && !/loaded|complete/.test(document.readyState)){setTimeout(_onload, 10);return}
+                        if (!window.__adroll_loaded){__adroll_loaded=true;setTimeout(_onload, 50);return}
+                        var scr = document.createElement("script");
+                        var host = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+                        scr.setAttribute('async', 'true');
+                        scr.type = "text/javascript";
+                        scr.src = host + "/j/roundtrip.js";
+                        ((document.getElementsByTagName('head') || [null])[0] ||
+                        document.getElementsByTagName('script')[0].parentNode).appendChild(scr);
+                        };
+                        if (window.addEventListener) {window.addEventListener('load', _onload, false);}
+                        else {window.attachEvent('onload', _onload)}
+                        }());
+                    </script>
+                {% endif %}
 
                 {% get_debug as DEBUG %}
 
