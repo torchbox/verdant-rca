@@ -332,13 +332,15 @@ function onDocumentReady(jQuery, inLightBox){
     /* Tweet blocks */
     $('.twitter-feed-items').each(function(){
         var username = $.trim($(this).data('twitter-feed')).replace(/^@/,'');
+        var link = '<a href="http://twitter.com/' + username + '">@' + username +'</a>';
         $(this).tweet({
             join_text: 'auto',
             username: username,
             avatar_size: 32,
-            auto_join_text_default: 'from @' + username,
+            auto_join_text_default: 'from ' + link,
             loading_text: 'Checking for new tweets...',
-            count: 3
+            count: 3,
+            template: '<div class="tweet-wrapper"><span class="twitter-icon"></span>{text} <span class="tweet-meta">{time} {join}</span></div>',
         });
     });
 

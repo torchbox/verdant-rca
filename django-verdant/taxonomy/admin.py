@@ -131,7 +131,8 @@ class TaxonomyModelAdmin(ModelAdmin):
         return view_class.as_view(**kwargs)(request)
 
     def get_admin_urls_for_registration(self):
-        urls = super(TaxonomyModelAdmin, self).get_admin_urls_for_registration()
+        urls = super(TaxonomyModelAdmin,
+                     self).get_admin_urls_for_registration()
 
         urls += (
             url(self.url_helper.get_action_url_pattern('usage'),
@@ -154,8 +155,13 @@ class ProgrammeModelAdmin(TaxonomyModelAdmin):
     model = models.Programme
 
 
+class DegreeLevelModelAdmin(TaxonomyModelAdmin):
+    model = models.DegreeLevel
+
+
 class TaxonomyModelAdminGroup(ModelAdminGroup):
     menu_label = 'Taxonomy'
     menu_icon = 'folder-open-inverse'
     menu_order = 750
-    items = (AreaModelAdmin, SchoolModelAdmin, ProgrammeModelAdmin)
+    items = (AreaModelAdmin, SchoolModelAdmin, ProgrammeModelAdmin,
+             DegreeLevelModelAdmin)

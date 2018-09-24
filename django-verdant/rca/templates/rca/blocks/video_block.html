@@ -1,0 +1,19 @@
+{% load wagtailembeds_tags wagtailimages_tags %}
+
+<div class="videoembed vimeo">
+    <h2 class="block-video__title homepage-h2">{{ value.title }}</h2>
+
+    <button class="playpause play block-video__play-button">
+        <svg class="block-video__play-icon">
+            <title>Play icon</title>
+            <use xlink:href="#play"></use>
+        </svg>
+        <span>Play</span>
+    </button>
+
+    {% if value.poster_image %}
+        <div class="poster block-video__poster">{% image value.poster_image width-1000 %}</div>
+    {% endif %}
+
+    {{ value.video.url|embed }}
+</div>

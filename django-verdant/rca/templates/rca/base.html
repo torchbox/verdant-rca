@@ -163,14 +163,18 @@
 
             <div class="page-wrapper">
                 <div class="page-content">
-                    <div class="inner" id="maincontent">
-                        {% block top %}{% endblock %}
-                        {% block content %}{% endblock %}
-                    </div>
+                    {% block layout %}
+                        <div class="inner" id="maincontent">
+                            {% block top %}{% endblock %}
+                            {% block content %}{% endblock %}
+                        </div>
+                    {% endblock %}
                 </div>
-                <aside>
-                    {% block sidebar %}{% endblock %}
-                </aside>
+                {% block aside %}
+                    <aside>
+                        {% block sidebar %}{% endblock %}
+                    </aside>
+                {% endblock %}
             </div>
 
             {% block extra_footer %}{% endblock %}

@@ -63,6 +63,8 @@ urlpatterns = patterns('',
     url(r'^my-rca/', include(student_profiles.urls, namespace='student-profiles')),
     url(r'^my-rca/nowpages/', include(student_profiles.now_urls, namespace='nowpages')),
 
+    url(r'^programme_search/', 'rca.views.programme_search', name="programme_search"),
+
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's serving mechanism
     url(r'', include(wagtail_urls)),
