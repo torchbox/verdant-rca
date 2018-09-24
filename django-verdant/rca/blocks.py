@@ -107,7 +107,7 @@ class EventsBlock(blocks.StructBlock):
     def get_context(self, value):
         from rca.models import EventItem
         context = super(EventsBlock, self).get_context(value)
-        context['events'] = EventItem.future_objects.live() \
+        context['events'] = EventItem.future_not_current_objects.live() \
             .annotate(start_date=Min('dates_times__date_from')) \
             .order_by('start_date')
         return context
