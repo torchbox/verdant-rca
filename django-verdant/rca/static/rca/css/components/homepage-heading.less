@@ -1,0 +1,20 @@
+.homepage-heading {
+    font-family: @font-family-benton-light;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: @color-dark-grey;
+
+    @media @media-desktop-small {
+        font-family: @font-family-knockout;
+        font-size: 70px;
+        font-weight: @font-weight-knockout;
+        color: @color-medium-grey;
+        line-height: 0.8;
+    }
+
+    &--on-dark {
+        @media @media-desktop-small {
+            color: @color-white;
+        }
+    }
+}
