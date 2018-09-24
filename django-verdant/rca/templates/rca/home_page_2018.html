@@ -16,15 +16,12 @@
 
             <p class="hero__text">{{ self.hero_text }}</p>
 
-            <div class="hero__title-wrapper">
-                <h2 class="hero__title">Study with us</h2>
-
-                {% if last_viewed_programme %}
-                    <h3>Recently viewed: <a href="{% pageurl last_viewed_programme %}">{{ last_viewed_programme }}</a></h3>
-                {% endif %}
+            <div class="hero__content-wrapper">
+                <h2 class="hero__title homepage-heading homepage-heading--white">Study with us</h2>
 
                 {# Browse all programmes link needs a ProgrammeFinderPage to exist #}
                 {% if programme_finder_page_url %}
+                {% endif %}
                     <a class="hero__browse-link" href="{{ programme_finder_page_url }}">
                         <span class="hero__browse-text">
                             <span class="hero__browse-text--text-alt">Browse</span> our programmes
@@ -34,17 +31,17 @@
                             <use xlink:href="#arrow-thin"></use>
                         </svg>
                     </a>
-                {% endif %}
-            </div>
 
-            <div class="hero__search-wrapper">
-                <label class="hidden" for="course_search">Search our programmes: enter a title or keyword</label>
+                <div class="hero__search hero-search__wrapper">
+                    <label class="hidden" for="course_search">Search our programmes: enter a title or keyword</label>
 
-                <input class="hero__search-input" type="text" name="course_search" id="course_search" placeholder="SEARCH OUR PROGRAMMES: ENTER A TITLE OR KEYWORD">
+                    <input class="hero-search__input" type="text" name="course_search" id="course_search" placeholder="SEARCH OUR PROGRAMMES: ENTER A TITLE OR KEYWORD">
 
-                <svg class="hero__search-icon">
-                    <use xlink:href="#search"></use>
-                </svg>
+                    <svg class="hero-search__icon">
+                        <title>Search</title>
+                        <use xlink:href="#search"></use>
+                    </svg>
+                </div>
             </div>
         </div>
     </section>
@@ -53,13 +50,10 @@
 {% block content %}
     {% include "rca/includes/sprites.html" %}
 
-
     {% include_block self.body %}
 
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
-
-
 
 
 {% block extra_js %}
@@ -93,7 +87,7 @@
             ]
         });
 
-        //WIP Programme Finder
+        // WIP Programme Finder
         $(function() {
             $("input#course_search").autocomplete({
                 minLength: 3,
@@ -106,7 +100,19 @@
                     window.location.href = ui.item.search_url || ui.item.url;
                 }
             }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-                return $( "<li></li>" ).data( "item.autocomplete", item ).append( "<a>" + item.title + "</a>" ).appendTo( ul );
+                if (item.thumbnail.url) {
+                    // Render image when it's available
+                    return $( "<li class=\"hero-search__result\"></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a class=\"hero-search__link\">" + "<img class=\"hero-search__image\" src=\"" + item.thumbnail.url + "\">" + item.title + "</a>" )
+                        .appendTo( ul );
+                } else {
+                    // When there's no image just render the title
+                    return $( "<li class=\"hero-search__result\"></li>" )
+                        .data( "item.autocomplete", item )
+                        .append( "<a class=\"hero-search__link\">" + item.title + "</a>" )
+                        .appendTo( ul );
+                }
             };
         });
     </script>
