@@ -8,7 +8,7 @@
 {% block body_class %}{{ block.super }} template-home-page{% endblock %}
 
 {% block hero %}
-    {% image self.hero_image original as hero_image %}
+    {% image self.hero_image fill-1800x420 as hero_image %}
     <section class="hero" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url('{{ hero_image.url }}');">
         <div class="hero__inner page-wrapper">
             <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
@@ -21,7 +21,6 @@
 
                 {# Browse all programmes link needs a ProgrammeFinderPage to exist #}
                 {% if programme_finder_page_url %}
-                {% endif %}
                     <a class="hero__browse-link" href="{{ programme_finder_page_url }}">
                         <span class="hero__browse-text">
                             <span class="hero__browse-text--text-alt">Browse</span> our programmes
@@ -31,6 +30,7 @@
                             <use xlink:href="#arrow-thin"></use>
                         </svg>
                     </a>
+                {% endif %}
 
                 <div class="hero__search hero-search__wrapper">
                     <label class="hidden" for="course_search">Search our programmes: enter a title or keyword</label>
