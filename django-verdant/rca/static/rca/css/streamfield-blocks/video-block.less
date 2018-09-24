@@ -1,0 +1,60 @@
+.block-video {
+    position: relative;
+
+    &__title {
+        position: absolute;
+        top: 13px;
+        left: 15px;
+        z-index: 3;
+        font-family: @font-family-knockout;
+        font-weight: @font-weight-knockout;
+        font-size: 50px;
+        line-height: 0.75;
+        color: @color-white !important;
+        margin: 0;
+        // Reduce width to force line breaks
+        max-width: 100px;
+
+        @media @media-desktop-small {
+            font-size: 70px;
+        }
+
+        .playing & {
+            display: none;
+        }
+    }
+
+    &__play-button {
+        transform: translateY(-50%);
+        border: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        // Specificity/important to overwrite legacy styles
+        .videoembed & {
+            top: 50% !important;
+            text-indent: 0;
+            background: @color-highlight-blue;
+
+            &::after {
+                display: none;
+            }
+        }
+
+        span {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(1px, 1px, 1px, 1px);
+        }
+    }
+
+    &__play-icon {
+        width: 30px;
+        height: 30px;
+        fill: @color-white;
+    }
+}

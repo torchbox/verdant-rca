@@ -188,7 +188,7 @@ $("#tweets").tweet({
             o.user = t('<a class="tweet-user" href="{user_url}">{screen_name}</a>', o);
             o.join = s.join_text ? t('<span class="tweet-join"> {join_text}</span>', o) : "";
             o.avatar = o.avatar_size ? t('<a class="tweet-avatar" href="{avatar_profile_url}"><img src="{avatar_url}" height="{avatar_size}" width="{avatar_size}" alt="{avatar_screen_name}\'s avatar" title="{avatar_screen_name}\'s avatar" border="0"/></a>', o) : "";
-            o.time = t('<span class="tweet-time"><a href="{tweet_url}" title="View tweet on twitter">{tweet_relative_time}</a></span>', o);
+            o.time = t('<span class="tweet-time">{tweet_relative_time}</span>', o);
             o.text = t('<span class="tweet-text">{tweet_text_fancy}</span>', o);
             o.retweeted_text = t('<span class="tweet-text">{retweeted_tweet_text}</span>', o);
             o.reply_action = t('<a class="tweet-action tweet-reply" href="{reply_url}">reply</a>', o);
