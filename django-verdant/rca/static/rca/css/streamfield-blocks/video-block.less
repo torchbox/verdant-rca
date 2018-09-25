@@ -1,5 +1,10 @@
 .block-video {
     position: relative;
+    margin: 0 (-@spacing-one);
+
+    @media @media-desktop-small {
+        margin: 0;
+    }
 
     &__title {
         position: absolute;
@@ -41,14 +46,6 @@
             &::after {
                 display: none;
             }
-        }
-
-        span {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(1px, 1px, 1px, 1px);
         }
     }
 
