@@ -11,7 +11,15 @@
     }
 
     &__title {
-        margin: 0;
+        margin: 0 0 @spacing-one;
+        //centerPadding in slick + event-item padding
+        // 17 + 3
+        margin-left: 20px;
+
+        @media @media-desktop-regular {
+            //108 + 8
+            margin-left: 116px;
+        }
     }
 
     // v similar to news more link. refactor if time.
@@ -25,6 +33,10 @@
             text-transform: uppercase;
             color: @color-white;
             font-family: @font-family-benton;
+            
+            //right margin is centerPadding in slick + event-item padding
+            //108 + 8
+            margin: 0 116px @spacing-one 0;
         }
 
         &:hover {
@@ -46,10 +58,43 @@
     }
 
     // carousel arrows
+
+    &__button {
+        //reset global button styles
+        line-height: 0;
+        padding: 0;
+        display: block;
+        text-transform: none;
+        background-color: transparent;
+        border: 0;
+        font-size: 0;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        // apply button styles
+        position: absolute;
+        background-image: none;
+        width: 27px;
+        height: 49px;
+        z-index: 1;
+
+        @media @media-desktop-regular {
+            width: 54px;
+            height: 98px;
+        }
+    }
+
     &__arrow {
         width: 27px;
         height: 49px;
         fill: @color-white;
+
+        @media @media-desktop-regular {
+            width: 54px;
+            height: 98px;
+        }
 
         &:hover {
             fill: @color-pink;
@@ -65,8 +110,12 @@
         top: 30%;
 
         @media @media-desktop-regular {
-            right: 35px;
-            top: 25%;
+            right: 22px;
+            top: 10%;
+        }
+
+        @media @media-desktop-large {
+            top: 15%;
         }
     }
 
@@ -75,8 +124,12 @@
         top: 30%;
 
         @media @media-desktop-regular {
-            left: 35px;
-            top: 25%;
+            left: 22px;
+            top: 10%;
+        }
+
+        @media @media-desktop-large {
+            top: 15%;
         }
     }
 
@@ -101,6 +154,10 @@
                     .opacity(60);
                 }
             }
+        }
+
+        .event-item__dates {
+            display: none;
         }
     }
 }
