@@ -1,0 +1,105 @@
+.testimonial {
+    background: @color-charcoal;
+    width: 100vw;
+    padding-top: @spacing-onepointfive;
+    padding-bottom: @spacing-one;
+    margin-left: -15px;
+
+    @media @media-desktop-small {
+        margin-left: -5vw;
+    }
+
+    &__wrapper {
+        max-width: 90%;
+        margin-left: 5%;
+
+        @media @media-desktop-large {
+            width: 90vw;
+            max-width: 1300px;
+        }
+    }
+
+    &__content {
+        // Prevent sliver of next slide being visible on some screen widths
+        padding-left: 1px;
+
+        @media @media-desktop-small {
+            display: flex;
+            align-items: flex-start;
+        }
+    }
+
+    &__image {
+        margin-bottom: @spacing-one;
+
+        @media @media-desktop-small {
+            max-width: 50%;
+            flex-basis: 50%;
+            margin: 0;
+            padding-right: @spacing-one;
+        }
+    }
+
+    &__quote {
+        margin: 0;
+        padding: 0;
+        padding-bottom: @spacing-three;
+        color: @color-white;
+        font-size: 16px;
+
+        @media @media-desktop-small {
+            max-width: 450px;
+            padding-bottom: @spacing-onepointfive;
+        }
+
+        @media @media-desktop-regular {
+            font-size: 18px;
+        }
+
+        &--highlight {
+            display: block;
+            color: @color-highlight-blue-light;
+            font-family: @font-family-benton;
+            font-size: 26px;
+            margin-bottom: @spacing-half;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            line-height: 1.3;
+
+            @media @media-desktop-small {
+                font-size: 28px;
+            }
+
+            @media @media-desktop-regular {
+                font-size: 33px;
+            }
+        }
+    }
+
+    &__quote-icon {
+        width: 33px;
+        height: 28px;
+        fill: @color-highlight-blue-light;
+    }
+
+    &__quote-text {
+        margin-top: 0;
+        margin-bottom: @spacing-half;
+        line-height: 1.8;
+    }
+
+    &__reference {
+        font-style: italic;
+        padding: 0;
+        font-size: 12px;
+
+        @media @media-desktop-small {
+            font-size: 14px;
+        }
+
+        @media @media-desktop-regular {
+            font-size: 15px;
+        }
+    }
+}
