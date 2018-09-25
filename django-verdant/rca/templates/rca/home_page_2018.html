@@ -45,12 +45,12 @@
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script type="text/javascript">
 
-        // Home page carousel
-        var $slider = $('.js-showcase');
+        // Showcase carousel
+        var $showcaseSlider = $('.js-showcase');
         var prevButton = '<button aria-label="Previous" class="showcase__prev showcase__button" type="button"><svg class="showcase__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
         var nextButton = '<button aria-label="Next" class="showcase__next showcase__button" type="button"><svg class="showcase__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
-
-        $slider.slick({
+        
+        $showcaseSlider.slick({
             // medium and large desktop
             prevArrow: prevButton,
             nextArrow: nextButton,
@@ -69,6 +69,33 @@
                 }
             ]
         });
+
+        // Events carousel
+        var $eventsSlider = $('.js-events');
+        var prevButton = '<button aria-label="Previous" class="events-block__prev showcase__button" type="button"><svg class="events-block__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
+        var nextButton = '<button aria-label="Next" class="events-block__next showcase__button" type="button"><svg class="events-block__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
+
+        $eventsSlider.slick({
+            // large desktop
+            prevArrow: prevButton,
+            nextArrow: nextButton,
+            infinte: true,
+            centerMode: true,
+            centerPadding: '108px',
+            slidesToShow: 3,
+            responsive: [
+                {
+                    // mobile
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 1,
+                        centerPadding: '17px',
+                    }
+                }
+            ]
+        });
+
+        
 
         //WIP Programme Finder
         $(function() {
