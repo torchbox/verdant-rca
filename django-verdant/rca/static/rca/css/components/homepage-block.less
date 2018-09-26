@@ -11,8 +11,13 @@
     }
 
     &__wrapper {
-        max-width: 90%;
-        margin-left: 5%;
+        padding: 0 @spacing-one;
+
+        @media @media-desktop-small {
+            padding: 0;
+            max-width: 90%;
+            margin-left: 5%;
+        }
 
         @media @media-desktop-large {
             width: 90vw;

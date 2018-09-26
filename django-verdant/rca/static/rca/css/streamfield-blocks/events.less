@@ -99,6 +99,7 @@
         font-size: 18px;
         color: @color-white;
         margin: 0 0 @spacing-half 0;
+        .transition(all 0.5s ease);
     }
 
     &__audience {
@@ -107,6 +108,21 @@
         color: @color-black;
         font-weight: bold;
     }
+
+    &__image {
+        .transition(all 0.5s ease);
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        .event-item__image {
+            .filter(brightness(0.8));
+        }
+
+        .event-item__title {
+            // Regular hover colors don't really work on the grey background
+            color: #A4429C;
+        }
+    }
 }
-
-
