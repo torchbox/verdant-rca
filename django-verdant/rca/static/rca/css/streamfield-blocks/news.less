@@ -1,28 +1,25 @@
 .news-block {
 
     &__header {
-        @media @media-desktop-small {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-    }
 
-    &__title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         margin-bottom: @spacing-two;
     }
 
-    &__more {
-        display: none;
+    &__title {
+        margin-bottom: 0;
+    }
 
-        @media @media-desktop-small {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: @color-highlight-blue;
-            font-family: @font-family-benton;
-        }
+    &__more {
+
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: @color-highlight-blue;
+        font-family: @font-family-benton;
 
         &:hover {
             color: @color-pink;
@@ -123,14 +120,6 @@
             margin-bottom: @spacing-one;
         }
 
-        &--featured {
-            margin-bottom: @spacing-one;
-
-            @media @media-desktop-small {
-                margin-bottom: 0;
-            }
-        }
-
         .news-item__link:hover & {
             .filter(brightness(0.8));
             .transition(all 0.5s ease);
@@ -141,19 +130,18 @@
 
         &--featured {
 
-            @media @media-desktop-small {
-                position: absolute;
-                bottom: 0;
-                right: 0;
-                width: 100%;
-                padding: @spacing-one;
-                background-color: @color-white;
-                .opacity(50);
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            padding: @spacing-one;
+            background-color: @color-white;
+            .opacity(50);
 
-                .news-item__link:hover & {
-                    .opacity(100);
-                }
+            .news-item__link:hover & {
+                .opacity(100);
             }
+
 
             @media @media-desktop-regular {
                 width: 50%;
@@ -162,45 +150,15 @@
     }
 
     &__title {
-
         display: inline;
         font-family: @font-family-benton;
         font-weight: 400;
         margin: 0;
         font-size: 18px;
-
-        &--featured {
-            font-size: 22px;
-
-            @media @media-desktop-small {
-                font-size: 18px;
-            }
-
-            .news-item__link:hover & {
-                @media @media-desktop-small {
-                    color: @color-black;
-                }
-            }
-        }
     }
 
     &__intro {
-
         font-family: @font-family-benton-light;
         font-size: 18px;
-
-        &--featured {
-            font-size: 22px;
-
-            @media @media-desktop-small {
-                font-size: 18px;
-            }
-
-            .news-item__link:hover & {
-                @media @media-desktop-small {
-                    color: @color-black;
-                }
-            }
-        }
     }
 }
