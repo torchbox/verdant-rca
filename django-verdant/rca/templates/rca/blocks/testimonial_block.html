@@ -1,9 +1,22 @@
 {% load wagtailimages_tags %}
 
-{% image value.image original %}
+<div class="testimonial__slide">
+    <div class="testimonial__content">
+        {% image value.image fill-600x335 class="testimonial__image" %}
 
-<p>{{ value.quote }}</p>
+        <blockquote class="testimonial__quote">
+            <p class="testimonial__quote-text">
+                <span class="testimonial__quote--highlight">
+                    <svg class="testimonial__quote-icon">
+                        <title>Open quotation mark</title>
+                        <use xlink:href="#quote"></use>
+                    </svg>
+                    {{ value.quote }}
+                </span>
+                {{ value.further_description }}”
+            </p>
 
-<p>{{ value.further_description }}</p>
-
-<p>{{ value.reference }}</p>
+             <footer class="testimonial__reference">{{ value.reference }}</footer>
+        </blockquote>
+    </div>
+</div>

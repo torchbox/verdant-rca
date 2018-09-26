@@ -118,128 +118,128 @@
             top: 35%;
         }
     }
-}
 
-// SLICK STYLE OVERRIDES
-// Much of this is layout rejigging to account for the large central slide
+    // SLICK STYLE OVERRIDES
+    // Much of this is layout rejigging to account for the large central slide
 
-.slick-slide {
-    .showcase__wrapper {
-        // mobile layout with centre mode but hides the left partial image
-        // by shifting the slides to the right
-        transform: translate(-42px, 0px);
-        padding: 0;
-
-        @media @media-desktop-regular {
-            transform: translate(0px, 0px);
-        }
-    }
-}
-
-// Used throughout for the slick layout
-@imagePadding: 75px;
-
-
-
-// Anything that isn't the centre slide
-.slick-slide:not(.slick-center) {
-    // smaller image size
-    .showcase__wrapper {
-        @media @media-desktop-regular {
-            padding-top: @imagePadding;
-        }
-    }
-
-    img {
-        // greyscale image
-        filter: grayscale(100%);
-    }
-
-    .showcase__image-wrapper {
-
-        &:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: @color-black;
-            .opacity(20);
-        }
-    }
-
-}
-
-// the 2 inactive slides (partially hidden)
-.slick-slide:not(.slick-active) {
-    .showcase__wrapper {
-
-        // adjusts layout to account for the larger image in the middle
-        // this is set for both partially hidden images, but then overriden for the
-        // image on the right - due to limitations of CSS selectors
-        @media @media-desktop-regular {
-            padding-right: @imagePadding;
-            transform: translate(@imagePadding, 0);
-        }
-    }
-
-    // hide the text at desktop for partially hidden images (already hidden at mobile)
-    .showcase__details,
-    .showcase__link {
-        @media @media-desktop-regular {
-            display: none;
-        }
-    }
-}
-
-// all 3 active slides
-.slick-active {
-    .showcase__wrapper {
-        // adjusts the layout for the 3 active slides
-        // in the end we only want this style on the slide to the left of the centre slide
-        // subsequent rules override this for the other 2 active slides - due to CSS selector limitations
-        @media @media-desktop-regular {
-            padding-right: @imagePadding;
-        }
-    }
-}
-
-// the slide after the centre one
-.slick-center + .slick-slide {
-    .showcase__wrapper {
-        // reset the padding
-        @media @media-desktop-regular {
-            padding-left: @imagePadding;
-            padding-right: 0;
-        }
-    }
-}
-
-// the last partially visible slide
-.slick-center + .slick-slide + .slick-slide {
-    .showcase__wrapper {
-        // resets the padding and adjusts the offset
-        @media @media-desktop-regular {
-            padding-right: 0;
-            padding-left: @imagePadding;
-            transform: translate(-@imagePadding, 0);
-        }
-    }
-}
-
-// the centre slide
-.slick-center {
-    .showcase__wrapper {
-        // enlarge and reposition it
-        @media @media-desktop-regular {
-            transform: translate(-@imagePadding, 0px);
-            width: calc(~"100% + 152px");
+    .slick-slide {
+        .showcase__wrapper {
+            // mobile layout with centre mode but hides the left partial image
+            // by shifting the slides to the right
+            transform: translate(-42px, 0px);
             padding: 0;
+
+            @media @media-desktop-regular {
+                transform: translate(0px, 0px);
+            }
         }
     }
 
-    .showcase__details {
-        font-size: 23px;
+    // Used throughout for the slick layout
+    @imagePadding: 75px;
+
+
+
+    // Anything that isn't the centre slide
+    .slick-slide:not(.slick-center) {
+        // smaller image size
+        .showcase__wrapper {
+            @media @media-desktop-regular {
+                padding-top: @imagePadding;
+            }
+        }
+
+        img {
+            // greyscale image
+            filter: grayscale(100%);
+        }
+
+        .showcase__image-wrapper {
+
+            &:after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: @color-black;
+                .opacity(20);
+            }
+        }
+
+    }
+
+    // the 2 inactive slides (partially hidden)
+    .slick-slide:not(.slick-active) {
+        .showcase__wrapper {
+
+            // adjusts layout to account for the larger image in the middle
+            // this is set for both partially hidden images, but then overriden for the
+            // image on the right - due to limitations of CSS selectors
+            @media @media-desktop-regular {
+                padding-right: @imagePadding;
+                transform: translate(@imagePadding, 0);
+            }
+        }
+
+        // hide the text at desktop for partially hidden images (already hidden at mobile)
+        .showcase__details,
+        .showcase__link {
+            @media @media-desktop-regular {
+                display: none;
+            }
+        }
+    }
+
+    // all 3 active slides
+    .slick-active {
+        .showcase__wrapper {
+            // adjusts the layout for the 3 active slides
+            // in the end we only want this style on the slide to the left of the centre slide
+            // subsequent rules override this for the other 2 active slides - due to CSS selector limitations
+            @media @media-desktop-regular {
+                padding-right: @imagePadding;
+            }
+        }
+    }
+
+    // the slide after the centre one
+    .slick-center + .slick-slide {
+        .showcase__wrapper {
+            // reset the padding
+            @media @media-desktop-regular {
+                padding-left: @imagePadding;
+                padding-right: 0;
+            }
+        }
+    }
+
+    // the last partially visible slide
+    .slick-center + .slick-slide + .slick-slide {
+        .showcase__wrapper {
+            // resets the padding and adjusts the offset
+            @media @media-desktop-regular {
+                padding-right: 0;
+                padding-left: @imagePadding;
+                transform: translate(-@imagePadding, 0);
+            }
+        }
+    }
+
+    // the centre slide
+    .slick-center {
+        .showcase__wrapper {
+            // enlarge and reposition it
+            @media @media-desktop-regular {
+                transform: translate(-@imagePadding, 0px);
+                width: calc(~"100% + 152px");
+                padding: 0;
+            }
+        }
+
+        .showcase__details {
+            font-size: 23px;
+        }
     }
 }

@@ -1,5 +1,5 @@
 {% extends "rca/full_width.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags static %}
 
 {% block extra_css %}
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
@@ -9,7 +9,7 @@
 
 {% block hero %}
     {% image self.hero_image fill-1800x420 as hero_image %}
-    <section class="hero" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url('{{ hero_image.url }}');">
+    <section class="hero homepage-block" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 100%), url('{{ hero_image.url }}');">
         <div class="hero__inner page-wrapper">
             <a href="{{ header_navigation_links.navigation_link_1_url }}">{{ header_navigation_links.navigation_link_1_text }}</a>
             <a href="{{ header_navigation_links.navigation_link_2_url }}">{{ header_navigation_links.navigation_link_2_text }}</a>
@@ -52,68 +52,18 @@
 
     {% include_block self.body %}
 
+    <h2 class="social__heading homepage-heading homepage-heading--blue">Social</a></h2>
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 
 
 {% block extra_js %}
-    
+
     {# showcase carousel using slick #}
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-    <script type="text/javascript">
 
-        // Home page carousel
-        var $slider = $('.js-showcase');
-        var prevButton = '<button aria-label="Previous" class="showcase__prev showcase__button" type="button"><svg class="showcase__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
-        var nextButton = '<button aria-label="Next" class="showcase__next showcase__button" type="button"><svg class="showcase__arrow"><title>Previous</title><use xlink:href="#chevron"></use></svg></button>';
-
-        $slider.slick({
-            // medium and large desktop
-            prevArrow: prevButton,
-            nextArrow: nextButton,
-            centerMode: true,
-            infinte:true,
-            slidesToShow: 3,
-            responsive: [
-                {
-                    // small desktop / mobile
-                    breakpoint: 1024,
-                    settings: {
-                        centerMode: true,
-                        centerPadding: '40px',
-                        slidesToShow: 1
-                    }
-                }
-            ]
-        });
-
-        // WIP Programme Finder
-        $(function() {
-            $("input#course_search").autocomplete({
-                minLength: 3,
-                source: function(request, response) {
-                    $.getJSON("/programme_search/?q=" + request.term, function(data) {
-                        response(data);
-                    });
-                },
-                select: function( event, ui ) {
-                    window.location.href = ui.item.search_url || ui.item.url;
-                }
-            }).data("ui-autocomplete")._renderItem = function( ul, item ) {
-                if (item.thumbnail.url) {
-                    // Render image when it's available
-                    return $( "<li class=\"hero-search__result\"></li>" )
-                        .data( "item.autocomplete", item )
-                        .append( "<a class=\"hero-search__link\">" + "<img class=\"hero-search__image\" src=\"" + item.thumbnail.url + "\">" + item.title + "</a>" )
-                        .appendTo( ul );
-                } else {
-                    // When there's no image just render the title
-                    return $( "<li class=\"hero-search__result\"></li>" )
-                        .data( "item.autocomplete", item )
-                        .append( "<a class=\"hero-search__link\">" + item.title + "</a>" )
-                        .appendTo( ul );
-                }
-            };
-        });
-    </script>
+    <script src="{% static "rca/js/showcase-block.js" %}"></script>
+    <script src="{% static "rca/js/testimonial-block.js" %}"></script>
+    <script src="{% static "rca/js/events-block.js" %}"></script>
+    <script src="{% static "rca/js/programme-finder.js" %}"></script>
 {% endblock %}
