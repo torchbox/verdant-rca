@@ -1,23 +1,23 @@
 $(function(){
 
 	/* configure left slideout menu toggle */
-	$(".mobile-menu-button").toggleClick(function(){
-		$("body").addClass("show-mobile-menu");
+	// $(".mobile-menu-button").toggleClick(function(){
+	// 	$("body").addClass("show-mobile-menu");
 
-		// Scroll back to top of page
-		$("body,html").animate({
-			scrollTop: 0
-		}, 800);
-	},function(){
-		$("body").removeClass("show-mobile-menu");
+	// 	// Scroll back to top of page
+	// 	$("body,html").animate({
+	// 		scrollTop: 0
+	// 	}, 800);
+	// },function(){
+	// 	$("body").removeClass("show-mobile-menu");
 
-		// measuring the width of some elements removes the white area appearing on the right after closing left menubar
-		setTimeout(function(){
-			$("body > *").each(function() {
-				$(this).width();
-			});
-		}, 250);
-	});
+	// 	// measuring the width of some elements removes the white area appearing on the right after closing left menubar
+	// 	setTimeout(function(){
+	// 		$("body > *").each(function() {
+	// 			$(this).width();
+	// 		});
+	// 	}, 250);
+	// });
 
 	// copy the sidebar so that we can show it on the left in the mobile version
 	// HC: please note this functionality has now been moved to Harvey in site.js, where the sidebar is moved for mobile rather than cloned
@@ -36,9 +36,9 @@ $(function(){
 			});
 			/* Only show the 'mobile-menu-button' button if there is some content in the aside - it is hidden by default in the css and
 			shown here to avoid it flickering on for a moment */
-			if( $('aside').children().length ) {
-				$('.mobile-menu-button').show();
-			}
+			// if( $('aside').children().length ) {
+			// 	$('.mobile-menu-button').show();
+			// }
 		},
 		off: function(){
 			$('nav').removeClass('dl-menuwrapper').removeData();
@@ -48,7 +48,7 @@ $(function(){
 			// remove width from page content which is needed to keep it constant when showing the mobile menu
 			$("body").removeClass("show-mobile-menu");
 			$("body, .mobile-content-wrapper").removeAttr("style");
-			$('.mobile-menu-button').hide();
+			//$('.mobile-menu-button').hide();
 
 		}
 	});
