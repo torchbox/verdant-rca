@@ -1,18 +1,45 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{# More events link #}
-<p><a href="{% pageurl value.more_events_link %}">More events</a></p>
+<div class="events-block">
 
-{% for event in events %}
-    <p>
-        <a href="{% pageurl event %}">
-            {% with event.next_date_time as event_dates %}
-                {# {% image event.feed_image original %} #}
-                Dates: {{ event_dates.date_from|date:"j F" }}{% if event_dates.date_to %} - {{ event_dates.date_to|date:"j F" }}{% endif %}<br>
-                Title: {{ event.title }}<br>
-                Strapline: {{ event.strapline }}<br>
-                Audience: {{ event.get_audience_display }}
-            {% endwith %}
+    <div class="events-block__header">
+        <h2 class="events-block__title homepage-heading homepage-heading--white">Events</h2>
+        <a class="events-block__more" href="{% pageurl value.more_events_link %}">
+            More events
+            <svg class="events-block__more-arrow" aria-hidden="true">
+                <title>Arrow</title>
+                <use xlink:href="#arrow-thin"></use>
+            </svg>
         </a>
-    </p>
-{% endfor %}
+    </div>
+    <div class="events-block__slider js-events">
+        {% for event in events %}
+            <div class="events-block__slide">
+                <a href="{% pageurl event %}" class="event-item">
+                    
+                        {% image event.feed_image fill-291x164 as event_image %}
+
+                        <div class="event-item__wrapper">
+                            <div class="event-item__image-wrapper">
+                                <img
+                                    src="{{ event_image.url }}"
+                                    width="{{ event_image.width }}"
+                                    height="{{ event_image.height }}"
+                                    alt="{{ event_image.alt }}"
+                                    class="event-item__image" />
+                            </div>
+                            {% with event.next_date_time as event_dates %}
+                                <span class="event-item__dates">
+                                    {{ event_dates.date_from|date:"j F" }}{% if event_dates.date_to %} - {{ event_dates.date_to|date:"j F" }}{% endif %}
+                                </span>
+                            </div>
+                        {% endwith %}
+                        <h3 class="event-item__title">{{ event.title }}</h3>
+                        {# <span class="event-item__strapline">{{ event.strapline }}</span> #}
+                        <span class="event-item__audience">{{ event.get_audience_display }}</span>
+                    
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

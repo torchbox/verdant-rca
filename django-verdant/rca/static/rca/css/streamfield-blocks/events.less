@@ -1,0 +1,204 @@
+.events-block {
+    background-color: @color-dark-grey;
+    padding: @spacing-one 0;
+
+    &__header {
+        @media @media-desktop-regular {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }
+
+    &__title {
+        margin: 0 0 @spacing-one;
+        //centerPadding in slick + event-item padding
+        // 17 + 3
+        margin-left: 20px;
+
+        @media @media-desktop-regular {
+            //108 + 8
+            margin-left: 116px;
+        }
+    }
+
+    // v similar to news more link. refactor if time.
+    &__more {
+        display: none;
+
+        @media @media-desktop-regular {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: @color-white;
+            font-family: @font-family-benton;
+            
+            //right margin is centerPadding in slick + event-item padding
+            //108 + 8
+            margin: 0 116px @spacing-one 0;
+        }
+
+        &:hover {
+            color: @color-pink;
+        }
+    }
+
+    // v similar to news arrow - refactor if time
+    &__more-arrow {
+        width: 39px;
+        height: 30px;
+        margin-left: @spacing-one;
+        display: inline-block;
+        fill: @color-white;
+
+        .events-block__more:hover & {
+            fill: @color-pink;
+        }
+    }
+
+    // carousel arrows
+
+    &__button {
+        //reset global button styles
+        line-height: 0;
+        padding: 0;
+        display: block;
+        text-transform: none;
+        background-color: transparent;
+        border: 0;
+        font-size: 0;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        // apply button styles
+        position: absolute;
+        background-image: none;
+        width: 27px;
+        height: 49px;
+        z-index: 1;
+
+        @media @media-desktop-regular {
+            width: 54px;
+            height: 98px;
+        }
+    }
+
+    &__arrow {
+        width: 27px;
+        height: 49px;
+        fill: @color-white;
+
+        @media @media-desktop-regular {
+            width: 54px;
+            height: 98px;
+        }
+
+        &:hover {
+            fill: @color-pink;
+        }
+
+        .events-block__prev & {
+            transform: scaleX(-1);
+        }
+    }
+
+    &__next {
+        right: 4px;
+        top: 30%;
+
+        @media @media-desktop-regular {
+            right: 22px;
+            top: 10%;
+        }
+
+        @media @media-desktop-large {
+            top: 15%;
+        }
+    }
+
+    &__prev {
+        left: 4px;
+        top: 30%;
+
+        @media @media-desktop-regular {
+            left: 22px;
+            top: 10%;
+        }
+
+        @media @media-desktop-large {
+            top: 15%;
+        }
+    }
+
+    // slick overrides
+
+    // the 2 inactive slides (partially hidden) - black and inactive
+    .slick-slide:not(.slick-active) {
+        pointer-events: none;
+
+        .event-item__image-wrapper {
+            position: relative;
+
+            &:after {
+                content: '';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                background-color: @color-black;
+
+                @media @media-desktop-regular {
+                    .opacity(60);
+                }
+            }
+        }
+
+        .event-item__dates {
+            display: none;
+        }
+    }
+}
+
+.event-item {
+    display: block;
+    padding: 0 3px;
+
+    @media @media-desktop-regular {
+        padding: 0 @spacing-half;
+    }
+
+    &__wrapper {
+        position: relative;
+        margin-bottom: @spacing-one;
+    }
+
+    &__dates {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #A4429C; // design doesn't match existing colour palette
+        .opacity(90);
+        color: @color-white;
+        padding: @spacing-half;
+        padding-right: @spacing-one;
+        font-size: 14px;
+    }
+
+    &__title {
+        font-size: 18px;
+        color: @color-white;
+        margin: 0 0 @spacing-half 0;
+    }
+
+    &__audience {
+        font-size: 13px;
+        text-transform: uppercase;
+        color: @color-black;
+        font-weight: bold;
+    }
+}
+
+
