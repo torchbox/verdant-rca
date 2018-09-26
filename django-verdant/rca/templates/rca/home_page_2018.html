@@ -52,17 +52,18 @@
 
     {% include_block self.body %}
 
+    <h2 class="social__heading homepage-heading homepage-heading--blue">Social</a></h2>
     {% include "rca/includes/modules/twitter-feed.html" %}
 {% endblock %}
 
 
 {% block extra_js %}
-    
+
     {# showcase carousel using slick #}
     <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <script src="{% static "rca/js/showcase-block.js" %}"></script>
     <script src="{% static "rca/js/testimonial-block.js" %}"></script>
+    <script src="{% static "rca/js/events-block.js" %}"></script>
     <script src="{% static "rca/js/programme-finder.js" %}"></script>
-
 {% endblock %}
