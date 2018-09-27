@@ -1024,4 +1024,12 @@ function onDocumentReady(jQuery, inLightBox){
     };
 
     contactUsForm();
+
+    // apply bold text (assumes just one set of asterisks to delimit bold text)
+    $('.js-bold').each(function() {
+        var text = $(this).text();
+        var splitText = text.split(/[**]/);
+        var boldedText = splitText[0] + '<b>' + splitText[1] + '</b>' + splitText[2];
+        $(this).html(boldedText);
+    });
 }
