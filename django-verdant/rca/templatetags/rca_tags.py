@@ -446,6 +446,14 @@ def menu(context):
     }
 
 
+@register.inclusion_tag('rca/tags/priority_menu.html', takes_context=True)
+def priority_menu(context):
+    nodes = get_site_nav(max_depth=4, must_have_children=False, only_in_menu_pages=True)[:4]
+    return {
+        'nodes': nodes,
+        'request': context['request'],
+    }
+
 @register.inclusion_tag('rca/tags/explorer_nav.html', takes_context=True)
 def menu_subnav(context, nodes):
     return {

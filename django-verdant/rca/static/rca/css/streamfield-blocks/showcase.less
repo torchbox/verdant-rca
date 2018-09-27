@@ -7,7 +7,7 @@
             // wrap text and sit over carousel
             max-width: 260px;
             position: relative;
-            top: 50px;
+            margin-bottom: -50px;
         }
     }
 
@@ -55,83 +55,12 @@
         }
     }
 
-    &__button {
-        //reset global button styles
-        line-height: 0;
-        padding: 0;
-        display: block;
-        text-transform: none;
-        background-color: transparent;
-        border: 0;
-        font-size: 0;
-
-        &:hover {
-            background-color: transparent;
-        }
-
-        // apply button styles
-        position: absolute;
-        background-image: none;
-        width: 27px;
-        height: 49px;
-        z-index: 1;
-    }
-
-    &__arrow {
-        width: 27px;
-        height: 49px;
-        fill: @color-white;
-
-        &:hover {
-            fill: @color-pink;
-        }
-
-        .showcase__prev & {
-            transform: scaleX(-1);
-        }
-    }
-
-    &__next {
-        right: 16px;
-        top: calc(~"50% - 31px");
-
-        @media @media-desktop-regular {
-            top: 30%;
-            right: 4px;
-        }
-
-        @media @media-desktop-large {
-            top: 35%;
-        }
-    }
-
-    &__prev {
-        left: 4px;
-        top: 30%;
-        .opacity(0); // because display:none overridden by inline style
-
-        @media @media-desktop-regular {
-            .opacity(100);
-        }
-
-        @media @media-desktop-large {
-            top: 35%;
-        }
-    }
-
     // SLICK STYLE OVERRIDES
     // Much of this is layout rejigging to account for the large central slide
 
     .slick-slide {
         .showcase__wrapper {
-            // mobile layout with centre mode but hides the left partial image
-            // by shifting the slides to the right
-            transform: translate(-42px, 0px);
             padding: 0;
-
-            @media @media-desktop-regular {
-                transform: translate(0px, 0px);
-            }
         }
     }
 
