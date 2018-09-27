@@ -112,7 +112,6 @@
     }
 
     &__image {
-        
         width: 100%;
         margin-bottom: @spacing-half;
 
@@ -120,7 +119,13 @@
             margin-bottom: @spacing-one;
         }
 
-        .news-item__link:hover & {
+        &--featured {
+            margin-bottom: 0;
+        }
+
+        .news-item__link:hover &,
+        .news-item__link:active &,
+        .news-item__link:focus & {
             .filter(brightness(0.8));
             .transition(all 0.5s ease);
         }
