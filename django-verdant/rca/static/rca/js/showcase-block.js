@@ -9,15 +9,22 @@ $(function(){
         prevArrow: prevButton,
         nextArrow: nextButton,
         centerMode: true,
-        infinte:true,
+        infinte: true,
         slidesToShow: 3,
+        centerPadding: 'calc(5vw - 8px)', // offset minus padding between items
         responsive: [
             {
-                // small desktop / mobile
+                // small desktop
                 breakpoint: 1024,
                 settings: {
-                    centerMode: true,
-                    centerPadding: '40px',
+                    centerPadding: '5vw', // offset
+                    slidesToShow: 1
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    centerPadding: '13px', // just works
                     slidesToShow: 1
                 }
             }
