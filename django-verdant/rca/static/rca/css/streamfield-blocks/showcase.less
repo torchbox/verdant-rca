@@ -32,14 +32,9 @@
     }
 
     &__details {
-        display: none;
-
-        @media @media-desktop-regular {
-            display: block;
-            font-weight: 400;
-            margin-bottom: @spacing-half;
-            font-size: 19px;
-        }
+        font-weight: 400;
+        margin-bottom: @spacing-half;
+        font-size: 19px;
     }
 
     &__page-title {
@@ -47,13 +42,9 @@
     }
 
     &__link {
-        display: none;
-
-        @media @media-desktop-regular {
-            display: block;
-            color: @color-highlight-blue;
-            font-weight: 700;
-        }
+        display: block;
+        color: @color-highlight-blue;
+        font-weight: 700;
     }
 
     // SLICK STYLE OVERRIDES
@@ -129,12 +120,10 @@
             }
         }
 
-        // hide the text at desktop for partially hidden images (already hidden at mobile)
+        // hide the text for partially hidden images
         .showcase__details,
         .showcase__link {
-            @media @media-desktop-regular {
-                display: none;
-            }
+            display: none;
         }
     }
 
