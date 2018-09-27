@@ -10,7 +10,7 @@ $(function(){
         nextArrow: nextButton,
         infinte: true,
         centerMode: true,
-        centerPadding: '5vw',
+        centerPadding: 'calc(5vw - 8px)',
         slidesToShow: 3,
         responsive: [
             {
@@ -18,7 +18,7 @@ $(function(){
                 breakpoint: 1024,
                 settings: {
                     slidesToShow: 1,
-                    centerPadding: '17px',
+                    centerPadding: '13px',
                 }
             }
         ]
