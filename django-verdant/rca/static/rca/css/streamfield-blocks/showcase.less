@@ -13,6 +13,7 @@
 
     &__slide {
         float: left; // stops so much jumping before the carousel loads
+        padding: 0 3px;
 
         @media @media-desktop-regular {
             padding-left: @spacing-half;
@@ -109,6 +110,22 @@
             @media @media-desktop-regular {
                 padding-right: @imagePadding;
                 transform: translate(@imagePadding, 0);
+            }
+        }
+
+        .showcase__image-wrapper {
+
+            //solid overlay at mobile for the 2 partially hidden slides
+            &:after {
+                .opacity(100);
+                background-color: @color-charcoal;
+            }
+
+            @media @media-desktop-regular {
+                &:after {
+                    .opacity(20);
+                    background-color: @color-black;
+                }
             }
         }
 

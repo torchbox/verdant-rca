@@ -17,21 +17,15 @@
         position: absolute;
         background-image: none;
         z-index: 1;
-        width: 24px;
-        height: 42px;
-
-        @media @media-desktop-small {
-            width: 32px;
-            height: 64px;
-        }
+        width: 32px;
+        height: 64px;
 
         &--next {
-            right: 16px;
+            right: 4px;
             top: calc(~"50% - 31px");
 
             @media @media-desktop-regular {
                 top: 30%;
-                right: 4px;
             }
 
             @media @media-desktop-large {
@@ -65,6 +59,10 @@
         &--prev {
             left: 4px;
             top: calc(~"50% - 31px");
+
+            @media @media-desktop-regular {
+                top: 30%;
+            }
 
             @media @media-desktop-large {
                 top: 35%;

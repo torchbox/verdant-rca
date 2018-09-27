@@ -10,15 +10,22 @@ $(function(){
         nextArrow: nextButton,
         infinte: true,
         centerMode: true,
-        centerPadding: 'calc(5vw - 8px)',
+        centerPadding: 'calc(5vw - 8px)',  // offset minus padding between items
         slidesToShow: 3,
         responsive: [
-            {
-                // mobile
+             {
+                // small desktop
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 1,
-                    centerPadding: '13px',
+                    centerPadding: '5vw', // offset
+                    slidesToShow: 1
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    centerPadding: '13px', // just works
+                    slidesToShow: 1
                 }
             }
         ]
