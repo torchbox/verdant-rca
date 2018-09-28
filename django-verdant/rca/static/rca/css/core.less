@@ -90,18 +90,6 @@ html, body {
     }
 }
 
-.mobile-menu-wrapper{
-    position:relative;
-    float: left;
-    width: 180px;
-    margin-left:-180px;
-
-    aside{
-        display: block;
-        width: 180px;
-    }
-}
-
 .mobile-menu-button{
     @button-height:40px;
     font-family:@font-family-benton;
@@ -136,13 +124,6 @@ html, body {
 body.show-mobile-menu{
     overflow-x:hidden;
 
-    .mobile-menu-wrapper{
-        transform: translate3d(100%,0,0);
-        -webkit-transform: translate3d(100%,0,0);
-        -moz-transform: translate3d(100%,0,0);
-        -o-transform: translate3d(100%,0,0);
-        -ms-transform: translate3d(100%,0,0);
-    }
     .mobile-content-wrapper{
         border-left:1px solid @color-pink;
         transform: translate3d(180px,0,0);
@@ -528,7 +509,8 @@ footer {
 }
 
 aside {
-    display: none; /* hidden until large desktop size */
+    width: 100%;
+    overflow: hidden;
 }
 
 /* grey background bleeding to edge */
