@@ -116,31 +116,25 @@
 
         <div class="mobile-menu-wrapper">
         </div>
-        {% block enquiry_form_button %}
-            <div class="enquiry-button-wrapper">
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                <button class="enquiry-form-trigger enquiry-form-trigger--body js-enquiry-form-trigger">
-                    Enquire to study
-                </button>
-            {% endif %}
-            </div>
-        {% endblock %}
 
         <div class="mobile-content-wrapper">
-            <div class="mobile-menu-button">Inside</div>
 
             <div class="header-wrapper">
-                <header class="page-header">
+                <header class="header">
                     {% block logo %}
-                        <a href="/" class="site-name" tabindex="2"><p>Royal College of Art</p></a>
+                        <a href="/" class="header__site-name" tabindex="2">
+                            <p class="hidden">Royal College of Art</p>
+                            <svg class="header__logo">
+                                <use xlink:href="#logo"></use>
+                            </svg>
+                        </a>
                     {% endblock %}
-                    <div class="showmenu dl-trigger">Show menu</div>
-                    <div class="showsearch">Show search</div>
+
                     <div class="nav-wrapper">
                         <div class="inner">
-                            <nav>
+                            <nav class="nav">
                                 <h2><a href="javascript: void(0);" class="trigger" tabindex="3">Menu</a></h2>
-                                <ul class="menu dl-menu">
+                                <ul class="nav__menu menu dl-menu">
                                     {% include "rca/menu.html" %}
                                 </ul>
                             </nav>
@@ -150,6 +144,20 @@
                             <input type="submit" value="search" />
                         </form>
                     </div>
+
+                    <button class="header__button header__button--show-menu showmenu dl-trigger">
+                        <span class="hidden">Show menu</span>
+                        <svg class="header__icon header__icon--menu">
+                            <use xlink:href="#menu"></use>
+                        </svg>
+                    </button>
+
+                    <button class="header__button header__button--show-search showsearch">
+                        <span class="hidden">Show search</span>
+                        <svg class="header__icon header__icon--search">
+                            <use xlink:href="#search"></use>
+                        </svg>
+                    </button>
                 </header>
             </div>
 
@@ -276,10 +284,5 @@
             {% block extra_js %}{% endblock %}
         {% endblock %}
 
-        {% block enquiry_form_sidebar %}
-            {% if settings.rca.EnquiryFormSettings.form_page %}
-                {% enquiry_form %}
-            {% endif %}
-        {% endblock %}
     </body>
 </html>

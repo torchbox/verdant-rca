@@ -1,0 +1,183 @@
+/**
+ * $Top navigation
+ */
+
+/* General menu styles */
+nav {
+    background-color: white;
+    background-color: rgba(255,255,255,0.95);
+    border-bottom: 1px solid @color-medium-grey; /* fallback for ie 8 */
+    border-bottom: 1px solid fade(@color-medium-grey, 40%);
+    padding: 8px @grid-gutter-width/2;
+    position: relative;
+    z-index: 999;
+    height: 150px; /* gets overridden by finding tallest submenu */
+    overflow: hidden;
+    display: none;
+
+    &.expanded {
+        display: block;
+    }
+
+    ul, li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    ul {
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+
+    > ul {
+        top: 8px; /* Same value as padding-top of nav element */
+        left: 70px;
+        width: 94%;
+        max-width: 800px;
+    }
+
+    li {
+        display: block;
+        overflow: hidden;
+        line-height: 1.3em;
+    }
+
+    a {
+        font-size: 12px;
+        color: #454545;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: block;
+        position: relative;
+        padding-right: 7%;
+
+        &:hover {
+            color:rgb(0, 150, 255) !important;
+        }
+    }
+}
+
+
+/* DL menu styles */
+nav.dl-menuwrapper{
+    margin:0;
+    height:initial;
+    overflow:visible;
+    visibility:visible;
+}
+    nav.dl-menuwrapper ul{
+        left:0;
+        top:initial;
+        background-color:white;
+        position:relative;
+        width:auto;
+    }
+    nav.dl-menuwrapper .children{
+        display:block;
+    }
+        nav.dl-menuwrapper li {
+            width:100%;
+        }
+            nav.dl-menuwrapper li > ul{
+                display:block;
+                left:0;
+            }
+
+
+
+/**
+ * $Mobile menu styles
+ */
+
+.mobile-content-wrapper{
+    position: relative;
+    float:right;
+    width:100%;
+    overflow: hidden;
+    padding: 0 15px 0 15px; /* padding for mobile */
+    background: white;
+    transition:
+        transform 300ms ease;
+
+    &--shift-left {
+        @media screen and ( min-width : 768px ) {
+            transform: translate3d(-@sidebarWidth, 0, 0);
+        }
+    }
+}
+
+.mobile-menu-wrapper{
+    position:relative;
+    float: left;
+    width: 180px;
+    margin-left:-180px;
+
+    aside{
+        display: block;
+        width: 180px;
+    }
+}
+
+.mobile-menu-button{
+    @button-height:40px;
+    font-family:@font-family-benton;
+    position: fixed;
+    z-index: 3000;
+    left: @spacing-two;
+    line-height:@spacing-two;
+    top: 8em;
+    background:#333;
+    color: white;
+    padding: 0 @grid-gutter-width*1.1;
+    font-size: 1em;
+    text-transform: uppercase;
+    outline: none !important;
+    display: none; /* javascript is now used to display this only if there is some content within the aside block */
+    transform: rotate(90deg);
+    transform-origin: top left;
+    -moz-transform: rotate(90deg);
+    -moz-transform-origin: top left;
+    -webkit-transform: rotate(90deg);
+    -webkit-transform-origin: top left;
+    -o-transform: rotate(90deg);
+    -o-transform-origin: top left;
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    zoom: 1;
+
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+body.show-mobile-menu{
+    overflow-x:hidden;
+
+    .mobile-menu-wrapper{
+        transform: translate3d(100%,0,0);
+        -webkit-transform: translate3d(100%,0,0);
+        -moz-transform: translate3d(100%,0,0);
+        -o-transform: translate3d(100%,0,0);
+        -ms-transform: translate3d(100%,0,0);
+    }
+    .mobile-content-wrapper{
+        border-left:1px solid @color-pink;
+        transform: translate3d(180px,0,0);
+        -webkit-transform: translate3d(180px,0,0);
+        -moz-transform: translate3d(180px,0,0);
+        -o-transform: translate3d(180px,0,0);
+        -ms-transform: translate3d(180px,0,0);
+    }
+    .mobile-menu-button{
+        color:white;
+        background-color:@color-pink;
+        display: block;
+    }
+}
+
+
+.lt-ie10 .mobile-menu-button{
+    left: 0;
+}
+
