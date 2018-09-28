@@ -119,7 +119,7 @@
 
         <div class="mobile-content-wrapper">
 
-            <div class="header-wrapper">
+            <div class="header__wrapper">
                 <header class="header">
                     {% block logo %}
                         <a href="/" class="header__site-name" tabindex="2">
@@ -130,34 +130,44 @@
                         </a>
                     {% endblock %}
 
-                    <div class="nav-wrapper">
+                    <div class="header__nav header__nav--priority">
+                        <nav class="nav nav--priority-nav">
+                            <ul class="nav__menu ">
+                                {% priority_menu %}
+                            </ul>
+                        </nav>
+                    </div>
+
+                    <div class="header__nav">
+                        <button class="header__button header__button--show-menu showmenu dl-trigger">
+                            <span class="hidden">Show menu</span>
+                            <svg class="header__icon header__icon--menu">
+                                <use xlink:href="#menu"></use>
+                            </svg>
+                        </button>
+
                         <div class="inner">
                             <nav class="nav">
-                                <h2><a href="javascript: void(0);" class="trigger" tabindex="3">Menu</a></h2>
                                 <ul class="nav__menu menu dl-menu">
                                     {% include "rca/menu.html" %}
                                 </ul>
                             </nav>
                         </div>
+                    </div>
+
+                    <div class="header__search-wrapper">
+                        <button class="header__button header__button--show-search showsearch">
+                            <span class="hidden">Show search</span>
+                            <svg class="header__icon header__icon--search">
+                                <use xlink:href="#search"></use>
+                            </svg>
+                        </button>
+
                         <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
                             <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
                             <input type="submit" value="search" />
                         </form>
                     </div>
-
-                    <button class="header__button header__button--show-menu showmenu dl-trigger">
-                        <span class="hidden">Show menu</span>
-                        <svg class="header__icon header__icon--menu">
-                            <use xlink:href="#menu"></use>
-                        </svg>
-                    </button>
-
-                    <button class="header__button header__button--show-search showsearch">
-                        <span class="hidden">Show search</span>
-                        <svg class="header__icon header__icon--search">
-                            <use xlink:href="#search"></use>
-                        </svg>
-                    </button>
                 </header>
             </div>
 

@@ -13,6 +13,7 @@ makes sure that doesn't happen. NB may no longer be needed if we definitely have
     height: @header-height-mobile;
     z-index: 4000;
     position: relative;
+    display: flex;
 
     &__site-name {
         display: block;
@@ -24,74 +25,19 @@ makes sure that doesn't happen. NB may no longer be needed if we definitely have
         height: 100%;
         width: 100%;
     }
-}
 
+    &__button {
+        border: 0;
+        background: transparent;
+    }
 
-
-/**
- * $Show icons for search and menu at mobile size
- */
-
-.showsearch,
-.showmenu {
-    text-indent: -2000px;
-    float:right;
-    width:15%;
-    margin-left:1px;
-    background-color:rgba(250,250,250,0.9);
-    position:relative;
-    height:100%;
-    border-left:1px solid rgba(125,125,125,0.1);
-    cursor: pointer;
-
-    &:after {
-        overflow:hidden;
-        width:100%;
-        content: " ";
-        display:block;
-        position:absolute;
-        margin:auto;
-        top: 0;
-        left: 0;
-        bottom:0;
-        right:0;
+    &__icon {
+        width: 21px;
+        height: 21px;
+        fill: @color-dark-grey;
     }
 }
 
-.showsearch {
-    &:after {
-        .sprite-load-23(
-            @positionX: -229px,
-            @positionY: -50px,
-            @retinaPositionX: -459px,
-            @retinaPositionY: -100px,
-            @width: 20px,
-            @height: 19px
-        );
-    }
-}
 
-.showmenu {
-    &:after {
-        .sprite-load-23(
-            @positionX: -48px,
-            @positionY: -48px,
-            @retinaPositionX: -97px,
-            @retinaPositionY: -97px,
-            @width: 23px,
-            @height: 13px
-        );
-    }
 
-    &.expanded:after {
-        .sprite-load-23(
-            @positionX: -12px,
-            @positionY: -48px,
-            @retinaPositionX: -25px,
-            @retinaPositionY: -97px,
-            @width: 23px,
-            @height: 13px
-        );
-    }
 
-}
