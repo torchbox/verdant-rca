@@ -10,18 +10,6 @@
         }
     }
 
-    &__title {
-        margin: 0 0 @spacing-one;
-        //centerPadding in slick + event-item padding
-        // 17 + 3
-        margin-left: 20px;
-
-        @media @media-desktop-regular {
-            //108 + 8
-            margin-left: 116px;
-        }
-    }
-
     // v similar to news more link. refactor if time.
     &__more {
         display: none;
@@ -33,10 +21,6 @@
             text-transform: uppercase;
             color: @color-white;
             font-family: @font-family-benton;
-            
-            //right margin is centerPadding in slick + event-item padding
-            //108 + 8
-            margin: 0 116px @spacing-one 0;
         }
 
         &:hover {
@@ -57,82 +41,6 @@
         }
     }
 
-    // carousel arrows
-
-    &__button {
-        //reset global button styles
-        line-height: 0;
-        padding: 0;
-        display: block;
-        text-transform: none;
-        background-color: transparent;
-        border: 0;
-        font-size: 0;
-
-        &:hover {
-            background-color: transparent;
-        }
-
-        // apply button styles
-        position: absolute;
-        background-image: none;
-        width: 27px;
-        height: 49px;
-        z-index: 1;
-
-        @media @media-desktop-regular {
-            width: 54px;
-            height: 98px;
-        }
-    }
-
-    &__arrow {
-        width: 27px;
-        height: 49px;
-        fill: @color-white;
-
-        @media @media-desktop-regular {
-            width: 54px;
-            height: 98px;
-        }
-
-        &:hover {
-            fill: @color-pink;
-        }
-
-        .events-block__prev & {
-            transform: scaleX(-1);
-        }
-    }
-
-    &__next {
-        right: 4px;
-        top: 30%;
-
-        @media @media-desktop-regular {
-            right: 22px;
-            top: 10%;
-        }
-
-        @media @media-desktop-large {
-            top: 15%;
-        }
-    }
-
-    &__prev {
-        left: 4px;
-        top: 30%;
-
-        @media @media-desktop-regular {
-            left: 22px;
-            top: 10%;
-        }
-
-        @media @media-desktop-large {
-            top: 15%;
-        }
-    }
-
     // slick overrides
 
     // the 2 inactive slides (partially hidden) - black and inactive
@@ -148,7 +56,7 @@
                 height: 100%;
                 position: absolute;
                 top: 0;
-                background-color: @color-black;
+                background-color: @color-charcoal;
 
                 @media @media-desktop-regular {
                     .opacity(60);
@@ -191,6 +99,7 @@
         font-size: 18px;
         color: @color-white;
         margin: 0 0 @spacing-half 0;
+        .transition(all 0.5s ease);
     }
 
     &__audience {
@@ -199,6 +108,21 @@
         color: @color-black;
         font-weight: bold;
     }
+
+    &__image {
+        .transition(all 0.5s ease);
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        .event-item__image {
+            .filter(brightness(0.8));
+        }
+
+        .event-item__title {
+            // Regular hover colors don't really work on the grey background
+            color: #A4429C;
+        }
+    }
 }
-
-

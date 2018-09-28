@@ -16,17 +16,16 @@
         // apply button styles
         position: absolute;
         background-image: none;
-        width: 27px;
-        height: 49px;
         z-index: 1;
+        width: 32px;
+        height: 64px;
 
         &--next {
-            right: 16px;
+            right: 4px;
             top: calc(~"50% - 31px");
 
             @media @media-desktop-regular {
                 top: 30%;
-                right: 4px;
             }
 
             @media @media-desktop-large {
@@ -41,15 +40,28 @@
                     right: -40px;
                 }
             }
+
+            .events-block & {
+                right: 4px;
+                top: 30%;
+
+                @media @media-desktop-regular {
+                    right: 9px;
+                    top: 20%;
+                }
+
+                @media @media-desktop-large {
+                    top: 26%;
+                }
+            }
         }
 
         &--prev {
             left: 4px;
-            top: 30%;
-            .opacity(0); // because display:none overridden by inline style
+            top: calc(~"50% - 31px");
 
             @media @media-desktop-regular {
-                .opacity(100);
+                top: 30%;
             }
 
             @media @media-desktop-large {
@@ -64,12 +76,26 @@
                     left: -40px;
                 }
             }
+
+            .events-block & {
+                left: 4px;
+                top: 30%;
+
+                @media @media-desktop-regular {
+                    left: 9px;
+                    top: 20%;
+                }
+
+                @media @media-desktop-large {
+                    top: 26%;
+                }
+            }
         }
     }
 
     &__arrow {
-        width: 27px;
-        height: 49px;
+        width: 100%;
+        height: 100%;
         fill: @color-white;
 
         &:hover {

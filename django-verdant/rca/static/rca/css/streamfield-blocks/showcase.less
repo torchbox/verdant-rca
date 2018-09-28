@@ -7,12 +7,13 @@
             // wrap text and sit over carousel
             max-width: 260px;
             position: relative;
-            top: 50px;
+            margin-bottom: -50px;
         }
     }
 
     &__slide {
         float: left; // stops so much jumping before the carousel loads
+        padding: 0 3px;
 
         @media @media-desktop-regular {
             padding-left: @spacing-half;
@@ -31,14 +32,9 @@
     }
 
     &__details {
-        display: none;
-
-        @media @media-desktop-regular {
-            display: block;
-            font-weight: 400;
-            margin-bottom: @spacing-half;
-            font-size: 19px;
-        }
+        font-weight: 400;
+        margin-bottom: @spacing-half;
+        font-size: 19px;
     }
 
     &__page-title {
@@ -46,77 +42,9 @@
     }
 
     &__link {
-        display: none;
-
-        @media @media-desktop-regular {
-            display: block;
-            color: @color-highlight-blue;
-            font-weight: 700;
-        }
-    }
-
-    &__button {
-        //reset global button styles
-        line-height: 0;
-        padding: 0;
         display: block;
-        text-transform: none;
-        background-color: transparent;
-        border: 0;
-        font-size: 0;
-
-        &:hover {
-            background-color: transparent;
-        }
-
-        // apply button styles
-        position: absolute;
-        background-image: none;
-        width: 27px;
-        height: 49px;
-        z-index: 1;
-    }
-
-    &__arrow {
-        width: 27px;
-        height: 49px;
-        fill: @color-white;
-
-        &:hover {
-            fill: @color-pink;
-        }
-
-        .showcase__prev & {
-            transform: scaleX(-1);
-        }
-    }
-
-    &__next {
-        right: 16px;
-        top: calc(~"50% - 31px");
-
-        @media @media-desktop-regular {
-            top: 30%;
-            right: 4px;
-        }
-
-        @media @media-desktop-large {
-            top: 35%;
-        }
-    }
-
-    &__prev {
-        left: 4px;
-        top: 30%;
-        .opacity(0); // because display:none overridden by inline style
-
-        @media @media-desktop-regular {
-            .opacity(100);
-        }
-
-        @media @media-desktop-large {
-            top: 35%;
-        }
+        color: @color-highlight-blue;
+        font-weight: 700;
     }
 
     // SLICK STYLE OVERRIDES
@@ -124,14 +52,7 @@
 
     .slick-slide {
         .showcase__wrapper {
-            // mobile layout with centre mode but hides the left partial image
-            // by shifting the slides to the right
-            transform: translate(-42px, 0px);
             padding: 0;
-
-            @media @media-desktop-regular {
-                transform: translate(0px, 0px);
-            }
         }
     }
 
@@ -183,12 +104,26 @@
             }
         }
 
-        // hide the text at desktop for partially hidden images (already hidden at mobile)
+        .showcase__image-wrapper {
+
+            //solid overlay at mobile for the 2 partially hidden slides
+            &:after {
+                .opacity(100);
+                background-color: @color-charcoal;
+            }
+
+            @media @media-desktop-regular {
+                &:after {
+                    .opacity(20);
+                    background-color: @color-black;
+                }
+            }
+        }
+
+        // hide the text for partially hidden images
         .showcase__details,
         .showcase__link {
-            @media @media-desktop-regular {
-                display: none;
-            }
+            display: none;
         }
     }
 
