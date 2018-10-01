@@ -128,26 +128,28 @@
 
                     <div class="header__nav header__nav--priority">
                         <nav class="nav nav--priority-nav">
-                            <ul class="nav__menu ">
+                            <ul class="nav__menu js-menu">
                                 {% priority_menu %}
                             </ul>
                         </nav>
                     </div>
 
                     <div class="header__nav">
-                        <button class="header__button header__button--show-menu showmenu dl-trigger">
+                        <button class="header__button header__button--show-menu js-showmenu dl-trigger">
                             <span class="hidden">Show menu</span>
                             <svg class="header__icon header__icon--menu">
                                 <use xlink:href="#menu"></use>
                             </svg>
                         </button>
 
-                        <div class="inner">
-                            <nav class="nav">
-                                <ul class="nav__menu menu dl-menu">
-                                    {% include "rca/menu.html" %}
-                                </ul>
-                            </nav>
+                        <div class="js-nav-wrapper">
+                            <div class="inner">
+                                <nav class="nav js-mobile-nav">
+                                    <ul class="nav__menu menu dl-menu">
+                                        {% include "rca/menu.html" %}
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
 

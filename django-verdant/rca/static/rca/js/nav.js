@@ -3,17 +3,16 @@ $(function(){
 	Harvey.attach(breakpoints.mobile, {
 		setup: function(){},
 		on: function(){
-			$('nav').addClass('dl-menuwrapper').dlmenu({
-				animationClasses : {
-					classin : 'dl-animate-in-2',
-					classout : 'dl-animate-out-2'
-				}
-			});
+			
+			    // function showHideMobileMenu(){
+			    //     $('.js-showmenu').click(function(eventObject){
+			    //         $('.js-mobile-nav').toggleClass('expanded');
+			    //         $(this).toggleClass('expanded');
+			    //     });
+		    	// }
 		},
 		off: function(){
-			$('nav').removeClass('dl-menuwrapper').removeData();
-			$('nav *').removeClass('dl-subview dl-subviewopen');
-			$('nav .dl-back').remove();
+			
 		}
 	});
 	Harvey.attach(breakpoints.desktopSmall, {
@@ -21,12 +20,14 @@ $(function(){
 		on: function(){
 			/* Duplicate anything added to this function, into the ".lt-ie9" section below */
 
-			//enable desktop dropdown nav
+			//enable desktop dropdown nav and kill mobile nav
 			desktopNav.apply();
+			mobileNav.revoke();
 		},
 		off: function(){
-			//kill desktop dropdown nav
+			//kill desktop dropdown nav and enable mobile nav
 			desktopNav.revoke();
+			mobileNav.apply();
 		}
 	});
 
@@ -36,6 +37,32 @@ $(function(){
 	});
 
 });
+
+var mobileNav = {
+	apply: function() {
+		$('js-mobile-nav').addClass('dl-menuwrapper').dlmenu({
+			animationClasses : {
+				classin : 'dl-animate-in-2',
+				classout : 'dl-animate-out-2'
+			}
+		});
+
+		function toggleMobileNav() {
+			$('.js-mobile-nav').toggleClass('expanded');
+			$('.js-showmenu').toggleClass('expanded');
+		}
+
+		// namespace the click to allow distinction between desktop and mobile actions
+		$('.js-showmenu').on('click.mobile', toggleMobileNav);
+	},
+
+	revoke: function() {
+		$('.js-showmenu').off('.mobile'); // clears events in the .mobile namespace
+		$('.js-mobile-nav').removeClass('dl-menuwrapper').removeData();
+		$('js-mobile-nav *').removeClass('dl-subview dl-subviewopen');
+		$('js-mobile-nav .dl-back').remove();
+	}
+}
 
 var desktopNav = {
 	apply: function(){
@@ -52,12 +79,12 @@ var desktopNav = {
 			}
 		}
 
-		$('.nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
+		$('.js-nav-wrapper nav:not(.dl-menuwrapper)').each(function(){
 			var $self = $(this);
 			var maxHeight = 0;
 			var selected = $('.selected', $self).clone();
-			var menu = $('.menu', $self);
-			var toggle = $('h2 a', $self);
+			var menu = $('.js-menu');
+			var toggle = $('.js-showmenu');
 
 			// find tallest submenu
 			$self.find('ul').each(function(){
@@ -121,21 +148,26 @@ var desktopNav = {
 				})
 			}
 
-			// open/close menu based on toggle click
-			toggle.click(function(){
+			function toggleMenu() {
 				if($self.hasClass('open')){
 					closeMenu();
 				}else{
 					openMenu();
 				}
-			});
+			}
 
-			// close menu on all clicks outside the toggle
-			$(document).on('click', function(e){
-				if($(e.target).get(0) != toggle.get(0)){
+			function clearMenu(e) {
+				if(!$(e.target).hasClass('js-showmenu')){
 					closeMenu();
 				}
-			});
+			}
+
+			// open/close menu based on toggle click
+			// namespace the click to allow distinction between desktop and mobile actions
+			$(document).on('click.desktop', toggle, toggleMenu);
+
+			// close menu on all clicks outside the toggle
+			$(document).on('click.desktop', clearMenu);
 
 			$('li', menu).hoverIntent({
 				over: function(e){
@@ -154,7 +186,9 @@ var desktopNav = {
 	},
 
 	revoke: function(){
-		$('nav').each(function(){
+		//$('.js-showmenu').off('.desktop'); // clears events in the .desktop namespace
+		$(document).off('.desktop');
+		$('.js-nav-wrapper nav').each(function(){
 			$(this).unbind().removeClass('ready').removeClass('changing').attr('style', '');
 			$('li, ul', $(this)).unbind().attr('style', '');
 			$('.breadcrumb', $(this)).remove()
