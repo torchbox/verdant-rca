@@ -1,19 +1,8 @@
-
-/**
- * $Header
- */
-
-/* header has to match width of page-content below so has left and right
-margins like the wrapper. When page-content scrolls up, especially the full width
-footer, we don't want stuff appearing behind the header. This 100% width wrapper
-makes sure that doesn't happen. NB may no longer be needed if we definitely have a transparent background */
-
-
 .header {
-    height: @header-height-mobile;
     z-index: 4000;
     position: relative;
     display: flex;
+    align-items: flex-end;
 
     &__site-name {
         display: block;
@@ -37,7 +26,3 @@ makes sure that doesn't happen. NB may no longer be needed if we definitely have
         fill: @color-dark-grey;
     }
 }
-
-
-
-

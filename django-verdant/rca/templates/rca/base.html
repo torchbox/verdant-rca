@@ -115,7 +115,7 @@
         <![endif]-->
 
         <div class="mobile-content-wrapper">
-            <div class="header__wrapper">
+            <div class="header__wrapper header-wrapper">
                 <header class="header">
                     {% block logo %}
                         <a href="/" class="header__site-name" tabindex="2">
@@ -127,8 +127,8 @@
                     {% endblock %}
 
                     <div class="header__nav header__nav--priority">
-                        <nav class="nav nav--priority-nav">
-                            <ul class="nav__menu ">
+                        <nav class="nav nav--priority">
+                            <ul class="nav__menu nav__menu--priority">
                                 {% priority_menu %}
                             </ul>
                         </nav>
@@ -143,8 +143,8 @@
                         </button>
 
                         <div class="inner">
-                            <nav class="nav">
-                                <ul class="nav__menu menu dl-menu">
+                            <nav class="nav nav--main">
+                                <ul class="nav__menu nav__menu--main menu dl-menu">
                                     {% include "rca/menu.html" %}
                                 </ul>
                             </nav>
@@ -159,7 +159,7 @@
                             </svg>
                         </button>
 
-                        <form class="search" action="{% url 'wagtailsearch_search' %}" method="get">
+                        <form class="header__search search" action="{% url 'wagtailsearch_search' %}" method="get">
                             <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
                             <input type="submit" value="search" />
                         </form>
