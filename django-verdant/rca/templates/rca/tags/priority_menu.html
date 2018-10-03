@@ -3,15 +3,17 @@
 {% for page, children in nodes %}
     <li class="nav__item nav__item--priority{% if children %} has-children {% endif %} ">
         <a class="nav__link nav__link--priority" href="{% pageurl page %}" tabindex="4">
-            <svg class="nav__icon nav__icon--chevron">
+            <svg class="nav__chevron">
                 <use xlink:href="#chevron"></use>
             </svg>
-            {{ page.title }}
+            <span>{{ page.title }}</span>
         </a>
         {% if children %}
-            <ul class="nav__subnav nav__subnav--priority dl-submenu">
-                {% menu_subnav children %}
-            </ul>
+            <div class="nav__inner">
+                <ul class="nav__subnav nav__subnav--priority dl-submenu">
+                    {% menu_subnav children %}
+                </ul>
+            </div>
         {% endif %}
     </li>
 {% endfor %}

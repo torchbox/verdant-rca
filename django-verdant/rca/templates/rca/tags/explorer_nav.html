@@ -2,7 +2,12 @@
 
 {% for page, children in nodes %}
     <li class="nav__item{% if children %} has-children {% endif %} ">
-        <a class="nav__link" href="{% pageurl page %}" tabindex="5">{{ page.title }}</a>
+        <a class="nav__link" href="{% pageurl page %}" tabindex="5">
+            <svg class="nav__active-item-arrow">
+                <use xlink:href="#arrow"></use>
+            </svg>
+            {{ page.title }}
+        </a>
         {% if children %}
             <div class="nav__plus-icon children">+</div>
             <ul class="nav__subnav subnav dl-submenu">

@@ -120,21 +120,23 @@
                     {% block logo %}
                         <a href="/" class="header__site-name" tabindex="2">
                             <p class="hidden">Royal College of Art</p>
-                            <svg class="header__logo">
+                            <!-- <svg class="header__logo">
                                 <use xlink:href="#logo"></use>
-                            </svg>
+                            </svg> -->
+                            <img class="header__logo" src="{% static "rca/images/new-logo.png" %}">
+                            <p class="header__strapline header__strapline--mobile">The No.1 Postgraduate Art & Design University</p>
                         </a>
                     {% endblock %}
 
-                    <div class="header__nav header__nav--priority">
-                        <nav class="nav nav--priority-nav">
-                            <ul class="nav__menu nav__menu--priority js-menu">
-                                {% priority_menu %}
-                            </ul>
-                        </nav>
-                    </div>
+                    <div class="header__nav-bar">
+                        <div class="header__nav header__nav--priority">
+                            <nav class="nav nav--priority">
+                                <ul class="nav__menu nav__menu--priority">
+                                    {% priority_menu %}
+                                </ul>
+                            </nav>
+                        </div>
 
-                    <div class="header__nav">
                         <button class="header__button header__button--show-menu js-showmenu dl-trigger">
                             <span class="hidden">Show menu</span>
                             <svg class="header__icon header__icon--menu">
@@ -142,18 +144,6 @@
                             </svg>
                         </button>
 
-                        <div class="js-nav-wrapper">
-                            <div class="inner">
-                                <nav class="nav nav--main js-mobile-nav">
-                                    <ul class="nav__menu nav__menu--main menu dl-menu">
-                                        {% include "rca/menu.html" %}
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="header__search-wrapper">
                         <button class="header__button header__button--show-search showsearch">
                             <span class="hidden">Show search</span>
                             <svg class="header__icon header__icon--search">
@@ -161,12 +151,40 @@
                             </svg>
                         </button>
 
-                        <form class="header__search search" action="{% url 'wagtailsearch_search' %}" method="get">
-                            <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
-                            <input type="submit" value="search" />
-                        </form>
+                        <div class="header__search-wrapper">
+                            <form class="header__search search" action="{% url 'wagtailsearch_search' %}" method="get">
+                                <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
+                                <input type="submit" value="search" />
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="header__ctas">
+                        <p class="header__strapline header__strapline--desktop">The No.1 Postgraduate Art & Design University</p>
+
+                        <a class="header__cta header__cta--apply" href="/">
+                            Apply now
+                            <svg class="header__cta-arrow">
+                                <use xlink:href="#arrow"></use>
+                            </svg>
+                        </a>
+                        <a class="header__cta header__cta--contact" href="/">
+                            Contact us
+                            <svg class="header__cta-arrow">
+                                <use xlink:href="#arrow"></use>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <div class=" js-nav-wrapper" style="display:;">
+                        <nav class="nav nav__inner nav--main js-mobile-nav" style="display: ;">
+                            <ul style="display: ;" class="nav__menu nav__menu--main menu js-menu dl-menu">
+                                {% include "rca/menu.html" %}
+                            </ul>
+                        </nav>
                     </div>
                 </header>
+
             </div>
 
             <div class="page-overlay">

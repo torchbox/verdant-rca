@@ -16,10 +16,19 @@
         margin-top: 0 !important;
     }
 
+    &__inner {
+        margin-top: 0;
+    }
+
     &__text {
         color: @color-white;
         font-size: @font-size-24;
         max-width: 745px;
+        margin-top: 2em;
+
+        @media @media-desktop-regular {
+            margin-top: 1em;
+        }
     }
 
     &__content-wrapper {
