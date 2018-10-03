@@ -9,7 +9,11 @@
             {{ page.title }}
         </a>
         {% if children %}
-            <div class="nav__plus-icon children">+</div>
+            <button class="nav__children-button children">
+                <svg class="nav__plus">
+                    <use xlink:href="#plus"></use>
+                </svg>
+            </button>
             <ul class="nav__subnav subnav dl-submenu">
                 {% menu_subnav children %}
             </ul>

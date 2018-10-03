@@ -72,8 +72,11 @@
         flex-shrink: 0;
         margin-right: -15px;
 
-        @media @media-desktop-regular {
+        @media @media-desktop-small {
             margin-right: 0;
+        }
+
+        @media @media-desktop-regular {
             padding: 0 @spacing-one;
         }
     }
@@ -84,6 +87,8 @@
         padding: 10px 15px;
         border-left: @nav-border;
         height: @mobile-logo-height;
+        position: relative;
+        width: 54px;
 
         @media @media-desktop-regular {
             border-left: 0;
@@ -105,9 +110,31 @@
         width: 21px;
         height: 21px;
         fill: @color-dark-grey;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.2s ease;
 
         @media @media-desktop-regular {
-            vertical-align: super;
+            top: 11px;
+            transform: translateX(-50%);
+        }
+
+        &--cross {
+            opacity: 0;
+
+            .expanded & {
+                opacity: 1;
+            }
+        }
+
+        &--menu {
+            opacity: 1;
+
+            .expanded & {
+                opacity: 0;
+            }
         }
     }
 
