@@ -46,9 +46,14 @@ li {
         background: @color-white;
         border-top: @nav-border;
         border-bottom: @nav-border;
+        display: none;
 
         @media @media-desktop-large {
             padding-right: 0;
+        }
+
+        &.open {
+            display: block;
         }
     }
 
@@ -315,25 +320,25 @@ li {
 // }
 
 
-// @media @media-desktop-small {
+@media @media-desktop-small {
 
-//     nav {
-//         display:block;
-//     }
+    nav {
+        display:block;
+    }
 
 
 
-//     /* these settings change when the menu is ready*/
-//     nav.ready{
-//         .menu{
-//             /* only hide after its max height has been calculated */
-//             display:none;
-//         }
-//         .subnav{
-//             display:none;
-//         }
-//     }
-// }
+    /* these settings change when the menu is ready*/
+    nav.ready{
+        .menu{
+            /* only hide after its max height has been calculated */
+            display:none;
+        }
+        .subnav{
+            display:none;
+        }
+    }
+}
 
     // nav.open{
     //     //background-color:white;
