@@ -299,25 +299,23 @@ li {
  * $Mobile menu styles
  */
 
+
+
 .mobile-content-wrapper {
+    position: relative;
+    // float: right;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 15px;
     background: white;
+    transition: transform 300ms ease;
+
+    // &--shift-left {
+    //     @media @media-desktop-small {
+    //         transform: translate3d(-@sidebarWidth, 0, 0);
+    //     }
+    // }
 }
-
-// .mobile-content-wrapper {
-//     position: relative;
-//     float: right;
-//     width: 100%;
-//     overflow: hidden;
-//     padding: 0 15px;
-//     background: white;
-//     transition: transform 300ms ease;
-
-//     &--shift-left {
-//         @media @media-desktop-small {
-//             transform: translate3d(-@sidebarWidth, 0, 0);
-//         }
-//     }
-// }
 
 
 @media @media-desktop-small {

@@ -91,10 +91,6 @@ var desktopNav = {
 				maxHeight = ($(this).height() > maxHeight) ? $(this).height() : maxHeight
 			})
 
-			/* create breadcrumb menu from selected items */
-			selected.find('ul').remove();
-			menu.before($('<ul class="breadcrumb"></ul>').append(selected));
-
 			$self.data('maxHeight', maxHeight + 70);
 
 			// set menu as ready
@@ -105,8 +101,6 @@ var desktopNav = {
 				setTimeout(function(){
 					$self.removeClass('changing');
 				}, 400)
-
-				$self.find('.breadcrumb').stop().hide();
 
 				$self.stop().animate({
 					height: $self.data('maxHeight')
@@ -142,10 +136,6 @@ var desktopNav = {
 				$self.find('li:not(.selected) > ul').stop().fadeOut(100, function(){
 					$(this).find('.selected > ul').fadeIn(100)
 				});
-
-				$self.find('.breadcrumb').stop().fadeIn(200, function(){
-					$(this).removeClass('changing');
-				})
 			}
 
 			function toggleMenu() {
@@ -191,7 +181,6 @@ var desktopNav = {
 		$('.js-nav-wrapper nav').each(function(){
 			$(this).unbind().removeClass('ready').removeClass('changing').attr('style', '');
 			$('li, ul', $(this)).unbind().attr('style', '');
-			$('.breadcrumb', $(this)).remove()
 			$('.menu', $(this)).attr('style', '');
 			$('.submenu', $(this)).attr('style', '');
 		})
