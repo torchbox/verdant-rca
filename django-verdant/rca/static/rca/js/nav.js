@@ -7,12 +7,6 @@ $(function(){
 		},
 		on: function(){
 				console.log('on mobileAndDesktopSmall');
-			    function showHideMobileMenu(){
-			        $('.js-showmenu').click(function(eventObject){
-			            $('.js-mobile-nav').toggleClass('expanded');
-			            $(this).toggleClass('expanded');
-			        });
-		    	}
 		},
 		off: function(){
 			console.log('off mobileAndDesktopSmall');
@@ -48,7 +42,7 @@ $(function(){
 var mobileNav = {
 	apply: function() {
 		console.log('apply mobile nav');
-		$('js-mobile-nav').addClass('dl-menuwrapper').dlmenu({
+		$('.js-mobile-nav').addClass('dl-menuwrapper').dlmenu({
 			animationClasses : {
 				classin : 'dl-animate-in-2',
 				classout : 'dl-animate-out-2'
@@ -56,6 +50,7 @@ var mobileNav = {
 		});
 
 		function toggleMobileNav() {
+			console.log('toggling mobile nav');
 			$('.js-mobile-nav').toggleClass('expanded');
 			$('.js-showmenu').toggleClass('expanded');
 		}
@@ -89,7 +84,10 @@ var desktopNav = {
 			}
 		}
 
-		$('.js-nav').each(function(){
+		//$('.js-nav').each(setupNav);
+		//$('.js-priority-nav').each(setupNav);
+
+		$('.js-nav').each(function() {
 			var $self = $(this);
 			var maxHeight = 0;
 			//var selected = $('.selected', $self).clone();
@@ -171,6 +169,7 @@ var desktopNav = {
 			// out, the maxHeight data isn't accessible from within any of the sub functions (even though other methods such
 			// as css() work fine)
 			$(document).on('click', toggle, toggleMenu.bind(toggleMenu, $self.data('maxHeight')));
+			//$(document).on('mouseover', $('.js-hover-menu'), toggleMenu.bind(toggleMenu, $self.data('maxHeight')));
 
 			// close menu on all clicks outside the toggle
 			//$(document).on('click.desktop', clearMenu);
