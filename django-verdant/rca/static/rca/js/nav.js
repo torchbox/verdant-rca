@@ -121,7 +121,7 @@ var desktopNav = {
 				menu.stop().hide()
 
 				$self.stop().animate({
-					height: 34
+					height: 0
 				}, 200, function(){
 					$self.find('.selected > ul').stop().show()
 					$self.removeClass('changing').removeClass('open');
