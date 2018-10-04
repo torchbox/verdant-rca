@@ -139,28 +139,46 @@
                             </nav>
                         </div>
 
-                        <button class="header__button header__button--show-menu js-showmenu dl-trigger">
-                            <span class="hidden">Show menu</span>
-                            <svg class="header__icon header__icon--menu">
-                                <use xlink:href="#menu"></use>
-                            </svg>
-                            <svg class="header__icon header__icon--cross">
-                                <use xlink:href="#cross"></use>
-                            </svg>
-                        </button>
+                        <div class="header__nav-wrapper">
+                            <button class="header__button header__button--show-menu js-showmenu dl-trigger">
+                                <span class="hidden">Show menu</span>
+                                <svg class="header__icon header__icon--menu">
+                                    <use xlink:href="#menu"></use>
+                                </svg>
+                                <svg class="header__icon header__icon--cross">
+                                    <use xlink:href="#cross"></use>
+                                </svg>
+                            </button>
 
-                        <button class="header__button header__button--show-search showsearch">
-                            <span class="hidden">Show search</span>
-                            <svg class="header__icon header__icon--search">
-                                <use xlink:href="#search"></use>
-                            </svg>
-                        </button>
+                            <div class="js-nav-wrapper">
+                                <nav class="nav nav__inner nav--main js-mobile-nav">
+                                    <ul class="nav__menu nav__menu--main menu js-menu dl-menu">
+                                        {% include "rca/menu.html" %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
 
-                        <div class="header__search-wrapper">
-                            <form class="header__search search" action="{% url 'wagtailsearch_search' %}" method="get">
-                                <input  tabindex="5" id="search_box" type="text" name="q" placeholder="Search"{% if query_string %} value="{{ query_string }}"{% endif %} />
-                                <input type="submit" value="search" />
+                        <div class="search js-search">
+                            <form class="search__form" action="{% url 'wagtailsearch_search' %}" method="get">
+                                <input class="search__input js-search-input" tabindex="5" id="search_box" type="text" name="q" placeholder="SEARCH"{% if query_string %} value="{{ query_string }}"{% endif %} />
+                                <button class="search__button header__button js-search-button" type="submit">
+                                    <span class="hidden">Search</span>
+                                    <svg class="header__icon">
+                                        <use xlink:href="#search"></use>
+                                    </svg>
+                                </button>
                             </form>
+
+                            <button class="header__button header__button--show-search js-showsearch">
+                                <span class="hidden">Show search</span>
+                                <svg class="header__icon header__icon--search">
+                                    <use xlink:href="#search"></use>
+                                </svg>
+                                <svg class="header__icon header__icon--cross">
+                                    <use xlink:href="#cross"></use>
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
@@ -181,13 +199,6 @@
                         </a>
                     </div>
 
-                    <div class="js-nav-wrapper">
-                        <nav class="nav nav__inner nav--main js-mobile-nav">
-                            <ul class="nav__menu nav__menu--main menu js-menu dl-menu">
-                                {% include "rca/menu.html" %}
-                            </ul>
-                        </nav>
-                    </div>
                 </header>
 
             </div>

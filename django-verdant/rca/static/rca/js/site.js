@@ -109,14 +109,14 @@ function onDocumentReady(jQuery, inLightBox){
     /* hide the search submit button then show
     on typing text */
     function showSearchSubmit() {
-        $('form.search input[type="submit"]').hide();
-        $('form.search input[type="text"]').focus(function() {
-           $('form.search input[type="submit"]').show();
+        $('js-search-button').hide();
+        $('js-search-input').focus(function() {
+           $('js-search-button').show();
         });
         $(document).click(function() {
-            $('form.search input[type="submit"]').hide();
+            $('js-search-button').hide();
         });
-        $('form.search input[type="text"]').click(function(e){
+        $('js-search-input').click(function(e){
             e.stopPropagation();
         });
     }
@@ -212,7 +212,7 @@ function onDocumentReady(jQuery, inLightBox){
     showHideFooter();
     showHideSlide('.today h2', '.today', '.today ul', $('.today').hasClass('expanded'));
     showHideSlide('.related h2', '.related', '.related .wrapper');
-    showHide('.showsearch', 'form.search');
+    showHide('.js-showsearch', '.js-search');
     showHideDialogue();
     showHideSlide('.profile .showBiography', '.profile .biography', '.profile .biography');
     showHideSlide('.profile .showPractice', '.profile .practice', '.profile .practice');

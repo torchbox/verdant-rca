@@ -7,11 +7,34 @@
     align-items: flex-start;
     flex-wrap: wrap;
     padding: 10px 0;
+    margin-bottom: 60px;
+
+    &::after {
+        content: '';
+        width: 100vw;
+        border-bottom: @nav-border;
+        position: absolute;
+        bottom: 0;
+        left: -15px;
+
+        @media @media-desktop-small {
+            left: -5vw;
+        }
+
+        .template-home-page & {
+            display: none;
+        }
+    }
 
     @media @media-desktop-regular {
         flex-wrap: nowrap;
         align-items: flex-end;
         padding: 0;
+        margin-bottom: 80px;
+    }
+
+    .template-home-page & {
+        margin-bottom: 0;
     }
 
     &__site-name {
@@ -129,7 +152,8 @@
             }
         }
 
-        &--menu {
+        &--menu,
+        &--search {
             opacity: 1;
 
             .expanded & {
@@ -143,6 +167,8 @@
         margin-bottom: -42px;
         padding-top: 10px;
         width: 100%;
+        position: relative;
+        z-index: 1;
 
         @media @media-desktop-regular {
             margin-bottom: -32px;
